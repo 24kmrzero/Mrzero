@@ -1,6 +1,5 @@
 (async function () {
   const A = window.App;
-  const D = window.DEMO_DATA;
   const state = {
     user: null, profile: null, courses: [], sessions: [], sessionLinks: {}, enrollments: [], payments: [],
     paymentMethods: [], signals: [], charts: [], articles: [], announcements: [], resources: [], support: [], riskAccepted: false,
@@ -29,25 +28,6 @@
   document.getElementById('studentApp').classList.remove('hidden');
 
   async function loadAll() {
-    if (!A.configured) {
-      const demoPayments = JSON.parse(localStorage.getItem('k24_demo_payments') || '[]');
-      const demoSupport = JSON.parse(localStorage.getItem('k24_demo_support') || '[]');
-      state.courses = structuredClone(D.courses);
-      state.sessions = structuredClone(D.sessions);
-      state.payments = demoPayments;
-      state.enrollments = demoPayments.filter(p => p.status === 'approved').map(p => ({ id: `enr-${p.id}`, student_id: state.user.id, course_id: p.course_id, status: 'active', access_expires_at: null }));
-      state.sessionLinks = state.enrollments.length ? structuredClone(D.sessionLinks) : {};
-      state.paymentMethods = structuredClone(D.paymentMethods);
-      state.signals = structuredClone(D.signals);
-      state.charts = structuredClone(D.charts);
-      state.articles = structuredClone(D.articles);
-      state.announcements = structuredClone(D.announcements);
-      state.resources = structuredClone(D.resources);
-      state.support = demoSupport;
-      state.riskAccepted = localStorage.getItem('k24_risk_accepted') === A.cfg.RISK_VERSION;
-      return;
-    }
-
     const sb = A.supabase;
     const requests = await Promise.all([
       sb.from('courses').select('*').eq('is_published', true).order('created_at', { ascending: false }),
@@ -276,18 +256,12 @@
     A.setLoading(button, true, 'Uploading receipt...');
     try {
       const paymentId = A.uid();
-      if (!A.configured) {
-        const payment = { id: paymentId, invoice_no: `DEMO-${Date.now().toString().slice(-6)}`, student_id: state.user.id, course_id: course.id, amount: Number(fd.get('amount')), payment_method_id: method?.id, payment_method_name: method?.name, transaction_reference: String(fd.get('transaction_reference')), student_note: String(fd.get('student_note') || ''), receipt_path: `demo/${file.name}`, status: 'received', created_at: new Date().toISOString() };
-        state.payments.unshift(payment);
-        localStorage.setItem('k24_demo_payments', JSON.stringify(state.payments));
-      } else {
-        const path = `${state.user.id}/${paymentId}/${A.fileSafeName(file.name)}`;
+      const path = `${state.user.id}/${paymentId}/${A.fileSafeName(file.name)}`;
         const upload = await A.supabase.storage.from('payment-receipts').upload(path, file, { upsert: false, contentType: file.type });
         if (upload.error) throw upload.error;
         const { error } = await A.supabase.from('payments').insert({ id: paymentId, student_id: state.user.id, course_id: course.id, amount: Number(fd.get('amount')), payment_method_id: method?.id, payment_method_name: method?.name, transaction_reference: String(fd.get('transaction_reference')).trim(), student_note: String(fd.get('student_note') || '').trim(), receipt_path: path, status: 'received' });
         if (error) { await A.supabase.storage.from('payment-receipts').remove([path]); throw error; }
         await loadAll();
-      }
       renderAll(); A.closeModal('paymentModal'); form.reset();
       A.toast('Receipt received. Admin approval is required before course access unlocks.', 'success');
       openPanel('payments');
@@ -298,13 +272,9 @@
   async function enrollFree(courseId, button) {
     A.setLoading(button, true, 'Enrolling...');
     try {
-      if (!A.configured) {
-        state.enrollments.push({ id: A.uid(), student_id: state.user.id, course_id: courseId, status: 'active', access_expires_at: null });
-      } else {
-        const { error } = await A.supabase.rpc('enroll_free_course', { p_course_id: courseId });
+      const { error } = await A.supabase.rpc('enroll_free_course', { p_course_id: courseId });
         if (error) throw error;
         await loadAll();
-      }
       renderAll(); A.toast('Free course enrolled successfully.', 'success');
     } catch (error) { A.toast(error.message || 'Could not enroll.', 'error'); }
     finally { A.setLoading(button, false); }
@@ -319,7 +289,6 @@
 
   async function viewReceipt(id) {
     const payment = state.payments.find(p => p.id === id); if (!payment?.receipt_path) return;
-    if (!A.configured) return A.toast('Receipt preview is available after Supabase storage is connected.', 'warning');
     const { data, error } = await A.supabase.storage.from('payment-receipts').createSignedUrl(payment.receipt_path, 120);
     if (error) return A.toast(error.message, 'error');
     window.open(data.signedUrl, '_blank', 'noopener');
@@ -327,7 +296,6 @@
 
   async function downloadResource(id) {
     const resource = state.resources.find(r => r.id === id); if (!resource) return;
-    if (!A.configured) return A.toast('Demo resource has no attached file.', 'warning');
     const { data, error } = await A.supabase.storage.from('course-resources').createSignedUrl(resource.file_path, 120, { download: resource.file_name });
     if (error) return A.toast(error.message, 'error');
     window.open(data.signedUrl, '_blank', 'noopener');
@@ -338,7 +306,7 @@
     A.setLoading(button, true, 'Saving...');
     try {
       const changes = { full_name: String(values.full_name).trim(), whatsapp: String(values.whatsapp).trim(), country: String(values.country || '').trim(), experience: String(values.experience || '') };
-      if (A.configured) { const { error } = await A.supabase.from('profiles').update(changes).eq('id', state.user.id); if (error) throw error; }
+      const { error } = await A.supabase.from('profiles').update(changes).eq('id', state.user.id); if (error) throw error;
       Object.assign(state.profile, changes); document.getElementById('welcomeName').textContent = `Welcome back, ${state.profile.full_name}`;
       A.toast('Profile updated successfully.', 'success');
     } catch (error) { A.toast(error.message || 'Could not update profile.', 'error'); }
@@ -350,8 +318,7 @@
     A.setLoading(button, true, 'Submitting...');
     try {
       const row = { id: A.uid(), student_id: state.user.id, category: values.category, subject: String(values.subject).trim(), message: String(values.message).trim(), status: 'open', created_at: new Date().toISOString() };
-      if (!A.configured) { state.support.unshift(row); localStorage.setItem('k24_demo_support', JSON.stringify(state.support)); }
-      else { const { error } = await A.supabase.from('support_requests').insert({ student_id: state.user.id, category: row.category, subject: row.subject, message: row.message }); if (error) throw error; await loadAll(); }
+      const { error } = await A.supabase.from('support_requests').insert({ student_id: state.user.id, category: row.category, subject: row.subject, message: row.message }); if (error) throw error; await loadAll();
       form.reset(); renderSupport(); A.toast('Support request submitted.', 'success');
     } catch (error) { A.toast(error.message || 'Could not submit request.', 'error'); }
     finally { A.setLoading(button, false); }
@@ -360,11 +327,8 @@
   async function acceptRisk(event) {
     event.preventDefault(); const form = event.currentTarget; const button = form.querySelector('button[type="submit"]'); A.setLoading(button, true, 'Saving...');
     try {
-      if (!A.configured) localStorage.setItem('k24_risk_accepted', A.cfg.RISK_VERSION);
-      else {
-        const { error } = await A.supabase.from('terms_acceptances').upsert({ user_id: state.user.id, document_type: 'risk_disclaimer', version: A.cfg.RISK_VERSION, accepted_at: new Date().toISOString(), ip_address: null }, { onConflict: 'user_id,document_type,version' });
+      const { error } = await A.supabase.from('terms_acceptances').upsert({ user_id: state.user.id, document_type: 'risk_disclaimer', version: A.cfg.RISK_VERSION, accepted_at: new Date().toISOString(), ip_address: null }, { onConflict: 'user_id,document_type,version' });
         if (error) throw error;
-      }
       state.riskAccepted = true; A.closeModal('riskModal'); A.toast('Risk disclaimer accepted.', 'success');
     } catch (error) { A.toast(error.message || 'Could not record acceptance.', 'error'); }
     finally { A.setLoading(button, false); }
@@ -372,7 +336,6 @@
 
 
   function subscribeRealtime() {
-    if (!A.configured) return;
     let timer;
     const refresh = () => {
       clearTimeout(timer);

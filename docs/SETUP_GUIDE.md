@@ -2,7 +2,7 @@
 
 ## A. Database
 1. Open Supabase SQL Editor.
-2. Run `RUN_FIRST_SUPABASE.sql` from the package root, or `supabase/00_RUN_FIRST_SCHEMA_AND_SEED.sql`.
+2. Run `RUN_FIRST_PRODUCTION.sql` from the package root, or `supabase/00_RUN_FIRST_PRODUCTION.sql`.
 3. The script safely removes and recreates named policies, including the previously duplicated receipt policy.
 
 ## B. Create Admin

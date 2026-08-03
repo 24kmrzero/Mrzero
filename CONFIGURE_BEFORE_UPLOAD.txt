@@ -1,0 +1,8 @@
+IMPORTANT BEFORE GITHUB UPLOAD
+
+1) Open assets/js/config.js
+2) Replace YOUR_SUPABASE_URL
+3) Replace YOUR_SUPABASE_ANON_KEY
+4) Save file
+5) Run SQL files in supabase-final folder in exact numeric order
+6) Upload the CONTENTS of this folder to GitHub repository root

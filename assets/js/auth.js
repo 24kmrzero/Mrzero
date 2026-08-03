@@ -1,6 +1,10 @@
 (async function () {
   const { configured, supabase, toast, setLoading, openModal, closeModal, cfg } = window.App;
-  document.getElementById('demoBanner')?.classList.toggle('hidden', configured);
+  if (!configured || !supabase) {
+    toast('Website setup is incomplete. Add Supabase URL and anon key in assets/js/config.js.', 'error');
+    document.querySelectorAll('form button[type="submit"]').forEach(button => button.disabled = true);
+    return;
+  }
 
   const tabs = [...document.querySelectorAll('[data-auth-tab]')];
   const forms = [...document.querySelectorAll('[data-auth-form]')];
@@ -31,15 +35,6 @@
     const password = String(values.get('password') || '');
     setLoading(button, true, 'Signing in...');
     try {
-      if (!configured) {
-        const valid = expectedRole === 'admin'
-          ? email === 'admin@24kexcellence.com' && password === 'admin123'
-          : email === 'student@24kexcellence.com' && password === '12345678';
-        if (!valid) throw new Error('Use the demo credentials shown below the form.');
-        localStorage.setItem('k24_demo_role', expectedRole);
-        window.location.href = expectedRole === 'admin' ? 'admin-dashboard.html' : 'student-dashboard.html';
-        return;
-      }
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
       const profile = await window.App.getProfile(data.user.id);
@@ -68,12 +63,6 @@
     const values = Object.fromEntries(new FormData(form).entries());
     setLoading(button, true, 'Creating account...');
     try {
-      if (!configured) {
-        localStorage.setItem('k24_demo_role', 'student');
-        toast('Demo student account created.', 'success');
-        setTimeout(() => window.location.href = 'student-dashboard.html', 450);
-        return;
-      }
       const { data, error } = await supabase.auth.signUp({
         email: String(values.email).trim().toLowerCase(),
         password: String(values.password),
@@ -113,15 +102,11 @@
     const email = String(new FormData(form).get('email') || '').trim().toLowerCase();
     setLoading(button, true, 'Sending...');
     try {
-      if (!configured) {
-        toast('Demo mode: reset email simulated.', 'success');
-      } else {
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: new URL('reset-password.html', window.location.href).href
-        });
-        if (error) throw error;
-        toast('Password reset link sent.', 'success');
-      }
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: new URL('reset-password.html', window.location.href).href
+      });
+      if (error) throw error;
+      toast('Password reset link sent.', 'success');
       closeModal('forgotModal'); form.reset();
     } catch (error) { toast(error.message || 'Could not send reset link.', 'error'); }
     finally { setLoading(button, false); }

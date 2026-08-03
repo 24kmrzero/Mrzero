@@ -1,16 +1,10 @@
-/*
-  24K Excellence Supabase configuration
-  Replace the two placeholder values after creating your Supabase project.
-  The site automatically uses safe local demo data while placeholders remain.
-*/
-window.APP_CONFIG = Object.freeze({
+window.APP_CONFIG = {
+  // REQUIRED: Paste values from Supabase Dashboard > Project Settings > API.
   SUPABASE_URL: 'YOUR_SUPABASE_URL',
   SUPABASE_ANON_KEY: 'YOUR_SUPABASE_ANON_KEY',
-  APP_NAME: '24K Excellence',
-  INSTRUCTOR_NAME: 'Malik Zameer',
   DEFAULT_TIMEZONE: 'Asia/Karachi',
-  SUPPORT_WHATSAPP: '923001234567',
-  SUPPORT_EMAIL: 'support@24kexcellence.com',
-  TERMS_VERSION: '2026-08-03',
-  RISK_VERSION: '2026-08-03'
-});
+  SUPPORT_WHATSAPP: '601113019068',
+  SUPPORT_EMAIL: '24kmrzero@gmail.com',
+  RISK_VERSION: '1.0',
+  TERMS_VERSION: '1.0'
+};

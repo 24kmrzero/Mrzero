@@ -327,8 +327,6 @@ input[type='file']::file-selector-button { margin-right: 10px; padding: 7px 10px
 .auth-form.on { display: grid; gap: 14px; }
 .auth-links { display: flex; justify-content: space-between; gap: 12px; font-size: 12px; }
 .auth-links a,.legal-links a { color: var(--app-gold); }
-.demo-banner { margin-top: 16px; padding: 12px; border: 1px solid rgba(255,193,7,.22); border-radius: 10px; color: #D8C98F; background: rgba(255,193,7,.055); font-size: 11px; line-height: 1.55; }
-.demo-banner code { color: var(--app-gold); }
 
 /* Admin helper blocks */
 .admin-form-box { display: none; margin-bottom: 20px; }

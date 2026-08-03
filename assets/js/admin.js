@@ -1,6 +1,5 @@
 (async function () {
   const A = window.App;
-  const D = window.DEMO_DATA;
   const state = { profile: null, profiles: [], courses: [], sessions: [], sessionLinks: {}, payments: [], signals: [], charts: [], articles: [], announcements: [], resources: [], support: [], methods: [] };
   const result = await A.requireRole('admin');
   if (!result) return;
@@ -15,22 +14,6 @@
   document.getElementById('adminApp').classList.remove('hidden');
 
   async function loadAll() {
-    if (!A.configured) {
-      const stored = JSON.parse(localStorage.getItem('k24_demo_admin_data') || 'null');
-      state.courses = stored?.courses || structuredClone(D.courses);
-      state.sessions = stored?.sessions || structuredClone(D.sessions);
-      state.sessionLinks = stored?.sessionLinks || structuredClone(D.sessionLinks);
-      state.signals = stored?.signals || structuredClone(D.signals);
-      state.charts = stored?.charts || structuredClone(D.charts);
-      state.articles = stored?.articles || structuredClone(D.articles);
-      state.announcements = stored?.announcements || structuredClone(D.announcements);
-      state.resources = stored?.resources || [];
-      state.methods = stored?.methods || structuredClone(D.paymentMethods);
-      state.payments = JSON.parse(localStorage.getItem('k24_demo_payments') || '[]');
-      state.support = JSON.parse(localStorage.getItem('k24_demo_support') || '[]');
-      state.profiles = [structuredClone(D.profile)];
-      return;
-    }
     const sb = A.supabase;
     const responses = await Promise.all([
       sb.from('profiles').select('*').order('created_at', { ascending: false }),
@@ -52,12 +35,6 @@
     state.sessionLinks = Object.fromEntries((responses[3].data || []).map(row => [row.course_session_id, row.meet_url]));
   }
 
-  function persistDemo() {
-    if (A.configured) return;
-    localStorage.setItem('k24_demo_admin_data', JSON.stringify({ courses: state.courses, sessions: state.sessions, sessionLinks: state.sessionLinks, signals: state.signals, charts: state.charts, articles: state.articles, announcements: state.announcements, resources: state.resources, methods: state.methods }));
-    localStorage.setItem('k24_demo_payments', JSON.stringify(state.payments));
-    localStorage.setItem('k24_demo_support', JSON.stringify(state.support));
-  }
 
   function renderAll() {
     populateCourseSelects();
@@ -233,7 +210,7 @@
 
   async function save(table, stateKey, row, existingId, form, message) {
     const button=form.querySelector('button[type="submit"]');A.setLoading(button,true,'Saving...');
-    try { if(!A.configured){upsertLocal(state[stateKey],row);persistDemo();}else{const {error}=existingId?await A.supabase.from(table).update(omit(row,'id')).eq('id',row.id):await A.supabase.from(table).insert(row);if(error)throw error;await loadAll();}form.reset();if(form.elements.id)form.elements.id.value='';form.closest('.admin-form-box')?.classList.remove('open');renderAll();A.toast(message,'success');}
+    try { const {error}=existingId?await A.supabase.from(table).update(omit(row,'id')).eq('id',row.id):await A.supabase.from(table).insert(row);if(error)throw error;await loadAll();form.reset();if(form.elements.id)form.elements.id.value='';form.closest('.admin-form-box')?.classList.remove('open');renderAll();A.toast(message,'success');}
     catch(error){A.toast(error.message||'Could not save record.','error');}finally{A.setLoading(button,false);}
   }
 
@@ -247,27 +224,17 @@
   async function deleteRecord(type,id,button){
     if(!confirm('Delete this record? This action cannot be undone.'))return;A.setLoading(button,true,'Deleting...');
     const map={signal:['signals','signals'],chart:['charts','charts'],article:['articles','articles'],announcement:['announcements','announcements'],course:['courses','courses'],session:['course_sessions','sessions'],resource:['course_resources','resources'],method:['payment_methods','methods']};const [table,key]=map[type]||[];
-    try {const row=state[key].find(x=>x.id===id);if(!A.configured){state[key]=state[key].filter(x=>x.id!==id);if(type==='session')delete state.sessionLinks[id];persistDemo();}
-      else {if(type==='resource'&&row?.file_path)await A.supabase.storage.from('course-resources').remove([row.file_path]);const {error}=await A.supabase.from(table).delete().eq('id',id);if(error)throw error;await loadAll();}renderAll();A.toast('Record deleted.','success');
-    }catch(error){A.toast(error.message||'Delete failed.','error');}finally{A.setLoading(button,false);}
-  }
-
-  function openPaymentReview(id){const p=state.payments.find(x=>x.id===id);if(!p)return;const f=document.getElementById('paymentReviewForm');f.reset();f.elements.payment_id.value=id;f.elements.status.value=p.status==='approved'?'approved':p.status==='declined'?'declined':'under_review';f.elements.admin_note.value=p.admin_note||'';document.getElementById('reviewPaymentSummary').innerHTML=`<b>${A.escapeHtml(p.invoice_no||'')}</b><br>${A.escapeHtml(profileName(p.student_id))} · ${A.escapeHtml(courseName(p.course_id))}<br>${A.formatMoney(p.amount,courseCurrency(p.course_id))} · Ref: ${A.escapeHtml(p.transaction_reference||'—')}`;A.openModal('paymentReviewModal');}
-
-  async function reviewPayment(event){event.preventDefault();const f=event.currentTarget,v=formValues(f),button=f.querySelector('button[type="submit"]');if(v.status==='declined'&&!v.admin_note.trim())return A.toast('Decline reason is required.','error');A.setLoading(button,true,'Saving decision...');
-    try{if(!A.configured){const p=state.payments.find(x=>x.id===v.payment_id);p.status=v.status;p.admin_note=v.admin_note;p.reviewed_at=new Date().toISOString();persistDemo();}
-      else{const {error}=await A.supabase.rpc('admin_review_payment',{p_payment_id:v.payment_id,p_status:v.status,p_admin_note:v.admin_note||null});if(error)throw error;await loadAll();}
+    try {const row=state[key].find(x=>x.id===id);{const {error}=await A.supabase.rpc('admin_review_payment',{p_payment_id:v.payment_id,p_status:v.status,p_admin_note:v.admin_note||null});if(error)throw error;await loadAll();}
       A.closeModal('paymentReviewModal');renderAll();A.toast(v.status==='approved'?'Payment approved and course unlocked.':'Payment status updated.','success');
     }catch(error){A.toast(error.message||'Could not update payment.','error');}finally{A.setLoading(button,false);}
   }
 
-  async function viewReceipt(id){const p=state.payments.find(x=>x.id===id);if(!p?.receipt_path)return;if(!A.configured)return A.toast('Demo receipt preview is unavailable.','warning');const {data,error}=await A.supabase.storage.from('payment-receipts').createSignedUrl(p.receipt_path,180);if(error)return A.toast(error.message,'error');window.open(data.signedUrl,'_blank','noopener');}
+  async function viewReceipt(id){const p=state.payments.find(x=>x.id===id);if(!p?.receipt_path)return;const {data,error}=await A.supabase.storage.from('payment-receipts').createSignedUrl(p.receipt_path,180);if(error)return A.toast(error.message,'error');window.open(data.signedUrl,'_blank','noopener');}
   async function updateSupport(id,status,button){A.setLoading(button,true,'Updating...');try{if(!A.configured){const row=state.support.find(x=>x.id===id);row.status=status;persistDemo();}else{const {error}=await A.supabase.from('support_requests').update({status,updated_at:new Date().toISOString()}).eq('id',id);if(error)throw error;await loadAll();}renderAll();A.toast('Support request updated.','success');}catch(error){A.toast(error.message,'error');}finally{A.setLoading(button,false);}}
-  async function uploadPublic(file,prefix){if(file.size>8*1024*1024)throw new Error('Image must be 8 MB or smaller.');if(!A.configured)return URL.createObjectURL(file);const path=`${prefix}/${Date.now()}-${A.fileSafeName(file.name)}`;const {error}=await A.supabase.storage.from('content-assets').upload(path,file,{contentType:file.type});if(error)throw error;return A.supabase.storage.from('content-assets').getPublicUrl(path).data.publicUrl;}
+  async function uploadPublic(file,prefix){if(file.size>8*1024*1024)throw new Error('Image must be 8 MB or smaller.');const path=`${prefix}/${Date.now()}-${A.fileSafeName(file.name)}`;const {error}=await A.supabase.storage.from('content-assets').upload(path,file,{contentType:file.type});if(error)throw error;return A.supabase.storage.from('content-assets').getPublicUrl(path).data.publicUrl;}
   function updateResourceSessionOptions(){const courseId=document.getElementById('resourceCourseSelect').value;document.getElementById('resourceSessionSelect').innerHTML='<option value="">General Course Resource</option>'+state.sessions.filter(s=>s.course_id===courseId).map(s=>`<option value="${s.id}">Session ${s.session_number}: ${A.escapeHtml(s.title)}</option>`).join('');}
 
   function subscribeRealtime(){
-    if(!A.configured)return;
     let timer;
     const refresh=()=>{clearTimeout(timer);timer=setTimeout(async()=>{try{await loadAll();renderAll();}catch(error){console.error('Realtime refresh failed',error);}},350);};
     A.supabase.channel('admin-live')

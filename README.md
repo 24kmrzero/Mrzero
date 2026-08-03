@@ -6,7 +6,7 @@ Premium black, gold and red student/admin system matching the original 24K Excel
 Read `START_HERE.md`.
 
 ## Main setup files
-- `RUN_FIRST_SUPABASE.sql`
+- `RUN_FIRST_PRODUCTION.sql`
 - `MAKE_ADMIN_24kmrzero.sql`
 - `assets/js/config.js`
 - `docs/SETUP_GUIDE.md`

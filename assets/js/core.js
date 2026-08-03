@@ -114,23 +114,14 @@
   }
 
   async function getCurrentUser() {
-    if (!configured) {
-      const role = localStorage.getItem('k24_demo_role');
-      if (!role) return null;
-      return { id: role === 'admin' ? 'admin-demo' : window.DEMO_DATA.profile.id, email: role === 'admin' ? 'admin@24kexcellence.com' : window.DEMO_DATA.profile.email };
-    }
+    if (!configured || !supabase) throw new Error('Supabase is not configured. Add your project URL and anon key in assets/js/config.js.');
     const { data, error } = await supabase.auth.getUser();
     if (error) throw error;
     return data.user;
   }
 
   async function getProfile(userId) {
-    if (!configured) {
-      const role = localStorage.getItem('k24_demo_role') || 'student';
-      return role === 'admin'
-        ? { id: 'admin-demo', full_name: 'Administrator', email: 'admin@24kexcellence.com', role: 'admin' }
-        : window.DEMO_DATA.profile;
-    }
+    if (!configured || !supabase) throw new Error('Supabase is not configured. Add your project URL and anon key in assets/js/config.js.');
     const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single();
     if (error) throw error;
     return data;
@@ -154,8 +145,7 @@
   }
 
   async function logout() {
-    if (configured) await supabase.auth.signOut();
-    localStorage.removeItem('k24_demo_role');
+    if (supabase) await supabase.auth.signOut();
     window.location.replace('login.html');
   }
 
