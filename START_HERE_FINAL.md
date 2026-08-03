@@ -1,3 +1,7 @@
+# V6 Configuration Status
+
+This package is already configured with the production Supabase Project URL and browser Publishable Key. The production SQL rollout has already been completed, so no additional SQL is required for this upload.
+
 # 24K Excellence — Final Production Setup
 
 ## Pehle kya run karna hai

@@ -1,7 +1,6 @@
 window.APP_CONFIG = {
-  // REQUIRED: Paste values from Supabase Dashboard > Project Settings > API.
-  SUPABASE_URL: 'YOUR_SUPABASE_URL',
-  SUPABASE_ANON_KEY: 'YOUR_SUPABASE_ANON_KEY',
+  SUPABASE_URL: 'https://jsmthmmkafgvzzcjjihp.supabase.co',
+  SUPABASE_ANON_KEY: 'sb_publishable_4NT_9rswuHlVNBXaoyBtaQ_Uk11zqu5',
   DEFAULT_TIMEZONE: 'Asia/Karachi',
   SUPPORT_WHATSAPP: '601113019068',
   SUPPORT_EMAIL: '24kmrzero@gmail.com',
