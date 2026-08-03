@@ -1,0 +1,12 @@
+24K EXCELLENCE — READY TO DEPLOY
+
+1. Read START_HERE.md
+2. Run supabase/00_RUN_FIRST_SCHEMA_AND_SEED.sql
+3. Create admin Auth user
+4. Edit and run supabase/03_make_admin.sql
+5. Add Supabase URL + anon key in assets/js/config.js
+6. Add real payment methods and Google Meet links from Admin Panel
+7. Complete docs/TEST_CHECKLIST.md
+8. Upload the complete folder to hosting
+
+Landing page preserved. Original project backup included.
