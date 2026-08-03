@@ -2,7 +2,7 @@
   const A = window.App;
   const state = {
     user: null, profile: null, courses: [], sessions: [], sessionLinks: {}, enrollments: [], payments: [],
-    paymentMethods: [], signals: [], charts: [], articles: [], announcements: [], resources: [], support: [], riskAccepted: false,
+    paymentMethods: [], signals: [], signalUpdates: [], charts: [], articles: [], announcements: [], resources: [], support: [], riskAccepted: false,
     selectedCourse: null
   };
   let openPanel;
@@ -37,6 +37,7 @@
       sb.from('payments').select('*,courses(title,currency)').eq('student_id', state.user.id).order('created_at', { ascending: false }),
       sb.from('payment_methods').select('*').eq('is_active', true).order('sort_order'),
       sb.from('signals').select('*').eq('is_published', true).order('published_at', { ascending: false }),
+      sb.from('signal_updates').select('*').order('created_at', { ascending: false }),
       sb.from('charts').select('*').eq('is_published', true).order('published_at', { ascending: false }),
       sb.from('articles').select('*').eq('is_published', true).order('published_at', { ascending: false }),
       sb.from('announcements').select('*').eq('is_published', true).order('published_at', { ascending: false }),
@@ -46,9 +47,12 @@
     ]);
     const firstError = requests.find(item => item.error)?.error;
     if (firstError) throw firstError;
-    [state.courses, state.sessions, , state.enrollments, state.payments, state.paymentMethods, state.signals, state.charts, state.articles, state.announcements, state.resources, state.support] = requests.slice(0, 12).map(r => r.data || []);
-    state.sessionLinks = Object.fromEntries((requests[2].data || []).map(row => [row.course_session_id, row.meet_url]));
-    state.riskAccepted = Boolean(requests[12].data?.length);
+    state.courses=requests[0].data||[]; state.sessions=requests[1].data||[];
+    state.sessionLinks=Object.fromEntries((requests[2].data||[]).map(row=>[row.course_session_id,row.meet_url]));
+    state.enrollments=requests[3].data||[]; state.payments=requests[4].data||[]; state.paymentMethods=requests[5].data||[];
+    state.signals=requests[6].data||[]; state.signalUpdates=requests[7].data||[]; state.charts=requests[8].data||[];
+    state.articles=requests[9].data||[]; state.announcements=requests[10].data||[]; state.resources=requests[11].data||[]; state.support=requests[12].data||[];
+    state.riskAccepted=Boolean(requests[13].data?.length);
   }
 
   function renderAll() {
@@ -60,12 +64,19 @@
   }
 
   function renderKpis() {
-    const activeSignals = state.signals.filter(s => s.status === 'active').length;
+    const activeSignals = state.signals.filter(s => !signalIsFinal(s)).length;
     const approvedCourses = state.enrollments.filter(isEnrollmentActive).length;
     const pending = state.payments.filter(p => ['received', 'under_review'].includes(p.status)).length;
-    const completed = state.signals.filter(s => ['tp_hit', 'sl_hit', 'breakeven', 'closed'].includes(s.status));
-    const wins = completed.filter(s => s.status === 'tp_hit').length;
-    const winRate = completed.length ? Math.round((wins / completed.length) * 100) : 0;
+    const finals = state.signals.filter(s => signalIsFinal(s) && s.status !== 'cancelled' && s.result_pips !== null);
+    const wins = finals.filter(s => Number(s.result_pips) > 0).length;
+    const losses = finals.filter(s => Number(s.result_pips) < 0).length;
+    const breakeven = finals.filter(s => Number(s.result_pips) === 0).length;
+    const totalPips = finals.reduce((sum,s)=>sum+Number(s.result_pips||0),0);
+    const weekStart = new Date(); weekStart.setDate(weekStart.getDate()-7);
+    const monthStart = new Date(); monthStart.setDate(1); monthStart.setHours(0,0,0,0);
+    const weekPips = finals.filter(s=>new Date(s.closed_at)>=weekStart).reduce((sum,s)=>sum+Number(s.result_pips||0),0);
+    const monthPips = finals.filter(s=>new Date(s.closed_at)>=monthStart).reduce((sum,s)=>sum+Number(s.result_pips||0),0);
+    const winRate = finals.length ? Math.round((wins / finals.length) * 100) : 0;
     const data = [
       ['fa-bolt', activeSignals, 'Active Signals'], ['fa-chart-line', state.charts.length, 'Published Charts'],
       ['fa-newspaper', state.articles.length, 'Learning Articles'], ['fa-graduation-cap', approvedCourses, 'Unlocked Courses'],
@@ -73,8 +84,9 @@
     ];
     document.getElementById('studentKpis').innerHTML = data.map(([icon, value, label]) => `<div class="app-kpi"><i class="fa-solid ${icon}"></i><div><b>${value}</b><small>${label}</small></div></div>`).join('');
     document.getElementById('signalPerformance').innerHTML = [
-      ['Total Signals', state.signals.length], ['Active', activeSignals], ['TP Hit', wins],
-      ['SL Hit', completed.filter(s => s.status === 'sl_hit').length], ['Breakeven', completed.filter(s => s.status === 'breakeven').length], ['Win Rate', `${winRate}%`]
+      ['Total Pips', signed(totalPips)], ['This Week', signed(weekPips)], ['This Month', signed(monthPips)],
+      ['Win Rate', `${winRate}%`], ['Total Signals', state.signals.length], ['Winning Signals', wins],
+      ['Losing Signals', losses], ['Breakeven', breakeven]
     ].map(([label, value]) => `<div class="performance-item"><small>${label}</small><b>${value}</b></div>`).join('');
   }
 
@@ -104,14 +116,33 @@
     const query = document.getElementById('signalSearch')?.value.trim().toLowerCase() || '';
     const status = document.getElementById('signalStatusFilter')?.value || 'all';
     const direction = document.getElementById('signalDirectionFilter')?.value || 'all';
-    const rows = state.signals.filter(s => (!query || `${s.symbol} ${s.notes || ''}`.toLowerCase().includes(query)) && (status === 'all' || s.status === status) && (direction === 'all' || s.direction === direction));
+    const rows = state.signals.filter(s => {
+      const final=signalIsFinal(s), result=Number(s.result_pips||0);
+      const statusMatch=status==='all'||(status==='active'&&!final)||(status==='history'&&final)||(status==='wins'&&final&&result>0)||(status==='losses'&&final&&result<0)||(status==='breakeven'&&s.status==='breakeven_hit')||(status==='cancelled'&&s.status==='cancelled');
+      return (!query || `${s.symbol} ${s.notes || ''}`.toLowerCase().includes(query)) && statusMatch && (direction === 'all' || s.direction === direction);
+    });
     document.getElementById('signalsGrid').innerHTML = rows.length ? rows.map(s => signalCard(s)).join('') : empty('No signal matches these filters.', 'fa-filter');
+    const latest=state.signalUpdates.find(u=>u.notify_users);
+    document.getElementById('latestSignalUpdate').innerHTML=latest?`<div class="signal-update-banner"><i class="fa-solid fa-bell"></i><div><b>${A.escapeHtml(latest.notification_title||eventLabel(latest.event_type))}</b><small style="display:block;color:#888">${A.escapeHtml(latest.notification_message||'')} · ${A.formatDateTime(latest.created_at)}</small></div></div>`:'';
   }
 
   function signalCard(signal, compact = false) {
-    const levels = compact ? '' : `<div class="signal-levels"><div class="signal-level"><small>Entry Zone</small><b>${num(signal.entry_from)}${signal.entry_to ? ` – ${num(signal.entry_to)}` : ''}</b></div><div class="signal-level"><small>Stop Loss</small><b>${num(signal.stop_loss)}</b></div><div class="signal-level"><small>Take Profit 1</small><b>${num(signal.take_profit_1)}</b></div><div class="signal-level"><small>Take Profit 2 / 3</small><b>${num(signal.take_profit_2)}${signal.take_profit_3 ? ` / ${num(signal.take_profit_3)}` : ''}</b></div></div>`;
-    return `<article class="signal-card ${String(signal.direction).toLowerCase()}"><div class="signal-body"><div class="signal-head"><div><span class="direction ${String(signal.direction).toLowerCase()}">${A.escapeHtml(signal.direction)}</span><h3>${A.escapeHtml(signal.symbol)}</h3></div><span class="status-pill ${A.statusClass(signal.status)}">${A.statusLabel(signal.status)}</span></div>${levels}<p>${A.escapeHtml(signal.notes || 'No additional note.')}</p><div class="course-meta"><span><i class="fa-solid fa-clock"></i> ${A.formatDateTime(signal.published_at)}</span>${signal.result_pips !== null && signal.result_pips !== undefined ? `<span><i class="fa-solid fa-chart-simple"></i> Result: ${signal.result_pips} pips</span>` : ''}</div></div></article>`;
+    const total=signal.take_profit_4?4:3, hit=Number(signal.tp_hit||0), progress=Math.min(100,Math.round(hit/total*100));
+    const unit=signal.result_unit||resultUnit(signal.symbol); const final=signalIsFinal(signal);
+    const targets=[1,2,3,4].filter(i=>signal[`take_profit_${i}`]!=null).map(i=>`<div class="signal-level ${hit>=i?'hit':''}"><small>TP${i}${hit>=i?' ✓':''}</small><b>${num(signal[`take_profit_${i}`])}</b></div>`).join('');
+    const levels=compact?'':`<div class="signal-levels"><div class="signal-level"><small>Entry ${signal.entry_to?'Zone':'Price'}</small><b>${entryText(signal)}</b></div><div class="signal-level"><small>Stop Loss</small><b>${num(signal.stop_loss)}</b></div></div><div class="tp-list">${targets}</div><div class="signal-progress-wrap"><div class="signal-progress-label"><span>TP Progress</span><b>${progress}%</b></div><div class="signal-progress"><span style="width:${progress}%"></span></div></div>`;
+    const tone=signal.status==='sl_hit'?'final-loss':['breakeven_hit','cancelled'].includes(signal.status)?'final-neutral':'';
+    return `<article class="signal-card ${String(signal.direction).toLowerCase()} ${tone}"><div class="signal-body"><div class="signal-head"><div><div style="display:flex;gap:7px;align-items:center"><span class="direction ${String(signal.direction).toLowerCase()}">${A.escapeHtml(signal.direction)}</span><span class="signal-order-badge">${A.statusLabel(signal.order_type||'market')}</span></div><h3>${displaySymbol(signal.symbol)}</h3></div><span class="status-pill ${A.statusClass(signal.status)}">${A.statusLabel(signal.status)}</span></div>${signal.be_moved?'<div class="be-badge"><i class="fa-solid fa-shield-halved"></i> Stop Loss Moved to Breakeven</div>':''}${levels}<p>${A.escapeHtml(signal.notes || 'No additional note.')}</p><div class="course-meta"><span><i class="fa-solid fa-clock"></i> ${A.formatDateTime(signal.published_at)}</span>${signal.result_pips !== null && signal.result_pips !== undefined ? `<span class="${Number(signal.result_pips)>0?'result-positive':Number(signal.result_pips)<0?'result-negative':''}"><i class="fa-solid fa-chart-simple"></i> ${final?'Final':'Current'}: ${signed(signal.result_pips)} ${unit}</span>` : ''}</div>${compact?'':`<div class="signal-card-actions"><button class="app-btn small outline" data-student-signal-history="${signal.id}"><i class="fa-solid fa-clock-rotate-left"></i> View History</button></div>`}</div></article>`;
   }
+
+  function openSignalHistory(id){
+    const signal=state.signals.find(s=>s.id===id); if(!signal)return;
+    const events=state.signalUpdates.filter(u=>u.signal_id===id).sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
+    document.getElementById('studentSignalHistoryTitle').textContent=`${displaySymbol(signal.symbol)} ${signal.direction} History`;
+    document.getElementById('studentSignalHistoryContent').innerHTML=`<div class="signal-history-summary"><div><small>Entry</small><b>${entryText(signal)}</b></div><div><small>Status</small><b>${A.statusLabel(signal.status)}</b></div><div><small>Result</small><b>${signal.result_pips==null?'—':`${signed(signal.result_pips)} ${signal.result_unit||resultUnit(signal.symbol)}`}</b></div><div><small>Published</small><b>${A.formatDateTime(signal.published_at)}</b></div></div><div class="signal-timeline">${events.length?events.map(ev=>`<div class="timeline-event ${eventTone(ev.event_type)}"><span class="timeline-dot"></span><div><div class="timeline-title"><b>${eventLabel(ev.event_type)}</b><time>${A.formatDateTime(ev.created_at)}</time></div>${ev.notification_message?`<p>${A.escapeHtml(ev.notification_message)}</p>`:''}${ev.note?`<small>Note: ${A.escapeHtml(ev.note)}</small>`:''}${ev.result_pips!=null?`<span class="timeline-result">${signed(ev.result_pips)} ${ev.result_unit}</span>`:''}</div></div>`).join(''):empty('No history recorded yet.','fa-clock-rotate-left')}</div>`;
+    A.openModal('studentSignalHistoryModal');
+  }
+
 
   function renderCharts() {
     const query = document.getElementById('chartSearch')?.value.trim().toLowerCase() || '';
@@ -208,8 +239,12 @@
       if (receipt) await viewReceipt(receipt.dataset.viewReceipt);
       const resource = event.target.closest('[data-download-resource]');
       if (resource) await downloadResource(resource.dataset.downloadResource);
+      const signalHistory = event.target.closest('[data-student-signal-history]');
+      if (signalHistory) openSignalHistory(signalHistory.dataset.studentSignalHistory);
     });
 
+    document.getElementById('enableSignalAlerts')?.addEventListener('click', enableSignalAlerts);
+    updateAlertButton();
     document.getElementById('paymentForm').addEventListener('submit', submitPayment);
     document.getElementById('profileForm').addEventListener('submit', saveProfile);
     document.getElementById('supportForm').addEventListener('submit', submitSupport);
@@ -223,6 +258,15 @@
       else { openPanel('articles'); document.getElementById('articleSearch').value = q; renderArticles(); }
     });
   }
+
+  async function enableSignalAlerts(){
+    if(!('Notification' in window)) return A.toast('Browser notifications are not supported here.','warning');
+    const permission=await Notification.requestPermission(); updateAlertButton();
+    A.toast(permission==='granted'?'Live signal alerts enabled.':'Notification permission was not allowed.',permission==='granted'?'success':'warning');
+  }
+  function updateAlertButton(){const b=document.getElementById('enableSignalAlerts');if(!b)return;const enabled='Notification' in window&&Notification.permission==='granted';b.classList.toggle('enabled',enabled);b.innerHTML=`<i class="fa-solid fa-bell${enabled?'':'-slash'}"></i> ${enabled?'Live Alerts Enabled':'Enable Live Alerts'}`;}
+  function showSignalNotification(update){if(!update?.notify_users)return;A.toast(`${update.notification_title||'Signal Update'} — ${update.notification_message||''}`,'success');if('Notification' in window&&Notification.permission==='granted'&&document.visibilityState!=='visible'){new Notification(update.notification_title||'24K Signal Update',{body:update.notification_message||'',icon:'assets/logo.png'});}}
+
 
   function openPaymentModal(courseId) {
     const course = state.courses.find(c => c.id === courseId);
@@ -337,21 +381,25 @@
 
   function subscribeRealtime() {
     let timer;
-    const refresh = () => {
-      clearTimeout(timer);
-      timer = setTimeout(async () => {
-        try { await loadAll(); renderAll(); }
-        catch (error) { console.error('Realtime refresh failed', error); }
-      }, 350);
-    };
+    const refresh = () => { clearTimeout(timer); timer = setTimeout(async () => { try { await loadAll(); renderAll(); } catch (error) { console.error('Realtime refresh failed', error); } }, 350); };
     A.supabase.channel(`student-${state.user.id}`)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'signals' }, refresh)
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'signal_updates' }, payload => { showSignalNotification(payload.new); refresh(); })
       .on('postgres_changes', { event: '*', schema: 'public', table: 'charts' }, refresh)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'articles' }, refresh)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'announcements' }, refresh)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'payments', filter: `student_id=eq.${state.user.id}` }, refresh)
       .subscribe();
   }
+
+  function signalIsFinal(s){return Boolean(s.closed_at)||['tp4_hit','sl_hit','breakeven_hit','manually_closed','cancelled'].includes(s.status)||(s.status==='tp3_hit'&&!s.take_profit_4);}
+  function resultUnit(symbol){const x=String(symbol||'').replace('/','').toUpperCase();return ['XAUUSD','XAGUSD','BTCUSD','US30','NAS100','SPX500','GER40'].includes(x)?'points':'pips';}
+  function displaySymbol(symbol){const x=String(symbol||'').replace('/','').toUpperCase();return x.length===6?`${x.slice(0,3)}/${x.slice(3)}`:x;}
+  function entryText(s){return `${num(s.entry_from)}${s.entry_to!=null?` – ${num(s.entry_to)}`:''}`;}
+  function signed(value){const n=Number(value||0);return `${n>0?'+':''}${Number.isInteger(n)?n:n.toFixed(1)}`;}
+  function eventLabel(v){return {published:'Signal Published',edited:'Signal Edited',move_to_be:'SL Moved to Breakeven',tp1_hit:'TP1 Hit',tp2_hit:'TP2 Hit',tp3_hit:'TP3 Hit',tp4_hit:'TP4 Hit',sl_hit:'SL Hit',breakeven_hit:'Breakeven Hit',manually_closed:'Trade Closed Manually',cancelled:'Signal Cancelled'}[v]||A.statusLabel(v);}
+  function eventTone(v){return ['sl_hit','cancelled'].includes(v)?'bad':['breakeven_hit','move_to_be'].includes(v)?'warn':v==='edited'?'neutral':'ok';}
+
 
   function latestPayment(courseId) { return state.payments.filter(p => p.course_id === courseId).sort((a,b) => new Date(b.created_at) - new Date(a.created_at))[0]; }
   function isEnrollmentActive(e) { return e.status === 'active' && (!e.access_expires_at || new Date(e.access_expires_at) > new Date()); }

@@ -1,33 +1,30 @@
-24K EXCELLENCE — FINAL PRODUCTION V6
+24K EXCELLENCE — SIGNAL AUTOMATION V7
 
-Status:
-- Supabase Project URL configured
-- Supabase Publishable Key configured
-- Production SQL rollout already completed
-- No additional SQL is required for this V6 upload
-- Demo content removed by the completed production migration
+BEFORE GITHUB UPLOAD:
+1. Run ONLY: supabase-final/06_SIGNAL_AUTOMATION_AND_HISTORY.sql
+2. Do not run older completed SQL files again.
+3. Upload the CONTENTS of this folder to the root of the Mrzero repository.
+4. Replace existing files.
+5. Wait 1–3 minutes and hard refresh with Ctrl + F5.
 
-GitHub repository:
-https://github.com/24kmrzero/Mrzero
+CONFIGURED:
+- Supabase URL: https://jsmthmmkafgvzzcjjihp.supabase.co
+- Browser publishable key: configured in assets/js/config.js
+- Admin email: 24kmrzero@gmail.com
 
-GitHub Pages URLs after upload:
-Landing: https://24kmrzero.github.io/Mrzero/
-Student Login: https://24kmrzero.github.io/Mrzero/login.html
-Student Dashboard: https://24kmrzero.github.io/Mrzero/student-dashboard.html
-Admin Login: https://24kmrzero.github.io/Mrzero/admin-login.html
-Admin Dashboard: https://24kmrzero.github.io/Mrzero/admin-dashboard.html
+ADMIN URL:
+https://24kmrzero.github.io/Mrzero/admin-login.html
 
-Upload instructions:
-1. Extract this ZIP.
-2. Upload the CONTENTS of the extracted folder to the root of the Mrzero repository.
-3. Replace existing files when GitHub asks.
-4. Do not upload the outer folder as a nested folder.
-5. Wait 1–3 minutes for GitHub Pages deployment.
-6. Open admin-login.html and sign in with the existing admin account.
-
-Admin email:
-24kmrzero@gmail.com
-
-Important:
-- Never place a Supabase service_role key in frontend files.
-- The configured sb_publishable key is intended for browser use with RLS enabled.
+NEW SIGNAL FEATURES:
+- Searchable pair dropdown: Gold, Silver, BTC first; USD pairs next; crosses below
+- BUY/SELL and Market/Limit/Stop
+- Entry price or entry zone
+- TP1, TP2, TP3 and optional TP4
+- Automated pip/point and risk-to-reward calculations
+- Move SL to Breakeven without closing the trade
+- TP/SL/BE/manual-close/cancel workflow
+- Animated TP progress
+- Complete signal timeline/history
+- Total, weekly, monthly and win-rate statistics
+- Realtime updates and browser live alerts
+- No Copy or WhatsApp Copy button

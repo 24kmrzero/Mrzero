@@ -1,56 +1,47 @@
-# Pre-Launch Test Checklist
+# V7 Test Checklist
 
-Use separate browser profiles for Admin and Student.
+## SQL
+- [ ] Run only `06_SIGNAL_AUTOMATION_AND_HISTORY.sql`
+- [ ] Verification shows `signals upgraded`
+- [ ] Verification shows `signal_updates ready`
 
-## Authentication
+## Admin Signals
+- [ ] Pair search opens and Gold/Silver/BTC are first
+- [ ] USD pairs appear before crosses
+- [ ] BUY validation rejects SL above entry
+- [ ] SELL validation rejects SL below entry
+- [ ] TP order validation works
+- [ ] New signal publishes once
+- [ ] Normal edit does not send a new-signal notification
+- [ ] Move SL to BE keeps signal active
+- [ ] TP1 progress is 33% for 3 TP / 25% for 4 TP
+- [ ] TP2 progress is 66% for 3 TP / 50% for 4 TP
+- [ ] TP3 closes 3-TP signal
+- [ ] TP3 keeps 4-TP signal active at 75%
+- [ ] TP4 closes 4-TP signal at 100%
+- [ ] SL Hit closes the signal
+- [ ] Breakeven Hit closes at zero by default
+- [ ] Manual Close accepts close price or manual result
+- [ ] Cancel does not count in performance
+- [ ] History modal shows every event
 
-- [ ] Student signup creates Auth user and `profiles` row.
-- [ ] Terms, Privacy and Risk acceptance rows are recorded.
-- [ ] Student login opens Student Panel.
-- [ ] Admin login opens Admin Panel.
-- [ ] Student cannot open Admin Panel.
-- [ ] Password reset email redirects to `reset-password.html`.
-- [ ] Logout clears session.
+## Student Signals
+- [ ] Signal appears after Admin publish
+- [ ] Progress bar updates in Realtime
+- [ ] SL Moved to BE badge appears
+- [ ] Active and Closed History filters work
+- [ ] Total/weekly/monthly performance updates only after final close
+- [ ] Signal History opens
+- [ ] No Copy/WhatsApp Copy button exists
+- [ ] Browser alert permission button works
 
-## Payments
-
-- [ ] Admin payment method appears in student form.
-- [ ] Student can upload JPG/PNG/WEBP/PDF receipt up to 5 MB.
-- [ ] Receipt is private and not publicly accessible.
-- [ ] Payment appears as Receipt Received.
-- [ ] Admin can open receipt.
-- [ ] Under Review status appears for student.
-- [ ] Decline requires a reason and keeps course locked.
-- [ ] Approve creates enrollment and unlocks course.
-- [ ] Another student cannot view the receipt.
-
-## Google Meet course
-
-- [ ] Upcoming course status is visible.
-- [ ] Session title, topic, date and time are visible while locked.
-- [ ] Unpaid student cannot retrieve `course_session_links` through Supabase API.
-- [ ] Approved student can see Join Google Meet.
-- [ ] Meet link opens in a new tab.
-- [ ] Admin can edit date/time/link/status.
-- [ ] Cancelled session displays Cancelled.
-- [ ] Optional resource is hidden from unpaid student and downloadable by approved student.
-
-## Content
-
-- [ ] Admin can create/edit/delete Signal.
-- [ ] Signal TP/SL/Breakeven status updates performance summary.
-- [ ] Admin can upload Chart image.
-- [ ] Admin can publish Article.
-- [ ] Admin can publish Announcement.
-- [ ] Student search and filters work.
-- [ ] Risk modal appears before Signals when not previously accepted.
-
-## Responsive and regression
-
-- [ ] Landing page appearance remains unchanged.
-- [ ] Courses page works.
-- [ ] Login, Student and Admin pages work on desktop.
-- [ ] Sidebar opens/closes on mobile.
-- [ ] Tables scroll horizontally on small screens.
-- [ ] No browser console errors.
-- [ ] No service-role key appears in source files.
+## Regression
+- [ ] Student login
+- [ ] Admin login
+- [ ] Payment receipt upload
+- [ ] Admin payment approval
+- [ ] Course unlock
+- [ ] Google Meet link access
+- [ ] Charts, Articles and Announcements
+- [ ] Mobile menu
+- [ ] Logout

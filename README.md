@@ -1,23 +1,5 @@
-# 24K Excellence V3 — Ready to Start
+# 24K Excellence V7
 
-Premium black, gold and red student/admin system matching the original 24K Excellence theme.
+Production website package with the original premium black-and-gold theme and an Admin-managed automated trading signal system.
 
-## Begin here
-Read `START_HERE.md`.
-
-## Main setup files
-- `RUN_FIRST_PRODUCTION.sql`
-- `MAKE_ADMIN_24kmrzero.sql`
-- `assets/js/config.js`
-- `docs/SETUP_GUIDE.md`
-- `docs/DEPLOYMENT.md`
-
-## Direct pages
-- `login.html`
-- `student-dashboard.html`
-- `admin-login.html`
-- `admin-dashboard.html`
-- `admin.html`
-- `admin/`
-
-The original landing page is preserved unchanged.
+Start with `START_HERE_FINAL.md`.

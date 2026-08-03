@@ -42,13 +42,13 @@
   const statusLabel = value => ({
     received: 'Receipt Received', under_review: 'Under Review', approved: 'Approved', declined: 'Declined',
     upcoming: 'Upcoming', active: 'Active', live: 'Live Now', completed: 'Completed', cancelled: 'Cancelled',
-    tp_hit: 'TP Hit', sl_hit: 'SL Hit', breakeven: 'Breakeven', closed: 'Closed', draft: 'Draft', published: 'Published'
+    tp_hit: 'TP Hit', tp1_hit: 'TP1 Hit', tp2_hit: 'TP2 Hit', tp3_hit: 'TP3 Hit', tp4_hit: 'TP4 Hit', sl_hit: 'SL Hit', breakeven: 'Breakeven', breakeven_hit: 'Breakeven Hit', manually_closed: 'Closed Manually', closed: 'Closed', market: 'Market', limit: 'Limit', stop: 'Stop', draft: 'Draft', published: 'Published'
   })[value] || String(value || '').replaceAll('_', ' ').replace(/\b\w/g, c => c.toUpperCase());
 
   const statusClass = value => {
-    if (['approved', 'active', 'live', 'completed', 'tp_hit', 'published'].includes(value)) return 'ok';
+    if (['approved', 'active', 'live', 'completed', 'tp_hit', 'tp1_hit', 'tp2_hit', 'tp3_hit', 'tp4_hit', 'published'].includes(value)) return 'ok';
     if (['declined', 'sl_hit', 'cancelled'].includes(value)) return 'bad';
-    if (['received', 'under_review', 'upcoming', 'breakeven', 'draft'].includes(value)) return 'warn';
+    if (['received', 'under_review', 'upcoming', 'breakeven', 'breakeven_hit', 'manually_closed', 'draft'].includes(value)) return 'warn';
     return 'neutral';
   };
 

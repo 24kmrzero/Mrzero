@@ -1,12 +1,7 @@
-# Supabase Setup
+# Supabase V7 Update
 
-This older setup file has been replaced by the complete production guide.
+The base production schema and Admin account are already installed.
 
-Start with:
+Run only `supabase-final/06_SIGNAL_AUTOMATION_AND_HISTORY.sql`.
 
-1. `START_HERE.md`
-2. `docs/SETUP_GUIDE.md`
-3. `supabase/00_RUN_FIRST_PRODUCTION.sql`
-4. `supabase/03_make_admin.sql`
-
-Do not use the old demo table structure from the original project.
+This patch adds the advanced Signals schema, history, status RPC, RLS, Realtime and required authenticated table privileges.
