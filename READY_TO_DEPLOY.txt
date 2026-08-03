@@ -1,12 +1,23 @@
-24K EXCELLENCE — READY TO DEPLOY
+24K EXCELLENCE V3 — READY TO DEPLOY
 
-1. Read START_HERE.md
-2. Run supabase/00_RUN_FIRST_SCHEMA_AND_SEED.sql
-3. Create admin Auth user
-4. Edit and run supabase/03_make_admin.sql
-5. Add Supabase URL + anon key in assets/js/config.js
-6. Add real payment methods and Google Meet links from Admin Panel
-7. Complete docs/TEST_CHECKLIST.md
-8. Upload the complete folder to hosting
+Theme:
+- Original premium black + gold + red 24K identity
+- Dark Student Dashboard
+- Dark Admin Dashboard
+- Dark Login / Signup
+- Original landing page preserved
 
-Landing page preserved. Original project backup included.
+Admin email:
+24kmrzero@gmail.com
+
+GitHub Pages routes after uploading all files to repository root:
+https://24kmrzero.github.io/Mrzero/admin-login.html
+https://24kmrzero.github.io/Mrzero/admin-dashboard.html
+https://24kmrzero.github.io/Mrzero/admin/
+
+Before live use:
+1. Run Supabase SQL.
+2. Create admin Auth user.
+3. Run 03_make_admin.sql.
+4. Add Supabase URL and anon key to assets/js/config.js.
+5. Upload every package file/folder to GitHub root.

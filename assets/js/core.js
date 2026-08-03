@@ -115,7 +115,8 @@
 
   async function getCurrentUser() {
     if (!configured) {
-      const role = localStorage.getItem('k24_demo_role') || 'student';
+      const role = localStorage.getItem('k24_demo_role');
+      if (!role) return null;
       return { id: role === 'admin' ? 'admin-demo' : window.DEMO_DATA.profile.id, email: role === 'admin' ? 'admin@24kexcellence.com' : window.DEMO_DATA.profile.email };
     }
     const { data, error } = await supabase.auth.getUser();
@@ -147,7 +148,7 @@
       return { user, profile };
     } catch (error) {
       console.error(error);
-      window.location.replace('login.html');
+      window.location.replace(role === 'admin' ? 'login.html?tab=admin-login' : 'login.html?tab=student-login');
       return null;
     }
   }

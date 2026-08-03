@@ -1,36 +1,39 @@
-# Deployment
+# GitHub Pages Deployment — 24K Excellence
 
-## Static hosting
+## Correct upload location
+Extract the ZIP. Open the extracted folder and upload its contents directly to the root of the GitHub repository named `Mrzero`.
 
-The project has no build step. Upload the entire folder to Netlify, Cloudflare Pages, GitHub Pages or normal web hosting.
+Do not upload the complete extracted folder as another nested folder. The repository root must visibly contain:
 
-Recommended production domain structure:
+- `index.html`
+- `login.html`
+- `student-dashboard.html`
+- `admin-dashboard.html`
+- `admin-login.html`
+- `admin.html`
+- `app.css`
+- `styles.css`
+- `assets` folder
+- `.nojekyll`
 
-- `https://yourdomain.com/index.html`
-- `https://yourdomain.com/login.html`
-- `https://yourdomain.com/student-dashboard.html`
-- `https://yourdomain.com/admin-dashboard.html`
+## Expected live routes
 
-## GitHub Pages
+- Home: `https://24kmrzero.github.io/Mrzero/`
+- Login: `https://24kmrzero.github.io/Mrzero/login.html`
+- Admin Login: `https://24kmrzero.github.io/Mrzero/admin-login.html`
+- Admin Dashboard: `https://24kmrzero.github.io/Mrzero/admin-dashboard.html`
+- Backup Admin alias: `https://24kmrzero.github.io/Mrzero/admin.html`
+- Backup Admin folder route: `https://24kmrzero.github.io/Mrzero/admin/`
 
-1. Create a repository.
-2. Upload all files and folders from this package.
-3. Enable Pages from the main branch/root.
-4. Add the final Pages URL to Supabase Auth redirect URLs.
+GitHub Pages is case-sensitive. Do not rename `admin-dashboard.html` or change uppercase/lowercase letters.
 
-## Local testing
+## GitHub Pages settings
+Open repository **Settings > Pages** and select deployment from the `main` branch and root `/` folder. After saving, allow GitHub Pages a short time to publish the new commit.
 
-Do not double-click HTML files because browser module/storage behavior can differ. Start a local server:
+## Supabase configuration before live testing
+Open `assets/js/config.js` and replace:
 
-```bash
-python -m http.server 8080
-```
+- `YOUR_SUPABASE_URL`
+- `YOUR_SUPABASE_ANON_KEY`
 
-Open `http://localhost:8080` and add `http://localhost:8080/**` to Supabase redirect URLs.
-
-## Update procedure
-
-1. Back up the live folder and database.
-2. Upload changed website files.
-3. Run only new migration SQL when future schema changes are supplied.
-4. Repeat `docs/TEST_CHECKLIST.md`.
+Use only the public anon key in frontend code. Never put the Supabase service-role key in GitHub.

@@ -1,16 +1,43 @@
-# START HERE — 24K Excellence
+# START HERE — 24K Excellence V3 Black & Gold
 
-This package is ready to connect to a new Supabase project.
+This package preserves the original 24K Excellence landing page and applies the same premium black, gold and red theme to Student Login, Student Dashboard and Admin Dashboard.
 
-## Required order
+## 1. Supabase setup
 
-1. Open `docs/SETUP_GUIDE.md` and complete every step.
-2. Run `supabase/00_RUN_FIRST_SCHEMA_AND_SEED.sql` in Supabase SQL Editor.
-3. Create the admin Auth user, then run `supabase/03_make_admin.sql` after replacing the email.
-4. Copy Supabase Project URL and anon public key into `assets/js/config.js`.
-5. Add your real payment account details in Admin Panel > Payment Methods.
-6. Add real Google Meet links in Admin Panel > Google Meet Sessions.
-7. Run the tests in `docs/TEST_CHECKLIST.md`.
-8. Deploy all files together; do not remove the `assets`, `docs` or `supabase` folders.
+1. Run `supabase/00_RUN_FIRST_SCHEMA_AND_SEED.sql` once in Supabase SQL Editor.
+2. In Supabase Dashboard open **Authentication > Users > Add user**.
+3. Create `24kmrzero@gmail.com` with a strong password.
+4. Run `supabase/03_make_admin.sql`.
+5. Verify the result shows `role = admin` and `status = active`.
+6. Put the Supabase Project URL and **anon public key** in `assets/js/config.js`.
 
-The landing page `index.html` was preserved. Student, admin, authentication and backend flows were rebuilt.
+## 2. GitHub Pages upload
+
+Upload **every file and folder from this ZIP to the root of the `Mrzero` repository**. Do not upload only the HTML files and do not place the package inside an extra folder.
+
+Required root files include:
+
+- `index.html`
+- `login.html`
+- `student-dashboard.html`
+- `admin-dashboard.html`
+- `admin.html`
+- `admin-login.html`
+- `app.css`
+- `styles.css`
+- `assets/`
+- `.nojekyll`
+
+After GitHub Pages updates, use:
+
+- Website: `https://24kmrzero.github.io/Mrzero/`
+- Student Login: `https://24kmrzero.github.io/Mrzero/login.html`
+- Admin Login: `https://24kmrzero.github.io/Mrzero/admin-login.html`
+- Admin Panel direct: `https://24kmrzero.github.io/Mrzero/admin-dashboard.html`
+- Backup Admin route: `https://24kmrzero.github.io/Mrzero/admin/`
+
+GitHub file names are case-sensitive. Keep `admin-dashboard.html` exactly in lowercase.
+
+## 3. Important admin access rule
+
+Opening the direct Admin Panel without a valid admin session redirects to the Admin Login tab. A Student account cannot enter the Admin Panel.
