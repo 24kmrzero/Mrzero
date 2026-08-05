@@ -39,74 +39,8 @@
 
 <section class="sec sec-yellow" style="padding-top:0">
   <div class="container">
-    <div class="big-grid">
-
-      <article class="big free reveal">
-        <span class="chip beg" style="position:absolute;top:22px;left:22px">Free Course</span>
-        <div class="big-head" style="margin-top:34px">
-          <div>
-            <h3>Forex Trading<span>Basic Course</span></h3>
-            <p class="big-sub">— Perfect for Beginners</p>
-            <p class="big-desc">Start your trading journey with the essential basics and build a strong, reliable foundation.</p>
-          </div>
-          <div class="big-ic"><i class="fa-solid fa-graduation-cap"></i></div>
-        </div>
-
-        <div class="big-body">
-          <ul class="big-list">
-            <li><i class="fa-solid fa-circle-check"></i> Basics of Forex Trading</li>
-            <li><i class="fa-solid fa-circle-check"></i> Market Understanding</li>
-            <li><i class="fa-solid fa-circle-check"></i> Risk Management Basics</li>
-            <li><i class="fa-solid fa-circle-check"></i> Practice Exercises</li>
-            <li><i class="fa-solid fa-circle-check"></i> Lifetime Access</li>
-          </ul>
-          <div class="price-block">
-            <div class="price-big">100% FREE</div>
-            <div class="price-cap">NO PAYMENT REQUIRED</div>
-            <div class="price-tagbox">
-              <i class="fa-solid fa-user-group"></i>
-              <small>Ideal for Beginners</small>
-            </div>
-          </div>
-        </div>
-
-        <a href="login.html" class="btn btn-green btn-block">Enroll in Free Course <i class="fa-solid fa-arrow-right"></i></a>
-      </article>
-
-      <article class="big reveal d1">
-        <span class="chip prem" style="position:absolute;top:22px;left:22px">Premium Course</span>
-        <div class="big-head" style="margin-top:34px">
-          <div>
-            <h3>Advanced Price Action<span>Trading Mastery</span></h3>
-            <p class="big-sub">— For Serious Traders</p>
-            <p class="big-desc">Master advanced strategies and price action techniques, and trade like a professional.</p>
-          </div>
-          <div class="big-ic"><i class="fa-solid fa-arrow-trend-up"></i></div>
-        </div>
-
-        <div class="big-body">
-          <ul class="big-list">
-            <li><i class="fa-solid fa-circle-check"></i> Advanced Price Action</li>
-            <li><i class="fa-solid fa-circle-check"></i> Market Structure &amp; Flow</li>
-            <li><i class="fa-solid fa-circle-check"></i> Strategy Building</li>
-            <li><i class="fa-solid fa-circle-check"></i> Live Google Meet Classes</li>
-            <li><i class="fa-solid fa-circle-check"></i> Advance Session Schedule</li>
-            <li><i class="fa-solid fa-circle-check"></i> Instructor: Malik Zameer</li>
-          </ul>
-          <div class="price-block">
-            <div class="price-cap">ONLY</div>
-            <div class="price-big">$149</div>
-            <div class="price-cap">ONE TIME PAYMENT</div>
-            <div class="price-tagbox">
-              <i class="fa-solid fa-award"></i>
-              <small>Certificate Included</small>
-            </div>
-          </div>
-        </div>
-
-        <a href="login.html?tab=signup&course=advanced-price-action-trading-mastery" class="btn btn-yellow btn-block">Enroll in Premium Course <i class="fa-solid fa-arrow-right"></i></a>
-      </article>
-
+    <div class="big-grid" id="publicCoursesGrid">
+      <div class="public-course-loading"><i class="fa-solid fa-spinner fa-spin"></i><p>Loading available courses...</p></div>
     </div>
   </div>
 </section>
@@ -185,5 +119,7 @@
 
 <button class="totop" id="totop" aria-label="Back to top"><i class="fa-solid fa-arrow-up"></i></button>
 <script src="script.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js"></script><script src="assets/js/tracking.js"></script><script src="assets/js/public-courses.js"></script>
 </body>
 </html>

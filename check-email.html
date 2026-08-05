@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0A0A0A">
+<title>Check Your Email | 24K Excellence</title>
+<link rel="icon" href="assets/logo.png"><link rel="stylesheet" href="app.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="app-page">
+<main class="auth-page check-email-page">
+  <section class="auth-showcase"><a href="index.html"><img src="assets/logo.png" alt="24K Excellence"></a><h1>One final step.<br><span>Verify your email.</span></h1><p>Your course and referral intent remains saved while you verify your account.</p></section>
+  <section class="auth-panel"><div class="auth-box email-check-card">
+    <div class="email-check-icon"><i class="fa-solid fa-envelope-circle-check"></i></div>
+    <h2>Check Your Email</h2>
+    <p class="muted">We sent a verification link to:</p>
+    <strong id="verificationEmail">your email</strong>
+    <div class="notice info" style="margin-top:18px"><i class="fa-solid fa-circle-info"></i> Open the email and click the verification link. After verification, return here and sign in.</div>
+    <div class="inline-actions stacked-mobile" style="margin-top:18px">
+      <button class="app-btn gold" id="resendVerification"><i class="fa-solid fa-paper-plane"></i> Resend Verification Email</button>
+      <a class="app-btn outline" href="login.html?tab=student-login"><i class="fa-solid fa-right-to-bracket"></i> Continue to Sign In</a>
+    </div>
+    <a class="auth-change-email" href="login.html?tab=signup"><i class="fa-solid fa-pen"></i> Use a different email</a>
+  </div></section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js"></script><script src="assets/js/core.js"></script><script src="assets/js/tracking.js"></script>
+<script>
+(async()=>{
+ const A=window.App, params=new URLSearchParams(location.search), email=params.get('email')||localStorage.getItem('24k_pending_signup_email')||'';
+ document.getElementById('verificationEmail').textContent=email||'your registered email';
+ document.getElementById('resendVerification').addEventListener('click',async e=>{
+   const b=e.currentTarget;if(!email)return A.toast('Enter your email again from the Sign Up page.','error');A.setLoading(b,true,'Sending...');
+   try{const {error}=await A.supabase.auth.resend({type:'signup',email,options:{emailRedirectTo:new URL('login.html?tab=student-login',location.href).href}});if(error)throw error;A.toast('Verification email sent again.','success');}
+   catch(err){A.toast(err.message||'Could not resend email.','error');}finally{A.setLoading(b,false);}
+ });
+})();
+</script>
+</body></html>

@@ -1,0 +1,23 @@
+24K EXCELLENCE COMPLETE PLATFORM V8
+
+1. Database:
+   - If 06_SIGNAL_AUTOMATION_AND_HISTORY.sql was never completed, run it first.
+   - Run the new 07_PLATFORM_WORKFLOWS_LINKS_ACCESS_COURSES.sql.
+   - Do not run any older production SQL again.
+
+2. GitHub:
+   Extract the deployment ZIP and upload ALL contents directly into the Mrzero repository root, replacing old files.
+
+3. Supabase Auth URLs:
+   Site URL: https://24kmrzero.github.io/Mrzero/
+   Redirect URL: https://24kmrzero.github.io/Mrzero/**
+
+4. Admin:
+   https://24kmrzero.github.io/Mrzero/admin-login.html
+   Admin email: 24kmrzero@gmail.com
+
+5. Detailed guide:
+   docs/V8_COMPLETE_SETUP.md
+
+6. Custom course/payment/live-class email sending:
+   Deploy supabase/functions/process-email-queue and configure Resend secrets. Supabase Auth verification/reset emails do not require this custom function.

@@ -1,7 +1,9 @@
-# Supabase V7 Update
+# Supabase Setup — V8
 
-The base production schema and Admin account are already installed.
+Only new upgrade SQL belongs in `supabase-final/`.
 
-Run only `supabase-final/06_SIGNAL_AUTOMATION_AND_HISTORY.sql`.
+1. If `06_SIGNAL_AUTOMATION_AND_HISTORY.sql` has never completed successfully, run it once.
+2. Run `07_PLATFORM_WORKFLOWS_LINKS_ACCESS_COURSES.sql` once.
+3. Do not rerun older production/schema/seed/admin SQL files.
 
-This patch adds the advanced Signals schema, history, status RPC, RLS, Realtime and required authenticated table privileges.
+For Auth URLs, deployment, email queue and test steps, read `docs/V8_COMPLETE_SETUP.md`.

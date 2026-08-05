@@ -57,7 +57,7 @@
 
       <div class="hero-visual reveal d2">
         <div class="mentor-ring"></div>
-        <img src="assets/mentor.png" alt="Zameer Khan — Professional Forex Educator" class="mentor-shot">
+        <img src="assets/mentor.png" alt="Zameer Khan — Professional Forex Educator" class="mentor-shot" fetchpriority="high" decoding="async">
         <div class="hero-badges">
           <div class="hbadge"><i class="fa-solid fa-chart-line"></i><div><b>7+</b><small>Years Experience</small></div></div>
           <div class="hbadge"><i class="fa-solid fa-star"></i><div><b>4.9/5</b><small>Student Rating</small></div></div>
@@ -81,7 +81,7 @@
 <section class="mentor-sec sec-yellow" id="mentor">
   <div class="container mentor-grid">
     <div class="mentor-photo-wrap reveal">
-      <img src="assets/mentor.png" alt="Zameer Khan">
+      <img src="assets/mentor.png" alt="Zameer Khan" loading="lazy" decoding="async">
       <div class="verified">
         <i class="fa-solid fa-circle-check"></i>
         <div><b>Verified</b><small>Trading Educator</small></div>
@@ -368,5 +368,7 @@
 
 <button class="totop" id="totop" aria-label="Back to top"><i class="fa-solid fa-arrow-up"></i></button>
 <script src="script.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js"></script><script src="assets/js/tracking.js"></script>
 </body>
 </html>

@@ -39,8 +39,22 @@
     }).format(date);
   };
 
+  const effectiveAccessStatus = profile => {
+    if (!profile) return 'locked';
+    if (profile.role === 'admin') return 'active';
+    if (profile.email_verified === false) return 'pending';
+    if (['locked','suspended','pending'].includes(profile.status)) return profile.status;
+    if (profile.lifetime_access) return 'active';
+    const expiry = profile.access_expires_at ? new Date(profile.access_expires_at) : null;
+    const grace = profile.grace_expires_at ? new Date(profile.grace_expires_at) : null;
+    if (!expiry) return profile.status || 'active';
+    if (expiry > new Date()) return 'active';
+    if (grace && grace > new Date()) return 'grace';
+    return 'expired';
+  };
+
   const statusLabel = value => ({
-    received: 'Receipt Received', under_review: 'Under Review', approved: 'Approved', declined: 'Declined',
+    received: 'Receipt Received', pending: 'Pending Approval', grace: 'Grace Active', locked: 'Locked', expired: 'Expired', suspended: 'Suspended', under_review: 'Under Review', approved: 'Approved', declined: 'Declined',
     upcoming: 'Upcoming', active: 'Active', live: 'Live Now', completed: 'Completed', cancelled: 'Cancelled',
     tp_hit: 'TP Hit', tp1_hit: 'TP1 Hit', tp2_hit: 'TP2 Hit', tp3_hit: 'TP3 Hit', tp4_hit: 'TP4 Hit', sl_hit: 'SL Hit', breakeven: 'Breakeven', breakeven_hit: 'Breakeven Hit', manually_closed: 'Closed Manually', closed: 'Closed', market: 'Market', limit: 'Limit', stop: 'Stop', draft: 'Draft', published: 'Published'
   })[value] || String(value || '').replaceAll('_', ' ').replace(/\b\w/g, c => c.toUpperCase());
@@ -100,6 +114,7 @@
       links.forEach(link => link.classList.toggle('on', link.dataset.panel === key));
       panels.forEach(panel => panel.classList.toggle('on', panel.id === `p-${key}`));
       side?.classList.remove('open');
+      if (history.replaceState) history.replaceState(null, '', `#${key}`);
       window.scrollTo({ top: 0, behavior: 'smooth' });
       document.dispatchEvent(new CustomEvent('panel:open', { detail: { key } }));
     };
@@ -110,6 +125,8 @@
       event.preventDefault(); open(button.dataset.goto);
     }));
     document.getElementById('burger')?.addEventListener('click', () => side?.classList.toggle('open'));
+    const initial = location.hash.replace('#','');
+    if (initial && links.some(link => link.dataset.panel === initial)) setTimeout(() => open(initial), 0);
     return open;
   }
 
@@ -122,6 +139,11 @@
 
   async function getProfile(userId) {
     if (!configured || !supabase) throw new Error('Supabase is not configured. Add your project URL and anon key in assets/js/config.js.');
+    // Refresh expiry/grace state and last-seen time. The database RLS policies
+    // still enforce access independently, so failure here never weakens security.
+    try { await supabase.rpc('sync_current_access_status'); } catch (error) {
+      console.warn('Access status sync skipped:', error?.message || error);
+    }
     const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single();
     if (error) throw error;
     return data;
@@ -154,7 +176,7 @@
 
   window.App = {
     cfg, configured, supabase, escapeHtml, formatMoney, formatDate, formatDateTime,
-    statusLabel, statusClass, toast, setLoading, openModal, closeModal,
+    statusLabel, statusClass, effectiveAccessStatus, toast, setLoading, openModal, closeModal,
     activateDashboardNavigation, getCurrentUser, getProfile, requireRole, logout,
     fileSafeName, uid
   };
