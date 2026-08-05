@@ -155,13 +155,19 @@
       if (!user) throw new Error('No active session');
       const profile = await getProfile(user.id);
       if (profile.role !== role) {
-        window.location.replace(profile.role === 'admin' ? 'admin-dashboard.html' : 'student-dashboard.html');
+        if (role === 'admin') {
+          // Explicit Admin access should open Admin Login, not bounce to Student Panel.
+          await supabase.auth.signOut();
+          window.location.replace('login.html?tab=admin-login&mode=admin&reason=admin-required');
+        } else {
+          window.location.replace(profile.role === 'admin' ? 'admin-dashboard.html' : 'student-dashboard.html');
+        }
         return null;
       }
       return { user, profile };
     } catch (error) {
       console.error(error);
-      window.location.replace(role === 'admin' ? 'login.html?tab=admin-login' : 'login.html?tab=student-login');
+      window.location.replace(role === 'admin' ? 'login.html?tab=admin-login&mode=admin' : 'login.html?tab=student-login');
       return null;
     }
   }

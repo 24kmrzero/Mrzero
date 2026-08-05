@@ -1,0 +1,11 @@
+24K Excellence V8.1 — Admin Login Route Fix
+
+Fixed behavior:
+- Opening admin-login.html while a Student session is active signs out that Student session.
+- The dedicated Admin tab remains open for Admin credentials.
+- admin.html and /admin/ now open Admin Login instead of Admin Dashboard directly.
+- A non-admin session visiting admin-dashboard.html is sent to Admin Login, never back to Student Panel.
+- No new SQL is required for this route fix.
+
+Admin URL:
+https://24kmrzero.github.io/Mrzero/admin-login.html

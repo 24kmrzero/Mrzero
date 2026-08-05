@@ -65,14 +65,33 @@
     window.location.replace(destination || 'student-dashboard.html');
   }
 
+  const adminLoginRequested = requestedTab === 'admin-login' || params.get('mode') === 'admin';
   const { data: sessionData } = await supabase.auth.getSession();
   if (sessionData.session?.user) {
     try {
       const profile = await window.App.getProfile(sessionData.session.user.id);
-      if (profile.role === 'admin') window.location.replace('admin-dashboard.html');
-      else await finishStudentLogin(sessionData.session.user, profile);
-      return;
-    } catch (error) { console.error(error); }
+      if (adminLoginRequested) {
+        if (profile.role === 'admin') {
+          window.location.replace('admin-dashboard.html');
+          return;
+        }
+        // A student session must never bounce an explicit Admin Login request
+        // back to the Student Panel. Close it and let Admin credentials be entered.
+        await supabase.auth.signOut();
+        activateTab('admin-login');
+        toast('Student session closed. Enter your Admin credentials.', 'info');
+      } else {
+        if (profile.role === 'admin') window.location.replace('admin-dashboard.html');
+        else await finishStudentLogin(sessionData.session.user, profile);
+        return;
+      }
+    } catch (error) {
+      console.error(error);
+      if (adminLoginRequested) {
+        await supabase.auth.signOut().catch(() => {});
+        activateTab('admin-login');
+      }
+    }
   }
 
   async function handleLogin(form, expectedRole) {
