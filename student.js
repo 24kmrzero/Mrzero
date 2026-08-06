@@ -1,0 +1,444 @@
+(async function () {
+  const A = window.App;
+  const state = {
+    user: null, profile: null, courses: [], sessions: [], sessionLinks: {}, enrollments: [], payments: [],
+    paymentMethods: [], signals: [], signalUpdates: [], charts: [], articles: [], announcements: [], resources: [], support: [], riskAccepted: false,
+    selectedCourse: null
+  };
+  window.StudentBase = { state, reload: async () => { await loadAll(); renderAll(); return state; } };
+  let openPanel;
+
+  const result = await A.requireRole('student');
+  if (!result) return;
+  state.user = result.user;
+  state.profile = result.profile;
+  openPanel = A.activateDashboardNavigation();
+  document.getElementById('logoutButton').addEventListener('click', A.logout);
+  document.getElementById('supportWhatsApp').href = `https://wa.me/${A.cfg.SUPPORT_WHATSAPP}`;
+  document.getElementById('supportEmail').href = `mailto:${A.cfg.SUPPORT_EMAIL}`;
+
+  const initials = (state.profile.full_name || state.profile.email || 'ST').split(/\s+/).slice(0, 2).map(x => x[0]).join('').toUpperCase();
+  document.getElementById('welcomeName').textContent = `Welcome back, ${state.profile.full_name || 'Student'}`;
+  document.getElementById('studentAvatar').textContent = initials;
+
+  await loadAll();
+  renderAll();
+  bindEvents();
+  subscribeRealtime();
+  document.getElementById('pageLoader').classList.add('hidden');
+  document.getElementById('studentApp').classList.remove('hidden');
+
+  async function loadAll() {
+    const sb = A.supabase;
+    const requests = await Promise.all([
+      sb.from('courses').select('*').eq('is_published', true).order('created_at', { ascending: false }),
+      sb.from('course_sessions').select('*').order('starts_at', { ascending: true }),
+      sb.from('course_session_links').select('course_session_id,meet_url'),
+      sb.from('enrollments').select('*').eq('student_id', state.user.id),
+      sb.from('payments').select('*,courses(title,currency)').eq('student_id', state.user.id).order('created_at', { ascending: false }),
+      sb.from('payment_methods').select('*').eq('is_active', true).order('sort_order'),
+      sb.from('signals').select('*').eq('is_published', true).order('published_at', { ascending: false }),
+      sb.from('signal_updates').select('*').order('created_at', { ascending: false }),
+      sb.from('charts').select('*').eq('is_published', true).order('published_at', { ascending: false }),
+      sb.from('articles').select('*').eq('is_published', true).order('published_at', { ascending: false }),
+      sb.from('announcements').select('*').eq('is_published', true).order('published_at', { ascending: false }),
+      sb.from('course_resources').select('*').order('created_at', { ascending: false }),
+      sb.from('support_requests').select('*').eq('student_id', state.user.id).order('created_at', { ascending: false }),
+      sb.from('terms_acceptances').select('id').eq('user_id', state.user.id).eq('document_type', 'risk_disclaimer').eq('version', A.cfg.RISK_VERSION).limit(1)
+    ]);
+    const firstError = requests.find(item => item.error)?.error;
+    if (firstError) throw firstError;
+    state.courses=requests[0].data||[]; state.sessions=requests[1].data||[];
+    state.sessionLinks=Object.fromEntries((requests[2].data||[]).map(row=>[row.course_session_id,row.meet_url]));
+    state.enrollments=requests[3].data||[]; state.payments=requests[4].data||[]; state.paymentMethods=requests[5].data||[];
+    state.signals=requests[6].data||[]; state.signalUpdates=requests[7].data||[]; state.charts=requests[8].data||[];
+    state.articles=requests[9].data||[]; state.announcements=requests[10].data||[]; state.resources=requests[11].data||[]; state.support=requests[12].data||[];
+    state.riskAccepted=Boolean(requests[13].data?.length);
+  }
+
+  function renderAll() {
+    renderKpis(); renderDashboard(); renderSignals(); renderCharts(); renderArticles(); renderCourses();
+    renderPayments(); renderAnnouncements(); renderProfile(); renderSupport();
+    document.getElementById('paymentCount').textContent = state.payments.filter(p => ['received', 'under_review', 'resubmission_required'].includes(p.status)).length;
+    document.getElementById('announcementCount').textContent = state.announcements.length;
+    window.dispatchEvent(new CustomEvent('24k:student-base-updated',{detail:state}));
+  }
+
+  function renderKpis() {
+    const activeSignals = state.signals.filter(s => !signalIsFinal(s)).length;
+    const approvedCourses = state.enrollments.filter(isEnrollmentActive).length;
+    const pending = state.payments.filter(p => ['received', 'under_review'].includes(p.status)).length;
+    const finals = state.signals.filter(s => signalIsFinal(s) && s.status !== 'cancelled' && s.result_pips !== null);
+    const wins = finals.filter(s => Number(s.result_pips) > 0).length;
+    const losses = finals.filter(s => Number(s.result_pips) < 0).length;
+    const breakeven = finals.filter(s => Number(s.result_pips) === 0).length;
+    const forex = finals.filter(s => resultUnit(s.symbol) === 'pips');
+    const markets = finals.filter(s => resultUnit(s.symbol) === 'points');
+    const totalPips = forex.reduce((sum,s)=>sum+Number(s.result_pips||0),0);
+    const totalPoints = markets.reduce((sum,s)=>sum+Number(s.result_pips||0),0);
+    const weekStart = new Date(); weekStart.setDate(weekStart.getDate()-7);
+    const monthStart = new Date(); monthStart.setDate(1); monthStart.setHours(0,0,0,0);
+    const weekPips = forex.filter(s=>new Date(s.closed_at)>=weekStart).reduce((sum,s)=>sum+Number(s.result_pips||0),0);
+    const monthPips = forex.filter(s=>new Date(s.closed_at)>=monthStart).reduce((sum,s)=>sum+Number(s.result_pips||0),0);
+    const winRate = finals.length ? Math.round((wins / finals.length) * 100) : 0;
+    const data = [
+      ['fa-bolt', activeSignals, 'Active Signals'], ['fa-chart-line', state.charts.length, 'Published Charts'],
+      ['fa-newspaper', state.articles.length, 'Learning Articles'], ['fa-graduation-cap', approvedCourses, 'Unlocked Courses'],
+      ['fa-receipt', pending, 'Pending Payments']
+    ];
+    document.getElementById('studentKpis').innerHTML = data.map(([icon, value, label]) => `<div class="app-kpi"><i class="fa-solid ${icon}"></i><div><b>${value}</b><small>${label}</small></div></div>`).join('');
+    document.getElementById('signalPerformance').innerHTML = [
+      ['Forex Pips', signed(totalPips)], ['Market Points', signed(totalPoints)], ['This Week Pips', signed(weekPips)],
+      ['This Month Pips', signed(monthPips)], ['Win Rate', `${winRate}%`], ['Closed Signals', finals.length],
+      ['Wins / Losses', `${wins} / ${losses}`], ['Breakeven', breakeven]
+    ].map(([label, value]) => `<div class="performance-item"><small>${label}</small><b>${value}</b></div>`).join('');
+  }
+
+
+  function renderDashboard() {
+    const pending = state.payments.find(p => ['received', 'under_review'].includes(p.status));
+    const resubmit = state.payments.find(p => p.status === 'resubmission_required');
+    const declined = state.payments.find(p => p.status === 'declined');
+    const alert = document.getElementById('dashboardAlert');
+    if (resubmit) alert.innerHTML = `<div class="notice bad"><i class="fa-solid fa-file-circle-exclamation"></i> Admin requested a new payment receipt. Open Payments and submit corrected proof. ${resubmit.admin_note?`<b>Reason: ${A.escapeHtml(resubmit.admin_note)}</b>`:''}</div>`;
+    else if (pending) alert.innerHTML = `<div class="notice warn"><i class="fa-solid fa-hourglass-half"></i> Your payment <b>${A.escapeHtml(pending.invoice_no || '')}</b> is ${A.statusLabel(pending.status).toLowerCase()}. Course access will unlock only after admin approval.</div>`;
+    else if (declined) alert.innerHTML = `<div class="notice bad"><i class="fa-solid fa-circle-xmark"></i> A payment was declined. Review the admin note in Payment History and submit a new receipt.</div>`;
+    else alert.innerHTML = '';
+
+    document.getElementById('latestSignal').innerHTML = state.signals[0] ? signalCard(state.signals[0], true) : empty('No signal has been published yet.', 'fa-bolt');
+    const coursePreview = state.courses.slice(0, 2);
+    document.getElementById('dashboardCourses').innerHTML = coursePreview.length ? coursePreview.map(course => {
+      const access = hasCourseAccess(course.id);
+      const payment = latestPayment(course.id);
+      return `<div class="activity-item"><div class="activity-icon"><i class="fa-solid ${access ? 'fa-lock-open' : 'fa-lock'}"></i></div><div><b>${A.escapeHtml(course.title)}</b><small>${access ? 'Course access approved' : payment ? A.statusLabel(payment.status) : `${A.formatMoney(course.discount_price!=null?course.discount_price:course.price, course.currency)} · Payment required`}</small></div><button class="app-btn small ${access ? 'gold' : 'outline'}" data-open-course="${course.id}">${access ? 'Open' : 'Details'}</button></div>`;
+    }).join('') : empty('No course is currently available.', 'fa-graduation-cap');
+
+    const next = state.sessions.filter(s => new Date(s.starts_at) >= new Date() && s.status !== 'cancelled')[0] || state.sessions.find(s => s.status === 'upcoming');
+    document.getElementById('nextSession').innerHTML = next ? sessionCompact(next) : empty('No upcoming class has been scheduled.', 'fa-calendar');
+    const notice = state.announcements[0];
+    document.getElementById('latestAnnouncement').innerHTML = notice ? `<div class="announcement ${notice.priority === 'important' ? 'important' : ''}"><h4>${A.escapeHtml(notice.title)}</h4><p>${A.escapeHtml(notice.message)}</p><small>${A.formatDateTime(notice.published_at)}</small></div>` : empty('No announcement has been published.', 'fa-bullhorn');
+  }
+
+  function renderSignals() {
+    const query = document.getElementById('signalSearch')?.value.trim().toLowerCase() || '';
+    const status = document.getElementById('signalStatusFilter')?.value || 'all';
+    const direction = document.getElementById('signalDirectionFilter')?.value || 'all';
+    const rows = state.signals.filter(s => {
+      const final=signalIsFinal(s), result=Number(s.result_pips||0);
+      const statusMatch=status==='all'||(status==='active'&&!final)||(status==='history'&&final)||(status==='wins'&&final&&result>0)||(status==='losses'&&final&&result<0)||(status==='breakeven'&&s.status==='breakeven_hit')||(status==='cancelled'&&s.status==='cancelled');
+      return (!query || `${s.symbol} ${s.notes || ''}`.toLowerCase().includes(query)) && statusMatch && (direction === 'all' || s.direction === direction);
+    });
+    document.getElementById('signalsGrid').innerHTML = rows.length ? rows.map(s => signalCard(s)).join('') : empty('No signal matches these filters.', 'fa-filter');
+    const latest=state.signalUpdates.find(u=>u.notify_users);
+    document.getElementById('latestSignalUpdate').innerHTML=latest?`<div class="signal-update-banner"><i class="fa-solid fa-bell"></i><div><b>${A.escapeHtml(latest.notification_title||eventLabel(latest.event_type))}</b><small style="display:block;color:#888">${A.escapeHtml(latest.notification_message||'')} · ${A.formatDateTime(latest.created_at)}</small></div></div>`:'';
+  }
+
+  function signalCard(signal, compact = false) {
+    const total=signal.take_profit_4?4:3, hit=Number(signal.tp_hit||0), progress=Math.min(100,Math.round(hit/total*100));
+    const unit=signal.result_unit||resultUnit(signal.symbol); const final=signalIsFinal(signal);
+    const targets=[1,2,3,4].filter(i=>signal[`take_profit_${i}`]!=null).map(i=>`<div class="signal-level ${hit>=i?'hit':''}"><small>TP${i}${hit>=i?' ✓':''}</small><b>${num(signal[`take_profit_${i}`])}</b></div>`).join('');
+    const levels=compact?'':`<div class="signal-levels"><div class="signal-level"><small>Entry ${signal.entry_to?'Zone':'Price'}</small><b>${entryText(signal)}</b></div><div class="signal-level"><small>Stop Loss</small><b>${num(signal.stop_loss)}</b></div></div><div class="tp-list">${targets}</div><div class="signal-progress-wrap"><div class="signal-progress-label"><span>TP Progress</span><b>${progress}%</b></div><div class="signal-progress"><span style="width:${progress}%"></span></div></div>`;
+    const tone=signal.status==='sl_hit'?'final-loss':['breakeven_hit','cancelled'].includes(signal.status)?'final-neutral':'';
+    return `<article class="signal-card ${String(signal.direction).toLowerCase()} ${tone}"><div class="signal-body"><div class="signal-head"><div><div style="display:flex;gap:7px;align-items:center"><span class="direction ${String(signal.direction).toLowerCase()}">${A.escapeHtml(signal.direction)}</span><span class="signal-order-badge">${A.statusLabel(signal.order_type||'market')}</span></div><h3>${displaySymbol(signal.symbol)}</h3></div><span class="status-pill ${A.statusClass(signal.status)}">${A.statusLabel(signal.status)}</span></div>${signal.be_moved?'<div class="be-badge"><i class="fa-solid fa-shield-halved"></i> Stop Loss Moved to Breakeven</div>':''}${levels}<p>${A.escapeHtml(signal.notes || 'No additional note.')}</p><div class="course-meta"><span><i class="fa-solid fa-clock"></i> ${A.formatDateTime(signal.published_at)}</span>${signal.result_pips !== null && signal.result_pips !== undefined ? `<span class="${Number(signal.result_pips)>0?'result-positive':Number(signal.result_pips)<0?'result-negative':''}"><i class="fa-solid fa-chart-simple"></i> ${final?'Final':'Current'}: ${signed(signal.result_pips)} ${unit}</span>` : ''}</div>${compact?'':`<div class="signal-card-actions"><button class="app-btn small outline" data-student-signal-history="${signal.id}"><i class="fa-solid fa-clock-rotate-left"></i> View History</button></div>`}</div></article>`;
+  }
+
+  function openSignalHistory(id){
+    const signal=state.signals.find(s=>s.id===id); if(!signal)return;
+    const events=state.signalUpdates.filter(u=>u.signal_id===id).sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
+    document.getElementById('studentSignalHistoryTitle').textContent=`${displaySymbol(signal.symbol)} ${signal.direction} History`;
+    document.getElementById('studentSignalHistoryContent').innerHTML=`<div class="signal-history-summary"><div><small>Entry</small><b>${entryText(signal)}</b></div><div><small>Status</small><b>${A.statusLabel(signal.status)}</b></div><div><small>Result</small><b>${signal.result_pips==null?'—':`${signed(signal.result_pips)} ${signal.result_unit||resultUnit(signal.symbol)}`}</b></div><div><small>Published</small><b>${A.formatDateTime(signal.published_at)}</b></div></div><div class="signal-timeline">${events.length?events.map(ev=>`<div class="timeline-event ${eventTone(ev.event_type)}"><span class="timeline-dot"></span><div><div class="timeline-title"><b>${eventLabel(ev.event_type)}</b><time>${A.formatDateTime(ev.created_at)}</time></div>${ev.notification_message?`<p>${A.escapeHtml(ev.notification_message)}</p>`:''}${ev.note?`<small>Note: ${A.escapeHtml(ev.note)}</small>`:''}${ev.result_pips!=null?`<span class="timeline-result">${signed(ev.result_pips)} ${ev.result_unit}</span>`:''}</div></div>`).join(''):empty('No history recorded yet.','fa-clock-rotate-left')}</div>`;
+    A.openModal('studentSignalHistoryModal');
+  }
+
+
+  function renderCharts() {
+    const query = document.getElementById('chartSearch')?.value.trim().toLowerCase() || '';
+    const tf = document.getElementById('chartTimeframeFilter')?.value || 'all';
+    const rows = state.charts.filter(c => (!query || `${c.title} ${c.symbol} ${c.summary}`.toLowerCase().includes(query)) && (tf === 'all' || c.timeframe === tf));
+    document.getElementById('chartsGrid').innerHTML = rows.length ? rows.map(chart => `<article class="content-card"><div class="content-cover ${chart.image_url ? 'has-image' : ''}">${chart.image_url ? `<img src="${attr(chart.image_url)}" alt="${attr(chart.title)}" loading="lazy" decoding="async">` : '<i class="fa-solid fa-chart-candlestick"></i>'}</div><div class="content-body"><div class="course-meta"><span>${A.escapeHtml(chart.symbol)}</span><span>${A.escapeHtml(chart.timeframe || '—')}</span><span>${A.escapeHtml(chart.category || 'Market Analysis')}</span><span>${A.formatDate(chart.published_at)}</span></div><h3>${A.escapeHtml(chart.title)}</h3><p>${A.escapeHtml(chart.summary || '')}</p><div class="card-actions"><button class="app-btn small gold" data-read-chart="${chart.id}">View Details</button>${chart.image_url ? `<a class="app-btn small outline" href="${attr(chart.image_url)}" target="_blank"><i class="fa-solid fa-up-right-from-square"></i> Full Chart</a>` : ''}</div></div></article>`).join('') : empty('No chart analysis matches your search.', 'fa-chart-line');
+  }
+
+  function renderArticles() {
+    const query = document.getElementById('articleSearch')?.value.trim().toLowerCase() || '';
+    const rows = state.articles.filter(a => !query || `${a.title} ${a.excerpt} ${a.content}`.toLowerCase().includes(query));
+    document.getElementById('articlesGrid').innerHTML = rows.length ? rows.map(article => `<article class="content-card"><div class="content-cover ${article.cover_url ? 'has-image' : ''}">${article.cover_url ? `<img src="${attr(article.cover_url)}" alt="${attr(article.title)}" loading="lazy" decoding="async">` : '<i class="fa-solid fa-book-open"></i>'}</div><div class="content-body"><div class="course-meta"><span>${A.escapeHtml(article.category || 'Education')}</span><span><i class="fa-solid fa-calendar"></i> ${A.formatDate(article.published_at)}</span></div><h3>${A.escapeHtml(article.title)}</h3><p>${A.escapeHtml(article.excerpt || '')}</p><button class="app-btn small gold" data-read-article="${article.id}">Read Article</button></div></article>`).join('') : empty('No article matches your search.', 'fa-newspaper');
+  }
+
+  function renderCourses() {
+    document.getElementById('coursesGrid').innerHTML = state.courses.length ? state.courses.map(course => {
+      const access = hasCourseAccess(course.id);
+      const payment = latestPayment(course.id);
+      const actualPrice=course.discount_price!=null?Number(course.discount_price):Number(course.price); const paymentText = payment ? A.statusLabel(payment.status) : (course.course_type==='free'||actualPrice===0 ? 'Free enrollment' : 'Payment required');
+      return `<article class="course-card"><div class="course-cover ${course.thumbnail_url?'has-image':''}">${course.thumbnail_url?`<img src="${attr(course.thumbnail_url)}" alt="${attr(course.title)}" loading="lazy" decoding="async">`:'<i class="fa-solid fa-graduation-cap"></i>'}<span class="status-pill ${A.statusClass(course.status)}">${A.statusLabel(course.status)}</span></div><div class="course-body"><h3>${A.escapeHtml(course.title)}</h3><p>${A.escapeHtml(course.description || '')}</p><div class="course-meta"><span><i class="fa-solid fa-user-tie"></i> ${A.escapeHtml(course.instructor_name || A.cfg.INSTRUCTOR_NAME)}</span><span><i class="fa-solid fa-money-bill"></i> ${course.discount_price!=null?`<s>${A.formatMoney(course.price,course.currency)}</s> ${A.formatMoney(course.discount_price,course.currency)}`:A.formatMoney(course.price, course.currency)}</span><span><i class="fa-solid fa-calendar"></i> ${course.start_date ? A.formatDate(course.start_date) : 'Date to be announced'}</span></div><div class="notice ${access ? 'ok' : payment?.status === 'declined' ? 'bad' : 'warn'}">${access ? '<b>Access approved.</b> Session links are unlocked.' : `<b>${paymentText}.</b> Session dates are visible, but Google Meet links remain locked.`}</div><div class="course-actions"><button class="app-btn ${access ? 'gold' : 'outline'}" data-open-course="${course.id}"><i class="fa-solid fa-calendar-days"></i> View Sessions</button>${access ? '' : (course.course_type==='free'||actualPrice===0) ? `<button class="app-btn gold" data-free-enroll="${course.id}">Enroll Free</button>` : `<button class="app-btn gold" data-buy-course="${course.id}"><i class="fa-solid fa-receipt"></i> ${payment && ['received','under_review'].includes(payment.status) ? 'Payment Submitted' : payment?.status==='resubmission_required' ? 'Submit New Receipt' : 'Submit Payment'}</button>`}</div></div></article>`;
+    }).join('') : empty('No course is currently published.', 'fa-graduation-cap');
+  }
+
+  function showCourseSessions(courseId) {
+    state.selectedCourse = state.courses.find(c => c.id === courseId);
+    if (!state.selectedCourse) return;
+    document.getElementById('coursesGrid').classList.add('hidden');
+    document.getElementById('sessionsArea').classList.remove('hidden');
+    document.getElementById('sessionCourseTitle').textContent = state.selectedCourse.title;
+    const rows = state.sessions.filter(s => s.course_id === courseId).sort((a,b) => a.session_number - b.session_number);
+    const access = hasCourseAccess(courseId);
+    document.getElementById('sessionsGrid').innerHTML = rows.length ? rows.map(session => sessionCard(session, access)).join('') : empty('Session schedule has not been published yet.', 'fa-calendar');
+    const resources = state.resources.filter(r => r.course_id === courseId);
+    const area = document.getElementById('resourcesArea');
+    area.classList.toggle('hidden', !resources.length || !access);
+    document.getElementById('resourcesList').innerHTML = resources.map(r => `<div class="resource-row"><div><b>${A.escapeHtml(r.title)}</b><small class="muted" style="display:block">${A.escapeHtml(r.description || '')}</small></div><button class="app-btn small outline" data-download-resource="${r.id}"><i class="fa-solid fa-download"></i> Download</button></div>`).join('');
+  }
+
+  function sessionCard(session, access) {
+    const link = state.sessionLinks[session.id];
+    const unlocked = access && Boolean(link);
+    return `<article class="session-card"><div class="session-top"><span class="session-number">Session ${session.session_number}</span><span class="session-lock"><i class="fa-solid ${unlocked ? 'fa-lock-open' : 'fa-lock'}"></i></span></div><div class="session-body"><div class="signal-head"><h3>${A.escapeHtml(session.title)}</h3><span class="status-pill ${A.statusClass(session.status)}">${A.statusLabel(session.status)}</span></div><p>${A.escapeHtml(session.topic || '')}</p><div class="session-date"><span><i class="fa-solid fa-calendar"></i> ${A.formatDateTime(session.starts_at)}</span><span><i class="fa-solid fa-hourglass-half"></i> ${session.duration_minutes || 90} minutes</span><span><i class="fa-solid fa-video"></i> Google Meet</span></div>${unlocked ? `<a class="app-btn green" href="${attr(link)}" target="_blank" rel="noopener"><i class="fa-solid fa-video"></i> Join Google Meet</a>` : `<button class="app-btn outline" disabled><i class="fa-solid fa-lock"></i> ${access ? 'Meet link not added yet' : 'Locked until payment approval'}</button>`}</div></article>`;
+  }
+
+  function sessionCompact(session) {
+    const course = state.courses.find(c => c.id === session.course_id);
+    const access = hasCourseAccess(session.course_id);
+    return `<div class="session-body" style="padding:0"><span class="status-pill ${A.statusClass(session.status)}">${A.statusLabel(session.status)}</span><h3 style="margin-top:12px">${A.escapeHtml(session.title)}</h3><p>${A.escapeHtml(course?.title || '')}</p><div class="session-date"><span><i class="fa-solid fa-calendar"></i> ${A.formatDateTime(session.starts_at)}</span><span><i class="fa-solid fa-user-tie"></i> Malik Zameer</span></div><button class="app-btn ${access ? 'gold' : 'outline'}" data-open-course="${session.course_id}">${access ? 'Open Session' : 'View Locked Schedule'}</button></div>`;
+  }
+
+  function renderPayments() {
+    const body = document.getElementById('paymentsBody');
+    if (!state.payments.length) { body.innerHTML = `<tr><td colspan="9">${empty('No payment has been submitted yet.', 'fa-receipt')}</td></tr>`; return; }
+    body.innerHTML = state.payments.map(p => {
+      const course = p.courses || state.courses.find(c => c.id === p.course_id) || {};
+      const latest = latestPayment(p.course_id);
+      const canResubmit = p.status === 'resubmission_required' && latest?.id === p.id;
+      const action = canResubmit
+        ? `<button class="app-btn small gold" data-buy-course="${p.course_id}"><i class="fa-solid fa-upload"></i> New Receipt</button>`
+        : p.status === 'resubmission_required' && latest?.id !== p.id
+          ? '<span class="status-pill neutral">Superseded</span>'
+          : p.receipt_path
+            ? `<button class="app-btn small outline" data-view-receipt="${p.id}"><i class="fa-solid fa-eye"></i> View</button>`
+            : '—';
+      return `<tr><td><b>${A.escapeHtml(p.invoice_no || 'Pending')}</b></td><td>${A.escapeHtml(course.title || 'Course')}</td><td>${A.formatMoney(p.amount, course.currency || 'USD')}</td><td>${A.escapeHtml(p.payment_method_name || p.method || '—')}</td><td>${A.escapeHtml(p.transaction_reference || '—')}</td><td>${A.formatDateTime(p.created_at)}</td><td><span class="status-pill ${A.statusClass(p.status)}">${A.statusLabel(p.status)}</span></td><td>${A.escapeHtml(p.admin_note || p.decline_reason || '—')}</td><td>${action}</td></tr>`;
+    }).join('');
+  }
+
+  function renderAnnouncements() {
+    document.getElementById('announcementsList').innerHTML = state.announcements.length ? state.announcements.map(n => `<article class="announcement ${n.priority === 'important' ? 'important' : ''}"><h4>${A.escapeHtml(n.title)}</h4><p>${A.escapeHtml(n.message)}</p><small>${A.formatDateTime(n.published_at)}</small></article>`).join('') : empty('No announcements yet.', 'fa-bullhorn');
+  }
+
+  function renderProfile() {
+    const form = document.getElementById('profileForm');
+    ['full_name','email','whatsapp','country','experience'].forEach(key => { if (form.elements[key]) form.elements[key].value = state.profile[key] || ''; });
+  }
+
+  function renderSupport() {
+    const open = state.support.filter(s => !['resolved','closed'].includes(s.status)).length;
+    document.getElementById('supportCount').textContent = `${open} open request(s)`;
+    document.getElementById('supportRequests').innerHTML = state.support.length ? state.support.map(s => `<div class="activity-item"><div class="activity-icon"><i class="fa-solid fa-ticket"></i></div><div><b>${A.escapeHtml(s.subject)}</b><small>${A.escapeHtml(s.category)} · ${A.formatDateTime(s.created_at)}</small></div><span class="status-pill ${A.statusClass(s.status)}">${A.statusLabel(s.status)}</span></div>`).join('') : empty('You have not submitted a support request.', 'fa-headset');
+  }
+
+  function bindEvents() {
+    document.addEventListener('panel:open', event => {
+      if (event.detail.key === 'signals' && !state.riskAccepted) A.openModal('riskModal');
+    });
+    ['signalSearch','signalStatusFilter','signalDirectionFilter'].forEach(id => document.getElementById(id)?.addEventListener('input', renderSignals));
+    ['chartSearch','chartTimeframeFilter'].forEach(id => document.getElementById(id)?.addEventListener('input', renderCharts));
+    document.getElementById('articleSearch')?.addEventListener('input', renderArticles);
+    document.getElementById('closeSessions').addEventListener('click', () => { document.getElementById('sessionsArea').classList.add('hidden'); document.getElementById('coursesGrid').classList.remove('hidden'); });
+
+    document.body.addEventListener('click', async event => {
+      const courseOpen = event.target.closest('[data-open-course]');
+      if (courseOpen) { openPanel('courses'); showCourseSessions(courseOpen.dataset.openCourse); }
+      const buy = event.target.closest('[data-buy-course]');
+      if (buy) openPaymentModal(buy.dataset.buyCourse);
+      const free = event.target.closest('[data-free-enroll]');
+      if (free) await enrollFree(free.dataset.freeEnroll, free);
+      const article = event.target.closest('[data-read-article]');
+      if (article) openArticle(article.dataset.readArticle);
+      const chart = event.target.closest('[data-read-chart]');
+      if (chart) openChart(chart.dataset.readChart);
+      const receipt = event.target.closest('[data-view-receipt]');
+      if (receipt) await viewReceipt(receipt.dataset.viewReceipt);
+      const resource = event.target.closest('[data-download-resource]');
+      if (resource) await downloadResource(resource.dataset.downloadResource);
+      const signalHistory = event.target.closest('[data-student-signal-history]');
+      if (signalHistory) openSignalHistory(signalHistory.dataset.studentSignalHistory);
+    });
+
+    document.getElementById('enableSignalAlerts')?.addEventListener('click', enableSignalAlerts);
+    updateAlertButton();
+    document.getElementById('paymentForm').addEventListener('submit', submitPayment);
+    document.getElementById('profileForm').addEventListener('submit', saveProfile);
+    document.getElementById('supportForm').addEventListener('submit', submitSupport);
+    document.getElementById('riskForm').addEventListener('submit', acceptRisk);
+    document.getElementById('globalSearch').addEventListener('keydown', event => {
+      if (event.key !== 'Enter') return;
+      const q = event.currentTarget.value.trim().toLowerCase();
+      if (!q) return;
+      if (state.signals.some(x => `${x.symbol} ${x.notes}`.toLowerCase().includes(q))) { openPanel('signals'); document.getElementById('signalSearch').value = q; renderSignals(); }
+      else if (state.charts.some(x => `${x.title} ${x.symbol}`.toLowerCase().includes(q))) { openPanel('charts'); document.getElementById('chartSearch').value = q; renderCharts(); }
+      else { openPanel('articles'); document.getElementById('articleSearch').value = q; renderArticles(); }
+    });
+  }
+
+  async function enableSignalAlerts(){
+    if(!('Notification' in window)) return A.toast('Browser notifications are not supported here.','warning');
+    const permission=await Notification.requestPermission(); updateAlertButton();
+    A.toast(permission==='granted'?'Live signal alerts enabled.':'Notification permission was not allowed.',permission==='granted'?'success':'warning');
+  }
+  function updateAlertButton(){const b=document.getElementById('enableSignalAlerts');if(!b)return;const enabled='Notification' in window&&Notification.permission==='granted';b.classList.toggle('enabled',enabled);b.innerHTML=`<i class="fa-solid fa-bell${enabled?'':'-slash'}"></i> ${enabled?'Live Alerts Enabled':'Enable Live Alerts'}`;}
+  function showSignalNotification(update){if(!update?.notify_users)return;A.toast(`${update.notification_title||'Signal Update'} — ${update.notification_message||''}`,'success');if('Notification' in window&&Notification.permission==='granted'&&document.visibilityState!=='visible'){new Notification(update.notification_title||'24K Signal Update',{body:update.notification_message||'',icon:'assets/logo.png'});}}
+
+
+  function openPaymentModal(courseId) {
+    const course = state.courses.find(c => c.id === courseId);
+    if (!course) return;
+    const pending = latestPayment(courseId);
+    if (pending && ['received','under_review'].includes(pending.status)) return A.toast('Your payment is already under review.', 'warning');
+    const form = document.getElementById('paymentForm');
+    form.reset(); form.elements.course_id.value = course.id; form.dataset.supersedesPaymentId = pending?.status==='resubmission_required'?pending.id:''; const payable=course.discount_price!=null?Number(course.discount_price):Number(course.price); form.elements.amount.value = payable;
+    document.getElementById('paymentCourseSummary').innerHTML = `<b>${A.escapeHtml(course.title)}</b><br>Instructor: Malik Zameer · Amount: ${A.formatMoney(course.discount_price!=null?course.discount_price:course.price, course.currency)}`;
+    document.getElementById('paymentMethodSelect').innerHTML = state.paymentMethods.map(m => `<option value="${m.id}">${A.escapeHtml(m.name)}</option>`).join('');
+    renderPaymentMethodInfo();
+    document.getElementById('paymentMethodSelect').onchange = renderPaymentMethodInfo;
+    A.openModal('paymentModal');
+  }
+
+  function renderPaymentMethodInfo() {
+    const method = state.paymentMethods.find(m => m.id === document.getElementById('paymentMethodSelect').value);
+    document.getElementById('paymentMethodsBox').innerHTML = method ? `<div class="notice warn"><b>${A.escapeHtml(method.name)}</b><br>Account title: ${A.escapeHtml(method.account_title || '—')}<br>Account/number: ${A.escapeHtml(method.account_number || '—')}<br>${A.escapeHtml(method.instructions || '')}</div>` : '';
+  }
+
+  async function submitPayment(event) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const button = form.querySelector('button[type="submit"]');
+    const fd = new FormData(form);
+    const course = state.courses.find(c => c.id === fd.get('course_id'));
+    const method = state.paymentMethods.find(m => m.id === fd.get('payment_method_id'));
+    const file = fd.get('receipt');
+    if (!file || !file.size) return A.toast('Please select a payment receipt.', 'error');
+    if (file.size > 5 * 1024 * 1024) return A.toast('Receipt must be 5 MB or smaller.', 'error');
+    A.setLoading(button, true, 'Uploading receipt...');
+    try {
+      const paymentId = A.uid();
+      const path = `${state.user.id}/${paymentId}/${A.fileSafeName(file.name)}`;
+        const upload = await A.supabase.storage.from('payment-receipts').upload(path, file, { upsert: false, contentType: file.type });
+        if (upload.error) throw upload.error;
+        const receiptHash = await A.hashFile(file);
+        const { error } = await A.supabase.from('payments').insert({ id: paymentId, student_id: state.user.id, course_id: course.id, amount: Number(fd.get('amount')), payment_method_id: method?.id, payment_method_name: method?.name, transaction_reference: String(fd.get('transaction_reference')).trim(), student_note: String(fd.get('student_note') || '').trim(), receipt_path: path, receipt_hash: receiptHash, supersedes_payment_id: form.dataset.supersedesPaymentId || null, status: 'received' });
+        if (error) { await A.supabase.storage.from('payment-receipts').remove([path]); throw error; }
+        await loadAll();
+      renderAll(); A.closeModal('paymentModal'); form.reset();
+      A.toast('Receipt received. Admin approval is required before course access unlocks.', 'success');
+      openPanel('payments');
+    } catch (error) { A.toast(A.friendlyError(error, 'Payment submission failed.'), 'error'); }
+    finally { A.setLoading(button, false); }
+  }
+
+  async function enrollFree(courseId, button) {
+    A.setLoading(button, true, 'Enrolling...');
+    try {
+      const { error } = await A.supabase.rpc('enroll_free_course', { p_course_id: courseId });
+        if (error) throw error;
+        await loadAll();
+      renderAll(); A.toast('Free course enrolled successfully.', 'success');
+    } catch (error) { A.toast(A.friendlyError(error, 'Could not enroll.'), 'error'); }
+    finally { A.setLoading(button, false); }
+  }
+
+  function openChart(id) {
+    const chart = state.charts.find(c => c.id === id); if (!chart) return;
+    document.getElementById('chartModalTitle').textContent = chart.title;
+    document.getElementById('chartModalContent').innerHTML = `${chart.image_url?`<img src="${attr(chart.image_url)}" alt="${attr(chart.title)}" class="detail-image">`:''}<div class="course-meta"><span>${A.escapeHtml(chart.symbol)}</span><span>${A.escapeHtml(chart.timeframe||'—')}</span><span>${A.escapeHtml(chart.category||'Market Analysis')}</span></div><p>${A.escapeHtml(chart.summary||'')}</p><div class="article-content">${A.escapeHtml(chart.details||chart.summary||'').replace(/\n/g,'<br>')}</div>`;
+    A.openModal('chartModal');
+  }
+
+  function openArticle(id) {
+    const article = state.articles.find(a => a.id === id); if (!article) return;
+    document.getElementById('articleModalTitle').textContent = article.title;
+    document.getElementById('articleModalContent').innerHTML = `${article.cover_url?`<img src="${attr(article.cover_url)}" alt="${attr(article.title)}" class="detail-image" loading="lazy" decoding="async">`:''}<div class="course-meta"><span>${A.escapeHtml(article.category||'Education')}</span><span>${A.formatDate(article.published_at)}</span></div><div>${A.escapeHtml(article.content || article.excerpt || '').replace(/\n/g,'<br>')}</div>`;
+    A.openModal('articleModal');
+  }
+
+  async function viewReceipt(id) {
+    const payment = state.payments.find(p => p.id === id); if (!payment?.receipt_path) return;
+    const { data, error } = await A.supabase.storage.from('payment-receipts').createSignedUrl(payment.receipt_path, 120);
+    if (error) return A.toast(A.friendlyError(error), 'error');
+    window.open(data.signedUrl, '_blank', 'noopener');
+  }
+
+  async function downloadResource(id) {
+    const resource = state.resources.find(r => r.id === id); if (!resource) return;
+    const { data, error } = await A.supabase.storage.from('course-resources').createSignedUrl(resource.file_path, 120, { download: resource.file_name });
+    if (error) return A.toast(A.friendlyError(error), 'error');
+    window.open(data.signedUrl, '_blank', 'noopener');
+  }
+
+  async function saveProfile(event) {
+    event.preventDefault(); const form = event.currentTarget; const button = form.querySelector('button[type="submit"]'); const values = Object.fromEntries(new FormData(form));
+    A.setLoading(button, true, 'Saving...');
+    try {
+      const changes = { full_name: String(values.full_name).trim(), whatsapp: String(values.whatsapp).trim(), country: String(values.country || '').trim(), experience: String(values.experience || '') };
+      const { error } = await A.supabase.from('profiles').update(changes).eq('id', state.user.id); if (error) throw error;
+      Object.assign(state.profile, changes); document.getElementById('welcomeName').textContent = `Welcome back, ${state.profile.full_name}`;
+      A.toast('Profile updated successfully.', 'success');
+    } catch (error) { A.toast(A.friendlyError(error, 'Could not update profile.'), 'error'); }
+    finally { A.setLoading(button, false); }
+  }
+
+  async function submitSupport(event) {
+    event.preventDefault(); const form = event.currentTarget; const button = form.querySelector('button[type="submit"]'); const values = Object.fromEntries(new FormData(form));
+    A.setLoading(button, true, 'Submitting...');
+    try {
+      const row = { id: A.uid(), student_id: state.user.id, category: values.category, subject: String(values.subject).trim(), message: String(values.message).trim(), status: 'open', created_at: new Date().toISOString() };
+      const { error } = await A.supabase.from('support_requests').insert({ student_id: state.user.id, category: row.category, subject: row.subject, message: row.message }); if (error) throw error; await loadAll();
+      form.reset(); renderSupport(); A.toast('Support request submitted.', 'success');
+    } catch (error) { A.toast(A.friendlyError(error, 'Could not submit request.'), 'error'); }
+    finally { A.setLoading(button, false); }
+  }
+
+  async function acceptRisk(event) {
+    event.preventDefault(); const form = event.currentTarget; const button = form.querySelector('button[type="submit"]'); A.setLoading(button, true, 'Saving...');
+    try {
+      const { error } = await A.supabase.from('terms_acceptances').upsert({ user_id: state.user.id, document_type: 'risk_disclaimer', version: A.cfg.RISK_VERSION, accepted_at: new Date().toISOString(), ip_address: null }, { onConflict: 'user_id,document_type,version' });
+        if (error) throw error;
+      state.riskAccepted = true; A.closeModal('riskModal'); A.toast('Risk disclaimer accepted.', 'success');
+    } catch (error) { A.toast(A.friendlyError(error, 'Could not record acceptance.'), 'error'); }
+    finally { A.setLoading(button, false); }
+  }
+
+
+  function subscribeRealtime() {
+    let timer;
+    const refresh = () => { clearTimeout(timer); timer = setTimeout(async () => { try { await loadAll(); renderAll(); } catch (error) { console.error('Realtime refresh failed', error); } }, 350); };
+    A.supabase.channel(`student-${state.user.id}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'signals' }, refresh)
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'signal_updates' }, payload => { showSignalNotification(payload.new); refresh(); })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'charts' }, refresh)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'articles' }, refresh)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'announcements' }, refresh)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'payments', filter: `student_id=eq.${state.user.id}` }, refresh)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'course_sessions' }, refresh)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'enrollments', filter: `student_id=eq.${state.user.id}` }, refresh)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'course_progress', filter: `student_id=eq.${state.user.id}` }, refresh)
+      .subscribe();
+  }
+
+  function signalIsFinal(s){return Boolean(s.closed_at)||['tp4_hit','sl_hit','breakeven_hit','manually_closed','cancelled'].includes(s.status)||(s.status==='tp3_hit'&&!s.take_profit_4);}
+  function resultUnit(symbol){const x=String(symbol||'').replace('/','').toUpperCase();return ['XAUUSD','XAGUSD','BTCUSD','US30','NAS100','SPX500','GER40'].includes(x)?'points':'pips';}
+  function displaySymbol(symbol){const x=String(symbol||'').replace('/','').toUpperCase();return x.length===6?`${x.slice(0,3)}/${x.slice(3)}`:x;}
+  function entryText(s){return `${num(s.entry_from)}${s.entry_to!=null?` – ${num(s.entry_to)}`:''}`;}
+  function signed(value){const n=Number(value||0);return `${n>0?'+':''}${Number.isInteger(n)?n:n.toFixed(1)}`;}
+  function eventLabel(v){return {published:'Signal Published',edited:'Signal Edited',move_to_be:'SL Moved to Breakeven',tp1_hit:'TP1 Hit',tp2_hit:'TP2 Hit',tp3_hit:'TP3 Hit',tp4_hit:'TP4 Hit',sl_hit:'SL Hit',breakeven_hit:'Breakeven Hit',manually_closed:'Trade Closed Manually',cancelled:'Signal Cancelled'}[v]||A.statusLabel(v);}
+  function eventTone(v){return ['sl_hit','cancelled'].includes(v)?'bad':['breakeven_hit','move_to_be'].includes(v)?'warn':v==='edited'?'neutral':'ok';}
+
+
+  function latestPayment(courseId) { return state.payments.filter(p => p.course_id === courseId).sort((a,b) => new Date(b.created_at) - new Date(a.created_at))[0]; }
+  function isEnrollmentActive(e) { return e.status === 'active' && (!e.access_expires_at || new Date(e.access_expires_at) > new Date()); }
+  function hasCourseAccess(courseId) { return state.enrollments.some(e => e.course_id === courseId && isEnrollmentActive(e)); }
+  function empty(text, icon) { return `<div class="empty-state"><i class="fa-solid ${icon}"></i>${A.escapeHtml(text)}</div>`; }
+  function num(value) { if (value === null || value === undefined || value === '') return '—'; return Number(value).toLocaleString('en-US', { maximumFractionDigits: 5 }); }
+  function attr(value) { return A.escapeHtml(value).replace(/`/g, '&#96;'); }
+})().catch(error => {
+  console.error(error);
+  window.App?.toast(window.App.friendlyError(error, 'Could not load the student panel.'), 'error');
+  document.getElementById('pageLoader')?.classList.add('hidden');
+  document.getElementById('studentApp')?.classList.remove('hidden');
+});
