@@ -1,0 +1,10 @@
+24K EXCELLENCE V9.1 — DEDICATED LOGIN PORTALS
+
+1. No new SQL is required.
+2. Upload all files from this folder to the GitHub repository root and replace existing files.
+3. Student Login: https://24kmrzero.github.io/Mrzero/login.html
+4. Admin Login: https://24kmrzero.github.io/Mrzero/admin-login.html
+5. Student page contains only Student Login and Sign Up.
+6. Admin page contains only the dedicated Admin Login.
+7. Student and Admin sessions are independent in the same browser.
+8. After upload, wait 1–3 minutes and press Ctrl + F5.

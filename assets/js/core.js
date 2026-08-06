@@ -8,10 +8,18 @@
     !String(cfg.SUPABASE_ANON_KEY).includes('YOUR_')
   );
 
+  const authScope = document.documentElement.dataset.authScope || 'student';
+  let projectRef = '24k';
+  try { projectRef = new URL(cfg.SUPABASE_URL).hostname.split('.')[0] || '24k'; } catch {}
+  const authStorageKey = authScope === 'admin'
+    ? `sb-${projectRef}-admin-auth-token`
+    : `sb-${projectRef}-auth-token`;
+
   let supabase = null;
   if (configured && window.supabase?.createClient) {
     supabase = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY, {
       auth: {
+        storageKey: authStorageKey,
         persistSession: true,
         autoRefreshToken: true,
         detectSessionInUrl: true,
@@ -282,30 +290,28 @@
   }
 
   async function requireRole(role) {
+    const loginUrl = role === 'admin' ? 'admin-login.html' : 'login.html?tab=student-login';
     try {
       const user = await getCurrentUser();
       if (!user) throw new Error('No active session');
       const profile = await getProfile(user.id);
       if (profile.role !== role) {
-        if (role === 'admin') {
-          await supabase.auth.signOut();
-          window.location.replace('login.html?tab=admin-login&mode=admin&reason=admin-required');
-        } else {
-          window.location.replace(profile.role === 'admin' ? 'admin-dashboard.html' : 'student-dashboard.html');
-        }
+        await supabase.auth.signOut().catch(() => {});
+        const reason = role === 'admin' ? 'admin-required' : 'student-required';
+        window.location.replace(`${loginUrl}${loginUrl.includes('?') ? '&' : '?'}reason=${reason}`);
         return null;
       }
       return { user, profile };
     } catch (error) {
       console.error(error);
-      window.location.replace(role === 'admin' ? 'login.html?tab=admin-login&mode=admin' : 'login.html?tab=student-login');
+      window.location.replace(loginUrl);
       return null;
     }
   }
 
   async function logout() {
     if (supabase) await supabase.auth.signOut();
-    window.location.replace('login.html');
+    window.location.replace(authScope === 'admin' ? 'admin-login.html' : 'login.html');
   }
 
   async function hashFile(file) {
@@ -319,7 +325,7 @@
   const uid = () => (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`);
 
   window.App = {
-    cfg, configured, supabase, escapeHtml, formatMoney, formatDate, formatDateTime,
+    cfg, configured, supabase, authScope, authStorageKey, escapeHtml, formatMoney, formatDate, formatDateTime,
     statusLabel, statusClass, effectiveAccessStatus, friendlyError, toast, setLoading,
     openModal, closeModal, confirmAction, activateDashboardNavigation,
     getCurrentUser, getProfile, requireRole, logout, hashFile, fileSafeName, uid

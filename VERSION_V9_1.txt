@@ -1,0 +1,3 @@
+24K Excellence V9.1
+Dedicated Student and Admin authentication portals
+Separate Supabase auth storage sessions

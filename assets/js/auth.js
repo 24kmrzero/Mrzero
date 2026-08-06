@@ -7,6 +7,12 @@
     return;
   }
 
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('tab') === 'admin-login' || params.get('mode') === 'admin') {
+    window.location.replace(`admin-login.html${params.get('reason') ? `?reason=${encodeURIComponent(params.get('reason'))}` : ''}`);
+    return;
+  }
+
   const tabs = [...document.querySelectorAll('[data-auth-tab]')];
   const forms = [...document.querySelectorAll('[data-auth-form]')];
   const activateTab = key => {
@@ -14,10 +20,11 @@
     forms.forEach(form => form.classList.toggle('on', form.dataset.authForm === key));
   };
   tabs.forEach(tab => tab.addEventListener('click', () => activateTab(tab.dataset.authTab)));
-
-  const params = new URLSearchParams(window.location.search);
   const requestedTab = params.get('tab');
   if (tabs.some(tab => tab.dataset.authTab === requestedTab)) activateTab(requestedTab);
+
+  const reason = params.get('reason');
+  if (reason === 'student-required') toast('Please sign in with a student account.', 'info');
 
   const isConfirmed = user => Boolean(user?.email_confirmed_at || user?.confirmed_at);
   const checkEmailUrl = email => `check-email.html?email=${encodeURIComponent(email || '')}`;
@@ -42,59 +49,49 @@
     await tracking?.record('login');
     const intent = tracking?.context().courseIntent || profile?.pending_course_slug || null;
     try {
-        const { data, error } = await supabase.rpc('complete_pending_course_intent', { p_course_slug: intent });
-        if (error) throw error;
-        if (data?.status === 'enrolled') {
-          await tracking?.record('enrollment', { course_id: data.course_id, course_slug: intent || profile?.pending_course_slug || '' });
-          tracking?.clearCourseIntent();
-          sessionStorage.setItem('24k_open_course_id', data.course_id);
-          window.location.replace(`student-dashboard.html#courses`);
-          return;
-        }
-        if (data?.status === 'payment_required') {
-          sessionStorage.setItem('24k_open_course_id', data.course_id);
-          tracking?.clearCourseIntent();
-          window.location.replace(`student-dashboard.html#courses`);
-          return;
-        }
-      } catch (error) {
-        console.warn('Course intent completion failed:', error.message || error);
+      const { data, error } = await supabase.rpc('complete_pending_course_intent', { p_course_slug: intent });
+      if (error) throw error;
+      if (data?.status === 'enrolled') {
+        await tracking?.record('enrollment', { course_id: data.course_id, course_slug: intent || profile?.pending_course_slug || '' });
+        tracking?.clearCourseIntent();
+        sessionStorage.setItem('24k_open_course_id', data.course_id);
+        window.location.replace('student-dashboard.html#courses');
+        return;
       }
+      if (data?.status === 'payment_required') {
+        sessionStorage.setItem('24k_open_course_id', data.course_id);
+        tracking?.clearCourseIntent();
+        window.location.replace('student-dashboard.html#courses');
+        return;
+      }
+    } catch (error) {
+      console.warn('Course intent completion failed:', error.message || error);
+    }
     const destination = safeDestination(tracking?.context().destination);
     if (destination) tracking?.clearDestination();
     window.location.replace(destination || 'student-dashboard.html');
   }
 
-  const adminLoginRequested = requestedTab === 'admin-login' || params.get('mode') === 'admin';
   const { data: sessionData } = await supabase.auth.getSession();
   if (sessionData.session?.user) {
     try {
       const profile = await window.App.getProfile(sessionData.session.user.id);
-      if (adminLoginRequested) {
-        if (profile.role === 'admin') {
-          window.location.replace('admin-dashboard.html');
-          return;
-        }
-        // A student session must never bounce an explicit Admin Login request
-        // back to the Student Panel. Close it and let Admin credentials be entered.
+      if (profile.role !== 'student') {
         await supabase.auth.signOut();
-        activateTab('admin-login');
-        toast('Student session closed. Enter your Admin credentials.', 'info');
+        toast('This page accepts student accounts only.', 'error');
       } else {
-        if (profile.role === 'admin') window.location.replace('admin-dashboard.html');
-        else await finishStudentLogin(sessionData.session.user, profile);
+        await finishStudentLogin(sessionData.session.user, profile);
         return;
       }
     } catch (error) {
       console.error(error);
-      if (adminLoginRequested) {
-        await supabase.auth.signOut().catch(() => {});
-        activateTab('admin-login');
-      }
+      await supabase.auth.signOut().catch(() => {});
     }
   }
 
-  async function handleLogin(form, expectedRole) {
+  document.getElementById('studentLoginForm')?.addEventListener('submit', async event => {
+    event.preventDefault();
+    const form = event.currentTarget;
     const button = form.querySelector('button[type="submit"]');
     const values = new FormData(form);
     const email = String(values.get('email') || '').trim().toLowerCase();
@@ -107,23 +104,15 @@
         throw error;
       }
       const profile = await window.App.getProfile(data.user.id);
-      if (profile.role !== expectedRole) {
+      if (profile.role !== 'student') {
         await supabase.auth.signOut();
-        throw new Error(expectedRole === 'admin' ? 'This account does not have Admin access.' : 'Please use the Admin tab for this account.');
+        throw new Error('This account is not registered as a student account.');
       }
-      if (expectedRole === 'admin') window.location.replace('admin-dashboard.html');
-      else await finishStudentLogin(data.user, profile);
+      await finishStudentLogin(data.user, profile);
     } catch (error) {
-      toast(friendlyError(error, 'Login failed.'), 'error');
+      toast(friendlyError(error, 'Student login failed.'), 'error');
       setLoading(button, false);
     }
-  }
-
-  document.getElementById('studentLoginForm')?.addEventListener('submit', event => {
-    event.preventDefault(); handleLogin(event.currentTarget, 'student');
-  });
-  document.getElementById('adminLoginForm')?.addEventListener('submit', event => {
-    event.preventDefault(); handleLogin(event.currentTarget, 'admin');
   });
 
   document.getElementById('signupForm')?.addEventListener('submit', async event => {
@@ -159,7 +148,7 @@
       form.reset();
       if (data.session && isConfirmed(data.user)) {
         await tracking?.record('signup');
-        toast('Account created successfully.', 'success');
+        toast('Student account created successfully.', 'success');
         const profile = await window.App.getProfile(data.user.id);
         await finishStudentLogin(data.user, profile);
       } else {
@@ -167,7 +156,7 @@
         window.location.replace(checkEmailUrl(email));
       }
     } catch (error) {
-      toast(friendlyError(error, 'Could not create account.'), 'error');
+      toast(friendlyError(error, 'Could not create student account.'), 'error');
       setLoading(button, false);
     }
   });
@@ -186,7 +175,7 @@
         redirectTo: new URL('reset-password.html', window.location.href).href
       });
       if (error) throw error;
-      toast('Password reset link sent.', 'success');
+      toast('Student password reset link sent.', 'success');
       closeModal('forgotModal'); form.reset();
     } catch (error) { toast(friendlyError(error, 'Could not send reset link.'), 'error'); }
     finally { setLoading(button, false); }

@@ -18,3 +18,11 @@ GitHub Pages + Supabase platform containing the public website, Student Panel an
 - No Signal Copy / WhatsApp Copy button
 
 Start with `START_HERE_V9.txt`, then read `docs/V9_COMPLETE_SETUP.md` and `docs/TEST_CHECKLIST_V9.md`.
+
+
+## V9.1 Authentication Separation
+
+- Student access: `login.html` (Student Login + Sign Up only)
+- Admin access: `admin-login.html` (Admin Login only)
+- Student and Admin sessions use separate browser storage keys and can stay logged in independently.
+- No database/SQL update is required for V9.1.

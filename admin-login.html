@@ -1,1 +1,62 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin Login | 24K Excellence</title><meta http-equiv="refresh" content="0;url=login.html?tab=admin-login&amp;mode=admin"><script>location.replace('login.html?tab=admin-login&mode=admin')</script></head><body style="background:#0a0a0a;color:#ffc107;font-family:Arial;padding:30px">Opening Admin Login… <a style="color:#ffc107" href="login.html?tab=admin-login&amp;mode=admin">Continue</a></body></html>
+<!DOCTYPE html>
+<html lang="en" data-auth-scope="admin">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0A0A0A">
+<title>Admin Login | 24K Excellence</title>
+<link rel="icon" href="assets/logo.png">
+<link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="app-page admin-auth-page">
+<main class="auth-page">
+  <section class="auth-showcase admin-auth-showcase">
+    <a href="index.html"><img src="assets/logo.png" alt="24K Excellence"></a>
+    <h1>24K Operations.<br><span>One secure control center.</span></h1>
+    <p>Manage official signals, charts, articles, live courses, payments, users and platform access from the dedicated Admin Panel.</p>
+    <div class="auth-benefits">
+      <span><i class="fa-solid fa-shield-halved"></i> Dedicated Admin authentication session</span>
+      <span><i class="fa-solid fa-bolt"></i> Signal publishing and performance controls</span>
+      <span><i class="fa-solid fa-receipt"></i> Payment review and course unlocking</span>
+      <span><i class="fa-solid fa-users-gear"></i> User, access and operational management</span>
+    </div>
+  </section>
+
+  <section class="auth-panel">
+    <div class="auth-box admin-auth-box">
+      <a href="index.html" class="muted" style="text-decoration:none;font-size:12px"><i class="fa-solid fa-arrow-left"></i> Back to website</a>
+      <div class="auth-page-badge admin"><i class="fa-solid fa-user-shield"></i> ADMIN ACCESS</div>
+      <h2>Admin Control Center</h2>
+      <p class="muted" style="margin-top:0">Authorized administrators only.</p>
+      <div class="notice warn admin-security-notice"><i class="fa-solid fa-shield-halved"></i><span>This portal uses a dedicated secure Admin session. Only authorized administrator accounts can continue.</span></div>
+
+      <form id="adminLoginForm" class="auth-form on">
+        <div class="form-field"><label>Admin Email</label><input type="email" name="email" autocomplete="username" required value="24kmrzero@gmail.com"></div>
+        <div class="form-field"><label>Admin Password</label><input type="password" name="password" autocomplete="current-password" required minlength="6" placeholder="Enter admin password"></div>
+        <div class="auth-links"><label class="check-row"><input type="checkbox" checked> Remember admin session</label><a href="#" id="adminForgotPasswordLink">Forgot password?</a></div>
+        <button class="app-btn gold" type="submit"><i class="fa-solid fa-lock"></i> Login to Admin Panel</button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<div class="app-modal" id="adminForgotModal">
+  <div class="app-modal-card">
+    <div class="app-modal-head"><h3>Reset Admin Password</h3><button class="modal-close" data-close-modal="adminForgotModal"><i class="fa-solid fa-xmark"></i></button></div>
+    <form id="adminForgotForm">
+      <div class="app-modal-body">
+        <p class="muted">Enter the authorized Admin email. A secure reset link will open the separate Admin password reset page.</p>
+        <div class="form-field"><label>Admin Email</label><input type="email" name="email" required value="24kmrzero@gmail.com"></div>
+      </div>
+      <div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="adminForgotModal">Cancel</button><button class="app-btn gold" type="submit">Send Admin Reset Link</button></div>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/core.js?v=9.1"></script>
+<script src="assets/js/admin-auth.js?v=9.1"></script>
+</body>
+</html>
