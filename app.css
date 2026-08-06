@@ -606,3 +606,18 @@ input[type='file']::file-selector-button { margin-right: 10px; padding: 7px 10px
 #p-signals .filter-row .hidden{display:none!important}
 .required-mark{color:#ff6767;font-weight:900}
 @media(max-width:560px){#p-signals .signal-view-tabs{width:100%}#p-signals .signal-view-tab{flex:1;justify-content:center}}
+
+
+/* V9.8 compact signal history report */
+.signal-history-report-group{margin-bottom:18px}
+.signal-history-table-wrap{width:100%;overflow-x:auto;border:1px solid var(--app-line);border-radius:12px;background:rgba(255,255,255,.018);scrollbar-width:thin}
+.signal-history-report-table{width:100%;min-width:1500px;border-collapse:collapse;font-size:11px}
+.signal-history-report-table th{position:sticky;top:0;z-index:1;padding:9px 10px;background:#15140f;color:#9d9d9d;border-bottom:1px solid var(--app-line-gold);font-size:9px;letter-spacing:.04em;text-align:left;text-transform:uppercase;white-space:nowrap}
+.signal-history-report-table td{padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.055);color:#d7d7d7;white-space:nowrap;vertical-align:middle}
+.signal-history-report-table tbody tr:last-child td{border-bottom:0}
+.signal-history-report-table td small{display:block;margin-top:2px;color:#777;font-size:9px}
+.signal-report-row{cursor:pointer;transition:background .18s ease}
+.signal-report-row:hover,.signal-report-row:focus{outline:0;background:rgba(255,193,7,.055)}
+.signal-history-report-table .direction{padding:3px 6px;font-size:8px}
+.signal-history-report-table .status-pill{padding:4px 7px;font-size:8px}
+@media(max-width:700px){.signal-history-report-table{min-width:1320px;font-size:10px}.signal-history-report-table th,.signal-history-report-table td{padding:8px}}

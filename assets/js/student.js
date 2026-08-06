@@ -145,7 +145,9 @@
     });
     const statusFilter = document.getElementById('signalStatusFilter');
     if (statusFilter) statusFilter.classList.toggle('hidden', signalView === 'active');
-    document.getElementById('signalsGrid').innerHTML = rows.length ? renderSignalDateGroups(rows, signalView) : empty(signalView === 'active' ? 'No active signal is available.' : 'No closed signal matches these filters.', 'fa-filter');
+    document.getElementById('signalsGrid').innerHTML = rows.length
+      ? (signalView === 'history' ? renderSignalHistoryGroups(rows) : renderSignalDateGroups(rows, signalView))
+      : empty(signalView === 'active' ? 'No active signal is available.' : 'No closed signal matches these filters.', 'fa-filter');
     const latest=state.signalUpdates.find(u=>u.notify_users);
     document.getElementById('latestSignalUpdate').innerHTML=latest?`<div class="signal-update-banner"><i class="fa-solid fa-bell"></i><div><b>${A.escapeHtml(latest.notification_title||eventLabel(latest.event_type))}</b><small style="display:block;color:#888">${A.escapeHtml(latest.notification_message||'')} · ${A.formatDateTime(latest.created_at)}</small></div></div>`:'';
   }
@@ -175,6 +177,62 @@
     if (date.getTime() === today.getTime()) return 'Today';
     if (date.getTime() === yesterday.getTime()) return 'Yesterday';
     return date.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+  }
+
+
+  function historyDateParts(value) {
+    const date = value ? new Date(value) : null;
+    if (!date || Number.isNaN(date.getTime())) return { date: '—', time: '—' };
+    return {
+      date: date.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }),
+      time: date.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit', hour12:true })
+    };
+  }
+
+  function renderSignalHistoryGroups(rows) {
+    const groups = new Map();
+    rows.forEach(signal => {
+      const sourceDate = signal.closed_at || signal.last_status_at || signal.updated_at || signal.published_at;
+      const date = sourceDate ? new Date(sourceDate) : new Date();
+      const key = Number.isNaN(date.getTime()) ? 'unknown' : `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(signal);
+    });
+    return [...groups.entries()].map(([key, signals]) => {
+      const rowsHtml = signals.map(signal => {
+        const closed = historyDateParts(signal.closed_at || signal.last_status_at || signal.updated_at);
+        const published = historyDateParts(signal.published_at);
+        const finalPips = signal.result_pips == null ? '—' : `${signed(signal.result_pips)} Pips`;
+        const finalClass = Number(signal.result_pips) > 0 ? 'result-positive' : Number(signal.result_pips) < 0 ? 'result-negative' : '';
+        return `<tr class="signal-report-row" data-student-signal-history="${signal.id}" tabindex="0" role="button" aria-label="Open ${attr(displaySymbol(signal.symbol))} signal history">
+          <td>${A.escapeHtml(closed.date)}</td>
+          <td>${A.escapeHtml(closed.time)}</td>
+          <td><b>${displaySymbol(signal.symbol)}</b></td>
+          <td><span class="direction ${String(signal.direction).toLowerCase()}">${A.escapeHtml(signal.direction)}</span></td>
+          <td>${A.escapeHtml(A.statusLabel(signal.order_type || 'market'))}</td>
+          <td><b>${entryText(signal)}</b></td>
+          <td>${num(signal.stop_loss)}</td>
+          <td>${num(signal.take_profit_1)}</td>
+          <td>${num(signal.take_profit_2)}</td>
+          <td>${num(signal.take_profit_3)}</td>
+          <td><span class="status-pill ${A.statusClass(signal.status)}">${A.statusLabel(signal.status)}</span></td>
+          <td><b class="${finalClass}">${finalPips}</b></td>
+          <td>${A.escapeHtml(published.time)}<small>${A.escapeHtml(published.date)}</small></td>
+          <td>${A.escapeHtml(closed.time)}<small>${A.escapeHtml(closed.date)}</small></td>
+        </tr>`;
+      }).join('');
+      return `<section class="signal-date-group signal-history-report-group">
+        <div class="signal-date-label"><span>${A.escapeHtml(signalDateLabel(key))}</span><small>${signals.length} signal${signals.length === 1 ? '' : 's'}</small></div>
+        <div class="signal-history-table-wrap">
+          <table class="signal-history-report-table">
+            <thead><tr>
+              <th>Date</th><th>Time</th><th>Pair</th><th>Direction</th><th>Order Type</th><th>Entry / Zone</th><th>SL</th><th>TP1</th><th>TP2</th><th>TP3</th><th>Final Result</th><th>Final Pips</th><th>Published</th><th>Closed</th>
+            </tr></thead>
+            <tbody>${rowsHtml}</tbody>
+          </table>
+        </div>
+      </section>`;
+    }).join('');
   }
 
   function signalEventResult(signalId, eventType) {
