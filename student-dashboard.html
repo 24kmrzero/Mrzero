@@ -4,9 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0A0A0A">
+<script>(function(){try{var t=localStorage.getItem('24k-excellence-theme');document.documentElement.dataset.theme=t==='light'?'light':'dark'}catch(e){document.documentElement.dataset.theme='dark'}})();</script>
 <title>Student Panel | 24K Excellence</title>
 <link rel="icon" href="assets/logo.png">
-<link rel="stylesheet" href="app.css?v=9.5">
+<link rel="stylesheet" href="app.css?v=9.16">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body class="app-page">
@@ -38,6 +39,7 @@
       <button class="app-burger" id="burger" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
       <div class="app-title"><strong id="welcomeName">Welcome back</strong><small>Signals, learning and live classes in one place</small></div>
       <div class="app-search"><i class="fa-solid fa-magnifying-glass"></i><input id="globalSearch" type="search" placeholder="Search signals, charts, articles..."></div>
+      <button class="app-theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme" title="Switch to light theme"><i class="fa-solid fa-sun"></i></button>
       <button class="app-notify" data-goto="announcements" aria-label="Announcements"><i class="fa-solid fa-bell"></i><span id="topNoticeCount">0</span></button>
       <div class="app-avatar" id="studentAvatar">ST</div>
     </header>
@@ -50,7 +52,7 @@
         <div class="app-grid cols-2">
           <div>
             <div class="app-card"><div class="app-card-head"><div><h3>Latest Signal</h3><p>Most recently published trading setup</p></div><button class="app-btn small outline" data-goto="signals">View All</button></div><div id="latestSignal"></div></div>
-            <div class="app-card"><div class="app-card-head"><div><h3>Your Courses</h3><p>Access live Google Meet classes after payment approval</p></div><button class="app-btn small outline" data-goto="courses">Open Courses</button></div><div id="dashboardCourses"></div></div>
+            <div class="app-card"><div class="app-card-head"><div><h3>Your Courses</h3><p>Access live online classes after enrollment or payment approval</p></div><button class="app-btn small outline" data-goto="courses">Open Courses</button></div><div id="dashboardCourses"></div></div>
           </div>
           <div>
             <div class="app-card"><div class="app-card-head"><div><h3>Next Live Class</h3><p>Instructor: Malik Zameer</p></div></div><div id="nextSession"></div></div>
@@ -80,9 +82,9 @@
       </section>
 
       <section class="panel" id="p-courses">
-        <div class="panel-heading"><div><h2>Live Courses</h2><p>Google Meet classes with Malik Zameer. Meet links unlock only after admin approval.</p></div></div>
+        <div class="panel-heading"><div><h2>Live Courses</h2><p>Online classes with Malik Zameer. Class access unlocks after enrollment or payment approval.</p></div></div>
         <div class="course-list-grid" id="coursesGrid"></div>
-        <div id="sessionsArea" class="hidden" style="margin-top:26px"><div class="panel-heading"><div><h2 id="sessionCourseTitle">Course Sessions</h2><p>Schedule is visible to everyone; Google Meet links remain locked until approval.</p></div><button class="app-btn outline" id="closeSessions"><i class="fa-solid fa-arrow-left"></i> Back to Courses</button></div><div class="session-grid" id="sessionsGrid"></div><div id="resourcesArea" class="app-card hidden" style="margin-top:20px"><div class="app-card-head"><div><h3>Course Resources</h3><p>Optional files uploaded by the admin</p></div></div><div id="resourcesList"></div></div></div>
+        <div id="sessionsArea" class="hidden" style="margin-top:26px"><div class="panel-heading"><div><h2 id="sessionCourseTitle">Course Sessions</h2><p>Schedule is visible to everyone; online class access unlocks after enrollment or payment approval.</p></div><button class="app-btn outline" id="closeSessions"><i class="fa-solid fa-arrow-left"></i> Back to Courses</button></div><div class="session-grid" id="sessionsGrid"></div><div id="resourcesArea" class="app-card hidden" style="margin-top:20px"><div class="app-card-head"><div><h3>Course Resources</h3><p>Optional files uploaded by the admin</p></div></div><div id="resourcesList"></div></div></div>
       </section>
 
       <section class="panel" id="p-payments">
@@ -102,7 +104,7 @@
       <section class="panel" id="p-support">
         <div class="panel-heading"><div><h2>Support</h2><p>Send a support request or contact the team directly.</p></div></div>
         <div class="app-grid cols-3" style="margin-bottom:20px"><div class="app-card"><i class="fa-brands fa-whatsapp" style="font-size:28px;color:#169c59"></i><h3>WhatsApp Support</h3><p class="muted">Fast support for access and payment questions.</p><a id="supportWhatsApp" class="app-btn green" target="_blank">Open WhatsApp</a></div><div class="app-card"><i class="fa-solid fa-envelope" style="font-size:27px;color:#2767d8"></i><h3>Email Support</h3><p class="muted">Send details for account or technical issues.</p><a id="supportEmail" class="app-btn outline">Send Email</a></div><div class="app-card"><i class="fa-solid fa-clock" style="font-size:27px;color:#9c7200"></i><h3>Response Status</h3><p class="muted">Your submitted support tickets appear below.</p><b id="supportCount">0 open request(s)</b></div></div>
-        <div class="app-card"><div class="app-card-head"><div><h3>Submit Support Request</h3><p>Include clear details so the admin can help quickly.</p></div></div><form id="supportForm"><div class="form-grid"><div class="form-field"><label>Category</label><select name="category"><option>Payment</option><option>Course Access</option><option>Google Meet</option><option>Signals</option><option>Account</option><option>Other</option></select></div><div class="form-field"><label>Subject</label><input name="subject" required></div><div class="form-field full"><label>Message</label><textarea name="message" required></textarea></div></div><div class="inline-actions"><button class="app-btn gold" type="submit">Submit Request</button></div></form></div>
+        <div class="app-card"><div class="app-card-head"><div><h3>Submit Support Request</h3><p>Include clear details so the admin can help quickly.</p></div></div><form id="supportForm"><div class="form-grid"><div class="form-field"><label>Category</label><select name="category"><option>Payment</option><option>Course Access</option><option>Online Class</option><option>Signals</option><option>Account</option><option>Other</option></select></div><div class="form-field"><label>Subject</label><input name="subject" required></div><div class="form-field full"><label>Message</label><textarea name="message" required></textarea></div></div><div class="inline-actions"><button class="app-btn gold" type="submit">Submit Request</button></div></form></div>
         <div class="app-card"><div class="app-card-head"><h3>My Requests</h3></div><div id="supportRequests"></div></div>
       </section>
     </div>
@@ -122,9 +124,9 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/js/config.js"></script>
 
-<script src="assets/js/core.js?v=9.1"></script>
+<script src="assets/js/core.js?v=9.16"></script>
 <script src="assets/js/tracking.js?v=9.1"></script>
-<script src="assets/js/student.js?v=9.15"></script>
+<script src="assets/js/student.js?v=9.16"></script>
 <script src="assets/js/platform-v8-student.js?v=9.12"></script>
 </body>
 </html>
