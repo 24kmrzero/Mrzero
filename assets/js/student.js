@@ -74,9 +74,9 @@
     const losses = finals.filter(s => Number(s.result_pips) < 0).length;
     const breakeven = finals.filter(s => Number(s.result_pips) === 0).length;
     const forex = finals.filter(s => resultUnit(s.symbol) === 'pips');
-    const markets = finals.filter(s => resultUnit(s.symbol) === 'points');
+    const markets = [];
     const totalPips = forex.reduce((sum,s)=>sum+Number(s.result_pips||0),0);
-    const totalPoints = markets.reduce((sum,s)=>sum+Number(s.result_pips||0),0);
+    const totalPoints = 0;
     const weekStart = new Date(); weekStart.setDate(weekStart.getDate()-7);
     const monthStart = new Date(); monthStart.setDate(1); monthStart.setHours(0,0,0,0);
     const weekPips = forex.filter(s=>new Date(s.closed_at)>=weekStart).reduce((sum,s)=>sum+Number(s.result_pips||0),0);
@@ -91,7 +91,7 @@
     ];
     document.getElementById('studentKpis').innerHTML = data.map(([icon, value, label, panel]) => `<button type="button" class="app-kpi dashboard-nav-card" data-goto="${panel}" aria-label="Open ${label}"><i class="fa-solid ${icon}"></i><div><b>${value}</b><small>${label}</small></div><i class="fa-solid fa-arrow-right dashboard-nav-arrow"></i></button>`).join('');
     document.getElementById('signalPerformance').innerHTML = [
-      ['Forex Pips', signed(totalPips)], ['Market Points', signed(totalPoints)], ['This Week Pips', signed(weekPips)],
+      ['Total Pips', signed(finals.filter(s=>s.status!=='cancelled').reduce((sum,s)=>sum+Number(s.result_pips||0),0))], ['Active Signals', state.signals.filter(s=>!signalIsFinal(s)).length], ['This Week Pips', signed(weekPips)],
       ['This Month Pips', signed(monthPips)], ['Win Rate', `${winRate}%`], ['Closed Signals', finals.length],
       ['Wins / Losses', `${wins} / ${losses}`], ['Breakeven', breakeven]
     ].map(([label, value]) => `<div class="performance-item"><small>${label}</small><b>${value}</b></div>`).join('');
@@ -478,7 +478,7 @@
   }
 
   function signalIsFinal(s){return Boolean(s.closed_at)||['tp3_hit','tp4_hit','sl_hit','breakeven_hit','manually_closed','cancelled'].includes(s.status);}
-  function resultUnit(symbol){const x=String(symbol||'').replace('/','').toUpperCase();return ['XAUUSD','XAGUSD','BTCUSD','US30','NAS100','SPX500','GER40'].includes(x)?'points':'pips';}
+  function resultUnit(){return 'pips';}
   function displaySymbol(symbol){const x=String(symbol||'').replace('/','').toUpperCase();return x.length===6?`${x.slice(0,3)}/${x.slice(3)}`:x;}
   function entryText(s){return `${num(s.entry_from)}${s.entry_to!=null?` – ${num(s.entry_to)}`:''}`;}
   function signed(value){const n=Number(value||0);return `${n>0?'+':''}${Number.isInteger(n)?n:n.toFixed(1)}`;}
