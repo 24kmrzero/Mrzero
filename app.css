@@ -446,3 +446,64 @@ input[type='file']::file-selector-button { margin-right: 10px; padding: 7px 10px
 @media (max-width: 620px) {
   .student-auth-tabs { grid-template-columns: repeat(2,minmax(0,1fr)); }
 }
+
+/* V9.2 chart CRUD hardening */
+.chart-upload-preview{min-height:190px;border:1px dashed rgba(255,193,7,.32);border-radius:14px;background:#090909;display:flex;align-items:center;justify-content:center;gap:10px;overflow:hidden;color:#777;padding:14px}.chart-upload-preview.empty{flex-direction:column}.chart-upload-preview i{font-size:30px;color:rgba(255,193,7,.45)}.chart-upload-preview img{display:block;width:100%;max-height:420px;object-fit:contain;object-position:center;border-radius:10px;background:#050505}.chart-upload-preview .preview-meta{display:flex;flex-direction:column;gap:3px}.chart-upload-preview .preview-meta b{color:#f5f5f5}.chart-upload-preview .preview-meta small{color:#888}.instrument-picker.invalid>input[type=search]{border-color:#dc2626;box-shadow:0 0 0 3px rgba(220,38,38,.12)}
+
+
+/* V9.3 dashboard navigation cards */
+.dashboard-nav-card {
+  width: 100%;
+  appearance: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  position: relative;
+}
+.dashboard-nav-card .dashboard-nav-arrow {
+  margin-left: auto;
+  opacity: .38;
+  font-size: .78rem;
+  transition: transform .2s ease, opacity .2s ease;
+}
+.dashboard-nav-card:hover,
+.dashboard-nav-card:focus-visible {
+  border-color: rgba(255, 193, 7, .55);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, .24), 0 0 0 1px rgba(255, 193, 7, .08);
+  outline: none;
+}
+.dashboard-nav-card:hover .dashboard-nav-arrow,
+.dashboard-nav-card:focus-visible .dashboard-nav-arrow {
+  opacity: 1;
+  transform: translateX(3px);
+}
+.dashboard-preview-link {
+  display: block;
+  border-radius: inherit;
+  cursor: pointer;
+}
+.dashboard-preview-link:focus-visible {
+  outline: 2px solid var(--gold, #ffc107);
+  outline-offset: 3px;
+}
+.dashboard-preview-link:hover > .signal-card,
+.dashboard-preview-link:hover > .empty-state,
+.dashboard-preview-link:hover > .announcement,
+.dashboard-preview-link:hover > .session-body {
+  filter: brightness(1.06);
+}
+.dashboard-activity-link {
+  width: 100%;
+  border: 0;
+  color: inherit;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+.dashboard-activity-link:hover,
+.dashboard-activity-link:focus-visible {
+  background: rgba(255, 193, 7, .06);
+  outline: 1px solid rgba(255, 193, 7, .25);
+}

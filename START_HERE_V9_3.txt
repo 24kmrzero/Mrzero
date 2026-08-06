@@ -1,0 +1,9 @@
+24K Excellence V9.3
+
+Dashboard navigation fix:
+- Admin KPI, urgent, session and quick-action controls open their exact tabs.
+- Student KPI cards open Signals, Charts, Articles, Courses and Payments.
+- Latest Signal, Next Live Class and Latest Announcement previews open their exact sections.
+- No new SQL is required.
+
+Upload all files inside this folder to the GitHub repository root and hard refresh.

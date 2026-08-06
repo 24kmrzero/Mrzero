@@ -501,7 +501,15 @@
     { icon: 'fa-address-book', value: overview.new_enquiries ?? state.enquiries.filter(row => row.status === 'new').length, title: 'New website enquiries', panel: 'leads', tone: 'blue' },
     { icon: 'fa-headset', value: overview.open_support ?? state.support.filter(row => ['open', 'in_progress'].includes(row.status)).length, title: 'Open support requests', panel: 'support', tone: 'blue' },
     { icon: 'fa-video', value: upcoming.length, title: upcoming[0] ? `Next class: ${A.formatDateTime(upcoming[0].starts_at)}` : 'No upcoming class', panel: 'sessions', tone: 'green' }
-  ]; const root = document.getElementById('urgentActions'); if (root) root.innerHTML = items.map(item => `<button class="urgent-card ${item.tone}" data-goto="${item.panel}"><i class="fa-solid ${item.icon}"></i><div><b>${item.value}</b><span>${esc(item.title)}</span></div><i class="fa-solid fa-arrow-right"></i></button>`).join(''); const adminKpis = document.getElementById('adminKpis'); if (adminKpis && overview.total_users !== undefined) adminKpis.innerHTML = [['fa-users', overview.total_users, 'Total Users'], ['fa-user-plus', overview.new_today, 'New Today'], ['fa-envelope-circle-check', overview.verified_users, 'Verified'], ['fa-envelope-open', overview.unverified_users, 'Unverified'], ['fa-unlock', overview.active_users, 'Active'], ['fa-lock', overview.locked_users, 'Locked'], ['fa-bell', overview.unread_admin_notifications, 'Admin Alerts']].map(([icon, value, title]) => `<div class="app-kpi"><i class="fa-solid ${icon}"></i><div><b>${value || 0}</b><small>${title}</small></div></div>`).join(''); }
+  ]; const root = document.getElementById('urgentActions'); if (root) root.innerHTML = items.map(item => `<button class="urgent-card ${item.tone}" data-goto="${item.panel}"><i class="fa-solid ${item.icon}"></i><div><b>${item.value}</b><span>${esc(item.title)}</span></div><i class="fa-solid fa-arrow-right"></i></button>`).join(''); const adminKpis = document.getElementById('adminKpis'); if (adminKpis && overview.total_users !== undefined) adminKpis.innerHTML = [
+      ['fa-users', overview.total_users, 'Total Users', 'students'],
+      ['fa-user-plus', overview.new_today, 'New Today', 'students'],
+      ['fa-envelope-circle-check', overview.verified_users, 'Verified', 'students'],
+      ['fa-envelope-open', overview.unverified_users, 'Unverified', 'students'],
+      ['fa-unlock', overview.active_users, 'Active', 'students'],
+      ['fa-lock', overview.locked_users, 'Locked', 'students'],
+      ['fa-bell', overview.unread_admin_notifications, 'Admin Alerts', 'admin-notifications']
+    ].map(([icon, value, title, panel]) => `<button type="button" class="app-kpi dashboard-nav-card" data-goto="${panel}" aria-label="Open ${title}"><i class="fa-solid ${icon}"></i><div><b>${value || 0}</b><small>${title}</small></div><i class="fa-solid fa-arrow-right dashboard-nav-arrow"></i></button>`).join(''); }
 
   function decorateBaseTables() {
     state.support.forEach(row => { const button = document.querySelector(`[data-support-status][data-id="${row.id}"]`); const actions = button?.parentElement; if (actions && !actions.querySelector('[data-support-review]')) actions.insertAdjacentHTML('afterbegin', `<button class="app-btn small gold" data-support-review="${row.id}">Review</button>`); });

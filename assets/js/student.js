@@ -82,11 +82,13 @@
     const monthPips = forex.filter(s=>new Date(s.closed_at)>=monthStart).reduce((sum,s)=>sum+Number(s.result_pips||0),0);
     const winRate = finals.length ? Math.round((wins / finals.length) * 100) : 0;
     const data = [
-      ['fa-bolt', activeSignals, 'Active Signals'], ['fa-chart-line', state.charts.length, 'Published Charts'],
-      ['fa-newspaper', state.articles.length, 'Learning Articles'], ['fa-graduation-cap', approvedCourses, 'Unlocked Courses'],
-      ['fa-receipt', pending, 'Pending Payments']
+      ['fa-bolt', activeSignals, 'Active Signals', 'signals'],
+      ['fa-chart-line', state.charts.length, 'Published Charts', 'charts'],
+      ['fa-newspaper', state.articles.length, 'Learning Articles', 'articles'],
+      ['fa-graduation-cap', approvedCourses, 'Unlocked Courses', 'courses'],
+      ['fa-receipt', pending, 'Pending Payments', 'payments']
     ];
-    document.getElementById('studentKpis').innerHTML = data.map(([icon, value, label]) => `<div class="app-kpi"><i class="fa-solid ${icon}"></i><div><b>${value}</b><small>${label}</small></div></div>`).join('');
+    document.getElementById('studentKpis').innerHTML = data.map(([icon, value, label, panel]) => `<button type="button" class="app-kpi dashboard-nav-card" data-goto="${panel}" aria-label="Open ${label}"><i class="fa-solid ${icon}"></i><div><b>${value}</b><small>${label}</small></div><i class="fa-solid fa-arrow-right dashboard-nav-arrow"></i></button>`).join('');
     document.getElementById('signalPerformance').innerHTML = [
       ['Forex Pips', signed(totalPips)], ['Market Points', signed(totalPoints)], ['This Week Pips', signed(weekPips)],
       ['This Month Pips', signed(monthPips)], ['Win Rate', `${winRate}%`], ['Closed Signals', finals.length],
@@ -105,7 +107,7 @@
     else if (declined) alert.innerHTML = `<div class="notice bad"><i class="fa-solid fa-circle-xmark"></i> A payment was declined. Review the admin note in Payment History and submit a new receipt.</div>`;
     else alert.innerHTML = '';
 
-    document.getElementById('latestSignal').innerHTML = state.signals[0] ? signalCard(state.signals[0], true) : empty('No signal has been published yet.', 'fa-bolt');
+    document.getElementById('latestSignal').innerHTML = `<div class="dashboard-preview-link" data-goto="signals" role="button" tabindex="0" aria-label="Open Signals">${state.signals[0] ? signalCard(state.signals[0], true) : empty('No signal has been published yet.', 'fa-bolt')}</div>`;
     const coursePreview = state.courses.slice(0, 2);
     document.getElementById('dashboardCourses').innerHTML = coursePreview.length ? coursePreview.map(course => {
       const access = hasCourseAccess(course.id);
@@ -114,9 +116,9 @@
     }).join('') : empty('No course is currently available.', 'fa-graduation-cap');
 
     const next = state.sessions.filter(s => new Date(s.starts_at) >= new Date() && s.status !== 'cancelled')[0] || state.sessions.find(s => s.status === 'upcoming');
-    document.getElementById('nextSession').innerHTML = next ? sessionCompact(next) : empty('No upcoming class has been scheduled.', 'fa-calendar');
+    document.getElementById('nextSession').innerHTML = `<div class="dashboard-preview-link" data-goto="courses" role="button" tabindex="0" aria-label="Open Courses and live sessions">${next ? sessionCompact(next) : empty('No upcoming class has been scheduled.', 'fa-calendar')}</div>`;
     const notice = state.announcements[0];
-    document.getElementById('latestAnnouncement').innerHTML = notice ? `<div class="announcement ${notice.priority === 'important' ? 'important' : ''}"><h4>${A.escapeHtml(notice.title)}</h4><p>${A.escapeHtml(notice.message)}</p><small>${A.formatDateTime(notice.published_at)}</small></div>` : empty('No announcement has been published.', 'fa-bullhorn');
+    document.getElementById('latestAnnouncement').innerHTML = `<div class="dashboard-preview-link" data-goto="announcements" role="button" tabindex="0" aria-label="Open Announcements">${notice ? `<div class="announcement ${notice.priority === 'important' ? 'important' : ''}"><h4>${A.escapeHtml(notice.title)}</h4><p>${A.escapeHtml(notice.message)}</p><small>${A.formatDateTime(notice.published_at)}</small></div>` : empty('No announcement has been published.', 'fa-bullhorn')}</div>`;
   }
 
   function renderSignals() {

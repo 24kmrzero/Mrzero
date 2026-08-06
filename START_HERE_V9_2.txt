@@ -1,0 +1,20 @@
+24K EXCELLENCE V9.2 — CHART CRUD FIX
+
+1. No new SQL is required for this update.
+2. Extract the ZIP.
+3. Upload every file/folder inside the extracted folder to the GitHub repository root.
+4. Replace existing files.
+5. Wait 1–3 minutes for GitHub Pages.
+6. Open Admin Dashboard and press Ctrl+F5.
+7. Test Charts: Add Chart -> choose instrument dropdown -> image -> Save Chart.
+8. Test Edit and Delete.
+
+Admin URL:
+https://24kmrzero.github.io/Mrzero/admin-login.html
+
+Fixes:
+- Save Chart no longer fails silently.
+- Delete no longer throws innerHTML/null error.
+- Chart symbol is now a searchable grouped dropdown matching Signals.
+- Gold, Silver, BTC appear first; USD pairs next; crosses below.
+- Image preview, size/type validation and storage cleanup included.

@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0A0A0A">
 <title>Admin Panel | 24K Excellence</title>
 <link rel="icon" href="assets/logo.png">
-<link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="app.css?v=9.2">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body class="app-page">
@@ -68,7 +68,25 @@
 
       <section class="panel" id="p-charts">
         <div class="panel-heading"><div><h2>Charts Management</h2><p>Upload chart images with a clear market summary.</p></div><button class="app-btn gold" data-toggle-form="chartFormBox"><i class="fa-solid fa-plus"></i> Add Chart</button></div>
-        <div class="app-card admin-form-box" id="chartFormBox"><form id="chartForm"><input type="hidden" name="id"><input type="hidden" name="existing_image_url"><div class="form-grid"><div class="form-field"><label>Title</label><input name="title" required></div><div class="form-field"><label>Symbol</label><input name="symbol" required placeholder="XAUUSD"></div><div class="form-field"><label>Timeframe</label><select name="timeframe"><option>M15</option><option>H1</option><option>H4</option><option>D1</option></select></div><div class="form-field"><label>Category</label><input name="category" placeholder="Gold, Forex, Crypto..."></div><div class="form-field"><label>Chart Image</label><input type="file" name="image" accept="image/png,image/jpeg,image/webp"></div><div class="form-field full"><label>Analysis Summary</label><textarea name="summary" required></textarea></div><div class="form-field full"><label>Full Analysis / Details</label><textarea name="details" style="min-height:180px"></textarea></div><label class="check-row"><input type="checkbox" name="is_published" checked> Publish to students</label></div><div class="inline-actions"><button type="button" class="app-btn outline" data-cancel-form="chartFormBox">Cancel</button><button class="app-btn gold" type="submit">Save Chart</button></div></form></div>
+        <div class="app-card admin-form-box" id="chartFormBox">
+          <form id="chartForm">
+            <input type="hidden" name="id">
+            <input type="hidden" name="existing_image_url">
+            <div class="form-grid">
+              <div class="form-field full"><label>Trading Instrument</label><div class="instrument-picker" id="chartInstrumentPicker"><input id="chartInstrumentSearch" type="search" autocomplete="off" placeholder="Search GOLD, SILVER, BTC, EURUSD..."><input type="hidden" name="symbol"><button type="button" class="instrument-toggle" aria-label="Open chart instrument list"><i class="fa-solid fa-chevron-down"></i></button><div class="instrument-menu" id="chartInstrumentMenu"></div></div><small class="muted">GOLD, SILVER and BTC appear first, followed by USD pairs and cross pairs.</small></div>
+              <div class="form-field"><label>Title</label><input name="title" required placeholder="Gold H4 Market Analysis"></div>
+              <div class="form-field"><label>Timeframe</label><select name="timeframe" required><option>M5</option><option selected>M15</option><option>M30</option><option>H1</option><option>H4</option><option>D1</option><option>W1</option></select></div>
+              <div class="form-field"><label>Category</label><input name="category" readonly placeholder="Selected automatically"></div>
+              <div class="form-field"><label>Chart Image</label><input type="file" name="image" accept="image/png,image/jpeg,image/webp"><small class="muted">PNG, JPG or WEBP · maximum 8 MB. Image is required for a new chart.</small></div>
+              <div class="form-field full"><div class="chart-upload-preview empty" id="chartImagePreview"><i class="fa-solid fa-image"></i><span>Selected chart image preview will appear here.</span></div></div>
+              <div class="form-field full"><label>Analysis Summary</label><textarea name="summary" required maxlength="500" placeholder="Short market summary shown on the chart card"></textarea></div>
+              <div class="form-field full"><label>Full Analysis / Details</label><textarea name="details" style="min-height:180px" placeholder="Complete analysis, levels, confirmation and invalidation details"></textarea></div>
+              <label class="check-row"><input type="checkbox" name="is_published" checked> Publish to students</label>
+            </div>
+            <div class="notice info"><i class="fa-solid fa-shield-halved"></i> Save, edit and delete actions now show a clear result. Replacing or deleting a chart also cleans up its old image from storage.</div>
+            <div class="inline-actions"><button type="button" class="app-btn outline" data-cancel-form="chartFormBox">Cancel</button><button class="app-btn gold" type="submit"><i class="fa-solid fa-cloud-arrow-up"></i> Save Chart</button></div>
+          </form>
+        </div>
         <div class="content-grid" id="adminChartsGrid"></div>
       </section>
 
@@ -129,6 +147,6 @@
 
 <div class="app-modal" id="receiptPreviewModal"><div class="app-modal-card receipt-preview-card"><div class="app-modal-head"><div><h3>Payment Receipt</h3><small id="receiptPreviewSubtitle" class="muted">Secure temporary preview</small></div><button class="modal-close" data-close-modal="receiptPreviewModal"><i class="fa-solid fa-xmark"></i></button></div><div class="app-modal-body"><div id="receiptPreviewContent" class="receipt-preview-content"></div></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="receiptPreviewModal">Close</button><a id="receiptOpenExternal" class="app-btn gold" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Full Size</a></div></div></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js"></script><script src="assets/js/core.js?v=9.1"></script><script src="assets/js/admin.js?v=9.1"></script><script src="assets/js/platform-v8-admin.js?v=9.1"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js"></script><script src="assets/js/core.js?v=9.2"></script><script src="assets/js/admin.js?v=9.2"></script><script src="assets/js/platform-v8-admin.js?v=9.2"></script>
 </body>
 </html>
