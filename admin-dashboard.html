@@ -62,7 +62,12 @@
           </form>
         </div>
 
-        <div class="filter-row"><input id="adminSignalSearch" type="search" placeholder="Search pair or note..."><select id="adminSignalView"><option value="all">All Signals</option><option value="active">Active / In Progress</option><option value="history">Closed History</option></select></div>
+        <div class="admin-signal-tabs" role="tablist" aria-label="Signal view">
+          <button type="button" class="admin-signal-tab active" data-admin-signal-view="active" aria-selected="true"><i class="fa-solid fa-bolt"></i> Active Signals <span id="adminActiveSignalCount">0</span></button>
+          <button type="button" class="admin-signal-tab" data-admin-signal-view="history" aria-selected="false"><i class="fa-solid fa-clock-rotate-left"></i> History <span id="adminHistorySignalCount">0</span></button>
+          <input type="hidden" id="adminSignalView" value="active">
+        </div>
+        <div class="filter-row"><input id="adminSignalSearch" type="search" placeholder="Search pair or note..."></div>
         <div class="table-scroll"><table class="admin-table signal-admin-table"><thead><tr><th>Signal</th><th>Order</th><th>Entry / SL</th><th>Targets & Progress</th><th>Status</th><th>Result</th><th>Published</th><th>Actions</th></tr></thead><tbody id="signalsBody"></tbody></table></div>
       </section>
 
