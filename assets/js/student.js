@@ -286,6 +286,12 @@
     }).join('') : empty('No course is currently published.', 'fa-graduation-cap');
   }
 
+  function resetCourseView() {
+    state.selectedCourse = null;
+    document.getElementById('sessionsArea')?.classList.add('hidden');
+    document.getElementById('coursesGrid')?.classList.remove('hidden');
+  }
+
   function showCourseSessions(courseId) {
     state.selectedCourse = state.courses.find(c => c.id === courseId);
     if (!state.selectedCourse) return;
@@ -304,7 +310,11 @@
   function sessionCard(session, access) {
     const link = state.sessionLinks[session.id];
     const unlocked = access && Boolean(link);
-    return `<article class="session-card"><div class="session-top"><span class="session-number">Session ${session.session_number}</span><span class="session-lock"><i class="fa-solid ${unlocked ? 'fa-lock-open' : 'fa-lock'}"></i></span></div><div class="session-body"><div class="signal-head"><h3>${A.escapeHtml(session.title)}</h3><span class="status-pill ${A.statusClass(session.status)}">${A.statusLabel(session.status)}</span></div><p>${A.escapeHtml(session.topic || '')}</p><div class="session-date"><span><i class="fa-solid fa-calendar"></i> ${A.formatDateTime(session.starts_at)}</span><span><i class="fa-solid fa-hourglass-half"></i> ${session.duration_minutes || 90} minutes</span><span><i class="fa-solid fa-video"></i> Google Meet</span></div>${unlocked ? `<a class="app-btn green" href="${attr(link)}" target="_blank" rel="noopener"><i class="fa-solid fa-video"></i> Join Google Meet</a>` : `<button class="app-btn outline" disabled><i class="fa-solid fa-lock"></i> ${access ? 'Meet link not added yet' : 'Locked until payment approval'}</button>`}</div></article>`;
+    const course = state.selectedCourse || state.courses.find(c => c.id === session.course_id);
+    const effectivePrice = course ? Number(course.discount_price != null ? course.discount_price : course.price || 0) : 0;
+    const isFree = course?.course_type === 'free' || effectivePrice === 0;
+    const lockedLabel = access ? 'Meet link not added yet' : (isFree ? 'Locked until enrollment' : 'Locked until payment approval');
+    return `<article class="session-card"><div class="session-top"><span class="session-number">Session ${session.session_number}</span><span class="session-lock"><i class="fa-solid ${unlocked ? 'fa-lock-open' : 'fa-lock'}"></i></span></div><div class="session-body"><div class="signal-head"><h3>${A.escapeHtml(session.title)}</h3><span class="status-pill ${A.statusClass(session.status)}">${A.statusLabel(session.status)}</span></div><p>${A.escapeHtml(session.topic || '')}</p><div class="session-date"><span><i class="fa-solid fa-calendar"></i> ${A.formatDateTime(session.starts_at)}</span><span><i class="fa-solid fa-hourglass-half"></i> ${session.duration_minutes || 90} minutes</span><span><i class="fa-solid fa-video"></i> Google Meet</span></div>${unlocked ? `<a class="app-btn green" href="${attr(link)}" target="_blank" rel="noopener"><i class="fa-solid fa-video"></i> Join Google Meet</a>` : `<button class="app-btn outline" disabled><i class="fa-solid fa-lock"></i> ${lockedLabel}</button>`}</div></article>`;
   }
 
   function sessionCompact(session) {
@@ -349,11 +359,12 @@
   function bindEvents() {
     document.addEventListener('panel:open', event => {
       if (event.detail.key === 'signals' && !state.riskAccepted) A.openModal('riskModal');
+      if (event.detail.key === 'courses') resetCourseView();
     });
     ['signalSearch','signalStatusFilter','signalDirectionFilter'].forEach(id => document.getElementById(id)?.addEventListener('input', renderSignals));
     ['chartSearch','chartTimeframeFilter'].forEach(id => document.getElementById(id)?.addEventListener('input', renderCharts));
     document.getElementById('articleSearch')?.addEventListener('input', renderArticles);
-    document.getElementById('closeSessions').addEventListener('click', () => { document.getElementById('sessionsArea').classList.add('hidden'); document.getElementById('coursesGrid').classList.remove('hidden'); });
+    document.getElementById('closeSessions').addEventListener('click', resetCourseView);
 
     document.body.addEventListener('click', async event => {
       const signalViewButton = event.target.closest('[data-signal-view]');
@@ -453,7 +464,9 @@
       const { error } = await A.supabase.rpc('enroll_free_course', { p_course_id: courseId });
         if (error) throw error;
         await loadAll();
-      renderAll(); A.toast('Free course enrolled successfully.', 'success');
+      renderAll();
+      showCourseSessions(courseId);
+      A.toast('Free course enrolled successfully. Google Meet links are now unlocked.', 'success');
     } catch (error) { A.toast(A.friendlyError(error, 'Could not enroll.'), 'error'); }
     finally { A.setLoading(button, false); }
   }
