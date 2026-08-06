@@ -130,9 +130,34 @@
       const statusMatch=status==='all'||(status==='active'&&!final)||(status==='history'&&final)||(status==='wins'&&final&&result>0)||(status==='losses'&&final&&result<0)||(status==='breakeven'&&s.status==='breakeven_hit')||(status==='cancelled'&&s.status==='cancelled');
       return (!query || `${s.symbol} ${s.notes || ''}`.toLowerCase().includes(query)) && statusMatch && (direction === 'all' || s.direction === direction);
     });
-    document.getElementById('signalsGrid').innerHTML = rows.length ? rows.map(s => signalCard(s)).join('') : empty('No signal matches these filters.', 'fa-filter');
+    document.getElementById('signalsGrid').innerHTML = rows.length ? renderSignalDateGroups(rows) : empty('No signal matches these filters.', 'fa-filter');
     const latest=state.signalUpdates.find(u=>u.notify_users);
     document.getElementById('latestSignalUpdate').innerHTML=latest?`<div class="signal-update-banner"><i class="fa-solid fa-bell"></i><div><b>${A.escapeHtml(latest.notification_title||eventLabel(latest.event_type))}</b><small style="display:block;color:#888">${A.escapeHtml(latest.notification_message||'')} · ${A.formatDateTime(latest.created_at)}</small></div></div>`:'';
+  }
+
+  function renderSignalDateGroups(rows) {
+    const groups = new Map();
+    rows.forEach(signal => {
+      const date = signal.published_at ? new Date(signal.published_at) : new Date();
+      const key = Number.isNaN(date.getTime()) ? 'unknown' : `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(signal);
+    });
+    return [...groups.entries()].map(([key, signals]) => {
+      const label = signalDateLabel(key);
+      return `<section class="signal-date-group"><div class="signal-date-label"><span>${A.escapeHtml(label)}</span><small>${signals.length} signal${signals.length === 1 ? '' : 's'}</small></div><div class="signal-date-cards">${signals.map(s => signalCard(s)).join('')}</div></section>`;
+    }).join('');
+  }
+
+  function signalDateLabel(key) {
+    if (key === 'unknown') return 'Older Signals';
+    const parts = key.split('-').map(Number);
+    const date = new Date(parts[0], parts[1]-1, parts[2]);
+    const today = new Date(); today.setHours(0,0,0,0);
+    const yesterday = new Date(today); yesterday.setDate(today.getDate()-1);
+    if (date.getTime() === today.getTime()) return 'Today';
+    if (date.getTime() === yesterday.getTime()) return 'Yesterday';
+    return date.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
   }
 
   function signalCard(signal, compact = false) {
