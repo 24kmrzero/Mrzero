@@ -641,3 +641,12 @@ input[type='file']::file-selector-button { margin-right: 10px; padding: 7px 10px
 .admin-signal-history-report .status-pill{padding:4px 7px;font-size:8px}
 .admin-signal-history-report .signal-report-row{cursor:pointer;transition:background .18s ease}
 .admin-signal-history-report .signal-report-row:hover{background:rgba(255,193,7,.055)}
+
+/* V9.12 simplified live-course workflow */
+.live-class-form-divider{border-top:1px solid rgba(255,193,7,.22);padding-top:16px;margin-top:4px}
+.live-class-form-divider span{display:block;color:#ffc928;font-weight:800;font-size:14px;text-transform:uppercase;letter-spacing:.04em}
+.live-class-form-divider small{display:block;margin-top:4px;color:var(--muted)}
+.course-next-class{display:grid;gap:4px;padding:12px 14px;border:1px solid rgba(255,193,7,.22);background:rgba(255,193,7,.05);border-radius:12px;margin:12px 0}
+.course-next-class small{color:#d4ad29;text-transform:uppercase;font-weight:800;letter-spacing:.04em}
+.course-next-class b{font-size:15px}
+.course-next-class span{color:var(--muted);font-size:13px}
