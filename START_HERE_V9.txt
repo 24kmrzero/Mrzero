@@ -1,0 +1,31 @@
+24K EXCELLENCE V9 — START HERE
+
+1) DATABASE
+- Never rerun the old production/schema/seed/admin/policy SQL files.
+- If SQL 06 and SQL 07 already showed Success, run ONLY:
+  supabase-final/08_DEEP_AUDIT_OPERATIONS_FIXES.sql
+- If either 06 or 07 was never completed, run only the missing file(s) in order, then run 08.
+
+2) WEBSITE DEPLOYMENT
+- Extract the V9 ZIP.
+- Open the extracted folder.
+- Upload everything INSIDE it directly to the GitHub repository `Mrzero` root.
+- Replace existing files.
+- Do not upload the outer folder as a nested folder.
+- Wait 1–3 minutes and hard refresh with Ctrl+F5.
+
+3) LIVE URLS
+Website: https://24kmrzero.github.io/Mrzero/
+Student Login: https://24kmrzero.github.io/Mrzero/login.html
+Admin Login: https://24kmrzero.github.io/Mrzero/admin-login.html
+Admin Dashboard: https://24kmrzero.github.io/Mrzero/admin-dashboard.html
+
+4) EMAIL CONFIRMATION
+- During testing, Supabase Confirm Email may remain OFF.
+- Before final launch, turn Confirm Email ON and test the Check Your Email flow.
+
+5) CUSTOM TRANSACTIONAL EMAILS
+- The included Edge Function needs Resend/provider secrets before it can deliver custom enrollment/payment/class emails.
+- Supabase Auth verification and password-reset emails are separate.
+
+Read docs/V9_COMPLETE_SETUP.md for full details.

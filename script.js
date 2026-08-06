@@ -2,9 +2,14 @@
    24K EXCELLENCE — main script
    =================================================================== */
 
-/* ---------- Supabase config (fill these in later) ---------- */
-const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+/* ---------- Public Supabase client ---------- */
+function publicClient(){
+  if (window.__trackingSupabase) return window.__trackingSupabase;
+  const cfg=window.APP_CONFIG||{};
+  if (!window.supabase?.createClient || !cfg.SUPABASE_URL || !cfg.SUPABASE_ANON_KEY) return null;
+  window.__trackingSupabase=window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+  return window.__trackingSupabase;
+}
 
 /* ---------- Mobile nav ---------- */
 const navToggle = document.getElementById('navToggle');
@@ -90,23 +95,42 @@ if (shot && window.matchMedia('(pointer:fine)').matches){
 }
 
 /* ---------- Toast ---------- */
-function toast(msg) {
-  const t = document.getElementById('toast');
-  if (!t) { alert(msg); return; }
+function toast(msg, type='info') {
+  let t = document.getElementById('toast');
+  if (!t) { t=document.createElement('div'); t.id='toast'; t.setAttribute('role','status'); t.setAttribute('aria-live','polite'); document.body.appendChild(t); }
   t.textContent = msg;
-  t.classList.add('show');
+  t.className = `toast show ${type}`;
   clearTimeout(t._timer);
-  t._timer = setTimeout(() => t.classList.remove('show'), 3200);
+  t._timer = setTimeout(() => t.classList.remove('show'), 3600);
 }
 
 /* ---------- Enquiry form ---------- */
 const enquiryForm = document.getElementById('enquiryForm');
 if (enquiryForm) {
-  enquiryForm.addEventListener('submit', e => {
+  enquiryForm.addEventListener('submit', async e => {
     e.preventDefault();
-    // TODO: send to Supabase table `enquiries`
-    enquiryForm.reset();
-    alert('Thank you! Your enquiry has been received. Our team will contact you shortly.');
+    const button=enquiryForm.querySelector('button[type="submit"]');
+    const original=button?.innerHTML;
+    if(button){button.disabled=true;button.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Sending...';}
+    try {
+      const sb=publicClient();
+      if(!sb) throw new Error('Website connection is not ready. Please refresh and try again.');
+      const values=Object.fromEntries(new FormData(enquiryForm));
+      const tracking=window.Tracking?.context?.()||{};
+      const {error}=await sb.from('enquiries').insert({
+        full_name:String(values.name||'').trim(),email:String(values.email||'').trim().toLowerCase(),
+        whatsapp:String(values.whatsapp||'').trim(),service:String(values.service||'').trim()||null,
+        message:String(values.message||'').trim()||null,source_path:location.pathname,
+        ref_code:tracking.ref||null,source:tracking.source||'Direct',campaign:tracking.campaign||null,visitor_id:tracking.visitorId||null
+      });
+      if(error) throw error;
+      await window.Tracking?.record?.('enquiry',{service:values.service||''});
+      enquiryForm.reset();
+      toast('Thank you! Your enquiry has been received. Our team will contact you shortly.','success');
+    } catch(error) {
+      console.error(error);
+      toast(/permission|policy/i.test(error?.message||'')?'Enquiry service is being configured. Please contact us on WhatsApp.':(error?.message||'Could not send your enquiry. Please try again.'),'error');
+    } finally { if(button){button.disabled=false;button.innerHTML=original;} }
   });
 }
 

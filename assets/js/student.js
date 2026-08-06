@@ -59,7 +59,7 @@
   function renderAll() {
     renderKpis(); renderDashboard(); renderSignals(); renderCharts(); renderArticles(); renderCourses();
     renderPayments(); renderAnnouncements(); renderProfile(); renderSupport();
-    document.getElementById('paymentCount').textContent = state.payments.filter(p => ['received', 'under_review'].includes(p.status)).length;
+    document.getElementById('paymentCount').textContent = state.payments.filter(p => ['received', 'under_review', 'resubmission_required'].includes(p.status)).length;
     document.getElementById('announcementCount').textContent = state.announcements.length;
     window.dispatchEvent(new CustomEvent('24k:student-base-updated',{detail:state}));
   }
@@ -72,11 +72,14 @@
     const wins = finals.filter(s => Number(s.result_pips) > 0).length;
     const losses = finals.filter(s => Number(s.result_pips) < 0).length;
     const breakeven = finals.filter(s => Number(s.result_pips) === 0).length;
-    const totalPips = finals.reduce((sum,s)=>sum+Number(s.result_pips||0),0);
+    const forex = finals.filter(s => resultUnit(s.symbol) === 'pips');
+    const markets = finals.filter(s => resultUnit(s.symbol) === 'points');
+    const totalPips = forex.reduce((sum,s)=>sum+Number(s.result_pips||0),0);
+    const totalPoints = markets.reduce((sum,s)=>sum+Number(s.result_pips||0),0);
     const weekStart = new Date(); weekStart.setDate(weekStart.getDate()-7);
     const monthStart = new Date(); monthStart.setDate(1); monthStart.setHours(0,0,0,0);
-    const weekPips = finals.filter(s=>new Date(s.closed_at)>=weekStart).reduce((sum,s)=>sum+Number(s.result_pips||0),0);
-    const monthPips = finals.filter(s=>new Date(s.closed_at)>=monthStart).reduce((sum,s)=>sum+Number(s.result_pips||0),0);
+    const weekPips = forex.filter(s=>new Date(s.closed_at)>=weekStart).reduce((sum,s)=>sum+Number(s.result_pips||0),0);
+    const monthPips = forex.filter(s=>new Date(s.closed_at)>=monthStart).reduce((sum,s)=>sum+Number(s.result_pips||0),0);
     const winRate = finals.length ? Math.round((wins / finals.length) * 100) : 0;
     const data = [
       ['fa-bolt', activeSignals, 'Active Signals'], ['fa-chart-line', state.charts.length, 'Published Charts'],
@@ -85,17 +88,20 @@
     ];
     document.getElementById('studentKpis').innerHTML = data.map(([icon, value, label]) => `<div class="app-kpi"><i class="fa-solid ${icon}"></i><div><b>${value}</b><small>${label}</small></div></div>`).join('');
     document.getElementById('signalPerformance').innerHTML = [
-      ['Total Pips', signed(totalPips)], ['This Week', signed(weekPips)], ['This Month', signed(monthPips)],
-      ['Win Rate', `${winRate}%`], ['Total Signals', state.signals.length], ['Winning Signals', wins],
-      ['Losing Signals', losses], ['Breakeven', breakeven]
+      ['Forex Pips', signed(totalPips)], ['Market Points', signed(totalPoints)], ['This Week Pips', signed(weekPips)],
+      ['This Month Pips', signed(monthPips)], ['Win Rate', `${winRate}%`], ['Closed Signals', finals.length],
+      ['Wins / Losses', `${wins} / ${losses}`], ['Breakeven', breakeven]
     ].map(([label, value]) => `<div class="performance-item"><small>${label}</small><b>${value}</b></div>`).join('');
   }
 
+
   function renderDashboard() {
     const pending = state.payments.find(p => ['received', 'under_review'].includes(p.status));
+    const resubmit = state.payments.find(p => p.status === 'resubmission_required');
     const declined = state.payments.find(p => p.status === 'declined');
     const alert = document.getElementById('dashboardAlert');
-    if (pending) alert.innerHTML = `<div class="notice warn"><i class="fa-solid fa-hourglass-half"></i> Your payment <b>${A.escapeHtml(pending.invoice_no || '')}</b> is ${A.statusLabel(pending.status).toLowerCase()}. Course access will unlock only after admin approval.</div>`;
+    if (resubmit) alert.innerHTML = `<div class="notice bad"><i class="fa-solid fa-file-circle-exclamation"></i> Admin requested a new payment receipt. Open Payments and submit corrected proof. ${resubmit.admin_note?`<b>Reason: ${A.escapeHtml(resubmit.admin_note)}</b>`:''}</div>`;
+    else if (pending) alert.innerHTML = `<div class="notice warn"><i class="fa-solid fa-hourglass-half"></i> Your payment <b>${A.escapeHtml(pending.invoice_no || '')}</b> is ${A.statusLabel(pending.status).toLowerCase()}. Course access will unlock only after admin approval.</div>`;
     else if (declined) alert.innerHTML = `<div class="notice bad"><i class="fa-solid fa-circle-xmark"></i> A payment was declined. Review the admin note in Payment History and submit a new receipt.</div>`;
     else alert.innerHTML = '';
 
@@ -163,7 +169,7 @@
       const access = hasCourseAccess(course.id);
       const payment = latestPayment(course.id);
       const actualPrice=course.discount_price!=null?Number(course.discount_price):Number(course.price); const paymentText = payment ? A.statusLabel(payment.status) : (course.course_type==='free'||actualPrice===0 ? 'Free enrollment' : 'Payment required');
-      return `<article class="course-card"><div class="course-cover ${course.thumbnail_url?'has-image':''}">${course.thumbnail_url?`<img src="${attr(course.thumbnail_url)}" alt="${attr(course.title)}" loading="lazy" decoding="async">`:'<i class="fa-solid fa-graduation-cap"></i>'}<span class="status-pill ${A.statusClass(course.status)}">${A.statusLabel(course.status)}</span></div><div class="course-body"><h3>${A.escapeHtml(course.title)}</h3><p>${A.escapeHtml(course.description || '')}</p><div class="course-meta"><span><i class="fa-solid fa-user-tie"></i> ${A.escapeHtml(course.instructor_name || A.cfg.INSTRUCTOR_NAME)}</span><span><i class="fa-solid fa-money-bill"></i> ${course.discount_price!=null?`<s>${A.formatMoney(course.price,course.currency)}</s> ${A.formatMoney(course.discount_price,course.currency)}`:A.formatMoney(course.price, course.currency)}</span><span><i class="fa-solid fa-calendar"></i> ${course.start_date ? A.formatDate(course.start_date) : 'Date to be announced'}</span></div><div class="notice ${access ? 'ok' : payment?.status === 'declined' ? 'bad' : 'warn'}">${access ? '<b>Access approved.</b> Session links are unlocked.' : `<b>${paymentText}.</b> Session dates are visible, but Google Meet links remain locked.`}</div><div class="course-actions"><button class="app-btn ${access ? 'gold' : 'outline'}" data-open-course="${course.id}"><i class="fa-solid fa-calendar-days"></i> View Sessions</button>${access ? '' : (course.course_type==='free'||actualPrice===0) ? `<button class="app-btn gold" data-free-enroll="${course.id}">Enroll Free</button>` : `<button class="app-btn gold" data-buy-course="${course.id}"><i class="fa-solid fa-receipt"></i> ${payment && ['received','under_review'].includes(payment.status) ? 'Payment Submitted' : 'Submit Payment'}</button>`}</div></div></article>`;
+      return `<article class="course-card"><div class="course-cover ${course.thumbnail_url?'has-image':''}">${course.thumbnail_url?`<img src="${attr(course.thumbnail_url)}" alt="${attr(course.title)}" loading="lazy" decoding="async">`:'<i class="fa-solid fa-graduation-cap"></i>'}<span class="status-pill ${A.statusClass(course.status)}">${A.statusLabel(course.status)}</span></div><div class="course-body"><h3>${A.escapeHtml(course.title)}</h3><p>${A.escapeHtml(course.description || '')}</p><div class="course-meta"><span><i class="fa-solid fa-user-tie"></i> ${A.escapeHtml(course.instructor_name || A.cfg.INSTRUCTOR_NAME)}</span><span><i class="fa-solid fa-money-bill"></i> ${course.discount_price!=null?`<s>${A.formatMoney(course.price,course.currency)}</s> ${A.formatMoney(course.discount_price,course.currency)}`:A.formatMoney(course.price, course.currency)}</span><span><i class="fa-solid fa-calendar"></i> ${course.start_date ? A.formatDate(course.start_date) : 'Date to be announced'}</span></div><div class="notice ${access ? 'ok' : payment?.status === 'declined' ? 'bad' : 'warn'}">${access ? '<b>Access approved.</b> Session links are unlocked.' : `<b>${paymentText}.</b> Session dates are visible, but Google Meet links remain locked.`}</div><div class="course-actions"><button class="app-btn ${access ? 'gold' : 'outline'}" data-open-course="${course.id}"><i class="fa-solid fa-calendar-days"></i> View Sessions</button>${access ? '' : (course.course_type==='free'||actualPrice===0) ? `<button class="app-btn gold" data-free-enroll="${course.id}">Enroll Free</button>` : `<button class="app-btn gold" data-buy-course="${course.id}"><i class="fa-solid fa-receipt"></i> ${payment && ['received','under_review'].includes(payment.status) ? 'Payment Submitted' : payment?.status==='resubmission_required' ? 'Submit New Receipt' : 'Submit Payment'}</button>`}</div></div></article>`;
     }).join('') : empty('No course is currently published.', 'fa-graduation-cap');
   }
 
@@ -199,7 +205,16 @@
     if (!state.payments.length) { body.innerHTML = `<tr><td colspan="9">${empty('No payment has been submitted yet.', 'fa-receipt')}</td></tr>`; return; }
     body.innerHTML = state.payments.map(p => {
       const course = p.courses || state.courses.find(c => c.id === p.course_id) || {};
-      return `<tr><td><b>${A.escapeHtml(p.invoice_no || 'Pending')}</b></td><td>${A.escapeHtml(course.title || 'Course')}</td><td>${A.formatMoney(p.amount, course.currency || 'USD')}</td><td>${A.escapeHtml(p.payment_method_name || p.method || '—')}</td><td>${A.escapeHtml(p.transaction_reference || '—')}</td><td>${A.formatDateTime(p.created_at)}</td><td><span class="status-pill ${A.statusClass(p.status)}">${A.statusLabel(p.status)}</span></td><td>${A.escapeHtml(p.admin_note || p.decline_reason || '—')}</td><td>${p.receipt_path ? `<button class="app-btn small outline" data-view-receipt="${p.id}"><i class="fa-solid fa-eye"></i> View</button>` : '—'}</td></tr>`;
+      const latest = latestPayment(p.course_id);
+      const canResubmit = p.status === 'resubmission_required' && latest?.id === p.id;
+      const action = canResubmit
+        ? `<button class="app-btn small gold" data-buy-course="${p.course_id}"><i class="fa-solid fa-upload"></i> New Receipt</button>`
+        : p.status === 'resubmission_required' && latest?.id !== p.id
+          ? '<span class="status-pill neutral">Superseded</span>'
+          : p.receipt_path
+            ? `<button class="app-btn small outline" data-view-receipt="${p.id}"><i class="fa-solid fa-eye"></i> View</button>`
+            : '—';
+      return `<tr><td><b>${A.escapeHtml(p.invoice_no || 'Pending')}</b></td><td>${A.escapeHtml(course.title || 'Course')}</td><td>${A.formatMoney(p.amount, course.currency || 'USD')}</td><td>${A.escapeHtml(p.payment_method_name || p.method || '—')}</td><td>${A.escapeHtml(p.transaction_reference || '—')}</td><td>${A.formatDateTime(p.created_at)}</td><td><span class="status-pill ${A.statusClass(p.status)}">${A.statusLabel(p.status)}</span></td><td>${A.escapeHtml(p.admin_note || p.decline_reason || '—')}</td><td>${action}</td></tr>`;
     }).join('');
   }
 
@@ -277,7 +292,7 @@
     const pending = latestPayment(courseId);
     if (pending && ['received','under_review'].includes(pending.status)) return A.toast('Your payment is already under review.', 'warning');
     const form = document.getElementById('paymentForm');
-    form.reset(); form.elements.course_id.value = course.id; const payable=course.discount_price!=null?Number(course.discount_price):Number(course.price); form.elements.amount.value = payable;
+    form.reset(); form.elements.course_id.value = course.id; form.dataset.supersedesPaymentId = pending?.status==='resubmission_required'?pending.id:''; const payable=course.discount_price!=null?Number(course.discount_price):Number(course.price); form.elements.amount.value = payable;
     document.getElementById('paymentCourseSummary').innerHTML = `<b>${A.escapeHtml(course.title)}</b><br>Instructor: Malik Zameer · Amount: ${A.formatMoney(course.discount_price!=null?course.discount_price:course.price, course.currency)}`;
     document.getElementById('paymentMethodSelect').innerHTML = state.paymentMethods.map(m => `<option value="${m.id}">${A.escapeHtml(m.name)}</option>`).join('');
     renderPaymentMethodInfo();
@@ -306,13 +321,14 @@
       const path = `${state.user.id}/${paymentId}/${A.fileSafeName(file.name)}`;
         const upload = await A.supabase.storage.from('payment-receipts').upload(path, file, { upsert: false, contentType: file.type });
         if (upload.error) throw upload.error;
-        const { error } = await A.supabase.from('payments').insert({ id: paymentId, student_id: state.user.id, course_id: course.id, amount: Number(fd.get('amount')), payment_method_id: method?.id, payment_method_name: method?.name, transaction_reference: String(fd.get('transaction_reference')).trim(), student_note: String(fd.get('student_note') || '').trim(), receipt_path: path, status: 'received' });
+        const receiptHash = await A.hashFile(file);
+        const { error } = await A.supabase.from('payments').insert({ id: paymentId, student_id: state.user.id, course_id: course.id, amount: Number(fd.get('amount')), payment_method_id: method?.id, payment_method_name: method?.name, transaction_reference: String(fd.get('transaction_reference')).trim(), student_note: String(fd.get('student_note') || '').trim(), receipt_path: path, receipt_hash: receiptHash, supersedes_payment_id: form.dataset.supersedesPaymentId || null, status: 'received' });
         if (error) { await A.supabase.storage.from('payment-receipts').remove([path]); throw error; }
         await loadAll();
       renderAll(); A.closeModal('paymentModal'); form.reset();
       A.toast('Receipt received. Admin approval is required before course access unlocks.', 'success');
       openPanel('payments');
-    } catch (error) { A.toast(error.message || 'Payment submission failed.', 'error'); }
+    } catch (error) { A.toast(A.friendlyError(error, 'Payment submission failed.'), 'error'); }
     finally { A.setLoading(button, false); }
   }
 
@@ -323,7 +339,7 @@
         if (error) throw error;
         await loadAll();
       renderAll(); A.toast('Free course enrolled successfully.', 'success');
-    } catch (error) { A.toast(error.message || 'Could not enroll.', 'error'); }
+    } catch (error) { A.toast(A.friendlyError(error, 'Could not enroll.'), 'error'); }
     finally { A.setLoading(button, false); }
   }
 
@@ -344,14 +360,14 @@
   async function viewReceipt(id) {
     const payment = state.payments.find(p => p.id === id); if (!payment?.receipt_path) return;
     const { data, error } = await A.supabase.storage.from('payment-receipts').createSignedUrl(payment.receipt_path, 120);
-    if (error) return A.toast(error.message, 'error');
+    if (error) return A.toast(A.friendlyError(error), 'error');
     window.open(data.signedUrl, '_blank', 'noopener');
   }
 
   async function downloadResource(id) {
     const resource = state.resources.find(r => r.id === id); if (!resource) return;
     const { data, error } = await A.supabase.storage.from('course-resources').createSignedUrl(resource.file_path, 120, { download: resource.file_name });
-    if (error) return A.toast(error.message, 'error');
+    if (error) return A.toast(A.friendlyError(error), 'error');
     window.open(data.signedUrl, '_blank', 'noopener');
   }
 
@@ -363,7 +379,7 @@
       const { error } = await A.supabase.from('profiles').update(changes).eq('id', state.user.id); if (error) throw error;
       Object.assign(state.profile, changes); document.getElementById('welcomeName').textContent = `Welcome back, ${state.profile.full_name}`;
       A.toast('Profile updated successfully.', 'success');
-    } catch (error) { A.toast(error.message || 'Could not update profile.', 'error'); }
+    } catch (error) { A.toast(A.friendlyError(error, 'Could not update profile.'), 'error'); }
     finally { A.setLoading(button, false); }
   }
 
@@ -374,7 +390,7 @@
       const row = { id: A.uid(), student_id: state.user.id, category: values.category, subject: String(values.subject).trim(), message: String(values.message).trim(), status: 'open', created_at: new Date().toISOString() };
       const { error } = await A.supabase.from('support_requests').insert({ student_id: state.user.id, category: row.category, subject: row.subject, message: row.message }); if (error) throw error; await loadAll();
       form.reset(); renderSupport(); A.toast('Support request submitted.', 'success');
-    } catch (error) { A.toast(error.message || 'Could not submit request.', 'error'); }
+    } catch (error) { A.toast(A.friendlyError(error, 'Could not submit request.'), 'error'); }
     finally { A.setLoading(button, false); }
   }
 
@@ -384,7 +400,7 @@
       const { error } = await A.supabase.from('terms_acceptances').upsert({ user_id: state.user.id, document_type: 'risk_disclaimer', version: A.cfg.RISK_VERSION, accepted_at: new Date().toISOString(), ip_address: null }, { onConflict: 'user_id,document_type,version' });
         if (error) throw error;
       state.riskAccepted = true; A.closeModal('riskModal'); A.toast('Risk disclaimer accepted.', 'success');
-    } catch (error) { A.toast(error.message || 'Could not record acceptance.', 'error'); }
+    } catch (error) { A.toast(A.friendlyError(error, 'Could not record acceptance.'), 'error'); }
     finally { A.setLoading(button, false); }
   }
 
@@ -422,7 +438,7 @@
   function attr(value) { return A.escapeHtml(value).replace(/`/g, '&#96;'); }
 })().catch(error => {
   console.error(error);
-  window.App?.toast(error.message || 'Could not load the student panel.', 'error');
+  window.App?.toast(window.App.friendlyError(error, 'Could not load the student panel.'), 'error');
   document.getElementById('pageLoader')?.classList.add('hidden');
   document.getElementById('studentApp')?.classList.remove('hidden');
 });

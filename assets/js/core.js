@@ -1,24 +1,36 @@
 (function () {
+  'use strict';
+
   const cfg = window.APP_CONFIG || {};
   const configured = Boolean(
     cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY &&
-    !cfg.SUPABASE_URL.includes('YOUR_') && !cfg.SUPABASE_ANON_KEY.includes('YOUR_')
+    !String(cfg.SUPABASE_URL).includes('YOUR_') &&
+    !String(cfg.SUPABASE_ANON_KEY).includes('YOUR_')
   );
+
   let supabase = null;
   if (configured && window.supabase?.createClient) {
     supabase = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY, {
-      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+        flowType: 'pkce'
+      }
     });
   }
 
-  const escapeHtml = (value = '') => String(value).replace(/[&<>'"]/g, ch => ({
+  const escapeHtml = (value = '') => String(value).replace(/[&<>'"]/g, character => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
-  })[ch]);
+  })[character]);
 
   const formatMoney = (amount, currency = 'USD') => {
     if (Number(amount) === 0) return 'Free';
-    try { return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(Number(amount)); }
-    catch { return `${currency} ${Number(amount).toFixed(2)}`; }
+    try {
+      return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(Number(amount));
+    } catch {
+      return `${currency} ${Number(amount || 0).toFixed(2)}`;
+    }
   };
 
   const formatDate = (value, options = {}) => {
@@ -33,9 +45,10 @@
   const formatDateTime = (value, timeZone = cfg.DEFAULT_TIMEZONE || 'Asia/Karachi') => {
     if (!value) return '—';
     const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return String(value);
     return new Intl.DateTimeFormat('en-GB', {
-      day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit',
-      hour12: true, timeZone
+      day: '2-digit', month: 'short', year: 'numeric',
+      hour: '2-digit', minute: '2-digit', hour12: true, timeZone
     }).format(date);
   };
 
@@ -43,107 +56,226 @@
     if (!profile) return 'locked';
     if (profile.role === 'admin') return 'active';
     if (profile.email_verified === false) return 'pending';
-    if (['locked','suspended','pending'].includes(profile.status)) return profile.status;
+    if (['locked', 'suspended', 'pending'].includes(profile.status)) return profile.status;
     if (profile.lifetime_access) return 'active';
+    const now = new Date();
     const expiry = profile.access_expires_at ? new Date(profile.access_expires_at) : null;
     const grace = profile.grace_expires_at ? new Date(profile.grace_expires_at) : null;
     if (!expiry) return profile.status || 'active';
-    if (expiry > new Date()) return 'active';
-    if (grace && grace > new Date()) return 'grace';
+    if (expiry > now) return 'active';
+    if (grace && grace > now) return 'grace';
     return 'expired';
   };
 
   const statusLabel = value => ({
-    received: 'Receipt Received', pending: 'Pending Approval', grace: 'Grace Active', locked: 'Locked', expired: 'Expired', suspended: 'Suspended', under_review: 'Under Review', approved: 'Approved', declined: 'Declined',
-    upcoming: 'Upcoming', active: 'Active', live: 'Live Now', completed: 'Completed', cancelled: 'Cancelled',
-    tp_hit: 'TP Hit', tp1_hit: 'TP1 Hit', tp2_hit: 'TP2 Hit', tp3_hit: 'TP3 Hit', tp4_hit: 'TP4 Hit', sl_hit: 'SL Hit', breakeven: 'Breakeven', breakeven_hit: 'Breakeven Hit', manually_closed: 'Closed Manually', closed: 'Closed', market: 'Market', limit: 'Limit', stop: 'Stop', draft: 'Draft', published: 'Published'
-  })[value] || String(value || '').replaceAll('_', ' ').replace(/\b\w/g, c => c.toUpperCase());
+    received: 'Receipt Received', pending: 'Pending Approval', grace: 'Grace Active',
+    locked: 'Locked', expired: 'Expired', suspended: 'Suspended', under_review: 'Under Review',
+    approved: 'Approved', declined: 'Declined', resubmission_required: 'New Receipt Required',
+    upcoming: 'Upcoming', active: 'Active', live: 'Live Now', completed: 'Completed',
+    cancelled: 'Cancelled', archived: 'Archived', open: 'Open', in_progress: 'In Progress',
+    resolved: 'Resolved', closed: 'Closed',
+    tp_hit: 'TP Hit', tp1_hit: 'TP1 Hit', tp2_hit: 'TP2 Hit', tp3_hit: 'TP3 Hit',
+    tp4_hit: 'TP4 Hit', sl_hit: 'SL Hit', breakeven: 'Breakeven',
+    breakeven_hit: 'Breakeven Hit', manually_closed: 'Closed Manually',
+    market: 'Market', limit: 'Limit', stop: 'Stop', draft: 'Draft', published: 'Published',
+    processing: 'Processing', sent: 'Sent', failed: 'Failed', lifetime: 'Lifetime'
+  })[value] || String(value || '').replaceAll('_', ' ').replace(/\b\w/g, character => character.toUpperCase());
 
   const statusClass = value => {
-    if (['approved', 'active', 'live', 'completed', 'tp_hit', 'tp1_hit', 'tp2_hit', 'tp3_hit', 'tp4_hit', 'published'].includes(value)) return 'ok';
-    if (['declined', 'sl_hit', 'cancelled'].includes(value)) return 'bad';
-    if (['received', 'under_review', 'upcoming', 'breakeven', 'breakeven_hit', 'manually_closed', 'draft'].includes(value)) return 'warn';
+    if (['approved', 'active', 'live', 'completed', 'tp_hit', 'tp1_hit', 'tp2_hit', 'tp3_hit', 'tp4_hit', 'published', 'resolved', 'sent'].includes(value)) return 'ok';
+    if (['declined', 'sl_hit', 'cancelled', 'locked', 'expired', 'suspended', 'failed'].includes(value)) return 'bad';
+    if (['received', 'under_review', 'resubmission_required', 'upcoming', 'breakeven', 'breakeven_hit', 'manually_closed', 'draft', 'pending', 'grace', 'in_progress', 'processing'].includes(value)) return 'warn';
     return 'neutral';
   };
 
-  function toast(message, type = 'info') {
-    let el = document.getElementById('appToast');
-    if (!el) {
-      el = document.createElement('div');
-      el.id = 'appToast';
-      el.className = 'app-toast';
-      document.body.appendChild(el);
+  function friendlyError(error, fallback = 'Something went wrong. Please try again.') {
+    const raw = String(error?.message || error || '').trim();
+    const lower = raw.toLowerCase();
+    if (!raw) return fallback;
+    if (lower.includes('permission denied') || lower.includes('row-level security') || lower.includes('rls')) return 'Your account does not have permission for this action. Please refresh or contact support.';
+    if (lower.includes('jwt') || lower.includes('session') || lower.includes('not authenticated')) return 'Your session has expired. Please sign in again.';
+    if (lower.includes('duplicate') || lower.includes('unique constraint')) return 'This record already exists. Please review the duplicate information.';
+    if (lower.includes('network') || lower.includes('failed to fetch') || lower.includes('load failed')) return 'Network connection failed. Check your internet and try again.';
+    if (lower.includes('storage') && lower.includes('policy')) return 'File upload permission is not configured correctly.';
+    if (lower.includes('invalid login credentials')) return 'Email or password is incorrect.';
+    if (lower.includes('email not confirmed')) return 'Please verify your email before signing in.';
+    if (lower.includes('rate limit')) return 'Too many attempts. Please wait a few minutes and try again.';
+    return raw.length > 180 ? fallback : raw;
+  }
+
+  function toast(message, type = 'info', duration = 3800) {
+    let element = document.getElementById('appToast');
+    if (!element) {
+      element = document.createElement('div');
+      element.id = 'appToast';
+      element.className = 'app-toast';
+      element.setAttribute('role', 'status');
+      element.setAttribute('aria-live', 'polite');
+      document.body.appendChild(element);
     }
-    el.className = `app-toast show ${type}`;
-    el.textContent = message;
-    clearTimeout(el._timer);
-    el._timer = setTimeout(() => el.classList.remove('show'), 3500);
+    element.className = `app-toast show ${type}`;
+    element.textContent = message;
+    clearTimeout(element._timer);
+    element._timer = setTimeout(() => element.classList.remove('show'), duration);
   }
 
   function setLoading(button, loading, text = 'Please wait...') {
     if (!button) return;
     if (loading) {
-      button.dataset.original = button.innerHTML;
+      if (!button.dataset.original) button.dataset.original = button.innerHTML;
       button.disabled = true;
+      button.setAttribute('aria-busy', 'true');
       button.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ${escapeHtml(text)}`;
     } else {
       button.disabled = false;
-      if (button.dataset.original) button.innerHTML = button.dataset.original;
+      button.removeAttribute('aria-busy');
+      if (button.dataset.original) {
+        button.innerHTML = button.dataset.original;
+        delete button.dataset.original;
+      }
     }
   }
 
   function openModal(id) {
-    document.getElementById(id)?.classList.add('open');
+    const modal = document.getElementById(id);
+    if (!modal) return;
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
     document.body.classList.add('modal-open');
+    setTimeout(() => modal.querySelector('input:not([type="hidden"]),select,textarea,button')?.focus(), 40);
   }
+
   function closeModal(id) {
-    document.getElementById(id)?.classList.remove('open');
+    const modal = document.getElementById(id);
+    if (!modal) return;
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
     if (!document.querySelector('.app-modal.open')) document.body.classList.remove('modal-open');
   }
+
+  function ensureConfirmModal() {
+    if (document.getElementById('appConfirmModal')) return;
+    document.body.insertAdjacentHTML('beforeend', `
+      <div class="app-modal" id="appConfirmModal" aria-hidden="true">
+        <div class="app-modal-card confirm-card">
+          <div class="app-modal-head"><div><h3 id="appConfirmTitle">Confirm Action</h3><small id="appConfirmSubtitle" class="muted"></small></div><button class="modal-close" type="button" data-close-modal="appConfirmModal"><i class="fa-solid fa-xmark"></i></button></div>
+          <div class="app-modal-body"><div class="confirm-icon" id="appConfirmIcon"><i class="fa-solid fa-circle-question"></i></div><p id="appConfirmMessage"></p><label class="confirm-input-wrap hidden" id="appConfirmInputWrap"><span id="appConfirmInputLabel">Reason</span><textarea id="appConfirmInput"></textarea></label></div>
+          <div class="app-modal-foot"><button class="app-btn outline" type="button" id="appConfirmCancel">Cancel</button><button class="app-btn gold" type="button" id="appConfirmAccept">Confirm</button></div>
+        </div>
+      </div>`);
+  }
+
+  function confirmAction(options = {}) {
+    ensureConfirmModal();
+    const {
+      title = 'Confirm Action', message = 'Are you sure?', subtitle = '',
+      confirmText = 'Confirm', danger = false, requireText = false,
+      inputLabel = 'Reason', inputPlaceholder = '', initialValue = ''
+    } = options;
+    const modal = document.getElementById('appConfirmModal');
+    const accept = document.getElementById('appConfirmAccept');
+    const cancel = document.getElementById('appConfirmCancel');
+    const inputWrap = document.getElementById('appConfirmInputWrap');
+    const input = document.getElementById('appConfirmInput');
+    document.getElementById('appConfirmTitle').textContent = title;
+    document.getElementById('appConfirmSubtitle').textContent = subtitle;
+    document.getElementById('appConfirmMessage').textContent = message;
+    document.getElementById('appConfirmInputLabel').textContent = inputLabel;
+    input.placeholder = inputPlaceholder;
+    input.value = initialValue;
+    inputWrap.classList.toggle('hidden', !requireText);
+    accept.textContent = confirmText;
+    accept.className = `app-btn ${danger ? 'danger' : 'gold'}`;
+    document.getElementById('appConfirmIcon').className = `confirm-icon ${danger ? 'danger' : ''}`;
+    openModal('appConfirmModal');
+
+    return new Promise(resolve => {
+      let settled = false;
+      const finish = result => {
+        if (settled) return;
+        settled = true;
+        cleanup();
+        closeModal('appConfirmModal');
+        resolve(result);
+      };
+      const onAccept = () => {
+        const text = input.value.trim();
+        if (requireText && !text) {
+          input.focus();
+          toast(`${inputLabel} is required.`, 'error');
+          return;
+        }
+        finish({ confirmed: true, text });
+      };
+      const onCancel = () => finish({ confirmed: false, text: '' });
+      const onBackdrop = event => { if (event.target === modal) onCancel(); };
+      const onKey = event => { if (event.key === 'Escape') onCancel(); };
+      const cleanup = () => {
+        accept.removeEventListener('click', onAccept);
+        cancel.removeEventListener('click', onCancel);
+        modal.removeEventListener('click', onBackdrop);
+        document.removeEventListener('keydown', onKey);
+      };
+      accept.addEventListener('click', onAccept);
+      cancel.addEventListener('click', onCancel);
+      modal.addEventListener('click', onBackdrop);
+      document.addEventListener('keydown', onKey);
+    });
+  }
+
   document.addEventListener('click', event => {
     const closer = event.target.closest('[data-close-modal]');
     if (closer) closeModal(closer.dataset.closeModal);
-    if (event.target.classList.contains('app-modal')) closeModal(event.target.id);
+    if (event.target.classList.contains('app-modal') && event.target.id !== 'appConfirmModal') closeModal(event.target.id);
+  });
+
+  document.addEventListener('keydown', event => {
+    if (event.key !== 'Escape') return;
+    const modal = [...document.querySelectorAll('.app-modal.open')].pop();
+    if (modal && modal.id !== 'appConfirmModal') closeModal(modal.id);
   });
 
   function activateDashboardNavigation() {
     const side = document.getElementById('side');
-    const links = [...document.querySelectorAll('[data-panel]')];
-    const panels = [...document.querySelectorAll('.panel')];
     const open = key => {
+      const links = [...document.querySelectorAll('[data-panel]')];
+      const panels = [...document.querySelectorAll('.panel')];
+      if (!panels.some(panel => panel.id === `p-${key}`)) return false;
       links.forEach(link => link.classList.toggle('on', link.dataset.panel === key));
       panels.forEach(panel => panel.classList.toggle('on', panel.id === `p-${key}`));
       side?.classList.remove('open');
       if (history.replaceState) history.replaceState(null, '', `#${key}`);
       window.scrollTo({ top: 0, behavior: 'smooth' });
       document.dispatchEvent(new CustomEvent('panel:open', { detail: { key } }));
+      return true;
     };
-    links.forEach(link => link.addEventListener('click', event => {
-      event.preventDefault(); open(link.dataset.panel);
-    }));
-    document.querySelectorAll('[data-goto]').forEach(button => button.addEventListener('click', event => {
-      event.preventDefault(); open(button.dataset.goto);
-    }));
+
+    if (!document.documentElement.dataset.navBound) {
+      document.documentElement.dataset.navBound = '1';
+      document.addEventListener('click', event => {
+        const target = event.target.closest('[data-panel],[data-goto]');
+        if (!target) return;
+        const key = target.dataset.panel || target.dataset.goto;
+        if (open(key)) event.preventDefault();
+      });
+    }
+
     document.getElementById('burger')?.addEventListener('click', () => side?.classList.toggle('open'));
-    const initial = location.hash.replace('#','');
-    if (initial && links.some(link => link.dataset.panel === initial)) setTimeout(() => open(initial), 0);
+    const initial = location.hash.replace('#', '');
+    if (initial) setTimeout(() => open(initial), 0);
     return open;
   }
 
   async function getCurrentUser() {
-    if (!configured || !supabase) throw new Error('Supabase is not configured. Add your project URL and anon key in assets/js/config.js.');
+    if (!configured || !supabase) throw new Error('Supabase is not configured. Add the project URL and publishable key in assets/js/config.js.');
     const { data, error } = await supabase.auth.getUser();
-    if (error) throw error;
-    return data.user;
+    if (error && !/session.*missing/i.test(error.message || '')) throw error;
+    return data?.user || null;
   }
 
   async function getProfile(userId) {
-    if (!configured || !supabase) throw new Error('Supabase is not configured. Add your project URL and anon key in assets/js/config.js.');
-    // Refresh expiry/grace state and last-seen time. The database RLS policies
-    // still enforce access independently, so failure here never weakens security.
-    try { await supabase.rpc('sync_current_access_status'); } catch (error) {
-      console.warn('Access status sync skipped:', error?.message || error);
-    }
+    if (!configured || !supabase) throw new Error('Supabase is not configured. Add the project URL and publishable key in assets/js/config.js.');
+    try { await supabase.rpc('sync_current_access_status'); } catch (error) { console.warn('Access status sync skipped:', error?.message || error); }
     const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single();
     if (error) throw error;
     return data;
@@ -156,7 +288,6 @@
       const profile = await getProfile(user.id);
       if (profile.role !== role) {
         if (role === 'admin') {
-          // Explicit Admin access should open Admin Login, not bounce to Student Panel.
           await supabase.auth.signOut();
           window.location.replace('login.html?tab=admin-login&mode=admin&reason=admin-required');
         } else {
@@ -177,13 +308,20 @@
     window.location.replace('login.html');
   }
 
+  async function hashFile(file) {
+    if (!file?.arrayBuffer || !window.crypto?.subtle) return null;
+    const buffer = await file.arrayBuffer();
+    const digest = await crypto.subtle.digest('SHA-256', buffer);
+    return [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, '0')).join('');
+  }
+
   const fileSafeName = name => String(name || 'file').replace(/[^a-zA-Z0-9._-]+/g, '-').toLowerCase();
   const uid = () => (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`);
 
   window.App = {
     cfg, configured, supabase, escapeHtml, formatMoney, formatDate, formatDateTime,
-    statusLabel, statusClass, effectiveAccessStatus, toast, setLoading, openModal, closeModal,
-    activateDashboardNavigation, getCurrentUser, getProfile, requireRole, logout,
-    fileSafeName, uid
+    statusLabel, statusClass, effectiveAccessStatus, friendlyError, toast, setLoading,
+    openModal, closeModal, confirmAction, activateDashboardNavigation,
+    getCurrentUser, getProfile, requireRole, logout, hashFile, fileSafeName, uid
   };
 })();

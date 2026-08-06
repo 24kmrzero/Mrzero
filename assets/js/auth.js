@@ -1,5 +1,5 @@
 (async function () {
-  const { configured, supabase, toast, setLoading, openModal, closeModal, cfg } = window.App;
+  const { configured, supabase, toast, setLoading, openModal, closeModal, friendlyError, cfg } = window.App;
   const tracking = window.Tracking;
   if (!configured || !supabase) {
     toast('Website setup is incomplete. Add Supabase URL and publishable key in assets/js/config.js.', 'error');
@@ -114,7 +114,7 @@
       if (expectedRole === 'admin') window.location.replace('admin-dashboard.html');
       else await finishStudentLogin(data.user, profile);
     } catch (error) {
-      toast(error.message || 'Login failed.', 'error');
+      toast(friendlyError(error, 'Login failed.'), 'error');
       setLoading(button, false);
     }
   }
@@ -167,7 +167,7 @@
         window.location.replace(checkEmailUrl(email));
       }
     } catch (error) {
-      toast(error.message || 'Could not create account.', 'error');
+      toast(friendlyError(error, 'Could not create account.'), 'error');
       setLoading(button, false);
     }
   });
@@ -188,7 +188,7 @@
       if (error) throw error;
       toast('Password reset link sent.', 'success');
       closeModal('forgotModal'); form.reset();
-    } catch (error) { toast(error.message || 'Could not send reset link.', 'error'); }
+    } catch (error) { toast(friendlyError(error, 'Could not send reset link.'), 'error'); }
     finally { setLoading(button, false); }
   });
 })();
