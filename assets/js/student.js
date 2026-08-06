@@ -7,6 +7,7 @@
   };
   window.StudentBase = { state, reload: async () => { await loadAll(); renderAll(); return state; } };
   let openPanel;
+  let signalView = 'active';
 
   const result = await A.requireRole('student');
   if (!result) return;
@@ -125,20 +126,36 @@
     const query = document.getElementById('signalSearch')?.value.trim().toLowerCase() || '';
     const status = document.getElementById('signalStatusFilter')?.value || 'all';
     const direction = document.getElementById('signalDirectionFilter')?.value || 'all';
-    const rows = state.signals.filter(s => {
-      const final=signalIsFinal(s), result=Number(s.result_pips||0);
-      const statusMatch=status==='all'||(status==='active'&&!final)||(status==='history'&&final)||(status==='wins'&&final&&result>0)||(status==='losses'&&final&&result<0)||(status==='breakeven'&&s.status==='breakeven_hit')||(status==='cancelled'&&s.status==='cancelled');
+    const activeRows = state.signals.filter(s => !signalIsFinal(s));
+    const historyRows = state.signals.filter(signalIsFinal);
+    const activeCount = document.getElementById('activeSignalsTabCount');
+    const historyCount = document.getElementById('historySignalsTabCount');
+    if (activeCount) activeCount.textContent = activeRows.length;
+    if (historyCount) historyCount.textContent = historyRows.length;
+    document.querySelectorAll('[data-signal-view]').forEach(btn => {
+      const selected = btn.dataset.signalView === signalView;
+      btn.classList.toggle('active', selected);
+      btn.setAttribute('aria-selected', selected ? 'true' : 'false');
+    });
+    const baseRows = signalView === 'active' ? activeRows : historyRows;
+    const rows = baseRows.filter(s => {
+      const result = Number(s.result_pips || 0);
+      const statusMatch = signalView === 'active' || status === 'all' || (status === 'wins' && result > 0) || (status === 'losses' && result < 0) || (status === 'breakeven' && s.status === 'breakeven_hit') || (status === 'cancelled' && s.status === 'cancelled');
       return (!query || `${s.symbol} ${s.notes || ''}`.toLowerCase().includes(query)) && statusMatch && (direction === 'all' || s.direction === direction);
     });
-    document.getElementById('signalsGrid').innerHTML = rows.length ? renderSignalDateGroups(rows) : empty('No signal matches these filters.', 'fa-filter');
+    const statusFilter = document.getElementById('signalStatusFilter');
+    if (statusFilter) statusFilter.classList.toggle('hidden', signalView === 'active');
+    document.getElementById('signalsGrid').innerHTML = rows.length ? renderSignalDateGroups(rows, signalView) : empty(signalView === 'active' ? 'No active signal is available.' : 'No closed signal matches these filters.', 'fa-filter');
     const latest=state.signalUpdates.find(u=>u.notify_users);
     document.getElementById('latestSignalUpdate').innerHTML=latest?`<div class="signal-update-banner"><i class="fa-solid fa-bell"></i><div><b>${A.escapeHtml(latest.notification_title||eventLabel(latest.event_type))}</b><small style="display:block;color:#888">${A.escapeHtml(latest.notification_message||'')} · ${A.formatDateTime(latest.created_at)}</small></div></div>`:'';
   }
 
-  function renderSignalDateGroups(rows) {
+
+  function renderSignalDateGroups(rows, view = 'active') {
     const groups = new Map();
     rows.forEach(signal => {
-      const date = signal.published_at ? new Date(signal.published_at) : new Date();
+      const sourceDate = view === 'history' ? (signal.closed_at || signal.last_status_at || signal.updated_at || signal.published_at) : signal.published_at;
+      const date = sourceDate ? new Date(sourceDate) : new Date();
       const key = Number.isNaN(date.getTime()) ? 'unknown' : `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
       if (!groups.has(key)) groups.set(key, []);
       groups.get(key).push(signal);
@@ -160,14 +177,24 @@
     return date.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
   }
 
+  function signalEventResult(signalId, eventType) {
+    return state.signalUpdates.find(update => update.signal_id === signalId && update.event_type === eventType && update.result_pips !== null && update.result_pips !== undefined);
+  }
+
   function signalCard(signal, compact = false) {
-    const total=signal.take_profit_4?4:3, hit=Number(signal.tp_hit||0), progress=Math.min(100,Math.round(hit/total*100));
+    const total=3, hit=Math.min(3,Number(signal.tp_hit||0)), progress=Math.min(100,Math.round(hit/total*100));
     const unit=signal.result_unit||resultUnit(signal.symbol); const final=signalIsFinal(signal);
-    const targets=[1,2,3,4].filter(i=>signal[`take_profit_${i}`]!=null).map(i=>`<div class="signal-level ${hit>=i?'hit':''}"><small>TP${i}${hit>=i?' ✓':''}</small><b>${num(signal[`take_profit_${i}`])}</b></div>`).join('');
+    const targets=[1,2,3].map(i=>{
+      const price=signal[`take_profit_${i}`]; if(price==null)return'';
+      const event=signalEventResult(signal.id,`tp${i}_hit`);
+      const resultText=event?`<span class="tp-manual-result ${Number(event.result_pips)>=0?'positive':'negative'}">${signed(event.result_pips)} ${event.result_unit||unit}</span>`:'';
+      return `<div class="signal-level ${hit>=i?'hit':''}"><small>TP${i}${hit>=i?' ✓':''}</small><b>${num(price)}</b>${resultText}</div>`;
+    }).join('');
     const levels=compact?'':`<div class="signal-levels"><div class="signal-level"><small>Entry ${signal.entry_to?'Zone':'Price'}</small><b>${entryText(signal)}</b></div><div class="signal-level"><small>Stop Loss</small><b>${num(signal.stop_loss)}</b></div></div><div class="tp-list">${targets}</div><div class="signal-progress-wrap"><div class="signal-progress-label"><span>TP Progress</span><b>${progress}%</b></div><div class="signal-progress"><span style="width:${progress}%"></span></div></div>`;
     const tone=signal.status==='sl_hit'?'final-loss':['breakeven_hit','cancelled'].includes(signal.status)?'final-neutral':'';
-    return `<article class="signal-card ${String(signal.direction).toLowerCase()} ${tone}"><div class="signal-body"><div class="signal-head"><div><div style="display:flex;gap:7px;align-items:center"><span class="direction ${String(signal.direction).toLowerCase()}">${A.escapeHtml(signal.direction)}</span><span class="signal-order-badge">${A.statusLabel(signal.order_type||'market')}</span></div><h3>${displaySymbol(signal.symbol)}</h3></div><span class="status-pill ${A.statusClass(signal.status)}">${A.statusLabel(signal.status)}</span></div>${signal.be_moved?'<div class="be-badge"><i class="fa-solid fa-shield-halved"></i> Stop Loss Moved to Breakeven</div>':''}${levels}<p>${A.escapeHtml(signal.notes || 'No additional note.')}</p><div class="course-meta"><span><i class="fa-solid fa-clock"></i> ${A.formatDateTime(signal.published_at)}</span>${signal.result_pips !== null && signal.result_pips !== undefined ? `<span class="${Number(signal.result_pips)>0?'result-positive':Number(signal.result_pips)<0?'result-negative':''}"><i class="fa-solid fa-chart-simple"></i> ${final?'Final':'Current'}: ${signed(signal.result_pips)} ${unit}</span>` : ''}</div>${compact?'':`<div class="signal-card-actions"><button class="app-btn small outline" data-student-signal-history="${signal.id}"><i class="fa-solid fa-clock-rotate-left"></i> View History</button></div>`}</div></article>`;
+    return `<article class="signal-card ${String(signal.direction).toLowerCase()} ${tone}"><div class="signal-body"><div class="signal-head"><div><div style="display:flex;gap:7px;align-items:center"><span class="direction ${String(signal.direction).toLowerCase()}">${A.escapeHtml(signal.direction)}</span><span class="signal-order-badge">${A.statusLabel(signal.order_type||'market')}</span></div><h3>${displaySymbol(signal.symbol)}</h3></div><span class="status-pill ${A.statusClass(signal.status)}">${A.statusLabel(signal.status)}</span></div>${signal.be_moved?'<div class="be-badge"><i class="fa-solid fa-shield-halved"></i> Stop Loss Moved to Breakeven</div>':''}${levels}<p>${A.escapeHtml(signal.notes || 'No additional note.')}</p><div class="course-meta"><span><i class="fa-solid fa-clock"></i> ${A.formatDateTime(final?(signal.closed_at||signal.last_status_at):signal.published_at)}</span>${signal.result_pips !== null && signal.result_pips !== undefined ? `<span class="${Number(signal.result_pips)>0?'result-positive':Number(signal.result_pips)<0?'result-negative':''}"><i class="fa-solid fa-chart-simple"></i> ${final?'Final':'Current'}: ${signed(signal.result_pips)} ${unit}</span>` : ''}</div>${compact?'':`<div class="signal-card-actions"><button class="app-btn small outline" data-student-signal-history="${signal.id}"><i class="fa-solid fa-clock-rotate-left"></i> View History</button></div>`}</div></article>`;
   }
+
 
   function openSignalHistory(id){
     const signal=state.signals.find(s=>s.id===id); if(!signal)return;
@@ -270,6 +297,8 @@
     document.getElementById('closeSessions').addEventListener('click', () => { document.getElementById('sessionsArea').classList.add('hidden'); document.getElementById('coursesGrid').classList.remove('hidden'); });
 
     document.body.addEventListener('click', async event => {
+      const signalViewButton = event.target.closest('[data-signal-view]');
+      if (signalViewButton) { signalView = signalViewButton.dataset.signalView; renderSignals(); }
       const courseOpen = event.target.closest('[data-open-course]');
       if (courseOpen) { openPanel('courses'); showCourseSessions(courseOpen.dataset.openCourse); }
       const buy = event.target.closest('[data-buy-course]');
@@ -448,7 +477,7 @@
       .subscribe();
   }
 
-  function signalIsFinal(s){return Boolean(s.closed_at)||['tp4_hit','sl_hit','breakeven_hit','manually_closed','cancelled'].includes(s.status)||(s.status==='tp3_hit'&&!s.take_profit_4);}
+  function signalIsFinal(s){return Boolean(s.closed_at)||['tp3_hit','tp4_hit','sl_hit','breakeven_hit','manually_closed','cancelled'].includes(s.status);}
   function resultUnit(symbol){const x=String(symbol||'').replace('/','').toUpperCase();return ['XAUUSD','XAGUSD','BTCUSD','US30','NAS100','SPX500','GER40'].includes(x)?'points':'pips';}
   function displaySymbol(symbol){const x=String(symbol||'').replace('/','').toUpperCase();return x.length===6?`${x.slice(0,3)}/${x.slice(3)}`:x;}
   function entryText(s){return `${num(s.entry_from)}${s.entry_to!=null?` – ${num(s.entry_to)}`:''}`;}
