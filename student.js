@@ -7,6 +7,7 @@
   };
   window.StudentBase = { state, reload: async () => { await loadAll(); renderAll(); return state; } };
   let openPanel;
+  let signalView = 'active';
 
   const result = await A.requireRole('student');
   if (!result) return;
@@ -73,22 +74,24 @@
     const losses = finals.filter(s => Number(s.result_pips) < 0).length;
     const breakeven = finals.filter(s => Number(s.result_pips) === 0).length;
     const forex = finals.filter(s => resultUnit(s.symbol) === 'pips');
-    const markets = finals.filter(s => resultUnit(s.symbol) === 'points');
+    const markets = [];
     const totalPips = forex.reduce((sum,s)=>sum+Number(s.result_pips||0),0);
-    const totalPoints = markets.reduce((sum,s)=>sum+Number(s.result_pips||0),0);
+    const totalPoints = 0;
     const weekStart = new Date(); weekStart.setDate(weekStart.getDate()-7);
     const monthStart = new Date(); monthStart.setDate(1); monthStart.setHours(0,0,0,0);
     const weekPips = forex.filter(s=>new Date(s.closed_at)>=weekStart).reduce((sum,s)=>sum+Number(s.result_pips||0),0);
     const monthPips = forex.filter(s=>new Date(s.closed_at)>=monthStart).reduce((sum,s)=>sum+Number(s.result_pips||0),0);
     const winRate = finals.length ? Math.round((wins / finals.length) * 100) : 0;
     const data = [
-      ['fa-bolt', activeSignals, 'Active Signals'], ['fa-chart-line', state.charts.length, 'Published Charts'],
-      ['fa-newspaper', state.articles.length, 'Learning Articles'], ['fa-graduation-cap', approvedCourses, 'Unlocked Courses'],
-      ['fa-receipt', pending, 'Pending Payments']
+      ['fa-bolt', activeSignals, 'Active Signals', 'signals'],
+      ['fa-chart-line', state.charts.length, 'Published Charts', 'charts'],
+      ['fa-newspaper', state.articles.length, 'Learning Articles', 'articles'],
+      ['fa-graduation-cap', approvedCourses, 'Unlocked Courses', 'courses'],
+      ['fa-receipt', pending, 'Pending Payments', 'payments']
     ];
-    document.getElementById('studentKpis').innerHTML = data.map(([icon, value, label]) => `<div class="app-kpi"><i class="fa-solid ${icon}"></i><div><b>${value}</b><small>${label}</small></div></div>`).join('');
+    document.getElementById('studentKpis').innerHTML = data.map(([icon, value, label, panel]) => `<button type="button" class="app-kpi dashboard-nav-card" data-goto="${panel}" aria-label="Open ${label}"><i class="fa-solid ${icon}"></i><div><b>${value}</b><small>${label}</small></div><i class="fa-solid fa-arrow-right dashboard-nav-arrow"></i></button>`).join('');
     document.getElementById('signalPerformance').innerHTML = [
-      ['Forex Pips', signed(totalPips)], ['Market Points', signed(totalPoints)], ['This Week Pips', signed(weekPips)],
+      ['Total Pips', signed(finals.filter(s=>s.status!=='cancelled').reduce((sum,s)=>sum+Number(s.result_pips||0),0))], ['Active Signals', state.signals.filter(s=>!signalIsFinal(s)).length], ['This Week Pips', signed(weekPips)],
       ['This Month Pips', signed(monthPips)], ['Win Rate', `${winRate}%`], ['Closed Signals', finals.length],
       ['Wins / Losses', `${wins} / ${losses}`], ['Breakeven', breakeven]
     ].map(([label, value]) => `<div class="performance-item"><small>${label}</small><b>${value}</b></div>`).join('');
@@ -105,7 +108,7 @@
     else if (declined) alert.innerHTML = `<div class="notice bad"><i class="fa-solid fa-circle-xmark"></i> A payment was declined. Review the admin note in Payment History and submit a new receipt.</div>`;
     else alert.innerHTML = '';
 
-    document.getElementById('latestSignal').innerHTML = state.signals[0] ? signalCard(state.signals[0], true) : empty('No signal has been published yet.', 'fa-bolt');
+    document.getElementById('latestSignal').innerHTML = `<div class="dashboard-preview-link" data-goto="signals" role="button" tabindex="0" aria-label="Open Signals">${state.signals[0] ? signalCard(state.signals[0], true) : empty('No signal has been published yet.', 'fa-bolt')}</div>`;
     const coursePreview = state.courses.slice(0, 2);
     document.getElementById('dashboardCourses').innerHTML = coursePreview.length ? coursePreview.map(course => {
       const access = hasCourseAccess(course.id);
@@ -114,33 +117,142 @@
     }).join('') : empty('No course is currently available.', 'fa-graduation-cap');
 
     const next = state.sessions.filter(s => new Date(s.starts_at) >= new Date() && s.status !== 'cancelled')[0] || state.sessions.find(s => s.status === 'upcoming');
-    document.getElementById('nextSession').innerHTML = next ? sessionCompact(next) : empty('No upcoming class has been scheduled.', 'fa-calendar');
+    document.getElementById('nextSession').innerHTML = `<div class="dashboard-preview-link" data-goto="courses" role="button" tabindex="0" aria-label="Open Courses and live sessions">${next ? sessionCompact(next) : empty('No upcoming class has been scheduled.', 'fa-calendar')}</div>`;
     const notice = state.announcements[0];
-    document.getElementById('latestAnnouncement').innerHTML = notice ? `<div class="announcement ${notice.priority === 'important' ? 'important' : ''}"><h4>${A.escapeHtml(notice.title)}</h4><p>${A.escapeHtml(notice.message)}</p><small>${A.formatDateTime(notice.published_at)}</small></div>` : empty('No announcement has been published.', 'fa-bullhorn');
+    document.getElementById('latestAnnouncement').innerHTML = `<div class="dashboard-preview-link" data-goto="announcements" role="button" tabindex="0" aria-label="Open Announcements">${notice ? `<div class="announcement ${notice.priority === 'important' ? 'important' : ''}"><h4>${A.escapeHtml(notice.title)}</h4><p>${A.escapeHtml(notice.message)}</p><small>${A.formatDateTime(notice.published_at)}</small></div>` : empty('No announcement has been published.', 'fa-bullhorn')}</div>`;
   }
 
   function renderSignals() {
     const query = document.getElementById('signalSearch')?.value.trim().toLowerCase() || '';
     const status = document.getElementById('signalStatusFilter')?.value || 'all';
     const direction = document.getElementById('signalDirectionFilter')?.value || 'all';
-    const rows = state.signals.filter(s => {
-      const final=signalIsFinal(s), result=Number(s.result_pips||0);
-      const statusMatch=status==='all'||(status==='active'&&!final)||(status==='history'&&final)||(status==='wins'&&final&&result>0)||(status==='losses'&&final&&result<0)||(status==='breakeven'&&s.status==='breakeven_hit')||(status==='cancelled'&&s.status==='cancelled');
+    const activeRows = state.signals.filter(s => !signalIsFinal(s));
+    const historyRows = state.signals.filter(signalIsFinal);
+    const activeCount = document.getElementById('activeSignalsTabCount');
+    const historyCount = document.getElementById('historySignalsTabCount');
+    if (activeCount) activeCount.textContent = activeRows.length;
+    if (historyCount) historyCount.textContent = historyRows.length;
+    document.querySelectorAll('[data-signal-view]').forEach(btn => {
+      const selected = btn.dataset.signalView === signalView;
+      btn.classList.toggle('active', selected);
+      btn.setAttribute('aria-selected', selected ? 'true' : 'false');
+    });
+    const baseRows = signalView === 'active' ? activeRows : historyRows;
+    const rows = baseRows.filter(s => {
+      const result = Number(s.result_pips || 0);
+      const statusMatch = signalView === 'active' || status === 'all' || (status === 'wins' && result > 0) || (status === 'losses' && result < 0) || (status === 'breakeven' && s.status === 'breakeven_hit') || (status === 'cancelled' && s.status === 'cancelled');
       return (!query || `${s.symbol} ${s.notes || ''}`.toLowerCase().includes(query)) && statusMatch && (direction === 'all' || s.direction === direction);
     });
-    document.getElementById('signalsGrid').innerHTML = rows.length ? rows.map(s => signalCard(s)).join('') : empty('No signal matches these filters.', 'fa-filter');
+    const statusFilter = document.getElementById('signalStatusFilter');
+    if (statusFilter) statusFilter.classList.toggle('hidden', signalView === 'active');
+    document.getElementById('signalsGrid').innerHTML = rows.length
+      ? (signalView === 'history' ? renderSignalHistoryGroups(rows) : renderSignalDateGroups(rows, signalView))
+      : empty(signalView === 'active' ? 'No active signal is available.' : 'No closed signal matches these filters.', 'fa-filter');
     const latest=state.signalUpdates.find(u=>u.notify_users);
     document.getElementById('latestSignalUpdate').innerHTML=latest?`<div class="signal-update-banner"><i class="fa-solid fa-bell"></i><div><b>${A.escapeHtml(latest.notification_title||eventLabel(latest.event_type))}</b><small style="display:block;color:#888">${A.escapeHtml(latest.notification_message||'')} · ${A.formatDateTime(latest.created_at)}</small></div></div>`:'';
   }
 
+
+  function renderSignalDateGroups(rows, view = 'active') {
+    const groups = new Map();
+    rows.forEach(signal => {
+      const sourceDate = view === 'history' ? (signal.closed_at || signal.last_status_at || signal.updated_at || signal.published_at) : signal.published_at;
+      const date = sourceDate ? new Date(sourceDate) : new Date();
+      const key = Number.isNaN(date.getTime()) ? 'unknown' : `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(signal);
+    });
+    return [...groups.entries()].map(([key, signals]) => {
+      const label = signalDateLabel(key);
+      return `<section class="signal-date-group"><div class="signal-date-label"><span>${A.escapeHtml(label)}</span><small>${signals.length} signal${signals.length === 1 ? '' : 's'}</small></div><div class="signal-date-cards">${signals.map(s => signalCard(s)).join('')}</div></section>`;
+    }).join('');
+  }
+
+  function signalDateLabel(key) {
+    if (key === 'unknown') return 'Older Signals';
+    const parts = key.split('-').map(Number);
+    const date = new Date(parts[0], parts[1]-1, parts[2]);
+    const today = new Date(); today.setHours(0,0,0,0);
+    const yesterday = new Date(today); yesterday.setDate(today.getDate()-1);
+    if (date.getTime() === today.getTime()) return 'Today';
+    if (date.getTime() === yesterday.getTime()) return 'Yesterday';
+    return date.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+  }
+
+
+  function historyDateParts(value) {
+    const date = value ? new Date(value) : null;
+    if (!date || Number.isNaN(date.getTime())) return { date: '—', time: '—' };
+    return {
+      date: date.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }),
+      time: date.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit', hour12:true })
+    };
+  }
+
+  function renderSignalHistoryGroups(rows) {
+    const groups = new Map();
+    rows.forEach(signal => {
+      const sourceDate = signal.closed_at || signal.last_status_at || signal.updated_at || signal.published_at;
+      const date = sourceDate ? new Date(sourceDate) : new Date();
+      const key = Number.isNaN(date.getTime()) ? 'unknown' : `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(signal);
+    });
+    return [...groups.entries()].map(([key, signals]) => {
+      const rowsHtml = signals.map(signal => {
+        const closed = historyDateParts(signal.closed_at || signal.last_status_at || signal.updated_at);
+        const published = historyDateParts(signal.published_at);
+        const finalPips = signal.result_pips == null ? '—' : `${signed(signal.result_pips)} Pips`;
+        const finalClass = Number(signal.result_pips) > 0 ? 'result-positive' : Number(signal.result_pips) < 0 ? 'result-negative' : '';
+        return `<tr class="signal-report-row" data-student-signal-history="${signal.id}" tabindex="0" role="button" aria-label="Open ${attr(displaySymbol(signal.symbol))} signal history">
+          <td>${A.escapeHtml(closed.date)}</td>
+          <td>${A.escapeHtml(closed.time)}</td>
+          <td><b>${displaySymbol(signal.symbol)}</b></td>
+          <td><span class="direction ${String(signal.direction).toLowerCase()}">${A.escapeHtml(signal.direction)}</span></td>
+          <td>${A.escapeHtml(A.statusLabel(signal.order_type || 'market'))}</td>
+          <td><b>${entryText(signal)}</b></td>
+          <td>${num(signal.stop_loss)}</td>
+          <td>${num(signal.take_profit_1)}</td>
+          <td>${num(signal.take_profit_2)}</td>
+          <td>${num(signal.take_profit_3)}</td>
+          <td><span class="status-pill ${A.statusClass(signal.status)}">${A.statusLabel(signal.status)}</span></td>
+          <td><b class="${finalClass}">${finalPips}</b></td>
+          <td>${A.escapeHtml(published.time)}<small>${A.escapeHtml(published.date)}</small></td>
+          <td>${A.escapeHtml(closed.time)}<small>${A.escapeHtml(closed.date)}</small></td>
+        </tr>`;
+      }).join('');
+      return `<section class="signal-date-group signal-history-report-group">
+        <div class="signal-date-label"><span>${A.escapeHtml(signalDateLabel(key))}</span><small>${signals.length} signal${signals.length === 1 ? '' : 's'}</small></div>
+        <div class="signal-history-table-wrap">
+          <table class="signal-history-report-table">
+            <thead><tr>
+              <th>Date</th><th>Time</th><th>Pair</th><th>Direction</th><th>Order Type</th><th>Entry / Zone</th><th>SL</th><th>TP1</th><th>TP2</th><th>TP3</th><th>Final Result</th><th>Final Pips</th><th>Published</th><th>Closed</th>
+            </tr></thead>
+            <tbody>${rowsHtml}</tbody>
+          </table>
+        </div>
+      </section>`;
+    }).join('');
+  }
+
+  function signalEventResult(signalId, eventType) {
+    return state.signalUpdates.find(update => update.signal_id === signalId && update.event_type === eventType && update.result_pips !== null && update.result_pips !== undefined);
+  }
+
   function signalCard(signal, compact = false) {
-    const total=signal.take_profit_4?4:3, hit=Number(signal.tp_hit||0), progress=Math.min(100,Math.round(hit/total*100));
+    const total=3, hit=Math.min(3,Number(signal.tp_hit||0)), progress=Math.min(100,Math.round(hit/total*100));
     const unit=signal.result_unit||resultUnit(signal.symbol); const final=signalIsFinal(signal);
-    const targets=[1,2,3,4].filter(i=>signal[`take_profit_${i}`]!=null).map(i=>`<div class="signal-level ${hit>=i?'hit':''}"><small>TP${i}${hit>=i?' ✓':''}</small><b>${num(signal[`take_profit_${i}`])}</b></div>`).join('');
+    const targets=[1,2,3].map(i=>{
+      const price=signal[`take_profit_${i}`]; if(price==null)return'';
+      const event=signalEventResult(signal.id,`tp${i}_hit`);
+      const resultText=event?`<span class="tp-manual-result ${Number(event.result_pips)>=0?'positive':'negative'}">${signed(event.result_pips)} ${event.result_unit||unit}</span>`:'';
+      return `<div class="signal-level ${hit>=i?'hit':''}"><small>TP${i}${hit>=i?' ✓':''}</small><b>${num(price)}</b>${resultText}</div>`;
+    }).join('');
     const levels=compact?'':`<div class="signal-levels"><div class="signal-level"><small>Entry ${signal.entry_to?'Zone':'Price'}</small><b>${entryText(signal)}</b></div><div class="signal-level"><small>Stop Loss</small><b>${num(signal.stop_loss)}</b></div></div><div class="tp-list">${targets}</div><div class="signal-progress-wrap"><div class="signal-progress-label"><span>TP Progress</span><b>${progress}%</b></div><div class="signal-progress"><span style="width:${progress}%"></span></div></div>`;
     const tone=signal.status==='sl_hit'?'final-loss':['breakeven_hit','cancelled'].includes(signal.status)?'final-neutral':'';
-    return `<article class="signal-card ${String(signal.direction).toLowerCase()} ${tone}"><div class="signal-body"><div class="signal-head"><div><div style="display:flex;gap:7px;align-items:center"><span class="direction ${String(signal.direction).toLowerCase()}">${A.escapeHtml(signal.direction)}</span><span class="signal-order-badge">${A.statusLabel(signal.order_type||'market')}</span></div><h3>${displaySymbol(signal.symbol)}</h3></div><span class="status-pill ${A.statusClass(signal.status)}">${A.statusLabel(signal.status)}</span></div>${signal.be_moved?'<div class="be-badge"><i class="fa-solid fa-shield-halved"></i> Stop Loss Moved to Breakeven</div>':''}${levels}<p>${A.escapeHtml(signal.notes || 'No additional note.')}</p><div class="course-meta"><span><i class="fa-solid fa-clock"></i> ${A.formatDateTime(signal.published_at)}</span>${signal.result_pips !== null && signal.result_pips !== undefined ? `<span class="${Number(signal.result_pips)>0?'result-positive':Number(signal.result_pips)<0?'result-negative':''}"><i class="fa-solid fa-chart-simple"></i> ${final?'Final':'Current'}: ${signed(signal.result_pips)} ${unit}</span>` : ''}</div>${compact?'':`<div class="signal-card-actions"><button class="app-btn small outline" data-student-signal-history="${signal.id}"><i class="fa-solid fa-clock-rotate-left"></i> View History</button></div>`}</div></article>`;
+    return `<article class="signal-card ${String(signal.direction).toLowerCase()} ${tone}"><div class="signal-body"><div class="signal-head"><div><div style="display:flex;gap:7px;align-items:center"><span class="direction ${String(signal.direction).toLowerCase()}">${A.escapeHtml(signal.direction)}</span><span class="signal-order-badge">${A.statusLabel(signal.order_type||'market')}</span></div><h3>${displaySymbol(signal.symbol)}</h3></div><span class="status-pill ${A.statusClass(signal.status)}">${A.statusLabel(signal.status)}</span></div>${signal.be_moved?'<div class="be-badge"><i class="fa-solid fa-shield-halved"></i> Stop Loss Moved to Breakeven</div>':''}${levels}<p>${A.escapeHtml(signal.notes || 'No additional note.')}</p><div class="course-meta"><span><i class="fa-solid fa-clock"></i> ${A.formatDateTime(final?(signal.closed_at||signal.last_status_at):signal.published_at)}</span>${signal.result_pips !== null && signal.result_pips !== undefined ? `<span class="${Number(signal.result_pips)>0?'result-positive':Number(signal.result_pips)<0?'result-negative':''}"><i class="fa-solid fa-chart-simple"></i> ${final?'Final':'Current'}: ${signed(signal.result_pips)} ${unit}</span>` : ''}</div>${compact?'':`<div class="signal-card-actions"><button class="app-btn small outline" data-student-signal-history="${signal.id}"><i class="fa-solid fa-clock-rotate-left"></i> View History</button></div>`}</div></article>`;
   }
+
 
   function openSignalHistory(id){
     const signal=state.signals.find(s=>s.id===id); if(!signal)return;
@@ -168,9 +280,16 @@
     document.getElementById('coursesGrid').innerHTML = state.courses.length ? state.courses.map(course => {
       const access = hasCourseAccess(course.id);
       const payment = latestPayment(course.id);
+      const nextSession=state.sessions.filter(s=>s.course_id===course.id&&s.status!=='cancelled').sort((a,b)=>new Date(a.starts_at)-new Date(b.starts_at))[0];
       const actualPrice=course.discount_price!=null?Number(course.discount_price):Number(course.price); const paymentText = payment ? A.statusLabel(payment.status) : (course.course_type==='free'||actualPrice===0 ? 'Free enrollment' : 'Payment required');
-      return `<article class="course-card"><div class="course-cover ${course.thumbnail_url?'has-image':''}">${course.thumbnail_url?`<img src="${attr(course.thumbnail_url)}" alt="${attr(course.title)}" loading="lazy" decoding="async">`:'<i class="fa-solid fa-graduation-cap"></i>'}<span class="status-pill ${A.statusClass(course.status)}">${A.statusLabel(course.status)}</span></div><div class="course-body"><h3>${A.escapeHtml(course.title)}</h3><p>${A.escapeHtml(course.description || '')}</p><div class="course-meta"><span><i class="fa-solid fa-user-tie"></i> ${A.escapeHtml(course.instructor_name || A.cfg.INSTRUCTOR_NAME)}</span><span><i class="fa-solid fa-money-bill"></i> ${course.discount_price!=null?`<s>${A.formatMoney(course.price,course.currency)}</s> ${A.formatMoney(course.discount_price,course.currency)}`:A.formatMoney(course.price, course.currency)}</span><span><i class="fa-solid fa-calendar"></i> ${course.start_date ? A.formatDate(course.start_date) : 'Date to be announced'}</span></div><div class="notice ${access ? 'ok' : payment?.status === 'declined' ? 'bad' : 'warn'}">${access ? '<b>Access approved.</b> Session links are unlocked.' : `<b>${paymentText}.</b> Session dates are visible, but Google Meet links remain locked.`}</div><div class="course-actions"><button class="app-btn ${access ? 'gold' : 'outline'}" data-open-course="${course.id}"><i class="fa-solid fa-calendar-days"></i> View Sessions</button>${access ? '' : (course.course_type==='free'||actualPrice===0) ? `<button class="app-btn gold" data-free-enroll="${course.id}">Enroll Free</button>` : `<button class="app-btn gold" data-buy-course="${course.id}"><i class="fa-solid fa-receipt"></i> ${payment && ['received','under_review'].includes(payment.status) ? 'Payment Submitted' : payment?.status==='resubmission_required' ? 'Submit New Receipt' : 'Submit Payment'}</button>`}</div></div></article>`;
+      return `<article class="course-card"><div class="course-cover ${course.thumbnail_url?'has-image':''}">${course.thumbnail_url?`<img src="${attr(course.thumbnail_url)}" alt="${attr(course.title)}" loading="lazy" decoding="async">`:'<i class="fa-solid fa-graduation-cap"></i>'}<span class="status-pill ${A.statusClass(course.status)}">${A.statusLabel(course.status)}</span></div><div class="course-body"><h3>${A.escapeHtml(course.title)}</h3><p>${A.escapeHtml(course.short_description || course.description || '')}</p><div class="course-meta"><span><i class="fa-solid fa-user-tie"></i> ${A.escapeHtml(course.instructor_name || A.cfg.INSTRUCTOR_NAME)}</span><span><i class="fa-solid fa-money-bill"></i> ${course.discount_price!=null?`<s>${A.formatMoney(course.price,course.currency)}</s> ${A.formatMoney(course.discount_price,course.currency)}`:A.formatMoney(course.price, course.currency)}</span>${nextSession?`<span><i class="fa-solid fa-calendar"></i> ${A.formatDateTime(nextSession.starts_at)}</span>`:`<span><i class="fa-solid fa-calendar"></i> Date to be announced</span>`}</div>${nextSession?`<div class="course-next-class"><small>Next Live Class</small><b>${A.escapeHtml(nextSession.title)}</b><span>${A.escapeHtml(nextSession.topic||'')}</span></div>`:''}<div class="notice ${access ? 'ok' : payment?.status === 'declined' ? 'bad' : 'warn'}">${access ? '<b>Access approved.</b> Google Meet link is unlocked.' : `<b>${paymentText}.</b> Class date is visible, but the Meet link remains locked.`}</div><div class="course-actions"><button class="app-btn ${access ? 'gold' : 'outline'}" data-open-course="${course.id}"><i class="fa-solid fa-calendar-days"></i> View Live Class</button>${access ? '' : (course.course_type==='free'||actualPrice===0) ? `<button class="app-btn gold" data-free-enroll="${course.id}">Enroll Free</button>` : `<button class="app-btn gold" data-buy-course="${course.id}"><i class="fa-solid fa-receipt"></i> ${payment && ['received','under_review'].includes(payment.status) ? 'Payment Submitted' : payment?.status==='resubmission_required' ? 'Submit New Receipt' : 'Submit Payment'}</button>`}</div></div></article>`;
     }).join('') : empty('No course is currently published.', 'fa-graduation-cap');
+  }
+
+  function resetCourseView() {
+    state.selectedCourse = null;
+    document.getElementById('sessionsArea')?.classList.add('hidden');
+    document.getElementById('coursesGrid')?.classList.remove('hidden');
   }
 
   function showCourseSessions(courseId) {
@@ -191,7 +310,11 @@
   function sessionCard(session, access) {
     const link = state.sessionLinks[session.id];
     const unlocked = access && Boolean(link);
-    return `<article class="session-card"><div class="session-top"><span class="session-number">Session ${session.session_number}</span><span class="session-lock"><i class="fa-solid ${unlocked ? 'fa-lock-open' : 'fa-lock'}"></i></span></div><div class="session-body"><div class="signal-head"><h3>${A.escapeHtml(session.title)}</h3><span class="status-pill ${A.statusClass(session.status)}">${A.statusLabel(session.status)}</span></div><p>${A.escapeHtml(session.topic || '')}</p><div class="session-date"><span><i class="fa-solid fa-calendar"></i> ${A.formatDateTime(session.starts_at)}</span><span><i class="fa-solid fa-hourglass-half"></i> ${session.duration_minutes || 90} minutes</span><span><i class="fa-solid fa-video"></i> Google Meet</span></div>${unlocked ? `<a class="app-btn green" href="${attr(link)}" target="_blank" rel="noopener"><i class="fa-solid fa-video"></i> Join Google Meet</a>` : `<button class="app-btn outline" disabled><i class="fa-solid fa-lock"></i> ${access ? 'Meet link not added yet' : 'Locked until payment approval'}</button>`}</div></article>`;
+    const course = state.selectedCourse || state.courses.find(c => c.id === session.course_id);
+    const effectivePrice = course ? Number(course.discount_price != null ? course.discount_price : course.price || 0) : 0;
+    const isFree = course?.course_type === 'free' || effectivePrice === 0;
+    const lockedLabel = access ? 'Meet link not added yet' : (isFree ? 'Locked until enrollment' : 'Locked until payment approval');
+    return `<article class="session-card"><div class="session-top"><span class="session-number">Session ${session.session_number}</span><span class="session-lock"><i class="fa-solid ${unlocked ? 'fa-lock-open' : 'fa-lock'}"></i></span></div><div class="session-body"><div class="signal-head"><h3>${A.escapeHtml(session.title)}</h3><span class="status-pill ${A.statusClass(session.status)}">${A.statusLabel(session.status)}</span></div><p>${A.escapeHtml(session.topic || '')}</p><div class="session-date"><span><i class="fa-solid fa-calendar"></i> ${A.formatDateTime(session.starts_at)}</span><span><i class="fa-solid fa-hourglass-half"></i> ${session.duration_minutes || 90} minutes</span><span><i class="fa-solid fa-video"></i> Google Meet</span></div>${unlocked ? `<a class="app-btn green" href="${attr(link)}" target="_blank" rel="noopener"><i class="fa-solid fa-video"></i> Join Google Meet</a>` : `<button class="app-btn outline" disabled><i class="fa-solid fa-lock"></i> ${lockedLabel}</button>`}</div></article>`;
   }
 
   function sessionCompact(session) {
@@ -236,13 +359,16 @@
   function bindEvents() {
     document.addEventListener('panel:open', event => {
       if (event.detail.key === 'signals' && !state.riskAccepted) A.openModal('riskModal');
+      if (event.detail.key === 'courses') resetCourseView();
     });
     ['signalSearch','signalStatusFilter','signalDirectionFilter'].forEach(id => document.getElementById(id)?.addEventListener('input', renderSignals));
     ['chartSearch','chartTimeframeFilter'].forEach(id => document.getElementById(id)?.addEventListener('input', renderCharts));
     document.getElementById('articleSearch')?.addEventListener('input', renderArticles);
-    document.getElementById('closeSessions').addEventListener('click', () => { document.getElementById('sessionsArea').classList.add('hidden'); document.getElementById('coursesGrid').classList.remove('hidden'); });
+    document.getElementById('closeSessions').addEventListener('click', resetCourseView);
 
     document.body.addEventListener('click', async event => {
+      const signalViewButton = event.target.closest('[data-signal-view]');
+      if (signalViewButton) { signalView = signalViewButton.dataset.signalView; renderSignals(); }
       const courseOpen = event.target.closest('[data-open-course]');
       if (courseOpen) { openPanel('courses'); showCourseSessions(courseOpen.dataset.openCourse); }
       const buy = event.target.closest('[data-buy-course]');
@@ -338,7 +464,9 @@
       const { error } = await A.supabase.rpc('enroll_free_course', { p_course_id: courseId });
         if (error) throw error;
         await loadAll();
-      renderAll(); A.toast('Free course enrolled successfully.', 'success');
+      renderAll();
+      showCourseSessions(courseId);
+      A.toast('Free course enrolled successfully. Google Meet links are now unlocked.', 'success');
     } catch (error) { A.toast(A.friendlyError(error, 'Could not enroll.'), 'error'); }
     finally { A.setLoading(button, false); }
   }
@@ -421,8 +549,8 @@
       .subscribe();
   }
 
-  function signalIsFinal(s){return Boolean(s.closed_at)||['tp4_hit','sl_hit','breakeven_hit','manually_closed','cancelled'].includes(s.status)||(s.status==='tp3_hit'&&!s.take_profit_4);}
-  function resultUnit(symbol){const x=String(symbol||'').replace('/','').toUpperCase();return ['XAUUSD','XAGUSD','BTCUSD','US30','NAS100','SPX500','GER40'].includes(x)?'points':'pips';}
+  function signalIsFinal(s){return Boolean(s.closed_at)||['tp3_hit','tp4_hit','sl_hit','breakeven_hit','manually_closed','cancelled'].includes(s.status);}
+  function resultUnit(){return 'pips';}
   function displaySymbol(symbol){const x=String(symbol||'').replace('/','').toUpperCase();return x.length===6?`${x.slice(0,3)}/${x.slice(3)}`:x;}
   function entryText(s){return `${num(s.entry_from)}${s.entry_to!=null?` – ${num(s.entry_to)}`:''}`;}
   function signed(value){const n=Number(value||0);return `${n>0?'+':''}${Number.isInteger(n)?n:n.toFixed(1)}`;}
