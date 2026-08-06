@@ -650,3 +650,13 @@ input[type='file']::file-selector-button { margin-right: 10px; padding: 7px 10px
 .course-next-class small{color:#d4ad29;text-transform:uppercase;font-weight:800;letter-spacing:.04em}
 .course-next-class b{font-size:15px}
 .course-next-class span{color:var(--muted);font-size:13px}
+
+/* V9.13 — multi-session course builder */
+.course-session-editor{display:grid;gap:14px}
+.course-session-row{border:1px solid rgba(255,201,40,.24);background:rgba(255,255,255,.025);border-radius:14px;padding:14px}
+.course-session-row-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;color:#ffc928}
+.course-session-row-head b{font-size:15px}
+.course-session-row .form-grid{margin:0}
+.course-session-row textarea{min-height:112px;white-space:pre-wrap}
+.course-session-row:only-child .session-remove-btn{display:none}
+@media(max-width:700px){.course-session-row{padding:12px}.course-session-row-head{align-items:flex-start}.session-remove-btn{padding:8px 10px}}
