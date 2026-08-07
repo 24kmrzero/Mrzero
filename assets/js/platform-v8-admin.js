@@ -566,9 +566,7 @@
       .filter(profile => profile.role === 'student')
       .map(profile => profile.created_at)
       .filter(Boolean);
-    const courseEvents = state.enrollments
-      .map(row => row.created_at || row.access_started_at)
-      .filter(Boolean);
+    const courseRows = state.enrollments || [];
 
     root.innerHTML = [
       analyticsTrendCard({
@@ -577,15 +575,15 @@
         title: 'User Growth',
         subtitle: 'New student registrations',
         icon: 'fa-users',
-        events: userEvents
+        data: userEvents
       }),
       analyticsTrendCard({
         target: 'courses',
         eyebrow: 'COURSES',
         title: 'Course Enrollments',
-        subtitle: 'Enrollment performance',
+        subtitle: 'Free and paid enrollments',
         icon: 'fa-user-graduate',
-        events: courseEvents
+        data: courseRows
       })
     ].join('');
   }
@@ -679,14 +677,97 @@
     return { period, buckets, current, previous, change: rounded };
   }
 
+  function analyticsEnrollmentSeries(rows, target) {
+    const period = analyticsPeriod(target);
+    const buckets = analyticsBuckets(period);
+    let freeCurrent = 0;
+    let paidCurrent = 0;
+    let freePrevious = 0;
+    let paidPrevious = 0;
+
+    rows.forEach(row => {
+      const date = new Date(row.created_at || row.access_started_at || row.updated_at);
+      if (Number.isNaN(date.getTime())) return;
+      const free = isFreeCourse(row.course_id);
+      if (date >= period.start && date < period.end) {
+        if (free) freeCurrent += 1; else paidCurrent += 1;
+        const bucket = buckets.find(item => date >= item.start && date < item.end);
+        if (bucket) bucket.value += 1;
+      } else if (date >= period.previousStart && date < period.previousEnd) {
+        if (free) freePrevious += 1; else paidPrevious += 1;
+      }
+    });
+
+    const current = freeCurrent + paidCurrent;
+    const previous = freePrevious + paidPrevious;
+    let change = 0;
+    if (previous > 0) change = ((current - previous) / previous) * 100;
+    else if (current > 0) change = 100;
+    const rounded = Math.round(change * 10) / 10;
+    return {
+      period,
+      buckets,
+      current,
+      previous,
+      change: rounded,
+      freeCurrent,
+      paidCurrent,
+      freePrevious,
+      paidPrevious
+    };
+  }
+
   function analyticsPieHtml(series, target) {
+    const circumference = 301.593;
+    const gid = `analytics-${target}`;
+
+    if (target === 'courses') {
+      const free = Math.max(0, Number(series.freeCurrent || 0));
+      const paid = Math.max(0, Number(series.paidCurrent || 0));
+      const total = free + paid;
+      const freePct = total > 0 ? (free / total) * 100 : 0;
+      const paidPct = total > 0 ? (paid / total) * 100 : 0;
+      const freeLen = total > 0 ? (freePct / 100) * circumference : 0;
+      const paidLen = total > 0 ? (paidPct / 100) * circumference : 0;
+      const freeGap = freeLen > 8 && paidLen > 0 ? 3.2 : 0;
+      const paidGap = paidLen > 8 && freeLen > 0 ? 3.2 : 0;
+      const freeDash = Math.max(0, freeLen - freeGap);
+      const paidDash = Math.max(0, paidLen - paidGap);
+      const paidOffset = -(freeLen + (freeGap ? .8 : 0));
+      const zeroMarkup = total <= 0 ? '<div class="analytics-donut-empty"><i class="fa-solid fa-chart-pie"></i><span>No data</span></div>' : '';
+      return `<div class="analytics-round-chart professional ${target}" role="img" aria-label="Free and paid course enrollments for the selected period">
+        <div class="analytics-donut-shell">
+          <svg class="analytics-donut-svg" viewBox="0 0 120 120" aria-hidden="true">
+            <defs>
+              <linearGradient id="${gid}-free" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#ffd76c"/><stop offset="55%" stop-color="#e3ad20"/><stop offset="100%" stop-color="#d77b2b"/>
+              </linearGradient>
+              <linearGradient id="${gid}-paid" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#74e49b"/><stop offset="52%" stop-color="#33b96e"/><stop offset="100%" stop-color="#159b8b"/>
+              </linearGradient>
+              <filter id="${gid}-glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <circle class="donut-track" cx="60" cy="60" r="48" pathLength="${circumference}"/>
+            ${total > 0 ? `<circle class="donut-segment free" cx="60" cy="60" r="48" stroke="url(#${gid}-free)" stroke-dasharray="${freeDash.toFixed(2)} ${(circumference-freeDash).toFixed(2)}" stroke-dashoffset="0" filter="url(#${gid}-glow)"/>` : ''}
+            ${paidLen > 0 ? `<circle class="donut-segment paid" cx="60" cy="60" r="48" stroke="url(#${gid}-paid)" stroke-dasharray="${paidDash.toFixed(2)} ${(circumference-paidDash).toFixed(2)}" stroke-dashoffset="${paidOffset.toFixed(2)}"/>` : ''}
+          </svg>
+          ${zeroMarkup}
+          <div class="analytics-donut-center"><b>${total}</b><span>Selected</span><small>${Math.round(paidPct)}% paid</small></div>
+        </div>
+        <div class="analytics-pie-legend professional">
+          <div><span class="pie-swatch free"></span><span>Free enrollments</span><b>${free}</b><small>${Math.round(freePct)}%</small></div>
+          <div><span class="pie-swatch paid"></span><span>Paid enrollments</span><b>${paid}</b><small>${Math.round(paidPct)}%</small></div>
+          <div class="analytics-mini-total"><span>Total selected</span><b>${total}</b></div>
+        </div>
+      </div>`;
+    }
+
     const current = Math.max(0, Number(series.current || 0));
     const previous = Math.max(0, Number(series.previous || 0));
     const total = current + previous;
     const currentPct = total > 0 ? (current / total) * 100 : 0;
     const previousPct = total > 0 ? 100 - currentPct : 0;
-    const chartLabel = target === 'users' ? 'User registrations comparison' : 'Course enrollments comparison';
-    const circumference = 301.593;
+    const chartLabel = 'User registrations comparison';
     const currentLen = total > 0 ? (currentPct / 100) * circumference : 0;
     const previousLen = total > 0 ? (previousPct / 100) * circumference : 0;
     const currentGap = currentLen > 8 && previousLen > 0 ? 3.2 : 0;
@@ -694,17 +775,16 @@
     const currentDash = Math.max(0, currentLen - currentGap);
     const previousDash = Math.max(0, previousLen - previousGap);
     const previousOffset = -(currentLen + (currentGap ? .8 : 0));
-    const gid = `analytics-${target}`;
     const zeroMarkup = total <= 0 ? '<div class="analytics-donut-empty"><i class="fa-solid fa-chart-pie"></i><span>No data</span></div>' : '';
     return `<div class="analytics-round-chart professional ${target}" role="img" aria-label="${chartLabel}">
       <div class="analytics-donut-shell">
         <svg class="analytics-donut-svg" viewBox="0 0 120 120" aria-hidden="true">
           <defs>
             <linearGradient id="${gid}-current" x1="0" y1="0" x2="1" y2="1">
-              ${target === 'users' ? '<stop offset="0%" stop-color="#ffd84a"/><stop offset="52%" stop-color="#e7b516"/><stop offset="100%" stop-color="#ef8f1b"/>' : '<stop offset="0%" stop-color="#74e49b"/><stop offset="52%" stop-color="#33b96e"/><stop offset="100%" stop-color="#159b8b"/>'}
+              <stop offset="0%" stop-color="#ffd84a"/><stop offset="52%" stop-color="#e7b516"/><stop offset="100%" stop-color="#ef8f1b"/>
             </linearGradient>
             <linearGradient id="${gid}-previous" x1="1" y1="0" x2="0" y2="1">
-              ${target === 'users' ? '<stop offset="0%" stop-color="#88a6ff"/><stop offset="55%" stop-color="#526fd8"/><stop offset="100%" stop-color="#6d50c9"/>' : '<stop offset="0%" stop-color="#ffd76c"/><stop offset="55%" stop-color="#e3ad20"/><stop offset="100%" stop-color="#d77b2b"/>'}
+              <stop offset="0%" stop-color="#88a6ff"/><stop offset="55%" stop-color="#526fd8"/><stop offset="100%" stop-color="#6d50c9"/>
             </linearGradient>
             <filter id="${gid}-glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
           </defs>
@@ -731,9 +811,9 @@
     return 'vs previous same period';
   }
 
-  function analyticsTrendCard({ target, eyebrow, title, subtitle, icon, events }) {
+  function analyticsTrendCard({ target, eyebrow, title, subtitle, icon, data }) {
     const config = analyticsState[target];
-    const series = analyticsSeries(events, target);
+    const series = target === 'courses' ? analyticsEnrollmentSeries(data || [], target) : analyticsSeries(data || [], target);
     const changeTone = series.change > 0 ? 'positive' : series.change < 0 ? 'negative' : 'neutral';
     const changeIcon = series.change > 0 ? 'fa-arrow-trend-up' : series.change < 0 ? 'fa-arrow-trend-down' : 'fa-minus';
     const changeText = `${series.change > 0 ? '+' : ''}${series.change}%`;
@@ -743,13 +823,15 @@
     const filterButtons = ranges.map(([range, text]) => `<button type="button" class="analytics-range-btn ${config.range === range ? 'active' : ''}" data-analytics-range data-analytics-target="${target}" data-range="${range}">${text}</button>`).join('');
     const custom = config.range === 'custom' ? `<div class="analytics-custom-range"><label>From<input type="date" value="${attr(config.start)}" data-analytics-custom="${target}-start"></label><label>To<input type="date" value="${attr(config.end)}" data-analytics-custom="${target}-end"></label></div>` : '';
     const labelText = config.range === 'today' ? 'today' : config.range === 'yesterday' ? 'yesterday' : config.range === 'last_month' ? 'last 30 days' : config.range === 'custom' ? 'selected period' : 'last 7 days';
+    const detailText = target === 'courses' ? `Free: ${series.freeCurrent || 0} · Paid: ${series.paidCurrent || 0}` : `Previous: ${series.previous}`;
+    const compareText = target === 'courses' ? `${analyticsComparisonText(config.range)} · total enrollments` : analyticsComparisonText(config.range);
 
     return `<section class="analytics-card trend-analytics-card" data-analytics-card="${target}">
       <div class="analytics-head trend-head"><div><span class="analytics-eyebrow">${eyebrow}</span><h3><i class="fa-solid ${icon}"></i> ${title}</h3><p>${subtitle} · ${labelText}</p></div><div class="trend-total"><b>${series.current}</b><small>Total</small></div></div>
       <div class="analytics-range-row">${filterButtons}</div>
       ${custom}
       <div class="analytics-trend-chart round">${analyticsPieHtml(series, target)}</div>
-      <div class="analytics-performance-row"><span class="analytics-change ${changeTone}"><i class="fa-solid ${changeIcon}"></i> ${changeText}</span><span>${analyticsComparisonText(config.range)}</span><small>Previous: ${series.previous}</small></div>
+      <div class="analytics-performance-row"><span class="analytics-change ${changeTone}"><i class="fa-solid ${changeIcon}"></i> ${changeText}</span><span>${compareText}</span><small>${detailText}</small></div>
     </section>`;
   }
 

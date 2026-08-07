@@ -1611,3 +1611,88 @@ html[data-theme="light"] #p-dashboard .analytics-pie-legend.professional .analyt
   #p-dashboard .analytics-performance-row{margin-top:5px;padding-top:5px;font-size:7px}
   #p-dashboard .analytics-performance-row small{font-size:7px}
 }
+
+
+/* V9.24 — larger right-side analytics and free/paid enrollment comparison */
+#p-dashboard .dashboard-business-grid{
+  grid-template-columns:minmax(0,1.04fr) minmax(560px,1fr);
+}
+#p-dashboard .dashboard-analytics-column{
+  gap:14px;
+}
+#p-dashboard .trend-analytics-card{
+  min-height:250px;
+}
+#p-dashboard .analytics-trend-chart.round{
+  min-height:185px;
+  height:auto;
+  display:flex;
+  align-items:center;
+}
+#p-dashboard .analytics-round-chart.professional{
+  width:100%;
+  max-width:none;
+  margin:0;
+  grid-template-columns:minmax(160px,190px) minmax(260px,1fr);
+  gap:18px;
+  justify-content:space-between;
+}
+#p-dashboard .analytics-donut-shell{
+  width:min(190px,100%);
+}
+#p-dashboard .analytics-pie-legend.professional{
+  width:100%;
+  align-self:center;
+}
+#p-dashboard .analytics-pie-legend.professional>div{
+  grid-template-columns:11px minmax(0,1fr) auto auto;
+  padding:9px 10px;
+  gap:8px;
+  font-size:9px;
+}
+#p-dashboard .analytics-pie-legend.professional>div>b{font-size:13px}
+#p-dashboard .analytics-pie-legend.professional>div>small{font-size:8px;min-width:28px}
+#p-dashboard .analytics-round-chart.courses .pie-swatch.free{background:linear-gradient(135deg,#ffd76c,#d77b2b)}
+#p-dashboard .analytics-round-chart.courses .pie-swatch.paid{background:linear-gradient(135deg,#74e49b,#159b8b)}
+#p-dashboard .analytics-performance-row{
+  margin-top:9px;
+  padding-top:9px;
+}
+#p-dashboard .trend-total{
+  min-width:48px;
+  text-align:right;
+}
+
+@media (min-width:1180px) and (min-height:720px){
+  #p-dashboard .dashboard-business-grid{grid-template-columns:minmax(0,1.03fr) minmax(580px,1fr)}
+  #p-dashboard .dashboard-analytics-column{gap:14px}
+  #p-dashboard .trend-analytics-card{padding:13px 14px 11px}
+  #p-dashboard .analytics-head.trend-head{margin-bottom:8px}
+  #p-dashboard .analytics-range-row{margin:4px 0 8px}
+  #p-dashboard .analytics-trend-chart.round{min-height:192px;padding:10px 12px}
+  #p-dashboard .analytics-round-chart.professional{grid-template-columns:170px minmax(270px,1fr);gap:18px;max-width:none}
+  #p-dashboard .analytics-donut-shell{width:170px}
+  #p-dashboard .analytics-donut-center{width:82px;height:82px}
+  #p-dashboard .analytics-donut-center b{font-size:24px}
+}
+
+@media (min-width:1180px) and (max-height:820px){
+  #p-dashboard .dashboard-business-grid{grid-template-columns:minmax(0,1.02fr) minmax(520px,.98fr)}
+  #p-dashboard .trend-analytics-card{min-height:220px}
+  #p-dashboard .analytics-trend-chart.round{min-height:155px;padding:8px 10px}
+  #p-dashboard .analytics-round-chart.professional{grid-template-columns:132px minmax(210px,1fr);gap:14px;max-width:none}
+  #p-dashboard .analytics-donut-shell{width:132px}
+  #p-dashboard .analytics-donut-center{width:68px;height:68px}
+  #p-dashboard .analytics-donut-center b{font-size:20px}
+  #p-dashboard .analytics-pie-legend.professional>div{padding:7px 8px;font-size:8px}
+  #p-dashboard .analytics-pie-legend.professional>div>b{font-size:11px}
+}
+
+@media (max-width:1050px){
+  #p-dashboard .dashboard-business-grid{grid-template-columns:1fr}
+  #p-dashboard .analytics-round-chart.professional{grid-template-columns:minmax(150px,180px) minmax(220px,1fr)}
+}
+@media (max-width:760px){
+  #p-dashboard .analytics-round-chart.professional{grid-template-columns:1fr;gap:12px}
+  #p-dashboard .analytics-donut-shell{width:min(180px,58vw)}
+}
