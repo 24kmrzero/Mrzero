@@ -797,12 +797,12 @@
             ${paidLen > 0 ? `<circle class="donut-segment paid" cx="60" cy="60" r="48" stroke="url(#${gid}-paid)" stroke-dasharray="${paidDash.toFixed(2)} ${(circumference-paidDash).toFixed(2)}" stroke-dashoffset="${paidOffset.toFixed(2)}"/>` : ''}
           </svg>
           ${zeroMarkup}
-          <div class="analytics-donut-center"><b>${total}</b><span>Selected</span><small>${Math.round(paidPct)}% paid</small></div>
+          <div class="analytics-donut-center"><b>${total}</b><span>Current Enrollments</span><small>${Math.round(paidPct)}% paid</small></div>
         </div>
         <div class="analytics-pie-legend professional">
           <div><span class="pie-swatch free"></span><span>Free enrollments</span><b>${free}</b><small>${Math.round(freePct)}%</small></div>
           <div><span class="pie-swatch paid"></span><span>Paid enrollments</span><b>${paid}</b><small>${Math.round(paidPct)}%</small></div>
-          <div class="analytics-mini-total"><span>Total selected</span><b>${total}</b></div>
+          
         </div>
       </div>`;
     }
@@ -838,12 +838,12 @@
           ${previousLen > 0 ? `<circle class="donut-segment previous" cx="60" cy="60" r="48" stroke="url(#${gid}-previous)" stroke-dasharray="${previousDash.toFixed(2)} ${(circumference-previousDash).toFixed(2)}" stroke-dashoffset="${previousOffset.toFixed(2)}"/>` : ''}
         </svg>
         ${zeroMarkup}
-        <div class="analytics-donut-center"><b>${current}</b><span>Selected</span><small>${Math.round(currentPct)}%</small></div>
+        <div class="analytics-donut-center"><b>${current}</b><span>Current Users</span><small>${Math.round(currentPct)}%</small></div>
       </div>
       <div class="analytics-pie-legend professional">
         <div><span class="pie-swatch current"></span><span>Selected period</span><b>${current}</b><small>${Math.round(currentPct)}%</small></div>
         <div><span class="pie-swatch previous"></span><span>Previous period</span><b>${previous}</b><small>${Math.round(previousPct)}%</small></div>
-        <div class="analytics-mini-total"><span>Total compared</span><b>${total}</b></div>
+        
       </div>
     </div>`;
   }
