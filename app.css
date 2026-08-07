@@ -1492,3 +1492,122 @@ html[data-theme="light"] #p-dashboard .analytics-pie-legend.professional .analyt
   #p-dashboard .analytics-donut-shell{width:min(160px,52vw)}
   #p-dashboard .analytics-pie-legend.professional{width:100%}
 }
+
+/* V9.23 — balanced desktop dashboard sizing
+   Restore a premium, readable scale while keeping the complete dashboard within
+   a typical 1440x900 / 1728x864 desktop viewport. */
+@media (min-width:1180px) and (min-height:720px){
+  .app-content{padding:20px 26px 18px;max-width:1720px}
+
+  #p-dashboard>.panel-heading{margin-bottom:12px}
+  #p-dashboard>.panel-heading h1{font-size:clamp(27px,1.85vw,32px);margin-bottom:3px}
+  #p-dashboard>.panel-heading p{font-size:12px}
+
+  #p-dashboard #adminKpis.business-summary-grid{gap:11px;margin-bottom:13px}
+  #p-dashboard .business-summary-card{
+    min-height:88px;
+    padding:13px 14px;
+    border-radius:15px;
+    grid-template-columns:42px minmax(0,1fr) 18px;
+    gap:10px;
+  }
+  #p-dashboard .business-summary-icon{width:42px;height:42px;border-radius:11px;font-size:16px}
+  #p-dashboard .business-summary-copy>b{font-size:22px;margin-bottom:4px}
+  #p-dashboard .business-summary-copy small{font-size:10px;line-height:1.2}
+  #p-dashboard .business-summary-arrow{font-size:10px}
+
+  #p-dashboard .dashboard-business-grid{
+    grid-template-columns:minmax(0,1.05fr) minmax(500px,.95fr);
+    gap:14px;
+  }
+  #p-dashboard .dashboard-work-column{
+    gap:14px;
+    grid-template-rows:minmax(150px,.58fr) minmax(300px,1.42fr);
+  }
+  #p-dashboard .dashboard-analytics-column{gap:12px}
+
+  #p-dashboard .dashboard-action-card{padding:14px 16px;border-radius:15px}
+  #p-dashboard .dashboard-action-card .app-card-head{margin-bottom:10px}
+  #p-dashboard .dashboard-action-card .app-card-head h3{font-size:16px}
+  #p-dashboard .dashboard-action-card .app-card-head p{font-size:10px}
+  #p-dashboard .dashboard-action-card .app-btn.small{min-height:33px;padding:6px 11px;font-size:9px}
+  #p-dashboard .dashboard-action-card .empty-state{padding:22px 12px;font-size:11px}
+  #p-dashboard .dashboard-action-card .empty-state i{font-size:23px}
+
+  #p-dashboard #dashboardSessions .activity-item,
+  #p-dashboard #dashboardPayments .activity-item{padding:9px 0;gap:10px}
+  #p-dashboard #dashboardSessions .activity-icon,
+  #p-dashboard #dashboardPayments .activity-icon{width:35px;height:35px;border-radius:10px;font-size:13px}
+  #p-dashboard #dashboardSessions .activity-item b,
+  #p-dashboard #dashboardPayments .activity-item b{font-size:11px}
+  #p-dashboard #dashboardSessions .activity-item small,
+  #p-dashboard #dashboardPayments .activity-item small{font-size:9px}
+  #p-dashboard #dashboardSessions .status-pill{min-height:23px;padding:4px 8px;font-size:7.5px}
+
+  #p-dashboard .trend-analytics-card{padding:12px 13px 10px;border-radius:15px}
+  #p-dashboard .analytics-head.trend-head{margin-bottom:7px}
+  #p-dashboard .analytics-head.trend-head h3{font-size:15px}
+  #p-dashboard .analytics-head.trend-head h3 i{font-size:13px}
+  #p-dashboard .analytics-head.trend-head p{font-size:9px}
+  #p-dashboard .analytics-eyebrow{font-size:7.5px}
+  #p-dashboard .trend-total b{font-size:21px}
+  #p-dashboard .trend-total small{font-size:7px}
+
+  #p-dashboard .analytics-range-row{gap:5px;margin:3px 0 7px}
+  #p-dashboard .analytics-range-btn{padding:5px 8px;font-size:7.5px}
+
+  #p-dashboard .analytics-trend-chart.round{height:170px;padding:8px 10px;border-radius:11px}
+  #p-dashboard .analytics-round-chart.professional{
+    grid-template-columns:146px minmax(0,1fr);
+    gap:14px;
+    max-width:390px;
+  }
+  #p-dashboard .analytics-donut-shell{width:146px}
+  #p-dashboard .analytics-donut-svg circle{stroke-width:13.5}
+  #p-dashboard .analytics-donut-center{width:78px;height:78px}
+  #p-dashboard .analytics-donut-center b{font-size:23px}
+  #p-dashboard .analytics-donut-center span{display:block;font-size:7px;margin-top:4px}
+  #p-dashboard .analytics-donut-center small{font-size:8px}
+  #p-dashboard .analytics-pie-legend.professional{gap:7px}
+  #p-dashboard .analytics-pie-legend.professional>div{
+    padding:7px 9px;
+    gap:7px;
+    font-size:8px;
+    border-radius:9px;
+  }
+  #p-dashboard .analytics-pie-legend.professional>div>b{font-size:12px}
+  #p-dashboard .analytics-pie-legend.professional>div>small{font-size:7px;min-width:24px}
+  #p-dashboard .analytics-performance-row{margin-top:7px;padding-top:7px;font-size:8px}
+  #p-dashboard .analytics-performance-row small{font-size:8px}
+  #p-dashboard .analytics-change{padding:4px 7px;font-size:8px}
+}
+
+/* Keep 1366x768 class laptops compact enough to avoid scroll, but not tiny. */
+@media (min-width:1180px) and (max-height:820px){
+  .app-content{padding:14px 20px 12px}
+  #p-dashboard>.panel-heading h1{font-size:26px}
+  #p-dashboard #adminKpis.business-summary-grid{gap:8px;margin-bottom:9px}
+  #p-dashboard .business-summary-card{min-height:72px;padding:9px 10px;grid-template-columns:34px minmax(0,1fr) 15px}
+  #p-dashboard .business-summary-icon{width:34px;height:34px;font-size:13px}
+  #p-dashboard .business-summary-copy>b{font-size:18px}
+  #p-dashboard .business-summary-copy small{font-size:8.5px}
+  #p-dashboard .dashboard-business-grid{gap:10px}
+  #p-dashboard .dashboard-work-column{gap:10px;grid-template-rows:minmax(125px,.55fr) minmax(230px,1.45fr)}
+  #p-dashboard .dashboard-analytics-column{gap:9px}
+  #p-dashboard .dashboard-action-card{padding:10px 12px}
+  #p-dashboard .trend-analytics-card{padding:9px 10px 8px}
+  #p-dashboard .analytics-head.trend-head h3{font-size:13.5px}
+  #p-dashboard .analytics-range-btn{padding:4px 6px;font-size:7px}
+  #p-dashboard .analytics-trend-chart.round{height:132px;padding:6px 8px}
+  #p-dashboard .analytics-round-chart.professional{grid-template-columns:112px minmax(0,1fr);gap:10px;max-width:320px}
+  #p-dashboard .analytics-donut-shell{width:112px}
+  #p-dashboard .analytics-donut-center{width:62px;height:62px}
+  #p-dashboard .analytics-donut-center b{font-size:18px}
+  #p-dashboard .analytics-donut-center span{display:block;font-size:6px;margin-top:2px}
+  #p-dashboard .analytics-donut-center small{font-size:7px}
+  #p-dashboard .analytics-pie-legend.professional{gap:5px}
+  #p-dashboard .analytics-pie-legend.professional>div{padding:5px 6px;font-size:7px}
+  #p-dashboard .analytics-pie-legend.professional>div>b{font-size:10px}
+  #p-dashboard .analytics-performance-row{margin-top:5px;padding-top:5px;font-size:7px}
+  #p-dashboard .analytics-performance-row small{font-size:7px}
+}
