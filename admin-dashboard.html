@@ -7,7 +7,7 @@
 <script>(function(){try{var t=localStorage.getItem('24k-excellence-theme');document.documentElement.dataset.theme=t==='light'?'light':'dark'}catch(e){document.documentElement.dataset.theme='dark'}})();</script>
 <title>Admin Panel | 24K Excellence</title>
 <link rel="icon" href="assets/logo.png">
-<link rel="stylesheet" href="app.css?v=9.18">
+<link rel="stylesheet" href="app.css?v=9.19">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body class="app-page">
@@ -30,8 +30,14 @@
       <section class="panel on" id="p-dashboard">
         <div class="panel-heading"><div><h1>Admin Dashboard</h1><p>Live snapshot of students, payments, content and upcoming classes.</p></div></div>
         <div class="kpi-grid" id="adminKpis"></div>
-        <div class="app-grid cols-2"><div class="app-card"><div class="app-card-head"><div><h3>Payments Requiring Action</h3><p>Review receipts before unlocking course access</p></div><button class="app-btn small gold" data-goto="payments">Open Payments</button></div><div id="dashboardPayments"></div></div><div class="app-card"><div class="app-card-head"><div><h3>Upcoming Sessions</h3><p>Online class schedule</p></div><button class="app-btn small outline" data-goto="sessions">Manage Sessions</button></div><div id="dashboardSessions"></div></div></div>
-        <div class="app-card"><div class="app-card-head"><div><h3>Quick Actions</h3><p>Create content or schedule a class</p></div></div><div class="course-actions"><button class="app-btn gold" data-goto="signals"><i class="fa-solid fa-bolt"></i> Add Signal</button><button class="app-btn outline" data-goto="charts"><i class="fa-solid fa-chart-line"></i> Upload Chart</button><button class="app-btn outline" data-goto="articles"><i class="fa-solid fa-newspaper"></i> Write Article</button><button class="app-btn outline" data-goto="sessions"><i class="fa-solid fa-video"></i> Schedule Online Class</button><button class="app-btn outline" data-goto="announcements"><i class="fa-solid fa-bullhorn"></i> Announcement</button></div></div>
+        <div class="dashboard-business-grid">
+          <div class="dashboard-work-column">
+            <div class="app-card dashboard-action-card"><div class="app-card-head"><div><h3>Payments Requiring Action</h3><p>Review receipts before unlocking course access</p></div><button class="app-btn small gold" data-goto="payments">Open Payments</button></div><div id="dashboardPayments"></div></div>
+            <div class="app-card dashboard-action-card"><div class="app-card-head"><div><h3>Upcoming Sessions</h3><p>Online class schedule</p></div><button class="app-btn small outline" data-goto="sessions">Manage Sessions</button></div><div id="dashboardSessions"></div></div>
+          </div>
+          <aside class="dashboard-analytics-column" id="dashboardAnalytics" aria-label="Business analytics"></aside>
+        </div>
+        <div class="app-card dashboard-quick-actions"><div class="app-card-head"><div><h3>Quick Actions</h3><p>Create content or schedule a class</p></div></div><div class="course-actions"><button class="app-btn gold" data-goto="signals"><i class="fa-solid fa-bolt"></i> Add Signal</button><button class="app-btn outline" data-goto="charts"><i class="fa-solid fa-chart-line"></i> Upload Chart</button><button class="app-btn outline" data-goto="articles"><i class="fa-solid fa-newspaper"></i> Write Article</button><button class="app-btn outline" data-goto="sessions"><i class="fa-solid fa-video"></i> Schedule Online Class</button><button class="app-btn outline" data-goto="announcements"><i class="fa-solid fa-bullhorn"></i> Announcement</button></div></div>
       </section>
 
       <section class="panel" id="p-signals">
@@ -183,6 +189,6 @@
 
 <div class="app-modal" id="receiptPreviewModal"><div class="app-modal-card receipt-preview-card"><div class="app-modal-head"><div><h3>Payment Receipt</h3><small id="receiptPreviewSubtitle" class="muted">Secure temporary preview</small></div><button class="modal-close" data-close-modal="receiptPreviewModal"><i class="fa-solid fa-xmark"></i></button></div><div class="app-modal-body"><div id="receiptPreviewContent" class="receipt-preview-content"></div></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="receiptPreviewModal">Close</button><a id="receiptOpenExternal" class="app-btn gold" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Full Size</a></div></div></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js"></script><script src="assets/js/core.js?v=9.18"></script><script src="assets/js/admin.js?v=9.18"></script><script src="assets/js/platform-v8-admin.js?v=9.12"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js"></script><script src="assets/js/core.js?v=9.18"></script><script src="assets/js/admin.js?v=9.18"></script><script src="assets/js/platform-v8-admin.js?v=9.19"></script>
 </body>
 </html>

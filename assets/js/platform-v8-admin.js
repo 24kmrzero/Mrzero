@@ -160,12 +160,14 @@
   function enhanceDashboard() {
     const panel = document.getElementById('p-dashboard');
     const heading = panel?.querySelector('.panel-heading');
-    if (!panel || !heading || document.getElementById('urgentActions')) return;
-    heading.insertAdjacentHTML('afterend', `<div class="operations-hero"><div><span class="eyebrow">OPERATIONS CONTROL CENTER</span><h2>What needs attention now</h2><p>Critical payments, expiries, support and classes in one view.</p></div><div class="system-clock" id="adminCurrentTime"></div></div><div class="urgent-grid" id="urgentActions"></div>`);
-    setInterval(() => {
+    if (!panel || !heading || panel.querySelector('.operations-hero')) return;
+    heading.insertAdjacentHTML('afterend', `<div class="operations-hero business-hero"><div><span class="eyebrow">BUSINESS OVERVIEW</span><h2>Your platform at a glance</h2><p>Users, enrollments, income, payments and upcoming classes in one clean view.</p></div><div class="system-clock" id="adminCurrentTime"></div></div>`);
+    const updateClock = () => {
       const el = document.getElementById('adminCurrentTime');
       if (el) el.textContent = new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium', timeStyle: 'short', timeZone: A.cfg.DEFAULT_TIMEZONE || 'Asia/Karachi' }).format(new Date());
-    }, 1000);
+    };
+    updateClock();
+    setInterval(updateClock, 1000);
   }
 
   function enhanceTopbar() {
@@ -494,22 +496,116 @@
   async function saveGeneralSettings(event) { event.preventDefault(); const values = Object.fromEntries(new FormData(event.currentTarget)); await saveSetting('general', values, event.currentTarget.querySelector('button[type="submit"]')); }
   async function saveNotificationSettings(event) { event.preventDefault(); const form = event.currentTarget; await saveSetting('notifications', { browser_enabled: form.elements.browser_enabled.checked, email_enabled: form.elements.email_enabled.checked }, form.querySelector('button[type="submit"]')); await saveSetting('security', { admin_reauth_minutes: Number(form.elements.admin_reauth_minutes.value || 30) }, form.querySelector('button[type="submit"]')); }
 
-  function renderOperationsDashboard() { const overview = state.overview || {}; const upcoming = state.sessions.filter(row => new Date(row.starts_at) >= new Date() && row.status !== 'cancelled').sort((a, b) => new Date(a.starts_at) - new Date(b.starts_at)); const items = [
-    { icon: 'fa-receipt', value: overview.pending_payments ?? state.payments.filter(row => ['received', 'under_review', 'resubmission_required'].includes(row.status)).length, title: 'Payments need review', panel: 'payments', tone: 'gold' },
-    { icon: 'fa-triangle-exclamation', value: overview.duplicate_warnings ?? state.payments.filter(row => row.duplicate_flag && ['received', 'under_review'].includes(row.status)).length, title: 'Duplicate warnings', panel: 'payments', tone: 'red' },
-    { icon: 'fa-hourglass-end', value: overview.expiring_7_days ?? state.profiles.filter(profile => profile.role === 'student' && !profile.lifetime_access && profile.access_expires_at && new Date(profile.access_expires_at) < new Date(Date.now() + 7 * 86400000) && new Date(profile.access_expires_at) > new Date()).length, title: 'Users expire in 7 days', panel: 'students', tone: 'orange' },
-    { icon: 'fa-address-book', value: overview.new_enquiries ?? state.enquiries.filter(row => row.status === 'new').length, title: 'New website enquiries', panel: 'leads', tone: 'blue' },
-    { icon: 'fa-headset', value: overview.open_support ?? state.support.filter(row => ['open', 'in_progress'].includes(row.status)).length, title: 'Open support requests', panel: 'support', tone: 'blue' },
-    { icon: 'fa-video', value: upcoming.length, title: upcoming[0] ? `Next class: ${A.formatDateTime(upcoming[0].starts_at)}` : 'No upcoming class', panel: 'sessions', tone: 'green' }
-  ]; const root = document.getElementById('urgentActions'); if (root) root.innerHTML = items.map(item => `<button class="urgent-card ${item.tone}" data-goto="${item.panel}"><i class="fa-solid ${item.icon}"></i><div><b>${item.value}</b><span>${esc(item.title)}</span></div><i class="fa-solid fa-arrow-right"></i></button>`).join(''); const adminKpis = document.getElementById('adminKpis'); if (adminKpis && overview.total_users !== undefined) adminKpis.innerHTML = [
-      ['fa-users', overview.total_users, 'Total Users', 'students'],
-      ['fa-user-plus', overview.new_today, 'New Today', 'students'],
-      ['fa-envelope-circle-check', overview.verified_users, 'Verified', 'students'],
-      ['fa-envelope-open', overview.unverified_users, 'Unverified', 'students'],
-      ['fa-unlock', overview.active_users, 'Active', 'students'],
-      ['fa-lock', overview.locked_users, 'Locked', 'students'],
-      ['fa-bell', overview.unread_admin_notifications, 'Admin Alerts', 'admin-notifications']
-    ].map(([icon, value, title, panel]) => `<button type="button" class="app-kpi dashboard-nav-card" data-goto="${panel}" aria-label="Open ${title}"><i class="fa-solid ${icon}"></i><div><b>${value || 0}</b><small>${title}</small></div><i class="fa-solid fa-arrow-right dashboard-nav-arrow"></i></button>`).join(''); }
+  function renderOperationsDashboard() {
+    const students = state.profiles.filter(profile => profile.role === 'student');
+    const enrollments = state.enrollments || [];
+    const pendingPayments = state.payments.filter(row => ['received', 'under_review'].includes(row.status));
+    const approvedPayments = state.payments.filter(row => row.status === 'approved');
+    const freeEnrollments = enrollments.filter(row => isFreeCourse(row.course_id)).length;
+    const paidEnrollments = enrollments.filter(row => !isFreeCourse(row.course_id)).length;
+
+    const summaryRoot = document.getElementById('adminKpis');
+    if (summaryRoot) {
+      summaryRoot.className = 'business-summary-grid';
+      const cards = [
+        { icon: 'fa-users', value: students.length, label: 'Total Users', panel: 'students', tone: 'gold' },
+        { icon: 'fa-user-graduate', value: enrollments.length, label: 'Total Enrollments', panel: 'enrollments', tone: 'green' },
+        { icon: 'fa-gift', value: freeEnrollments, label: 'Free Enrollments', panel: 'enrollments', tone: 'gold' },
+        { icon: 'fa-crown', value: paidEnrollments, label: 'Paid Enrollments', panel: 'enrollments', tone: 'blue' },
+        { icon: 'fa-sack-dollar', valueHtml: incomeSummaryHtml(approvedPayments), label: 'Total Income', panel: 'payments', tone: 'green' },
+        { icon: 'fa-receipt', value: pendingPayments.length, label: 'Pending Payments', panel: 'payments', tone: 'orange' }
+      ];
+      summaryRoot.innerHTML = cards.map(card => `<button type="button" class="business-summary-card ${card.tone}" data-goto="${card.panel}"><span class="business-summary-icon"><i class="fa-solid ${card.icon}"></i></span><span class="business-summary-copy">${card.valueHtml || `<b>${card.value}</b>`}<small>${esc(card.label)}</small></span><i class="fa-solid fa-arrow-right business-summary-arrow"></i></button>`).join('');
+    }
+
+    renderBusinessAnalytics({ enrollments, freeEnrollments, paidEnrollments, approvedPayments, pendingPayments });
+  }
+
+  function isFreeCourse(courseId) {
+    const course = courseById(courseId);
+    if (!course) return false;
+    return course.course_type === 'free' || Number(course.discount_price ?? course.price ?? 0) === 0;
+  }
+
+  function paymentCurrency(payment) {
+    return String(payment.currency || courseById(payment.course_id)?.currency || 'USD').toUpperCase();
+  }
+
+  function incomeTotals(payments) {
+    return payments.reduce((totals, payment) => {
+      const currency = paymentCurrency(payment);
+      totals[currency] = (totals[currency] || 0) + Number(payment.amount || 0);
+      return totals;
+    }, {});
+  }
+
+  function incomeSummaryHtml(payments) {
+    const entries = Object.entries(incomeTotals(payments)).filter(([, total]) => Number(total) !== 0).sort((a, b) => b[1] - a[1]);
+    if (!entries.length) return '<b>0</b>';
+    if (entries.length === 1) return `<b>${esc(A.formatMoney(entries[0][1], entries[0][0]))}</b>`;
+    return `<b class="multi-money">${entries.slice(0, 2).map(([currency, total]) => `<span>${esc(A.formatMoney(total, currency))}</span>`).join('')}</b>`;
+  }
+
+  function renderBusinessAnalytics({ enrollments, freeEnrollments, paidEnrollments, approvedPayments, pendingPayments }) {
+    const root = document.getElementById('dashboardAnalytics');
+    if (!root) return;
+
+    const declinedPayments = state.payments.filter(row => ['declined', 'resubmission_required'].includes(row.status));
+    const paymentTotal = approvedPayments.length + pendingPayments.length + declinedPayments.length;
+    const approvedPct = paymentTotal ? Math.round((approvedPayments.length / paymentTotal) * 100) : 0;
+    const pendingPct = paymentTotal ? Math.round((pendingPayments.length / paymentTotal) * 100) : 0;
+    const declinedPct = Math.max(0, 100 - approvedPct - pendingPct);
+
+    const enrollmentTotal = Math.max(1, freeEnrollments + paidEnrollments);
+    const freePct = freeEnrollments + paidEnrollments ? Math.round((freeEnrollments / enrollmentTotal) * 100) : 0;
+    const paidPct = freeEnrollments + paidEnrollments ? 100 - freePct : 0;
+
+    const income = monthlyIncomeSeries(approvedPayments);
+    const maxIncome = Math.max(0, ...income.points.map(point => point.value));
+    const bars = income.points.map(point => {
+      const height = maxIncome > 0 ? Math.max(7, Math.round((point.value / maxIncome) * 100)) : 4;
+      return `<div class="income-bar-item"><div class="income-bar-track"><span class="income-bar-fill" style="height:${height}%" title="${attr(A.formatMoney(point.value, income.currency))}"></span></div><small>${esc(point.label)}</small></div>`;
+    }).join('');
+
+    root.innerHTML = `
+      <div class="analytics-card income-analytics-card">
+        <div class="analytics-head"><div><span class="analytics-eyebrow">INCOME</span><h3>Income Overview</h3><p>Approved payments · last 6 months${income.currency ? ` · ${esc(income.currency)}` : ''}</p></div><span class="analytics-total">${income.currency ? esc(A.formatMoney(income.total, income.currency)) : '0'}</span></div>
+        <div class="income-bar-chart">${bars}</div>
+      </div>
+      <div class="analytics-split">
+        <div class="analytics-card donut-analytics-card">
+          <div class="analytics-head compact"><div><span class="analytics-eyebrow">COURSES</span><h3>Enrollments</h3></div><b>${enrollments.length}</b></div>
+          <div class="donut-wrap"><div class="donut-chart enrollment-donut" style="--slice-a:${freePct}%;--slice-b:${paidPct}%"><span><b>${enrollments.length}</b><small>Total</small></span></div><div class="chart-legend"><span><i class="legend-dot gold"></i>Free <b>${freeEnrollments}</b></span><span><i class="legend-dot green"></i>Paid <b>${paidEnrollments}</b></span></div></div>
+        </div>
+        <div class="analytics-card donut-analytics-card">
+          <div class="analytics-head compact"><div><span class="analytics-eyebrow">PAYMENTS</span><h3>Payment Status</h3></div><b>${paymentTotal}</b></div>
+          <div class="donut-wrap"><div class="donut-chart payment-donut" style="--approved:${approvedPct}%;--pending:${approvedPct + pendingPct}%"><span><b>${paymentTotal}</b><small>Total</small></span></div><div class="chart-legend"><span><i class="legend-dot green"></i>Approved <b>${approvedPayments.length}</b></span><span><i class="legend-dot gold"></i>Pending <b>${pendingPayments.length}</b></span><span><i class="legend-dot red"></i>Declined <b>${declinedPayments.length}</b></span></div></div>
+        </div>
+      </div>`;
+  }
+
+  function monthlyIncomeSeries(approvedPayments) {
+    const counts = {};
+    approvedPayments.forEach(payment => {
+      const currency = paymentCurrency(payment);
+      counts[currency] = (counts[currency] || 0) + 1;
+    });
+    const currency = Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] || (state.courses[0]?.currency || 'USD');
+    const now = new Date();
+    const months = [];
+    for (let offset = 5; offset >= 0; offset -= 1) {
+      const date = new Date(now.getFullYear(), now.getMonth() - offset, 1);
+      months.push({ key: `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`, label: date.toLocaleDateString('en-US', { month: 'short' }), value: 0 });
+    }
+    approvedPayments.filter(payment => paymentCurrency(payment) === currency).forEach(payment => {
+      const date = new Date(payment.approved_at || payment.updated_at || payment.created_at);
+      if (Number.isNaN(date.getTime())) return;
+      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+      const month = months.find(item => item.key === key);
+      if (month) month.value += Number(payment.amount || 0);
+    });
+    return { currency, points: months, total: months.reduce((sum, month) => sum + month.value, 0) };
+  }
 
   function decorateBaseTables() {
     state.support.forEach(row => { const button = document.querySelector(`[data-support-status][data-id="${row.id}"]`); const actions = button?.parentElement; if (actions && !actions.querySelector('[data-support-review]')) actions.insertAdjacentHTML('afterbegin', `<button class="app-btn small gold" data-support-review="${row.id}">Review</button>`); });
