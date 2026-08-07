@@ -981,3 +981,72 @@ html[data-theme="light"] .empty-state i { color: #9B760F; }
 .app-side-brand img { max-width: 178px; max-height: 86px; width: auto; height: auto; filter: drop-shadow(0 8px 22px rgba(255,193,7,.10)); }
 .loading-screen img { max-width: 190px; max-height: 120px; width: auto; height: auto; }
 html[data-theme="light"] .app-side-brand img { filter: drop-shadow(0 7px 18px rgba(78,58,31,.13)); }
+
+/* V9.18 — light-theme notification/card hard fix */
+html[data-theme="light"] .notification-item,
+html[data-theme="light"] .notification-item.unread,
+html[data-theme="light"] .admin-notification,
+html[data-theme="light"] .admin-notification.unread {
+  background: linear-gradient(155deg,#FFFDF9 0%,#F8F0E4 100%) !important;
+  color: #211E1A !important;
+  border-color: rgba(74,57,35,.20) !important;
+  box-shadow: 0 12px 30px -24px rgba(74,52,25,.28) !important;
+}
+html[data-theme="light"] .notification-item:hover,
+html[data-theme="light"] .admin-notification:hover {
+  background: linear-gradient(155deg,#FFF9EC 0%,#F6EBD9 100%) !important;
+  border-color: rgba(183,128,0,.42) !important;
+}
+html[data-theme="light"] .notification-item .notification-icon,
+html[data-theme="light"] .admin-notification .notification-icon {
+  color: #A87400 !important;
+  background: #FFF2C7 !important;
+  border: 1px solid rgba(183,128,0,.22) !important;
+}
+html[data-theme="light"] .notification-item b,
+html[data-theme="light"] .notification-item strong,
+html[data-theme="light"] .notification-item h3,
+html[data-theme="light"] .notification-item h4,
+html[data-theme="light"] .notification-title,
+html[data-theme="light"] .notification-title b,
+html[data-theme="light"] .admin-notification b,
+html[data-theme="light"] .admin-notification strong {
+  color: #1B1814 !important;
+}
+html[data-theme="light"] .notification-item p,
+html[data-theme="light"] .notification-item span,
+html[data-theme="light"] .notification-item small,
+html[data-theme="light"] .notification-item time,
+html[data-theme="light"] .notification-title time,
+html[data-theme="light"] .admin-notification p,
+html[data-theme="light"] .admin-notification span,
+html[data-theme="light"] .admin-notification small,
+html[data-theme="light"] .admin-notification time {
+  color: #665E54 !important;
+}
+html[data-theme="light"] .notification-item > i,
+html[data-theme="light"] .notification-item .fa-chevron-right,
+html[data-theme="light"] .notification-item .fa-angle-right,
+html[data-theme="light"] .admin-notification > i {
+  color: #795700 !important;
+}
+html[data-theme="light"] .notification-item.unread,
+html[data-theme="light"] .admin-notification.unread {
+  border-color: rgba(183,128,0,.36) !important;
+  background: linear-gradient(100deg,rgba(255,193,7,.11),#FFFDF9 34%) !important;
+}
+html[data-theme="light"] .unread-dot {
+  background: #F0B400 !important;
+  color: #F0B400 !important;
+  box-shadow: 0 0 0 3px rgba(240,180,0,.12) !important;
+}
+
+/* Never allow dark inherited surfaces inside the light theme. */
+html[data-theme="light"] #p-notifications .notification-item,
+html[data-theme="light"] #p-announcements .announcement,
+html[data-theme="light"] #p-courses .course-card,
+html[data-theme="light"] #p-courses .session-card,
+html[data-theme="light"] #p-dashboard .course-card,
+html[data-theme="light"] #p-dashboard .content-card {
+  background-color: #FFFDF9 !important;
+}
