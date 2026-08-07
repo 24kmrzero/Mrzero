@@ -560,73 +560,77 @@
 
   const DEMO_ANALYTICS_PREVIEW = true;
 
-  function demoAnalyticsData() {
+  function demoAnalyticsPreviewData() {
     const now = startOfLocalDay(new Date());
-    const at = (daysAgo, hour = 12) => {
+    const stamp = (daysAgo, hour) => {
       const date = addDays(now, -daysAgo);
-      date.setHours(hour, 0, 0, 0);
+      date.setHours(hour || 12, 0, 0, 0);
       return date.toISOString();
     };
-
-    // Designed to make both donut colors and growth comparisons visible.
-    const users = [
-      at(0, 9), at(0, 14),
-      at(1, 10), at(1, 16),
-      at(2, 11), at(2, 18),
-      at(3, 10), at(4, 15), at(5, 12), at(6, 17),
-      at(7, 11), at(8, 14), at(9, 10), at(10, 16), at(11, 12), at(12, 15), at(13, 9)
-    ];
-
-    const enrollments = [
-      { created_at: at(0, 10), __demoFree: true },
-      { created_at: at(0, 15), __demoFree: false },
-      { created_at: at(1, 11), __demoFree: true },
-      { created_at: at(2, 12), __demoFree: true },
-      { created_at: at(2, 17), __demoFree: false },
-      { created_at: at(3, 10), __demoFree: true },
-      { created_at: at(4, 14), __demoFree: false },
-      { created_at: at(5, 12), __demoFree: true },
-      { created_at: at(6, 16), __demoFree: true },
-      { created_at: at(7, 11), __demoFree: true },
-      { created_at: at(8, 12), __demoFree: false },
-      { created_at: at(9, 15), __demoFree: true },
-      { created_at: at(10, 10), __demoFree: true },
-      { created_at: at(11, 17), __demoFree: false },
-      { created_at: at(12, 13), __demoFree: true },
-      { created_at: at(13, 9), __demoFree: false }
-    ];
-    return { users, enrollments };
+    return {
+      users: [
+        stamp(0,9), stamp(0,14), stamp(1,10), stamp(2,11), stamp(2,16),
+        stamp(3,12), stamp(4,10), stamp(5,15), stamp(6,11),
+        stamp(7,10), stamp(8,14), stamp(9,11), stamp(10,15), stamp(11,10), stamp(12,13), stamp(13,16)
+      ],
+      courses: [
+        { created_at: stamp(0,10), __demoFree: true },
+        { created_at: stamp(0,15), __demoFree: false },
+        { created_at: stamp(1,11), __demoFree: true },
+        { created_at: stamp(2,12), __demoFree: false },
+        { created_at: stamp(2,17), __demoFree: true },
+        { created_at: stamp(3,10), __demoFree: true },
+        { created_at: stamp(4,14), __demoFree: false },
+        { created_at: stamp(5,12), __demoFree: true },
+        { created_at: stamp(6,16), __demoFree: false },
+        { created_at: stamp(7,11), __demoFree: true },
+        { created_at: stamp(8,12), __demoFree: false },
+        { created_at: stamp(9,15), __demoFree: true },
+        { created_at: stamp(10,10), __demoFree: true },
+        { created_at: stamp(11,17), __demoFree: false },
+        { created_at: stamp(12,13), __demoFree: true },
+        { created_at: stamp(13,9), __demoFree: false }
+      ]
+    };
   }
 
   function renderBusinessAnalytics() {
     const root = document.getElementById('dashboardAnalytics');
     if (!root) return;
+    root.innerHTML = '';
 
-    const demo = DEMO_ANALYTICS_PREVIEW ? demoAnalyticsData() : null;
+    const demo = DEMO_ANALYTICS_PREVIEW ? demoAnalyticsPreviewData() : null;
     const userEvents = demo ? demo.users : state.profiles
       .filter(profile => profile.role === 'student')
       .map(profile => profile.created_at)
       .filter(Boolean);
-    const courseRows = demo ? demo.enrollments : (state.enrollments || []);
+    const courseRows = demo ? demo.courses : (state.enrollments || []);
 
-    root.innerHTML = [
-      analyticsTrendCard({
+    try {
+      root.insertAdjacentHTML('beforeend', analyticsTrendCard({
         target: 'users',
         eyebrow: 'USERS',
         title: 'User Growth',
         subtitle: DEMO_ANALYTICS_PREVIEW ? 'Demo preview · new student registrations' : 'New student registrations',
         icon: 'fa-users',
         data: userEvents
-      }),
-      analyticsTrendCard({
+      }));
+    } catch (error) {
+      console.error('User analytics render failed', error);
+    }
+
+    try {
+      root.insertAdjacentHTML('beforeend', analyticsTrendCard({
         target: 'courses',
         eyebrow: 'COURSES',
         title: 'Course Enrollments',
         subtitle: DEMO_ANALYTICS_PREVIEW ? 'Demo preview · free and paid enrollments' : 'Free and paid enrollments',
         icon: 'fa-user-graduate',
         data: courseRows
-      })
-    ].join('');
+      }));
+    } catch (error) {
+      console.error('Course analytics render failed', error);
+    }
   }
 
   function startOfLocalDay(date) {
