@@ -15,7 +15,7 @@
       try { localStorage.setItem(THEME_KEY, next); } catch {}
     }
     const light = next === 'light';
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', light ? '#F6F7F9' : '#0A0A0A');
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', light ? '#F6EFE3' : '#0A0A0A');
     document.querySelectorAll('[data-theme-toggle]').forEach(button => {
       button.setAttribute('aria-label', light ? 'Switch to dark theme' : 'Switch to light theme');
       button.setAttribute('title', light ? 'Switch to dark theme' : 'Switch to light theme');

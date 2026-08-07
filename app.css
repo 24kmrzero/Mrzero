@@ -765,3 +765,219 @@ html[data-theme="light"] .app-btn:not(.gold):not(.green):not(.danger):not(.outli
 @media(max-width:760px){
   .app-theme-toggle{width:40px;height:40px;flex-basis:40px}
 }
+
+
+/* V9.17 — warm premium light theme contrast hardening + Digital Gold branding */
+html[data-theme="light"] {
+  --app-ink: #F6EFE3;
+  --app-ink-2: #FFFDF8;
+  --app-ink-3: #F0E6D7;
+  --app-card: #FFFDF9;
+  --app-card-2: #FAF4EA;
+  --app-muted: #6F665B;
+  --app-line: rgba(74,57,35,.17);
+  --app-line-gold: rgba(183,128,0,.36);
+  --app-gold-2: #765200;
+  --app-grad-dark: linear-gradient(155deg,#FFFDF9 0%,#F9F1E6 100%);
+  --app-shadow: 0 18px 44px -28px rgba(78,58,31,.28);
+  --app-glow: 0 0 0 1px rgba(190,137,0,.22),0 22px 46px -28px rgba(162,111,0,.28);
+}
+html[data-theme="light"] body.app-page {
+  color: #211E1A;
+  background:
+    radial-gradient(980px 560px at 96% -8%, rgba(255,193,7,.20), transparent 62%),
+    radial-gradient(760px 500px at 6% 104%, rgba(182,128,0,.09), transparent 66%),
+    #F6EFE3;
+}
+html[data-theme="light"] body.app-page::before { opacity: .08; }
+html[data-theme="light"] .app-side {
+  color: #28231D;
+  background:
+    linear-gradient(180deg,rgba(255,193,7,.13),transparent 30%),
+    linear-gradient(155deg,#FFF9EF,#F1E6D6 78%);
+  border-right-color: rgba(174,121,0,.24);
+  box-shadow: 18px 0 44px -34px rgba(86,60,26,.28);
+}
+html[data-theme="light"] .app-side-brand { border-bottom-color: rgba(74,57,35,.12); }
+html[data-theme="light"] .app-nav-label { color: #776D61; }
+html[data-theme="light"] .app-nav a { color: #514A42; }
+html[data-theme="light"] .app-nav a i { color: #6A6157; }
+html[data-theme="light"] .app-nav a:hover { color: #171512; background: rgba(209,153,0,.10); }
+html[data-theme="light"] .app-nav a.on,
+html[data-theme="light"] .app-nav a.on i { color: #17120A; }
+html[data-theme="light"] .app-nav .nav-count { background: #E8DFD3; color: #342E27; }
+html[data-theme="light"] .app-side-foot { border-top-color: rgba(74,57,35,.12); }
+html[data-theme="light"] .app-side-foot button,
+html[data-theme="light"] .app-side-foot a { color: #514A42; }
+html[data-theme="light"] .app-topbar {
+  background: rgba(255,252,247,.94);
+  border-bottom-color: rgba(74,57,35,.13);
+  box-shadow: 0 12px 34px -27px rgba(70,49,23,.32);
+}
+html[data-theme="light"] .app-title strong,
+html[data-theme="light"] .panel-heading h1,
+html[data-theme="light"] .panel-heading h2,
+html[data-theme="light"] .app-card-head h3 { color: #1B1916; }
+html[data-theme="light"] .app-title small,
+html[data-theme="light"] .panel-heading p,
+html[data-theme="light"] .app-card-head p { color: #71685D; }
+html[data-theme="light"] .app-search i { color: #71685D; }
+html[data-theme="light"] .app-search input,
+html[data-theme="light"] .form-field input,
+html[data-theme="light"] .form-field select,
+html[data-theme="light"] .form-field textarea,
+html[data-theme="light"] .filter-row input,
+html[data-theme="light"] .filter-row select {
+  color: #1D1A16;
+  background: #FFFDF9;
+  border-color: rgba(74,57,35,.20);
+}
+html[data-theme="light"] .app-search input::placeholder,
+html[data-theme="light"] input::placeholder,
+html[data-theme="light"] textarea::placeholder { color: #82796E; opacity: 1; }
+html[data-theme="light"] .app-search input:focus,
+html[data-theme="light"] .form-field input:focus,
+html[data-theme="light"] .form-field select:focus,
+html[data-theme="light"] .form-field textarea:focus,
+html[data-theme="light"] .filter-row input:focus,
+html[data-theme="light"] .filter-row select:focus { background: #FFF9ED; }
+html[data-theme="light"] .app-notify,
+html[data-theme="light"] .app-theme-toggle {
+  background: #FFFDF9;
+  color: #6D4D00;
+  border-color: rgba(74,57,35,.18);
+  box-shadow: 0 8px 22px -18px rgba(69,47,20,.4);
+}
+html[data-theme="light"] .app-avatar {
+  background: linear-gradient(145deg,#FFF3C9,#FFFDF9);
+  color: #624600;
+  border-color: rgba(183,128,0,.32);
+}
+html[data-theme="light"] .app-card,
+html[data-theme="light"] .app-kpi,
+html[data-theme="light"] #p-dashboard #studentKpis .app-kpi,
+html[data-theme="light"] .course-card,
+html[data-theme="light"] .session-card,
+html[data-theme="light"] .signal-card,
+html[data-theme="light"] .content-card,
+html[data-theme="light"] .performance-item {
+  color: #24201B;
+  background: linear-gradient(155deg,#FFFDF9,#F9F1E6);
+  border-color: rgba(74,57,35,.20);
+  box-shadow: 0 14px 34px -25px rgba(74,52,25,.30);
+}
+html[data-theme="light"] .app-card:hover,
+html[data-theme="light"] .app-kpi:hover,
+html[data-theme="light"] .course-card:hover,
+html[data-theme="light"] .session-card:hover,
+html[data-theme="light"] .signal-card:hover,
+html[data-theme="light"] .content-card:hover { border-color: rgba(183,128,0,.42); }
+html[data-theme="light"] .app-kpi > i:first-child {
+  color: #A87400;
+  background: linear-gradient(145deg,#FFF0B8,#FFF8DE);
+  border-color: rgba(187,132,0,.28);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.55);
+}
+html[data-theme="light"] .app-kpi b {
+  color: #171512 !important;
+  font-weight: 800;
+}
+html[data-theme="light"] .app-kpi small {
+  color: #665E54 !important;
+  font-weight: 600;
+}
+html[data-theme="light"] .dashboard-nav-card .dashboard-nav-arrow {
+  color: #8B6500;
+  opacity: .82;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: #FFF8E5;
+  border: 1px solid rgba(183,128,0,.22);
+}
+html[data-theme="light"] .app-card::before { background: linear-gradient(135deg,rgba(216,159,0,.07),transparent 36%); }
+html[data-theme="light"] .course-body h3,
+html[data-theme="light"] .content-body h3,
+html[data-theme="light"] .session-body h3,
+html[data-theme="light"] .signal-body h3,
+html[data-theme="light"] .activity-item b,
+html[data-theme="light"] .performance-item b,
+html[data-theme="light"] .announcement h4 { color: #1B1814; }
+html[data-theme="light"] .course-body p,
+html[data-theme="light"] .content-body p,
+html[data-theme="light"] .session-body p,
+html[data-theme="light"] .signal-body p,
+html[data-theme="light"] .announcement p,
+html[data-theme="light"] .activity-item small,
+html[data-theme="light"] .performance-item small { color: #665E54; }
+html[data-theme="light"] .activity-icon {
+  color: #A87400;
+  background: #FFF5D5;
+  border-color: rgba(183,128,0,.24);
+}
+html[data-theme="light"] .activity-item { border-bottom-color: rgba(74,57,35,.12); }
+html[data-theme="light"] .session-date,
+html[data-theme="light"] .signal-level,
+html[data-theme="light"] .course-next-class,
+html[data-theme="light"] .signal-history-table-wrap {
+  background: rgba(112,83,43,.045);
+  color: #514A42;
+  border-color: rgba(74,57,35,.15);
+}
+html[data-theme="light"] .session-top {
+  color: #241F18;
+  background: linear-gradient(145deg,#FFF4CD,#F8E8B4);
+  border-bottom-color: rgba(183,128,0,.24);
+}
+html[data-theme="light"] .session-lock { background: #FFF8E3; }
+html[data-theme="light"] .notice.ok {
+  color: #166534;
+  background: #E6F5E9;
+  border-color: #A9DAB5;
+}
+html[data-theme="light"] .notice.info { color: #1E4F91; background: #EBF3FF; border-color: #BFD4F1; }
+html[data-theme="light"] .notice.warn { color: #705000; background: #FFF4CF; border-color: #E6C968; }
+html[data-theme="light"] .notice.bad { color: #991B1B; background: #FDECEC; border-color: #F0B4B4; }
+html[data-theme="light"] .status-pill.ok { color: #166534; background: #E7F6EA; border-color: #AFDBB8; }
+html[data-theme="light"] .status-pill.warn { color: #6D4D00; background: #FFF3CB; border-color: #E5C35B; }
+html[data-theme="light"] .status-pill.bad { color: #991B1B; background: #FDECEC; border-color: #EFB4B4; }
+html[data-theme="light"] .status-pill.neutral { background: #EEE7DC; color: #544C43; }
+html[data-theme="light"] .app-btn.outline {
+  color: #795700;
+  background: #FFF9E9;
+  border-color: rgba(183,128,0,.38);
+  box-shadow: none;
+}
+html[data-theme="light"] .app-btn.outline:hover { color: #493400; background: #FFF1C2; }
+html[data-theme="light"] .app-btn:not(.gold):not(.green):not(.danger):not(.outline) {
+  color: #604500;
+  background: linear-gradient(155deg,#FFFDF9,#F3E8D9);
+  border-color: rgba(74,57,35,.15);
+}
+html[data-theme="light"] .announcement {
+  background: linear-gradient(90deg,rgba(191,138,0,.13),rgba(255,253,249,.88));
+  border-color: rgba(183,128,0,.23);
+}
+html[data-theme="light"] .announcement.important {
+  background: linear-gradient(90deg,rgba(220,38,38,.09),rgba(255,253,249,.90));
+  border-color: rgba(220,38,38,.20);
+}
+html[data-theme="light"] .announcement small { color: #675F55; }
+html[data-theme="light"] .table-scroll,
+html[data-theme="light"] .app-modal-card { background: #FFFDF9; }
+html[data-theme="light"] .payment-table th,
+html[data-theme="light"] .admin-table th,
+html[data-theme="light"] .signal-history-report-table th { background: #F3EBDD; color: #625A50; }
+html[data-theme="light"] .payment-table td,
+html[data-theme="light"] .admin-table td,
+html[data-theme="light"] .signal-history-report-table td { color: #39342E; }
+html[data-theme="light"] .empty-state { color: #6D655B; background: rgba(191,138,0,.055); }
+html[data-theme="light"] .empty-state i { color: #9B760F; }
+
+/* New Digital Gold logo sizing. Dark theme keeps the original supplied artwork unchanged. */
+.app-side-brand { min-height: 112px; padding: 12px 16px; }
+.app-side-brand img { max-width: 178px; max-height: 86px; width: auto; height: auto; filter: drop-shadow(0 8px 22px rgba(255,193,7,.10)); }
+.loading-screen img { max-width: 190px; max-height: 120px; width: auto; height: auto; }
+html[data-theme="light"] .app-side-brand img { filter: drop-shadow(0 7px 18px rgba(78,58,31,.13)); }
