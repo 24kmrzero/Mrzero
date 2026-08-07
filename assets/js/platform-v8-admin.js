@@ -59,13 +59,12 @@
     const nav = document.querySelector('.app-nav');
     const courseLabel = [...nav.querySelectorAll('.app-nav-label')].find(node => node.textContent.trim() === 'COURSES');
     const operationsLabel = [...nav.querySelectorAll('.app-nav-label')].find(node => node.textContent.trim() === 'OPERATIONS');
-    if (courseLabel && !nav.querySelector('[data-panel="structure"]')) {
+    if (courseLabel && !nav.querySelector('[data-panel="calendar"]')) {
       const marker = document.createElement('div');
-      marker.innerHTML = navLink('structure', 'fa-list-check', 'Course Structure') + navLink('enrollments', 'fa-user-graduate', 'Enrollments') + navLink('calendar', 'fa-calendar-days', 'Calendar');
-      const links = [...marker.children];
+      marker.innerHTML = navLink('calendar', 'fa-calendar-days', 'Calendar');
       let cursor = courseLabel;
       while (cursor.nextElementSibling && !cursor.nextElementSibling.classList.contains('app-nav-label')) cursor = cursor.nextElementSibling;
-      links.reverse().forEach(link => cursor.after(link));
+      [...marker.children].reverse().forEach(link => cursor.after(link));
     }
     if (operationsLabel && !nav.querySelector('[data-panel="links"]')) {
       const marker = document.createElement('div');
@@ -74,7 +73,7 @@
     }
 
     const content = document.querySelector('.app-content');
-    if (!document.getElementById('p-structure')) content.insertAdjacentHTML('beforeend', panelsHtml());
+    if (!document.getElementById('p-calendar')) content.insertAdjacentHTML('beforeend', panelsHtml());
     enhanceStudentsPanel();
     installModals();
     enhanceDashboard();
@@ -84,21 +83,6 @@
 
   function panelsHtml() {
     return `
-      <section class="panel" id="p-structure">
-        <div class="panel-heading"><div><h2>Course Structure</h2><p>Build modules and lessons in the exact order students must complete them.</p></div><button class="app-btn outline" id="exportStructure"><i class="fa-solid fa-download"></i> Export</button></div>
-        <div class="app-grid cols-2 operations-forms">
-          <div class="app-card"><div class="app-card-head"><div><h3>Module</h3><p>Create or update a course module.</p></div></div><form id="moduleForm"><input type="hidden" name="id"><div class="form-grid"><div class="form-field full"><label>Course</label><select name="course_id" id="moduleCourse" required></select></div><div class="form-field"><label>Module Number</label><input type="number" min="1" name="module_number" required></div><div class="form-field"><label>Module Title</label><input name="title" required></div><div class="form-field full"><label>Description</label><textarea name="description"></textarea></div><label class="check-row"><input type="checkbox" name="is_published" checked> Published</label></div><div class="sticky-form-actions"><button class="app-btn outline" type="button" data-reset-form="moduleForm">Clear</button><button class="app-btn gold" type="submit">Save Module</button></div></form></div>
-          <div class="app-card"><div class="app-card-head"><div><h3>Lesson</h3><p>Link a class, resource or text lesson.</p></div></div><form id="lessonForm"><input type="hidden" name="id"><div class="form-grid"><div class="form-field"><label>Course</label><select name="course_id" id="lessonCourse" required></select></div><div class="form-field"><label>Module</label><select name="module_id" id="lessonModule" required></select></div><div class="form-field"><label>Lesson Number</label><input type="number" min="1" name="lesson_number" required></div><div class="form-field"><label>Lesson Type</label><select name="lesson_type" id="lessonType"><option value="live_class">Live Online Class</option><option value="resource">Course Resource</option><option value="text">Text Lesson</option></select></div><div class="form-field full"><label>Lesson Title</label><input name="title" required></div><div class="form-field full"><label>Description</label><textarea name="description"></textarea></div><div class="form-field full v9-session-link"><label>Online Class Session</label><select name="course_session_id" id="lessonSession"><option value="">Select session</option></select></div><div class="form-field full v9-resource-link hidden"><label>Course Resource</label><select name="course_resource_id" id="lessonResource"><option value="">Select resource</option></select></div><div class="form-field full v9-text-link hidden"><label>Text Content</label><textarea name="text_content" style="min-height:140px"></textarea></div><label class="check-row"><input type="checkbox" name="is_published" checked> Published</label></div><div class="sticky-form-actions"><button class="app-btn outline" type="button" data-reset-form="lessonForm">Clear</button><button class="app-btn gold" type="submit">Save Lesson</button></div></form></div>
-        </div>
-        <div class="app-card"><div class="app-card-head"><div><h3>Modules & Lessons</h3><p>Numbers control sequence. Duplicate numbers are blocked by the database.</p></div><select id="structureCourseFilter"></select></div><div id="structureList"></div></div>
-      </section>
-
-      <section class="panel" id="p-enrollments">
-        <div class="panel-heading"><div><h2>Course Enrollments</h2><p>Activate, extend, expire or revoke course access.</p></div><button class="app-btn outline" id="exportEnrollments"><i class="fa-solid fa-file-csv"></i> Export CSV</button></div>
-        <div class="app-card compact-form"><form id="enrollmentForm"><input type="hidden" name="enrollment_id"><div class="form-grid"><div class="form-field"><label>Student</label><select name="student_id" id="enrollmentStudent" required></select></div><div class="form-field"><label>Course</label><select name="course_id" id="enrollmentCourse" required></select></div><div class="form-field"><label>Status</label><select name="status"><option value="active">Active</option><option value="expired">Expired</option><option value="revoked">Revoked</option></select></div><div class="form-field"><label>Access Days</label><input type="number" min="1" name="access_days" placeholder="Optional"></div><div class="form-field"><label>Exact Expiry</label><input type="datetime-local" name="expires_at"></div></div><div class="inline-actions"><button class="app-btn gold" type="submit">Save Enrollment</button><button class="app-btn outline" type="button" id="resetEnrollmentForm">Clear</button></div></form></div>
-        <div class="filter-row"><input id="enrollmentSearch" type="search" placeholder="Search student or course..."><select id="enrollmentStatus"><option value="all">All statuses</option><option value="active">Active</option><option value="expired">Expired</option><option value="revoked">Revoked</option></select></div>
-        <div class="table-scroll"><table class="admin-table"><thead><tr><th>Student</th><th>Course</th><th>Status</th><th>Started</th><th>Expires</th><th>Payment</th><th>Actions</th></tr></thead><tbody id="enrollmentsBody"></tbody></table></div>
-      </section>
 
 
       <section class="panel" id="p-leads">
@@ -115,7 +99,7 @@
 
       <section class="panel" id="p-calendar">
         <div class="panel-heading"><div><h2>Operations Calendar</h2><p>Classes, course dates, scheduled content and user expiries.</p></div><div class="inline-actions"><button class="app-btn outline" id="calendarPrev"><i class="fa-solid fa-chevron-left"></i></button><b id="calendarTitle"></b><button class="app-btn outline" id="calendarNext"><i class="fa-solid fa-chevron-right"></i></button></div></div>
-        <div class="calendar-legend"><span class="class-dot">Classes</span><span class="content-dot">Content</span><span class="expiry-dot">Expiries</span></div><div class="admin-calendar" id="adminCalendar"></div><div class="app-card"><h3>Selected Day</h3><div id="calendarDayDetails">Select a day to view activities.</div></div>
+        <div class="calendar-legend"><span class="class-dot">Classes</span><span class="content-dot">Content</span><span class="expiry-dot">Expiries</span></div><div class="admin-calendar" id="adminCalendar"></div>
       </section>
 
       <section class="panel" id="p-admin-notifications">
@@ -145,10 +129,23 @@
   function enhanceStudentsPanel() {
     const panel = document.getElementById('p-students');
     if (!panel) return;
-    panel.innerHTML = `<div class="panel-heading"><div><h2>Admin User Management</h2><p>Search registrations, attribution, access, activity and enrollments.</p></div><button class="app-btn outline" id="exportUsers"><i class="fa-solid fa-file-csv"></i> Export CSV</button></div>
-      <div class="filter-row v9-user-filters"><input id="userSearchV9" type="search" placeholder="Search name, email, WhatsApp or reference..."><select id="userDateFilter"><option value="all">All registrations</option><option value="today">Today</option><option value="yesterday">Yesterday</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option><option value="custom">Custom dates</option></select><input type="date" id="userDateFrom" class="hidden"><input type="date" id="userDateTo" class="hidden"><select id="userVerifiedFilter"><option value="all">Verified & Unverified</option><option value="verified">Email Verified</option><option value="unverified">Email Unverified</option></select><select id="userStatusFilter"><option value="all">All Access Statuses</option><option value="active">Active</option><option value="grace">Grace Active</option><option value="pending">Pending</option><option value="locked">Locked</option><option value="expired">Expired</option><option value="suspended">Suspended</option><option value="lifetime">Lifetime</option></select></div>
-      <div class="app-card bulk-bar"><div><b>Bulk Actions</b><small>Lifetime accounts are skipped for expiry extensions.</small></div><select id="bulkUserAction"><option value="extend_days">Extend Access</option><option value="lock">Lock Selected</option><option value="unlock">Unlock Selected</option><option value="resend_verification">Resend Verification</option></select><input id="bulkAccessDays" type="number" min="1" placeholder="Days"><button class="app-btn outline" id="notifySelectedUsers"><i class="fa-solid fa-bullhorn"></i> Notify Selected</button><button class="app-btn gold" id="applyBulkUsers">Apply to Selected</button></div>
-      <div class="table-scroll"><table class="admin-table"><thead><tr><th><input type="checkbox" id="selectAllUsers"></th><th>Student</th><th>WhatsApp</th><th>Registered</th><th>Source / Link</th><th>Email</th><th>Access</th><th>Expiry</th><th>PIN</th><th>Actions</th></tr></thead><tbody id="studentsBodyV9"></tbody></table></div>`;
+    panel.innerHTML = `<div class="panel-heading"><div><h2>Student Management</h2><p>Users, course enrollment, payments and access in one place.</p></div><button class="app-btn outline" id="exportUsers"><i class="fa-solid fa-file-csv"></i> Export CSV</button></div>
+      <div class="student-summary-grid" id="studentSummaryCards"></div>
+      <div class="student-filter-toolbar">
+        <div class="student-date-buttons" role="group" aria-label="Registration period">
+          <button type="button" class="student-date-btn active" data-user-date-quick="all">All</button>
+          <button type="button" class="student-date-btn" data-user-date-quick="today">Today</button>
+          <button type="button" class="student-date-btn" data-user-date-quick="yesterday">Yesterday</button>
+          <button type="button" class="student-date-btn" data-user-date-quick="7">Last Week</button>
+          <button type="button" class="student-date-btn" data-user-date-quick="30">Last Month</button>
+          <button type="button" class="student-date-btn" data-user-date-quick="custom">Custom Date</button>
+        </div>
+        <select id="userDateFilter" class="hidden"><option value="all">All</option><option value="today">Today</option><option value="yesterday">Yesterday</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option><option value="custom">Custom</option></select>
+        <div class="student-custom-dates hidden" id="studentCustomDates"><input type="date" id="userDateFrom"><input type="date" id="userDateTo"></div>
+        <div class="filter-row student-main-filters"><input id="userSearchV9" type="search" placeholder="Search name, email or WhatsApp..."><select id="userCourseFilter"><option value="all">All Courses</option></select><select id="userStatusFilter"><option value="all">All Access</option><option value="active">Active</option><option value="grace">Grace Active</option><option value="pending">Pending</option><option value="locked">Locked</option><option value="expired">Expired</option><option value="suspended">Suspended</option><option value="lifetime">Lifetime</option></select><select id="userVerifiedFilter"><option value="all">All Email Status</option><option value="verified">Verified</option><option value="unverified">Unverified</option></select></div>
+      </div>
+      <div class="app-card bulk-bar"><div><b>Bulk Actions</b><small>Optional actions for selected users.</small></div><select id="bulkUserAction"><option value="extend_days">Extend Access</option><option value="lock">Lock Selected</option><option value="unlock">Unlock Selected</option><option value="resend_verification">Resend Verification</option></select><input id="bulkAccessDays" type="number" min="1" placeholder="Days"><button class="app-btn outline" id="notifySelectedUsers"><i class="fa-solid fa-bullhorn"></i> Notify</button><button class="app-btn gold" id="applyBulkUsers">Apply</button></div>
+      <div class="table-scroll"><table class="admin-table student-management-table"><thead><tr><th><input type="checkbox" id="selectAllUsers"></th><th>Student</th><th>WhatsApp</th><th>Registered</th><th>Course</th><th>Enrollment</th><th>Payment</th><th>Access / Expiry</th><th>Actions</th></tr></thead><tbody id="studentsBodyV9"></tbody></table></div>`;
   }
 
   function installModals() {
@@ -159,6 +156,8 @@
       <div class="app-modal" id="supportReviewModal"><div class="app-modal-card"><div class="app-modal-head"><div><h3>Support Request</h3><small id="supportReviewSubtitle" class="muted"></small></div><button class="modal-close" data-close-modal="supportReviewModal"><i class="fa-solid fa-xmark"></i></button></div><form id="supportReviewForm"><input type="hidden" name="request_id"><div class="app-modal-body"><div id="supportReviewContent" class="notice info"></div><div class="form-field"><label>Status</label><select name="status"><option value="open">Open</option><option value="in_progress">In Progress</option><option value="resolved">Resolved</option><option value="closed">Closed</option></select></div><div class="form-field"><label>Admin / Resolution Note</label><textarea name="note" placeholder="Required for a clear resolution"></textarea></div></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="supportReviewModal">Cancel</button><button class="app-btn gold" type="submit">Save Update</button></div></form></div></div>
       <div class="app-modal" id="enquiryReviewModal"><div class="app-modal-card"><div class="app-modal-head"><div><h3>Website Enquiry</h3><small id="enquiryReviewSubtitle" class="muted"></small></div><button class="modal-close" data-close-modal="enquiryReviewModal"><i class="fa-solid fa-xmark"></i></button></div><form id="enquiryReviewForm"><input type="hidden" name="enquiry_id"><div class="app-modal-body"><div id="enquiryReviewContent" class="notice info"></div><div class="form-field"><label>Status</label><select name="status"><option value="new">New</option><option value="contacted">Contacted</option><option value="qualified">Qualified</option><option value="closed">Closed</option><option value="spam">Spam</option></select></div><div class="form-field"><label>Admin Note</label><textarea name="note" placeholder="Follow-up notes"></textarea></div></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="enquiryReviewModal">Cancel</button><button class="app-btn gold" type="submit">Save Enquiry</button></div></form></div></div>
       <div class="app-modal" id="bulkMessageModal"><div class="app-modal-card"><div class="app-modal-head"><div><h3>Notify Selected Students</h3><small id="bulkMessageSubtitle" class="muted"></small></div><button class="modal-close" data-close-modal="bulkMessageModal"><i class="fa-solid fa-xmark"></i></button></div><form id="bulkMessageForm"><div class="app-modal-body"><div class="form-field"><label>Title</label><input name="title" required maxlength="150"></div><div class="form-field"><label>Message</label><textarea name="message" required maxlength="2000"></textarea></div><label class="check-row"><input type="checkbox" name="send_email"> Also queue email delivery</label></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="bulkMessageModal">Cancel</button><button class="app-btn gold" type="submit">Send Notification</button></div></form></div></div>
+      <div class="app-modal" id="enrollmentManageModal"><div class="app-modal-card"><div class="app-modal-head"><div><h3>Manage Enrollment</h3><small id="enrollmentModalSubtitle" class="muted"></small></div><button class="modal-close" data-close-modal="enrollmentManageModal"><i class="fa-solid fa-xmark"></i></button></div><form id="enrollmentForm"><input type="hidden" name="enrollment_id"><div class="app-modal-body"><div class="form-grid"><div class="form-field full"><label>Student</label><select name="student_id" id="enrollmentStudent" required></select></div><div class="form-field full"><label>Course</label><select name="course_id" id="enrollmentCourse" required></select></div><div class="form-field"><label>Status</label><select name="status"><option value="active">Active</option><option value="expired">Expired</option><option value="revoked">Revoked</option></select></div><div class="form-field"><label>Access Days</label><input type="number" min="1" name="access_days" placeholder="Optional"></div><div class="form-field full"><label>Exact Expiry</label><input type="datetime-local" name="expires_at"></div></div></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="enrollmentManageModal" id="resetEnrollmentForm">Cancel</button><button class="app-btn gold" type="submit">Save Enrollment</button></div></form></div></div>
+      <div class="app-modal" id="calendarDayModal"><div class="app-modal-card"><div class="app-modal-head"><div><h3 id="calendarDayTitle">Calendar Details</h3><small class="muted">Classes, content and expiries</small></div><button class="modal-close" data-close-modal="calendarDayModal"><i class="fa-solid fa-xmark"></i></button></div><div class="app-modal-body" id="calendarDayModalContent"></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="calendarDayModal">Close</button></div></div></div>
       <div class="global-search-results hidden" id="globalSearchResults"></div>`);
   }
 
@@ -198,8 +197,6 @@
     document.getElementById('structureCourseFilter')?.addEventListener('change', renderStructure);
     document.getElementById('enrollmentForm')?.addEventListener('submit', saveEnrollment);
     document.getElementById('resetEnrollmentForm')?.addEventListener('click', resetEnrollmentForm);
-    document.getElementById('enrollmentSearch')?.addEventListener('input', renderEnrollments);
-    document.getElementById('enrollmentStatus')?.addEventListener('change', renderEnrollments);
     document.getElementById('linkForm')?.addEventListener('submit', saveLink);
     document.getElementById('processEmailQueue')?.addEventListener('click', processEmailQueue);
     document.getElementById('emailSearch')?.addEventListener('input', renderDelivery);
@@ -216,8 +213,10 @@
     document.getElementById('enquiryReviewForm')?.addEventListener('submit', saveEnquiryReview);
     document.getElementById('enquirySearch')?.addEventListener('input', renderEnquiries);
     document.getElementById('enquiryStatus')?.addEventListener('change', renderEnquiries);
-    ['userSearchV9', 'userDateFilter', 'userDateFrom', 'userDateTo', 'userVerifiedFilter', 'userStatusFilter'].forEach(id => document.getElementById(id)?.addEventListener('input', renderUsers));
-    document.getElementById('userDateFilter')?.addEventListener('change', toggleCustomDates);
+    ['userSearchV9', 'userDateFrom', 'userDateTo', 'userVerifiedFilter', 'userStatusFilter', 'userCourseFilter'].forEach(id => document.getElementById(id)?.addEventListener('input', renderUsers));
+    document.querySelectorAll('[data-user-date-quick]').forEach(btn => btn.addEventListener('click', () => setUserDateFilter(btn.dataset.userDateQuick, btn)));
+    document.getElementById('userDateFrom')?.addEventListener('change', renderUsers);
+    document.getElementById('userDateTo')?.addEventListener('change', renderUsers);
     document.getElementById('selectAllUsers')?.addEventListener('change', event => document.querySelectorAll('[data-user-select]').forEach(input => { input.checked = event.target.checked; }));
     document.getElementById('bulkUserAction')?.addEventListener('change', toggleBulkDays);
     document.getElementById('applyBulkUsers')?.addEventListener('click', applyBulkUsers);
@@ -240,6 +239,7 @@
       const delModule = event.target.closest('[data-delete-module]'); if (delModule) deleteRow('course_modules', delModule.dataset.deleteModule, 'module');
       const delLesson = event.target.closest('[data-delete-lesson]'); if (delLesson) deleteRow('course_lessons', delLesson.dataset.deleteLesson, 'lesson');
       const editEnrollment = event.target.closest('[data-edit-enrollment]'); if (editEnrollment) editEnrollmentRow(editEnrollment.dataset.editEnrollment);
+      const manageEnrollment = event.target.closest('[data-manage-enrollment]'); if (manageEnrollment) openEnrollmentForStudent(manageEnrollment.dataset.manageEnrollment);
       const enrollmentAction = event.target.closest('[data-enrollment-action]'); if (enrollmentAction) quickEnrollmentAction(enrollmentAction.dataset.enrollmentId, enrollmentAction.dataset.enrollmentAction, enrollmentAction);
       const copy = event.target.closest('[data-copy-link]'); if (copy) { await navigator.clipboard.writeText(copy.dataset.copyLink); A.toast('Tracked link copied.', 'success'); }
       const editLinkButton = event.target.closest('[data-edit-link]'); if (editLinkButton) editLink(editLinkButton.dataset.editLink);
@@ -323,6 +323,8 @@
       const old = element.value; element.innerHTML = options || '<option value="">No course available</option>';
       if ([...element.options].some(option => option.value === old)) element.value = old;
     });
+    const userCourseFilter = document.getElementById('userCourseFilter');
+    if (userCourseFilter) { const old = userCourseFilter.value; userCourseFilter.innerHTML = '<option value="all">All Courses</option>' + options; if ([...userCourseFilter.options].some(option => option.value === old)) userCourseFilter.value = old; }
     const announcementCourse = document.getElementById('announcementCourse');
     if (announcementCourse) announcementCourse.innerHTML = '<option value="">Select course</option>' + options;
     const students = state.profiles.filter(profile => profile.role === 'student').map(profile => `<option value="${profile.id}">${esc(profile.full_name || 'Student')} — ${esc(profile.email)}</option>`).join('');
@@ -355,7 +357,7 @@
 
   async function saveLesson(event) {
     event.preventDefault(); const form = event.currentTarget; const values = Object.fromEntries(new FormData(form));
-    const row = { course_id: values.course_id, module_id: values.module_id, lesson_number: Number(values.lesson_number), title: values.title.trim(), description: values.description.trim(), lesson_type: values.lesson_type, course_session_id: values.lesson_type === 'live_class' ? values.course_session_id || null : null, course_resource_id: values.lesson_type === 'resource' ? values.course_resource_id || null : null, text_content: values.lesson_type === 'text' ? values.text_content || null : null, is_published: form.elements.is_published.checked };
+    const row = { course_id: values.course_id, module_id: values.module_id, lesson_number: Number(values.lesson_number), title: values.title.trim(), description: values.description.trim(), lesson_type: values.lesson_type, course_session_id: values.lesson_type === 'live_class' ? values.course_session_id || null : null, course_resource_id: null, text_content: values.lesson_type === 'text' ? values.text_content || null : null, is_published: form.elements.is_published.checked };
     await upsert('course_lessons', row, values.id, form, 'Lesson saved successfully.');
   }
 
@@ -393,8 +395,9 @@
   }
 
   function resetEnrollmentForm() { const form = document.getElementById('enrollmentForm'); form?.reset(); if (form?.elements.enrollment_id) form.elements.enrollment_id.value = ''; }
-  function editEnrollmentRow(id) { const row = state.enrollments.find(item => item.id === id); const form = document.getElementById('enrollmentForm'); if (!row || !form) return; form.elements.enrollment_id.value = row.id; form.elements.student_id.value = row.student_id; form.elements.course_id.value = row.course_id; form.elements.status.value = row.status; form.elements.access_days.value = ''; form.elements.expires_at.value = localInput(row.access_expires_at); form.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
-  async function saveEnrollment(event) { event.preventDefault(); const form = event.currentTarget; const values = Object.fromEntries(new FormData(form)); const button = form.querySelector('button[type="submit"]'); A.setLoading(button, true, 'Saving...'); try { const response = await A.supabase.rpc('admin_upsert_enrollment', { p_student_id: values.student_id, p_course_id: values.course_id, p_status: values.status, p_access_days: values.access_days ? Number(values.access_days) : null, p_expires_at: values.expires_at ? new Date(values.expires_at).toISOString() : null }); if (response.error) throw response.error; resetEnrollmentForm(); await refresh(); A.toast('Course enrollment updated successfully.', 'success'); } catch (error) { A.toast(A.friendlyError(error), 'error'); } finally { A.setLoading(button, false); } }
+  function openEnrollmentForStudent(studentId) { const form = document.getElementById('enrollmentForm'); const profile = profileById(studentId); if (!form || !profile) return; resetEnrollmentForm(); form.elements.student_id.value = studentId; const active = state.enrollments.find(row => row.student_id === studentId && row.status === 'active') || state.enrollments.find(row => row.student_id === studentId); if (active) { form.elements.enrollment_id.value = active.id; form.elements.course_id.value = active.course_id; form.elements.status.value = active.status; form.elements.expires_at.value = localInput(active.access_expires_at); } document.getElementById('enrollmentModalSubtitle').textContent = `${profile.full_name || 'Student'} · ${profile.email || ''}`; A.openModal('enrollmentManageModal'); }
+  function editEnrollmentRow(id) { const row = state.enrollments.find(item => item.id === id); const form = document.getElementById('enrollmentForm'); if (!row || !form) return; form.elements.enrollment_id.value = row.id; form.elements.student_id.value = row.student_id; form.elements.course_id.value = row.course_id; form.elements.status.value = row.status; form.elements.access_days.value = ''; form.elements.expires_at.value = localInput(row.access_expires_at); const profile = profileById(row.student_id); document.getElementById('enrollmentModalSubtitle').textContent = `${profile?.full_name || 'Student'} · ${courseById(row.course_id)?.title || 'Course'}`; A.openModal('enrollmentManageModal'); }
+  async function saveEnrollment(event) { event.preventDefault(); const form = event.currentTarget; const values = Object.fromEntries(new FormData(form)); const button = form.querySelector('button[type="submit"]'); A.setLoading(button, true, 'Saving...'); try { const response = await A.supabase.rpc('admin_upsert_enrollment', { p_student_id: values.student_id, p_course_id: values.course_id, p_status: values.status, p_access_days: values.access_days ? Number(values.access_days) : null, p_expires_at: values.expires_at ? new Date(values.expires_at).toISOString() : null }); if (response.error) throw response.error; resetEnrollmentForm(); A.closeModal('enrollmentManageModal'); await refresh(); A.toast('Course enrollment updated successfully.', 'success'); } catch (error) { A.toast(A.friendlyError(error), 'error'); } finally { A.setLoading(button, false); } }
   async function quickEnrollmentAction(id, status, button) { const row = state.enrollments.find(item => item.id === id); if (!row) return; const confirm = await A.confirmAction({ title: status === 'active' ? 'Activate Enrollment' : 'Revoke Enrollment', message: `${status === 'active' ? 'Restore' : 'Remove'} course access for this student?`, confirmText: status === 'active' ? 'Activate' : 'Revoke', danger: status !== 'active' }); if (!confirm.confirmed) return; A.setLoading(button, true, 'Updating...'); try { const response = await A.supabase.rpc('admin_upsert_enrollment', { p_student_id: row.student_id, p_course_id: row.course_id, p_status: status, p_access_days: null, p_expires_at: null }); if (response.error) throw response.error; await refresh(); A.toast(status === 'active' ? 'Enrollment activated.' : 'Enrollment revoked.', 'success'); } catch (error) { A.toast(A.friendlyError(error), 'error'); } finally { A.setLoading(button, false); } }
 
   async function saveLink(event) { event.preventDefault(); const form = event.currentTarget; const values = Object.fromEntries(new FormData(form)); const row = { name: values.name.trim(), destination_path: values.destination_path, team_member: values.team_member.trim() || null, ref_code: slug(values.ref_code), source: values.source, campaign: values.campaign.trim() || null, is_active: form.elements.is_active.checked, created_by: window.AdminBase?.state?.profile?.id || null }; await upsert('tracking_links', row, values.id, form, 'Tracked link saved.'); }
@@ -434,44 +437,66 @@
   async function toggleLink(id) { const row = state.links.find(item => item.id === id); if (!row) return; const result = await A.confirmAction({ title: row.is_active ? 'Disable Tracking Link' : 'Enable Tracking Link', message: `${row.is_active ? 'New clicks will no longer be attributed through this link.' : 'Tracking will resume for this link.'}`, confirmText: row.is_active ? 'Disable' : 'Enable', danger: row.is_active }); if (!result.confirmed) return; const response = await A.supabase.from('tracking_links').update({ is_active: !row.is_active }).eq('id', id); if (response.error) A.toast(A.friendlyError(response.error), 'error'); else { await refresh(); A.toast('Tracking link updated.', 'success'); } }
 
   function effective(profile) { return A.effectiveAccessStatus(profile); }
-  function filteredUsers() { const query = document.getElementById('userSearchV9')?.value.toLowerCase().trim() || ''; const dateFilter = document.getElementById('userDateFilter')?.value || 'all'; const verified = document.getElementById('userVerifiedFilter')?.value || 'all'; const status = document.getElementById('userStatusFilter')?.value || 'all'; const now = new Date(); const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()); return state.profiles.filter(profile => profile.role === 'student').filter(profile => { const attribution = state.attributions.find(item => item.user_id === profile.id); const haystack = `${profile.full_name || ''} ${profile.email || ''} ${profile.whatsapp || ''} ${profile.first_ref || attribution?.ref_code || ''} ${profile.first_source || attribution?.source || ''}`.toLowerCase(); if (query && !haystack.includes(query)) return false; const created = new Date(profile.created_at); if (dateFilter === 'today' && created < today) return false; if (dateFilter === 'yesterday') { const yesterday = new Date(today); yesterday.setDate(yesterday.getDate() - 1); if (created < yesterday || created >= today) return false; } if (['7', '30'].includes(dateFilter)) { const start = new Date(); start.setDate(start.getDate() - Number(dateFilter)); if (created < start) return false; } if (dateFilter === 'custom') { const from = document.getElementById('userDateFrom')?.value; const to = document.getElementById('userDateTo')?.value; if (from && created < new Date(`${from}T00:00:00`)) return false; if (to && created > new Date(`${to}T23:59:59`)) return false; } if (verified === 'verified' && !profile.email_verified) return false; if (verified === 'unverified' && profile.email_verified) return false; const access = effective(profile); if (status === 'lifetime' && !profile.lifetime_access) return false; if (status !== 'all' && status !== 'lifetime' && access !== status) return false; return true; }); }
-  function renderUsers() { const body = document.getElementById('studentsBodyV9'); if (!body) return; const rows = filteredUsers(); body.innerHTML = rows.length ? rows.map(profile => { const access = effective(profile); const attribution = state.attributions.find(item => item.user_id === profile.id); return `<tr><td><input type="checkbox" data-user-select value="${profile.id}"></td><td><button class="text-link" data-user-details="${profile.id}"><b>${esc(profile.full_name || 'Student')}</b></button><small>${esc(profile.email)}</small></td><td>${esc(profile.whatsapp || '—')}</td><td>${A.formatDateTime(profile.created_at)}</td><td>${esc(profile.first_source || attribution?.source || 'Direct')}<small>${esc(profile.first_ref || attribution?.ref_code || '—')} · ${esc(profile.first_campaign || attribution?.campaign || '—')}</small></td><td><span class="status-pill ${profile.email_verified ? 'ok' : 'warn'}">${profile.email_verified ? 'Verified' : 'Unverified'}</span></td><td><span class="status-pill ${A.statusClass(access)}">${profile.lifetime_access ? 'Lifetime' : A.statusLabel(access)}</span></td><td>${profile.lifetime_access ? 'Never' : A.formatDateTime(profile.access_expires_at)}</td><td>${esc(profile.access_pin || '—')}</td><td><div class="table-actions"><button class="app-btn small outline" data-user-details="${profile.id}">Details</button><button class="app-btn small gold" data-manage-access="${profile.id}">Access</button></div></td></tr>`; }).join('') : `<tr><td colspan="10">${empty('No users match the selected filters.', 'fa-users')}</td></tr>`; }
-  function toggleCustomDates() { const custom = document.getElementById('userDateFilter')?.value === 'custom'; document.getElementById('userDateFrom')?.classList.toggle('hidden', !custom); document.getElementById('userDateTo')?.classList.toggle('hidden', !custom); renderUsers(); }
-  function toggleBulkDays() { const show = document.getElementById('bulkUserAction')?.value === 'extend_days'; document.getElementById('bulkAccessDays')?.classList.toggle('hidden', !show); }
-  function openAccess(id) { const profile = profileById(id); const form = document.getElementById('userAccessForm'); if (!profile || !form) return; form.reset(); form.elements.user_id.value = id; document.getElementById('accessUserName').textContent = `${profile.full_name || 'Student'} · ${profile.email}`; renderAccessFields(); A.openModal('userAccessModal'); }
-  function renderAccessFields() { const action = document.getElementById('accessAction')?.value; document.querySelector('.access-days')?.classList.toggle('hidden', !['set_days', 'extend_days'].includes(action)); document.querySelector('.access-until')?.classList.toggle('hidden', action !== 'set_until'); document.querySelector('.access-grace')?.classList.toggle('hidden', !['set_days', 'extend_days', 'set_until'].includes(action)); document.querySelector('.access-pin')?.classList.toggle('hidden', action !== 'new_pin'); }
-  async function applyAccess(event) { event.preventDefault(); const form = event.currentTarget; const values = Object.fromEntries(new FormData(form)); const actionLabel = label(values.action); const confirmation = await A.confirmAction({ title: actionLabel, message: `Apply ${actionLabel.toLowerCase()} to this student account?`, confirmText: 'Apply', danger: ['lock', 'reset'].includes(values.action) }); if (!confirmation.confirmed) return; const button = form.querySelector('button[type="submit"]'); A.setLoading(button, true, 'Applying...'); try { const response = await A.supabase.rpc('admin_manage_user_access', { p_user_id: values.user_id, p_action: values.action, p_days: values.days ? Number(values.days) : null, p_until: values.until ? new Date(values.until).toISOString() : null, p_grace_days: Number(values.grace_days || 0), p_pin: values.pin || null }); if (response.error) throw response.error; A.closeModal('userAccessModal'); if (window.AdminBase?.reload) await window.AdminBase.reload(); await refresh(); A.toast('User access updated successfully.', 'success'); } catch (error) { A.toast(A.friendlyError(error), 'error'); } finally { A.setLoading(button, false); } }
-  function selectedUserIds() { return [...document.querySelectorAll('[data-user-select]:checked')].map(input => input.value); }
-  function openBulkMessage() { const ids = selectedUserIds(); if (!ids.length) return A.toast('Select at least one student.', 'error'); const form = document.getElementById('bulkMessageForm'); form?.reset(); document.getElementById('bulkMessageSubtitle').textContent = `${ids.length} selected student(s)`; A.openModal('bulkMessageModal'); }
-  async function sendBulkMessage(event) { event.preventDefault(); const form = event.currentTarget; const ids = selectedUserIds(); if (!ids.length) return A.toast('Select at least one student.', 'error'); const values = Object.fromEntries(new FormData(form)); const button = form.querySelector('button[type="submit"]'); A.setLoading(button, true, 'Sending...'); try { const response = await A.supabase.rpc('admin_send_user_message', { p_user_ids: ids, p_title: values.title.trim(), p_message: values.message.trim(), p_send_email: Boolean(form.elements.send_email.checked) }); if (response.error) throw response.error; A.closeModal('bulkMessageModal'); await refresh(); A.toast(`Notification sent to ${response.data?.notified || ids.length} student(s).`, 'success'); } catch (error) { A.toast(A.friendlyError(error, 'Could not send the notification.'), 'error'); } finally { A.setLoading(button, false); } }
-
-  async function applyBulkUsers() {
-    const ids = selectedUserIds();
-    const action = document.getElementById('bulkUserAction')?.value;
-    const days = Number(document.getElementById('bulkAccessDays')?.value || 0);
-    if (!ids.length) return A.toast('Select at least one student.', 'error');
-    if (action === 'extend_days' && days <= 0) return A.toast('Enter valid access days.', 'error');
-    const confirmation = await A.confirmAction({ title: 'Apply Bulk User Action', message: `${label(action)} for ${ids.length} selected account(s)?`, confirmText: 'Apply to Selected', danger: action === 'lock' });
-    if (!confirmation.confirmed) return;
-    const button = document.getElementById('applyBulkUsers'); A.setLoading(button, true, 'Updating...');
-    try {
-      if (action === 'resend_verification') {
-        let sent = 0, skipped = 0, failed = 0;
-        for (const id of ids) {
-          const profile = profileById(id);
-          if (!profile || profile.email_verified) { skipped += 1; continue; }
-          const response = await A.supabase.auth.resend({ type: 'signup', email: profile.email, options: { emailRedirectTo: new URL('login.html?tab=student-login', location.href).href } });
-          if (response.error) failed += 1; else sent += 1;
-        }
-        A.toast(`${sent} verification email(s) requested; ${skipped} verified account(s) skipped; ${failed} failed.`, failed ? 'warning' : 'success', 6000);
-      } else {
-        const response = await A.supabase.rpc('admin_bulk_user_action', { p_user_ids: ids, p_action: action, p_days: action === 'extend_days' ? days : null });
-        if (response.error) throw response.error;
-        if (window.AdminBase?.reload) await window.AdminBase.reload(); await refresh();
-        A.toast(`${response.data?.updated || 0} account(s) updated; ${response.data?.skipped || 0} skipped.`, 'success');
-      }
-    } catch (error) { A.toast(A.friendlyError(error), 'error'); } finally { A.setLoading(button, false); }
+  function filteredUsers() {
+    const query = document.getElementById('userSearchV9')?.value.toLowerCase().trim() || '';
+    const dateFilter = document.getElementById('userDateFilter')?.value || 'all';
+    const verified = document.getElementById('userVerifiedFilter')?.value || 'all';
+    const status = document.getElementById('userStatusFilter')?.value || 'all';
+    const courseFilter = document.getElementById('userCourseFilter')?.value || 'all';
+    const now = new Date(); const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    return state.profiles.filter(profile => profile.role === 'student').filter(profile => {
+      const haystack = `${profile.full_name || ''} ${profile.email || ''} ${profile.whatsapp || ''}`.toLowerCase();
+      if (query && !haystack.includes(query)) return false;
+      const created = new Date(profile.created_at);
+      if (dateFilter === 'today' && (created < today || created >= addDays(today, 1))) return false;
+      if (dateFilter === 'yesterday') { const start = addDays(today, -1); if (created < start || created >= today) return false; }
+      if (['7','30'].includes(dateFilter)) { const start = addDays(today, -(Number(dateFilter)-1)); if (created < start) return false; }
+      if (dateFilter === 'custom') { const from = document.getElementById('userDateFrom')?.value; const to = document.getElementById('userDateTo')?.value; if (from && created < new Date(`${from}T00:00:00`)) return false; if (to && created > new Date(`${to}T23:59:59`)) return false; }
+      if (verified === 'verified' && !profile.email_verified) return false;
+      if (verified === 'unverified' && profile.email_verified) return false;
+      const access = effective(profile);
+      if (status === 'lifetime' && !profile.lifetime_access) return false;
+      if (status !== 'all' && status !== 'lifetime' && access !== status) return false;
+      if (courseFilter !== 'all' && !state.enrollments.some(row => row.student_id === profile.id && row.course_id === courseFilter)) return false;
+      return true;
+    });
   }
+
+  function setUserDateFilter(value, button) {
+    const select = document.getElementById('userDateFilter'); if (select) select.value = value || 'all';
+    document.querySelectorAll('[data-user-date-quick]').forEach(item => item.classList.toggle('active', item === button));
+    const custom = value === 'custom'; document.getElementById('studentCustomDates')?.classList.toggle('hidden', !custom);
+    if (custom && !document.getElementById('userDateFrom')?.value) { const today = startOfLocalDay(new Date()); document.getElementById('userDateTo').value = today.toLocaleDateString('en-CA'); document.getElementById('userDateFrom').value = addDays(today,-6).toLocaleDateString('en-CA'); }
+    renderUsers();
+  }
+
+  function renderUsers() {
+    const body = document.getElementById('studentsBodyV9'); if (!body) return; const rows = filteredUsers();
+    const summary = document.getElementById('studentSummaryCards');
+    if (summary) {
+      const ids = new Set(rows.map(row => row.id));
+      const enrollments = state.enrollments.filter(row => ids.has(row.student_id));
+      const free = enrollments.filter(row => isFreeCourse(row.course_id)).length;
+      const paid = enrollments.filter(row => !isFreeCourse(row.course_id)).length;
+      summary.innerHTML = [
+        ['fa-users', rows.length, 'Total Users', 'gold'],
+        ['fa-user-graduate', new Set(enrollments.map(row => row.student_id)).size, 'Enrolled Users', 'green'],
+        ['fa-gift', free, 'Free Enrollments', 'gold'],
+        ['fa-crown', paid, 'Paid Enrollments', 'blue']
+      ].map(([icon,value,labelText,tone]) => `<div class="student-summary-card ${tone}"><span><i class="fa-solid ${icon}"></i></span><div><b>${value}</b><small>${labelText}</small></div></div>`).join('');
+    }
+    body.innerHTML = rows.length ? rows.map(profile => {
+      const access = effective(profile);
+      const enrollments = state.enrollments.filter(row => row.student_id === profile.id).sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0));
+      const active = enrollments.find(row => row.status === 'active') || enrollments[0];
+      const course = active ? courseById(active.course_id) : null;
+      const payment = active ? state.payments.find(row => row.id === active.payment_id) || state.payments.find(row => row.student_id === profile.id && row.course_id === active.course_id && row.status === 'approved') : null;
+      const enrollmentLabel = active ? A.statusLabel(active.status) : 'Not Enrolled';
+      const paymentHtml = active ? (payment ? `<span class="status-pill ${A.statusClass(payment.status)}">${A.statusLabel(payment.status)}</span>` : (course && isFreeCourse(course.id) ? '<span class="status-pill ok">Free</span>' : '<span class="status-pill warn">No Payment</span>')) : '—';
+      return `<tr><td><input type="checkbox" data-user-select value="${profile.id}"></td><td><button class="text-link" data-user-details="${profile.id}"><b>${esc(profile.full_name || 'Student')}</b></button><small>${esc(profile.email || '')}</small></td><td>${esc(profile.whatsapp || '—')}</td><td>${A.formatDateTime(profile.created_at)}</td><td>${course ? `<b>${esc(course.title)}</b><small>${enrollments.length > 1 ? `${enrollments.length} enrollments` : (isFreeCourse(course.id) ? 'Free Course' : 'Paid Course')}</small>` : '<span class="muted">No course</span>'}</td><td><span class="status-pill ${A.statusClass(active?.status || 'pending')}">${enrollmentLabel}</span></td><td>${paymentHtml}</td><td><span class="status-pill ${A.statusClass(access)}">${profile.lifetime_access ? 'Lifetime' : A.statusLabel(access)}</span><small>${profile.lifetime_access ? 'No expiry' : (profile.access_expires_at ? A.formatDateTime(profile.access_expires_at) : 'No expiry set')}</small></td><td><div class="table-actions"><button class="app-btn small outline" data-user-details="${profile.id}">View</button><button class="app-btn small gold" data-manage-enrollment="${profile.id}">Enrollment</button><button class="app-btn small outline" data-manage-access="${profile.id}">Access</button></div></td></tr>`;
+    }).join('') : `<tr><td colspan="9">${empty('No users match the selected filters.', 'fa-users')}</td></tr>`;
+  }
+
 
   async function resendVerificationEmail(id, button) {
     const profile = profileById(id); if (!profile) return;
@@ -498,7 +523,14 @@
   function moveCalendar(months) { calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth() + months, 1); renderCalendar(); }
   function calendarEvents() { const rows = []; state.sessions.forEach(row => rows.push({ date: row.starts_at, type: 'class', title: row.title, subtitle: courseById(row.course_id)?.title || 'Course', panel: 'sessions' })); state.courses.forEach(row => { if (row.start_date) rows.push({ date: `${row.start_date}T00:00:00`, type: 'content', title: `${row.title} starts`, panel: 'courses' }); if (row.end_date) rows.push({ date: `${row.end_date}T00:00:00`, type: 'content', title: `${row.title} ends`, panel: 'courses' }); }); ['charts', 'articles', 'announcements'].forEach(key => (window.AdminBase?.state?.[key] || []).forEach(row => { const date = row.publish_at || row.published_at; if (date) rows.push({ date, type: 'content', title: row.title, panel: key }); })); state.profiles.filter(profile => profile.role === 'student' && !profile.lifetime_access && profile.access_expires_at).forEach(profile => rows.push({ date: profile.access_expires_at, type: 'expiry', title: `${profile.full_name || profile.email} access expires`, userId: profile.id, panel: 'students' })); return rows; }
   function renderCalendar() { const root = document.getElementById('adminCalendar'); if (!root) return; const year = calendarCursor.getFullYear(); const month = calendarCursor.getMonth(); document.getElementById('calendarTitle').textContent = new Intl.DateTimeFormat('en-GB', { month: 'long', year: 'numeric' }).format(calendarCursor); const firstDay = new Date(year, month, 1).getDay(); const days = new Date(year, month + 1, 0).getDate(); const events = calendarEvents(); const cells = []; for (let i = 0; i < firstDay; i += 1) cells.push('<div class="calendar-cell muted-cell"></div>'); for (let day = 1; day <= days; day += 1) { const key = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`; const dayEvents = events.filter(event => new Date(event.date).toLocaleDateString('en-CA') === key); cells.push(`<button class="calendar-cell ${key === new Date().toLocaleDateString('en-CA') ? 'today' : ''}" data-calendar-date="${key}"><b>${day}</b><span class="calendar-dots">${dayEvents.slice(0, 5).map(event => `<i class="${event.type}"></i>`).join('')}</span>${dayEvents.length ? `<small>${dayEvents.length} event${dayEvents.length > 1 ? 's' : ''}</small>` : ''}</button>`); } root.innerHTML = `<div class="calendar-weekdays">${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => `<span>${day}</span>`).join('')}</div><div class="calendar-grid">${cells.join('')}</div>`; }
-  function renderCalendarDay(date) { const events = calendarEvents().filter(event => new Date(event.date).toLocaleDateString('en-CA') === date); document.getElementById('calendarDayDetails').innerHTML = events.length ? events.map(event => `<button class="activity-item calendar-event-row" ${event.userId ? `data-user-details="${event.userId}"` : `data-goto="${event.panel}"`}><div class="activity-icon ${event.type}"><i class="fa-solid ${event.type === 'class' ? 'fa-video' : event.type === 'expiry' ? 'fa-hourglass-end' : 'fa-calendar-check'}"></i></div><div><b>${esc(event.title)}</b><small>${esc(event.subtitle || '')} · ${A.formatDateTime(event.date)}</small></div></button>`).join('') : empty('No activities on this date.', 'fa-calendar-day'); }
+  function renderCalendarDay(date) {
+    const events = calendarEvents().filter(event => new Date(event.date).toLocaleDateString('en-CA') === date);
+    const title = document.getElementById('calendarDayTitle');
+    const content = document.getElementById('calendarDayModalContent');
+    if (title) title.textContent = new Date(`${date}T12:00:00`).toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+    if (content) content.innerHTML = events.length ? events.map(event => `<button class="activity-item calendar-event-row" ${event.userId ? `data-user-details="${event.userId}"` : `data-goto="${event.panel}"`}><div class="activity-icon ${event.type}"><i class="fa-solid ${event.type === 'class' ? 'fa-video' : event.type === 'expiry' ? 'fa-hourglass-end' : 'fa-calendar-check'}"></i></div><div><b>${esc(event.title)}</b><small>${esc(event.subtitle || '')} · ${A.formatDateTime(event.date)}</small></div></button>`).join('') : empty('No activities on this date.', 'fa-calendar-day');
+    A.openModal('calendarDayModal');
+  }
 
   function renderAudit() { const type = document.getElementById('auditType')?.value || 'admin'; const query = (document.getElementById('auditSearch')?.value || '').toLowerCase().trim(); const head = document.getElementById('auditHead'); const body = document.getElementById('auditBody'); if (!head || !body) return; if (type === 'admin') { const rows = state.auditLogs.filter(row => !query || `${row.action} ${row.entity_type} ${JSON.stringify(row.details)}`.toLowerCase().includes(query)); head.innerHTML = '<tr><th>Admin</th><th>Action</th><th>Entity</th><th>Date</th><th>Summary</th></tr>'; body.innerHTML = rows.length ? rows.map(row => `<tr><td>${esc(profileById(row.admin_id)?.full_name || 'System')}</td><td><b>${esc(label(row.action))}</b></td><td>${esc(row.entity_type || '—')}</td><td>${A.formatDateTime(row.created_at)}</td><td><code class="audit-summary">${esc(JSON.stringify(row.details || {}).slice(0, 180))}</code></td></tr>`).join('') : `<tr><td colspan="5">${empty('No admin audit events.', 'fa-shield-halved')}</td></tr>`; } else { const rows = state.activities.filter(row => !query || `${row.description} ${row.activity_type}`.toLowerCase().includes(query)); head.innerHTML = '<tr><th>Student</th><th>Activity</th><th>Entity</th><th>Date</th><th>Details</th></tr>'; body.innerHTML = rows.length ? rows.map(row => `<tr><td><button class="text-link" data-user-details="${row.user_id}">${esc(profileById(row.user_id)?.full_name || 'Student')}</button></td><td><b>${esc(row.description)}</b></td><td>${esc(row.entity_type || '—')}</td><td>${A.formatDateTime(row.created_at)}</td><td><code class="audit-summary">${esc(JSON.stringify(row.details || {}).slice(0, 180))}</code></td></tr>`).join('') : `<tr><td colspan="5">${empty('No user activity events.', 'fa-clock-rotate-left')}</td></tr>`; } }
 
@@ -558,79 +590,38 @@
     return `<b class="multi-money">${entries.slice(0, 2).map(([currency, total]) => `<span>${esc(A.formatMoney(total, currency))}</span>`).join('')}</b>`;
   }
 
-  const DEMO_ANALYTICS_PREVIEW = true;
-
-  function demoAnalyticsPreviewData() {
-    const now = startOfLocalDay(new Date());
-    const stamp = (daysAgo, hour) => {
-      const date = addDays(now, -daysAgo);
-      date.setHours(hour || 12, 0, 0, 0);
-      return date.toISOString();
-    };
-    return {
-      users: [
-        stamp(0,9), stamp(0,14), stamp(1,10), stamp(2,11), stamp(2,16),
-        stamp(3,12), stamp(4,10), stamp(5,15), stamp(6,11),
-        stamp(7,10), stamp(8,14), stamp(9,11), stamp(10,15), stamp(11,10), stamp(12,13), stamp(13,16)
-      ],
-      courses: [
-        { created_at: stamp(0,10), __demoFree: true },
-        { created_at: stamp(0,15), __demoFree: false },
-        { created_at: stamp(1,11), __demoFree: true },
-        { created_at: stamp(2,12), __demoFree: false },
-        { created_at: stamp(2,17), __demoFree: true },
-        { created_at: stamp(3,10), __demoFree: true },
-        { created_at: stamp(4,14), __demoFree: false },
-        { created_at: stamp(5,12), __demoFree: true },
-        { created_at: stamp(6,16), __demoFree: false },
-        { created_at: stamp(7,11), __demoFree: true },
-        { created_at: stamp(8,12), __demoFree: false },
-        { created_at: stamp(9,15), __demoFree: true },
-        { created_at: stamp(10,10), __demoFree: true },
-        { created_at: stamp(11,17), __demoFree: false },
-        { created_at: stamp(12,13), __demoFree: true },
-        { created_at: stamp(13,9), __demoFree: false }
-      ]
-    };
-  }
-
   function renderBusinessAnalytics() {
     const root = document.getElementById('dashboardAnalytics');
     if (!root) return;
     root.innerHTML = '';
 
-    const demo = DEMO_ANALYTICS_PREVIEW ? demoAnalyticsPreviewData() : null;
-    const userEvents = demo ? demo.users : state.profiles
+    const userEvents = state.profiles
       .filter(profile => profile.role === 'student')
       .map(profile => profile.created_at)
       .filter(Boolean);
-    const courseRows = demo ? demo.courses : (state.enrollments || []);
+    const courseRows = state.enrollments || [];
 
     try {
       root.insertAdjacentHTML('beforeend', analyticsTrendCard({
         target: 'users',
         eyebrow: 'USERS',
         title: 'User Growth',
-        subtitle: DEMO_ANALYTICS_PREVIEW ? 'Demo preview · new student registrations' : 'New student registrations',
+        subtitle: 'New student registrations',
         icon: 'fa-users',
         data: userEvents
       }));
-    } catch (error) {
-      console.error('User analytics render failed', error);
-    }
+    } catch (error) { console.error('User analytics render failed', error); }
 
     try {
       root.insertAdjacentHTML('beforeend', analyticsTrendCard({
         target: 'courses',
         eyebrow: 'COURSES',
         title: 'Course Enrollments',
-        subtitle: DEMO_ANALYTICS_PREVIEW ? 'Demo preview · free and paid enrollments' : 'Free and paid enrollments',
+        subtitle: 'Free and paid enrollments',
         icon: 'fa-user-graduate',
         data: courseRows
       }));
-    } catch (error) {
-      console.error('Course analytics render failed', error);
-    }
+    } catch (error) { console.error('Course analytics render failed', error); }
   }
 
   function startOfLocalDay(date) {
@@ -733,7 +724,7 @@
     rows.forEach(row => {
       const date = new Date(row.created_at || row.access_started_at || row.updated_at);
       if (Number.isNaN(date.getTime())) return;
-      const free = typeof row.__demoFree === 'boolean' ? row.__demoFree : isFreeCourse(row.course_id);
+      const free = isFreeCourse(row.course_id);
       if (date >= period.start && date < period.end) {
         if (free) freeCurrent += 1; else paidCurrent += 1;
         const bucket = buckets.find(item => date >= item.start && date < item.end);

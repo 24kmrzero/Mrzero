@@ -7,18 +7,18 @@
 <script>(function(){try{var t=localStorage.getItem('24k-excellence-theme');document.documentElement.dataset.theme=t==='light'?'light':'dark'}catch(e){document.documentElement.dataset.theme='dark'}})();</script>
 <title>Admin Panel | 24K Excellence</title>
 <link rel="icon" href="assets/logo.png">
-<link rel="stylesheet" href="app.css?v=9.30">
+<link rel="stylesheet" href="app.css?v=9.31">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body class="app-page">
 <div id="pageLoader" class="loading-screen"><div><img src="assets/logo.png" alt="24K Digital Gold"><i class="fa-solid fa-spinner fa-spin"></i><p>Loading admin controls...</p></div></div>
 <div id="adminApp" class="app-shell hidden">
   <aside class="app-side" id="side">
-    <div class="app-side-brand"><img src="assets/logo.png" alt="24K Digital Gold"></div>
+    <div class="app-side-brand"><a class="app-logo-home" href="index.html" aria-label="Go to website home"><img src="assets/logo.png" alt="24K Digital Gold"></a></div>
     <div class="app-side-scroll"><nav class="app-nav">
       <p class="app-nav-label">OVERVIEW</p><a href="#" class="on" data-panel="dashboard"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
       <p class="app-nav-label">CONTENT</p><a href="#" data-panel="signals"><i class="fa-solid fa-bolt"></i> Signals</a><a href="#" data-panel="charts"><i class="fa-solid fa-chart-line"></i> Charts</a><a href="#" data-panel="articles"><i class="fa-solid fa-newspaper"></i> Articles</a><a href="#" data-panel="announcements"><i class="fa-solid fa-bullhorn"></i> Announcements</a>
-      <p class="app-nav-label">COURSES</p><a href="#" data-panel="courses"><i class="fa-solid fa-graduation-cap"></i> Courses</a><a href="#" data-panel="sessions"><i class="fa-solid fa-video"></i> Online Class Sessions</a><a href="#" data-panel="resources"><i class="fa-solid fa-folder-open"></i> Course Resources</a>
+      <p class="app-nav-label">COURSES</p><a href="#" data-panel="courses"><i class="fa-solid fa-graduation-cap"></i> Courses</a><a href="#" data-panel="sessions"><i class="fa-solid fa-video"></i> Online Class Sessions</a>
       <p class="app-nav-label">OPERATIONS</p><a href="#" data-panel="payments"><i class="fa-solid fa-receipt"></i> Payments <span class="nav-count" id="pendingPaymentCount">0</span></a><a href="#" data-panel="students"><i class="fa-solid fa-users"></i> Students</a><a href="#" data-panel="support"><i class="fa-solid fa-headset"></i> Support</a><a href="#" data-panel="methods"><i class="fa-solid fa-building-columns"></i> Payment Methods</a>
     </nav></div>
     <div class="app-side-foot"><a href="index.html"><i class="fa-solid fa-house"></i> Website Home</a><button id="logoutButton"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button></div>
@@ -129,38 +129,56 @@
       </section>
 
       <section class="panel" id="p-courses">
-        <div class="panel-heading"><div><h2>Courses Management</h2><p>Instructor is Malik Zameer. Set Upcoming, Active or Completed status from here.</p></div><button class="app-btn gold" data-toggle-form="courseFormBox"><i class="fa-solid fa-plus"></i> Add Course</button></div>
-        <div class="app-card admin-form-box" id="courseFormBox"><form id="courseForm"><input type="hidden" name="id"><input type="hidden" name="existing_thumbnail_url"><div class="form-grid">
-          <div class="form-field"><label>Course Heading</label><input name="title" required placeholder="Forex Live Masterclass"></div>
-          <div class="form-field"><label>Instructor</label><input name="instructor_name" value="Malik Zameer" readonly></div>
-          <div class="form-field full"><label>Short Caption</label><textarea name="short_description" maxlength="220" required placeholder="One short line explaining what students will learn."></textarea></div>
-          <div class="form-field"><label>Course Type</label><select name="course_type"><option value="paid">Paid</option><option value="free">Free</option></select></div>
-          <div class="form-field"><label>Course Status</label><select name="status"><option value="upcoming">Upcoming</option><option value="active">Active</option><option value="completed">Completed</option><option value="draft">Draft</option></select></div>
-          <div class="form-field"><label>Regular Price</label><input type="number" min="0" step="0.01" name="price" value="0" required></div>
-          <div class="form-field"><label>Discount Price <span class="muted">(optional)</span></label><input type="number" min="0" step="0.01" name="discount_price"></div>
-          <div class="form-field"><label>Currency</label><select name="currency"><option>USD</option><option>PKR</option><option>MYR</option></select></div>
-          <div class="form-field"><label>Course Thumbnail <span class="muted">(optional)</span></label><input type="file" name="thumbnail" accept="image/png,image/jpeg,image/webp"></div>
-          <div class="form-field full live-class-form-divider"><span>Online Classes / Sessions</span><small>Add all classes for this course here. Use “Add Another Session” for Class 2, Class 3 and more.</small></div>
-          <div class="form-field full course-session-editor" id="courseSessionEditor">
-            <article class="course-session-row" data-course-session-row>
-              <input type="hidden" data-session-field="id" value="">
-              <div class="course-session-row-head"><b>Class 1</b><button type="button" class="app-btn small danger session-remove-btn" data-remove-course-session title="Remove this class"><i class="fa-solid fa-trash"></i> Remove</button></div>
-              <div class="form-grid">
-                <div class="form-field"><label>Class Title / Number</label><input data-session-field="title" value="Class 1" placeholder="Class 1" required></div>
-                <div class="form-field"><label>Date & Time (Pakistan Time)</label><input type="datetime-local" data-session-field="starts_at" value="2026-08-20T21:00" required></div>
-                <div class="form-field full"><label>Heading & What Students Will Learn</label><textarea data-session-field="topic" required>Basics of Forex
-• What is Forex trading?
-• How currency pairs work
-• Basic buy and sell concept</textarea></div>
-                <div class="form-field"><label>Duration Minutes</label><input type="number" min="15" data-session-field="duration_minutes" value="90" required></div>
-                <div class="form-field"><label>Online Class Link</label><input type="url" data-session-field="meet_url" placeholder="https://your-secure-class-link.com/" required></div>
+        <div class="panel-heading"><div><h2>Courses Management</h2><p>Create courses, add sessions and manage the course structure from one place.</p></div><button class="app-btn gold" data-toggle-form="courseFormBox"><i class="fa-solid fa-plus"></i> Add Course</button></div>
+        <div class="app-modal course-form-modal" id="courseFormBox" aria-hidden="true">
+          <div class="app-modal-card course-form-card extra-large">
+            <div class="app-modal-head"><div><h3 id="courseFormTitle">Add Course</h3><small class="muted">Course details, sessions and structure</small></div><button type="button" class="modal-close" data-cancel-form="courseFormBox" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div>
+            <form id="courseForm"><input type="hidden" name="id"><input type="hidden" name="existing_thumbnail_url">
+              <div class="app-modal-body course-modal-body"><div class="form-grid compact-course-grid">
+                <div class="form-field"><label>Course Heading</label><input name="title" required placeholder="Forex Live Masterclass"></div>
+                <div class="form-field"><label>Instructor</label><input name="instructor_name" value="Malik Zameer" readonly></div>
+                <div class="form-field full"><label>Short Caption</label><textarea name="short_description" maxlength="220" required placeholder="One short line explaining what students will learn."></textarea></div>
+                <div class="form-field"><label>Course Type</label><select name="course_type"><option value="paid">Paid</option><option value="free">Free</option></select></div>
+                <div class="form-field"><label>Course Status</label><select name="status"><option value="upcoming">Upcoming</option><option value="active">Active</option><option value="completed">Completed</option><option value="draft">Draft</option></select></div>
+                <div class="form-field"><label>Regular Price</label><input type="number" min="0" step="0.01" name="price" value="0" required></div>
+                <div class="form-field"><label>Discount Price <span class="muted">(optional)</span></label><input type="number" min="0" step="0.01" name="discount_price"></div>
+                <div class="form-field"><label>Currency</label><select name="currency"><option>USD</option><option>PKR</option><option>MYR</option></select></div>
+                <div class="form-field"><label>Course Thumbnail <span class="muted">(optional)</span></label><input type="file" name="thumbnail" accept="image/png,image/jpeg,image/webp"></div>
+                <div class="form-field full live-class-form-divider"><span>Online Classes / Sessions</span><small>Add Class 1, Class 2 and more inside this course.</small></div>
+                <div class="form-field full course-session-editor" id="courseSessionEditor">
+                  <article class="course-session-row" data-course-session-row>
+                    <input type="hidden" data-session-field="id" value="">
+                    <div class="course-session-row-head"><b>Class 1</b><button type="button" class="app-btn small danger session-remove-btn" data-remove-course-session title="Remove this class"><i class="fa-solid fa-trash"></i> Remove</button></div>
+                    <div class="form-grid compact-session-grid">
+                      <div class="form-field"><label>Class Title / Number</label><input data-session-field="title" value="Class 1" placeholder="Class 1" required></div>
+                      <div class="form-field"><label>Date & Time (Pakistan Time)</label><input type="datetime-local" data-session-field="starts_at" required></div>
+                      <div class="form-field full"><label>Heading & What Students Will Learn</label><textarea data-session-field="topic" required placeholder="Basics of Forex&#10;• What is Forex trading?&#10;• How currency pairs work"></textarea></div>
+                      <div class="form-field"><label>Duration Minutes</label><input type="number" min="15" data-session-field="duration_minutes" value="90" required></div>
+                      <div class="form-field"><label>Online Class Link</label><input type="url" data-session-field="meet_url" placeholder="https://your-secure-class-link.com/" required></div>
+                    </div>
+                  </article>
+                </div>
+                <div class="form-field full"><button type="button" class="app-btn outline" id="addCourseSessionBtn"><i class="fa-solid fa-plus"></i> Add Another Session</button></div>
+                <input type="hidden" name="slug"><input type="hidden" name="description"><input type="hidden" name="access_days"><input type="hidden" name="start_date"><input type="hidden" name="end_date">
+                <label class="check-row"><input type="checkbox" name="enrollment_open" checked> Enrollment open</label><label class="check-row"><input type="checkbox" name="is_published" checked> Show course to students</label>
               </div>
-            </article>
+              <details class="course-structure-inline" id="courseStructureInline">
+                <summary><span><i class="fa-solid fa-list-check"></i> Course Structure / Modules</span><small>Optional</small></summary>
+                <div class="course-structure-inline-body">
+                  <div class="notice info compact-structure-note"><i class="fa-solid fa-circle-info"></i> For a new course, save it first. Then edit the course and add modules/lessons here.</div>
+                  <div class="course-structure-toolbar"><label>Course<select id="structureCourseFilter"></select></label></div>
+                  <div class="app-grid cols-2 operations-forms compact-structure-forms">
+                    <div class="app-card compact-inner-card"><form id="moduleForm"><input type="hidden" name="id"><h4>Module</h4><div class="form-grid"><div class="form-field full"><label>Course</label><select name="course_id" id="moduleCourse" required></select></div><div class="form-field"><label>Module No.</label><input type="number" min="1" name="module_number" required></div><div class="form-field"><label>Title</label><input name="title" required></div><div class="form-field full"><label>Description</label><textarea name="description"></textarea></div><label class="check-row"><input type="checkbox" name="is_published" checked> Published</label></div><div class="inline-actions"><button class="app-btn outline small" type="button" data-reset-form="moduleForm">Clear</button><button class="app-btn gold small" type="submit">Save Module</button></div></form></div>
+                    <div class="app-card compact-inner-card"><form id="lessonForm"><input type="hidden" name="id"><h4>Lesson</h4><div class="form-grid"><div class="form-field"><label>Course</label><select name="course_id" id="lessonCourse" required></select></div><div class="form-field"><label>Module</label><select name="module_id" id="lessonModule" required></select></div><div class="form-field"><label>Lesson No.</label><input type="number" min="1" name="lesson_number" required></div><div class="form-field"><label>Type</label><select name="lesson_type" id="lessonType"><option value="live_class">Live Online Class</option><option value="text">Text Lesson</option></select></div><div class="form-field full"><label>Lesson Title</label><input name="title" required></div><div class="form-field full"><label>Description</label><textarea name="description"></textarea></div><div class="form-field full v9-session-link"><label>Online Class Session</label><select name="course_session_id" id="lessonSession"><option value="">Select session</option></select></div><div class="form-field full v9-text-link hidden"><label>Text Content</label><textarea name="text_content"></textarea></div><label class="check-row"><input type="checkbox" name="is_published" checked> Published</label></div><div class="inline-actions"><button class="app-btn outline small" type="button" data-reset-form="lessonForm">Clear</button><button class="app-btn gold small" type="submit">Save Lesson</button></div></form></div>
+                  </div>
+                  <div class="app-card compact-inner-card structure-inline-list"><div id="structureList"></div></div>
+                </div>
+              </details>
+              <div class="notice info course-access-note">The class schedule is visible to everyone, but the online class link unlocks only after free enrollment or approved payment.</div></div>
+              <div class="app-modal-foot"><button type="button" class="app-btn outline" data-cancel-form="courseFormBox">Cancel</button><button class="app-btn gold" type="submit">Save Course & All Sessions</button></div>
+            </form>
           </div>
-          <div class="form-field full"><button type="button" class="app-btn outline" id="addCourseSessionBtn"><i class="fa-solid fa-plus"></i> Add Another Session</button></div>
-          <input type="hidden" name="slug"><input type="hidden" name="description"><input type="hidden" name="access_days"><input type="hidden" name="start_date"><input type="hidden" name="end_date">
-          <label class="check-row"><input type="checkbox" name="enrollment_open" checked> Enrollment open</label><label class="check-row"><input type="checkbox" name="is_published" checked> Show course to students</label>
-        </div><div class="notice info">The class schedule is visible to everyone, but the online class link unlocks only after free enrollment or approved payment.</div><div class="inline-actions"><button type="button" class="app-btn outline" data-cancel-form="courseFormBox">Cancel</button><button class="app-btn gold" type="submit">Save Course & All Sessions</button></div></form></div>
+        </div>
         <div class="table-scroll"><table class="admin-table"><thead><tr><th>Course</th><th>Price</th><th>Status</th><th>Next Class</th><th>Online Class Link</th><th>Published</th><th>Actions</th></tr></thead><tbody id="coursesBody"></tbody></table></div>
       </section>
 
@@ -168,12 +186,6 @@
         <div class="panel-heading"><div><h2>Online Class Sessions</h2><p>Add session title, topic, date, time and private online class link in advance.</p></div><button class="app-btn gold" data-toggle-form="sessionFormBox"><i class="fa-solid fa-plus"></i> Schedule Session</button></div>
         <div class="app-card admin-form-box" id="sessionFormBox"><form id="sessionForm"><input type="hidden" name="id"><div class="form-grid"><div class="form-field"><label>Course</label><select name="course_id" id="sessionCourseSelect" required></select></div><div class="form-field"><label>Session Number</label><input type="number" min="1" name="session_number" required></div><div class="form-field"><label>Session Title</label><input name="title" required></div><div class="form-field"><label>Status</label><select name="status"><option value="upcoming">Upcoming</option><option value="live">Live</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option></select></div><div class="form-field full"><label>Class Topic</label><textarea name="topic" required></textarea></div><div class="form-field"><label>Date & Time (PKT)</label><input type="datetime-local" name="starts_at" required></div><div class="form-field"><label>Duration Minutes</label><input type="number" min="15" name="duration_minutes" value="90" required></div><div class="form-field full"><label>Online Class Link</label><input type="url" name="meet_url" placeholder="https://your-secure-class-link.com/" required></div></div><div class="notice info">Students can see the schedule, but this online class link is returned only to students with an active approved enrollment.</div><div class="inline-actions"><button type="button" class="app-btn outline" data-cancel-form="sessionFormBox">Cancel</button><button class="app-btn gold" type="submit">Save Session</button></div></form></div>
         <div class="table-scroll"><table class="admin-table"><thead><tr><th>#</th><th>Course</th><th>Session</th><th>Date & Time</th><th>Duration</th><th>Status</th><th>Online Class Link</th><th>Actions</th></tr></thead><tbody id="sessionsBody"></tbody></table></div>
-      </section>
-
-      <section class="panel" id="p-resources">
-        <div class="panel-heading"><div><h2>Course Resources</h2><p>Optional PDF, notes or homework files controlled from Admin.</p></div><button class="app-btn gold" data-toggle-form="resourceFormBox"><i class="fa-solid fa-upload"></i> Upload Resource</button></div>
-        <div class="app-card admin-form-box" id="resourceFormBox"><form id="resourceForm"><div class="form-grid"><div class="form-field"><label>Course</label><select name="course_id" id="resourceCourseSelect" required></select></div><div class="form-field"><label>Session (optional)</label><select name="course_session_id" id="resourceSessionSelect"><option value="">General Course Resource</option></select></div><div class="form-field"><label>Title</label><input name="title" required></div><div class="form-field"><label>File</label><input type="file" name="file" required></div><div class="form-field full"><label>Description</label><textarea name="description"></textarea></div></div><div class="inline-actions"><button type="button" class="app-btn outline" data-cancel-form="resourceFormBox">Cancel</button><button class="app-btn gold" type="submit">Upload Resource</button></div></form></div>
-        <div class="app-card"><div id="adminResources"></div></div>
       </section>
 
       <section class="panel" id="p-payments">
@@ -203,7 +215,6 @@
 
 <div class="app-modal" id="receiptPreviewModal"><div class="app-modal-card receipt-preview-card"><div class="app-modal-head"><div><h3>Payment Receipt</h3><small id="receiptPreviewSubtitle" class="muted">Secure temporary preview</small></div><button class="modal-close" data-close-modal="receiptPreviewModal"><i class="fa-solid fa-xmark"></i></button></div><div class="app-modal-body"><div id="receiptPreviewContent" class="receipt-preview-content"></div></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="receiptPreviewModal">Close</button><a id="receiptOpenExternal" class="app-btn gold" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Full Size</a></div></div></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js?v=9.20"></script><script src="assets/js/core.js?v=9.18"></script><script src="assets/js/admin.js?v=9.25"></script><script src="assets/js/platform-v8-admin.js?v=9.30"></script>
-<script src="assets/js/admin-dashboard-analytics.js?v=9.30"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js?v=9.20"></script><script src="assets/js/core.js?v=9.18"></script><script src="assets/js/admin.js?v=9.31"></script><script src="assets/js/platform-v8-admin.js?v=9.31"></script>
 </body>
 </html>

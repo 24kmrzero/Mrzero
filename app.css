@@ -1801,3 +1801,74 @@ html[data-theme="light"] #p-dashboard .v929-custom input{background:#fffdf8;bord
 #p-dashboard .analytics-pie-legend.professional{align-content:center}
 #p-dashboard .analytics-pie-legend.professional>div:not(.analytics-mini-total){min-height:42px}
 @media (min-width:1180px) and (max-height:820px){#p-dashboard .analytics-donut-center span{font-size:6px;max-width:56px}}
+
+
+/* V9.31 — consolidated course/student/calendar workflow */
+.app-logo-home{display:flex;align-items:center;justify-content:center;width:100%;height:100%;text-decoration:none}
+.app-logo-home img{display:block;max-width:100%}
+
+/* Compact Add/Edit Course modal */
+#courseFormBox.course-form-modal{z-index:235}
+#courseFormBox .course-form-card{width:min(1040px,96vw);max-height:92vh}
+#courseFormBox .app-modal-head{padding:13px 17px}
+#courseFormBox .app-modal-head h3{font-size:18px}
+#courseFormBox .course-modal-body{padding:14px 17px}
+#courseFormBox .compact-course-grid{gap:9px 11px}
+#courseFormBox .form-field{gap:4px}
+#courseFormBox .form-field label{font-size:9px}
+#courseFormBox input,#courseFormBox select,#courseFormBox textarea{min-height:36px;padding:8px 10px;font-size:10px;border-radius:9px}
+#courseFormBox textarea{min-height:58px}
+#courseFormBox .live-class-form-divider{margin-top:2px;padding:8px 10px}
+#courseFormBox .course-session-editor{gap:8px}
+#courseFormBox .course-session-row{padding:10px;border-radius:11px}
+#courseFormBox .course-session-row-head{margin-bottom:8px}
+#courseFormBox .compact-session-grid{gap:8px 10px}
+#courseFormBox .app-modal-foot{padding:10px 17px}
+#courseFormBox .app-modal-foot .app-btn{min-height:36px;padding:8px 13px;font-size:10px}
+.course-structure-inline{margin-top:10px;border:1px solid var(--app-line);border-radius:12px;overflow:hidden;background:rgba(255,255,255,.02)}
+.course-structure-inline summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;font-size:11px;font-weight:800;color:#ddd}
+.course-structure-inline summary::-webkit-details-marker{display:none}
+.course-structure-inline summary small{color:var(--app-gold);font-size:8px;text-transform:uppercase;letter-spacing:.8px}
+.course-structure-inline-body{padding:0 12px 12px;border-top:1px solid var(--app-line)}
+.compact-structure-note{margin:10px 0;font-size:9px}
+.course-structure-toolbar{display:flex;justify-content:flex-end;margin-bottom:8px}.course-structure-toolbar label{display:flex;align-items:center;gap:8px;font-size:9px}.course-structure-toolbar select{min-width:210px}
+.compact-structure-forms{gap:10px}.compact-inner-card{padding:10px 11px;border-radius:10px}.compact-inner-card h4{margin:0 0 8px;font-size:12px}.structure-inline-list{margin-top:10px;max-height:220px;overflow:auto}
+.course-access-note{margin:10px 0 0}
+
+/* Student management filters and summary */
+.student-summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.student-summary-card{display:flex;align-items:center;gap:10px;padding:12px 13px;border:1px solid var(--app-line);border-radius:13px;background:#11110f}
+.student-summary-card>span{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:rgba(246,197,47,.1);color:var(--app-gold)}
+.student-summary-card b{display:block;font:800 20px/1 'Sora';color:#fff}.student-summary-card small{display:block;margin-top:4px;color:#89867f;font-size:9px}
+.student-summary-card.green>span{color:#48c77d;background:rgba(72,199,125,.1)}.student-summary-card.blue>span{color:#7894ff;background:rgba(120,148,255,.1)}
+.student-filter-toolbar{display:grid;gap:8px;margin-bottom:11px}.student-date-buttons{display:flex;flex-wrap:wrap;gap:6px}
+.student-date-btn{border:1px solid var(--app-line);background:#11110f;color:#96938b;border-radius:999px;padding:7px 11px;font-size:9px;font-weight:800;cursor:pointer}
+.student-date-btn.active{background:var(--app-gold);border-color:var(--app-gold);color:#111}
+.student-custom-dates{display:flex;gap:8px}.student-custom-dates input{max-width:180px}
+.student-main-filters{margin:0;grid-template-columns:minmax(220px,1.4fr) repeat(3,minmax(150px,.7fr))}
+.student-management-table td small{display:block;margin-top:3px;color:#777;font-size:8px}.student-management-table .table-actions{flex-wrap:nowrap}
+
+/* Light calendar must be truly light */
+html[data-theme="light"] #p-calendar .admin-calendar{background:#fffdf8;border-color:#e3d9cb}
+html[data-theme="light"] #p-calendar .calendar-weekdays{background:#f6efe4;border-color:#e4d9c9}
+html[data-theme="light"] #p-calendar .calendar-weekdays span{color:#6e6459}
+html[data-theme="light"] #p-calendar .calendar-cell{background:#fffdf8;border-color:#eadfce;color:#25211d}
+html[data-theme="light"] #p-calendar .calendar-cell:hover{background:#fff7e5;border-color:#d8b54b}
+html[data-theme="light"] #p-calendar .calendar-cell.today{background:#fff4cf;border-color:#d5aa1c;box-shadow:inset 0 0 0 1px rgba(213,170,28,.25)}
+html[data-theme="light"] #p-calendar .calendar-cell.muted-cell{background:#f7f1e8}
+html[data-theme="light"] #p-calendar .calendar-cell small{color:#7c7267}
+html[data-theme="light"] #p-calendar .calendar-legend{color:#625a51}
+html[data-theme="light"] #calendarDayModal .activity-item{background:#fffaf1;border-color:#e7dccd}
+html[data-theme="light"] #calendarDayModal .activity-item b{color:#211d18}
+html[data-theme="light"] #calendarDayModal .activity-item small{color:#746a60}
+
+html[data-theme="light"] .course-structure-inline{background:#fffaf1;border-color:#e5dacb}
+html[data-theme="light"] .course-structure-inline summary{color:#211d18}
+html[data-theme="light"] .student-summary-card{background:#fffdf8;border-color:#e5dacb}
+html[data-theme="light"] .student-summary-card b{color:#211d18}
+html[data-theme="light"] .student-summary-card small{color:#746a60}
+html[data-theme="light"] .student-date-btn{background:#fffdf8;border-color:#e5dacb;color:#62594f}
+html[data-theme="light"] .student-date-btn.active{background:#efb914;border-color:#efb914;color:#1a160d}
+
+@media(max-width:1100px){.student-summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.student-main-filters{grid-template-columns:1fr 1fr}.compact-structure-forms{grid-template-columns:1fr}}
+@media(max-width:700px){#courseFormBox .compact-course-grid,#courseFormBox .compact-session-grid{grid-template-columns:1fr}.student-summary-grid{grid-template-columns:1fr 1fr}.student-main-filters{grid-template-columns:1fr}.student-date-buttons{overflow-x:auto;flex-wrap:nowrap;padding-bottom:3px}.student-date-btn{white-space:nowrap}.student-custom-dates{display:grid;grid-template-columns:1fr 1fr}.student-management-table .table-actions{flex-wrap:wrap}}
