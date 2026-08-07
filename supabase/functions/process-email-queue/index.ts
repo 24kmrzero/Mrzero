@@ -36,13 +36,13 @@ function template(row: QueueRow) {
 
 
   const sessions = Array.isArray(payload.sessions) ? payload.sessions as Array<Record<string, unknown>> : [];
-  const sessionSchedule = sessions.length ? `<div style="margin-top:18px"><strong style="color:#ffc107">Class Schedule & Google Meet Links</strong>${sessions.map((item) => {
+  const sessionSchedule = sessions.length ? `<div style="margin-top:18px"><strong style="color:#ffc107">Class Schedule & Online Class Access</strong>${sessions.map((item) => {
     const title = escapeHtml(item.title || `Session ${item.session_number || ''}`);
     const topic = item.topic ? `<div style="color:#aaa;font-size:13px;margin-top:3px">${escapeHtml(item.topic)}</div>` : "";
     const starts = item.starts_at ? new Date(String(item.starts_at)).toLocaleString("en-PK", { timeZone: "Asia/Karachi", dateStyle: "medium", timeStyle: "short" }) : "Date to be announced";
     const duration = escapeHtml(item.duration_minutes || 90);
-    const meetUrl = String(item.meet_url || "");
-    const join = meetUrl ? `<a href="${escapeHtml(meetUrl)}" style="display:inline-block;margin-top:10px;background:#ffc107;color:#090909;text-decoration:none;font-weight:800;padding:9px 14px;border-radius:8px">Join Google Meet</a>` : `<div style="margin-top:8px;color:#999">Meet link will be added soon.</div>`;
+    const classUrl = String(item.class_url || item.meet_url || "");
+    const join = classUrl ? `<a href="${escapeHtml(classUrl)}" style="display:inline-block;margin-top:10px;background:#ffc107;color:#090909;text-decoration:none;font-weight:800;padding:9px 14px;border-radius:8px">Open Online Class</a>` : `<div style="margin-top:8px;color:#999">Online class link will be added soon.</div>`;
     return `<div style="margin-top:12px;padding:14px;border:1px solid #3e3412;border-radius:10px;background:#0c0c0c"><strong>${title}</strong><div style="margin-top:5px;color:#ccc">${escapeHtml(starts)} PKT · ${duration} minutes</div>${topic}${join}</div>`;
   }).join("")}</div>` : "";
 
@@ -50,7 +50,7 @@ function template(row: QueueRow) {
   let body = "Your 24K Excellence account has an update.";
   if (row.template_key === "course_enrollment") {
     heading = "Course Enrollment Confirmed";
-    body = `Your enrollment in <strong>${course}</strong> is confirmed. Your current class schedule and Google Meet links are below.${sessionSchedule}`;
+    body = `Your enrollment in <strong>${course}</strong> is confirmed. Your current class schedule and online class access are below.${sessionSchedule}`;
   } else if (row.template_key === "payment_received") {
     heading = "Payment Receipt Received";
     body = `We received your payment proof for <strong>${course}</strong>. Admin review is pending.`;
@@ -59,7 +59,7 @@ function template(row: QueueRow) {
     body = `Your payment for <strong>${course}</strong> is under review.`;
   } else if (row.template_key === "payment_approved") {
     heading = "Payment Approved";
-    body = `Your payment for <strong>${course}</strong> has been approved. Course access and Google Meet links are now unlocked.${sessionSchedule}`;
+    body = `Your payment for <strong>${course}</strong> has been approved. Course and online class access are now unlocked.${sessionSchedule}`;
   } else if (row.template_key === "payment_declined") {
     const note = payload.admin_note ? `<br><br><strong>Admin note:</strong> ${escapeHtml(payload.admin_note)}` : "";
     heading = "Payment Declined";
@@ -78,7 +78,7 @@ function template(row: QueueRow) {
     body = `Your account status is now <strong>${status}</strong>. Open your Student Panel for details.`;
   }
 
-  const siteUrl = Deno.env.get("SITE_URL") || "https://24kmrzero.github.io/Mrzero";
+  const siteUrl = Deno.env.get("SITE_URL") || "https://www.24kmrzero.com";
   return `<!doctype html><html><body style="margin:0;background:#080808;color:#f5f5f5;font-family:Arial,sans-serif"><div style="max-width:620px;margin:auto;padding:28px 18px"><div style="border:1px solid #5b4912;background:#111;border-radius:16px;overflow:hidden"><div style="padding:22px;background:linear-gradient(135deg,#17130a,#080808);border-bottom:1px solid #5b4912"><div style="font-size:12px;letter-spacing:.18em;color:#ffc107;font-weight:800">24K EXCELLENCE</div><h1 style="margin:9px 0 0;font-size:25px;color:#fff">${escapeHtml(heading)}</h1></div><div style="padding:24px;line-height:1.7;color:#d6d6d6">${body}<div style="margin-top:24px"><a href="${escapeHtml(siteUrl)}/student-dashboard.html" style="display:inline-block;background:#ffc107;color:#090909;text-decoration:none;font-weight:800;padding:12px 18px;border-radius:9px">Open Student Panel</a></div></div><div style="padding:16px 24px;border-top:1px solid #272727;color:#888;font-size:12px">Trading involves financial risk. Content is for educational purposes and does not guarantee profit.</div></div></div></body></html>`;
 }
 
@@ -96,7 +96,7 @@ Deno.serve(async (req) => {
       } catch { /* legacy secret below will be used when available */ }
     }
     const resendKey = Deno.env.get("RESEND_API_KEY");
-    const emailFrom = Deno.env.get("EMAIL_FROM") || "24K Excellence <no-reply@example.com>";
+    const emailFrom = Deno.env.get("EMAIL_FROM") || "24K Excellence <no-reply@24kmrzero.com>";
     const queueSecret = Deno.env.get("EMAIL_QUEUE_SECRET");
     if (!supabaseUrl || !serviceRole) throw new Error("Supabase function secrets are incomplete.");
     if (!resendKey) throw new Error("RESEND_API_KEY is not configured.");

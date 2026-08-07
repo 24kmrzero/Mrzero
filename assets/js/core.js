@@ -1,6 +1,45 @@
 (function () {
   'use strict';
 
+  const THEME_KEY = '24k-excellence-theme';
+
+  function currentTheme() {
+    try { return localStorage.getItem(THEME_KEY) === 'light' ? 'light' : 'dark'; }
+    catch { return document.documentElement.dataset.theme === 'light' ? 'light' : 'dark'; }
+  }
+
+  function applyTheme(theme, persist = true) {
+    const next = theme === 'light' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    if (persist) {
+      try { localStorage.setItem(THEME_KEY, next); } catch {}
+    }
+    const light = next === 'light';
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', light ? '#F6F7F9' : '#0A0A0A');
+    document.querySelectorAll('[data-theme-toggle]').forEach(button => {
+      button.setAttribute('aria-label', light ? 'Switch to dark theme' : 'Switch to light theme');
+      button.setAttribute('title', light ? 'Switch to dark theme' : 'Switch to light theme');
+      button.innerHTML = `<i class="fa-solid ${light ? 'fa-moon' : 'fa-sun'}"></i>`;
+      button.classList.toggle('is-light', light);
+    });
+    document.dispatchEvent(new CustomEvent('theme:change', { detail: { theme: next } }));
+    return next;
+  }
+
+  function initTheme() {
+    applyTheme(currentTheme(), false);
+    if (document.documentElement.dataset.themeBound) return;
+    document.documentElement.dataset.themeBound = '1';
+    document.addEventListener('click', event => {
+      const button = event.target.closest('[data-theme-toggle]');
+      if (!button) return;
+      event.preventDefault();
+      applyTheme(currentTheme() === 'light' ? 'dark' : 'light');
+    });
+  }
+
+  initTheme();
+
   const cfg = window.APP_CONFIG || {};
   const configured = Boolean(
     cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY &&
@@ -276,9 +315,23 @@
 
   async function getCurrentUser() {
     if (!configured || !supabase) throw new Error('Supabase is not configured. Add the project URL and publishable key in assets/js/config.js.');
+
+    // Read the persisted local session first. This prevents a normal page refresh
+    // from being treated as a logout while Supabase is restoring/refreshing tokens.
+    const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError && !/session.*missing/i.test(sessionError.message || '')) throw sessionError;
+    if (!sessionData?.session?.user) return null;
+
+    // Validate with the server when possible. If the network/token refresh is briefly
+    // unavailable, keep the valid persisted user instead of forcing a logout.
     const { data, error } = await supabase.auth.getUser();
-    if (error && !/session.*missing/i.test(error.message || '')) throw error;
-    return data?.user || null;
+    if (error) {
+      const message = String(error.message || '');
+      if (/session.*missing|refresh token.*not found|invalid refresh token/i.test(message)) return null;
+      console.warn('Session validation temporarily unavailable; using persisted session:', message);
+      return sessionData.session.user;
+    }
+    return data?.user || sessionData.session.user;
   }
 
   async function getProfile(userId) {
@@ -328,6 +381,7 @@
     cfg, configured, supabase, authScope, authStorageKey, escapeHtml, formatMoney, formatDate, formatDateTime,
     statusLabel, statusClass, effectiveAccessStatus, friendlyError, toast, setLoading,
     openModal, closeModal, confirmAction, activateDashboardNavigation,
+    currentTheme, applyTheme, initTheme,
     getCurrentUser, getProfile, requireRole, logout, hashFile, fileSafeName, uid
   };
 })();
