@@ -1134,3 +1134,35 @@ html[data-theme="light"] #p-dashboard .analytics-change.neutral{color:#8b6500;ba
 @media(max-width:1250px){#p-dashboard .dashboard-business-grid{grid-template-columns:minmax(0,1fr) minmax(380px,.82fr)}}
 @media(max-width:1050px){#p-dashboard .dashboard-business-grid{grid-template-columns:1fr}#p-dashboard .dashboard-analytics-column{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){#p-dashboard .dashboard-analytics-column{grid-template-columns:1fr}#p-dashboard .analytics-performance-row{grid-template-columns:auto 1fr}#p-dashboard .analytics-performance-row small{grid-column:1/-1}#p-dashboard .analytics-trend-svg{height:145px}}
+
+
+/* V9.21 — round analytics charts matching the requested pie-chart style */
+#p-dashboard .analytics-trend-chart.round{min-height:220px;display:flex;align-items:center;justify-content:center;padding:14px;background:linear-gradient(180deg,rgba(246,197,47,.035),rgba(255,255,255,.01))}
+#p-dashboard .analytics-round-chart{width:100%;display:grid;grid-template-columns:minmax(170px,220px) minmax(0,1fr);align-items:center;justify-content:center;gap:22px;max-width:430px;margin:0 auto}
+#p-dashboard .analytics-pie{width:190px;aspect-ratio:1;border-radius:50%;position:relative;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 16px 35px -24px rgba(0,0,0,.65);justify-self:center}
+#p-dashboard .analytics-pie:after{content:"";position:absolute;inset:0;border-radius:50%;box-shadow:inset 0 0 24px rgba(0,0,0,.08);pointer-events:none}
+#p-dashboard .analytics-pie .pie-label{position:absolute;z-index:2;display:grid;place-items:center;min-width:42px;height:28px;padding:0 7px;border-radius:999px;background:rgba(10,10,9,.82);border:1px solid rgba(255,255,255,.1);color:#fff;font:800 10px/1 'Sora';box-shadow:0 6px 16px rgba(0,0,0,.24)}
+#p-dashboard .analytics-pie .pie-label.current{left:18px;top:50%;transform:translateY(-50%)}
+#p-dashboard .analytics-pie .pie-label.previous{right:18px;top:50%;transform:translateY(-50%)}
+#p-dashboard .analytics-pie .pie-empty{position:absolute;inset:0;display:grid;place-items:center;color:#8d8a82;font:800 28px/1 'Sora'}
+#p-dashboard .analytics-pie-legend{display:grid;gap:11px;min-width:0}
+#p-dashboard .analytics-pie-legend>div{display:grid;grid-template-columns:12px minmax(0,1fr) auto;align-items:center;gap:9px;padding:9px 10px;border-radius:10px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.055);color:#9b988f;font-size:10px}
+#p-dashboard .analytics-pie-legend b{font:800 14px/1 'Sora';color:#fff}
+#p-dashboard .pie-swatch{width:10px;height:10px;border-radius:50%;display:block}
+#p-dashboard .analytics-round-chart.users .pie-swatch.current{background:#e9b415}
+#p-dashboard .analytics-round-chart.users .pie-swatch.previous{background:#4e6bd8}
+#p-dashboard .analytics-round-chart.courses .pie-swatch.current{background:#38b86f}
+#p-dashboard .analytics-round-chart.courses .pie-swatch.previous{background:#e9b415}
+#p-dashboard .analytics-performance-row{border-top:1px solid rgba(255,255,255,.055);padding-top:10px}
+
+html[data-theme="light"] #p-dashboard .analytics-trend-chart.round{background:linear-gradient(180deg,#fffaf1,#fbf3e7);border-color:rgba(90,65,34,.13)}
+html[data-theme="light"] #p-dashboard .analytics-pie{box-shadow:inset 0 0 0 1px rgba(85,63,35,.08),0 16px 30px -24px rgba(74,52,25,.38)}
+html[data-theme="light"] #p-dashboard .analytics-pie .pie-label{background:rgba(255,253,248,.92);border-color:rgba(76,57,32,.15);color:#241e16;box-shadow:0 5px 15px rgba(75,54,28,.13)}
+html[data-theme="light"] #p-dashboard .analytics-pie .pie-empty{color:#8a7f72}
+html[data-theme="light"] #p-dashboard .analytics-pie-legend>div{background:#fffdf8;border-color:rgba(80,60,35,.12);color:#665d53}
+html[data-theme="light"] #p-dashboard .analytics-pie-legend b{color:#1e1a16}
+html[data-theme="light"] #p-dashboard .analytics-performance-row{border-top-color:rgba(80,60,35,.1)}
+
+@media(max-width:1250px){#p-dashboard .analytics-round-chart{grid-template-columns:160px minmax(0,1fr);gap:16px}#p-dashboard .analytics-pie{width:160px}}
+@media(max-width:1050px){#p-dashboard .analytics-round-chart{grid-template-columns:150px minmax(0,1fr)}#p-dashboard .analytics-pie{width:150px}}
+@media(max-width:760px){#p-dashboard .analytics-round-chart{grid-template-columns:1fr;gap:14px}#p-dashboard .analytics-pie{width:min(190px,70vw)}#p-dashboard .analytics-pie-legend{width:100%}}

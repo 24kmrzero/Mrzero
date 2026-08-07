@@ -679,31 +679,27 @@
     return { period, buckets, current, previous, change: rounded };
   }
 
-  function analyticsLineSvg(buckets, target) {
-    const width = 520;
-    const height = 160;
-    const left = 18;
-    const right = 12;
-    const top = 14;
-    const bottom = 28;
-    const innerWidth = width - left - right;
-    const innerHeight = height - top - bottom;
-    const max = Math.max(1, ...buckets.map(item => item.value));
-    const denominator = Math.max(1, buckets.length - 1);
-    const points = buckets.map((item, index) => {
-      const x = left + (innerWidth * index / denominator);
-      const y = top + innerHeight - ((item.value / max) * innerHeight);
-      return { x, y, value: item.value, label: item.label };
-    });
-    const pointString = points.map(point => `${point.x.toFixed(1)},${point.y.toFixed(1)}`).join(' ');
-    const area = `${left},${top + innerHeight} ${pointString} ${left + innerWidth},${top + innerHeight}`;
-    const grid = [0, .5, 1].map(ratio => {
-      const y = top + (innerHeight * ratio);
-      return `<line x1="${left}" y1="${y}" x2="${left + innerWidth}" y2="${y}" class="trend-grid-line" />`;
-    }).join('');
-    const dots = points.map(point => `<g class="trend-dot"><circle cx="${point.x}" cy="${point.y}" r="4"></circle><title>${esc(point.label)}: ${point.value}</title></g>`).join('');
-    const labels = points.map(point => `<text x="${point.x}" y="${height - 7}" text-anchor="middle">${esc(point.label)}</text>`).join('');
-    return `<svg class="analytics-trend-svg ${target}" viewBox="0 0 ${width} ${height}" role="img" aria-label="${target === 'users' ? 'User growth' : 'Course enrollment'} trend">${grid}<polygon points="${area}" class="trend-area"></polygon><polyline points="${pointString}" class="trend-line"></polyline>${dots}${labels}</svg>`;
+  function analyticsPieHtml(series, target) {
+    const current = Math.max(0, Number(series.current || 0));
+    const previous = Math.max(0, Number(series.previous || 0));
+    const total = current + previous;
+    const currentPct = total > 0 ? (current / total) * 100 : 0;
+    const previousPct = total > 0 ? 100 - currentPct : 0;
+    const chartLabel = target === 'users' ? 'User registrations comparison' : 'Course enrollments comparison';
+    const currentTone = target === 'users' ? '#e9b415' : '#38b86f';
+    const previousTone = target === 'users' ? '#4e6bd8' : '#e9b415';
+    const bg = total > 0
+      ? `conic-gradient(${currentTone} 0 ${currentPct.toFixed(2)}%, ${previousTone} ${currentPct.toFixed(2)}% 100%)`
+      : 'conic-gradient(#d8d0c5 0 100%)';
+    return `<div class="analytics-round-chart ${target}" role="img" aria-label="${chartLabel}">
+      <div class="analytics-pie" style="background:${bg}">
+        ${total > 0 ? `<span class="pie-label current">${Math.round(currentPct)}%</span><span class="pie-label previous">${Math.round(previousPct)}%</span>` : '<span class="pie-empty">0</span>'}
+      </div>
+      <div class="analytics-pie-legend">
+        <div><span class="pie-swatch current"></span><span>Selected period</span><b>${current}</b></div>
+        <div><span class="pie-swatch previous"></span><span>Previous period</span><b>${previous}</b></div>
+      </div>
+    </div>`;
   }
 
   function analyticsComparisonText(range) {
@@ -731,7 +727,7 @@
       <div class="analytics-head trend-head"><div><span class="analytics-eyebrow">${eyebrow}</span><h3><i class="fa-solid ${icon}"></i> ${title}</h3><p>${subtitle} · ${labelText}</p></div><div class="trend-total"><b>${series.current}</b><small>Total</small></div></div>
       <div class="analytics-range-row">${filterButtons}</div>
       ${custom}
-      <div class="analytics-trend-chart">${analyticsLineSvg(series.buckets, target)}</div>
+      <div class="analytics-trend-chart round">${analyticsPieHtml(series, target)}</div>
       <div class="analytics-performance-row"><span class="analytics-change ${changeTone}"><i class="fa-solid ${changeIcon}"></i> ${changeText}</span><span>${analyticsComparisonText(config.range)}</span><small>Previous: ${series.previous}</small></div>
     </section>`;
   }
