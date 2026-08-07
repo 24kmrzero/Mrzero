@@ -1723,3 +1723,61 @@ body:has(#signalFormBox.open){overflow:hidden}
 html[data-theme=light] #signalFormBox.signal-create-modal{background:rgba(50,42,28,.35)}
 html[data-theme=light] #signalFormBox .signal-create-card{background:linear-gradient(155deg,#fffdf9,#f8f0e4)}
 @media(max-width:700px){#signalFormBox.signal-create-modal{padding:0;align-items:flex-end}#signalFormBox .signal-create-card{width:100%;max-height:94vh;border-radius:18px 18px 0 0}#signalFormBox .signal-popup-grid{grid-template-columns:1fr}#signalFormBox .signal-calculation-preview.compact-popup{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+
+/* V9.26 — New Signal modal light-theme contrast/readability fix */
+html[data-theme="light"] #signalFormBox .app-modal-head h3,
+html[data-theme="light"] #signalFormBox .app-modal-head small,
+html[data-theme="light"] #signalFormBox .signal-popup-grid label,
+html[data-theme="light"] #signalFormBox .signal-publish-check,
+html[data-theme="light"] #signalFormBox .signal-publish-check span,
+html[data-theme="light"] #signalFormBox .check-row{
+  color:#332d25 !important;
+}
+html[data-theme="light"] #signalFormBox .app-modal-head small{
+  color:#756b60 !important;
+}
+html[data-theme="light"] #signalFormBox .signal-popup-grid input,
+html[data-theme="light"] #signalFormBox .signal-popup-grid select,
+html[data-theme="light"] #signalFormBox .signal-popup-grid textarea,
+html[data-theme="light"] #signalFormBox .instrument-picker>input[type="search"]{
+  color:#29241e !important;
+  background:#fffdf9 !important;
+  border-color:#d9cdbd !important;
+}
+html[data-theme="light"] #signalFormBox .signal-popup-grid input::placeholder,
+html[data-theme="light"] #signalFormBox .signal-popup-grid textarea::placeholder,
+html[data-theme="light"] #signalFormBox .instrument-picker>input[type="search"]::placeholder{
+  color:#8a8177 !important;
+  opacity:1;
+}
+html[data-theme="light"] #signalFormBox .signal-calculation-preview.compact-popup>div{
+  background:#fffaf0 !important;
+  border-color:#ded0bd !important;
+  box-shadow:0 4px 12px -12px rgba(77,55,25,.35);
+}
+html[data-theme="light"] #signalFormBox .signal-calculation-preview.compact-popup small{
+  color:#70665b !important;
+  font-weight:800;
+}
+html[data-theme="light"] #signalFormBox .signal-calculation-preview.compact-popup b{
+  color:#211d18 !important;
+  background:transparent !important;
+  text-shadow:none !important;
+}
+html[data-theme="light"] #signalFormBox .signal-calculation-preview.compact-popup>div:nth-child(2) b,
+html[data-theme="light"] #signalFormBox .signal-calculation-preview.compact-popup>div:nth-child(3) b,
+html[data-theme="light"] #signalFormBox .signal-calculation-preview.compact-popup>div:nth-child(4) b{
+  color:#916700 !important;
+}
+html[data-theme="light"] #signalFormBox .signal-calculation-preview.compact-popup>div:nth-child(5) b{
+  color:#2e5a3b !important;
+}
+html[data-theme="light"] #signalFormBox .signal-publish-check input,
+html[data-theme="light"] #signalFormBox .check-row input{
+  accent-color:#eab713;
+}
+html[data-theme="light"] #signalFormBox .app-modal-foot{
+  background:#fffaf2;
+  border-top-color:#e1d5c5;
+}
