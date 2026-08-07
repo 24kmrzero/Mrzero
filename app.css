@@ -1166,3 +1166,329 @@ html[data-theme="light"] #p-dashboard .analytics-performance-row{border-top-colo
 @media(max-width:1250px){#p-dashboard .analytics-round-chart{grid-template-columns:160px minmax(0,1fr);gap:16px}#p-dashboard .analytics-pie{width:160px}}
 @media(max-width:1050px){#p-dashboard .analytics-round-chart{grid-template-columns:150px minmax(0,1fr)}#p-dashboard .analytics-pie{width:150px}}
 @media(max-width:760px){#p-dashboard .analytics-round-chart{grid-template-columns:1fr;gap:14px}#p-dashboard .analytics-pie{width:min(190px,70vw)}#p-dashboard .analytics-pie-legend{width:100%}}
+
+/* V9.22 — desktop dashboard viewport-fit pass
+   Keep the whole Admin Dashboard visible on a normal desktop/laptop viewport
+   without changing the responsive/mobile layouts or other admin panels. */
+@media (min-width:1180px) and (min-height:720px){
+  .app-content{padding:18px 24px;max-width:1700px}
+
+  #p-dashboard>.panel-heading{margin-bottom:10px}
+  #p-dashboard>.panel-heading h1{font-size:clamp(24px,1.65vw,29px);margin-bottom:2px;line-height:1.08}
+  #p-dashboard>.panel-heading p{font-size:11px;line-height:1.25}
+
+  #p-dashboard #adminKpis.business-summary-grid{
+    grid-template-columns:repeat(6,minmax(0,1fr));
+    gap:9px;
+    margin-bottom:11px;
+  }
+  #p-dashboard .business-summary-card{
+    min-height:76px;
+    padding:10px 11px;
+    border-radius:14px;
+    grid-template-columns:36px minmax(0,1fr) 16px;
+    gap:8px;
+  }
+  #p-dashboard .business-summary-icon{
+    width:36px;height:36px;border-radius:10px;font-size:14px
+  }
+  #p-dashboard .business-summary-copy>b{
+    font-size:19px;line-height:1.05;margin-bottom:3px
+  }
+  #p-dashboard .business-summary-copy small{
+    font-size:9px;line-height:1.15;white-space:normal
+  }
+  #p-dashboard .business-summary-arrow{font-size:9px}
+
+  #p-dashboard .dashboard-business-grid{
+    grid-template-columns:minmax(0,1.08fr) minmax(450px,.92fr);
+    gap:12px;
+    margin-bottom:0;
+    align-items:stretch;
+  }
+  #p-dashboard .dashboard-work-column{
+    gap:12px;
+    grid-template-rows:minmax(138px,.62fr) minmax(250px,1.38fr);
+    min-height:0;
+  }
+  #p-dashboard .dashboard-analytics-column{
+    gap:10px;
+    grid-template-rows:repeat(2,minmax(0,1fr));
+    min-height:0;
+  }
+
+  #p-dashboard .dashboard-action-card{
+    padding:12px 14px;
+    border-radius:14px;
+    min-height:0;
+    margin:0;
+  }
+  #p-dashboard .dashboard-action-card .app-card-head{
+    margin-bottom:8px;gap:10px
+  }
+  #p-dashboard .dashboard-action-card .app-card-head h3{
+    font-size:14px;line-height:1.15
+  }
+  #p-dashboard .dashboard-action-card .app-card-head p{
+    margin-top:2px;font-size:9px;line-height:1.2
+  }
+  #p-dashboard .dashboard-action-card .app-btn.small{
+    min-height:30px;padding:5px 9px;font-size:9px
+  }
+  #p-dashboard .dashboard-action-card .empty-state{
+    padding:18px 10px;border-radius:10px;font-size:10px
+  }
+  #p-dashboard .dashboard-action-card .empty-state i{
+    font-size:21px;margin-bottom:6px
+  }
+
+  #p-dashboard #dashboardSessions .activity-item,
+  #p-dashboard #dashboardPayments .activity-item{
+    padding:7px 0;gap:9px;min-height:0
+  }
+  #p-dashboard #dashboardSessions .activity-icon,
+  #p-dashboard #dashboardPayments .activity-icon{
+    width:31px;height:31px;border-radius:9px;font-size:12px
+  }
+  #p-dashboard #dashboardSessions .activity-item b,
+  #p-dashboard #dashboardPayments .activity-item b{
+    font-size:10px;line-height:1.15
+  }
+  #p-dashboard #dashboardSessions .activity-item small,
+  #p-dashboard #dashboardPayments .activity-item small{
+    font-size:8px;line-height:1.15;margin-top:1px
+  }
+  #p-dashboard #dashboardSessions .status-pill{
+    min-height:21px;padding:3px 7px;font-size:7px
+  }
+  #p-dashboard #dashboardPayments .app-btn.small{
+    min-height:26px;padding:4px 7px;font-size:8px
+  }
+
+  #p-dashboard .trend-analytics-card{
+    padding:10px 11px 8px;
+    border-radius:14px;
+    min-height:0;
+    overflow:hidden;
+  }
+  #p-dashboard .analytics-head.trend-head{
+    margin-bottom:5px;gap:8px
+  }
+  #p-dashboard .analytics-head.trend-head h3{
+    margin:1px 0 1px;font-size:13px;line-height:1.05;gap:5px
+  }
+  #p-dashboard .analytics-head.trend-head h3 i{font-size:11px}
+  #p-dashboard .analytics-head.trend-head p{
+    font-size:8px;line-height:1.15
+  }
+  #p-dashboard .analytics-eyebrow{
+    font-size:7px;letter-spacing:1.2px
+  }
+  #p-dashboard .trend-total{min-width:40px}
+  #p-dashboard .trend-total b{font-size:19px}
+  #p-dashboard .trend-total small{font-size:7px;margin-top:2px}
+
+  #p-dashboard .analytics-range-row{
+    gap:4px;margin:2px 0 5px;flex-wrap:nowrap
+  }
+  #p-dashboard .analytics-range-btn{
+    padding:4px 6px;font-size:7px;white-space:nowrap
+  }
+  #p-dashboard .analytics-custom-range{
+    grid-template-columns:1fr 1fr;gap:5px;margin:0 0 5px
+  }
+  #p-dashboard .analytics-custom-range label{font-size:7px;gap:2px}
+  #p-dashboard .analytics-custom-range input{
+    padding:4px 5px;border-radius:6px;font-size:8px
+  }
+
+  #p-dashboard .analytics-trend-chart.round{
+    min-height:0;
+    height:132px;
+    padding:5px 6px;
+    border-radius:10px;
+  }
+  #p-dashboard .analytics-round-chart{
+    grid-template-columns:112px minmax(0,1fr);
+    gap:10px;
+    max-width:310px;
+  }
+  #p-dashboard .analytics-pie{width:112px}
+  #p-dashboard .analytics-pie .pie-label{
+    min-width:31px;height:21px;padding:0 5px;font-size:7px
+  }
+  #p-dashboard .analytics-pie .pie-label.current{left:9px}
+  #p-dashboard .analytics-pie .pie-label.previous{right:9px}
+  #p-dashboard .analytics-pie .pie-empty{font-size:20px}
+  #p-dashboard .analytics-pie-legend{gap:5px}
+  #p-dashboard .analytics-pie-legend>div{
+    grid-template-columns:8px minmax(0,1fr) auto;
+    gap:5px;
+    padding:5px 6px;
+    border-radius:7px;
+    font-size:7px
+  }
+  #p-dashboard .analytics-pie-legend b{font-size:10px}
+  #p-dashboard .pie-swatch{width:7px;height:7px}
+
+  #p-dashboard .analytics-performance-row{
+    margin-top:5px;
+    padding-top:5px;
+    gap:5px;
+    font-size:7px;
+  }
+  #p-dashboard .analytics-performance-row small{font-size:7px}
+  #p-dashboard .analytics-change{
+    padding:3px 5px;gap:3px;font-size:7px
+  }
+
+  /* Quick actions already exist in the sidebar/content tabs; hiding this duplicate
+     block keeps the complete dashboard visible in one viewport. */
+  #p-dashboard .dashboard-quick-actions{display:none!important}
+}
+
+/* Slightly tighter pass for common 1366×768 / 1440×900 laptop screens. */
+@media (min-width:1180px) and (max-height:820px){
+  .app-content{padding-top:12px;padding-bottom:12px}
+  #p-dashboard>.panel-heading{margin-bottom:7px}
+  #p-dashboard>.panel-heading h1{font-size:24px}
+  #p-dashboard>.panel-heading p{font-size:10px}
+  #p-dashboard #adminKpis.business-summary-grid{margin-bottom:8px;gap:7px}
+  #p-dashboard .business-summary-card{min-height:66px;padding:8px 9px}
+  #p-dashboard .business-summary-icon{width:32px;height:32px}
+  #p-dashboard .business-summary-copy>b{font-size:17px}
+  #p-dashboard .dashboard-business-grid{gap:9px}
+  #p-dashboard .dashboard-work-column{gap:9px;grid-template-rows:minmax(122px,.58fr) minmax(220px,1.42fr)}
+  #p-dashboard .dashboard-analytics-column{gap:8px}
+  #p-dashboard .dashboard-action-card{padding:9px 11px}
+  #p-dashboard .trend-analytics-card{padding:8px 9px 7px}
+  #p-dashboard .analytics-trend-chart.round{height:116px}
+  #p-dashboard .analytics-round-chart{grid-template-columns:98px minmax(0,1fr);max-width:285px}
+  #p-dashboard .analytics-pie{width:98px}
+  #p-dashboard #dashboardSessions .activity-item,
+  #p-dashboard #dashboardPayments .activity-item{padding:5px 0}
+}
+
+/* V9.22 — professional two-tone circular analytics */
+#p-dashboard .analytics-round-chart.professional{
+  grid-template-columns:132px minmax(0,1fr);
+  align-items:center;
+  gap:14px;
+  max-width:360px;
+  margin:0 auto;
+}
+#p-dashboard .analytics-donut-shell{
+  position:relative;
+  width:132px;
+  aspect-ratio:1;
+  display:grid;
+  place-items:center;
+  isolation:isolate;
+}
+#p-dashboard .analytics-donut-shell:before{
+  content:"";
+  position:absolute;
+  inset:10px;
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 28%,rgba(255,255,255,.12),transparent 36%),rgba(255,255,255,.025);
+  border:1px solid rgba(255,255,255,.055);
+  box-shadow:inset 0 0 28px rgba(0,0,0,.22),0 10px 24px -20px rgba(0,0,0,.85);
+  z-index:-1;
+}
+#p-dashboard .analytics-donut-svg{width:100%;height:100%;overflow:visible;transform:rotate(-90deg)}
+#p-dashboard .analytics-donut-svg circle{fill:none;stroke-width:13.5;stroke-linecap:round}
+#p-dashboard .analytics-donut-svg .donut-track{stroke:rgba(255,255,255,.075)}
+#p-dashboard .analytics-donut-svg .donut-segment{transition:stroke-dasharray .45s ease,stroke-dashoffset .45s ease}
+#p-dashboard .analytics-donut-center{
+  position:absolute;
+  inset:50% auto auto 50%;
+  transform:translate(-50%,-50%);
+  width:72px;height:72px;
+  border-radius:50%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:linear-gradient(145deg,#171714,#0e0e0d);
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 8px 20px -16px rgba(0,0,0,.9),inset 0 1px 0 rgba(255,255,255,.04);
+  text-align:center;
+}
+#p-dashboard .analytics-donut-center b{font-family:'Sora';font-size:22px;line-height:1;color:#fff}
+#p-dashboard .analytics-donut-center span{margin-top:4px;color:#8f8d86;font-size:7px;text-transform:uppercase;letter-spacing:.8px;font-weight:800}
+#p-dashboard .analytics-donut-center small{margin-top:2px;color:var(--v9-gold);font-size:8px;font-weight:900}
+#p-dashboard .analytics-donut-empty{position:absolute;inset:0;display:grid;place-content:center;gap:4px;text-align:center;color:#777;pointer-events:none}
+#p-dashboard .analytics-donut-empty i{font-size:15px;opacity:.45}
+#p-dashboard .analytics-donut-empty span{font-size:7px;font-weight:800;text-transform:uppercase;letter-spacing:.8px}
+#p-dashboard .analytics-pie-legend.professional{display:grid;gap:7px;min-width:0}
+#p-dashboard .analytics-pie-legend.professional>div{
+  display:grid;
+  grid-template-columns:9px minmax(0,1fr) auto auto;
+  align-items:center;
+  gap:7px;
+  padding:7px 8px;
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:9px;
+  background:rgba(255,255,255,.025);
+  color:#aaa;
+  font-size:8px;
+}
+#p-dashboard .analytics-pie-legend.professional>div>b{font-size:12px;color:#fff}
+#p-dashboard .analytics-pie-legend.professional>div>small{font-size:7px;color:#7f7d76;min-width:24px;text-align:right}
+#p-dashboard .analytics-pie-legend.professional .analytics-mini-total{grid-template-columns:minmax(0,1fr) auto;background:rgba(246,197,47,.045);border-color:rgba(246,197,47,.16)}
+#p-dashboard .analytics-pie-legend.professional .analytics-mini-total>b{color:var(--v9-gold)}
+#p-dashboard .analytics-pie-legend.professional .analytics-mini-total .pie-swatch{display:none}
+#p-dashboard .analytics-round-chart.users .pie-swatch.current{background:linear-gradient(135deg,#ffd84a,#ef8f1b)}
+#p-dashboard .analytics-round-chart.users .pie-swatch.previous{background:linear-gradient(135deg,#88a6ff,#6d50c9)}
+#p-dashboard .analytics-round-chart.courses .pie-swatch.current{background:linear-gradient(135deg,#74e49b,#159b8b)}
+#p-dashboard .analytics-round-chart.courses .pie-swatch.previous{background:linear-gradient(135deg,#ffd76c,#d77b2b)}
+
+html[data-theme="light"] #p-dashboard .analytics-donut-shell:before{
+  background:radial-gradient(circle at 35% 28%,rgba(255,255,255,.9),transparent 38%),#fffdf8;
+  border-color:#e5dacb;
+  box-shadow:inset 0 0 20px rgba(128,94,18,.045),0 12px 24px -22px rgba(70,52,20,.3);
+}
+html[data-theme="light"] #p-dashboard .analytics-donut-svg .donut-track{stroke:#e8dfd2}
+html[data-theme="light"] #p-dashboard .analytics-donut-center{
+  background:linear-gradient(145deg,#fffdf8,#f5eddf);
+  border-color:#e4d8c7;
+  box-shadow:0 10px 20px -18px rgba(89,65,25,.32),inset 0 1px 0 #fff;
+}
+html[data-theme="light"] #p-dashboard .analytics-donut-center b{color:#1d1b18}
+html[data-theme="light"] #p-dashboard .analytics-donut-center span{color:#80766a}
+html[data-theme="light"] #p-dashboard .analytics-donut-center small{color:#9b7412}
+html[data-theme="light"] #p-dashboard .analytics-pie-legend.professional>div{
+  background:#fffdf8;
+  border-color:#e7dccd;
+  color:#766d62;
+  box-shadow:0 8px 16px -18px rgba(83,60,20,.3);
+}
+html[data-theme="light"] #p-dashboard .analytics-pie-legend.professional>div>b{color:#211f1b}
+html[data-theme="light"] #p-dashboard .analytics-pie-legend.professional>div>small{color:#9a9084}
+html[data-theme="light"] #p-dashboard .analytics-pie-legend.professional .analytics-mini-total{background:#fff8e7;border-color:#ead9aa}
+
+/* Preserve the one-screen dashboard goal with the richer circular charts. */
+@media (min-width:1180px) and (min-height:720px){
+  #p-dashboard .analytics-round-chart.professional{grid-template-columns:102px minmax(0,1fr);gap:9px;max-width:300px}
+  #p-dashboard .analytics-donut-shell{width:102px}
+  #p-dashboard .analytics-donut-svg circle{stroke-width:12.5}
+  #p-dashboard .analytics-donut-center{width:56px;height:56px}
+  #p-dashboard .analytics-donut-center b{font-size:17px}
+  #p-dashboard .analytics-donut-center span{font-size:6px;margin-top:2px}
+  #p-dashboard .analytics-donut-center small{font-size:7px}
+  #p-dashboard .analytics-pie-legend.professional{gap:4px}
+  #p-dashboard .analytics-pie-legend.professional>div{padding:5px 6px;gap:5px;font-size:7px;border-radius:7px}
+  #p-dashboard .analytics-pie-legend.professional>div>b{font-size:10px}
+  #p-dashboard .analytics-pie-legend.professional>div>small{font-size:6px;min-width:20px}
+}
+@media (min-width:1180px) and (max-height:820px){
+  #p-dashboard .analytics-round-chart.professional{grid-template-columns:88px minmax(0,1fr);max-width:270px}
+  #p-dashboard .analytics-donut-shell{width:88px}
+  #p-dashboard .analytics-donut-svg circle{stroke-width:12}
+  #p-dashboard .analytics-donut-center{width:48px;height:48px}
+  #p-dashboard .analytics-donut-center b{font-size:15px}
+  #p-dashboard .analytics-donut-center span{display:none}
+  #p-dashboard .analytics-pie-legend.professional>div{padding:4px 5px}
+}
+@media(max-width:760px){
+  #p-dashboard .analytics-round-chart.professional{grid-template-columns:1fr;max-width:none;justify-items:center}
+  #p-dashboard .analytics-donut-shell{width:min(160px,52vw)}
+  #p-dashboard .analytics-pie-legend.professional{width:100%}
+}

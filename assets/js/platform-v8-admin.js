@@ -686,18 +686,39 @@
     const currentPct = total > 0 ? (current / total) * 100 : 0;
     const previousPct = total > 0 ? 100 - currentPct : 0;
     const chartLabel = target === 'users' ? 'User registrations comparison' : 'Course enrollments comparison';
-    const currentTone = target === 'users' ? '#e9b415' : '#38b86f';
-    const previousTone = target === 'users' ? '#4e6bd8' : '#e9b415';
-    const bg = total > 0
-      ? `conic-gradient(${currentTone} 0 ${currentPct.toFixed(2)}%, ${previousTone} ${currentPct.toFixed(2)}% 100%)`
-      : 'conic-gradient(#d8d0c5 0 100%)';
-    return `<div class="analytics-round-chart ${target}" role="img" aria-label="${chartLabel}">
-      <div class="analytics-pie" style="background:${bg}">
-        ${total > 0 ? `<span class="pie-label current">${Math.round(currentPct)}%</span><span class="pie-label previous">${Math.round(previousPct)}%</span>` : '<span class="pie-empty">0</span>'}
+    const circumference = 301.593;
+    const currentLen = total > 0 ? (currentPct / 100) * circumference : 0;
+    const previousLen = total > 0 ? (previousPct / 100) * circumference : 0;
+    const currentGap = currentLen > 8 && previousLen > 0 ? 3.2 : 0;
+    const previousGap = previousLen > 8 && currentLen > 0 ? 3.2 : 0;
+    const currentDash = Math.max(0, currentLen - currentGap);
+    const previousDash = Math.max(0, previousLen - previousGap);
+    const previousOffset = -(currentLen + (currentGap ? .8 : 0));
+    const gid = `analytics-${target}`;
+    const zeroMarkup = total <= 0 ? '<div class="analytics-donut-empty"><i class="fa-solid fa-chart-pie"></i><span>No data</span></div>' : '';
+    return `<div class="analytics-round-chart professional ${target}" role="img" aria-label="${chartLabel}">
+      <div class="analytics-donut-shell">
+        <svg class="analytics-donut-svg" viewBox="0 0 120 120" aria-hidden="true">
+          <defs>
+            <linearGradient id="${gid}-current" x1="0" y1="0" x2="1" y2="1">
+              ${target === 'users' ? '<stop offset="0%" stop-color="#ffd84a"/><stop offset="52%" stop-color="#e7b516"/><stop offset="100%" stop-color="#ef8f1b"/>' : '<stop offset="0%" stop-color="#74e49b"/><stop offset="52%" stop-color="#33b96e"/><stop offset="100%" stop-color="#159b8b"/>'}
+            </linearGradient>
+            <linearGradient id="${gid}-previous" x1="1" y1="0" x2="0" y2="1">
+              ${target === 'users' ? '<stop offset="0%" stop-color="#88a6ff"/><stop offset="55%" stop-color="#526fd8"/><stop offset="100%" stop-color="#6d50c9"/>' : '<stop offset="0%" stop-color="#ffd76c"/><stop offset="55%" stop-color="#e3ad20"/><stop offset="100%" stop-color="#d77b2b"/>'}
+            </linearGradient>
+            <filter id="${gid}-glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <circle class="donut-track" cx="60" cy="60" r="48" pathLength="${circumference}"/>
+          ${total > 0 ? `<circle class="donut-segment current" cx="60" cy="60" r="48" stroke="url(#${gid}-current)" stroke-dasharray="${currentDash.toFixed(2)} ${(circumference-currentDash).toFixed(2)}" stroke-dashoffset="0" filter="url(#${gid}-glow)"/>` : ''}
+          ${previousLen > 0 ? `<circle class="donut-segment previous" cx="60" cy="60" r="48" stroke="url(#${gid}-previous)" stroke-dasharray="${previousDash.toFixed(2)} ${(circumference-previousDash).toFixed(2)}" stroke-dashoffset="${previousOffset.toFixed(2)}"/>` : ''}
+        </svg>
+        ${zeroMarkup}
+        <div class="analytics-donut-center"><b>${current}</b><span>Selected</span><small>${Math.round(currentPct)}%</small></div>
       </div>
-      <div class="analytics-pie-legend">
-        <div><span class="pie-swatch current"></span><span>Selected period</span><b>${current}</b></div>
-        <div><span class="pie-swatch previous"></span><span>Previous period</span><b>${previous}</b></div>
+      <div class="analytics-pie-legend professional">
+        <div><span class="pie-swatch current"></span><span>Selected period</span><b>${current}</b><small>${Math.round(currentPct)}%</small></div>
+        <div><span class="pie-swatch previous"></span><span>Previous period</span><b>${previous}</b><small>${Math.round(previousPct)}%</small></div>
+        <div class="analytics-mini-total"><span>Total compared</span><b>${total}</b></div>
       </div>
     </div>`;
   }
