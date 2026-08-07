@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" data-auth-scope="student">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0A0A0A">
-<title>Student Login | 24K Excellence</title>
+<title>Login | 24K Excellence</title>
 <link rel="icon" href="assets/logo.png">
 <link rel="stylesheet" href="app.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -14,10 +14,10 @@
   <section class="auth-showcase">
     <a href="index.html"><img src="assets/logo.png" alt="24K Excellence"></a>
     <h1>Learn live.<br><span>Trade with discipline.</span></h1>
-    <p>Access Signals, Charts, Articles and live online courses with Malik Zameer from one secure student account.</p>
+    <p>Access Signals, Charts, Articles and live Google Meet courses with Malik Zameer from one secure student account.</p>
     <div class="auth-benefits">
       <span><i class="fa-solid fa-circle-check"></i> Payment approval before course access</span>
-      <span><i class="fa-solid fa-circle-check"></i> Private online class links for approved students</span>
+      <span><i class="fa-solid fa-circle-check"></i> Private Google Meet links for approved students</span>
       <span><i class="fa-solid fa-circle-check"></i> Live signal performance history</span>
       <span><i class="fa-solid fa-circle-check"></i> Course announcements and session schedule</span>
     </div>
@@ -26,13 +26,13 @@
   <section class="auth-panel">
     <div class="auth-box">
       <a href="index.html" class="muted" style="text-decoration:none;font-size:12px"><i class="fa-solid fa-arrow-left"></i> Back to website</a>
-      <div class="auth-page-badge"><i class="fa-solid fa-user-graduate"></i> STUDENT ACCESS</div>
-      <h2>Welcome to 24K Excellence</h2>
+      <h2 style="margin-top:18px">Welcome to 24K Excellence</h2>
       <p class="muted" style="margin-top:0">Sign in or create your student account.</p>
 
-      <div class="auth-tabs student-auth-tabs">
+      <div class="auth-tabs">
         <button type="button" class="on" data-auth-tab="student-login">Student Login</button>
         <button type="button" data-auth-tab="signup">Sign Up</button>
+        <button type="button" data-auth-tab="admin-login">Admin</button>
       </div>
 
       <form id="studentLoginForm" class="auth-form on" data-auth-form="student-login">
@@ -53,16 +53,23 @@
         <label class="check-row"><input type="checkbox" name="terms" required> <span>I accept the <a href="terms.html" target="_blank">Terms &amp; Conditions</a>, <a href="privacy.html" target="_blank">Privacy Policy</a> and <a href="risk-disclaimer.html" target="_blank">Risk Disclaimer</a>.</span></label>
         <button class="app-btn gold" type="submit"><i class="fa-solid fa-user-plus"></i> Create Student Account</button>
       </form>
-    </div>
+
+      <form id="adminLoginForm" class="auth-form" data-auth-form="admin-login">
+        <div class="notice warn"><i class="fa-solid fa-shield-halved"></i> Admin access is granted only to accounts marked as <b>admin</b> in Supabase.</div>
+        <div class="form-field"><label>Admin Email</label><input type="email" name="email" autocomplete="email" required value="24kmrzero@gmail.com"></div>
+        <div class="form-field"><label>Password</label><input type="password" name="password" autocomplete="current-password" required minlength="6" placeholder="Enter admin password"></div>
+        <button class="app-btn gold" type="submit"><i class="fa-solid fa-lock"></i> Login to Admin Panel</button>
+      </form>
+</div>
   </section>
 </main>
 
 <div class="app-modal" id="forgotModal">
   <div class="app-modal-card">
-    <div class="app-modal-head"><h3>Reset Student Password</h3><button class="modal-close" data-close-modal="forgotModal"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="app-modal-head"><h3>Reset Password</h3><button class="modal-close" data-close-modal="forgotModal"><i class="fa-solid fa-xmark"></i></button></div>
     <form id="forgotForm">
       <div class="app-modal-body">
-        <p class="muted">Enter your student account email. A secure password-reset link will be sent to you.</p>
+        <p class="muted">Enter your account email. Supabase will send a secure password-reset link.</p>
         <div class="form-field"><label>Email Address</label><input type="email" name="email" required placeholder="you@example.com"></div>
       </div>
       <div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="forgotModal">Cancel</button><button class="app-btn gold" type="submit">Send Reset Link</button></div>
@@ -71,9 +78,10 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="assets/js/config.js?v=9.20"></script>
-<script src="assets/js/core.js?v=9.1"></script>
-<script src="assets/js/tracking.js?v=9.1"></script>
-<script src="assets/js/auth.js?v=9.1"></script>
+<script src="assets/js/config.js"></script>
+
+<script src="assets/js/core.js"></script>
+<script src="assets/js/tracking.js?v=9.32"></script>
+<script src="assets/js/auth.js?v=9.32"></script>
 </body>
 </html>

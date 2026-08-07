@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#10100e">
+<title>Team Performance | 24K Excellence</title>
+<link rel="icon" href="../assets/logo.png">
+<link rel="stylesheet" href="../app.css?v=9.32">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="team-page">
+<div id="teamLogin" class="team-login-wrap">
+  <form class="team-login-card" id="teamLoginForm">
+    <a href="../index.html" aria-label="Website home"><img src="../assets/logo.png" alt="24K Digital Gold"></a>
+    <h1>Team Performance Panel</h1>
+    <p>Sign in with the username and password provided by Admin.</p>
+    <div class="form-field"><label>Username</label><input name="username" autocomplete="username" required></div>
+    <div class="form-field"><label>Password</label><input type="password" name="password" autocomplete="current-password" required></div>
+    <button class="app-btn gold" type="submit" style="width:100%"><i class="fa-solid fa-right-to-bracket"></i> Sign In</button>
+    <div class="team-error" id="teamLoginError"></div>
+  </form>
+</div>
+
+<div id="teamDashboard" class="team-dashboard hidden">
+  <header class="team-topbar">
+    <a href="../index.html" aria-label="Website home"><img src="../assets/logo.png" alt="24K Digital Gold"></a>
+    <div class="team-topbar-actions"><span id="teamIdentity"></span><button class="app-btn outline small" id="teamLogout"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button></div>
+  </header>
+  <main class="team-main">
+    <div class="team-welcome"><div><h1 id="teamWelcome">Performance</h1><p>Only your Admin-assigned tracking link and attributed clients are shown here.</p></div><button class="app-btn outline" id="teamRefresh"><i class="fa-solid fa-rotate"></i> Refresh</button></div>
+    <section class="team-kpis" id="teamKpis"></section>
+    <section class="team-link-card"><div class="app-card-head"><div><h3>Assigned Tracking Link</h3><p id="teamLinkMeta"></p></div></div><div class="team-link-line"><input id="teamTrackedUrl" readonly><button class="app-btn gold" id="teamCopyLink"><i class="fa-solid fa-copy"></i> Copy</button></div></section>
+    <section class="team-clients-card"><div class="app-card-head"><div><h3>Attributed Clients</h3><p>Historical and new clients credited to your assigned link.</p></div></div><div class="table-scroll"><table class="team-table"><thead><tr><th>Name</th><th>Email</th><th>WhatsApp</th><th>Signup Date</th><th>Verification</th><th>Course / Enrollment</th></tr></thead><tbody id="teamClientsBody"></tbody></table></div></section>
+  </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../assets/js/config.js?v=9.20"></script>
+<script src="../assets/js/team.js?v=9.32"></script>
+</body>
+</html>
