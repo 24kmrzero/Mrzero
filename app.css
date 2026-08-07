@@ -1696,3 +1696,30 @@ html[data-theme="light"] #p-dashboard .analytics-pie-legend.professional .analyt
   #p-dashboard .analytics-round-chart.professional{grid-template-columns:1fr;gap:12px}
   #p-dashboard .analytics-donut-shell{width:min(180px,58vw)}
 }
+
+
+/* V9.25 — New Signal branded modal + combined Direction/Order Type */
+#signalFormBox.signal-create-modal{z-index:260;padding:18px;background:rgba(8,8,7,.72);backdrop-filter:blur(7px)}
+#signalFormBox .signal-create-card{width:min(650px,94vw);max-height:min(88vh,760px);border-radius:18px;overflow:auto}
+#signalFormBox .app-modal-head{padding:14px 17px}
+#signalFormBox .app-modal-head h3{font-size:19px}
+#signalFormBox .app-modal-head small{display:block;margin-top:3px;font-size:10px}
+#signalFormBox .signal-create-body{padding:15px 17px 10px}
+#signalFormBox .signal-popup-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 12px}
+#signalFormBox .signal-popup-grid .form-field{gap:5px}
+#signalFormBox .signal-popup-grid label{font-size:9px}
+#signalFormBox .signal-popup-grid input,#signalFormBox .signal-popup-grid select,#signalFormBox .signal-popup-grid textarea{min-height:39px;padding:9px 11px;font-size:12px;border-radius:9px}
+#signalFormBox .signal-popup-grid textarea{min-height:72px;resize:vertical}
+#signalFormBox .instrument-picker>input[type=search]{padding-right:44px}
+#signalFormBox .instrument-menu{max-height:220px}
+#signalFormBox .signal-calculation-preview.compact-popup{grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin:11px 0 9px}
+#signalFormBox .signal-calculation-preview.compact-popup>div{padding:8px 9px;border-radius:9px}
+#signalFormBox .signal-calculation-preview.compact-popup small{font-size:7px}
+#signalFormBox .signal-calculation-preview.compact-popup b{font-size:11px}
+#signalFormBox .signal-publish-check{margin:8px 0 0;font-size:10px}
+#signalFormBox .app-modal-foot{padding:11px 17px}
+#signalFormBox .app-modal-foot .app-btn{min-height:36px;padding:8px 13px;font-size:10px}
+body:has(#signalFormBox.open){overflow:hidden}
+html[data-theme=light] #signalFormBox.signal-create-modal{background:rgba(50,42,28,.35)}
+html[data-theme=light] #signalFormBox .signal-create-card{background:linear-gradient(155deg,#fffdf9,#f8f0e4)}
+@media(max-width:700px){#signalFormBox.signal-create-modal{padding:0;align-items:flex-end}#signalFormBox .signal-create-card{width:100%;max-height:94vh;border-radius:18px 18px 0 0}#signalFormBox .signal-popup-grid{grid-template-columns:1fr}#signalFormBox .signal-calculation-preview.compact-popup{grid-template-columns:repeat(2,minmax(0,1fr))}}

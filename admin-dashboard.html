@@ -7,7 +7,7 @@
 <script>(function(){try{var t=localStorage.getItem('24k-excellence-theme');document.documentElement.dataset.theme=t==='light'?'light':'dark'}catch(e){document.documentElement.dataset.theme='dark'}})();</script>
 <title>Admin Panel | 24K Excellence</title>
 <link rel="icon" href="assets/logo.png">
-<link rel="stylesheet" href="app.css?v=9.24">
+<link rel="stylesheet" href="app.css?v=9.25">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body class="app-page">
@@ -44,29 +44,43 @@
         <div class="panel-heading"><div><h2>Signals Management</h2><p>Create official signals, update TP/SL outcomes and keep a complete performance history.</p></div><button class="app-btn gold" data-toggle-form="signalFormBox"><i class="fa-solid fa-plus"></i> New Signal</button></div>
         <div class="performance-grid signal-admin-performance" id="adminSignalStats"></div>
 
-        <div class="app-card admin-form-box" id="signalFormBox">
-          <form id="signalForm">
-            <input type="hidden" name="id">
-            <div class="form-grid">
-              <div class="form-field full"><label>Trading Pair</label><div class="instrument-picker" id="instrumentPicker"><input id="instrumentSearch" type="search" autocomplete="off" placeholder="Search GOLD, SILVER, BTC, EURUSD..."><input type="hidden" name="symbol"><button type="button" class="instrument-toggle" aria-label="Open trading pair list"><i class="fa-solid fa-chevron-down"></i></button><div class="instrument-menu" id="instrumentMenu"></div></div><small class="muted">GOLD, SILVER and BTC appear first, followed by USD pairs and crosses.</small></div>
-              <div class="form-field"><label>Direction</label><select name="direction" required><option value="BUY">BUY</option><option value="SELL">SELL</option></select></div>
-              <div class="form-field"><label>Order Type</label><select name="order_type" required><option value="market">Market</option><option value="limit">Limit</option><option value="stop">Stop</option></select></div>
-              <div class="form-field"><label>Entry Price / Zone From</label><input type="number" step="any" name="entry_from" required></div>
-              <div class="form-field"><label>Entry Zone To <span class="muted">(optional)</span></label><input type="number" step="any" name="entry_to"></div>
-              <div class="form-field"><label>Stop Loss</label><input type="number" step="any" name="stop_loss" required></div>
-              <div class="form-field"><label>TP1</label><input type="number" step="any" name="take_profit_1" required></div>
-              <div class="form-field"><label>TP2</label><input type="number" step="any" name="take_profit_2" required></div>
-              <div class="form-field"><label>TP3</label><input type="number" step="any" name="take_profit_3" required></div>
-              
-              <div class="form-field"><label>Audience</label><select name="audience_access"><option value="all_students">All Students</option><option value="course_students">Course Students</option><option value="premium_users">Premium Users</option></select></div>
-              <div class="form-field"><label>Ready Note Template</label><select id="signalNoteTemplate"><option value="">Choose a template</option><option>Wait for candle confirmation</option><option>Do not chase the market</option><option>Risk only 1–2%</option><option>Move SL to Breakeven after TP1</option><option>Book partial profit at TP1</option><option>Hold till TP3 if momentum is strong</option></select></div>
-              <div class="form-field full"><label>Admin Note</label><textarea name="notes" placeholder="Signal instructions for students"></textarea></div>
-              <label class="check-row"><input type="checkbox" name="is_published" checked> Publish to students immediately</label>
+        <div class="app-modal signal-create-modal" id="signalFormBox" aria-hidden="true">
+          <div class="app-modal-card signal-create-card">
+            <div class="app-modal-head">
+              <div><h3 id="signalFormTitle">New Signal</h3><small class="muted">Create and publish an official trading signal.</small></div>
+              <button type="button" class="modal-close" data-cancel-form="signalFormBox" aria-label="Close New Signal"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div class="signal-calculation-preview" id="signalCalculationPreview"><div><small>SL Distance</small><b>—</b></div><div><small>TP1 Potential</small><b>—</b></div><div><small>TP2 Potential</small><b>—</b></div><div><small>TP3 Potential</small><b>—</b></div><div><small>Best R:R</small><b>—</b></div></div>
-            <div class="notice info"><i class="fa-solid fa-wand-magic-sparkles"></i> Risk-to-reward previews are shown while creating a signal. Gold TP/SL results are calculated automatically in Pips; other results are entered by Admin.</div>
-            <div class="inline-actions"><button type="button" class="app-btn outline" data-cancel-form="signalFormBox">Cancel</button><button class="app-btn gold" type="submit"><i class="fa-solid fa-paper-plane"></i> Publish Signal</button></div>
-          </form>
+            <form id="signalForm">
+              <input type="hidden" name="id">
+              <input type="hidden" name="direction" value="BUY">
+              <input type="hidden" name="order_type" value="market">
+              <div class="app-modal-body signal-create-body">
+                <div class="form-grid signal-popup-grid">
+                  <div class="form-field full"><label>Trading Pair</label><div class="instrument-picker" id="instrumentPicker"><input id="instrumentSearch" type="search" autocomplete="off" placeholder="Search GOLD, SILVER, BTC, EURUSD..."><input type="hidden" name="symbol"><button type="button" class="instrument-toggle" aria-label="Open trading pair list"><i class="fa-solid fa-chevron-down"></i></button><div class="instrument-menu" id="instrumentMenu"></div></div></div>
+                  <div class="form-field full"><label>Direction</label><select id="signalDirectionOrder" name="direction_order" required>
+                    <option value="BUY|market">BUY</option>
+                    <option value="SELL|market">SELL</option>
+                    <option value="BUY|stop">BUY STOP</option>
+                    <option value="SELL|stop">SELL STOP</option>
+                    <option value="BUY|limit">BUY LIMIT</option>
+                    <option value="SELL|limit">SELL LIMIT</option>
+                  </select></div>
+                  <div class="form-field"><label>Entry Price / Zone From</label><input type="number" step="any" name="entry_from" required></div>
+                  <div class="form-field"><label>Entry Zone To <span class="muted">(optional)</span></label><input type="number" step="any" name="entry_to"></div>
+                  <div class="form-field"><label>Stop Loss</label><input type="number" step="any" name="stop_loss" required></div>
+                  <div class="form-field"><label>TP1</label><input type="number" step="any" name="take_profit_1" required></div>
+                  <div class="form-field"><label>TP2</label><input type="number" step="any" name="take_profit_2" required></div>
+                  <div class="form-field"><label>TP3</label><input type="number" step="any" name="take_profit_3" required></div>
+                  <div class="form-field"><label>Audience</label><select name="audience_access"><option value="all_students">All Students</option><option value="course_students">Course Students</option><option value="premium_users">Premium Users</option></select></div>
+                  <div class="form-field"><label>Ready Note Template</label><select id="signalNoteTemplate"><option value="">Choose a template</option><option>Wait for candle confirmation</option><option>Do not chase the market</option><option>Risk only 1–2%</option><option>Move SL to Breakeven after TP1</option><option>Book partial profit at TP1</option><option>Hold till TP3 if momentum is strong</option></select></div>
+                  <div class="form-field full"><label>Admin Note</label><textarea name="notes" rows="3" placeholder="Signal instructions for students"></textarea></div>
+                </div>
+                <div class="signal-calculation-preview compact-popup" id="signalCalculationPreview"><div><small>SL Distance</small><b>—</b></div><div><small>TP1 Potential</small><b>—</b></div><div><small>TP2 Potential</small><b>—</b></div><div><small>TP3 Potential</small><b>—</b></div><div><small>Best R:R</small><b>—</b></div></div>
+                <label class="check-row signal-publish-check"><input type="checkbox" name="is_published" checked> Publish to students immediately</label>
+              </div>
+              <div class="app-modal-foot"><button type="button" class="app-btn outline" data-cancel-form="signalFormBox">Cancel</button><button class="app-btn gold" type="submit"><i class="fa-solid fa-paper-plane"></i> Publish Signal</button></div>
+            </form>
+          </div>
         </div>
 
         <div class="admin-signal-tabs" role="tablist" aria-label="Signal view">
@@ -189,6 +203,6 @@
 
 <div class="app-modal" id="receiptPreviewModal"><div class="app-modal-card receipt-preview-card"><div class="app-modal-head"><div><h3>Payment Receipt</h3><small id="receiptPreviewSubtitle" class="muted">Secure temporary preview</small></div><button class="modal-close" data-close-modal="receiptPreviewModal"><i class="fa-solid fa-xmark"></i></button></div><div class="app-modal-body"><div id="receiptPreviewContent" class="receipt-preview-content"></div></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="receiptPreviewModal">Close</button><a id="receiptOpenExternal" class="app-btn gold" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Full Size</a></div></div></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js?v=9.20"></script><script src="assets/js/core.js?v=9.18"></script><script src="assets/js/admin.js?v=9.21"></script><script src="assets/js/platform-v8-admin.js?v=9.24"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js?v=9.20"></script><script src="assets/js/core.js?v=9.18"></script><script src="assets/js/admin.js?v=9.25"></script><script src="assets/js/platform-v8-admin.js?v=9.24"></script>
 </body>
 </html>
