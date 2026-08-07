@@ -113,7 +113,7 @@
     document.getElementById('dashboardCourses').innerHTML = coursePreview.length ? coursePreview.map(course => {
       const access = hasCourseAccess(course.id);
       const payment = latestPayment(course.id);
-      return `<div class="activity-item"><div class="activity-icon"><i class="fa-solid ${access ? 'fa-lock-open' : 'fa-lock'}"></i></div><div><b>${A.escapeHtml(course.title)}</b><small>${access ? 'Course access approved' : payment ? A.statusLabel(payment.status) : `${A.formatMoney(course.discount_price!=null?course.discount_price:course.price, course.currency)} · Payment required`}</small></div><button class="app-btn small ${access ? 'gold' : 'outline'}" data-open-course="${course.id}">${access ? 'Open' : 'Details'}</button></div>`;
+      return `<div class="activity-item"><div class="activity-icon"><i class="fa-solid ${access ? 'fa-lock-open' : 'fa-lock'}"></i></div><div><b>${A.escapeHtml(course.title)}</b><small>${access ? 'Course access approved' : payment ? A.statusLabel(payment.status) : (course.course_type==='free'||Number(course.discount_price!=null?course.discount_price:course.price)===0 ? 'Free enrollment available' : `${A.formatMoney(course.discount_price!=null?course.discount_price:course.price, course.currency)} · Payment required`)}</small></div><button class="app-btn small ${access ? 'gold' : 'outline'}" data-open-course="${course.id}">${access ? 'Open' : 'Details'}</button></div>`;
     }).join('') : empty('No course is currently available.', 'fa-graduation-cap');
 
     const next = state.sessions.filter(s => new Date(s.starts_at) >= new Date() && s.status !== 'cancelled')[0] || state.sessions.find(s => s.status === 'upcoming');

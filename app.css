@@ -1075,3 +1075,62 @@ html[data-theme="light"] .income-bar-track{background:#F2E9DB;border-color:rgba(
 @media(max-width:1350px){.dashboard-business-grid{grid-template-columns:minmax(0,1fr) minmax(360px,.8fr)}.analytics-split{grid-template-columns:1fr}.donut-wrap{justify-content:flex-start}}
 @media(max-width:1120px){.business-summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.dashboard-business-grid{grid-template-columns:1fr}.dashboard-analytics-column{position:static}.analytics-split{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.business-summary-grid{grid-template-columns:1fr}.business-summary-card{min-height:96px}.analytics-split{grid-template-columns:1fr}.donut-wrap{gap:12px}.dashboard-business-grid{gap:14px}}
+
+/* V9.20 — compact admin analytics: user growth + course enrollment trends */
+#p-dashboard .business-hero,
+#p-dashboard .operations-hero.business-hero{display:none!important}
+#p-dashboard>.panel-heading{margin-bottom:18px}
+#p-dashboard .dashboard-business-grid{grid-template-columns:minmax(0,1.32fr) minmax(430px,.88fr);gap:18px;align-items:start}
+#p-dashboard .dashboard-analytics-column{position:static;display:grid;gap:16px}
+#p-dashboard .trend-analytics-card{padding:16px 16px 14px;min-height:0}
+#p-dashboard .trend-head{margin-bottom:10px;align-items:center}
+#p-dashboard .trend-head h3{display:flex;align-items:center;gap:8px;margin-top:2px}
+#p-dashboard .trend-head h3 i{color:var(--v9-gold);font-size:14px}
+#p-dashboard .trend-total{text-align:right;min-width:54px}
+#p-dashboard .trend-total b{display:block;font:800 26px/1 'Sora';color:#fff}
+#p-dashboard .trend-total small{display:block;margin-top:4px;color:#89867f;font-size:9px;text-transform:uppercase;letter-spacing:.08em}
+#p-dashboard .analytics-range-row{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 10px}
+#p-dashboard .analytics-range-btn{appearance:none;border:1px solid #30302b;background:#11110f;color:#8f8d86;border-radius:999px;padding:6px 9px;font:700 9px/1 'Inter',sans-serif;cursor:pointer;transition:.18s}
+#p-dashboard .analytics-range-btn:hover,#p-dashboard .analytics-range-btn:focus-visible{border-color:rgba(246,197,47,.55);color:#fff;outline:none}
+#p-dashboard .analytics-range-btn.active{background:var(--v9-gold);border-color:var(--v9-gold);color:#111;font-weight:800}
+#p-dashboard .analytics-custom-range{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 10px}
+#p-dashboard .analytics-custom-range label{display:grid;gap:4px;color:#8d8a82;font-size:9px;font-weight:700}
+#p-dashboard .analytics-custom-range input{width:100%;border:1px solid #30302b;background:#0e0e0c;color:#eee;border-radius:8px;padding:7px 8px;font:600 10px/1.2 'Inter',sans-serif;color-scheme:dark}
+#p-dashboard .analytics-trend-chart{border:1px solid rgba(255,255,255,.06);background:linear-gradient(180deg,rgba(246,197,47,.035),rgba(255,255,255,.01));border-radius:12px;padding:6px 8px 2px;overflow:hidden}
+#p-dashboard .analytics-trend-svg{display:block;width:100%;height:158px;overflow:visible}
+#p-dashboard .analytics-trend-svg text{fill:#7f7d76;font:700 8px 'Inter',sans-serif;text-transform:uppercase}
+#p-dashboard .trend-grid-line{stroke:rgba(255,255,255,.07);stroke-width:1;stroke-dasharray:3 5}
+#p-dashboard .trend-line{fill:none;stroke:#f6c52f;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+#p-dashboard .trend-area{fill:rgba(246,197,47,.09)}
+#p-dashboard .trend-dot circle{fill:#0e0e0d;stroke:#f6c52f;stroke-width:2.5}
+#p-dashboard .analytics-trend-svg.courses .trend-line{stroke:#3ebf78}
+#p-dashboard .analytics-trend-svg.courses .trend-area{fill:rgba(62,191,120,.1)}
+#p-dashboard .analytics-trend-svg.courses .trend-dot circle{stroke:#3ebf78}
+#p-dashboard .analytics-performance-row{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:7px;margin-top:10px;color:#87847d;font-size:10px}
+#p-dashboard .analytics-performance-row small{color:#6f6c66}
+#p-dashboard .analytics-change{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:5px 8px;font-weight:800}
+#p-dashboard .analytics-change.positive{color:#5dd58d;background:rgba(55,183,105,.12)}
+#p-dashboard .analytics-change.negative{color:#ff7777;background:rgba(218,74,74,.12)}
+#p-dashboard .analytics-change.neutral{color:#d4ad36;background:rgba(246,197,47,.1)}
+
+html[data-theme="light"] #p-dashboard .trend-total b{color:#201c17}
+html[data-theme="light"] #p-dashboard .trend-total small{color:#72685d}
+html[data-theme="light"] #p-dashboard .analytics-range-btn{background:#fffaf1;border-color:rgba(98,73,38,.18);color:#62594f}
+html[data-theme="light"] #p-dashboard .analytics-range-btn:hover,
+html[data-theme="light"] #p-dashboard .analytics-range-btn:focus-visible{border-color:#c99814;color:#342b1d}
+html[data-theme="light"] #p-dashboard .analytics-range-btn.active{background:#efb914;border-color:#efb914;color:#1a160d}
+html[data-theme="light"] #p-dashboard .analytics-custom-range label{color:#6f655a}
+html[data-theme="light"] #p-dashboard .analytics-custom-range input{background:#fffdf8;border-color:rgba(85,63,35,.2);color:#211d18;color-scheme:light}
+html[data-theme="light"] #p-dashboard .analytics-trend-chart{background:linear-gradient(180deg,#fffaf1,#fbf3e7);border-color:rgba(90,65,34,.13)}
+html[data-theme="light"] #p-dashboard .analytics-trend-svg text{fill:#71675c}
+html[data-theme="light"] #p-dashboard .trend-grid-line{stroke:rgba(74,57,35,.12)}
+html[data-theme="light"] #p-dashboard .trend-dot circle{fill:#fffdf8}
+html[data-theme="light"] #p-dashboard .analytics-performance-row{color:#6c6258}
+html[data-theme="light"] #p-dashboard .analytics-performance-row small{color:#877c70}
+html[data-theme="light"] #p-dashboard .analytics-change.positive{color:#167d46;background:#e2f5e9}
+html[data-theme="light"] #p-dashboard .analytics-change.negative{color:#a83232;background:#fbe7e5}
+html[data-theme="light"] #p-dashboard .analytics-change.neutral{color:#8b6500;background:#fff1bf}
+
+@media(max-width:1250px){#p-dashboard .dashboard-business-grid{grid-template-columns:minmax(0,1fr) minmax(380px,.82fr)}}
+@media(max-width:1050px){#p-dashboard .dashboard-business-grid{grid-template-columns:1fr}#p-dashboard .dashboard-analytics-column{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){#p-dashboard .dashboard-analytics-column{grid-template-columns:1fr}#p-dashboard .analytics-performance-row{grid-template-columns:auto 1fr}#p-dashboard .analytics-performance-row small{grid-column:1/-1}#p-dashboard .analytics-trend-svg{height:145px}}

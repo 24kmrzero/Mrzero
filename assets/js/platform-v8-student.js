@@ -62,7 +62,7 @@
         </section>
         <section class="panel" id="p-access">
           <div class="panel-heading"><div><h2>Access Status</h2><p>Your platform access, verification and expiry information.</p></div></div>
-          <div class="app-grid cols-2"><div class="app-card" id="accessStatusCard"></div><div class="app-card"><h3>Protected Content</h3><p class="muted">Signals, charts, articles, private resources and Google Meet links require active platform access. Course catalogue, payments, profile and support remain available while access is locked.</p><a class="app-btn green" id="accessSupportLink" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Contact Support</a></div></div>
+          <div class="app-grid cols-2"><div class="app-card" id="accessStatusCard"></div><div class="app-card"><h3>Protected Content</h3><p class="muted">Signals, charts, articles, private resources and online class links require active platform access. Course catalogue, payments, profile and support remain available while access is locked.</p><a class="app-btn green" id="accessSupportLink" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Contact Support</a></div></div>
         </section>`);
     }
 
@@ -344,7 +344,7 @@
     if (!platformAllowed || !activeEnrollment(lesson.course_id)) return A.toast('An active approved enrollment is required for this class.', 'warning');
     const link = state.sessionLinks[session.id];
     if (link) window.open(link, '_blank', 'noopener');
-    else A.toast(`${session.title} is scheduled for ${A.formatDateTime(session.starts_at)}. The Meet link is locked or has not been added yet.`, 'warning');
+    else A.toast(`${session.title} is scheduled for ${A.formatDateTime(session.starts_at)}. The online class link is locked or has not been added yet.`, 'warning');
   }
 
   async function openResourceLesson(lessonId, button) {

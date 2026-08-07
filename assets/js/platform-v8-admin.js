@@ -33,6 +33,11 @@
     notifications: [], activities: [], auditLogs: [], enquiries: [], settings: [], overview: null
   };
 
+  const analyticsState = {
+    users: { range: 'last_week', start: '', end: '' },
+    courses: { range: 'last_week', start: '', end: '' }
+  };
+
   installUi();
   bindUi();
   syncBaseState();
@@ -83,7 +88,7 @@
         <div class="panel-heading"><div><h2>Course Structure</h2><p>Build modules and lessons in the exact order students must complete them.</p></div><button class="app-btn outline" id="exportStructure"><i class="fa-solid fa-download"></i> Export</button></div>
         <div class="app-grid cols-2 operations-forms">
           <div class="app-card"><div class="app-card-head"><div><h3>Module</h3><p>Create or update a course module.</p></div></div><form id="moduleForm"><input type="hidden" name="id"><div class="form-grid"><div class="form-field full"><label>Course</label><select name="course_id" id="moduleCourse" required></select></div><div class="form-field"><label>Module Number</label><input type="number" min="1" name="module_number" required></div><div class="form-field"><label>Module Title</label><input name="title" required></div><div class="form-field full"><label>Description</label><textarea name="description"></textarea></div><label class="check-row"><input type="checkbox" name="is_published" checked> Published</label></div><div class="sticky-form-actions"><button class="app-btn outline" type="button" data-reset-form="moduleForm">Clear</button><button class="app-btn gold" type="submit">Save Module</button></div></form></div>
-          <div class="app-card"><div class="app-card-head"><div><h3>Lesson</h3><p>Link a class, resource or text lesson.</p></div></div><form id="lessonForm"><input type="hidden" name="id"><div class="form-grid"><div class="form-field"><label>Course</label><select name="course_id" id="lessonCourse" required></select></div><div class="form-field"><label>Module</label><select name="module_id" id="lessonModule" required></select></div><div class="form-field"><label>Lesson Number</label><input type="number" min="1" name="lesson_number" required></div><div class="form-field"><label>Lesson Type</label><select name="lesson_type" id="lessonType"><option value="live_class">Live Google Meet Class</option><option value="resource">Course Resource</option><option value="text">Text Lesson</option></select></div><div class="form-field full"><label>Lesson Title</label><input name="title" required></div><div class="form-field full"><label>Description</label><textarea name="description"></textarea></div><div class="form-field full v9-session-link"><label>Google Meet Session</label><select name="course_session_id" id="lessonSession"><option value="">Select session</option></select></div><div class="form-field full v9-resource-link hidden"><label>Course Resource</label><select name="course_resource_id" id="lessonResource"><option value="">Select resource</option></select></div><div class="form-field full v9-text-link hidden"><label>Text Content</label><textarea name="text_content" style="min-height:140px"></textarea></div><label class="check-row"><input type="checkbox" name="is_published" checked> Published</label></div><div class="sticky-form-actions"><button class="app-btn outline" type="button" data-reset-form="lessonForm">Clear</button><button class="app-btn gold" type="submit">Save Lesson</button></div></form></div>
+          <div class="app-card"><div class="app-card-head"><div><h3>Lesson</h3><p>Link a class, resource or text lesson.</p></div></div><form id="lessonForm"><input type="hidden" name="id"><div class="form-grid"><div class="form-field"><label>Course</label><select name="course_id" id="lessonCourse" required></select></div><div class="form-field"><label>Module</label><select name="module_id" id="lessonModule" required></select></div><div class="form-field"><label>Lesson Number</label><input type="number" min="1" name="lesson_number" required></div><div class="form-field"><label>Lesson Type</label><select name="lesson_type" id="lessonType"><option value="live_class">Live Online Class</option><option value="resource">Course Resource</option><option value="text">Text Lesson</option></select></div><div class="form-field full"><label>Lesson Title</label><input name="title" required></div><div class="form-field full"><label>Description</label><textarea name="description"></textarea></div><div class="form-field full v9-session-link"><label>Online Class Session</label><select name="course_session_id" id="lessonSession"><option value="">Select session</option></select></div><div class="form-field full v9-resource-link hidden"><label>Course Resource</label><select name="course_resource_id" id="lessonResource"><option value="">Select resource</option></select></div><div class="form-field full v9-text-link hidden"><label>Text Content</label><textarea name="text_content" style="min-height:140px"></textarea></div><label class="check-row"><input type="checkbox" name="is_published" checked> Published</label></div><div class="sticky-form-actions"><button class="app-btn outline" type="button" data-reset-form="lessonForm">Clear</button><button class="app-btn gold" type="submit">Save Lesson</button></div></form></div>
         </div>
         <div class="app-card"><div class="app-card-head"><div><h3>Modules & Lessons</h3><p>Numbers control sequence. Duplicate numbers are blocked by the database.</p></div><select id="structureCourseFilter"></select></div><div id="structureList"></div></div>
       </section>
@@ -158,16 +163,9 @@
   }
 
   function enhanceDashboard() {
-    const panel = document.getElementById('p-dashboard');
-    const heading = panel?.querySelector('.panel-heading');
-    if (!panel || !heading || panel.querySelector('.operations-hero')) return;
-    heading.insertAdjacentHTML('afterend', `<div class="operations-hero business-hero"><div><span class="eyebrow">BUSINESS OVERVIEW</span><h2>Your platform at a glance</h2><p>Users, enrollments, income, payments and upcoming classes in one clean view.</p></div><div class="system-clock" id="adminCurrentTime"></div></div>`);
-    const updateClock = () => {
-      const el = document.getElementById('adminCurrentTime');
-      if (el) el.textContent = new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium', timeStyle: 'short', timeZone: A.cfg.DEFAULT_TIMEZONE || 'Asia/Karachi' }).format(new Date());
-    };
-    updateClock();
-    setInterval(updateClock, 1000);
+    // V9.20: keep the dashboard compact. Business metrics start immediately
+    // below the page heading; the oversized overview hero is intentionally removed.
+    document.querySelector('#p-dashboard .operations-hero')?.remove();
   }
 
   function enhanceTopbar() {
@@ -255,7 +253,21 @@
       const support = event.target.closest('[data-support-review]'); if (support) openSupportReview(support.dataset.supportReview);
       const enquiry = event.target.closest('[data-enquiry-review]'); if (enquiry) openEnquiryReview(enquiry.dataset.enquiryReview);
       const result = event.target.closest('[data-global-result]'); if (result) handleGlobalResult(result);
+      const analyticsRange = event.target.closest('[data-analytics-range]');
+      if (analyticsRange) {
+        const target = analyticsRange.dataset.analyticsTarget;
+        if (analyticsState[target]) { analyticsState[target].range = analyticsRange.dataset.range || 'last_week'; if (analyticsState[target].range === 'custom' && (!analyticsState[target].start || !analyticsState[target].end)) { const now = new Date(); const pad = n => String(n).padStart(2,'0'); const fmt = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; analyticsState[target].end = fmt(now); analyticsState[target].start = fmt(addDays(now,-6)); } renderOperationsDashboard(); }
+      }
       if (!event.target.closest('.app-search') && !event.target.closest('#globalSearchResults')) document.getElementById('globalSearchResults')?.classList.add('hidden');
+    });
+    document.addEventListener('change', event => {
+      const input = event.target.closest('[data-analytics-custom]');
+      if (!input) return;
+      const [target, field] = String(input.dataset.analyticsCustom || '').split('-');
+      if (!analyticsState[target] || !['start','end'].includes(field)) return;
+      analyticsState[target][field] = input.value || '';
+      analyticsState[target].range = 'custom';
+      renderOperationsDashboard();
     });
   }
 
@@ -546,65 +558,182 @@
     return `<b class="multi-money">${entries.slice(0, 2).map(([currency, total]) => `<span>${esc(A.formatMoney(total, currency))}</span>`).join('')}</b>`;
   }
 
-  function renderBusinessAnalytics({ enrollments, freeEnrollments, paidEnrollments, approvedPayments, pendingPayments }) {
+  function renderBusinessAnalytics() {
     const root = document.getElementById('dashboardAnalytics');
     if (!root) return;
 
-    const declinedPayments = state.payments.filter(row => ['declined', 'resubmission_required'].includes(row.status));
-    const paymentTotal = approvedPayments.length + pendingPayments.length + declinedPayments.length;
-    const approvedPct = paymentTotal ? Math.round((approvedPayments.length / paymentTotal) * 100) : 0;
-    const pendingPct = paymentTotal ? Math.round((pendingPayments.length / paymentTotal) * 100) : 0;
-    const declinedPct = Math.max(0, 100 - approvedPct - pendingPct);
+    const userEvents = state.profiles
+      .filter(profile => profile.role === 'student')
+      .map(profile => profile.created_at)
+      .filter(Boolean);
+    const courseEvents = state.enrollments
+      .map(row => row.created_at || row.access_started_at)
+      .filter(Boolean);
 
-    const enrollmentTotal = Math.max(1, freeEnrollments + paidEnrollments);
-    const freePct = freeEnrollments + paidEnrollments ? Math.round((freeEnrollments / enrollmentTotal) * 100) : 0;
-    const paidPct = freeEnrollments + paidEnrollments ? 100 - freePct : 0;
-
-    const income = monthlyIncomeSeries(approvedPayments);
-    const maxIncome = Math.max(0, ...income.points.map(point => point.value));
-    const bars = income.points.map(point => {
-      const height = maxIncome > 0 ? Math.max(7, Math.round((point.value / maxIncome) * 100)) : 4;
-      return `<div class="income-bar-item"><div class="income-bar-track"><span class="income-bar-fill" style="height:${height}%" title="${attr(A.formatMoney(point.value, income.currency))}"></span></div><small>${esc(point.label)}</small></div>`;
-    }).join('');
-
-    root.innerHTML = `
-      <div class="analytics-card income-analytics-card">
-        <div class="analytics-head"><div><span class="analytics-eyebrow">INCOME</span><h3>Income Overview</h3><p>Approved payments · last 6 months${income.currency ? ` · ${esc(income.currency)}` : ''}</p></div><span class="analytics-total">${income.currency ? esc(A.formatMoney(income.total, income.currency)) : '0'}</span></div>
-        <div class="income-bar-chart">${bars}</div>
-      </div>
-      <div class="analytics-split">
-        <div class="analytics-card donut-analytics-card">
-          <div class="analytics-head compact"><div><span class="analytics-eyebrow">COURSES</span><h3>Enrollments</h3></div><b>${enrollments.length}</b></div>
-          <div class="donut-wrap"><div class="donut-chart enrollment-donut" style="--slice-a:${freePct}%;--slice-b:${paidPct}%"><span><b>${enrollments.length}</b><small>Total</small></span></div><div class="chart-legend"><span><i class="legend-dot gold"></i>Free <b>${freeEnrollments}</b></span><span><i class="legend-dot green"></i>Paid <b>${paidEnrollments}</b></span></div></div>
-        </div>
-        <div class="analytics-card donut-analytics-card">
-          <div class="analytics-head compact"><div><span class="analytics-eyebrow">PAYMENTS</span><h3>Payment Status</h3></div><b>${paymentTotal}</b></div>
-          <div class="donut-wrap"><div class="donut-chart payment-donut" style="--approved:${approvedPct}%;--pending:${approvedPct + pendingPct}%"><span><b>${paymentTotal}</b><small>Total</small></span></div><div class="chart-legend"><span><i class="legend-dot green"></i>Approved <b>${approvedPayments.length}</b></span><span><i class="legend-dot gold"></i>Pending <b>${pendingPayments.length}</b></span><span><i class="legend-dot red"></i>Declined <b>${declinedPayments.length}</b></span></div></div>
-        </div>
-      </div>`;
+    root.innerHTML = [
+      analyticsTrendCard({
+        target: 'users',
+        eyebrow: 'USERS',
+        title: 'User Growth',
+        subtitle: 'New student registrations',
+        icon: 'fa-users',
+        events: userEvents
+      }),
+      analyticsTrendCard({
+        target: 'courses',
+        eyebrow: 'COURSES',
+        title: 'Course Enrollments',
+        subtitle: 'Enrollment performance',
+        icon: 'fa-user-graduate',
+        events: courseEvents
+      })
+    ].join('');
   }
 
-  function monthlyIncomeSeries(approvedPayments) {
-    const counts = {};
-    approvedPayments.forEach(payment => {
-      const currency = paymentCurrency(payment);
-      counts[currency] = (counts[currency] || 0) + 1;
-    });
-    const currency = Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] || (state.courses[0]?.currency || 'USD');
-    const now = new Date();
-    const months = [];
-    for (let offset = 5; offset >= 0; offset -= 1) {
-      const date = new Date(now.getFullYear(), now.getMonth() - offset, 1);
-      months.push({ key: `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`, label: date.toLocaleDateString('en-US', { month: 'short' }), value: 0 });
+  function startOfLocalDay(date) {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  }
+
+  function addDays(date, days) {
+    const next = new Date(date);
+    next.setDate(next.getDate() + days);
+    return next;
+  }
+
+  function analyticsPeriod(target) {
+    const config = analyticsState[target] || analyticsState.users;
+    const today = startOfLocalDay(new Date());
+    let start;
+    let end;
+
+    if (config.range === 'today') {
+      start = today; end = addDays(today, 1);
+    } else if (config.range === 'yesterday') {
+      start = addDays(today, -1); end = today;
+    } else if (config.range === 'last_month') {
+      start = addDays(today, -29); end = addDays(today, 1);
+    } else if (config.range === 'custom' && config.start && config.end) {
+      const customStart = new Date(`${config.start}T00:00:00`);
+      const customEnd = new Date(`${config.end}T00:00:00`);
+      if (!Number.isNaN(customStart.getTime()) && !Number.isNaN(customEnd.getTime()) && customEnd >= customStart) {
+        start = customStart; end = addDays(customEnd, 1);
+      }
     }
-    approvedPayments.filter(payment => paymentCurrency(payment) === currency).forEach(payment => {
-      const date = new Date(payment.approved_at || payment.updated_at || payment.created_at);
-      if (Number.isNaN(date.getTime())) return;
-      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-      const month = months.find(item => item.key === key);
-      if (month) month.value += Number(payment.amount || 0);
+
+    if (!start || !end) {
+      start = addDays(today, -6); end = addDays(today, 1);
+    }
+
+    const duration = Math.max(60 * 60 * 1000, end.getTime() - start.getTime());
+    return {
+      start, end,
+      previousStart: new Date(start.getTime() - duration),
+      previousEnd: start,
+      duration
+    };
+  }
+
+  function analyticsBuckets(period) {
+    const dayMs = 86400000;
+    const durationDays = period.duration / dayMs;
+    let count = 7;
+    if (durationDays <= 2) count = 6;
+    else if (durationDays <= 9) count = Math.max(2, Math.round(durationDays));
+    else if (durationDays <= 35) count = 6;
+    else count = 8;
+
+    const span = period.duration / count;
+    return Array.from({ length: count }, (_, index) => {
+      const start = new Date(period.start.getTime() + (span * index));
+      const end = index === count - 1 ? period.end : new Date(period.start.getTime() + (span * (index + 1)));
+      let labelText;
+      if (durationDays <= 2) labelText = start.toLocaleTimeString('en-US', { hour: 'numeric' });
+      else if (durationDays <= 35) labelText = start.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
+      else labelText = start.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+      return { start, end, label: labelText, value: 0 };
     });
-    return { currency, points: months, total: months.reduce((sum, month) => sum + month.value, 0) };
+  }
+
+  function analyticsSeries(events, target) {
+    const period = analyticsPeriod(target);
+    const buckets = analyticsBuckets(period);
+    let current = 0;
+    let previous = 0;
+
+    events.forEach(value => {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return;
+      if (date >= period.start && date < period.end) {
+        current += 1;
+        const bucket = buckets.find(item => date >= item.start && date < item.end);
+        if (bucket) bucket.value += 1;
+      } else if (date >= period.previousStart && date < period.previousEnd) {
+        previous += 1;
+      }
+    });
+
+    let change = 0;
+    if (previous > 0) change = ((current - previous) / previous) * 100;
+    else if (current > 0) change = 100;
+    const rounded = Math.round(change * 10) / 10;
+    return { period, buckets, current, previous, change: rounded };
+  }
+
+  function analyticsLineSvg(buckets, target) {
+    const width = 520;
+    const height = 160;
+    const left = 18;
+    const right = 12;
+    const top = 14;
+    const bottom = 28;
+    const innerWidth = width - left - right;
+    const innerHeight = height - top - bottom;
+    const max = Math.max(1, ...buckets.map(item => item.value));
+    const denominator = Math.max(1, buckets.length - 1);
+    const points = buckets.map((item, index) => {
+      const x = left + (innerWidth * index / denominator);
+      const y = top + innerHeight - ((item.value / max) * innerHeight);
+      return { x, y, value: item.value, label: item.label };
+    });
+    const pointString = points.map(point => `${point.x.toFixed(1)},${point.y.toFixed(1)}`).join(' ');
+    const area = `${left},${top + innerHeight} ${pointString} ${left + innerWidth},${top + innerHeight}`;
+    const grid = [0, .5, 1].map(ratio => {
+      const y = top + (innerHeight * ratio);
+      return `<line x1="${left}" y1="${y}" x2="${left + innerWidth}" y2="${y}" class="trend-grid-line" />`;
+    }).join('');
+    const dots = points.map(point => `<g class="trend-dot"><circle cx="${point.x}" cy="${point.y}" r="4"></circle><title>${esc(point.label)}: ${point.value}</title></g>`).join('');
+    const labels = points.map(point => `<text x="${point.x}" y="${height - 7}" text-anchor="middle">${esc(point.label)}</text>`).join('');
+    return `<svg class="analytics-trend-svg ${target}" viewBox="0 0 ${width} ${height}" role="img" aria-label="${target === 'users' ? 'User growth' : 'Course enrollment'} trend">${grid}<polygon points="${area}" class="trend-area"></polygon><polyline points="${pointString}" class="trend-line"></polyline>${dots}${labels}</svg>`;
+  }
+
+  function analyticsComparisonText(range) {
+    if (range === 'today') return 'vs yesterday';
+    if (range === 'yesterday') return 'vs previous day';
+    if (range === 'last_week') return 'vs previous 7 days';
+    if (range === 'last_month') return 'vs previous 30 days';
+    return 'vs previous same period';
+  }
+
+  function analyticsTrendCard({ target, eyebrow, title, subtitle, icon, events }) {
+    const config = analyticsState[target];
+    const series = analyticsSeries(events, target);
+    const changeTone = series.change > 0 ? 'positive' : series.change < 0 ? 'negative' : 'neutral';
+    const changeIcon = series.change > 0 ? 'fa-arrow-trend-up' : series.change < 0 ? 'fa-arrow-trend-down' : 'fa-minus';
+    const changeText = `${series.change > 0 ? '+' : ''}${series.change}%`;
+    const ranges = [
+      ['today', 'Today'], ['yesterday', 'Yesterday'], ['last_week', 'Last Week'], ['last_month', 'Last Month'], ['custom', 'Custom Date']
+    ];
+    const filterButtons = ranges.map(([range, text]) => `<button type="button" class="analytics-range-btn ${config.range === range ? 'active' : ''}" data-analytics-range data-analytics-target="${target}" data-range="${range}">${text}</button>`).join('');
+    const custom = config.range === 'custom' ? `<div class="analytics-custom-range"><label>From<input type="date" value="${attr(config.start)}" data-analytics-custom="${target}-start"></label><label>To<input type="date" value="${attr(config.end)}" data-analytics-custom="${target}-end"></label></div>` : '';
+    const labelText = config.range === 'today' ? 'today' : config.range === 'yesterday' ? 'yesterday' : config.range === 'last_month' ? 'last 30 days' : config.range === 'custom' ? 'selected period' : 'last 7 days';
+
+    return `<section class="analytics-card trend-analytics-card" data-analytics-card="${target}">
+      <div class="analytics-head trend-head"><div><span class="analytics-eyebrow">${eyebrow}</span><h3><i class="fa-solid ${icon}"></i> ${title}</h3><p>${subtitle} · ${labelText}</p></div><div class="trend-total"><b>${series.current}</b><small>Total</small></div></div>
+      <div class="analytics-range-row">${filterButtons}</div>
+      ${custom}
+      <div class="analytics-trend-chart">${analyticsLineSvg(series.buckets, target)}</div>
+      <div class="analytics-performance-row"><span class="analytics-change ${changeTone}"><i class="fa-solid ${changeIcon}"></i> ${changeText}</span><span>${analyticsComparisonText(config.range)}</span><small>Previous: ${series.previous}</small></div>
+    </section>`;
   }
 
   function decorateBaseTables() {

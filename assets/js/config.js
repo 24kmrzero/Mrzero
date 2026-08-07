@@ -1,7 +1,7 @@
 window.APP_CONFIG = {
   SUPABASE_URL: 'https://jsmthmmkafgvzzcjjihp.supabase.co',
   SUPABASE_ANON_KEY: 'sb_publishable_4NT_9rswuHlVNBXaoyBtaQ_Uk11zqu5',
-  SITE_URL: 'https://24kmrzero.github.io/Mrzero',
+  SITE_URL: 'https://www.24kmrzero.com',
   DEFAULT_FREE_COURSE_SLUG: 'free-course',
   DEFAULT_TIMEZONE: 'Asia/Karachi',
   SUPPORT_WHATSAPP: '601113019068',

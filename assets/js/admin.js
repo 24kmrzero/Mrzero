@@ -156,7 +156,7 @@
     const starts=session.starts_at?isoToPktInput(session.starts_at):(number===1?'2026-08-20T21:00':'');
     const topic=session.topic||(number===1?'Basics of Forex\n• What is Forex trading?\n• How currency pairs work\n• Basic buy and sell concept':'');
     const duration=session.duration_minutes||90;
-    const meet=session.meet_url||state.sessionLinks[session.id]||(number===1?'https://example.com/online-class':'');
+    const meet=session.meet_url||state.sessionLinks[session.id]||'';
     return `<article class="course-session-row" data-course-session-row>
       <input type="hidden" data-session-field="id" value="${attr(session.id||'')}">
       <div class="course-session-row-head"><b>Class ${number}</b><button type="button" class="app-btn small danger session-remove-btn" data-remove-course-session title="Remove this class"><i class="fa-solid fa-trash"></i> Remove</button></div>
@@ -165,7 +165,7 @@
         <div class="form-field"><label>Date & Time (Pakistan Time)</label><input type="datetime-local" data-session-field="starts_at" value="${attr(starts)}" required></div>
         <div class="form-field full"><label>Heading & What Students Will Learn</label><textarea data-session-field="topic" required>${A.escapeHtml(topic)}</textarea></div>
         <div class="form-field"><label>Duration Minutes</label><input type="number" min="15" data-session-field="duration_minutes" value="${attr(duration)}" required></div>
-        <div class="form-field"><label>Online Class Link</label><input type="url" data-session-field="meet_url" value="${attr(meet)}" placeholder="https://example.com/online-class" required></div>
+        <div class="form-field"><label>Online Class Link</label><input type="url" data-session-field="meet_url" value="${attr(meet)}" placeholder="https://your-secure-class-link.com/" required></div>
       </div>
     </article>`;
   }
