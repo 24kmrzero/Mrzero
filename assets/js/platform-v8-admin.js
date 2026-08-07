@@ -558,22 +558,63 @@
     return `<b class="multi-money">${entries.slice(0, 2).map(([currency, total]) => `<span>${esc(A.formatMoney(total, currency))}</span>`).join('')}</b>`;
   }
 
+  const DEMO_ANALYTICS_PREVIEW = true;
+
+  function demoAnalyticsData() {
+    const now = startOfLocalDay(new Date());
+    const at = (daysAgo, hour = 12) => {
+      const date = addDays(now, -daysAgo);
+      date.setHours(hour, 0, 0, 0);
+      return date.toISOString();
+    };
+
+    // Designed to make both donut colors and growth comparisons visible.
+    const users = [
+      at(0, 9), at(0, 14),
+      at(1, 10), at(1, 16),
+      at(2, 11), at(2, 18),
+      at(3, 10), at(4, 15), at(5, 12), at(6, 17),
+      at(7, 11), at(8, 14), at(9, 10), at(10, 16), at(11, 12), at(12, 15), at(13, 9)
+    ];
+
+    const enrollments = [
+      { created_at: at(0, 10), __demoFree: true },
+      { created_at: at(0, 15), __demoFree: false },
+      { created_at: at(1, 11), __demoFree: true },
+      { created_at: at(2, 12), __demoFree: true },
+      { created_at: at(2, 17), __demoFree: false },
+      { created_at: at(3, 10), __demoFree: true },
+      { created_at: at(4, 14), __demoFree: false },
+      { created_at: at(5, 12), __demoFree: true },
+      { created_at: at(6, 16), __demoFree: true },
+      { created_at: at(7, 11), __demoFree: true },
+      { created_at: at(8, 12), __demoFree: false },
+      { created_at: at(9, 15), __demoFree: true },
+      { created_at: at(10, 10), __demoFree: true },
+      { created_at: at(11, 17), __demoFree: false },
+      { created_at: at(12, 13), __demoFree: true },
+      { created_at: at(13, 9), __demoFree: false }
+    ];
+    return { users, enrollments };
+  }
+
   function renderBusinessAnalytics() {
     const root = document.getElementById('dashboardAnalytics');
     if (!root) return;
 
-    const userEvents = state.profiles
+    const demo = DEMO_ANALYTICS_PREVIEW ? demoAnalyticsData() : null;
+    const userEvents = demo ? demo.users : state.profiles
       .filter(profile => profile.role === 'student')
       .map(profile => profile.created_at)
       .filter(Boolean);
-    const courseRows = state.enrollments || [];
+    const courseRows = demo ? demo.enrollments : (state.enrollments || []);
 
     root.innerHTML = [
       analyticsTrendCard({
         target: 'users',
         eyebrow: 'USERS',
         title: 'User Growth',
-        subtitle: 'New student registrations',
+        subtitle: DEMO_ANALYTICS_PREVIEW ? 'Demo preview · new student registrations' : 'New student registrations',
         icon: 'fa-users',
         data: userEvents
       }),
@@ -581,7 +622,7 @@
         target: 'courses',
         eyebrow: 'COURSES',
         title: 'Course Enrollments',
-        subtitle: 'Free and paid enrollments',
+        subtitle: DEMO_ANALYTICS_PREVIEW ? 'Demo preview · free and paid enrollments' : 'Free and paid enrollments',
         icon: 'fa-user-graduate',
         data: courseRows
       })
@@ -688,7 +729,7 @@
     rows.forEach(row => {
       const date = new Date(row.created_at || row.access_started_at || row.updated_at);
       if (Number.isNaN(date.getTime())) return;
-      const free = isFreeCourse(row.course_id);
+      const free = typeof row.__demoFree === 'boolean' ? row.__demoFree : isFreeCourse(row.course_id);
       if (date >= period.start && date < period.end) {
         if (free) freeCurrent += 1; else paidCurrent += 1;
         const bucket = buckets.find(item => date >= item.start && date < item.end);
