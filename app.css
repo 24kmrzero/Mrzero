@@ -2002,3 +2002,22 @@ html[data-theme="light"] #p-dashboard .v933-change.neutral{color:#8b6500;backgro
 @media(max-width:760px){
   #p-dashboard .v933-chart-surface{grid-template-columns:1fr}.v933-donut{width:min(150px,48vw)}
 }
+
+
+/* V9.38 — compact course modal + valid independent forms */
+#courseFormBox .course-form-card{width:min(760px,94vw);max-height:86vh}
+#courseFormBox .app-modal-head{padding:10px 14px}
+#courseFormBox .app-modal-head h3{font-size:16px}
+#courseFormBox .course-modal-body{padding:10px 14px}
+#courseFormBox .compact-course-grid{gap:7px 9px}
+#courseFormBox input,#courseFormBox select,#courseFormBox textarea{min-height:32px;padding:6px 8px;font-size:9px;border-radius:8px}
+#courseFormBox textarea{min-height:48px}
+#courseFormBox .course-session-row{padding:8px}
+#courseFormBox .course-session-row-head{margin-bottom:6px}
+#courseFormBox .compact-session-grid{gap:6px 8px}
+#courseFormBox .live-class-form-divider{padding:6px 8px}
+#courseFormBox .app-modal-foot{padding:8px 14px}
+#courseFormBox .app-modal-foot .app-btn{min-height:32px;padding:6px 11px;font-size:9px}
+#courseFormBox .course-structure-inline{margin:8px 14px 12px}
+#courseFormBox .course-access-note{margin:7px 0 0}
+@media(max-width:760px){#courseFormBox .course-form-card{width:100%;max-height:94vh}#courseFormBox .compact-course-grid,#courseFormBox .compact-session-grid{grid-template-columns:1fr}}
