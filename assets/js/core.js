@@ -15,7 +15,7 @@
       try { localStorage.setItem(THEME_KEY, next); } catch {}
     }
     const light = next === 'light';
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', light ? '#F6EFE3' : '#0A0A0A');
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', light ? '#F6F7F9' : '#0A0A0A');
     document.querySelectorAll('[data-theme-toggle]').forEach(button => {
       button.setAttribute('aria-label', light ? 'Switch to dark theme' : 'Switch to light theme');
       button.setAttribute('title', light ? 'Switch to dark theme' : 'Switch to light theme');
@@ -115,7 +115,7 @@
   };
 
   const statusLabel = value => ({
-    received: 'Receipt Received', pending: 'Pending Approval', grace: 'Grace Active',
+    initiated: 'Payment Started', received: 'Receipt Received', pending: 'Pending Approval', grace: 'Grace Active',
     locked: 'Locked', expired: 'Expired', suspended: 'Suspended', under_review: 'Under Review',
     approved: 'Approved', declined: 'Declined', resubmission_required: 'New Receipt Required',
     upcoming: 'Upcoming', active: 'Active', live: 'Live Now', completed: 'Completed',
@@ -131,7 +131,7 @@
   const statusClass = value => {
     if (['approved', 'active', 'live', 'completed', 'tp_hit', 'tp1_hit', 'tp2_hit', 'tp3_hit', 'tp4_hit', 'published', 'resolved', 'sent'].includes(value)) return 'ok';
     if (['declined', 'sl_hit', 'cancelled', 'locked', 'expired', 'suspended', 'failed'].includes(value)) return 'bad';
-    if (['received', 'under_review', 'resubmission_required', 'upcoming', 'breakeven', 'breakeven_hit', 'manually_closed', 'draft', 'pending', 'grace', 'in_progress', 'processing'].includes(value)) return 'warn';
+    if (['initiated', 'received', 'under_review', 'resubmission_required', 'upcoming', 'breakeven', 'breakeven_hit', 'manually_closed', 'draft', 'pending', 'grace', 'in_progress', 'processing'].includes(value)) return 'warn';
     return 'neutral';
   };
 

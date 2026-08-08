@@ -94,7 +94,17 @@
   function renderCourses(){document.getElementById('coursesBody').innerHTML=state.courses.length?state.courses.map(c=>{const next=state.sessions.filter(s=>s.course_id===c.id&&s.status!=='cancelled').sort((a,b)=>new Date(a.starts_at)-new Date(b.starts_at))[0];const hasLink=next&&Boolean(state.sessionLinks[next.id]);return `<tr><td><div class="table-course-cell">${c.thumbnail_url?`<img src="${attr(c.thumbnail_url)}" alt="" loading="lazy" decoding="async">`:'<span class="table-course-placeholder"><i class="fa-solid fa-graduation-cap"></i></span>'}<div><b>${A.escapeHtml(c.title)}</b><small>${A.escapeHtml(c.short_description||'No caption added')}</small></div></div></td><td>${coursePriceText(c)}</td><td><span class="status-pill ${A.statusClass(c.status)}">${A.statusLabel(c.status)}</span></td><td>${next?`<b>${A.escapeHtml(next.title)}</b><br><small>${A.formatDateTime(next.starts_at)}</small>`:'<span class="muted">Not scheduled</span>'}</td><td>${hasLink?'<span class="status-pill ok">Added</span>':'<span class="status-pill warn">Missing</span>'}</td><td>${c.is_published?'Yes':'No'}</td><td><div class="table-actions"><button class="app-btn small outline" data-edit="course" data-id="${c.id}">Edit</button><button class="app-btn small outline" data-goto="sessions">Sessions</button><button class="app-btn small danger" data-delete="course" data-id="${c.id}">Delete</button></div></td></tr>`}).join(''):`<tr><td colspan="7">${empty('No courses created.','fa-graduation-cap')}</td></tr>`;}
   function renderSessions(){document.getElementById('sessionsBody').innerHTML=state.sessions.length?state.sessions.map(s=>`<tr><td>${s.session_number}</td><td>${A.escapeHtml(courseName(s.course_id))}</td><td><b>${A.escapeHtml(s.title)}</b><br><small>${A.escapeHtml(s.topic||'')}</small></td><td>${A.formatDateTime(s.starts_at)}</td><td>${s.duration_minutes||90} min</td><td><span class="status-pill ${A.statusClass(s.status)}">${A.statusLabel(s.status)}</span></td><td>${state.sessionLinks[s.id]?'<span class="status-pill ok">Added</span>':'<span class="status-pill warn">Missing</span>'}</td><td><div class="table-actions"><button class="app-btn small outline" data-edit="session" data-id="${s.id}">Edit</button><button class="app-btn small danger" data-delete="session" data-id="${s.id}">Delete</button></div></td></tr>`).join(''):`<tr><td colspan="8">${empty('No online class sessions scheduled.','fa-video')}</td></tr>`;}
   function renderResources(){const root=document.getElementById('adminResources');if(!root)return;root.innerHTML=state.resources.length?state.resources.map(r=>`<div class="resource-row"><div><b>${A.escapeHtml(r.title)}</b><small class="muted" style="display:block">${A.escapeHtml(courseName(r.course_id))}${r.course_session_id?` · Session ${state.sessions.find(s=>s.id===r.course_session_id)?.session_number||''}`:''} · ${A.escapeHtml(r.file_name||'')}</small></div><button class="app-btn small danger" data-delete="resource" data-id="${r.id}">Delete</button></div>`).join(''):empty('No optional course resource uploaded.','fa-folder-open');}
-  function renderPayments(){const q=document.getElementById('paymentSearch')?.value.trim().toLowerCase()||'';const st=document.getElementById('paymentStatusFilter')?.value||'all';const rows=state.payments.filter(p=>(st==='all'||p.status===st)&&(!q||`${p.invoice_no} ${p.transaction_reference} ${profileName(p.student_id)} ${courseName(p.course_id)}`.toLowerCase().includes(q)));document.getElementById('adminPaymentsBody').innerHTML=rows.length?rows.map(p=>`<tr class="${p.duplicate_flag?'duplicate-payment-row':''}"><td><b>${A.escapeHtml(p.invoice_no||'Pending')}</b>${p.duplicate_flag?'<span class="status-pill bad"><i class="fa-solid fa-triangle-exclamation"></i> Duplicate Warning</span>':''}</td><td>${A.escapeHtml(profileName(p.student_id))}<br><small>${A.escapeHtml(profileEmail(p.student_id))}</small></td><td>${A.escapeHtml(courseName(p.course_id))}</td><td>${A.formatMoney(p.amount,courseCurrency(p.course_id))}</td><td>${A.escapeHtml(p.payment_method_name||'—')}</td><td>${A.escapeHtml(p.transaction_reference||'—')}${p.duplicate_reason?`<small class="danger-text">${A.escapeHtml(p.duplicate_reason)}</small>`:''}</td><td>${A.formatDateTime(p.created_at)}</td><td><span class="status-pill ${A.statusClass(p.status)}">${A.statusLabel(p.status)}</span></td><td><div class="table-actions">${p.receipt_path?`<button class="app-btn small outline" data-view-receipt="${p.id}">Receipt</button>`:''}<button class="app-btn small gold" data-review-payment="${p.id}">Review</button></div></td></tr>`).join(''):`<tr><td colspan="9">${empty('No payments match this filter.','fa-receipt')}</td></tr>`;}
+  function renderPayments(){
+    const q=document.getElementById('paymentSearch')?.value.trim().toLowerCase()||'';
+    const st=document.getElementById('paymentStatusFilter')?.value||'all';
+    const rows=state.payments.filter(p=>(st==='all'||p.status===st)&&(!q||`${p.invoice_no} ${p.transaction_reference} ${p.provider_request_id||''} ${profileName(p.student_id)} ${courseName(p.course_id)}`.toLowerCase().includes(q)));
+    document.getElementById('adminPaymentsBody').innerHTML=rows.length?rows.map(p=>{
+      const hosted=p.provider==='infinity';
+      const providerInfo=hosted?`<small class="muted" style="display:block">Infinity #${A.escapeHtml(p.provider_request_id||'—')}</small>`:'';
+      const receiptAction=hosted?'<span class="status-pill neutral">Hosted Verify</span>':p.receipt_path?`<button class="app-btn small outline" data-view-receipt="${p.id}">Receipt</button>`:'';
+      return `<tr class="${p.duplicate_flag?'duplicate-payment-row':''}"><td><b>${A.escapeHtml(p.invoice_no||'Pending')}</b>${providerInfo}${p.duplicate_flag?'<span class="status-pill bad"><i class="fa-solid fa-triangle-exclamation"></i> Duplicate Warning</span>':''}</td><td>${A.escapeHtml(profileName(p.student_id))}<br><small>${A.escapeHtml(profileEmail(p.student_id))}</small></td><td>${A.escapeHtml(courseName(p.course_id))}</td><td>${A.formatMoney(p.amount,courseCurrency(p.course_id))}</td><td>${A.escapeHtml(p.payment_method_name||'—')}</td><td>${A.escapeHtml(p.transaction_reference||'—')}${p.provider_rejection_reason?`<small class="danger-text">${A.escapeHtml(p.provider_rejection_reason)}</small>`:''}${p.duplicate_reason?`<small class="danger-text">${A.escapeHtml(p.duplicate_reason)}</small>`:''}</td><td>${A.formatDateTime(p.created_at)}</td><td><span class="status-pill ${A.statusClass(p.status)}">${A.statusLabel(p.status)}</span></td><td><div class="table-actions">${receiptAction}<button class="app-btn small gold" data-review-payment="${p.id}">Review</button></div></td></tr>`;
+    }).join(''):`<tr><td colspan="9">${empty('No payments match this filter.','fa-receipt')}</td></tr>`;
+  }
   function renderStudents(){const target=document.getElementById('studentsBody');if(!target)return;const rows=state.profiles.filter(p=>p.role==='student');target.innerHTML=rows.length?rows.map(p=>`<tr><td><b>${A.escapeHtml(p.full_name||'Student')}</b></td><td>${A.escapeHtml(p.email||'')}</td><td>${A.escapeHtml(p.whatsapp||'—')}</td><td>${A.escapeHtml(p.country||'—')}</td><td>${A.escapeHtml(p.experience||'—')}</td><td>${A.formatDate(p.created_at)}</td></tr>`).join(''):`<tr><td colspan="6">${empty('No registered students.','fa-users')}</td></tr>`;}
   function renderSupport(){document.getElementById('supportBody').innerHTML=state.support.length?state.support.map(s=>`<tr><td>${A.escapeHtml(profileName(s.student_id))}</td><td>${A.escapeHtml(s.category)}</td><td><b>${A.escapeHtml(s.subject)}</b></td><td>${A.escapeHtml(s.message)}</td><td>${A.formatDateTime(s.created_at)}</td><td><span class="status-pill ${A.statusClass(s.status)}">${A.statusLabel(s.status)}</span></td><td><div class="table-actions">${s.status!=='resolved'?`<button class="app-btn small green" data-support-status="resolved" data-id="${s.id}">Resolve</button>`:''}<button class="app-btn small outline" data-support-status="open" data-id="${s.id}">Reopen</button></div></td></tr>`).join(''):`<tr><td colspan="7">${empty('No support requests.','fa-headset')}</td></tr>`;}
   function renderMethods(){document.getElementById('methodsBody').innerHTML=state.methods.length?state.methods.map(m=>`<tr><td><b>${A.escapeHtml(m.name)}</b></td><td>${A.escapeHtml(m.account_title||'')}</td><td>${A.escapeHtml(m.account_number||'')}</td><td>${A.escapeHtml(m.instructions||'')}</td><td><span class="status-pill ${m.is_active?'ok':'warn'}">${m.is_active?'Active':'Inactive'}</span></td><td><div class="table-actions"><button class="app-btn small outline" data-edit="method" data-id="${m.id}">Edit</button><button class="app-btn small danger" data-delete="method" data-id="${m.id}">Delete</button></div></td></tr>`).join(''):`<tr><td colspan="6">${empty('No payment method configured.','fa-building-columns')}</td></tr>`;}
@@ -204,11 +214,85 @@
     });
   }
 
-  async function saveCourse(e){e.preventDefault();const f=e.currentTarget,v=formValues(f),id=v.id||A.uid(),button=f.querySelector('button[type=submit]');A.setLoading(button,true,'Saving course...');try{let thumbnail=v.existing_thumbnail_url||'';const file=f.elements.thumbnail.files[0];if(file)thumbnail=await uploadPublic(file,`courses/${id}`);const type=v.course_type||'paid';const price=type==='free'?0:Number(v.price||0);const discount=type==='free'?null:n(v.discount_price);if(type==='paid'&&price<=0)throw new Error('Paid course price must be greater than zero.');if(discount!==null&&discount>price)throw new Error('Discount price cannot be higher than regular price.');const caption=String(v.short_description||'').trim();if(!caption)throw new Error('Short caption is required.');const sessions=collectCourseSessions();if(!sessions.length)throw new Error('Add at least one class session.');for(const session of sessions){if(!session.title||!session.starts_at||!session.topic||!session.meet_url)throw new Error(`Complete all required fields for Class ${session.session_number}.`);if(!/^https:\/\//i.test(session.meet_url))throw new Error(`Enter a valid secure online class link for Class ${session.session_number}.`);}const row={id,title:String(v.title).trim(),slug:String(v.slug||slugify(v.title)).toLowerCase().trim().replace(/[^a-z0-9-]+/g,'-'),description:caption,short_description:caption.slice(0,220),instructor_name:'Malik Zameer',course_type:type,price,discount_price:discount,currency:v.currency,status:v.status,enrollment_open:checked(f,'enrollment_open'),access_days:null,start_date:String(sessions[0].starts_at).slice(0,10),end_date:null,thumbnail_url:thumbnail||null,is_published:checked(f,'is_published'),created_by:state.profile.id};const {error}=v.id?await A.supabase.from('courses').update(omit(row,'id','created_by')).eq('id',id):await A.supabase.from('courses').insert(row);if(error)throw error;
-      const existingIds=new Set(state.sessions.filter(x=>x.course_id===id).map(x=>x.id));const keptIds=new Set();
-      for(const session of sessions){const sessionId=session.id||A.uid();keptIds.add(sessionId);const sessionRow={id:sessionId,course_id:id,session_number:session.session_number,title:session.title,topic:session.topic,starts_at:pktToIso(session.starts_at),duration_minutes:session.duration_minutes,status:v.status==='completed'?'completed':'upcoming',created_by:state.profile.id};const result=session.id?await A.supabase.from('course_sessions').update(omit(sessionRow,'id','created_by','course_id')).eq('id',sessionId):await A.supabase.from('course_sessions').insert(sessionRow);if(result.error)throw result.error;const linkResult=await A.supabase.from('course_session_links').upsert({course_session_id:sessionId,meet_url:session.meet_url,updated_by:state.profile.id},{onConflict:'course_session_id'});if(linkResult.error)throw linkResult.error;}
-      const removed=[...existingIds].filter(x=>!keptIds.has(x));if(removed.length){const del=await A.supabase.from('course_sessions').delete().in('id',removed);if(del.error)throw del.error;}
-      await loadAll();f.reset();f.elements.id.value='';f.elements.existing_thumbnail_url.value='';f.elements.instructor_name.value='Malik Zameer';f.elements.price.value='0';renderCourseSessionEditor();document.getElementById('courseFormBox').classList.remove('open');document.getElementById('courseFormBox').setAttribute('aria-hidden','true');renderAll();A.toast(`Course and ${sessions.length} class session${sessions.length===1?'':'s'} saved successfully.`,'success');}catch(error){A.toast(A.friendlyError(error,'Could not save course.'),'error');}finally{A.setLoading(button,false);}}
+  async function saveCourse(e){
+    e.preventDefault();
+    const f=e.currentTarget,v=formValues(f),id=v.id||A.uid(),button=f.querySelector('button[type=submit]');
+    let uploaded=null;
+    A.setLoading(button,true,'Saving course...');
+    try{
+      let thumbnail=v.existing_thumbnail_url||'';
+      const file=f.elements.thumbnail.files[0];
+      if(file){uploaded=await uploadPublicAsset(file,`courses/${id}`);thumbnail=uploaded.url;}
+
+      const type=v.course_type||'paid';
+      const price=type==='free'?0:Number(v.price||0);
+      const discount=type==='free'?null:n(v.discount_price);
+      if(type==='paid'&&price<=0)throw new Error('Paid course price must be greater than zero.');
+      if(discount!==null&&discount>price)throw new Error('Discount price cannot be higher than regular price.');
+      const caption=String(v.short_description||'').trim();
+      if(!caption)throw new Error('Short caption is required.');
+
+      const sessions=collectCourseSessions();
+      if(!sessions.length)throw new Error('Add at least one class session.');
+      for(const session of sessions){
+        if(!session.title||!session.starts_at||!session.topic||!session.meet_url)throw new Error(`Complete all required fields for Class ${session.session_number}.`);
+        if(!/^https:\/\//i.test(session.meet_url))throw new Error(`Enter a valid secure online class link for Class ${session.session_number}.`);
+      }
+
+      const coursePayload={
+        id:v.id||null,
+        title:String(v.title).trim(),
+        slug:String(v.slug||slugify(v.title)).toLowerCase().trim().replace(/[^a-z0-9-]+/g,'-'),
+        short_description:caption,
+        course_type:type,
+        price,
+        discount_price:discount,
+        currency:v.currency,
+        status:v.status,
+        enrollment_open:checked(f,'enrollment_open'),
+        thumbnail_url:thumbnail||null,
+        is_published:checked(f,'is_published'),
+        publish_at:v.publish_at?new Date(v.publish_at).toISOString():null,
+        unpublish_at:v.unpublish_at?new Date(v.unpublish_at).toISOString():null,
+        featured:checked(f,'featured')
+      };
+      const sessionPayload=sessions.map(session=>({
+        id:session.id||null,
+        session_number:session.session_number,
+        title:session.title,
+        topic:session.topic,
+        starts_at:pktToIso(session.starts_at),
+        duration_minutes:session.duration_minutes,
+        status:v.status==='completed'?'completed':'upcoming',
+        meet_url:session.meet_url
+      }));
+
+      const {data,error}=await A.supabase.rpc('admin_save_course_with_sessions',{p_course:coursePayload,p_sessions:sessionPayload});
+      if(error)throw error;
+
+      if(uploaded&&v.existing_thumbnail_url&&v.existing_thumbnail_url!==uploaded.url){
+        const oldPath=publicStoragePath(v.existing_thumbnail_url,'content-assets');
+        if(oldPath)await A.supabase.storage.from('content-assets').remove([oldPath]);
+      }
+
+      await loadAll();
+      f.reset();
+      f.elements.id.value='';
+      f.elements.existing_thumbnail_url.value='';
+      f.elements.instructor_name.value='Malik Zameer';
+      f.elements.price.value='0';
+      renderCourseSessionEditor();
+      document.getElementById('courseFormBox').classList.remove('open');
+      document.getElementById('courseFormBox').setAttribute('aria-hidden','true');
+      const title=document.getElementById('courseFormTitle');if(title)title.textContent='Add Course';
+      renderAll();
+      A.toast(`Course and ${data?.sessions_saved||sessions.length} class session${sessions.length===1?'':'s'} saved successfully.`,'success');
+    }catch(error){
+      if(uploaded?.path)await A.supabase.storage.from('content-assets').remove([uploaded.path]).catch(()=>{});
+      console.error('Course save failed:',error);
+      A.toast(A.friendlyError(error,'Could not save course.'),'error');
+    }finally{A.setLoading(button,false);}
+  }
   async function saveSession(e){e.preventDefault();const f=e.currentTarget,v=formValues(f),id=v.id||A.uid(),button=f.querySelector('button[type=submit]');A.setLoading(button,true,'Saving...');try{const row={id,course_id:v.course_id,session_number:Number(v.session_number),title:v.title,topic:v.topic,starts_at:pktToIso(v.starts_at),duration_minutes:Number(v.duration_minutes||90),status:v.status,created_by:state.profile.id};const {error}=v.id?await A.supabase.from('course_sessions').update(omit(row,'id','created_by')).eq('id',id):await A.supabase.from('course_sessions').insert(row);if(error)throw error;const {error:le}=await A.supabase.from('course_session_links').upsert({course_session_id:id,meet_url:v.meet_url,updated_by:state.profile.id},{onConflict:'course_session_id'});if(le)throw le;await loadAll();f.reset();f.elements.id.value='';document.getElementById('sessionFormBox').classList.remove('open');renderAll();A.toast('Online class session saved securely.','success');}catch(error){A.toast(A.friendlyError(error,'Could not save session.'),'error');}finally{A.setLoading(button,false);}}
   async function saveResource(e){e.preventDefault();const f=e.currentTarget,v=formValues(f),file=f.elements.file.files[0],button=f.querySelector('button[type=submit]');if(!file)return A.toast('Choose a file.','error');A.setLoading(button,true,'Uploading...');try{const id=A.uid(),path=`${v.course_id}/${id}/${A.fileSafeName(file.name)}`;const upload=await A.supabase.storage.from('course-resources').upload(path,file,{contentType:file.type});if(upload.error)throw upload.error;const {error}=await A.supabase.from('course_resources').insert({id,course_id:v.course_id,course_session_id:v.course_session_id||null,title:v.title,description:v.description,file_path:path,file_name:file.name,mime_type:file.type,file_size:file.size,created_by:state.profile.id});if(error){await A.supabase.storage.from('course-resources').remove([path]);throw error;}await loadAll();f.reset();document.getElementById('resourceFormBox').classList.remove('open');renderAll();A.toast('Course resource uploaded.','success');}catch(error){A.toast(A.friendlyError(error,'Upload failed.'),'error');}finally{A.setLoading(button,false);}}
   async function saveMethod(e){e.preventDefault();const f=e.currentTarget,v=formValues(f),id=v.id||A.uid();await save('payment_methods',{id,name:v.name,account_title:v.account_title,account_number:v.account_number,instructions:v.instructions,sort_order:Number(v.sort_order||0),is_active:checked(f,'is_active')},v.id,f,'Payment method saved.');}

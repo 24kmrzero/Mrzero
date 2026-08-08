@@ -28,6 +28,7 @@
   subscribeRealtime();
   document.getElementById('pageLoader').classList.add('hidden');
   document.getElementById('studentApp').classList.remove('hidden');
+  handlePaymentReturn();
 
   async function loadAll() {
     const sb = A.supabase;
@@ -60,7 +61,7 @@
   function renderAll() {
     renderKpis(); renderDashboard(); renderSignals(); renderCharts(); renderArticles(); renderCourses();
     renderPayments(); renderAnnouncements(); renderProfile(); renderSupport();
-    document.getElementById('paymentCount').textContent = state.payments.filter(p => ['received', 'under_review', 'resubmission_required'].includes(p.status)).length;
+    document.getElementById('paymentCount').textContent = state.payments.filter(p => ['initiated', 'received', 'under_review', 'resubmission_required'].includes(p.status)).length;
     document.getElementById('announcementCount').textContent = state.announcements.length;
     window.dispatchEvent(new CustomEvent('24k:student-base-updated',{detail:state}));
   }
@@ -68,7 +69,7 @@
   function renderKpis() {
     const activeSignals = state.signals.filter(s => !signalIsFinal(s)).length;
     const approvedCourses = state.enrollments.filter(isEnrollmentActive).length;
-    const pending = state.payments.filter(p => ['received', 'under_review'].includes(p.status)).length;
+    const pending = state.payments.filter(p => ['initiated', 'received', 'under_review'].includes(p.status)).length;
     const finals = state.signals.filter(s => signalIsFinal(s) && s.status !== 'cancelled' && s.result_pips !== null);
     const wins = finals.filter(s => Number(s.result_pips) > 0).length;
     const losses = finals.filter(s => Number(s.result_pips) < 0).length;
@@ -281,8 +282,12 @@
       const access = hasCourseAccess(course.id);
       const payment = latestPayment(course.id);
       const nextSession=state.sessions.filter(s=>s.course_id===course.id&&s.status!=='cancelled').sort((a,b)=>new Date(a.starts_at)-new Date(b.starts_at))[0];
-      const actualPrice=course.discount_price!=null?Number(course.discount_price):Number(course.price); const paymentText = payment ? A.statusLabel(payment.status) : (course.course_type==='free'||actualPrice===0 ? 'Free enrollment' : 'Payment required');
-      return `<article class="course-card"><div class="course-cover ${course.thumbnail_url?'has-image':''}">${course.thumbnail_url?`<img src="${attr(course.thumbnail_url)}" alt="${attr(course.title)}" loading="lazy" decoding="async">`:'<i class="fa-solid fa-graduation-cap"></i>'}<span class="status-pill ${A.statusClass(course.status)}">${A.statusLabel(course.status)}</span></div><div class="course-body"><h3>${A.escapeHtml(course.title)}</h3><p>${A.escapeHtml(course.short_description || course.description || '')}</p><div class="course-meta"><span><i class="fa-solid fa-user-tie"></i> ${A.escapeHtml(course.instructor_name || A.cfg.INSTRUCTOR_NAME)}</span><span><i class="fa-solid fa-money-bill"></i> ${course.discount_price!=null?`<s>${A.formatMoney(course.price,course.currency)}</s> ${A.formatMoney(course.discount_price,course.currency)}`:A.formatMoney(course.price, course.currency)}</span>${nextSession?`<span><i class="fa-solid fa-calendar"></i> ${A.formatDateTime(nextSession.starts_at)}</span>`:`<span><i class="fa-solid fa-calendar"></i> Date to be announced</span>`}</div>${nextSession?`<div class="course-next-class"><small>Next Live Class</small><b>${A.escapeHtml(nextSession.title)}</b><span>${A.escapeHtml(nextSession.topic||'')}</span></div>`:''}<div class="notice ${access ? 'ok' : payment?.status === 'declined' ? 'bad' : 'warn'}">${access ? '<b>Access approved.</b> Online class access is unlocked.' : `<b>${paymentText}.</b> Class date is visible, but online class access remains locked.`}</div><div class="course-actions"><button class="app-btn ${access ? 'gold' : 'outline'}" data-open-course="${course.id}"><i class="fa-solid fa-calendar-days"></i> View Live Class</button>${access ? '' : (course.course_type==='free'||actualPrice===0) ? `<button class="app-btn gold" data-free-enroll="${course.id}">Enroll Free</button>` : `<button class="app-btn gold" data-buy-course="${course.id}"><i class="fa-solid fa-receipt"></i> ${payment && ['received','under_review'].includes(payment.status) ? 'Payment Submitted' : payment?.status==='resubmission_required' ? 'Submit New Receipt' : 'Submit Payment'}</button>`}</div></div></article>`;
+      const actualPrice=course.discount_price!=null?Number(course.discount_price):Number(course.price);
+      const paymentText = payment ? A.statusLabel(payment.status) : (course.course_type==='free'||actualPrice===0 ? 'Free enrollment' : 'Payment required');
+      const isInfinity = String(course.currency||'').toUpperCase()==='PKR';
+      const paymentButtonText = payment?.status==='initiated' ? 'Continue Payment' : payment && ['received','under_review'].includes(payment.status) ? 'Payment Submitted' : payment?.status==='resubmission_required' ? 'Submit New Receipt' : ['failed','declined'].includes(payment?.status) ? 'Try Payment Again' : isInfinity ? 'Pay Now' : 'Submit Payment';
+      const paymentTone = ['declined','failed'].includes(payment?.status) ? 'bad' : 'warn';
+      return `<article class="course-card"><div class="course-cover ${course.thumbnail_url?'has-image':''}">${course.thumbnail_url?`<img src="${attr(course.thumbnail_url)}" alt="${attr(course.title)}" loading="lazy" decoding="async">`:'<i class="fa-solid fa-graduation-cap"></i>'}<span class="status-pill ${A.statusClass(course.status)}">${A.statusLabel(course.status)}</span></div><div class="course-body"><h3>${A.escapeHtml(course.title)}</h3><p>${A.escapeHtml(course.short_description || course.description || '')}</p><div class="course-meta"><span><i class="fa-solid fa-user-tie"></i> ${A.escapeHtml(course.instructor_name || A.cfg.INSTRUCTOR_NAME)}</span><span><i class="fa-solid fa-money-bill"></i> ${course.discount_price!=null?`<s>${A.formatMoney(course.price,course.currency)}</s> ${A.formatMoney(course.discount_price,course.currency)}`:A.formatMoney(course.price, course.currency)}</span>${nextSession?`<span><i class="fa-solid fa-calendar"></i> ${A.formatDateTime(nextSession.starts_at)}</span>`:`<span><i class="fa-solid fa-calendar"></i> Date to be announced</span>`}</div>${nextSession?`<div class="course-next-class"><small>Next Live Class</small><b>${A.escapeHtml(nextSession.title)}</b><span>${A.escapeHtml(nextSession.topic||'')}</span></div>`:''}<div class="notice ${access ? 'ok' : paymentTone}">${access ? '<b>Access approved.</b> Online class access is unlocked.' : `<b>${paymentText}.</b> ${payment?.status==='initiated'&&isInfinity?'Complete the secure hosted bank payment and receipt verification.':'Class date is visible, but online class access remains locked.'}`}</div><div class="course-actions"><button class="app-btn ${access ? 'gold' : 'outline'}" data-open-course="${course.id}"><i class="fa-solid fa-calendar-days"></i> View Live Class</button>${access ? '' : (course.course_type==='free'||actualPrice===0) ? `<button class="app-btn gold" data-free-enroll="${course.id}">Enroll Free</button>` : `<button class="app-btn gold" data-buy-course="${course.id}"><i class="fa-solid fa-building-columns"></i> ${paymentButtonText}</button>`}</div></div></article>`;
     }).join('') : empty('No course is currently published.', 'fa-graduation-cap');
   }
 
@@ -330,13 +335,20 @@
       const course = p.courses || state.courses.find(c => c.id === p.course_id) || {};
       const latest = latestPayment(p.course_id);
       const canResubmit = p.status === 'resubmission_required' && latest?.id === p.id;
-      const action = canResubmit
-        ? `<button class="app-btn small gold" data-buy-course="${p.course_id}"><i class="fa-solid fa-upload"></i> New Receipt</button>`
-        : p.status === 'resubmission_required' && latest?.id !== p.id
-          ? '<span class="status-pill neutral">Superseded</span>'
-          : p.receipt_path
-            ? `<button class="app-btn small outline" data-view-receipt="${p.id}"><i class="fa-solid fa-eye"></i> View</button>`
-            : '—';
+      const isInfinity = p.provider === 'infinity';
+      const action = isInfinity
+        ? (p.status === 'initiated' && latest?.id === p.id
+            ? `<button class="app-btn small gold" data-buy-course="${p.course_id}"><i class="fa-solid fa-arrow-up-right-from-square"></i> Continue</button>`
+            : ['failed','declined'].includes(p.status) && latest?.id === p.id
+              ? `<button class="app-btn small outline" data-buy-course="${p.course_id}"><i class="fa-solid fa-rotate-right"></i> Try Again</button>`
+              : '<span class="status-pill neutral">Hosted</span>')
+        : canResubmit
+          ? `<button class="app-btn small gold" data-buy-course="${p.course_id}"><i class="fa-solid fa-upload"></i> New Receipt</button>`
+          : p.status === 'resubmission_required' && latest?.id !== p.id
+            ? '<span class="status-pill neutral">Superseded</span>'
+            : p.receipt_path
+              ? `<button class="app-btn small outline" data-view-receipt="${p.id}"><i class="fa-solid fa-eye"></i> View</button>`
+              : '—';
       return `<tr><td><b>${A.escapeHtml(p.invoice_no || 'Pending')}</b></td><td>${A.escapeHtml(course.title || 'Course')}</td><td>${A.formatMoney(p.amount, course.currency || 'USD')}</td><td>${A.escapeHtml(p.payment_method_name || p.method || '—')}</td><td>${A.escapeHtml(p.transaction_reference || '—')}</td><td>${A.formatDateTime(p.created_at)}</td><td><span class="status-pill ${A.statusClass(p.status)}">${A.statusLabel(p.status)}</span></td><td>${A.escapeHtml(p.admin_note || p.decline_reason || '—')}</td><td>${action}</td></tr>`;
     }).join('');
   }
@@ -372,7 +384,7 @@
       const courseOpen = event.target.closest('[data-open-course]');
       if (courseOpen) { openPanel('courses'); showCourseSessions(courseOpen.dataset.openCourse); }
       const buy = event.target.closest('[data-buy-course]');
-      if (buy) openPaymentModal(buy.dataset.buyCourse);
+      if (buy) await openPaymentModal(buy.dataset.buyCourse, buy);
       const free = event.target.closest('[data-free-enroll]');
       if (free) await enrollFree(free.dataset.freeEnroll, free);
       const article = event.target.closest('[data-read-article]');
@@ -412,11 +424,18 @@
   function showSignalNotification(update){if(!update?.notify_users)return;A.toast(`${update.notification_title||'Signal Update'} — ${update.notification_message||''}`,'success');if('Notification' in window&&Notification.permission==='granted'&&document.visibilityState!=='visible'){new Notification(update.notification_title||'24K Signal Update',{body:update.notification_message||'',icon:'assets/logo.png'});}}
 
 
-  function openPaymentModal(courseId) {
+  async function openPaymentModal(courseId, triggerButton=null) {
     const course = state.courses.find(c => c.id === courseId);
     if (!course) return;
     const pending = latestPayment(courseId);
-    if (pending && ['received','under_review'].includes(pending.status)) return A.toast('Your payment is already under review.', 'warning');
+    if (pending && ['received','under_review'].includes(pending.status)) return A.toast('Your payment is already being processed.', 'warning');
+
+    // PKR paid courses use the secure Infinity hosted bank-deposit flow.
+    if (course.course_type === 'paid' && String(course.currency||'').toUpperCase() === 'PKR') {
+      return startInfinityPayment(courseId, triggerButton);
+    }
+
+    // Legacy/manual fallback remains available for any non-PKR course.
     const form = document.getElementById('paymentForm');
     form.reset(); form.elements.course_id.value = course.id; form.dataset.supersedesPaymentId = pending?.status==='resubmission_required'?pending.id:''; const payable=course.discount_price!=null?Number(course.discount_price):Number(course.price); form.elements.amount.value = payable;
     document.getElementById('paymentCourseSummary').innerHTML = `<b>${A.escapeHtml(course.title)}</b><br>Instructor: Malik Zameer · Amount: ${A.formatMoney(course.discount_price!=null?course.discount_price:course.price, course.currency)}`;
@@ -424,6 +443,42 @@
     renderPaymentMethodInfo();
     document.getElementById('paymentMethodSelect').onchange = renderPaymentMethodInfo;
     A.openModal('paymentModal');
+  }
+
+  async function startInfinityPayment(courseId, triggerButton=null) {
+    const course = state.courses.find(c => c.id === courseId);
+    if (!course) return;
+    const button = triggerButton || document.querySelector(`[data-buy-course="${courseId}"]`);
+    A.setLoading(button, true, 'Opening secure payment...');
+    try {
+      const { data, error } = await A.supabase.functions.invoke('create-infinity-payment', { body: { course_id: courseId } });
+      if (error) throw error;
+      if (!data?.redirect_url) throw new Error(data?.error || 'Payment provider did not return a secure payment page.');
+      if (!/^https?:\/\//i.test(data.redirect_url)) throw new Error('Invalid payment redirect URL.');
+      window.location.assign(data.redirect_url);
+    } catch (error) {
+      await loadAll().catch(()=>{});
+      renderAll();
+      A.toast(A.friendlyError(error, 'Could not open secure payment. Please try again.'), 'error');
+    } finally {
+      A.setLoading(button, false);
+    }
+  }
+
+  function handlePaymentReturn() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('payment_return') !== '1') return;
+    openPanel('payments');
+    const payment = state.payments.find(p => Number(p.provider_request_id) === Number(params.get('request_id')));
+    if (payment?.status === 'approved') A.toast('Payment verified successfully. Your course access is now active.', 'success');
+    else if (payment?.status === 'declined') A.toast(payment.provider_rejection_reason || payment.admin_note || 'Payment was rejected.', 'error');
+    else A.toast('Payment verification is being finalized. This page will update automatically.', 'warning');
+    try {
+      const clean = new URL(window.location.href);
+      clean.searchParams.delete('payment_return');
+      clean.searchParams.delete('request_id');
+      history.replaceState({}, '', `${clean.pathname}${clean.search}#payments`);
+    } catch { /* cosmetic URL cleanup only */ }
   }
 
   function renderPaymentMethodInfo() {
