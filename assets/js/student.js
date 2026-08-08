@@ -457,9 +457,20 @@
       if (!/^https?:\/\//i.test(data.redirect_url)) throw new Error('Invalid payment redirect URL.');
       window.location.assign(data.redirect_url);
     } catch (error) {
+      let paymentError = error;
+      try {
+        const response = error?.context;
+        if (response && typeof response.clone === 'function') {
+          const payload = await response.clone().json().catch(()=>null);
+          if (payload?.error) {
+            const extra = [payload.code, payload.details, payload.hint].filter(Boolean).join(' · ');
+            paymentError = new Error(`${payload.error}${extra ? ` (${extra})` : ''}`);
+          }
+        }
+      } catch { /* preserve original function error */ }
       await loadAll().catch(()=>{});
       renderAll();
-      A.toast(A.friendlyError(error, 'Could not open secure payment. Please try again.'), 'error');
+      A.toast(A.friendlyError(paymentError, 'Could not open secure payment. Please try again.'), 'error');
     } finally {
       A.setLoading(button, false);
     }
