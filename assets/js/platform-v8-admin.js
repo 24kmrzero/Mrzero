@@ -54,8 +54,8 @@
 
   function openCleanAdminRouteAfterInstall() {
     const map = {
-      '/admin/calendar': 'calendar', '/admin/enquiries': 'leads', '/admin/links': 'links',
-      '/admin/notifications': 'admin-notifications', '/admin/delivery': 'delivery',
+      '/admin/enquiries': 'leads', '/admin/links': 'links',
+      '/admin/notifications': 'admin-notifications',
       '/admin/activity': 'audit', '/admin/settings': 'settings'
     };
     const path = location.pathname.replace(/\/+$/, '');
@@ -72,21 +72,14 @@
     const nav = document.querySelector('.app-nav');
     const courseLabel = [...nav.querySelectorAll('.app-nav-label')].find(node => node.textContent.trim() === 'COURSES');
     const operationsLabel = [...nav.querySelectorAll('.app-nav-label')].find(node => node.textContent.trim() === 'OPERATIONS');
-    if (courseLabel && !nav.querySelector('[data-panel="calendar"]')) {
-      const marker = document.createElement('div');
-      marker.innerHTML = navLink('calendar', 'fa-calendar-days', 'Calendar');
-      let cursor = courseLabel;
-      while (cursor.nextElementSibling && !cursor.nextElementSibling.classList.contains('app-nav-label')) cursor = cursor.nextElementSibling;
-      [...marker.children].reverse().forEach(link => cursor.after(link));
-    }
     if (operationsLabel && !nav.querySelector('[data-panel="links"]')) {
       const marker = document.createElement('div');
-      marker.innerHTML = navLink('leads', 'fa-address-book', 'Website Enquiries', 'enquiryCount') + navLink('links', 'fa-link', 'Link Manager') + navLink('admin-notifications', 'fa-bell', 'Admin Notifications', 'adminNotificationCount') + navLink('delivery', 'fa-paper-plane', 'Delivery Center') + navLink('audit', 'fa-clock-rotate-left', 'Activity Logs') + navLink('settings', 'fa-gear', 'Settings');
+      marker.innerHTML = navLink('leads', 'fa-address-book', 'Website Enquiries', 'enquiryCount') + navLink('links', 'fa-link', 'Link Manager') + navLink('admin-notifications', 'fa-bell', 'Admin Notifications', 'adminNotificationCount') + navLink('audit', 'fa-clock-rotate-left', 'Activity Logs') + navLink('settings', 'fa-gear', 'Settings');
       [...marker.children].reverse().forEach(link => operationsLabel.after(link));
     }
 
     const content = document.querySelector('.app-content');
-    if (!document.getElementById('p-calendar')) content.insertAdjacentHTML('beforeend', panelsHtml());
+    if (!document.getElementById('p-leads')) content.insertAdjacentHTML('beforeend', panelsHtml());
     enhanceStudentsPanel();
     installModals();
     enhanceDashboard();
@@ -111,21 +104,9 @@
         <div class="app-card team-management-card"><div class="app-card-head"><div><h3>Team Performance Accounts</h3><p>Assign one existing tracked link to each team member.</p></div><button class="app-btn gold" type="button" id="addTeamAccount"><i class="fa-solid fa-user-plus"></i> Add Team Account</button></div><div class="table-scroll"><table class="admin-table"><thead><tr><th>Team Member</th><th>Username</th><th>Assigned Link</th><th>Reference</th><th>Status</th><th>Actions</th></tr></thead><tbody id="teamAccountsBody"></tbody></table></div></div>
       </section>
 
-      <section class="panel" id="p-calendar">
-        <div class="panel-heading"><div><h2>Operations Calendar</h2><p>Classes, course dates, scheduled content and user expiries.</p></div><div class="inline-actions"><button class="app-btn outline" id="calendarPrev"><i class="fa-solid fa-chevron-left"></i></button><b id="calendarTitle"></b><button class="app-btn outline" id="calendarNext"><i class="fa-solid fa-chevron-right"></i></button></div></div>
-        <div class="calendar-legend"><span class="class-dot">Classes</span><span class="content-dot">Content</span><span class="expiry-dot">Expiries</span></div><div class="admin-calendar" id="adminCalendar"></div>
-      </section>
-
       <section class="panel" id="p-admin-notifications">
         <div class="panel-heading"><div><h2>Admin Notifications</h2><p>New registrations, payments and support requests that need attention.</p></div><button class="app-btn outline" id="markAllAdminNotifications">Mark All Read</button></div>
         <div class="filter-row"><select id="adminNotificationFilter"><option value="all">All</option><option value="unread">Unread</option><option value="payment">Payments</option><option value="signup">Registrations</option><option value="support">Support</option><option value="enquiry">Enquiries</option></select></div><div id="adminNotificationsList"></div>
-      </section>
-
-      <section class="panel" id="p-delivery">
-        <div class="panel-heading"><div><h2>Delivery Center</h2><p>Monitor queued, sent and failed transactional emails.</p></div><button class="app-btn gold" id="processEmailQueue"><i class="fa-solid fa-paper-plane"></i> Process Queue</button></div>
-        <div class="kpi-grid" id="deliveryKpis"></div><div class="notice info"><i class="fa-solid fa-circle-info"></i> Supabase handles verification and password reset emails. Custom enrollment/payment/class emails require the included Edge Function and sender configuration.</div>
-        <div class="filter-row"><input id="emailSearch" type="search" placeholder="Search recipient or template..."><select id="emailStatusFilter"><option value="all">All statuses</option><option value="pending">Pending</option><option value="sent">Sent</option><option value="failed">Failed</option><option value="cancelled">Cancelled</option></select></div>
-        <div class="table-scroll"><table class="admin-table"><thead><tr><th>Recipient</th><th>Template</th><th>Subject</th><th>Status</th><th>Attempts</th><th>Scheduled</th><th>Error</th><th>Action</th></tr></thead><tbody id="emailQueueBody"></tbody></table></div>
       </section>
 
       <section class="panel" id="p-audit">
@@ -171,7 +152,6 @@
       <div class="app-modal" id="enquiryReviewModal"><div class="app-modal-card"><div class="app-modal-head"><div><h3>Website Enquiry</h3><small id="enquiryReviewSubtitle" class="muted"></small></div><button class="modal-close" data-close-modal="enquiryReviewModal"><i class="fa-solid fa-xmark"></i></button></div><form id="enquiryReviewForm"><input type="hidden" name="enquiry_id"><div class="app-modal-body"><div id="enquiryReviewContent" class="notice info"></div><div class="form-field"><label>Status</label><select name="status"><option value="new">New</option><option value="contacted">Contacted</option><option value="qualified">Qualified</option><option value="closed">Closed</option><option value="spam">Spam</option></select></div><div class="form-field"><label>Admin Note</label><textarea name="note" placeholder="Follow-up notes"></textarea></div></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="enquiryReviewModal">Cancel</button><button class="app-btn gold" type="submit">Save Enquiry</button></div></form></div></div>
       <div class="app-modal" id="bulkMessageModal"><div class="app-modal-card"><div class="app-modal-head"><div><h3>Notify Selected Students</h3><small id="bulkMessageSubtitle" class="muted"></small></div><button class="modal-close" data-close-modal="bulkMessageModal"><i class="fa-solid fa-xmark"></i></button></div><form id="bulkMessageForm"><div class="app-modal-body"><div class="form-field"><label>Title</label><input name="title" required maxlength="150"></div><div class="form-field"><label>Message</label><textarea name="message" required maxlength="2000"></textarea></div><label class="check-row"><input type="checkbox" name="send_email"> Also queue email delivery</label></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="bulkMessageModal">Cancel</button><button class="app-btn gold" type="submit">Send Notification</button></div></form></div></div>
       <div class="app-modal" id="enrollmentManageModal"><div class="app-modal-card"><div class="app-modal-head"><div><h3>Manage Enrollment</h3><small id="enrollmentModalSubtitle" class="muted"></small></div><button class="modal-close" data-close-modal="enrollmentManageModal"><i class="fa-solid fa-xmark"></i></button></div><form id="enrollmentForm"><input type="hidden" name="enrollment_id"><div class="app-modal-body"><div class="form-grid"><div class="form-field full"><label>Student</label><select name="student_id" id="enrollmentStudent" required></select></div><div class="form-field full"><label>Course</label><select name="course_id" id="enrollmentCourse" required></select></div><div class="form-field"><label>Status</label><select name="status"><option value="active">Active</option><option value="expired">Expired</option><option value="revoked">Revoked</option></select></div><div class="form-field"><label>Access Days</label><input type="number" min="1" name="access_days" placeholder="Optional"></div><div class="form-field full"><label>Exact Expiry</label><input type="datetime-local" name="expires_at"></div></div></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="enrollmentManageModal" id="resetEnrollmentForm">Cancel</button><button class="app-btn gold" type="submit">Save Enrollment</button></div></form></div></div>
-      <div class="app-modal" id="calendarDayModal"><div class="app-modal-card"><div class="app-modal-head"><div><h3 id="calendarDayTitle">Calendar Details</h3><small class="muted">Classes, content and expiries</small></div><button class="modal-close" data-close-modal="calendarDayModal"><i class="fa-solid fa-xmark"></i></button></div><div class="app-modal-body" id="calendarDayModalContent"></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="calendarDayModal">Close</button></div></div></div>
       <div class="app-modal" id="teamAccountModal"><div class="app-modal-card"><div class="app-modal-head"><div><h3 id="teamAccountModalTitle">Add Team Account</h3><small class="muted">Username + password only. Assign an existing tracked link.</small></div><button class="modal-close" data-close-modal="teamAccountModal"><i class="fa-solid fa-xmark"></i></button></div><form id="teamAccountForm"><input type="hidden" name="team_id"><div class="app-modal-body"><div class="form-grid"><div class="form-field"><label>Team Member Name</label><input name="display_name" required></div><div class="form-field"><label>Username</label><input name="username" required autocomplete="off"></div><div class="form-field full"><label>Password <span class="muted">(leave blank when editing to keep current)</span></label><input type="password" name="password" autocomplete="new-password"></div><div class="form-field full"><label>Existing Tracked Link</label><select name="link_id" id="teamLinkSelect" required></select></div><label class="check-row"><input type="checkbox" name="is_active" checked> Team account active</label></div></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="teamAccountModal">Cancel</button><button class="app-btn gold" type="submit">Save Team Account</button></div></form></div></div>
       <div class="global-search-results hidden" id="globalSearchResults"></div>`);
   }
@@ -215,7 +195,6 @@
     document.getElementById('linkForm')?.addEventListener('submit', saveLink);
     document.getElementById('addTeamAccount')?.addEventListener('click', () => openTeamAccount());
     document.getElementById('teamAccountForm')?.addEventListener('submit', saveTeamAccount);
-    document.getElementById('processEmailQueue')?.addEventListener('click', processEmailQueue);
     document.getElementById('emailSearch')?.addEventListener('input', renderDelivery);
     document.getElementById('emailStatusFilter')?.addEventListener('change', renderDelivery);
     document.getElementById('adminNotificationFilter')?.addEventListener('change', renderAdminNotifications);
@@ -239,8 +218,6 @@
     document.getElementById('applyBulkUsers')?.addEventListener('click', applyBulkUsers);
     document.getElementById('notifySelectedUsers')?.addEventListener('click', openBulkMessage);
     document.getElementById('bulkMessageForm')?.addEventListener('submit', sendBulkMessage);
-    document.getElementById('calendarPrev')?.addEventListener('click', () => moveCalendar(-1));
-    document.getElementById('calendarNext')?.addEventListener('click', () => moveCalendar(1));
     document.getElementById('adminSearch')?.addEventListener('input', renderGlobalSearch);
     document.getElementById('exportUsers')?.addEventListener('click', exportUsers);
     document.getElementById('exportEnrollments')?.addEventListener('click', exportEnrollments);
@@ -268,7 +245,6 @@
       const resendVerification = event.target.closest('[data-resend-verification]'); if (resendVerification) resendVerificationEmail(resendVerification.dataset.resendVerification, resendVerification);
       const notify = event.target.closest('[data-admin-notification]'); if (notify) openAdminNotification(notify.dataset.adminNotification);
       const retry = event.target.closest('[data-retry-email]'); if (retry) retryEmail(retry.dataset.retryEmail, retry);
-      const day = event.target.closest('[data-calendar-date]'); if (day) renderCalendarDay(day.dataset.calendarDate);
       const support = event.target.closest('[data-support-review]'); if (support) openSupportReview(support.dataset.supportReview);
       const enquiry = event.target.closest('[data-enquiry-review]'); if (enquiry) openEnquiryReview(enquiry.dataset.enquiryReview);
       const result = event.target.closest('[data-global-result]'); if (result) handleGlobalResult(result);
@@ -328,11 +304,11 @@
 
   function safeRender(name, fn) { try { fn(); } catch (error) { console.error(`Admin render failed: ${name}`, error); } }
   function renderAll() {
-    [['courses',populateCourseOptions],['structure',renderStructure],['enrollments',renderEnrollments],['enquiries',renderEnquiries],['links',renderLinks],['team',renderTeamAccounts],['users',renderUsers],['delivery',renderDelivery],['notifications',renderAdminNotifications],['audit',renderAudit],['calendar',renderCalendar],['settings',renderSettings],['analytics',renderOperationsDashboard],['tables',decorateBaseTables],['search',renderGlobalSearch]].forEach(([name,fn])=>safeRender(name,fn));
+    [['courses',populateCourseOptions],['structure',renderStructure],['enrollments',renderEnrollments],['enquiries',renderEnquiries],['links',renderLinks],['team',renderTeamAccounts],['users',renderUsers],['notifications',renderAdminNotifications],['audit',renderAudit],['settings',renderSettings],['analytics',renderOperationsDashboard],['tables',decorateBaseTables],['search',renderGlobalSearch]].forEach(([name,fn])=>safeRender(name,fn));
   }
 
   function renderBaseDependentViews() {
-    [['courses',populateCourseOptions],['enrollments',renderEnrollments],['users',renderUsers],['calendar',renderCalendar],['analytics',renderOperationsDashboard],['tables',decorateBaseTables],['team',renderTeamAccounts]].forEach(([name,fn])=>safeRender(name,fn));
+    [['courses',populateCourseOptions],['enrollments',renderEnrollments],['users',renderUsers],['analytics',renderOperationsDashboard],['tables',decorateBaseTables],['team',renderTeamAccounts]].forEach(([name,fn])=>safeRender(name,fn));
   }
 
   function populateCourseOptions() {
@@ -601,7 +577,7 @@
   }
 
   function paymentCurrency(payment) {
-    return String(payment.currency || courseById(payment.course_id)?.currency || 'USD').toUpperCase();
+    const raw = String(payment.currency || courseById(payment.course_id)?.currency || 'PKR').toUpperCase(); return raw === 'USD' || raw === 'MYR' ? 'USDT' : raw;
   }
 
   function incomeTotals(payments) {
