@@ -158,15 +158,14 @@
       });
       if (error) throw error;
       form.reset();
-      if (data.session && isConfirmed(data.user)) {
-        await tracking?.record('signup');
-        toast('Account created successfully.', 'success');
-        const profile = await window.App.getProfile(data.user.id);
-        await finishStudentLogin(data.user, profile);
-      } else {
-        localStorage.setItem('24k_pending_signup_email', email);
-        window.location.replace(checkEmailUrl(email));
-      }
+      // Production rule: a new student must verify the mailbox before the first login.
+      // If Supabase Email Confirmation is accidentally disabled and a session is returned,
+      // close that session instead of silently logging the new account in.
+      await tracking?.record('signup').catch(()=>{});
+      if (data.session) await supabase.auth.signOut().catch(()=>{});
+      localStorage.setItem('24k_pending_signup_email', email);
+      toast('Account created. Please verify your email before signing in.', 'success');
+      window.location.replace(checkEmailUrl(email));
     } catch (error) {
       toast(friendlyError(error, 'Could not create account.'), 'error');
       setLoading(button, false);

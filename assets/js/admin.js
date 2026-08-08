@@ -214,6 +214,19 @@
     });
   }
 
+  function normalizeSecureUrl(value){
+    let url=String(value||'').trim();
+    if(!url)return '';
+    if(/^www\./i.test(url))url=`https://${url}`;
+    else if(!/^[a-z][a-z0-9+.-]*:\/\//i.test(url) && /^[a-z0-9.-]+\.[a-z]{2,}(?:[\/?:#]|$)/i.test(url))url=`https://${url}`;
+    try{
+      const parsed=new URL(url);
+      if(parsed.protocol!=='https:')throw new Error('Only secure HTTPS links are allowed.');
+      parsed.hash=parsed.hash||'';
+      return parsed.href.replace(/\/$/,'');
+    }catch{throw new Error('Enter a valid secure HTTPS online class link.');}
+  }
+
   async function saveCourse(e){
     e.preventDefault();
     const f=e.currentTarget,v=formValues(f),id=v.id||A.uid(),button=f.querySelector('button[type=submit]');
@@ -236,7 +249,7 @@
       if(!sessions.length)throw new Error('Add at least one class session.');
       for(const session of sessions){
         if(!session.title||!session.starts_at||!session.topic||!session.meet_url)throw new Error(`Complete all required fields for Class ${session.session_number}.`);
-        if(!/^https:\/\//i.test(session.meet_url))throw new Error(`Enter a valid secure online class link for Class ${session.session_number}.`);
+        session.meet_url=normalizeSecureUrl(session.meet_url);
       }
 
       const coursePayload={
@@ -293,7 +306,7 @@
       A.toast(A.friendlyError(error,'Could not save course.'),'error');
     }finally{A.setLoading(button,false);}
   }
-  async function saveSession(e){e.preventDefault();const f=e.currentTarget,v=formValues(f),id=v.id||A.uid(),button=f.querySelector('button[type=submit]');A.setLoading(button,true,'Saving...');try{const row={id,course_id:v.course_id,session_number:Number(v.session_number),title:v.title,topic:v.topic,starts_at:pktToIso(v.starts_at),duration_minutes:Number(v.duration_minutes||90),status:v.status,created_by:state.profile.id};const {error}=v.id?await A.supabase.from('course_sessions').update(omit(row,'id','created_by')).eq('id',id):await A.supabase.from('course_sessions').insert(row);if(error)throw error;const {error:le}=await A.supabase.from('course_session_links').upsert({course_session_id:id,meet_url:v.meet_url,updated_by:state.profile.id},{onConflict:'course_session_id'});if(le)throw le;await loadAll();f.reset();f.elements.id.value='';document.getElementById('sessionFormBox').classList.remove('open');renderAll();A.toast('Online class session saved securely.','success');}catch(error){A.toast(A.friendlyError(error,'Could not save session.'),'error');}finally{A.setLoading(button,false);}}
+  async function saveSession(e){e.preventDefault();const f=e.currentTarget,v=formValues(f),id=v.id||A.uid(),button=f.querySelector('button[type=submit]');A.setLoading(button,true,'Saving...');try{const secureLink=normalizeSecureUrl(v.meet_url);const row={id,course_id:v.course_id,session_number:Number(v.session_number),title:v.title,topic:v.topic,starts_at:pktToIso(v.starts_at),duration_minutes:Number(v.duration_minutes||90),status:v.status,created_by:state.profile.id};const {error}=v.id?await A.supabase.from('course_sessions').update(omit(row,'id','created_by')).eq('id',id):await A.supabase.from('course_sessions').insert(row);if(error)throw error;const {error:le}=await A.supabase.from('course_session_links').upsert({course_session_id:id,meet_url:secureLink,updated_by:state.profile.id},{onConflict:'course_session_id'});if(le)throw le;await loadAll();f.reset();f.elements.id.value='';document.getElementById('sessionFormBox').classList.remove('open');document.getElementById('sessionFormBox')?.setAttribute('aria-hidden','true');renderAll();A.toast('Online class session saved securely.','success');}catch(error){A.toast(A.friendlyError(error,'Could not save session.'),'error');}finally{A.setLoading(button,false);}}
   async function saveResource(e){e.preventDefault();const f=e.currentTarget,v=formValues(f),file=f.elements.file.files[0],button=f.querySelector('button[type=submit]');if(!file)return A.toast('Choose a file.','error');A.setLoading(button,true,'Uploading...');try{const id=A.uid(),path=`${v.course_id}/${id}/${A.fileSafeName(file.name)}`;const upload=await A.supabase.storage.from('course-resources').upload(path,file,{contentType:file.type});if(upload.error)throw upload.error;const {error}=await A.supabase.from('course_resources').insert({id,course_id:v.course_id,course_session_id:v.course_session_id||null,title:v.title,description:v.description,file_path:path,file_name:file.name,mime_type:file.type,file_size:file.size,created_by:state.profile.id});if(error){await A.supabase.storage.from('course-resources').remove([path]);throw error;}await loadAll();f.reset();document.getElementById('resourceFormBox').classList.remove('open');renderAll();A.toast('Course resource uploaded.','success');}catch(error){A.toast(A.friendlyError(error,'Upload failed.'),'error');}finally{A.setLoading(button,false);}}
   async function saveMethod(e){e.preventDefault();const f=e.currentTarget,v=formValues(f),id=v.id||A.uid();await save('payment_methods',{id,name:v.name,account_title:v.account_title,account_number:v.account_number,instructions:v.instructions,sort_order:Number(v.sort_order||0),is_active:checked(f,'is_active')},v.id,f,'Payment method saved.');}
   async function save(table,row,existingId,form,message){const button=form.querySelector('button[type=submit]');A.setLoading(button,true,'Saving...');try{const clean=Object.fromEntries(Object.entries(row).filter(([,v])=>v!==undefined));const {error}=existingId?await A.supabase.from(table).update(omit(clean,'id','created_by')).eq('id',row.id):await A.supabase.from(table).insert(clean);if(error)throw error;await loadAll();form.reset();if(form.elements.id)form.elements.id.value='';form.closest('.admin-form-box')?.classList.remove('open');renderAll();A.toast(message,'success');}catch(error){A.toast(A.friendlyError(error,'Could not save record.'),'error');}finally{A.setLoading(button,false);}}
