@@ -285,7 +285,7 @@
       const actualPrice=course.discount_price!=null?Number(course.discount_price):Number(course.price);
       const paymentText = payment ? A.statusLabel(payment.status) : (course.course_type==='free'||actualPrice===0 ? 'Free enrollment' : 'Payment required');
       const isInfinity = String(course.currency||'').toUpperCase()==='PKR';
-      const paymentButtonText = payment?.status==='initiated' ? 'Continue Payment' : payment && ['received','under_review'].includes(payment.status) ? 'Payment Submitted' : payment?.status==='resubmission_required' ? 'Submit New Receipt' : ['failed','declined'].includes(payment?.status) ? 'Try Payment Again' : isInfinity ? 'Pay Now' : 'Submit Payment';
+      const paymentButtonText = payment?.status==='initiated' ? 'Continue Payment' : payment && ['received','under_review'].includes(payment.status) ? 'Payment Submitted' : payment?.status==='resubmission_required' ? 'Submit New Receipt' : ['failed','declined'].includes(payment?.status) ? 'Try Payment Again' : 'Pay Now';
       const paymentTone = ['declined','failed'].includes(payment?.status) ? 'bad' : 'warn';
       return `<article class="course-card"><div class="course-cover ${course.thumbnail_url?'has-image':''}">${course.thumbnail_url?`<img src="${attr(course.thumbnail_url)}" alt="${attr(course.title)}" loading="lazy" decoding="async">`:'<i class="fa-solid fa-graduation-cap"></i>'}<span class="status-pill ${A.statusClass(course.status)}">${A.statusLabel(course.status)}</span></div><div class="course-body"><h3>${A.escapeHtml(course.title)}</h3><p>${A.escapeHtml(course.short_description || course.description || '')}</p><div class="course-meta"><span><i class="fa-solid fa-user-tie"></i> ${A.escapeHtml(course.instructor_name || A.cfg.INSTRUCTOR_NAME)}</span><span><i class="fa-solid fa-money-bill"></i> ${course.discount_price!=null?`<s>${A.formatMoney(course.price,course.currency)}</s> ${A.formatMoney(course.discount_price,course.currency)}`:A.formatMoney(course.price, course.currency)}</span>${nextSession?`<span><i class="fa-solid fa-calendar"></i> ${A.formatDateTime(nextSession.starts_at)}</span>`:`<span><i class="fa-solid fa-calendar"></i> Date to be announced</span>`}</div>${nextSession?`<div class="course-next-class"><small>Next Live Class</small><b>${A.escapeHtml(nextSession.title)}</b><span>${A.escapeHtml(nextSession.topic||'')}</span></div>`:''}<div class="notice ${access ? 'ok' : paymentTone}">${access ? '<b>Access approved.</b> Online class access is unlocked.' : `<b>${paymentText}.</b> ${payment?.status==='initiated'&&isInfinity?'Complete the secure hosted bank payment and receipt verification.':'Class date is visible, but online class access remains locked.'}`}</div><div class="course-actions"><button class="app-btn ${access ? 'gold' : 'outline'}" data-open-course="${course.id}"><i class="fa-solid fa-calendar-days"></i> View Live Class</button>${access ? '' : (course.course_type==='free'||actualPrice===0) ? `<button class="app-btn gold" data-free-enroll="${course.id}">Enroll Free</button>` : `<button class="app-btn gold" data-buy-course="${course.id}"><i class="fa-solid fa-building-columns"></i> ${paymentButtonText}</button>`}</div></div></article>`;
     }).join('') : empty('No course is currently published.', 'fa-graduation-cap');
@@ -349,7 +349,7 @@
             : p.receipt_path
               ? `<button class="app-btn small outline" data-view-receipt="${p.id}"><i class="fa-solid fa-eye"></i> View</button>`
               : '—';
-      return `<tr><td><b>${A.escapeHtml(p.invoice_no || 'Pending')}</b></td><td>${A.escapeHtml(course.title || 'Course')}</td><td>${A.formatMoney(p.amount, course.currency || 'PKR')}</td><td>${A.escapeHtml(p.payment_method_name || p.method || '—')}</td><td>${A.escapeHtml(p.transaction_reference || '—')}</td><td>${A.formatDateTime(p.created_at)}</td><td><span class="status-pill ${A.statusClass(p.status)}">${A.statusLabel(p.status)}</span></td><td>${A.escapeHtml(p.admin_note || p.decline_reason || '—')}</td><td>${action}</td></tr>`;
+      return `<tr><td><b>${A.escapeHtml(p.invoice_no || 'Pending')}</b></td><td>${A.escapeHtml(course.title || 'Course')}</td><td>${A.formatMoney(p.amount, course.currency || 'PKR')}</td><td>${A.escapeHtml(isInfinity ? 'Local Bank Transfer' : (p.payment_method_name || p.method || '—'))}</td><td>${A.escapeHtml(p.transaction_reference || '—')}</td><td>${A.formatDateTime(p.created_at)}</td><td><span class="status-pill ${A.statusClass(p.status)}">${A.statusLabel(p.status)}</span></td><td>${A.escapeHtml(p.admin_note || p.decline_reason || '—')}</td><td>${action}</td></tr>`;
     }).join('');
   }
 
@@ -385,6 +385,8 @@
       if (courseOpen) { openPanel('courses'); showCourseSessions(courseOpen.dataset.openCourse); }
       const buy = event.target.closest('[data-buy-course]');
       if (buy) await openPaymentModal(buy.dataset.buyCourse, buy);
+      const paymentChoice = event.target.closest('[data-payment-choice]');
+      if (paymentChoice) await choosePaymentMethod(paymentChoice.dataset.paymentChoice);
       const free = event.target.closest('[data-free-enroll]');
       if (free) await enrollFree(free.dataset.freeEnroll, free);
       const article = event.target.closest('[data-read-article]');
@@ -424,21 +426,47 @@
   function showSignalNotification(update){if(!update?.notify_users)return;A.toast(`${update.notification_title||'Signal Update'} — ${update.notification_message||''}`,'success');if('Notification' in window&&Notification.permission==='granted'&&document.visibilityState!=='visible'){new Notification(update.notification_title||'24K Signal Update',{body:update.notification_message||'',icon:'assets/logo.png'});}}
 
 
+  let paymentChoiceContext = { courseId: null, triggerButton: null };
+
   async function openPaymentModal(courseId, triggerButton=null) {
     const course = state.courses.find(c => c.id === courseId);
     if (!course) return;
     const pending = latestPayment(courseId);
     if (pending && ['received','under_review'].includes(pending.status)) return A.toast('Your payment is already being processed.', 'warning');
 
-    // PKR paid courses use the secure Infinity hosted bank-deposit flow.
-    if (course.course_type === 'paid' && String(course.currency||'').toUpperCase() === 'PKR') {
+    paymentChoiceContext = { courseId, triggerButton };
+    const payable = course.discount_price != null ? Number(course.discount_price) : Number(course.price);
+    const currency = String(course.currency || '').toUpperCase();
+    const summary = document.getElementById('paymentChoiceCourseSummary');
+    if (summary) summary.innerHTML = `<b>${A.escapeHtml(course.title)}</b><br>Amount: ${A.formatMoney(payable, currency || 'PKR')}<br><small>Choose your preferred payment method below.</small>`;
+    A.openModal('paymentMethodChoiceModal');
+  }
+
+  async function choosePaymentMethod(choice) {
+    const { courseId, triggerButton } = paymentChoiceContext;
+    const course = state.courses.find(c => c.id === courseId);
+    if (!course) return;
+    const currency = String(course.currency || '').toUpperCase();
+
+    if (choice === 'local-bank') {
+      if (currency !== 'PKR') return A.toast('Local Bank Transfer is available for courses priced in PKR. This course is currently priced in USDT.', 'warning');
+      A.closeModal('paymentMethodChoiceModal');
       return startInfinityPayment(courseId, triggerButton);
     }
 
-    const currency = String(course.currency || '').toUpperCase();
-    if (currency !== 'USDT') return A.toast('This course has an unsupported payment currency. Admin must set it to PKR or USDT.', 'error');
+    if (choice === 'usdt') {
+      if (currency !== 'USDT') return A.toast('USDT TRC20 is available for courses priced in USDT. This course is currently priced in PKR.', 'warning');
+      A.closeModal('paymentMethodChoiceModal');
+      return openUsdtPaymentModal(courseId);
+    }
+  }
 
-    // USDT courses use manual TRC20 proof submission for Admin review.
+  async function openUsdtPaymentModal(courseId) {
+    const course = state.courses.find(c => c.id === courseId);
+    if (!course) return;
+    const pending = latestPayment(courseId);
+    if (pending && ['received','under_review'].includes(pending.status)) return A.toast('Your payment is already being processed.', 'warning');
+
     const usdtMethods = state.paymentMethods.filter(m => /usdt|trc\s*20|trc20/i.test(`${m.name||''} ${m.instructions||''}`));
     if (!usdtMethods.length) return A.toast('USDT TRC20 payment method is not configured yet. Please contact Admin.', 'warning');
     const form = document.getElementById('paymentForm');
@@ -462,7 +490,7 @@
     const course = state.courses.find(c => c.id === courseId);
     if (!course) return;
     const button = triggerButton || document.querySelector(`[data-buy-course="${courseId}"]`);
-    A.setLoading(button, true, 'Opening secure payment...');
+    A.setLoading(button, true, 'Opening Local Bank Transfer...');
     try {
       const { data, error } = await A.supabase.functions.invoke('create-infinity-payment', { body: { course_id: courseId } });
       if (error) throw error;
@@ -483,7 +511,7 @@
       } catch { /* preserve original function error */ }
       await loadAll().catch(()=>{});
       renderAll();
-      A.toast(A.friendlyError(paymentError, 'Could not open secure payment. Please try again.'), 'error');
+      A.toast(A.friendlyError(paymentError, 'Could not open Local Bank Transfer. Please try again.'), 'error');
     } finally {
       A.setLoading(button, false);
     }
