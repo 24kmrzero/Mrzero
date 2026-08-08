@@ -284,14 +284,40 @@
 
   function activateDashboardNavigation() {
     const side = document.getElementById('side');
-    const open = key => {
+    const adminRoutes = {
+      dashboard: '/admin/', signals: '/admin/signals/', charts: '/admin/charts/', articles: '/admin/articles/',
+      announcements: '/admin/announcements/', courses: '/admin/courses/', sessions: '/admin/sessions/',
+      calendar: '/admin/calendar/', leads: '/admin/enquiries/', links: '/admin/links/',
+      'admin-notifications': '/admin/notifications/', delivery: '/admin/delivery/', audit: '/admin/activity/',
+      settings: '/admin/settings/', payments: '/admin/payments/', students: '/admin/students/',
+      support: '/admin/support/', methods: '/admin/payment-methods/'
+    };
+    const studentRoutes = {
+      dashboard: '/student/', signals: '/student/signals/', charts: '/student/charts/', articles: '/student/articles/',
+      courses: '/student/courses/', payments: '/student/payments/', announcements: '/student/announcements/',
+      profile: '/student/profile/', support: '/student/support/'
+    };
+    const routeMap = authScope === 'admin' ? adminRoutes : studentRoutes;
+    const reverseRoutes = Object.fromEntries(Object.entries(routeMap).map(([key, path]) => [path.replace(/\/+$/, '') || '/', key]));
+    const cleanPath = () => {
+      const path = location.pathname.replace(/\/+$/, '') || '/';
+      if (reverseRoutes[path]) return reverseRoutes[path];
+      if (authScope === 'admin' && (path === '/admin-dashboard.html' || path === '/admin-dashboard')) return 'dashboard';
+      if (authScope !== 'admin' && (path === '/student-dashboard.html' || path === '/student-dashboard')) return 'dashboard';
+      return '';
+    };
+
+    const open = (key, updateUrl = true) => {
       const links = [...document.querySelectorAll('[data-panel]')];
       const panels = [...document.querySelectorAll('.panel')];
       if (!panels.some(panel => panel.id === `p-${key}`)) return false;
       links.forEach(link => link.classList.toggle('on', link.dataset.panel === key));
       panels.forEach(panel => panel.classList.toggle('on', panel.id === `p-${key}`));
       side?.classList.remove('open');
-      if (history.replaceState) history.replaceState(null, '', `#${key}`);
+      if (updateUrl && history.replaceState) {
+        const route = routeMap[key];
+        history.replaceState({ panel: key }, '', route || `#${key}`);
+      }
       window.scrollTo({ top: 0, behavior: 'smooth' });
       document.dispatchEvent(new CustomEvent('panel:open', { detail: { key } }));
       return true;
@@ -303,13 +329,17 @@
         const target = event.target.closest('[data-panel],[data-goto]');
         if (!target) return;
         const key = target.dataset.panel || target.dataset.goto;
-        if (open(key)) event.preventDefault();
+        if (open(key, true)) event.preventDefault();
+      });
+      window.addEventListener('popstate', () => {
+        const key = cleanPath() || location.hash.replace('#', '') || 'dashboard';
+        open(key, false);
       });
     }
 
     document.getElementById('burger')?.addEventListener('click', () => side?.classList.toggle('open'));
-    const initial = location.hash.replace('#', '');
-    if (initial) setTimeout(() => open(initial), 0);
+    const initial = cleanPath() || location.hash.replace('#', '') || 'dashboard';
+    setTimeout(() => open(initial, true), 0);
     return open;
   }
 

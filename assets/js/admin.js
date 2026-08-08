@@ -112,9 +112,10 @@
   function populateCourseSelects(){const opts=state.courses.map(c=>`<option value="${c.id}">${A.escapeHtml(c.title)}</option>`).join('');document.getElementById('sessionCourseSelect').innerHTML=opts;const resourceSelect=document.getElementById('resourceCourseSelect');if(resourceSelect){resourceSelect.innerHTML=opts;updateResourceSessionOptions();}}
 
   function bindEvents(){
+    prepareCourseSaveUi();
     document.querySelectorAll('[data-toggle-form]').forEach(btn=>btn.addEventListener('click',()=>{const box=document.getElementById(btn.dataset.toggleForm);box?.classList.add('open');if(box?.classList.contains('app-modal'))box.setAttribute('aria-hidden','false');if(btn.dataset.toggleForm==='signalFormBox'&&!document.getElementById('signalForm').elements.id.value)resetSignalForm();if(btn.dataset.toggleForm==='chartFormBox'&&!document.getElementById('chartForm').elements.id.value)resetChartForm();if(btn.dataset.toggleForm==='courseFormBox'&&!document.getElementById('courseForm').elements.id.value){const title=document.getElementById('courseFormTitle');if(title)title.textContent='Add Course';}}));
     document.querySelectorAll('[data-cancel-form]').forEach(btn=>btn.addEventListener('click',()=>{const box=document.getElementById(btn.dataset.cancelForm);box?.classList.remove('open');if(box?.classList.contains('app-modal'))box.setAttribute('aria-hidden','true');box?.querySelector('form')?.reset();if(btn.dataset.cancelForm==='signalFormBox')resetSignalForm();if(btn.dataset.cancelForm==='chartFormBox')resetChartForm();if(btn.dataset.cancelForm==='courseFormBox'){const title=document.getElementById('courseFormTitle');if(title)title.textContent='Add Course';}}));
-    document.getElementById('resourceCourseSelect')?.addEventListener('change',updateResourceSessionOptions);document.getElementById('courseForm').elements.course_type.addEventListener('change',syncCourseTypeFields);syncCourseTypeFields();document.getElementById('addCourseSessionBtn').addEventListener('click',()=>{const editor=document.getElementById('courseSessionEditor'),count=editor.querySelectorAll('[data-course-session-row]').length;editor.insertAdjacentHTML('beforeend',courseSessionTemplate({},count));renumberCourseSessionRows();});document.getElementById('courseSessionEditor').addEventListener('click',e=>{const button=e.target.closest('[data-remove-course-session]');if(!button)return;const rows=document.querySelectorAll('[data-course-session-row]');if(rows.length===1)return A.toast('A course needs at least one class session.','warning');button.closest('[data-course-session-row]').remove();renumberCourseSessionRows();});document.getElementById('paymentStatusFilter').addEventListener('change',renderPayments);document.getElementById('paymentSearch').addEventListener('input',renderPayments);document.getElementById('adminSignalSearch').addEventListener('input',renderSignals);document.querySelectorAll('[data-admin-signal-view]').forEach(btn=>btn.addEventListener('click',()=>{document.getElementById('adminSignalView').value=btn.dataset.adminSignalView;renderSignals();}));
+    document.getElementById('resourceCourseSelect')?.addEventListener('change',updateResourceSessionOptions);document.getElementById('courseForm').elements.course_type.addEventListener('change',syncCourseTypeFields);syncCourseTypeFields();document.getElementById('addCourseSessionBtn').addEventListener('click',()=>{const editor=document.getElementById('courseSessionEditor'),count=editor.querySelectorAll('[data-course-session-row]').length;editor.insertAdjacentHTML('beforeend',courseSessionTemplate({},count));renumberCourseSessionRows();editor.querySelectorAll('[data-session-field="meet_url"]').forEach(prepareUrlInput);});document.getElementById('courseSessionEditor').addEventListener('click',e=>{const button=e.target.closest('[data-remove-course-session]');if(!button)return;const rows=document.querySelectorAll('[data-course-session-row]');if(rows.length===1)return A.toast('A course needs at least one class session.','warning');button.closest('[data-course-session-row]').remove();renumberCourseSessionRows();});document.getElementById('paymentStatusFilter').addEventListener('change',renderPayments);document.getElementById('paymentSearch').addEventListener('input',renderPayments);document.getElementById('adminSignalSearch').addEventListener('input',renderSignals);document.querySelectorAll('[data-admin-signal-view]').forEach(btn=>btn.addEventListener('click',()=>{document.getElementById('adminSignalView').value=btn.dataset.adminSignalView;renderSignals();}));
     document.getElementById('adminSearch').addEventListener('input',e=>{const q=e.currentTarget.value.trim().toLowerCase();document.querySelectorAll('.panel.on tbody tr,.panel.on article.content-card,.panel.on .announcement,.panel.on .resource-row').forEach(row=>row.classList.toggle('hidden',q&&!row.textContent.toLowerCase().includes(q)));});
     bindInstrumentPicker();
     bindChartInstrumentPicker();
@@ -187,7 +188,7 @@
         <div class="form-field"><label>Date & Time (Pakistan Time)</label><input type="datetime-local" data-session-field="starts_at" value="${attr(starts)}" required></div>
         <div class="form-field full"><label>Heading & What Students Will Learn</label><textarea data-session-field="topic" required>${A.escapeHtml(topic)}</textarea></div>
         <div class="form-field"><label>Duration Minutes</label><input type="number" min="15" data-session-field="duration_minutes" value="${attr(duration)}" required></div>
-        <div class="form-field"><label>Online Class Link</label><input type="url" data-session-field="meet_url" value="${attr(meet)}" placeholder="https://your-secure-class-link.com/" required></div>
+        <div class="form-field"><label>Online Class Link</label><input type="text" inputmode="url" autocomplete="url" data-session-field="meet_url" value="${attr(meet)}" placeholder="https://your-secure-class-link.com/ or www.example.com" required></div>
       </div>
     </article>`;
   }
@@ -227,41 +228,119 @@
     }catch{throw new Error('Enter a valid secure HTTPS online class link.');}
   }
 
+  function prepareCourseSaveUi(){
+    const courseForm=document.getElementById('courseForm');
+    if(courseForm){
+      courseForm.noValidate=true;
+      courseForm.querySelectorAll('[data-session-field="meet_url"]').forEach(prepareUrlInput);
+      const foot=courseForm.querySelector('.app-modal-foot');
+      if(foot&&!document.getElementById('courseSaveError')){
+        const box=document.createElement('div');
+        box.id='courseSaveError';
+        box.className='notice bad hidden';
+        box.setAttribute('role','alert');
+        box.setAttribute('aria-live','assertive');
+        box.style.cssText='margin:0 16px 12px;white-space:pre-wrap;word-break:break-word;';
+        foot.parentNode.insertBefore(box,foot);
+      }
+    }
+    const sessionForm=document.getElementById('sessionForm');
+    if(sessionForm){
+      sessionForm.noValidate=true;
+      prepareUrlInput(sessionForm.elements.meet_url);
+    }
+  }
+  function prepareUrlInput(input){
+    if(!input)return;
+    input.type='text';
+    input.inputMode='url';
+    input.autocomplete='url';
+    input.setAttribute('placeholder','https://your-secure-class-link.com/ or www.example.com');
+  }
+  function clearCourseSaveError(){
+    const box=document.getElementById('courseSaveError');
+    if(box){box.textContent='';box.classList.add('hidden');}
+    document.querySelectorAll('#courseForm .course-field-invalid').forEach(el=>{el.classList.remove('course-field-invalid');el.style.outline='';el.style.outlineOffset='';});
+  }
+  function courseSaveError(message,field){
+    const text=String(message||'Could not save course.');
+    const box=document.getElementById('courseSaveError');
+    if(box){box.textContent=text;box.classList.remove('hidden');}
+    A.toast(text.length>180?'Course could not be saved. See the error inside the form.':text,'error',6500);
+    if(field){field.classList.add('course-field-invalid');field.style.outline='2px solid #ef4444';field.style.outlineOffset='2px';field.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>field.focus?.(),180);}
+  }
+  function rawCourseError(error){
+    const bits=[];
+    if(error?.message)bits.push(error.message);
+    if(error?.details)bits.push(`Details: ${error.details}`);
+    if(error?.hint)bits.push(`Hint: ${error.hint}`);
+    if(error?.code)bits.push(`Code: ${error.code}`);
+    const joined=bits.filter(Boolean).join('\n');
+    if(/admin_save_course_with_sessions_v2|pgrst202|could not find the function/i.test(joined)){
+      return 'Course save database function is not installed yet. Run supabase/17_COURSE_SAVE_V2_DIAGNOSTICS.sql once, then try again.\n'+joined;
+    }
+    return joined||A.friendlyError(error,'Could not save course.');
+  }
+  function requireCourseField(value,message,field){
+    if(String(value??'').trim())return;
+    const err=new Error(message);err.field=field;throw err;
+  }
+  function safePktIso(value,label,field){
+    requireCourseField(value,`${label} date and time is required.`,field);
+    try{return pktToIso(value);}catch{const err=new Error(`${label} has an invalid date/time.`);err.field=field;throw err;}
+  }
+
   async function saveCourse(e){
     e.preventDefault();
-    const f=e.currentTarget,v=formValues(f),id=v.id||A.uid(),button=f.querySelector('button[type=submit]');
+    const f=e.currentTarget,v=formValues(f),button=f.querySelector('button[type=submit]');
     let uploaded=null;
+    clearCourseSaveError();
     A.setLoading(button,true,'Saving course...');
     try{
-      let thumbnail=v.existing_thumbnail_url||'';
-      const file=f.elements.thumbnail.files[0];
-      if(file){uploaded=await uploadPublicAsset(file,`courses/${id}`);thumbnail=uploaded.url;}
+      const titleInput=f.elements.title;
+      const captionInput=f.elements.short_description;
+      requireCourseField(v.title,'Course heading is required.',titleInput);
+      requireCourseField(v.short_description,'Short caption is required.',captionInput);
 
       const type=v.course_type||'paid';
       const price=type==='free'?0:Number(v.price||0);
       const discount=type==='free'?null:n(v.discount_price);
-      if(type==='paid'&&price<=0)throw new Error('Paid course price must be greater than zero.');
-      if(discount!==null&&discount>price)throw new Error('Discount price cannot be higher than regular price.');
-      const caption=String(v.short_description||'').trim();
-      if(!caption)throw new Error('Short caption is required.');
+      if(type==='paid'&&(!Number.isFinite(price)||price<=0)){const err=new Error('Paid course price must be greater than zero.');err.field=f.elements.price;throw err;}
+      if(discount!==null&&(!Number.isFinite(discount)||discount<0||discount>price)){const err=new Error('Discount price must be between zero and the regular price.');err.field=f.elements.discount_price;throw err;}
 
       const sessions=collectCourseSessions();
       if(!sessions.length)throw new Error('Add at least one class session.');
-      for(const session of sessions){
-        if(!session.title||!session.starts_at||!session.topic||!session.meet_url)throw new Error(`Complete all required fields for Class ${session.session_number}.`);
-        session.meet_url=normalizeSecureUrl(session.meet_url);
-      }
+      const sessionRows=[...document.querySelectorAll('[data-course-session-row]')];
+      sessions.forEach((session,index)=>{
+        const row=sessionRows[index];
+        const label=`Class ${session.session_number}`;
+        requireCourseField(session.title,`${label} title is required.`,row?.querySelector('[data-session-field="title"]'));
+        requireCourseField(session.topic,`${label} topic is required.`,row?.querySelector('[data-session-field="topic"]'));
+        const durationField=row?.querySelector('[data-session-field="duration_minutes"]');
+        if(!Number.isFinite(session.duration_minutes)||session.duration_minutes<15){const err=new Error(`${label} duration must be at least 15 minutes.`);err.field=durationField;throw err;}
+        session.starts_at_iso=safePktIso(session.starts_at,label,row?.querySelector('[data-session-field="starts_at"]'));
+        const linkField=row?.querySelector('[data-session-field="meet_url"]');
+        requireCourseField(session.meet_url,`${label} online class link is required.`,linkField);
+        try{session.meet_url=normalizeSecureUrl(session.meet_url);if(linkField)linkField.value=session.meet_url;}catch(error){error.field=linkField;throw error;}
+      });
 
+      const id=v.id||A.uid();
+      let thumbnail=v.existing_thumbnail_url||'';
+      const file=f.elements.thumbnail.files[0];
+      if(file){uploaded=await uploadPublicAsset(file,`courses/${id}`);thumbnail=uploaded.url;}
+
+      const caption=String(v.short_description||'').trim();
       const coursePayload={
         id:v.id||null,
         title:String(v.title).trim(),
-        slug:String(v.slug||slugify(v.title)).toLowerCase().trim().replace(/[^a-z0-9-]+/g,'-'),
+        slug:String(v.slug||slugify(v.title)).toLowerCase().trim().replace(/[^a-z0-9-]+/g,'-').replace(/^-+|-+$/g,''),
         short_description:caption,
+        instructor_name:String(v.instructor_name||'Malik Zameer').trim()||'Malik Zameer',
         course_type:type,
         price,
         discount_price:discount,
-        currency:v.currency,
-        status:v.status,
+        currency:String(v.currency||'PKR').toUpperCase(),
+        status:v.status||'upcoming',
         enrollment_open:checked(f,'enrollment_open'),
         thumbnail_url:thumbnail||null,
         is_published:checked(f,'is_published'),
@@ -274,14 +353,16 @@
         session_number:session.session_number,
         title:session.title,
         topic:session.topic,
-        starts_at:pktToIso(session.starts_at),
+        starts_at:session.starts_at_iso,
         duration_minutes:session.duration_minutes,
         status:v.status==='completed'?'completed':'upcoming',
         meet_url:session.meet_url
       }));
 
-      const {data,error}=await A.supabase.rpc('admin_save_course_with_sessions',{p_course:coursePayload,p_sessions:sessionPayload});
+      console.info('[24K] Saving course bundle',{course:coursePayload.title,type:coursePayload.course_type,currency:coursePayload.currency,sessions:sessionPayload.length});
+      const {data,error}=await A.supabase.rpc('admin_save_course_with_sessions_v2',{p_course:coursePayload,p_sessions:sessionPayload});
       if(error)throw error;
+      if(!data?.course_id)throw new Error('Database returned no course ID. Save was not confirmed.');
 
       if(uploaded&&v.existing_thumbnail_url&&v.existing_thumbnail_url!==uploaded.url){
         const oldPath=publicStoragePath(v.existing_thumbnail_url,'content-assets');
@@ -289,24 +370,42 @@
       }
 
       await loadAll();
+      const saved=state.courses.some(course=>course.id===data.course_id);
+      if(!saved)throw new Error(`Course was saved in the database but did not reload in Admin. Course ID: ${data.course_id}`);
       f.reset();
       f.elements.id.value='';
       f.elements.existing_thumbnail_url.value='';
       f.elements.instructor_name.value='Malik Zameer';
       f.elements.price.value='0';
       renderCourseSessionEditor();
+      prepareCourseSaveUi();
       document.getElementById('courseFormBox').classList.remove('open');
       document.getElementById('courseFormBox').setAttribute('aria-hidden','true');
-      const title=document.getElementById('courseFormTitle');if(title)title.textContent='Add Course';
+      const formTitle=document.getElementById('courseFormTitle');if(formTitle)formTitle.textContent='Add Course';
       renderAll();
-      A.toast(`Course and ${data?.sessions_saved||sessions.length} class session${sessions.length===1?'':'s'} saved successfully.`,'success');
+      A.toast(`Course and ${data.sessions_saved||sessions.length} class session${sessions.length===1?'':'s'} saved successfully.`,'success',5500);
     }catch(error){
-      if(uploaded?.path)await A.supabase.storage.from('content-assets').remove([uploaded.path]).catch(()=>{});
+      if(uploaded?.path)try{await A.supabase.storage.from('content-assets').remove([uploaded.path]);}catch{}
       console.error('Course save failed:',error);
-      A.toast(A.friendlyError(error,'Could not save course.'),'error');
+      courseSaveError(rawCourseError(error),error?.field);
     }finally{A.setLoading(button,false);}
   }
-  async function saveSession(e){e.preventDefault();const f=e.currentTarget,v=formValues(f),id=v.id||A.uid(),button=f.querySelector('button[type=submit]');A.setLoading(button,true,'Saving...');try{const secureLink=normalizeSecureUrl(v.meet_url);const row={id,course_id:v.course_id,session_number:Number(v.session_number),title:v.title,topic:v.topic,starts_at:pktToIso(v.starts_at),duration_minutes:Number(v.duration_minutes||90),status:v.status,created_by:state.profile.id};const {error}=v.id?await A.supabase.from('course_sessions').update(omit(row,'id','created_by')).eq('id',id):await A.supabase.from('course_sessions').insert(row);if(error)throw error;const {error:le}=await A.supabase.from('course_session_links').upsert({course_session_id:id,meet_url:secureLink,updated_by:state.profile.id},{onConflict:'course_session_id'});if(le)throw le;await loadAll();f.reset();f.elements.id.value='';document.getElementById('sessionFormBox').classList.remove('open');document.getElementById('sessionFormBox')?.setAttribute('aria-hidden','true');renderAll();A.toast('Online class session saved securely.','success');}catch(error){A.toast(A.friendlyError(error,'Could not save session.'),'error');}finally{A.setLoading(button,false);}}
+  async function saveSession(e){
+    e.preventDefault();const f=e.currentTarget,v=formValues(f),id=v.id||A.uid(),button=f.querySelector('button[type=submit]');
+    A.setLoading(button,true,'Saving...');
+    try{
+      if(!v.course_id)throw new Error('Choose a course.');
+      if(!String(v.title||'').trim())throw new Error('Session title is required.');
+      if(!String(v.topic||'').trim())throw new Error('Class topic is required.');
+      if(!v.starts_at)throw new Error('Session date and time is required.');
+      if(Number(v.duration_minutes||0)<15)throw new Error('Duration must be at least 15 minutes.');
+      const secureLink=normalizeSecureUrl(v.meet_url);if(f.elements.meet_url)f.elements.meet_url.value=secureLink;
+      const row={id,course_id:v.course_id,session_number:Number(v.session_number),title:String(v.title).trim(),topic:String(v.topic).trim(),starts_at:pktToIso(v.starts_at),duration_minutes:Number(v.duration_minutes||90),status:v.status,created_by:state.profile.id};
+      const {error}=v.id?await A.supabase.from('course_sessions').update(omit(row,'id','created_by')).eq('id',id):await A.supabase.from('course_sessions').insert(row);if(error)throw error;
+      const {error:le}=await A.supabase.from('course_session_links').upsert({course_session_id:id,meet_url:secureLink,updated_by:state.profile.id},{onConflict:'course_session_id'});if(le)throw le;
+      await loadAll();f.reset();f.elements.id.value='';prepareUrlInput(f.elements.meet_url);document.getElementById('sessionFormBox').classList.remove('open');document.getElementById('sessionFormBox')?.setAttribute('aria-hidden','true');renderAll();A.toast('Online class session saved securely.','success');
+    }catch(error){console.error('Session save failed:',error);A.toast(A.friendlyError(error,'Could not save session.'),'error',6000);}finally{A.setLoading(button,false);}
+  }
   async function saveResource(e){e.preventDefault();const f=e.currentTarget,v=formValues(f),file=f.elements.file.files[0],button=f.querySelector('button[type=submit]');if(!file)return A.toast('Choose a file.','error');A.setLoading(button,true,'Uploading...');try{const id=A.uid(),path=`${v.course_id}/${id}/${A.fileSafeName(file.name)}`;const upload=await A.supabase.storage.from('course-resources').upload(path,file,{contentType:file.type});if(upload.error)throw upload.error;const {error}=await A.supabase.from('course_resources').insert({id,course_id:v.course_id,course_session_id:v.course_session_id||null,title:v.title,description:v.description,file_path:path,file_name:file.name,mime_type:file.type,file_size:file.size,created_by:state.profile.id});if(error){await A.supabase.storage.from('course-resources').remove([path]);throw error;}await loadAll();f.reset();document.getElementById('resourceFormBox').classList.remove('open');renderAll();A.toast('Course resource uploaded.','success');}catch(error){A.toast(A.friendlyError(error,'Upload failed.'),'error');}finally{A.setLoading(button,false);}}
   async function saveMethod(e){e.preventDefault();const f=e.currentTarget,v=formValues(f),id=v.id||A.uid();await save('payment_methods',{id,name:v.name,account_title:v.account_title,account_number:v.account_number,instructions:v.instructions,sort_order:Number(v.sort_order||0),is_active:checked(f,'is_active')},v.id,f,'Payment method saved.');}
   async function save(table,row,existingId,form,message){const button=form.querySelector('button[type=submit]');A.setLoading(button,true,'Saving...');try{const clean=Object.fromEntries(Object.entries(row).filter(([,v])=>v!==undefined));const {error}=existingId?await A.supabase.from(table).update(omit(clean,'id','created_by')).eq('id',row.id):await A.supabase.from(table).insert(clean);if(error)throw error;await loadAll();form.reset();if(form.elements.id)form.elements.id.value='';form.closest('.admin-form-box')?.classList.remove('open');renderAll();A.toast(message,'success');}catch(error){A.toast(A.friendlyError(error,'Could not save record.'),'error');}finally{A.setLoading(button,false);}}

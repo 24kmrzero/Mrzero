@@ -39,6 +39,7 @@
   };
 
   installUi();
+  openCleanAdminRouteAfterInstall();
   bindUi();
   syncBaseState();
   await refresh();
@@ -50,6 +51,18 @@
   });
 
   window.AdminOps = { state, refresh, openUserDetails, openPanel: key => document.querySelector(`[data-goto="${key}"]`)?.click() };
+
+  function openCleanAdminRouteAfterInstall() {
+    const map = {
+      '/admin/calendar': 'calendar', '/admin/enquiries': 'leads', '/admin/links': 'links',
+      '/admin/notifications': 'admin-notifications', '/admin/delivery': 'delivery',
+      '/admin/activity': 'audit', '/admin/settings': 'settings'
+    };
+    const path = location.pathname.replace(/\/+$/, '');
+    const panel = map[path];
+    if (!panel) return;
+    setTimeout(() => document.querySelector(`[data-panel="${panel}"]`)?.click(), 0);
+  }
 
   function navLink(panel, icon, text, badgeId = '') {
     return `<a href="#" data-panel="${panel}"><i class="fa-solid ${icon}"></i> ${text}${badgeId ? ` <span class="nav-count" id="${badgeId}">0</span>` : ''}</a>`;
