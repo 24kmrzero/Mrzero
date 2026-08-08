@@ -450,6 +450,14 @@
     A.openModal('paymentModal');
   }
 
+  async function flushMyEmailQueue() {
+    try {
+      await A.supabase.functions.invoke('process-email-queue', { body: { limit: 10 } });
+    } catch (error) {
+      console.warn('Email delivery will retry later:', error);
+    }
+  }
+
   async function startInfinityPayment(courseId, triggerButton=null) {
     const course = state.courses.find(c => c.id === courseId);
     if (!course) return;
@@ -521,6 +529,7 @@
         const receiptHash = await A.hashFile(file);
         const { error } = await A.supabase.from('payments').insert({ id: paymentId, student_id: state.user.id, course_id: course.id, amount: Number(fd.get('amount')), payment_method_id: method?.id, payment_method_name: method?.name, transaction_reference: String(fd.get('transaction_reference')).trim(), student_note: String(fd.get('student_note') || '').trim(), receipt_path: path, receipt_hash: receiptHash, supersedes_payment_id: form.dataset.supersedesPaymentId || null, status: 'received' });
         if (error) { await A.supabase.storage.from('payment-receipts').remove([path]); throw error; }
+        await flushMyEmailQueue();
         await loadAll();
       renderAll(); A.closeModal('paymentModal'); form.reset();
       A.toast('Receipt received. Admin approval is required before course access unlocks.', 'success');
@@ -534,6 +543,7 @@
     try {
       const { error } = await A.supabase.rpc('enroll_free_course', { p_course_id: courseId });
         if (error) throw error;
+        await flushMyEmailQueue();
         await loadAll();
       renderAll();
       showCourseSessions(courseId);
