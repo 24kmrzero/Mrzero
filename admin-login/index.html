@@ -1,0 +1,8 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin Login | 24K Excellence</title></head><body><div style="font-family:Arial,sans-serif;padding:24px">Loading...</div><script>
+(function(){
+  fetch('/admin-login.html?v=9.43',{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.text();}).then(function(html){
+    html=html.replace('<head>','<head><base href="/">');
+    document.open();document.write(html);document.close();
+  }).catch(function(){location.replace('/admin-login.html');});
+})();
+</script></body></html>

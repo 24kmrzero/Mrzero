@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0A0A0A">
 <title>Login | 24K Excellence</title>
+<script>
+(function(){
+  if (/\/login\.html$/i.test(location.pathname)) {
+    var p = new URLSearchParams(location.search);
+    var target = p.get('tab') === 'signup' ? '/sign-up/' : '/sign-in/';
+    if (p.get('reason')) target += '?reason=' + encodeURIComponent(p.get('reason'));
+    location.replace(target);
+  }
+})();
+</script>
 <link rel="icon" href="assets/logo.png">
 <link rel="stylesheet" href="app.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -29,10 +39,9 @@
       <h2 style="margin-top:18px">Welcome to 24K Excellence</h2>
       <p class="muted" style="margin-top:0">Sign in or create your student account.</p>
 
-      <div class="auth-tabs">
+      <div class="auth-tabs student-auth-tabs">
         <button type="button" class="on" data-auth-tab="student-login">Student Login</button>
         <button type="button" data-auth-tab="signup">Sign Up</button>
-        <button type="button" data-auth-tab="admin-login">Admin</button>
       </div>
 
       <form id="studentLoginForm" class="auth-form on" data-auth-form="student-login">
@@ -54,12 +63,7 @@
         <button class="app-btn gold" type="submit"><i class="fa-solid fa-user-plus"></i> Create Student Account</button>
       </form>
 
-      <form id="adminLoginForm" class="auth-form" data-auth-form="admin-login">
-        <div class="notice warn"><i class="fa-solid fa-shield-halved"></i> Admin access is granted only to accounts marked as <b>admin</b> in Supabase.</div>
-        <div class="form-field"><label>Admin Email</label><input type="email" name="email" autocomplete="email" required value="24kmrzero@gmail.com"></div>
-        <div class="form-field"><label>Password</label><input type="password" name="password" autocomplete="current-password" required minlength="6" placeholder="Enter admin password"></div>
-        <button class="app-btn gold" type="submit"><i class="fa-solid fa-lock"></i> Login to Admin Panel</button>
-      </form>
+
 </div>
   </section>
 </main>
@@ -82,6 +86,6 @@
 
 <script src="assets/js/core.js"></script>
 <script src="assets/js/tracking.js?v=9.36"></script>
-<script src="assets/js/auth.js?v=9.36"></script>
+<script src="assets/js/auth.js?v=9.43"></script>
 </body>
 </html>

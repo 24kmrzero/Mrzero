@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0A0A0A">
 <title>Admin Login | 24K Excellence</title>
+<script>
+(function(){
+  if (/\/admin-login\.html$/i.test(location.pathname)) {
+    var p = new URLSearchParams(location.search);
+    location.replace('/admin-login/' + (p.get('reason') ? '?reason=' + encodeURIComponent(p.get('reason')) : ''));
+  }
+})();
+</script>
 <link rel="icon" href="assets/logo.png">
 <link rel="stylesheet" href="app.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -57,6 +65,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/js/config.js?v=9.20"></script>
 <script src="assets/js/core.js?v=9.1"></script>
-<script src="assets/js/admin-auth.js?v=9.1"></script>
+<script src="assets/js/admin-auth.js?v=9.43"></script>
 </body>
 </html>

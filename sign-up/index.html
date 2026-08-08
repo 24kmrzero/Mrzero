@@ -1,1 +1,8 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0A0A0A"><title>Redirecting | 24K Excellence</title><link rel="icon" href="../assets/logo.png"><link rel="stylesheet" href="../app.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"></head><body class="app-page"><div class="loading-screen"><div><img src="../assets/logo.png" alt="24K Excellence"><i class="fa-solid fa-spinner fa-spin"></i><p>Opening 24K Excellence...</p></div></div><script>location.replace('../login.html?tab=signup' + (location.search ? ('../login.html?tab=signup'.includes('?')?'&':'?') + location.search.slice(1) : ''));</script></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>24K Excellence</title></head><body><div style="font-family:Arial,sans-serif;padding:24px">Loading...</div><script>
+(function(){
+  fetch('/login.html?v=9.43',{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.text();}).then(function(html){
+    html=html.replace('<head>','<head><base href="/">');
+    document.open();document.write(html);document.close();
+  }).catch(function(){location.replace('/login.html');});
+})();
+</script></body></html>

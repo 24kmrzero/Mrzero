@@ -14,7 +14,7 @@
     try {
       const profile = await A.getProfile(sessionData.session.user.id);
       if (profile.role === 'admin') {
-        window.location.replace('admin-dashboard.html');
+        window.location.replace('/admin/');
         return;
       }
       await A.supabase.auth.signOut();
@@ -42,7 +42,7 @@
         throw new Error('This account is not authorized for Admin access.');
       }
       A.toast('Admin login successful.', 'success');
-      window.location.replace('admin-dashboard.html');
+      window.location.replace('/admin/');
     } catch (error) {
       A.toast(A.friendlyError(error, 'Admin login failed.'), 'error');
       A.setLoading(button, false);
@@ -61,7 +61,7 @@
     A.setLoading(button, true, 'Sending...');
     try {
       const { error } = await A.supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: new URL('admin-reset-password.html', window.location.href).href
+        redirectTo: `${window.location.origin}/admin-reset-password.html`
       });
       if (error) throw error;
       A.toast('Admin password reset link sent.', 'success');

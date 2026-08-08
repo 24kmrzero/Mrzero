@@ -8,10 +8,6 @@
   }
 
   const params = new URLSearchParams(window.location.search);
-  if (params.get('tab') === 'admin-login' || params.get('mode') === 'admin') {
-    window.location.replace(`admin-login.html${params.get('reason') ? `?reason=${encodeURIComponent(params.get('reason'))}` : ''}`);
-    return;
-  }
 
   const tabs = [...document.querySelectorAll('[data-auth-tab]')];
   const forms = [...document.querySelectorAll('[data-auth-form]')];
@@ -19,31 +15,41 @@
     tabs.forEach(item => item.classList.toggle('on', item.dataset.authTab === key));
     forms.forEach(form => form.classList.toggle('on', form.dataset.authForm === key));
   };
-  tabs.forEach(tab => tab.addEventListener('click', () => activateTab(tab.dataset.authTab)));
+  const cleanAuthPath = key => key === 'signup' ? '/sign-up/' : '/sign-in/';
+  const switchStudentTab = key => {
+    activateTab(key);
+    const next = cleanAuthPath(key);
+    if (window.location.pathname !== next) history.replaceState(null, '', next);
+    document.title = key === 'signup' ? 'Sign Up | 24K Excellence' : 'Sign In | 24K Excellence';
+  };
+  tabs.forEach(tab => tab.addEventListener('click', () => switchStudentTab(tab.dataset.authTab)));
+  const pathTab = /\/sign-up\/?$/i.test(window.location.pathname) ? 'signup' : 'student-login';
   const requestedTab = params.get('tab');
-  if (tabs.some(tab => tab.dataset.authTab === requestedTab)) activateTab(requestedTab);
+  switchStudentTab(tabs.some(tab => tab.dataset.authTab === requestedTab) ? requestedTab : pathTab);
 
   const reason = params.get('reason');
   if (reason === 'student-required') toast('Please sign in with a student account.', 'info');
 
   const isConfirmed = user => Boolean(user?.email_confirmed_at || user?.confirmed_at);
-  const checkEmailUrl = email => `check-email.html?email=${encodeURIComponent(email || '')}`;
+  const checkEmailUrl = () => '/check-email/';
 
   function safeDestination(value) {
     if (!value) return '';
     try {
       const url = new URL(value, window.location.href);
       if (url.origin !== window.location.origin) return '';
-      const base = new URL('.', window.location.href).pathname;
-      if (!url.pathname.startsWith(base)) return '';
-      return `${url.pathname}${url.search}${url.hash}`.replace(base, '');
+      return `${url.pathname}${url.search}${url.hash}`;
     } catch { return ''; }
   }
 
   async function finishStudentLogin(user, profile = null) {
     if (!isConfirmed(user)) {
       await supabase.auth.signOut();
-      window.location.replace(checkEmailUrl(user.email));
+      if (user?.email) {
+        sessionStorage.setItem('24k_pending_signup_email', user.email);
+        localStorage.setItem('24k_pending_signup_email', user.email);
+      }
+      window.location.replace(checkEmailUrl());
       return;
     }
     await tracking?.record('login');
@@ -100,7 +106,7 @@
     try {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) {
-        if (/confirm|verified/i.test(error.message || '')) window.location.href = checkEmailUrl(email);
+        if (/confirm|verified/i.test(error.message || '')) { sessionStorage.setItem('24k_pending_signup_email', email); localStorage.setItem('24k_pending_signup_email', email); window.location.href = checkEmailUrl(); }
         throw error;
       }
       const profile = await window.App.getProfile(data.user.id);
@@ -128,7 +134,7 @@
         email,
         password: String(values.password),
         options: {
-          emailRedirectTo: new URL('login.html?tab=student-login', window.location.href).href,
+          emailRedirectTo: `${window.location.origin}/sign-in/`,
           data: {
             full_name: String(values.full_name).trim(),
             whatsapp: String(values.whatsapp).trim(),
@@ -152,8 +158,9 @@
         const profile = await window.App.getProfile(data.user.id);
         await finishStudentLogin(data.user, profile);
       } else {
+        sessionStorage.setItem('24k_pending_signup_email', email);
         localStorage.setItem('24k_pending_signup_email', email);
-        window.location.replace(checkEmailUrl(email));
+        window.location.replace(checkEmailUrl());
       }
     } catch (error) {
       toast(friendlyError(error, 'Could not create student account.'), 'error');
@@ -172,7 +179,7 @@
     setLoading(button, true, 'Sending...');
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: new URL('reset-password.html', window.location.href).href
+        redirectTo: `${window.location.origin}/reset-password.html`
       });
       if (error) throw error;
       toast('Student password reset link sent.', 'success');
