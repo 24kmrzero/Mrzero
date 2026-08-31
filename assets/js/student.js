@@ -32,6 +32,9 @@
 
   async function loadAll() {
     const sb = A.supabase;
+    const { data: freshProfile, error: profileError } = await sb.from('profiles').select('*').eq('id', state.user.id).maybeSingle();
+    if (profileError) throw profileError;
+    if (freshProfile) state.profile = freshProfile;
     const requests = await Promise.all([
       sb.from('courses').select('*').eq('is_published', true).order('created_at', { ascending: false }),
       sb.from('course_sessions').select('*').order('starts_at', { ascending: true }),
@@ -60,7 +63,7 @@
 
   function renderAll() {
     renderKpis(); renderDashboard(); renderSignals(); renderCharts(); renderArticles(); renderCourses();
-    renderPayments(); renderAnnouncements(); renderProfile(); renderSupport();
+    renderPayments(); renderAnnouncements(); renderProfile(); renderEmailVerification(); renderSupport();
     document.getElementById('paymentCount').textContent = state.payments.filter(p => ['initiated', 'received', 'under_review', 'resubmission_required'].includes(p.status)).length;
     document.getElementById('announcementCount').textContent = state.announcements.length;
     window.dispatchEvent(new CustomEvent('24k:student-base-updated',{detail:state}));
@@ -362,6 +365,29 @@
     ['full_name','email','whatsapp','country','experience'].forEach(key => { if (form.elements[key]) form.elements[key].value = state.profile[key] || ''; });
   }
 
+  function renderEmailVerification() {
+    const verified = Boolean(state.profile?.email_verified);
+    const banner = document.getElementById('emailVerificationBanner');
+    const card = document.getElementById('emailVerificationCard');
+    if (banner) banner.innerHTML = verified ? '' : `<div class="notice warn email-verify-banner"><i class="fa-solid fa-envelope-circle-check"></i><div><b>Verify your email address</b><span> Your account is active, but protected content stays limited until your email is verified.</span></div><button type="button" class="app-btn small gold" data-request-email-verification>Verify Email</button></div>`;
+    if (card) card.innerHTML = verified
+      ? `<div class="email-verify-card-row"><div class="email-verify-icon verified"><i class="fa-solid fa-circle-check"></i></div><div><h3>Email Verified</h3><p class="muted">${A.escapeHtml(state.profile.email || '')} is verified and your account verification is complete.</p></div><span class="status-pill ok">Verified</span></div>`
+      : `<div class="email-verify-card-row"><div class="email-verify-icon"><i class="fa-solid fa-envelope"></i></div><div><h3>Email Verification</h3><p class="muted">Verify ${A.escapeHtml(state.profile.email || '')} to unlock verified-account access.</p></div><button type="button" class="app-btn gold" data-request-email-verification><i class="fa-solid fa-paper-plane"></i> Send Verification Email</button></div>`;
+  }
+
+  async function requestEmailVerification(button) {
+    if (state.profile?.email_verified) return A.toast('Your email is already verified.', 'info');
+    A.setLoading(button, true, 'Sending...');
+    try {
+      const { data, error } = await A.supabase.rpc('request_app_email_verification');
+      if (error) throw error;
+      await A.supabase.functions.invoke('process-email-queue', { body: { limit: 5 } }).catch(() => null);
+      A.toast(data?.message || 'Verification email sent. Check your inbox.', 'success');
+    } catch (error) {
+      A.toast(A.friendlyError(error, 'Could not send verification email.'), 'error');
+    } finally { A.setLoading(button, false); }
+  }
+
   function renderSupport() {
     const open = state.support.filter(s => !['resolved','closed'].includes(s.status)).length;
     document.getElementById('supportCount').textContent = `${open} open request(s)`;
@@ -399,6 +425,8 @@
       if (resource) await downloadResource(resource.dataset.downloadResource);
       const signalHistory = event.target.closest('[data-student-signal-history]');
       if (signalHistory) openSignalHistory(signalHistory.dataset.studentSignalHistory);
+      const verifyEmail = event.target.closest('[data-request-email-verification]');
+      if (verifyEmail) await requestEmailVerification(verifyEmail);
     });
 
     document.getElementById('enableSignalAlerts')?.addEventListener('click', enableSignalAlerts);

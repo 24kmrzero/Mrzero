@@ -1,4 +1,5 @@
 (async function () {
+  'use strict';
   const { configured, supabase, toast, setLoading, openModal, closeModal, friendlyError, cfg } = window.App;
   const tracking = window.Tracking;
   if (!configured || !supabase) {
@@ -7,95 +8,112 @@
     return;
   }
 
+  const params = new URLSearchParams(window.location.search);
   const tabs = [...document.querySelectorAll('[data-auth-tab]')];
   const forms = [...document.querySelectorAll('[data-auth-form]')];
   const activateTab = key => {
     tabs.forEach(item => item.classList.toggle('on', item.dataset.authTab === key));
     forms.forEach(form => form.classList.toggle('on', form.dataset.authForm === key));
   };
-  tabs.forEach(tab => tab.addEventListener('click', () => activateTab(tab.dataset.authTab)));
-
-  const params = new URLSearchParams(window.location.search);
+  const cleanAuthPath = key => key === 'signup' ? '/sign-up/' : '/sign-in/';
+  const switchStudentTab = key => {
+    activateTab(key);
+    const next = cleanAuthPath(key);
+    if (window.location.pathname !== next) history.replaceState(null, '', `${next}${window.location.search || ''}`);
+    document.title = key === 'signup' ? 'Sign Up | 24K Excellence' : 'Sign In | 24K Excellence';
+  };
+  tabs.forEach(tab => tab.addEventListener('click', () => switchStudentTab(tab.dataset.authTab)));
+  const pathTab = /\/sign-up\/?$/i.test(window.location.pathname) ? 'signup' : 'student-login';
   const requestedTab = params.get('tab');
-  if (tabs.some(tab => tab.dataset.authTab === requestedTab)) activateTab(requestedTab);
+  switchStudentTab(tabs.some(tab => tab.dataset.authTab === requestedTab) ? requestedTab : pathTab);
 
-  const isConfirmed = user => Boolean(user?.email_confirmed_at || user?.confirmed_at);
-  const checkEmailUrl = email => `check-email.html?email=${encodeURIComponent(email || '')}`;
+  const reason = params.get('reason');
+  if (reason === 'student-required') toast('Please sign in with a student account.', 'info');
+
+  const checkEmailUrl = () => '/check-email/';
+  const studentHome = () => '/student/';
+  const studentCourses = () => '/student/courses/';
 
   function safeDestination(value) {
     if (!value) return '';
     try {
       const url = new URL(value, window.location.href);
       if (url.origin !== window.location.origin) return '';
-      const base = new URL('.', window.location.href).pathname;
-      if (!url.pathname.startsWith(base)) return '';
-      return `${url.pathname}${url.search}${url.hash}`.replace(base, '');
+      return `${url.pathname}${url.search}${url.hash}`;
     } catch { return ''; }
   }
 
-  async function finishStudentLogin(user, profile = null) {
-    if (!isConfirmed(user)) {
-      await supabase.auth.signOut();
-      window.location.replace(checkEmailUrl(user.email));
-      return;
+  async function getProfileWithRetry(userId) {
+    let lastError = null;
+    for (let attempt = 0; attempt < 6; attempt += 1) {
+      try { return await window.App.getProfile(userId); }
+      catch (error) {
+        lastError = error;
+        await new Promise(resolve => setTimeout(resolve, 250 + attempt * 150));
+      }
     }
-    await tracking?.record('login');
-    try { await supabase.rpc('record_user_activity', { p_activity_type:'login', p_description:'Student signed in', p_entity_type:'profile', p_entity_id:profile?.id || null, p_details:{} }); } catch (error) { console.warn('Activity log skipped:', error?.message || error); }
-    const intent = tracking?.context().courseIntent || profile?.pending_course_slug || null;
+    throw lastError || new Error('Student profile is not ready yet.');
+  }
+
+  async function finishStudentLogin(user, profile = null) {
+    profile = profile || await getProfileWithRetry(user.id);
+    await tracking?.record('login').catch(() => {});
     try {
+      await supabase.rpc('record_user_activity', {
+        p_activity_type: 'login',
+        p_description: 'Student signed in',
+        p_entity_type: 'profile',
+        p_entity_id: profile?.id || null,
+        p_details: {}
+      });
+    } catch (error) { console.warn('Activity log skipped:', error?.message || error); }
+
+    const intent = tracking?.context().courseIntent || profile?.pending_course_slug || null;
+    if (intent) {
+      try {
         const { data, error } = await supabase.rpc('complete_pending_course_intent', { p_course_slug: intent });
         if (error) throw error;
         if (data?.status === 'enrolled') {
-          await tracking?.record('enrollment', { course_id: data.course_id, course_slug: intent || profile?.pending_course_slug || '' });
+          await tracking?.record('enrollment', { course_id: data.course_id, course_slug: intent || profile?.pending_course_slug || '' }).catch(() => {});
           tracking?.clearCourseIntent();
           sessionStorage.setItem('24k_open_course_id', data.course_id);
-          window.location.replace(`student-dashboard.html#courses`);
+          window.location.replace(studentCourses());
           return;
         }
         if (data?.status === 'payment_required') {
           sessionStorage.setItem('24k_open_course_id', data.course_id);
           tracking?.clearCourseIntent();
-          window.location.replace(`student-dashboard.html#courses`);
+          window.location.replace(studentCourses());
           return;
         }
-      } catch (error) {
-        console.warn('Course intent completion failed:', error.message || error);
-      }
+      } catch (error) { console.warn('Course intent completion failed:', error?.message || error); }
+    }
+
     const destination = safeDestination(tracking?.context().destination);
     if (destination) tracking?.clearDestination();
-    window.location.replace(destination || 'student-dashboard.html');
+    window.location.replace(destination || studentHome());
   }
 
-  const adminLoginRequested = requestedTab === 'admin-login' || params.get('mode') === 'admin';
   const { data: sessionData } = await supabase.auth.getSession();
   if (sessionData.session?.user) {
     try {
-      const profile = await window.App.getProfile(sessionData.session.user.id);
-      if (adminLoginRequested) {
-        if (profile.role === 'admin') {
-          window.location.replace('admin-dashboard.html');
-          return;
-        }
-        // A student session must never bounce an explicit Admin Login request
-        // back to the Student Panel. Close it and let Admin credentials be entered.
+      const profile = await getProfileWithRetry(sessionData.session.user.id);
+      if (profile.role !== 'student') {
         await supabase.auth.signOut();
-        activateTab('admin-login');
-        toast('Student session closed. Enter your Admin credentials.', 'info');
+        toast('This page accepts student accounts only.', 'error');
       } else {
-        if (profile.role === 'admin') window.location.replace('admin-dashboard.html');
-        else await finishStudentLogin(sessionData.session.user, profile);
+        await finishStudentLogin(sessionData.session.user, profile);
         return;
       }
     } catch (error) {
       console.error(error);
-      if (adminLoginRequested) {
-        await supabase.auth.signOut().catch(() => {});
-        activateTab('admin-login');
-      }
+      await supabase.auth.signOut().catch(() => {});
     }
   }
 
-  async function handleLogin(form, expectedRole) {
+  document.getElementById('studentLoginForm')?.addEventListener('submit', async event => {
+    event.preventDefault();
+    const form = event.currentTarget;
     const button = form.querySelector('button[type="submit"]');
     const values = new FormData(form);
     const email = String(values.get('email') || '').trim().toLowerCase();
@@ -103,28 +121,17 @@
     setLoading(button, true, 'Signing in...');
     try {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) {
-        if (/confirm|verified/i.test(error.message || '')) window.location.href = checkEmailUrl(email);
-        throw error;
-      }
-      const profile = await window.App.getProfile(data.user.id);
-      if (profile.role !== expectedRole) {
+      if (error) throw error;
+      const profile = await getProfileWithRetry(data.user.id);
+      if (profile.role !== 'student') {
         await supabase.auth.signOut();
-        throw new Error(expectedRole === 'admin' ? 'This account does not have Admin access.' : 'Please use the Admin tab for this account.');
+        throw new Error('This account is not registered as a student account.');
       }
-      if (expectedRole === 'admin') window.location.replace('admin-dashboard.html');
-      else await finishStudentLogin(data.user, profile);
+      await finishStudentLogin(data.user, profile);
     } catch (error) {
-      toast(friendlyError(error, 'Login failed.'), 'error');
+      toast(friendlyError(error, 'Student login failed.'), 'error');
       setLoading(button, false);
     }
-  }
-
-  document.getElementById('studentLoginForm')?.addEventListener('submit', event => {
-    event.preventDefault(); handleLogin(event.currentTarget, 'student');
-  });
-  document.getElementById('adminLoginForm')?.addEventListener('submit', event => {
-    event.preventDefault(); handleLogin(event.currentTarget, 'admin');
   });
 
   document.getElementById('signupForm')?.addEventListener('submit', async event => {
@@ -133,18 +140,20 @@
     const button = form.querySelector('button[type="submit"]');
     const values = Object.fromEntries(new FormData(form).entries());
     const context = tracking?.context() || {};
-    const email = String(values.email).trim().toLowerCase();
+    const email = String(values.email || '').trim().toLowerCase();
     setLoading(button, true, 'Creating account...');
     try {
       const { data, error } = await supabase.auth.signUp({
         email,
-        password: String(values.password),
+        password: String(values.password || ''),
         options: {
-          emailRedirectTo: new URL('login.html?tab=student-login', window.location.href).href,
+          // This is only a fallback if mandatory Supabase confirmation is accidentally left ON.
+          // Normal V9.46 flow uses an immediate session and application-level verification later.
+          emailRedirectTo: `${window.location.origin}/sign-in/`,
           data: {
-            full_name: String(values.full_name).trim(),
-            whatsapp: String(values.whatsapp).trim(),
-            country: String(values.country).trim(),
+            full_name: String(values.full_name || '').trim(),
+            whatsapp: String(values.whatsapp || '').trim(),
+            country: String(values.country || '').trim(),
             accepted_terms: true,
             terms_version: cfg.TERMS_VERSION,
             risk_version: cfg.RISK_VERSION,
@@ -158,16 +167,22 @@
       });
       if (error) throw error;
       form.reset();
-      // Production rule: a new student must verify the mailbox before the first login.
-      // If Supabase Email Confirmation is accidentally disabled and a session is returned,
-      // close that session instead of silently logging the new account in.
-      await tracking?.record('signup').catch(()=>{});
-      if (data.session) await supabase.auth.signOut().catch(()=>{});
+
+      if (data.session?.user) {
+        await tracking?.record('signup').catch(() => {});
+        const profile = await getProfileWithRetry(data.session.user.id);
+        toast('Account created successfully. Verify your email later from the Student Panel.', 'success');
+        await finishStudentLogin(data.session.user, profile);
+        return;
+      }
+
+      // Safe fallback when Supabase mandatory Confirm Email is still enabled.
+      sessionStorage.setItem('24k_pending_signup_email', email);
       localStorage.setItem('24k_pending_signup_email', email);
-      toast('Account created. Please verify your email before signing in.', 'success');
-      window.location.replace(checkEmailUrl(email));
+      toast('Account created. Supabase email confirmation is still enabled.', 'warning');
+      window.location.replace(checkEmailUrl());
     } catch (error) {
-      toast(friendlyError(error, 'Could not create account.'), 'error');
+      toast(friendlyError(error, 'Could not create student account.'), 'error');
       setLoading(button, false);
     }
   });
@@ -183,10 +198,10 @@
     setLoading(button, true, 'Sending...');
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: new URL('reset-password.html', window.location.href).href
+        redirectTo: `${window.location.origin}/reset-password.html`
       });
       if (error) throw error;
-      toast('Password reset link sent.', 'success');
+      toast('Student password reset link sent.', 'success');
       closeModal('forgotModal'); form.reset();
     } catch (error) { toast(friendlyError(error, 'Could not send reset link.'), 'error'); }
     finally { setLoading(button, false); }

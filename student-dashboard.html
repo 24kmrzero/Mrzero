@@ -7,7 +7,7 @@
 <script>(function(){try{var t=localStorage.getItem('24k-excellence-theme');document.documentElement.dataset.theme=t==='light'?'light':'dark'}catch(e){document.documentElement.dataset.theme='dark'}})();</script>
 <title>Student Panel | 24K Excellence</title>
 <link rel="icon" href="assets/logo.png">
-<link rel="stylesheet" href="app.css?v=9.31">
+<link rel="stylesheet" href="app.css?v=9.46">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body class="app-page">
@@ -47,6 +47,7 @@
     <div class="app-content">
       <section class="panel on" id="p-dashboard">
         <div class="panel-heading"><div><h1>Student Dashboard</h1><p>Your latest market content, course access and payment status.</p></div><button class="app-btn outline" data-goto="courses"><i class="fa-solid fa-graduation-cap"></i> View Courses</button></div>
+        <div id="emailVerificationBanner"></div>
         <div id="dashboardAlert"></div>
         <div class="kpi-grid" id="studentKpis"></div>
         <div class="app-grid cols-2">
@@ -98,6 +99,7 @@
 
       <section class="panel" id="p-profile">
         <div class="panel-heading"><div><h2>Profile Settings</h2><p>Keep your contact information up to date.</p></div></div>
+        <div class="app-card email-verification-card" id="emailVerificationCard"></div>
         <div class="app-card"><form id="profileForm"><div class="form-grid"><div class="form-field"><label>Full Name</label><input name="full_name" required></div><div class="form-field"><label>Email Address</label><input name="email" type="email" disabled></div><div class="form-field"><label>WhatsApp Number</label><input name="whatsapp" required></div><div class="form-field"><label>Country</label><input name="country"></div><div class="form-field full"><label>Trading Experience</label><select name="experience"><option value="beginner">Beginner</option><option value="intermediate">Intermediate</option><option value="advanced">Advanced</option></select></div></div><div class="inline-actions"><button class="app-btn gold" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save Profile</button></div></form></div>
       </section>
 
@@ -128,7 +130,7 @@
 
 <script src="assets/js/core.js?v=9.37"></script>
 <script src="assets/js/tracking.js?v=9.1"></script>
-<script src="assets/js/student.js?v=9.45"></script>
+<script src="assets/js/student.js?v=9.46"></script>
 <script src="assets/js/platform-v8-student.js?v=9.12"></script>
 </body>
 </html>

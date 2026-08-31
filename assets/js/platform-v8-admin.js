@@ -101,7 +101,7 @@
         <div class="panel-heading"><div><h2>Link Manager</h2><p>Track the first click through signup and enrollment.</p></div><button class="app-btn outline" id="exportLinks"><i class="fa-solid fa-file-csv"></i> Export CSV</button></div>
         <div class="app-grid cols-2"><div class="app-card"><form id="linkForm"><input type="hidden" name="id"><div class="form-grid"><div class="form-field full"><label>Link Name</label><input name="name" required placeholder="August Free Course WhatsApp"></div><div class="form-field"><label>Destination</label><select name="destination_path"><option value="/">Home</option><option value="/courses">Courses</option><option value="/sign-in">Sign In</option><option value="/sign-up">Sign Up</option><option value="/free-course">Free Course</option><option value="/charts">Charts</option><option value="/articles">Articles</option></select></div><div class="form-field"><label>Reference Code</label><input name="ref_code" required placeholder="rabiafx"></div><div class="form-field"><label>Source</label><select name="source"><option>WhatsApp</option><option>Facebook</option><option>Instagram</option><option>YouTube</option><option>Direct</option><option>Other</option></select></div><div class="form-field full"><label>Campaign</label><input name="campaign" placeholder="free-course-august"></div><label class="check-row"><input type="checkbox" name="is_active" checked> Link active</label></div><div class="sticky-form-actions"><button class="app-btn outline" type="button" data-reset-form="linkForm">Clear</button><button class="app-btn gold" type="submit">Generate / Save Link</button></div></form></div><div class="app-card"><h3>Attribution Summary</h3><div id="linkSummary" class="performance-grid"></div><div id="topSources"></div></div></div>
         <div class="table-scroll"><table class="admin-table"><thead><tr><th>Link</th><th>Reference</th><th>Source</th><th>Clicks</th><th>Unique</th><th>Signups</th><th>Enrollments</th><th>Conversion</th><th>Last Activity</th><th>Status</th><th>Actions</th></tr></thead><tbody id="linkManagerBody"></tbody></table></div>
-        <div class="app-card team-management-card"><div class="app-card-head"><div><h3>Team Performance Accounts</h3><p>Assign one existing tracked link to each team member.</p></div><button class="app-btn gold" type="button" id="addTeamAccount"><i class="fa-solid fa-user-plus"></i> Add Team Account</button></div><div class="table-scroll"><table class="admin-table"><thead><tr><th>Team Member</th><th>Username</th><th>Assigned Link</th><th>Reference</th><th>Status</th><th>Actions</th></tr></thead><tbody id="teamAccountsBody"></tbody></table></div></div>
+        <div class="app-card team-management-card"><div class="app-card-head"><div><h3>Team Performance Accounts</h3><p>Assign one existing tracked link to each team member.</p></div><div class="inline-actions"><a class="app-btn outline" href="team/" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Team Panel</a><button class="app-btn gold" type="button" id="addTeamAccount"><i class="fa-solid fa-user-plus"></i> Add Team Account</button></div></div><div class="table-scroll"><table class="admin-table"><thead><tr><th>Team Member</th><th>Username</th><th>Assigned Link</th><th>Reference</th><th>Status</th><th>Actions</th></tr></thead><tbody id="teamAccountsBody"></tbody></table></div></div>
       </section>
 
       <section class="panel" id="p-admin-notifications">
@@ -435,9 +435,35 @@
   function renderTeamAccounts() {
     const body=document.getElementById('teamAccountsBody'); if(!body) return;
     body.innerHTML=state.teamAccounts.length?state.teamAccounts.map(row=>`<tr><td><b>${esc(row.display_name)}</b></td><td>${esc(row.username)}</td><td>${esc(row.link_name||'—')}</td><td><code>${esc(row.ref_code||'—')}</code></td><td><span class="status-pill ${row.is_active?'ok':'bad'}">${row.is_active?'Active':'Disabled'}</span></td><td><div class="table-actions"><button class="app-btn small outline" data-edit-team="${row.id}">Edit</button><button class="app-btn small ${row.is_active?'outline':'gold'}" data-toggle-team="${row.id}">${row.is_active?'Disable':'Enable'}</button></div></td></tr>`).join(''):`<tr><td colspan="6">${empty('No team accounts created.','fa-users')}</td></tr>`;
-    const select=document.getElementById('teamLinkSelect'); if(select){const old=select.value; select.innerHTML=state.links.map(link=>`<option value="${link.id}">${esc(link.name)} — ${esc(link.ref_code)}</option>`).join('')||'<option value="">Create a tracked link first</option>'; if([...select.options].some(o=>o.value===old))select.value=old;}
+    const select=document.getElementById('teamLinkSelect'); if(select){
+      const old=select.value;
+      const editingId=document.getElementById('teamAccountForm')?.elements?.team_id?.value||'';
+      const assigned=new Map(state.teamAccounts.map(account=>[account.link_id,account.id]));
+      select.innerHTML=state.links.map(link=>{
+        const owner=assigned.get(link.id);
+        const blocked=!link.is_active||(owner&&owner!==editingId);
+        const reason=!link.is_active?' (Inactive)':owner&&owner!==editingId?' (Already assigned)':'';
+        return `<option value="${link.id}" ${blocked?'disabled':''}>${esc(link.name)} — ${esc(link.ref_code)}${reason}</option>`;
+      }).join('')||'<option value="">Create a tracked link first</option>';
+      if([...select.options].some(o=>o.value===old&&!o.disabled))select.value=old;
+      else { const first=[...select.options].find(o=>!o.disabled); if(first)select.value=first.value; }
+    }
   }
-  function openTeamAccount(id='') { const form=document.getElementById('teamAccountForm'); if(!form)return; form.reset(); form.elements.team_id.value=''; form.elements.is_active.checked=true; document.getElementById('teamAccountModalTitle').textContent=id?'Edit Team Account':'Add Team Account'; renderTeamAccounts(); if(id){const row=state.teamAccounts.find(x=>x.id===id); if(!row)return; form.elements.team_id.value=row.id; form.elements.display_name.value=row.display_name||''; form.elements.username.value=row.username||''; form.elements.link_id.value=row.link_id||''; form.elements.is_active.checked=Boolean(row.is_active);} A.openModal('teamAccountModal'); }
+  function openTeamAccount(id='') {
+    const form=document.getElementById('teamAccountForm'); if(!form)return;
+    form.reset(); form.elements.team_id.value=''; form.elements.is_active.checked=true;
+    document.getElementById('teamAccountModalTitle').textContent=id?'Edit Team Account':'Add Team Account';
+    if(id){
+      const row=state.teamAccounts.find(x=>x.id===id); if(!row)return;
+      form.elements.team_id.value=row.id;
+      form.elements.display_name.value=row.display_name||'';
+      form.elements.username.value=row.username||'';
+      form.elements.is_active.checked=Boolean(row.is_active);
+      renderTeamAccounts();
+      form.elements.link_id.value=row.link_id||'';
+    } else renderTeamAccounts();
+    A.openModal('teamAccountModal');
+  }
   async function saveTeamAccount(event){event.preventDefault();const form=event.currentTarget;const v=Object.fromEntries(new FormData(form));if(!v.team_id&&!String(v.password||'').trim())return A.toast('Password is required for a new team account.','error');const button=form.querySelector('button[type="submit"]');A.setLoading(button,true,'Saving...');try{const {error}=await A.supabase.rpc('admin_upsert_team_account',{p_team_id:v.team_id||null,p_display_name:String(v.display_name||'').trim(),p_username:String(v.username||'').trim(),p_password:String(v.password||'').trim()||null,p_link_id:v.link_id,p_is_active:form.elements.is_active.checked});if(error)throw error;A.closeModal('teamAccountModal');await refresh();A.toast('Team account saved.','success');}catch(error){A.toast(A.friendlyError(error),'error');}finally{A.setLoading(button,false);}}
   async function toggleTeamAccount(id){const row=state.teamAccounts.find(x=>x.id===id);if(!row)return;const {error}=await A.supabase.rpc('admin_set_team_account_active',{p_team_id:id,p_is_active:!row.is_active});if(error)return A.toast(A.friendlyError(error),'error');await refresh();A.toast(`Team account ${row.is_active?'disabled':'enabled'}.`,'success');}
 
@@ -475,6 +501,140 @@
     renderUsers();
   }
 
+
+  function toggleBulkDays() {
+    const show = document.getElementById('bulkUserAction')?.value === 'extend_days';
+    document.getElementById('bulkAccessDays')?.classList.toggle('hidden', !show);
+  }
+
+
+  function openAccess(id) {
+    const profile = profileById(id);
+    const form = document.getElementById('userAccessForm');
+    if (!profile || !form) return;
+    form.reset();
+    form.elements.user_id.value = id;
+    document.getElementById('accessUserName').textContent = `${profile.full_name || 'Student'} · ${profile.email || ''}`;
+    renderAccessFields();
+    A.openModal('userAccessModal');
+  }
+
+  function renderAccessFields() {
+    const action = document.getElementById('accessAction')?.value;
+    document.querySelector('.access-days')?.classList.toggle('hidden', !['set_days', 'extend_days'].includes(action));
+    document.querySelector('.access-until')?.classList.toggle('hidden', action !== 'set_until');
+    document.querySelector('.access-grace')?.classList.toggle('hidden', !['set_days', 'extend_days', 'set_until'].includes(action));
+    document.querySelector('.access-pin')?.classList.toggle('hidden', action !== 'new_pin');
+  }
+
+  async function applyAccess(event) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const values = Object.fromEntries(new FormData(form));
+    const actionLabel = label(values.action);
+    const confirmation = await A.confirmAction({
+      title: actionLabel,
+      message: `Apply ${actionLabel.toLowerCase()} to this student account?`,
+      confirmText: 'Apply',
+      danger: ['lock', 'reset'].includes(values.action)
+    });
+    if (!confirmation.confirmed) return;
+    const button = form.querySelector('button[type="submit"]');
+    A.setLoading(button, true, 'Applying...');
+    try {
+      const response = await A.supabase.rpc('admin_manage_user_access', {
+        p_user_id: values.user_id,
+        p_action: values.action,
+        p_days: values.days ? Number(values.days) : null,
+        p_until: values.until ? new Date(values.until).toISOString() : null,
+        p_grace_days: Number(values.grace_days || 0),
+        p_pin: values.pin || null
+      });
+      if (response.error) throw response.error;
+      A.closeModal('userAccessModal');
+      if (window.AdminBase?.reload) await window.AdminBase.reload();
+      await refresh();
+      A.toast('User access updated successfully.', 'success');
+    } catch (error) { A.toast(A.friendlyError(error), 'error'); }
+    finally { A.setLoading(button, false); }
+  }
+
+  function selectedUserIds() {
+    return [...document.querySelectorAll('[data-user-select]:checked')].map(input => input.value);
+  }
+
+  function openBulkMessage() {
+    const ids = selectedUserIds();
+    if (!ids.length) return A.toast('Select at least one student.', 'error');
+    const form = document.getElementById('bulkMessageForm');
+    form?.reset();
+    document.getElementById('bulkMessageSubtitle').textContent = `${ids.length} selected student(s)`;
+    A.openModal('bulkMessageModal');
+  }
+
+  async function sendBulkMessage(event) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const ids = selectedUserIds();
+    if (!ids.length) return A.toast('Select at least one student.', 'error');
+    const values = Object.fromEntries(new FormData(form));
+    const button = form.querySelector('button[type="submit"]');
+    A.setLoading(button, true, 'Sending...');
+    try {
+      const response = await A.supabase.rpc('admin_send_user_message', {
+        p_user_ids: ids,
+        p_title: String(values.title || '').trim(),
+        p_message: String(values.message || '').trim(),
+        p_send_email: Boolean(form.elements.send_email.checked)
+      });
+      if (response.error) throw response.error;
+      A.closeModal('bulkMessageModal');
+      await refresh();
+      A.toast(`Notification sent to ${response.data?.notified || ids.length} student(s).`, 'success');
+    } catch (error) { A.toast(A.friendlyError(error, 'Could not send the notification.'), 'error'); }
+    finally { A.setLoading(button, false); }
+  }
+
+  async function queueAdminVerification(userId) {
+    const response = await A.supabase.rpc('admin_request_app_email_verification', { p_user_id: userId });
+    if (response.error) throw response.error;
+    // Process queued email immediately with the current Admin session.
+    await A.supabase.functions.invoke('process-email-queue', { body: { limit: 10 } }).catch(() => null);
+    return response.data;
+  }
+
+  async function applyBulkUsers() {
+    const ids = selectedUserIds();
+    const action = document.getElementById('bulkUserAction')?.value;
+    const days = Number(document.getElementById('bulkAccessDays')?.value || 0);
+    if (!ids.length) return A.toast('Select at least one student.', 'error');
+    if (action === 'extend_days' && days <= 0) return A.toast('Enter valid access days.', 'error');
+    const confirmation = await A.confirmAction({ title: 'Apply Bulk User Action', message: `${label(action)} for ${ids.length} selected account(s)?`, confirmText: 'Apply to Selected', danger: action === 'lock' });
+    if (!confirmation.confirmed) return;
+    const button = document.getElementById('applyBulkUsers');
+    A.setLoading(button, true, 'Updating...');
+    try {
+      if (action === 'resend_verification') {
+        let sent = 0, skipped = 0, failed = 0;
+        for (const id of ids) {
+          const profile = profileById(id);
+          if (!profile || profile.email_verified) { skipped += 1; continue; }
+          try { await queueAdminVerification(id); sent += 1; }
+          catch (error) { console.warn('Verification queue failed:', id, error?.message || error); failed += 1; }
+        }
+        await refresh();
+        A.toast(`${sent} verification email(s) queued; ${skipped} verified account(s) skipped; ${failed} failed.`, failed ? 'warning' : 'success', 6000);
+      } else {
+        const response = await A.supabase.rpc('admin_bulk_user_action', { p_user_ids: ids, p_action: action, p_days: action === 'extend_days' ? days : null });
+        if (response.error) throw response.error;
+        if (window.AdminBase?.reload) await window.AdminBase.reload();
+        await refresh();
+        A.toast(`${response.data?.updated || 0} account(s) updated; ${response.data?.skipped || 0} skipped.`, 'success');
+      }
+    } catch (error) { A.toast(A.friendlyError(error), 'error'); }
+    finally { A.setLoading(button, false); }
+  }
+
   function renderUsers() {
     const body = document.getElementById('studentsBodyV9'); if (!body) return; const rows = filteredUsers();
     const summary = document.getElementById('studentSummaryCards');
@@ -508,10 +668,10 @@
     if (profile.email_verified) return A.toast('This email is already verified.', 'info');
     A.setLoading(button, true, 'Sending...');
     try {
-      const response = await A.supabase.auth.resend({ type: 'signup', email: profile.email, options: { emailRedirectTo: new URL('login.html?tab=student-login', location.href).href } });
-      if (response.error) throw response.error;
-      A.toast('Verification email requested successfully. Supabase rate limits still apply.', 'success');
-    } catch (error) { A.toast(A.friendlyError(error, 'Could not resend verification email.'), 'error'); } finally { A.setLoading(button, false); }
+      const data = await queueAdminVerification(id);
+      A.toast(data?.message || 'Verification email queued successfully.', 'success');
+    } catch (error) { A.toast(A.friendlyError(error, 'Could not send verification email.'), 'error'); }
+    finally { A.setLoading(button, false); }
   }
 
   async function openUserDetails(id) { const profile = profileById(id); if (!profile) return; const enrollments = state.enrollments.filter(row => row.student_id === id); const payments = state.payments.filter(row => row.student_id === id); const activities = state.activities.filter(row => row.user_id === id).slice(0, 50); const supportRows = state.support.filter(row => row.student_id === id); const attribution = state.attributions.find(row => row.user_id === id); document.getElementById('userDetailsTitle').textContent = profile.full_name || 'Student'; document.getElementById('userDetailsSubtitle').textContent = profile.email; document.getElementById('userDetailsContent').innerHTML = `<div class="user-detail-grid"><div class="detail-card"><small>WhatsApp</small><b>${esc(profile.whatsapp || '—')}</b></div><div class="detail-card"><small>Email</small><b>${profile.email_verified ? 'Verified' : 'Unverified'}</b></div><div class="detail-card"><small>Access</small><b>${profile.lifetime_access ? 'Lifetime' : A.statusLabel(effective(profile))}</b></div><div class="detail-card"><small>Expiry</small><b>${profile.lifetime_access ? 'Never' : A.formatDateTime(profile.access_expires_at)}</b></div><div class="detail-card"><small>Source</small><b>${esc(profile.first_source || attribution?.source || 'Direct')}</b></div><div class="detail-card"><small>Reference</small><b>${esc(profile.first_ref || attribution?.ref_code || '—')}</b></div></div><div class="app-grid cols-2"><div class="app-card"><h3>Course Access</h3>${enrollments.map(row => `<div class="metric-row"><span>${esc(courseById(row.course_id)?.title || 'Course')}</span><span class="status-pill ${A.statusClass(row.status)}">${A.statusLabel(row.status)}</span></div>`).join('') || empty('No course enrollment.', 'fa-graduation-cap')}</div><div class="app-card"><h3>Payment History</h3>${payments.map(row => `<div class="metric-row"><span>${esc(courseById(row.course_id)?.title || 'Course')}<small>${esc(row.transaction_reference)}</small></span><span class="status-pill ${A.statusClass(row.status)}">${A.statusLabel(row.status)}</span></div>`).join('') || empty('No payment history.', 'fa-receipt')}</div></div><div class="app-card"><h3>Support Requests</h3>${supportRows.map(row => `<div class="metric-row"><span>${esc(row.subject)}<small>${A.formatDateTime(row.created_at)}</small></span><span class="status-pill ${A.statusClass(row.status)}">${A.statusLabel(row.status)}</span></div>`).join('') || empty('No support requests.', 'fa-headset')}</div><div class="app-card"><div class="app-card-head"><h3>Recent Activity</h3>${profile.email_verified ? '' : `<button class="app-btn small outline" data-resend-verification="${id}">Resend Verification</button>`}<button class="app-btn small gold" data-manage-access="${id}">Manage Access</button></div>${activities.map(row => `<div class="activity-item"><div class="activity-icon"><i class="fa-solid fa-clock-rotate-left"></i></div><div><b>${esc(row.description)}</b><small>${A.formatDateTime(row.created_at)}</small></div></div>`).join('') || empty('No activity recorded yet.', 'fa-clock')}</div>`; A.openModal('userDetailsModal'); }

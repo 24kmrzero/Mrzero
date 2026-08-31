@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0A0A0A">
+<script>(function(){try{var t=localStorage.getItem('24k-excellence-theme');document.documentElement.dataset.theme=t==='light'?'light':'dark'}catch(e){document.documentElement.dataset.theme='dark'}})();</script>
+<title>Verify Email | 24K Excellence</title>
+<link rel="icon" href="../assets/logo.png">
+<link rel="stylesheet" href="../app.css?v=9.46">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="verification-page">
+<main class="verification-shell">
+  <section class="verification-card">
+    <a href="/" class="verification-logo" aria-label="Website home"><img src="../assets/logo.png" alt="24K Digital Gold"></a>
+    <div class="verification-icon" id="verifyIcon"><i class="fa-solid fa-spinner fa-spin"></i></div>
+    <h1 id="verifyTitle">Verifying your email...</h1>
+    <p id="verifyMessage">Please wait while we securely verify your email address.</p>
+    <div class="verification-actions hidden" id="verifyActions">
+      <a class="app-btn gold" href="/student/"><i class="fa-solid fa-gauge-high"></i> Open Student Panel</a>
+      <a class="app-btn outline" href="/sign-in/"><i class="fa-solid fa-right-to-bracket"></i> Sign In</a>
+    </div>
+  </section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../assets/js/config.js?v=9.46"></script>
+<script>
+(async function(){
+  const title=document.getElementById('verifyTitle');
+  const message=document.getElementById('verifyMessage');
+  const icon=document.getElementById('verifyIcon');
+  const actions=document.getElementById('verifyActions');
+  const token=new URLSearchParams(location.search).get('token')||'';
+  const cfg=window.APP_CONFIG||{};
+  function show(ok,heading,text){
+    title.textContent=heading;message.textContent=text;
+    icon.className='verification-icon '+(ok?'success':'error');
+    icon.innerHTML=ok?'<i class="fa-solid fa-circle-check"></i>':'<i class="fa-solid fa-circle-xmark"></i>';
+    actions.classList.remove('hidden');
+  }
+  if(!token){show(false,'Invalid verification link','This verification link is missing its secure token. Request a new email from your Student Panel.');return;}
+  if(!window.supabase?.createClient||!cfg.SUPABASE_URL||!cfg.SUPABASE_ANON_KEY){show(false,'Verification unavailable','The verification service is not configured correctly.');return;}
+  try{
+    const sb=window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true}});
+    const {data,error}=await sb.rpc('verify_app_email',{p_token:token});
+    if(error)throw error;
+    if(!data?.success){show(false,'Verification link expired',data?.message||'This verification link is invalid or expired. Request a new email from your Student Panel.');return;}
+    show(true,'Email Verified','Your email address has been verified successfully. You can continue to your Student Panel.');
+  }catch(error){show(false,'Could not verify email',error?.message||'Please request a new verification email from your Student Panel.');}
+})();
+</script>
+</body>
+</html>
