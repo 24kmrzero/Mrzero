@@ -569,6 +569,16 @@
     if(price) price.innerHTML=p.package_mode==='free'?`<div class="premium-price"><b>FREE</b><small>Admin has opened Premium Market Access.</small></div>`:`<div class="premium-price"><span><b>PKR ${Number(p.price_pkr||0).toLocaleString()}</b><small>Local Bank Transfer</small></span><span><b>${Number(p.price_usdt||0).toLocaleString()} USDT</b><small>USDT TRC20</small></span><em>${Number(p.monthly_days||30)} days per renewal</em></div>`;
     const ib=document.getElementById('premiumIbStatus');
     if(ib){const latest=state.ibVerifications[0];ib.innerHTML=!p.ib_enabled?'<div class="notice warn">IB verification is currently disabled by Admin.</div>':latest?`<div class="notice ${latest.status==='approved'?'ok':latest.status==='declined'?'bad':'warn'}"><b>${A.statusLabel(latest.status)}</b> · ${A.escapeHtml(latest.broker)} / ${A.escapeHtml(latest.trading_account_id)}${latest.admin_note?`<br>${A.escapeHtml(latest.admin_note)}`:''}</div>`:'<div class="notice info">No IB verification submitted yet.</div>';}
+    const compactStatus=document.getElementById('premiumCompactStatus');
+    if(compactStatus){
+      const has=Boolean(p.has_access); const source=String(p.source||'locked');
+      compactStatus.classList.toggle('locked',!has);
+      compactStatus.innerHTML=has
+        ? `<i class="fa-solid fa-circle"></i> ${source==='trial'?'Free Trial':source==='ib'?'IB Access':'Premium Active'}${p.days_left!=null?` · ${p.days_left}d left`:''}`
+        : `<i class="fa-solid fa-lock"></i> Locked`;
+    }
+    const historyCount=document.getElementById('premiumHistoryCount');
+    if(historyCount) historyCount.textContent=`${state.premiumPayments.length} payment${state.premiumPayments.length===1?'':'s'}`;
     const body=document.getElementById('premiumPaymentsBody');
     if(body) body.innerHTML=state.premiumPayments.length?state.premiumPayments.map(row=>`<tr><td>${A.formatDateTime(row.created_at)}</td><td>${A.escapeHtml(row.payment_method_name)}</td><td>${A.escapeHtml(row.currency==='PKR'?`PKR ${Number(row.amount||0).toLocaleString()}`:`${Number(row.amount||0).toLocaleString()} USDT`)}</td><td><span class="status-pill ${A.statusClass(row.status)}">${A.statusLabel(row.status)}</span></td><td>${row.access_expires_at?A.formatDateTime(row.access_expires_at):'—'}</td><td>${A.escapeHtml(row.admin_note||row.provider_rejection_reason||'—')}</td></tr>`).join(''):`<tr><td colspan="6">${empty('No premium payment history yet.','fa-crown')}</td></tr>`;
     ['premiumPayLocal','premiumPayUsdt','openIbVerification'].forEach(id=>{const el=document.getElementById(id);if(el)el.disabled=p.package_mode==='free'||(id==='openIbVerification'&&!p.ib_enabled);});
@@ -629,8 +639,8 @@
       ? `<span class="account-check"><i class="fa-solid fa-check"></i></span><span><b>Account Verified</b><small>Email verification complete</small></span>`
       : `<span class="account-check pending"><i class="fa-solid fa-envelope"></i></span><span><b>Verify Email</b><small>Recommended for account security</small></span><button type="button" data-request-email-verification>Verify</button>`;
     if (card) card.innerHTML = verified
-      ? `<div class="email-verify-card-row"><div class="email-verify-icon verified"><i class="fa-solid fa-circle-check"></i></div><div><h3>Email Verified</h3><p class="muted">${A.escapeHtml(state.profile.email || '')} is verified and your account verification is complete.</p></div><span class="status-pill ok">Verified</span></div>`
-      : `<div class="email-verify-card-row"><div class="email-verify-icon"><i class="fa-solid fa-envelope"></i></div><div><h3>Email Verification</h3><p class="muted">Verify ${A.escapeHtml(state.profile.email || '')} to secure your account and keep important email updates enabled.</p></div><button type="button" class="app-btn gold" data-request-email-verification><i class="fa-solid fa-paper-plane"></i> Send Verification Email</button></div>`;
+      ? `<span class="account-row-icon"><i class="fa-solid fa-circle-check"></i></span><div class="account-row-copy"><h3>Email Verified</h3><p>${A.escapeHtml(state.profile.email || '')}</p></div><div class="account-row-side"><span class="status-pill ok">Verified</span></div>`
+      : `<span class="account-row-icon"><i class="fa-solid fa-envelope"></i></span><div class="account-row-copy"><h3>Email Verification</h3><p>Verify ${A.escapeHtml(state.profile.email || '')} to secure your account.</p></div><div class="account-row-side"><button type="button" class="app-btn gold" data-request-email-verification><i class="fa-solid fa-paper-plane"></i> Verify Email</button></div>`;
   }
 
   async function requestEmailVerification(button) {
@@ -706,10 +716,26 @@
     if(verify) verify.disabled=!meta || !p.ib_enabled;
   }
 
+  function forceOpenModal(id){
+    const modal=document.getElementById(id);
+    if(!modal){ A.toast('Access window could not be loaded. Please refresh the page.','error'); return false; }
+    try{
+      if(typeof A.openModal==='function') A.openModal(id);
+      if(!modal.classList.contains('open')) modal.classList.add('open');
+      modal.setAttribute('aria-hidden','false');
+      document.body.classList.add('modal-open');
+      return true;
+    }catch(error){
+      console.error('Modal open failed:',error);
+      modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); document.body.classList.add('modal-open');
+      return true;
+    }
+  }
+
   function openAllAccessModal(step='home'){
     if(step==='home'){ accessFlowState.broker=''; accessFlowState.mode=''; }
     setAccessStep(step);
-    A.openModal('allAccessModal');
+    forceOpenModal('allAccessModal');
   }
 
   async function copySelectedBrokerLink(){
@@ -742,6 +768,8 @@
     ['chartSearch','chartTimeframeFilter'].forEach(id => document.getElementById(id)?.addEventListener('input', renderCharts));
     document.getElementById('articleSearch')?.addEventListener('input', renderArticles);
     document.getElementById('closeSessions').addEventListener('click', resetCourseView);
+    const allAccessButton=document.getElementById('openAllAccessModal');
+    if(allAccessButton) allAccessButton.addEventListener('click', event=>{event.preventDefault();event.stopPropagation();openAllAccessModal('home');});
 
     document.body.addEventListener('click', async event => {
       const signalStatusButton = event.target.closest('[data-signal-status]');
@@ -772,7 +800,6 @@
       if (resource) await downloadResource(resource.dataset.downloadResource);
       const signalHistory = event.target.closest('[data-student-signal-history]');
       if (signalHistory) openSignalHistory(signalHistory.dataset.studentSignalHistory);
-      const openAccess=event.target.closest('#openAllAccessModal'); if(openAccess) openAllAccessModal();
       const accessStepButton=event.target.closest('[data-access-step-target]'); if(accessStepButton){setAccessStep(accessStepButton.dataset.accessStepTarget||'home'); return;}
       const brokerButton=event.target.closest('[data-broker-select]'); if(brokerButton){accessFlowState.broker=brokerButton.dataset.brokerSelect||''; if(!accessFlowState.mode) accessFlowState.mode='new'; renderAccessSelection(); return;}
       const accessModeButton=event.target.closest('[data-access-account-mode]'); if(accessModeButton){accessFlowState.mode=accessModeButton.dataset.accessAccountMode||''; renderAccessSelection(); return;}
