@@ -106,7 +106,7 @@
     const alert = document.getElementById('dashboardAlert');
     if (alert) alert.innerHTML = '';
 
-    const latest = state.signals[0];
+    const latest = state.signals.find(s => !signalIsFinal(s)) || state.signals[0];
     document.getElementById('latestSignal').innerHTML = latest ? dashboardSignalSnapshot(latest) : `<div class="dashboard-empty-compact"><span><i class="fa-solid fa-bolt"></i></span><b>No active market signal right now.</b><small>Fresh setups will appear here automatically.</small><button type="button" class="text-link-btn" data-refresh-dashboard>Refresh <i class="fa-solid fa-rotate"></i></button></div>`;
 
     const next = state.sessions.filter(s => new Date(s.starts_at) >= new Date() && s.status !== 'cancelled')[0] || state.sessions.find(s => s.status === 'upcoming');
