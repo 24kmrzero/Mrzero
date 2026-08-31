@@ -11,7 +11,9 @@
   window.StudentBase = { state, reload: async () => { await loadAll(); renderAll(); return state; } };
   let openPanel;
   let signalStatusView = 'all';
-  let signalWorkspaceView = 'today';
+  let signalWorkspaceView = 'active';
+  let historyMarketFilter = 'all';
+  let historyDateFilter = 'month';
 
   const result = await A.requireRole('student');
   if (!result) return;
@@ -134,61 +136,79 @@
   }
 
 
+  function signalHistorySourceDate(signal) {
+    return new Date(signal.closed_at || signal.last_status_at || signal.updated_at || signal.published_at || signal.created_at || Date.now());
+  }
+
+  function signalMarketBucket(signal) {
+    const symbol = String(signal.symbol || '').replace(/[^A-Za-z]/g,'').toUpperCase();
+    if (symbol.startsWith('XAU')) return 'gold';
+    if (symbol.startsWith('BTC')) return 'btc';
+    const currencies = ['USD','EUR','GBP','JPY','AUD','NZD','CAD','CHF'];
+    if (symbol.length === 6 && currencies.includes(symbol.slice(0,3)) && currencies.includes(symbol.slice(3))) return 'forex';
+    return 'other';
+  }
+
+  function historyDateMatches(signal, filter) {
+    const source = signalHistorySourceDate(signal);
+    if (Number.isNaN(source.getTime())) return false;
+    const now = new Date();
+    const today = dateKey(now);
+    if (filter === 'today') return dateKey(source) === today;
+    if (filter === 'yesterday') {
+      const y = new Date(now.getTime() - 86400000);
+      return dateKey(source) === dateKey(y);
+    }
+    const age = now.getTime() - source.getTime();
+    if (filter === 'week') return age >= 0 && age <= 7 * 86400000;
+    if (filter === 'month') return age >= 0 && age <= 30 * 86400000;
+    return true;
+  }
+
   function signalBaseRowsForWorkspace() {
-    const today = dateKey(new Date());
-    return state.signals.filter(signal => signalWorkspaceView === 'today'
-      ? dateKey(new Date(signal.published_at || signal.created_at || Date.now())) === today
-      : true);
+    if (signalWorkspaceView === 'active') return state.signals.filter(signal => !signalIsFinal(signal));
+    return state.signals.filter(signal => signalIsFinal(signal));
   }
 
   function signalVisibleRows() {
-    const query = document.getElementById('signalSearch')?.value.trim().toLowerCase() || '';
-    const direction = document.getElementById('signalDirectionFilter')?.value || 'all';
-    const instrument = document.getElementById('signalInstrumentFilter')?.value || 'all';
-    const dateValue = document.getElementById('signalDateFilter')?.value || '';
-    const baseRows = signalBaseRowsForWorkspace();
-    return baseRows.filter(signal => {
-      const searchable = `${signal.symbol || ''} ${signal.notes || ''} ${signal.direction || ''}`.toLowerCase();
-      const symbolKey = String(signal.symbol || '').replace('/','').toUpperCase();
-      const publishedKey = dateKey(new Date(signal.published_at || signal.created_at || Date.now()));
-      const dateMatch = signalWorkspaceView === 'today' ? true : (!dateValue || publishedKey === dateValue);
-      return (!query || searchable.includes(query))
-        && (direction === 'all' || String(signal.direction || '').toUpperCase() === direction)
-        && (instrument === 'all' || symbolKey === instrument)
-        && dateMatch
-        && matchesSignalStatus(signal, signalStatusView);
-    });
+    let rows = signalBaseRowsForWorkspace();
+    if (signalWorkspaceView === 'history') {
+      rows = rows.filter(signal => (historyMarketFilter === 'all' || signalMarketBucket(signal) === historyMarketFilter) && historyDateMatches(signal, historyDateFilter));
+      rows.sort((a,b) => signalHistorySourceDate(b) - signalHistorySourceDate(a));
+    } else {
+      rows.sort((a,b) => new Date(b.published_at || b.created_at || 0) - new Date(a.published_at || a.created_at || 0));
+    }
+    return rows;
   }
 
   function renderSignalPerformance() {
-    const rows = signalBaseRowsForWorkspace();
+    const rows = signalVisibleRows();
     const pips = rows.map(latestSignalPips).filter(value => value !== null && value !== undefined && Number.isFinite(Number(value))).map(Number);
     const totalPips = pips.reduce((sum, value) => sum + value, 0);
     const tpHits = rows.filter(signal => Number(signal.tp_hit || 0) > 0 || /^tp\d+_hit$/.test(String(signal.status || '').toLowerCase())).length;
-    const closed = rows.filter(signal => signalIsFinal(signal)).length;
     const slHits = rows.filter(signal => String(signal.status || '').toLowerCase() === 'sl_hit').length;
+    const pending = rows.filter(signal => matchesSignalStatus(signal,'pending')).length;
+    const beCount = rows.filter(signal => Boolean(signal.be_moved) || ['breakeven_hit','move_to_be','be'].includes(String(signal.status || '').toLowerCase())).length;
     const wins = rows.filter(signal => {
       const pip = latestSignalPips(signal);
       return (pip != null && Number(pip) > 0) || Number(signal.tp_hit || 0) > 0;
     }).length;
     const resolved = rows.filter(signal => signalIsFinal(signal) || Number(signal.tp_hit || 0) > 0 || signal.be_moved).length;
     const winRate = resolved ? Math.round((wins / resolved) * 100) : 0;
-    const summary = signalWorkspaceView === 'today'
+    const summary = signalWorkspaceView === 'active'
       ? [
-          ['fa-bolt', rows.length, "Today's Signals", 'Published today', 'gold'],
-          ['fa-signal', rows.filter(signal => !signalIsFinal(signal)).length, 'Active Signals', 'Currently running setups', 'green'],
-          ['fa-bullseye', tpHits, 'TP Hits', 'Target progress today', 'target'],
-          ['fa-ban', slHits, 'SL Hits', 'Stopped-out trades today', 'bad'],
-          ['fa-chart-line', `${signed(totalPips)} Pips`, 'Today Performance', 'Total live + closed result', 'gold'],
-          ['fa-trophy', `${winRate}%`, 'Win Rate', 'Based on resolved signals', 'violet']
+          ['fa-bolt', rows.length, 'Active Signals', 'Current open setups', 'gold'],
+          ['fa-hourglass-half', pending, 'Pending', 'Waiting for activation', 'violet'],
+          ['fa-bullseye', tpHits, 'TP Progress', 'Targets already hit', 'target'],
+          ['fa-shield-halved', beCount, 'Break Even', 'Protected live setups', 'green'],
+          ['fa-chart-line', `${signed(totalPips)} Pips`, 'Live Performance', 'Visible active result', 'gold']
         ]
       : [
-          ['fa-clock-rotate-left', rows.length, 'History Signals', 'All published records', 'gold'],
-          ['fa-circle-check', closed, 'Closed Signals', 'Completed history', 'green'],
-          ['fa-bullseye', tpHits, 'TP Hits', 'Historical target hits', 'target'],
-          ['fa-ban', slHits, 'SL Hits', 'Historical stopped-out trades', 'bad'],
-          ['fa-chart-line', `${signed(totalPips)} Pips`, 'Total Performance', 'All visible rows', 'gold'],
-          ['fa-trophy', `${winRate}%`, 'Win Rate', 'Visible history only', 'violet']
+          ['fa-clock-rotate-left', rows.length, 'History Signals', 'Filtered completed records', 'gold'],
+          ['fa-bullseye', tpHits, 'TP Hits', 'Filtered target hits', 'target'],
+          ['fa-ban', slHits, 'SL Hits', 'Filtered stopped trades', 'bad'],
+          ['fa-chart-line', `${signed(totalPips)} Pips`, 'Total Performance', 'Filtered result', 'gold'],
+          ['fa-trophy', `${winRate}%`, 'Win Rate', 'Filtered resolved signals', 'violet']
         ];
     const root = document.getElementById('signalPerformance');
     if (root) root.innerHTML = summary.map(([icon,value,label,note,tone]) => `<div class="signal-summary-card ${tone}"><span class="signal-summary-icon"><i class="fa-solid ${icon}"></i></span><div><b>${A.escapeHtml(String(value))}</b><strong>${label}</strong><small>${note}</small></div></div>`).join('');
@@ -200,56 +220,26 @@
       btn.classList.toggle('active', active);
       btn.setAttribute('aria-selected', active ? 'true' : 'false');
     });
-    const meta = document.getElementById('signalWorkspaceMeta');
-    if (meta) meta.textContent = signalWorkspaceView === 'today'
-      ? "Today's live setups, target progress and performance summary."
-      : 'Full signal history with filters, results and published records.';
-    const dateInput = document.getElementById('signalDateFilter');
-    if (dateInput) {
-      if (signalWorkspaceView === 'today') {
-        dateInput.value = dateKey(new Date());
-        dateInput.disabled = true;
-      } else {
-        if (dateInput.disabled) dateInput.value = '';
-        dateInput.disabled = false;
-      }
-    }
-    const clearBtn = document.getElementById('signalClearFilters');
-    if (clearBtn) clearBtn.innerHTML = `<i class="fa-solid fa-eraser"></i> ${signalWorkspaceView === 'today' ? 'Reset Today View' : 'Clear Filters'}`;
+    const filters = document.getElementById('signalHistoryFilters');
+    if (filters) filters.hidden = signalWorkspaceView !== 'history';
+    document.querySelectorAll('[data-history-market]').forEach(btn => btn.classList.toggle('active', btn.dataset.historyMarket === historyMarketFilter));
+    document.querySelectorAll('[data-history-date]').forEach(btn => btn.classList.toggle('active', btn.dataset.historyDate === historyDateFilter));
   }
 
   function renderSignals() {
-    syncSignalInstrumentFilter();
     updateSignalWorkspaceUi();
-    document.querySelectorAll('[data-signal-status]').forEach(btn => {
-      const selected = btn.dataset.signalStatus === signalStatusView;
-      btn.classList.toggle('active', selected);
-      btn.setAttribute('aria-selected', selected ? 'true' : 'false');
-    });
-
     const rows = signalVisibleRows();
     renderSignalPerformance();
-
     const grid = document.getElementById('signalsGrid');
     if (!grid) return;
     if (!rows.length) {
-      grid.innerHTML = `<div class="signal-table-empty"><i class="fa-solid fa-filter-circle-xmark"></i><b>${signalWorkspaceView === 'today' ? 'No today signals match this view.' : 'No signals match these filters.'}</b><span>${signalWorkspaceView === 'today' ? 'Try another status or refresh the live feed.' : 'Try changing status, instrument or date.'}</span></div>`;
-    } else {
-      grid.innerHTML = `<table class="premium-signal-table"><thead><tr><th>Time / Date</th><th>Instrument</th><th>Type</th><th>Entry Zone</th><th>SL</th><th>TP1</th><th>TP2</th><th>TP3</th><th>Current Pips</th><th>Status</th><th>Published By</th></tr></thead><tbody>${rows.map(signalTableRow).join('')}</tbody></table><div class="signal-table-footer">Showing 1 to ${rows.length} of ${rows.length} signal${rows.length === 1 ? '' : 's'}</div>`;
+      grid.innerHTML = `<div class="signal-table-empty"><i class="fa-solid fa-filter-circle-xmark"></i><b>${signalWorkspaceView === 'active' ? 'No active signals right now.' : 'No history matches these filters.'}</b><span>${signalWorkspaceView === 'active' ? 'New active setups will appear here automatically.' : 'Try another market or date range.'}</span></div>`;
+      return;
     }
-
-    const latest = state.signalUpdates.find(u => u.notify_users);
-    document.getElementById('latestSignalUpdate').innerHTML = latest ? `<div class="signal-update-banner compact"><i class="fa-solid fa-bell"></i><div><b>${A.escapeHtml(latest.notification_title||eventLabel(latest.event_type))}</b><small>${A.escapeHtml(latest.notification_message||'')} · ${A.formatDateTime(latest.created_at)}</small></div></div>` : '';
+    grid.innerHTML = `<table class="premium-signal-table compact-history-table"><thead><tr><th>Time</th><th>Date</th><th>Instrument</th><th>Type</th><th>Entry</th><th>SL</th><th>TP1</th><th>TP2</th><th>TP3</th><th>Current Pips</th><th>Status</th></tr></thead><tbody>${rows.map(signalTableRow).join('')}</tbody></table><div class="signal-table-footer">Showing ${rows.length} signal${rows.length === 1 ? '' : 's'}</div>`;
   }
 
-  function syncSignalInstrumentFilter() {
-    const select = document.getElementById('signalInstrumentFilter');
-    if (!select) return;
-    const selected = select.value || 'all';
-    const symbols = [...new Set(signalBaseRowsForWorkspace().map(s => String(s.symbol || '').replace('/','').toUpperCase()).filter(Boolean))].sort();
-    select.innerHTML = `<option value="all">All Instruments</option>${symbols.map(symbol => `<option value="${attr(symbol)}">${A.escapeHtml(displaySymbol(symbol))}</option>`).join('')}`;
-    select.value = symbols.includes(selected) ? selected : 'all';
-  }
+  function syncSignalInstrumentFilter() { return; }
 
   function matchesSignalStatus(signal, key) {
     if (!key || key === 'all') return true;
@@ -265,16 +255,16 @@
   }
 
   function signalTableRow(signal) {
-    const d = new Date(signal.published_at || signal.created_at || Date.now());
-    const time = Number.isNaN(d.getTime()) ? '—' : new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Karachi',hour:'2-digit',minute:'2-digit',hour12:true}).format(d);
-    const date = Number.isNaN(d.getTime()) ? '—' : new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Karachi',day:'2-digit',month:'short',year:'numeric'}).format(d);
+    const sourceDate = signalWorkspaceView === 'history' ? signalHistorySourceDate(signal) : new Date(signal.published_at || signal.created_at || Date.now());
+    const time = Number.isNaN(sourceDate.getTime()) ? '—' : new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Karachi',hour:'2-digit',minute:'2-digit',hour12:true}).format(sourceDate);
+    const date = Number.isNaN(sourceDate.getTime()) ? '—' : new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Karachi',day:'2-digit',month:'short',year:'numeric'}).format(sourceDate);
     const symbol = String(signal.symbol || '').replace('/','').toUpperCase();
     const meta = instrumentMeta(symbol);
     const currentPips = latestSignalPips(signal);
     const pipClass = currentPips == null ? '' : Number(currentPips) > 0 ? 'positive' : Number(currentPips) < 0 ? 'negative' : 'neutral';
     const pipText = currentPips == null ? '—' : `${signed(currentPips)} Pips`;
     const status = signalDisplayStatus(signal);
-    return `<tr data-student-signal-history="${signal.id}" tabindex="0"><td><b>${A.escapeHtml(time)}</b><small>${A.escapeHtml(date)}</small></td><td><div class="instrument-cell"><span class="instrument-badge ${meta.tone}">${meta.icon}</span><div><b>${A.escapeHtml(displaySymbol(symbol))}</b><small>${A.escapeHtml(meta.name)}</small></div></div></td><td><span class="table-direction ${String(signal.direction||'').toLowerCase()}">${A.escapeHtml(signal.direction || '—')}</span></td><td><b>${entryText(signal)}</b></td><td>${num(signal.stop_loss)}</td><td>${num(signal.take_profit_1)}</td><td>${num(signal.take_profit_2)}</td><td>${num(signal.take_profit_3)}</td><td><b class="table-pips ${pipClass}">${A.escapeHtml(pipText)}</b></td><td><span class="signal-table-status ${status.tone}">${A.escapeHtml(status.label)}</span></td><td><span class="publisher-name">Malik Zameer</span></td></tr>`;
+    return `<tr data-student-signal-history="${signal.id}" tabindex="0"><td class="signal-time-cell"><b>${A.escapeHtml(time)}</b></td><td class="signal-date-cell">${A.escapeHtml(date)}</td><td><div class="instrument-cell"><span class="instrument-badge ${meta.tone}">${meta.icon}</span><div><b>${A.escapeHtml(displaySymbol(symbol))}</b><small>${A.escapeHtml(meta.name)}</small></div></div></td><td><span class="table-direction ${String(signal.direction||'').toLowerCase()}">${A.escapeHtml(signal.direction || '—')}</span></td><td><b>${entryText(signal)}</b></td><td>${num(signal.stop_loss)}</td><td>${num(signal.take_profit_1)}</td><td>${num(signal.take_profit_2)}</td><td>${num(signal.take_profit_3)}</td><td><b class="table-pips ${pipClass}">${A.escapeHtml(pipText)}</b></td><td><span class="signal-table-status ${status.tone}">${A.escapeHtml(status.label)}</span></td></tr>`;
   }
 
   function latestSignalPips(signal) {
@@ -621,7 +611,6 @@
       if (!TEMP_OPEN_ACCESS && event.detail.key === 'signals' && !state.riskAccepted) A.openModal('riskModal');
       if (event.detail.key === 'courses') resetCourseView();
     });
-    ['signalSearch','signalDirectionFilter','signalInstrumentFilter','signalDateFilter'].forEach(id => { const el=document.getElementById(id); el?.addEventListener('input', renderSignals); el?.addEventListener('change', renderSignals); });
     ['chartSearch','chartTimeframeFilter'].forEach(id => document.getElementById(id)?.addEventListener('input', renderCharts));
     document.getElementById('articleSearch')?.addEventListener('input', renderArticles);
     document.getElementById('closeSessions').addEventListener('click', resetCourseView);
@@ -630,7 +619,11 @@
       const signalStatusButton = event.target.closest('[data-signal-status]');
       if (signalStatusButton) { signalStatusView = signalStatusButton.dataset.signalStatus || 'all'; renderSignals(); }
       const signalWorkspaceButton = event.target.closest('[data-signal-view]');
-      if (signalWorkspaceButton) { signalWorkspaceView = signalWorkspaceButton.dataset.signalView || 'today'; signalStatusView = 'all'; renderSignals(); }
+      if (signalWorkspaceButton) { signalWorkspaceView = signalWorkspaceButton.dataset.signalView || 'active'; renderSignals(); }
+      const historyMarketButton = event.target.closest('[data-history-market]');
+      if (historyMarketButton) { historyMarketFilter = historyMarketButton.dataset.historyMarket || 'all'; renderSignals(); }
+      const historyDateButton = event.target.closest('[data-history-date]');
+      if (historyDateButton) { historyDateFilter = historyDateButton.dataset.historyDate || 'month'; renderSignals(); }
       const courseOpen = event.target.closest('[data-open-course]');
       if (courseOpen) { openPanel('courses'); showCourseSessions(courseOpen.dataset.openCourse); }
       const buy = event.target.closest('[data-buy-course]');
@@ -662,21 +655,6 @@
       }
     });
 
-    document.getElementById('signalFilterToggle')?.addEventListener('click', () => document.getElementById('signalFilterBar')?.classList.toggle('open'));
-    document.getElementById('signalClearFilters')?.addEventListener('click', () => {
-      const search=document.getElementById('signalSearch'); if(search) search.value='';
-      const direction=document.getElementById('signalDirectionFilter'); if(direction) direction.value='all';
-      const instrument=document.getElementById('signalInstrumentFilter'); if(instrument) instrument.value='all';
-      const date=document.getElementById('signalDateFilter'); if(date) date.value='';
-      signalStatusView='all'; if (signalWorkspaceView === 'history') { const date=document.getElementById('signalDateFilter'); if(date) date.value=''; } renderSignals();
-    });
-    document.getElementById('signalRefresh')?.addEventListener('click', async event => {
-      const button=event.currentTarget; A.setLoading(button,true,'Refreshing...');
-      try { await loadAll(); renderAll(); A.toast('Signals refreshed.','success'); }
-      catch(error){ A.toast(A.friendlyError(error,'Could not refresh signals.'),'error'); }
-      finally { A.setLoading(button,false); }
-    });
-    document.getElementById('enableSignalAlerts')?.addEventListener('click', enableSignalAlerts);
     updateAlertButton();
     document.getElementById('paymentForm').addEventListener('submit', submitPayment);
     document.getElementById('profileForm').addEventListener('submit', saveProfile);
@@ -686,7 +664,7 @@
       if (event.key !== 'Enter') return;
       const q = event.currentTarget.value.trim().toLowerCase();
       if (!q) return;
-      if (state.signals.some(x => `${x.symbol} ${x.notes}`.toLowerCase().includes(q))) { openPanel('signals'); document.getElementById('signalSearch').value = q; renderSignals(); }
+      if (state.signals.some(x => `${x.symbol} ${x.notes}`.toLowerCase().includes(q))) { const found=state.signals.find(x => `${x.symbol} ${x.notes}`.toLowerCase().includes(q)); signalWorkspaceView=found&&signalIsFinal(found)?'history':'active'; openPanel('signals'); renderSignals(); }
       else if (state.charts.some(x => `${x.title} ${x.symbol}`.toLowerCase().includes(q))) { openPanel('charts'); document.getElementById('chartSearch').value = q; renderCharts(); }
       else { openPanel('articles'); document.getElementById('articleSearch').value = q; renderArticles(); }
     });

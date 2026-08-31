@@ -3320,3 +3320,136 @@ html[data-theme="light"] .student-page .course-card { background:#FFFDF9 !import
 .student-page .signal-summary-card.green .signal-summary-icon { background: rgba(34,183,99,.12) !important; color: #22B763 !important; }
 .student-page .signal-summary-card.bad .signal-summary-icon { background: rgba(224,74,74,.12) !important; color: #E04A4A !important; }
 .student-page .signal-summary-card.violet .signal-summary-icon { background: rgba(171,99,255,.12) !important; color: #B56DFF !important; }
+
+/* ======================================================================
+   V9.61 Signals simplification: cards-first, Active/History, compact rows
+   ====================================================================== */
+.student-page #p-signals { padding-top: 0 !important; }
+.student-page #p-signals .signal-summary-grid {
+  grid-template-columns: repeat(5, minmax(0,1fr)) !important;
+  gap: 12px !important;
+  margin: 0 0 14px !important;
+}
+.student-page #p-signals .signal-summary-card {
+  min-height: 82px !important;
+  padding: 13px 14px !important;
+  border-radius: 14px !important;
+}
+.student-page #p-signals .signal-summary-card b { font-size: 22px !important; }
+.student-page #p-signals .signal-summary-card strong { font-size: 12px !important; }
+.student-page #p-signals .signal-summary-card small { font-size: 10px !important; }
+.student-page #p-signals .signal-summary-icon { width: 42px !important; height: 42px !important; flex: 0 0 42px !important; }
+
+.student-page .compact-history-card { border-radius: 16px !important; overflow: hidden; }
+.student-page .signal-workspace-switch {
+  display:flex !important;
+  gap:10px !important;
+  padding:14px 16px !important;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.student-page .signal-workspace-switch button {
+  min-width: 112px !important;
+  min-height: 42px !important;
+  padding: 0 18px !important;
+  border-radius: 12px !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+}
+.student-page .signal-history-filters {
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:16px;
+  padding:14px 16px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  background:rgba(255,255,255,.012);
+}
+.student-page .signal-history-filters[hidden] { display:none !important; }
+.student-page .history-filter-group { display:grid; gap:7px; }
+.student-page .history-filter-group > small {
+  color:#777;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.student-page .history-pill-row { display:flex; gap:7px; flex-wrap:wrap; }
+.student-page .history-pill-row button {
+  min-height:34px;
+  padding:0 13px;
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:9px;
+  background:rgba(255,255,255,.025);
+  color:#B7B7B7;
+  font:800 11px/1 inherit;
+  cursor:pointer;
+  transition:.15s ease;
+}
+.student-page .history-pill-row button:hover { border-color:rgba(255,193,7,.22); color:#FFD45A; }
+.student-page .history-pill-row button.active {
+  color:#111;
+  border-color:#FFC107;
+  background:linear-gradient(135deg,#FFE39A,#FFC107 58%,#E4A400);
+}
+
+.student-page .compact-history-table { min-width: 1040px !important; }
+.student-page .compact-history-table thead th {
+  height: 34px !important;
+  padding: 8px 10px !important;
+  font-size: 10px !important;
+  letter-spacing:.03em !important;
+}
+.student-page .compact-history-table tbody td {
+  height: 46px !important;
+  min-height: 46px !important;
+  padding: 7px 10px !important;
+  font-size: 12px !important;
+}
+.student-page .compact-history-table td > b,
+.student-page .compact-history-table .instrument-cell b,
+.student-page .compact-history-table .table-direction,
+.student-page .compact-history-table .table-pips,
+.student-page .compact-history-table .signal-table-status { font-size: 12px !important; }
+.student-page .compact-history-table .instrument-cell small { font-size: 9px !important; margin-top:2px !important; }
+.student-page .compact-history-table .instrument-cell { gap:8px !important; }
+.student-page .compact-history-table .instrument-badge {
+  width:30px !important;
+  height:30px !important;
+  min-width:30px !important;
+  border-radius:8px !important;
+  font-size:11px !important;
+}
+.student-page .compact-history-table .signal-time-cell b { font-size:12px !important; }
+.student-page .compact-history-table .signal-date-cell { color:#7A746B; font-size:10px !important; }
+.student-page .compact-history-table .signal-table-status {
+  padding:5px 9px !important;
+  border-radius:999px !important;
+}
+.student-page .signal-table-footer { min-height: 30px !important; padding: 7px 12px !important; font-size: 9px !important; }
+
+html[data-theme="light"] .student-page .signal-workspace-switch { border-bottom-color:#E7E0D6; }
+html[data-theme="light"] .student-page .signal-history-filters {
+  background:#FCF8F1;
+  border-bottom-color:#E7E0D6;
+}
+html[data-theme="light"] .student-page .history-filter-group > small { color:#766D63; }
+html[data-theme="light"] .student-page .history-pill-row button {
+  color:#544C43;
+  background:#FFFDF9;
+  border-color:#DDD4C8;
+}
+html[data-theme="light"] .student-page .history-pill-row button.active {
+  color:#17120A;
+  background:linear-gradient(135deg,#FFE39A,#FFC107 58%,#E4A400);
+  border-color:#E1A900;
+}
+html[data-theme="light"] .student-page .compact-history-table .signal-date-cell { color:#786F65 !important; }
+
+@media (max-width: 1180px) {
+  .student-page #p-signals .signal-summary-grid { grid-template-columns: repeat(3,minmax(0,1fr)) !important; }
+}
+@media (max-width: 760px) {
+  .student-page #p-signals .signal-summary-grid { grid-template-columns: repeat(2,minmax(0,1fr)) !important; }
+  .student-page .signal-history-filters { align-items:stretch; flex-direction:column; }
+  .student-page .signal-workspace-switch button { flex:1; min-width:0 !important; }
+}

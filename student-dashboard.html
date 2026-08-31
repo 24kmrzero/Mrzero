@@ -8,7 +8,7 @@
 <title>Student Panel | 24K Excellence</title>
 <link rel="icon" href="assets/logo.png">
 <link rel="stylesheet" href="app.css?v=9.59" onload="document.documentElement.classList.add('student-base-css-ready')">
-<link rel="stylesheet" href="assets/student-premium.css?v=9.60" onload="document.documentElement.classList.add('student-css-ready')">
+<link rel="stylesheet" href="assets/student-premium.css?v=9.61" onload="document.documentElement.classList.add('student-css-ready')">
 <style>html:not(.student-base-css-ready) body.student-page,html:not(.student-css-ready) body.student-page{visibility:hidden}</style>
 <script>setTimeout(function(){document.documentElement.classList.add('student-base-css-ready','student-css-ready')},1800);</script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -113,47 +113,35 @@
       </section>
 
       <section class="panel" id="p-signals">
-        <div class="signals-page-header signals-command-header">
-          <div class="signals-title-lockup"><span class="signals-eyebrow">24K MARKET DESK</span><h2>Trading Signals <i class="fa-solid fa-tower-broadcast"></i></h2><p>Live setups, target progress and completed trade history in one workspace.</p></div>
-          <div class="signals-live-chip"><i></i><span><b>LIVE FEED</b><small>Auto-updating</small></span></div>
-          <div class="signals-header-actions">
-            <button class="signal-action-btn" type="button" id="signalRefresh"><i class="fa-solid fa-rotate"></i> Refresh</button>
-            <button class="signal-action-btn primary" type="button" id="signalFilterToggle"><i class="fa-solid fa-sliders"></i> Filters</button>
-          </div>
-        </div>
-        <div id="latestSignalUpdate"></div>
         <div class="signal-summary-grid signal-performance-grid" id="signalPerformance"></div>
 
-        <div class="signal-table-card">
+        <div class="signal-table-card compact-history-card">
           <div class="signal-workspace-switch" role="tablist" aria-label="Signals workspace">
-            <button type="button" class="active" data-signal-view="today">Today Signals</button>
+            <button type="button" class="active" data-signal-view="active">Active</button>
             <button type="button" data-signal-view="history">History</button>
           </div>
-          <div class="signal-table-toolbar">
-            <div class="signal-toolbar-left">
-              <div class="signal-workspace-meta" id="signalWorkspaceMeta">Today's live setups, target progress and performance summary.</div>
-              <div class="signal-status-tabs" role="tablist" aria-label="Signal status">
-                <button type="button" class="active" data-signal-status="all">All</button>
-                <button type="button" data-signal-status="active">Active</button>
-                <button type="button" data-signal-status="pending">Pending</button>
-                <button type="button" data-signal-status="tp_hit">TP Hit</button>
-                <button type="button" data-signal-status="be">BE</button>
-                <button type="button" data-signal-status="closed">Closed</button>
-                <button type="button" data-signal-status="sl">SL</button>
+
+          <div class="signal-history-filters" id="signalHistoryFilters" hidden>
+            <div class="history-filter-group">
+              <small>Market</small>
+              <div class="history-pill-row" role="group" aria-label="History market filter">
+                <button type="button" data-history-market="gold">Gold</button>
+                <button type="button" data-history-market="btc">BTC</button>
+                <button type="button" data-history-market="forex">Forex</button>
+                <button type="button" class="active" data-history-market="all">All</button>
               </div>
             </div>
-            <div class="signal-primary-filters">
-              <select id="signalInstrumentFilter"><option value="all">All Instruments</option></select>
-              <div class="signal-date-control"><i class="fa-regular fa-calendar"></i><input id="signalDateFilter" type="date" aria-label="Filter signals by date"></div>
+            <div class="history-filter-group">
+              <small>Date</small>
+              <div class="history-pill-row" role="group" aria-label="History date filter">
+                <button type="button" data-history-date="today">Today</button>
+                <button type="button" data-history-date="yesterday">Yesterday</button>
+                <button type="button" data-history-date="week">Last Week</button>
+                <button type="button" class="active" data-history-date="month">Last Month</button>
+              </div>
             </div>
           </div>
-          <div class="signal-advanced-filters" id="signalFilterBar">
-            <div class="filter-field"><i class="fa-solid fa-magnifying-glass"></i><input id="signalSearch" type="search" placeholder="Search pair or note..."></div>
-            <select id="signalDirectionFilter"><option value="all">Buy & Sell</option><option value="BUY">Buy</option><option value="SELL">Sell</option></select>
-            <button class="signal-filter-clear" type="button" id="signalClearFilters"><i class="fa-solid fa-eraser"></i> Clear</button>
-            <a class="signal-risk-link" href="risk-disclaimer.html" target="_blank"><i class="fa-solid fa-triangle-exclamation"></i> Risk Disclaimer</a>
-            <button class="signal-alert-inline" type="button" id="enableSignalAlerts"><i class="fa-solid fa-bell"></i> Enable Live Alerts</button>
-          </div>
+
           <div class="signal-table-scroll" id="signalsGrid"></div>
         </div>
       </section>
@@ -225,7 +213,7 @@
 
 <script src="assets/js/core.js?v=9.37"></script>
 <script src="assets/js/tracking.js?v=9.1"></script>
-<script src="assets/js/student.js?v=9.60"></script>
+<script src="assets/js/student.js?v=9.61"></script>
 <script src="assets/js/student-ui.js?v=9.54"></script>
 <script src="assets/js/student-open-access.js?v=9.54"></script>
 </body>
