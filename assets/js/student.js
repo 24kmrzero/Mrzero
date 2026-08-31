@@ -81,10 +81,10 @@
     const todayKey = dateKey(new Date());
     const todayCharts = state.charts.filter(c => dateKey(new Date(c.published_at || c.created_at || Date.now())) === todayKey).length;
     const data = [
-      ['fa-bolt', activeSignals, 'Active Signals', 'Live setups & partial TPs', 'signals'],
-      ['fa-chart-column', todayCharts, 'Market Insights', 'Fresh chart analysis', 'charts'],
-      ['fa-file-lines', state.articles.length, 'Learning Library', 'Guides & education', 'articles'],
-      ['fa-graduation-cap', approvedCourses, 'Course Access', 'Programs & live classes', 'courses']
+      ['fa-bolt', activeSignals, 'Active Signals', 'Live setups & target progress', 'signals'],
+      ['fa-chart-column', todayCharts, 'Market Analysis', 'Fresh charts published today', 'charts'],
+      ['fa-file-lines', state.articles.length, 'Learning Library', 'Guides, notes & education', 'articles'],
+      ['fa-graduation-cap', approvedCourses, 'My Courses', 'Programs & live classes', 'courses']
     ];
     document.getElementById('studentKpis').innerHTML = data.map(([icon, value, label, note, panel]) => `<button type="button" class="app-kpi dashboard-nav-card" data-goto="${panel}" aria-label="Open ${label}"><span class="kpi-icon"><i class="fa-solid ${icon}"></i></span><div><small>${label}</small><b>${value}</b><em>${note}</em></div><span class="kpi-spark"><i></i><i></i><i></i></span><i class="fa-solid fa-arrow-right dashboard-nav-arrow"></i></button>`).join('');
 
@@ -109,12 +109,12 @@
     const latest = state.signals.find(s => !signalIsFinal(s)) || state.signals[0];
     document.getElementById('latestSignal').innerHTML = latest ? dashboardSignalSnapshot(latest) : `<div class="dashboard-empty-compact"><span><i class="fa-solid fa-bolt"></i></span><b>No active market signal right now.</b><small>Fresh setups will appear here automatically.</small><button type="button" class="text-link-btn" data-refresh-dashboard>Refresh <i class="fa-solid fa-rotate"></i></button></div>`;
 
-    const next = state.sessions.filter(s => new Date(s.starts_at) >= new Date() && s.status !== 'cancelled')[0] || state.sessions.find(s => s.status === 'upcoming');
+    const next = state.sessions.filter(s => new Date(s.starts_at) >= new Date() && s.status !== 'cancelled').sort((a,b) => new Date(a.starts_at) - new Date(b.starts_at))[0];
     document.getElementById('nextSession').innerHTML = next ? dashboardClassSnapshot(next) : `<div class="dashboard-empty-compact class-empty"><span><i class="fa-solid fa-calendar-check"></i></span><b>No upcoming class scheduled</b><small>Your next live class will appear here when published.</small><button type="button" class="text-link-btn" data-goto="courses">Open Courses <i class="fa-solid fa-arrow-right"></i></button></div>`;
 
     const analysis = state.charts.slice(0, 3);
     const analysisWrap = document.getElementById('dashboardMarketAnalysis');
-    if (analysisWrap) analysisWrap.innerHTML = analysis.length ? analysis.map(chart => `<button type="button" class="analysis-mini-row" data-read-chart="${chart.id}"><span class="analysis-thumb ${chart.image_url ? 'has-image' : ''}">${chart.image_url ? `<img src="${attr(chart.image_url)}" alt="${attr(chart.title)}">` : '<i class="fa-solid fa-chart-candlestick"></i>'}</span><span class="analysis-mini-copy"><b>${A.escapeHtml(chart.title)}</b><small>${A.escapeHtml(chart.symbol || 'Market')} · ${A.escapeHtml(chart.timeframe || 'Analysis')}</small><em>${A.formatDateTime(chart.published_at)}</em></span><i class="fa-solid fa-arrow-right"></i></button>`).join('') : `<div class="dashboard-empty-inline"><i class="fa-solid fa-chart-line"></i><span>No market analysis published yet.</span></div>`;
+    if (analysisWrap) analysisWrap.innerHTML = analysis.length ? analysis.map(chart => `<button type="button" class="analysis-mini-row" data-read-chart="${chart.id}"><span class="analysis-thumb ${chart.image_url ? 'has-image' : ''}">${chart.image_url ? `<img src="${attr(chart.image_url)}" alt="${attr(chart.title)}" onerror="this.remove();this.parentElement.classList.remove('has-image')">` : ''}<i class="fa-solid fa-chart-line analysis-thumb-fallback"></i></span><span class="analysis-mini-copy"><b>${A.escapeHtml(chart.title)}</b><small>${A.escapeHtml(chart.symbol || 'Market')} · ${A.escapeHtml(chart.timeframe || 'Analysis')}</small><em>${A.formatDateTime(chart.published_at)}</em></span><span class="analysis-open-arrow"><i class="fa-solid fa-arrow-up-right-from-square"></i></span></button>`).join('') : `<div class="dashboard-empty-inline premium-empty-state"><span class="empty-orb"><i class="fa-solid fa-chart-line"></i></span><div><b>No market analysis yet</b><small>New chart breakdowns will appear here when published.</small></div></div>`;
 
     const upcomingSessions = state.sessions.filter(s => new Date(s.starts_at) >= new Date() && s.status !== 'cancelled').sort((a,b) => new Date(a.starts_at) - new Date(b.starts_at));
     const nextPulseSession = upcomingSessions[0];
@@ -125,13 +125,21 @@
       const joined = state.profile?.created_at ? new Date(state.profile.created_at) : null;
       const joinedText = joined && !Number.isNaN(joined.getTime()) ? new Intl.DateTimeFormat('en-GB',{day:'2-digit',month:'short',year:'numeric'}).format(joined) : '24K Member';
       const nextClassText = nextPulseSession ? A.formatDateTime(nextPulseSession.starts_at) : 'Not scheduled';
-      const noticeTitle = latestNotice?.title || 'No new announcement';
-      learning.innerHTML = `<div class="member-pulse-grid">
-        <div class="member-pulse-primary"><span class="pulse-orbit"><i class="fa-solid fa-crown"></i></span><div><small>MEMBER ACCESS</small><b>Open Access</b><em>All learning areas are currently available.</em></div><span class="pulse-live-dot">ACTIVE</span></div>
-        <div class="member-pulse-row"><span class="pulse-row-icon ${verified?'ok':'warn'}"><i class="fa-solid ${verified?'fa-circle-check':'fa-envelope'}"></i></span><div><small>EMAIL STATUS</small><b>${verified?'Verified':'Verification available'}</b></div><span>${verified?'Secure':'Optional'}</span></div>
-        <div class="member-pulse-row"><span class="pulse-row-icon"><i class="fa-regular fa-calendar"></i></span><div><small>NEXT LIVE CLASS</small><b>${A.escapeHtml(nextClassText)}</b></div><span>${upcomingSessions.length ? `${upcomingSessions.length} upcoming` : 'Waiting'}</span></div>
-        <button type="button" class="member-pulse-row pulse-update-row" data-goto="announcements"><span class="pulse-row-icon"><i class="fa-solid fa-bullhorn"></i></span><div><small>LATEST UPDATE</small><b>${A.escapeHtml(noticeTitle)}</b></div><i class="fa-solid fa-arrow-right"></i></button>
-        <div class="member-pulse-footer"><span><i class="fa-regular fa-id-badge"></i> Member since <b>${A.escapeHtml(joinedText)}</b></span><button type="button" data-goto="profile">Manage Account</button></div>
+      const latestNoticeTitle = latestNotice?.title || 'No new announcement';
+      const publishedResources = state.resources.length;
+      learning.innerHTML = `<div class="member-desk-shell">
+        <div class="member-desk-access">
+          <span class="desk-crown"><i class="fa-solid fa-crown"></i></span>
+          <div><small>24K MEMBER ACCESS</small><b>Workspace Open</b><em>Courses, signals and learning content are available.</em></div>
+          <span class="desk-active"><i></i> ACTIVE</span>
+        </div>
+        <div class="member-desk-metrics">
+          <button type="button" data-goto="profile"><span class="desk-metric-icon"><i class="fa-solid ${verified?'fa-circle-check':'fa-envelope'}"></i></span><small>Email security</small><b>${verified?'Verified':'Verify available'}</b><em>${verified?'Account protected':'Optional for now'}</em></button>
+          <button type="button" data-goto="courses"><span class="desk-metric-icon"><i class="fa-regular fa-calendar"></i></span><small>Next live class</small><b>${A.escapeHtml(nextClassText)}</b><em>${upcomingSessions.length ? `${upcomingSessions.length} upcoming` : 'Waiting for schedule'}</em></button>
+          <button type="button" data-goto="courses"><span class="desk-metric-icon"><i class="fa-solid fa-folder-open"></i></span><small>Learning resources</small><b>${publishedResources}</b><em>Available files</em></button>
+          <button type="button" data-goto="announcements"><span class="desk-metric-icon"><i class="fa-solid fa-bullhorn"></i></span><small>Latest update</small><b>${A.escapeHtml(latestNoticeTitle)}</b><em>${latestNotice ? A.formatDateTime(latestNotice.published_at || latestNotice.created_at) : 'No update yet'}</em></button>
+        </div>
+        <div class="member-desk-footer"><span><i class="fa-regular fa-id-badge"></i> Member since <b>${A.escapeHtml(joinedText)}</b></span><button type="button" data-goto="profile">Account settings <i class="fa-solid fa-arrow-right"></i></button></div>
       </div>`;
     }
   }
@@ -242,12 +250,38 @@
   function dashboardSignalSnapshot(signal) {
     const status = signalDisplayStatus(signal);
     const pips = latestSignalPips(signal);
-    return `<button type="button" class="dashboard-signal-snapshot" data-goto="signals"><div class="dash-signal-top"><div><b>${A.escapeHtml(displaySymbol(signal.symbol))}</b><span class="table-direction ${String(signal.direction||'').toLowerCase()}">${A.escapeHtml(signal.direction || '—')}</span></div><span class="signal-table-status ${status.tone}">${A.escapeHtml(status.label)}</span></div><div class="dash-signal-note">${A.escapeHtml(signal.notes || 'Live trade setup')}</div><div class="dash-signal-levels"><span><small>ENTRY</small><b>${entryText(signal)}</b></span><span><small>STOP LOSS</small><b>${num(signal.stop_loss)}</b></span><span><small>TP1</small><b>${num(signal.take_profit_1)}</b></span><span><small>TP2</small><b>${num(signal.take_profit_2)}</b></span><span><small>TP3</small><b>${num(signal.take_profit_3)}</b></span></div><div class="dash-signal-foot"><small>Opened ${A.formatDateTime(signal.published_at)}</small><b class="table-pips ${pips>0?'positive':pips<0?'negative':''}">${pips==null?'Live':`${signed(pips)} Pips`}</b></div></button>`;
+    const pipsClass = pips == null ? 'neutral' : pips > 0 ? 'positive' : pips < 0 ? 'negative' : 'neutral';
+    const pipsText = pips == null ? 'Live' : `${signed(pips)} Pips`;
+    return `<button type="button" class="dashboard-signal-snapshot premium-signal-snapshot" data-goto="signals">
+      <div class="dash-signal-command">
+        <div class="dash-signal-identity"><span class="dash-market-icon"><i class="fa-solid fa-chart-line"></i></span><div><small>LIVE SETUP</small><b>${A.escapeHtml(displaySymbol(signal.symbol))}</b></div><span class="table-direction ${String(signal.direction||'').toLowerCase()}">${A.escapeHtml(signal.direction || '—')}</span></div>
+        <div class="dash-signal-result"><small>CURRENT RESULT</small><b class="table-pips ${pipsClass}">${A.escapeHtml(pipsText)}</b></div>
+        <span class="signal-table-status ${status.tone}">${A.escapeHtml(status.label)}</span>
+      </div>
+      <div class="dash-signal-note"><i class="fa-solid fa-circle-info"></i>${A.escapeHtml(signal.notes || 'Live trade setup')}</div>
+      <div class="dash-signal-levels"><span><small>ENTRY ZONE</small><b>${entryText(signal)}</b></span><span><small>STOP LOSS</small><b>${num(signal.stop_loss)}</b></span><span><small>TP1</small><b>${num(signal.take_profit_1)}</b></span><span><small>TP2</small><b>${num(signal.take_profit_2)}</b></span><span><small>TP3</small><b>${num(signal.take_profit_3)}</b></span></div>
+      <div class="dash-signal-foot"><small><i class="fa-regular fa-clock"></i> Published ${A.formatDateTime(signal.published_at)}</small><span>Open signal desk <i class="fa-solid fa-arrow-right"></i></span></div>
+    </button>`;
   }
 
   function dashboardClassSnapshot(session) {
     const course = state.courses.find(c => c.id === session.course_id);
-    return `<button type="button" class="dashboard-class-snapshot" data-open-course="${session.course_id}"><div class="class-status-row"><span class="class-upcoming">${A.escapeHtml(A.statusLabel(session.status || 'upcoming'))}</span><span class="class-live-icon"><i class="fa-solid fa-video"></i></span></div><h4>${A.escapeHtml(session.title)}</h4><p>${A.escapeHtml(course?.title || '24K Excellence')}</p><div class="class-meta-row"><span><i class="fa-regular fa-calendar"></i>${A.formatDateTime(session.starts_at)}</span><span><i class="fa-solid fa-user-tie"></i>Malik Zameer</span></div><span class="class-open-link">Open Class <i class="fa-solid fa-arrow-right"></i></span></button>`;
+    const start = new Date(session.starts_at);
+    const diff = start.getTime() - Date.now();
+    let countdown = 'Scheduled';
+    if (Number.isFinite(diff) && diff > 0) {
+      const mins = Math.max(1, Math.floor(diff / 60000));
+      const days = Math.floor(mins / 1440);
+      const hours = Math.floor((mins % 1440) / 60);
+      countdown = days > 0 ? `Starts in ${days}d ${hours}h` : hours > 0 ? `Starts in ${hours}h ${mins % 60}m` : `Starts in ${mins}m`;
+    }
+    return `<button type="button" class="dashboard-class-snapshot premium-class-snapshot" data-open-course="${session.course_id}">
+      <div class="class-visual-lockup"><span class="class-visual-icon"><i class="fa-solid fa-video"></i></span><div><small>UPCOMING LIVE SESSION</small><b>${A.escapeHtml(countdown)}</b></div></div>
+      <div class="class-status-row"><span class="class-upcoming">${A.escapeHtml(A.statusLabel(session.status || 'upcoming'))}</span><span class="class-course-chip">${A.escapeHtml(course?.course_type === 'free' ? 'Free Course' : 'Member Class')}</span></div>
+      <h4>${A.escapeHtml(session.title)}</h4><p>${A.escapeHtml(course?.title || '24K Excellence')}</p>
+      <div class="class-meta-row"><span><i class="fa-regular fa-calendar"></i>${A.formatDateTime(session.starts_at)}</span><span><i class="fa-solid fa-user-tie"></i>Malik Zameer</span></div>
+      <span class="class-open-link">View class details <i class="fa-solid fa-arrow-right"></i></span>
+    </button>`;
   }
 
   function dateKey(date) {

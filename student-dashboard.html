@@ -8,7 +8,7 @@
 <title>Student Panel | 24K Excellence</title>
 <link rel="icon" href="assets/logo.png">
 <link rel="stylesheet" href="app.css?v=9.51" onload="document.documentElement.classList.add('student-base-css-ready')">
-<link rel="stylesheet" href="assets/student-premium.css?v=9.51" onload="document.documentElement.classList.add('student-css-ready')">
+<link rel="stylesheet" href="assets/student-premium.css?v=9.55" onload="document.documentElement.classList.add('student-css-ready')">
 <style>html:not(.student-base-css-ready) body.student-page,html:not(.student-css-ready) body.student-page{visibility:hidden}</style>
 <script>setTimeout(function(){document.documentElement.classList.add('student-base-css-ready','student-css-ready')},1800);</script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -78,9 +78,10 @@
               <span class="live-chip"><i></i> LIVE</span>
             </div>
           </div>
-          <div class="compact-market-art" aria-hidden="true">
-            <div class="art-bars"><i></i><i></i><i></i><i></i><i></i><i></i></div>
-            <div class="art-globe"><span></span></div>
+          <div class="market-desk-capsule" aria-hidden="true">
+            <span class="market-desk-icon"><i class="fa-solid fa-chart-line"></i></span>
+            <div><small>24K MARKET DESK</small><b>Live market & learning feed</b><em>Signals · Analysis · Classes</em></div>
+            <span class="market-desk-live"><i></i> LIVE</span>
           </div>
           <div id="dashboardAccountBadge" class="compact-account-badge"></div>
         </div>
@@ -105,15 +106,16 @@
             <div id="dashboardMarketAnalysis"></div>
           </div>
           <div class="app-card compact-dashboard-card member-pulse-card">
-            <div class="compact-card-head"><div><span>24K MEMBER DESK</span><h3>Member Pulse</h3></div><button class="text-link-btn" data-goto="profile">Account <i class="fa-solid fa-arrow-right"></i></button></div>
+            <div class="compact-card-head"><div><span>MEMBER OVERVIEW</span><h3>My 24K Desk</h3></div><button class="text-link-btn" data-goto="profile">Manage <i class="fa-solid fa-arrow-right"></i></button></div>
             <div id="dashboardLearningSnapshot"></div>
           </div>
         </div>
       </section>
 
       <section class="panel" id="p-signals">
-        <div class="signals-page-header">
-          <div><h2>Trading Signals <i class="fa-solid fa-tower-broadcast"></i></h2><p>Track active setups, updates and completed trades.</p></div>
+        <div class="signals-page-header signals-command-header">
+          <div class="signals-title-lockup"><span class="signals-eyebrow">24K MARKET DESK</span><h2>Trading Signals <i class="fa-solid fa-tower-broadcast"></i></h2><p>Live setups, target progress and completed trade history in one workspace.</p></div>
+          <div class="signals-live-chip"><i></i><span><b>LIVE FEED</b><small>Auto-updating</small></span></div>
           <div class="signals-header-actions">
             <button class="signal-action-btn" type="button" id="signalRefresh"><i class="fa-solid fa-rotate"></i> Refresh</button>
             <button class="signal-action-btn primary" type="button" id="signalFilterToggle"><i class="fa-solid fa-sliders"></i> Filters</button>
@@ -216,7 +218,7 @@
 
 <script src="assets/js/core.js?v=9.37"></script>
 <script src="assets/js/tracking.js?v=9.1"></script>
-<script src="assets/js/student.js?v=9.54"></script>
+<script src="assets/js/student.js?v=9.55"></script>
 <script src="assets/js/student-ui.js?v=9.54"></script>
 <script src="assets/js/student-open-access.js?v=9.54"></script>
 </body>
