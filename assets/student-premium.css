@@ -2736,3 +2736,364 @@ html[data-theme="light"] .student-page .signal-table-footer { color:#756D63 !imp
   .student-page .compact-welcome-copy h1 { font-size:22px !important; }
   .student-page .dashboard-top-title small { display:none; }
 }
+
+/* ======================================================================
+   24K Excellence v9.56 — layout recovery + premium readability pass
+   Fixes the v9.55 double-sidebar offset, over-compression, light-theme
+   heavy blocks, stretched empty cards and tiny signal/dashboard text.
+   ====================================================================== */
+
+/* ---------- Desktop frame: one sidebar reservation only ---------- */
+@media (min-width: 901px) {
+  .student-page .app-shell {
+    grid-template-columns: 244px minmax(0,1fr) !important;
+  }
+  .student-page .app-side {
+    width: auto !important;
+    min-width: 0 !important;
+  }
+  .student-page .app-main {
+    margin-left: 0 !important;
+    width: auto !important;
+    min-width: 0 !important;
+  }
+}
+
+.student-page .app-content {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 20px 24px 40px !important;
+}
+.student-page .app-topbar {
+  min-height: 70px !important;
+  height: 70px !important;
+  padding: 0 24px !important;
+  gap: 14px !important;
+}
+.student-page .dashboard-top-title strong { font-size: 18px !important; }
+.student-page .dashboard-top-title small { font-size: 10px !important; line-height: 1.25 !important; }
+.student-page .top-market-clock { height: 37px !important; font-size: 10px !important; padding: 0 11px !important; }
+.student-page .market-session-chips { gap: 6px !important; }
+.student-page .market-session-chips span { min-width: 37px !important; height: 27px !important; font-size: 9px !important; }
+.student-page .app-search { width: min(430px,31vw) !important; }
+.student-page .app-search input { height: 40px !important; font-size: 11px !important; }
+.student-page .app-theme-toggle,
+.student-page .app-notify,
+.student-page .app-avatar { width: 40px !important; height: 40px !important; flex-basis: 40px !important; }
+
+/* ---------- Sidebar: compact, but not miniature ---------- */
+.student-page .app-side-brand { min-height: 88px !important; padding: 14px 16px !important; }
+.student-page .app-side-brand img { max-width: 112px !important; max-height: 56px !important; }
+.student-page .app-side-scroll { padding: 12px 12px 18px !important; }
+.student-page .premium-side-nav { gap: 5px !important; }
+.student-page .premium-side-nav a {
+  min-height: 47px !important;
+  padding: 7px 10px !important;
+  font-size: 13px !important;
+  border-radius: 12px !important;
+}
+.student-page .premium-side-nav a i {
+  width: 32px !important; height: 32px !important; border-radius: 10px !important; font-size: 12px !important;
+}
+.student-page .nav-count { font-size: 9px !important; min-width: 20px !important; height: 20px !important; }
+.student-page .sidebar-member-card { margin: 16px 2px 10px !important; padding: 11px !important; }
+.student-page .sidebar-member-avatar { width: 38px !important; height: 38px !important; font-size: 11px !important; }
+.student-page .sidebar-member-copy strong { font-size: 11px !important; }
+.student-page .sidebar-member-copy small { font-size: 8px !important; }
+.student-page .sidebar-benefits-card { padding: 13px !important; }
+.student-page .sidebar-benefits-card h3 { font-size: 13px !important; }
+.student-page .sidebar-benefits-card p { font-size: 9px !important; line-height: 1.5 !important; }
+.student-page .sidebar-benefits-card li { font-size: 8px !important; }
+.student-page .sidebar-benefits-btn { min-height: 34px !important; font-size: 9px !important; }
+.student-page .app-side-foot a,
+.student-page .app-side-foot button { min-height: 35px !important; font-size: 10px !important; }
+
+/* ---------- Welcome strip: premium, compact, readable ---------- */
+.student-page .compact-welcome-banner {
+  min-height: 108px !important;
+  margin-bottom: 14px !important;
+  padding: 16px 18px !important;
+  grid-template-columns: minmax(0,1.35fr) minmax(250px,.72fr) minmax(205px,.48fr) !important;
+  gap: 14px !important;
+  border-radius: 18px !important;
+}
+.student-page .compact-welcome-copy { padding-left: 14px !important; }
+.student-page .compact-kicker { font-size: 9px !important; letter-spacing: .08em !important; }
+.student-page .compact-welcome-copy h1 { font-size: 29px !important; line-height: 1.05 !important; margin: 4px 0 !important; }
+.student-page .compact-welcome-copy p { font-size: 11px !important; line-height: 1.45 !important; max-width: 620px !important; }
+.student-page .compact-welcome-meta { margin-top: 9px !important; gap: 6px !important; }
+.student-page .compact-welcome-meta > span { min-height: 27px !important; padding: 0 8px !important; font-size: 8px !important; }
+.student-page .market-desk-capsule { min-height: 66px !important; padding: 10px 11px !important; border-radius: 13px !important; }
+.student-page .market-desk-icon { width: 39px !important; height: 39px !important; }
+.student-page .market-desk-capsule small { font-size: 7px !important; }
+.student-page .market-desk-capsule b { font-size: 10px !important; line-height: 1.2 !important; }
+.student-page .market-desk-capsule em { font-size: 7px !important; }
+.student-page .compact-account-badge { min-height: 66px !important; padding: 9px 11px !important; border-radius: 13px !important; }
+.student-page .compact-account-badge b { font-size: 10px !important; }
+.student-page .compact-account-badge small { font-size: 7.5px !important; line-height: 1.35 !important; }
+
+/* ---------- KPI row: stronger hierarchy ---------- */
+.student-page .compact-kpi-grid {
+  gap: 12px !important;
+  margin-bottom: 14px !important;
+}
+.student-page .compact-kpi-grid .app-kpi {
+  min-height: 92px !important;
+  padding: 14px 15px !important;
+  border-radius: 15px !important;
+  gap: 11px !important;
+}
+.student-page .compact-kpi-grid .kpi-icon { width: 44px !important; height: 44px !important; border-radius: 12px !important; font-size: 15px !important; }
+.student-page .compact-kpi-grid small { font-size: 8px !important; letter-spacing: .065em !important; }
+.student-page .compact-kpi-grid b { font-size: 23px !important; line-height: 1 !important; margin-top: 3px !important; }
+.student-page .compact-kpi-grid em { font-size: 8.5px !important; margin-top: 5px !important; line-height: 1.3 !important; }
+.student-page .compact-kpi-grid .dashboard-nav-arrow { width: 26px !important; height: 26px !important; font-size: 9px !important; }
+.student-page .kpi-spark { transform: scale(1.06); transform-origin: right center; }
+
+/* ---------- Main dashboard composition ---------- */
+.student-page .dashboard-compact-grid { gap: 14px !important; }
+.student-page .dashboard-compact-grid.primary-grid {
+  grid-template-columns: minmax(0,1.7fr) minmax(340px,.9fr) !important;
+  align-items: stretch !important;
+  margin-bottom: 14px !important;
+}
+.student-page .dashboard-compact-grid.secondary-grid {
+  grid-template-columns: minmax(0,1.45fr) minmax(370px,.85fr) !important;
+  align-items: start !important;
+}
+.student-page .compact-dashboard-card {
+  border-radius: 16px !important;
+  padding: 15px !important;
+}
+.student-page .primary-grid .compact-dashboard-card { min-height: 245px !important; }
+.student-page .secondary-grid .compact-dashboard-card { min-height: 0 !important; height: auto !important; }
+.student-page .compact-card-head { margin-bottom: 11px !important; }
+.student-page .compact-card-head span { font-size: 8px !important; letter-spacing: .075em !important; }
+.student-page .compact-card-head h3 { font-size: 17px !important; line-height: 1.15 !important; margin-top: 2px !important; }
+.student-page .text-link-btn { font-size: 10px !important; min-height: 30px !important; }
+
+/* ---------- Latest signal: premium but readable in both themes ---------- */
+.student-page .premium-signal-snapshot {
+  min-height: 180px !important;
+  padding: 13px !important;
+  border-radius: 14px !important;
+}
+.student-page .dash-signal-command { gap: 10px !important; padding-bottom: 10px !important; }
+.student-page .dash-market-icon { width: 40px !important; height: 40px !important; border-radius: 11px !important; }
+.student-page .dash-signal-identity small,
+.student-page .dash-signal-result small { font-size: 7px !important; }
+.student-page .dash-signal-identity b { font-size: 15px !important; }
+.student-page .dash-signal-result b { font-size: 11px !important; }
+.student-page .signal-table-status { font-size: 7.5px !important; min-height: 23px !important; padding: 0 8px !important; }
+.student-page .dash-signal-note { min-height: 34px !important; padding: 8px 9px !important; font-size: 9px !important; }
+.student-page .dash-signal-levels { gap: 8px !important; margin-top: 9px !important; }
+.student-page .dash-signal-levels span { min-height: 52px !important; padding: 8px 9px !important; border-radius: 10px !important; }
+.student-page .dash-signal-levels small { font-size: 7px !important; }
+.student-page .dash-signal-levels b { font-size: 11px !important; margin-top: 4px !important; }
+.student-page .dash-signal-foot { margin-top: 9px !important; padding-top: 8px !important; font-size: 8px !important; }
+
+/* ---------- Next class: compact empty state, stronger real state ---------- */
+.student-page .premium-class-snapshot { min-height: 174px !important; padding: 13px !important; }
+.student-page .class-visual-lockup { min-height: 48px !important; padding: 8px 10px !important; }
+.student-page .class-visual-lockup small { font-size: 7px !important; }
+.student-page .class-visual-lockup b { font-size: 10px !important; }
+.student-page .premium-class-snapshot h4 { font-size: 18px !important; margin: 11px 0 3px !important; }
+.student-page .premium-class-snapshot p { font-size: 9px !important; }
+.student-page .class-meta-row { gap: 7px !important; }
+.student-page .class-meta-row span { min-height: 32px !important; font-size: 8px !important; }
+.student-page .class-open-link { font-size: 9px !important; margin-top: 10px !important; }
+.student-page .live-learning-card .dashboard-empty-compact {
+  min-height: 158px !important;
+  padding: 18px 14px !important;
+}
+.student-page .dashboard-empty-compact > span { width: 43px !important; height: 43px !important; font-size: 17px !important; }
+.student-page .dashboard-empty-compact b { font-size: 12px !important; }
+.student-page .dashboard-empty-compact small { font-size: 9px !important; }
+
+/* ---------- Analysis: no stretched blank card, no broken-image flash ---------- */
+.student-page .analysis-snapshot-card { align-self: start !important; }
+.student-page #dashboardMarketAnalysis { display: grid !important; gap: 8px !important; }
+.student-page .analysis-mini-row {
+  min-height: 62px !important;
+  padding: 8px 9px !important;
+  grid-template-columns: 76px minmax(0,1fr) 30px !important;
+  gap: 10px !important;
+  border-radius: 11px !important;
+}
+.student-page .analysis-thumb { width: 72px !important; height: 46px !important; }
+.student-page .analysis-thumb img { opacity: 0 !important; transition: opacity .18s ease !important; }
+.student-page .analysis-thumb img.is-loaded { opacity: 1 !important; }
+.student-page .analysis-thumb-fallback { z-index: 1 !important; font-size: 14px !important; }
+.student-page .analysis-mini-copy b { font-size: 10px !important; line-height: 1.25 !important; }
+.student-page .analysis-mini-copy small { font-size: 8px !important; margin-top: 2px !important; }
+.student-page .analysis-mini-copy em { font-size: 7.5px !important; margin-top: 3px !important; }
+.student-page .analysis-open-arrow { width: 28px !important; height: 28px !important; }
+.student-page .premium-empty-state { min-height: 92px !important; padding: 14px !important; }
+.student-page .premium-empty-state b { font-size: 11px !important; }
+.student-page .premium-empty-state small { font-size: 8.5px !important; }
+
+/* ---------- My 24K Desk: less admin-like, easier to scan ---------- */
+.student-page .member-pulse-card { align-self: start !important; }
+.student-page .member-desk-shell { gap: 9px !important; }
+.student-page .member-desk-access { min-height: 62px !important; padding: 10px !important; }
+.student-page .desk-crown { width: 40px !important; height: 40px !important; }
+.student-page .member-desk-access small { font-size: 7px !important; }
+.student-page .member-desk-access b { font-size: 11px !important; }
+.student-page .member-desk-access em { font-size: 8px !important; }
+.student-page .member-desk-metrics { gap: 8px !important; }
+.student-page .member-desk-metrics button { min-height: 58px !important; padding: 9px !important; border-radius: 11px !important; }
+.student-page .desk-metric-icon { width: 31px !important; height: 31px !important; border-radius: 9px !important; font-size: 10px !important; }
+.student-page .member-desk-metrics small { font-size: 7px !important; }
+.student-page .member-desk-metrics b { font-size: 9px !important; }
+.student-page .member-desk-metrics em { font-size: 7.5px !important; }
+.student-page .member-desk-footer { min-height: 31px !important; font-size: 8px !important; }
+
+/* ---------- Signals page: readable professional desk ---------- */
+.student-page .signals-command-header {
+  padding: 17px 18px !important;
+  min-height: 94px !important;
+  border-radius: 16px !important;
+}
+.student-page .signals-eyebrow { font-size: 8px !important; }
+.student-page .signals-title-lockup h2 { font-size: 24px !important; line-height: 1.1 !important; }
+.student-page .signals-title-lockup p { font-size: 10px !important; margin-top: 5px !important; }
+.student-page .signals-live-chip b { font-size: 8px !important; }
+.student-page .signals-live-chip small { font-size: 7px !important; }
+.student-page .signal-action-btn { min-height: 36px !important; padding: 0 12px !important; font-size: 9px !important; }
+.student-page .signal-summary-grid { gap: 10px !important; }
+.student-page .signal-summary-card { min-height: 86px !important; padding: 12px !important; }
+.student-page .signal-summary-icon { width: 43px !important; height: 43px !important; }
+.student-page .signal-summary-card b { font-size: 21px !important; }
+.student-page .signal-summary-card strong { font-size: 9px !important; }
+.student-page .signal-summary-card small { font-size: 8px !important; }
+.student-page .signal-table-toolbar { padding: 10px !important; }
+.student-page .signal-status-tabs button { min-width: 58px !important; height: 34px !important; padding: 0 11px !important; font-size: 8.5px !important; }
+.student-page .signal-primary-filters select,
+.student-page .signal-date-control { min-height: 34px !important; font-size: 9px !important; }
+.student-page .signal-date-control input { font-size: 9px !important; }
+.student-page .filter-field { min-height: 34px !important; }
+.student-page .filter-field input { font-size: 9px !important; }
+.student-page .premium-signal-table thead th { padding: 11px 9px !important; font-size: 8px !important; }
+.student-page .premium-signal-table tbody td { padding: 11px 9px !important; font-size: 9px !important; }
+.student-page .premium-signal-table tbody td > small { font-size: 7.5px !important; }
+.student-page .instrument-cell b { font-size: 10px !important; }
+.student-page .instrument-cell small { font-size: 7.5px !important; }
+.student-page .instrument-badge { width: 34px !important; height: 34px !important; }
+.student-page .table-direction { font-size: 8px !important; }
+.student-page .table-pips { font-size: 9px !important; }
+.student-page .publisher-name { font-size: 8.5px !important; }
+.student-page .signal-table-footer { font-size: 8px !important; }
+
+/* ---------- Light theme: no giant black blocks ---------- */
+html[data-theme="light"] .student-page .compact-welcome-banner {
+  background:
+    radial-gradient(420px 170px at 72% 45%,rgba(255,193,7,.18),transparent 70%),
+    linear-gradient(118deg,#FFFDF9 0%,#FBF4E8 62%,#FFF7DC 100%) !important;
+  border-color:#E0C66D !important;
+  box-shadow:0 18px 40px -32px rgba(87,60,24,.30) !important;
+}
+html[data-theme="light"] .student-page .compact-welcome-banner::after { color:rgba(154,104,0,.045) !important; }
+html[data-theme="light"] .student-page .compact-welcome-copy h1 { color:#201C18 !important; }
+html[data-theme="light"] .student-page .compact-welcome-copy p { color:#6F665B !important; }
+html[data-theme="light"] .student-page .compact-kicker { color:#A36F00 !important; }
+html[data-theme="light"] .student-page .compact-welcome-meta > span {
+  color:#665E54 !important; background:#FFFDF9 !important; border-color:#E5DCCD !important;
+}
+html[data-theme="light"] .student-page .compact-welcome-meta b { color:#37312B !important; }
+html[data-theme="light"] .student-page .market-desk-capsule {
+  background:linear-gradient(135deg,#FFF4C8,#FFFDF9) !important;
+  border-color:#E4C96B !important;
+}
+html[data-theme="light"] .student-page .market-desk-capsule b { color:#2B241B !important; }
+html[data-theme="light"] .student-page .market-desk-capsule em { color:#756B5F !important; }
+html[data-theme="light"] .student-page .compact-account-badge {
+  background:#FFFDF9 !important; border-color:#D8C985 !important; box-shadow:0 10px 24px -22px rgba(74,57,35,.35) !important;
+}
+html[data-theme="light"] .student-page .compact-account-badge b { color:#30291F !important; }
+html[data-theme="light"] .student-page .compact-account-badge small { color:#746B60 !important; }
+
+html[data-theme="light"] .student-page .compact-kpi-grid .app-kpi:first-child {
+  background:linear-gradient(135deg,#FFF4C8,#FFFDF9) !important;
+  border-color:#DCBC53 !important;
+  box-shadow:0 15px 34px -27px rgba(154,104,0,.34) !important;
+}
+html[data-theme="light"] .student-page .compact-kpi-grid .app-kpi:first-child small { color:#826D3A !important; }
+html[data-theme="light"] .student-page .compact-kpi-grid .app-kpi:first-child b { color:#211C15 !important; }
+html[data-theme="light"] .student-page .compact-kpi-grid .app-kpi:first-child em { color:#736A5E !important; }
+html[data-theme="light"] .student-page .compact-kpi-grid .app-kpi:first-child .kpi-icon {
+  background:linear-gradient(145deg,#FFD85B,#E0A000) !important; color:#18120A !important;
+}
+
+html[data-theme="light"] .student-page .premium-signal-snapshot {
+  background:
+    radial-gradient(360px 150px at 0 0,rgba(255,193,7,.14),transparent 72%),
+    linear-gradient(145deg,#FFFDF9,#FBF5EA) !important;
+  border-color:#DCC775 !important;
+  box-shadow:0 15px 32px -29px rgba(74,57,35,.38) !important;
+}
+html[data-theme="light"] .student-page .premium-signal-snapshot .dash-signal-identity b,
+html[data-theme="light"] .student-page .premium-signal-snapshot .dash-signal-levels b { color:#221E1A !important; }
+html[data-theme="light"] .student-page .premium-signal-snapshot .dash-signal-result small,
+html[data-theme="light"] .student-page .premium-signal-snapshot .dash-signal-identity small { color:#756D63 !important; }
+html[data-theme="light"] .student-page .premium-signal-snapshot .dash-signal-note {
+  color:#5D554C !important; background:#FFF9EE !important; border-color:#E6DCCB !important;
+}
+html[data-theme="light"] .student-page .premium-signal-snapshot .dash-signal-levels span {
+  background:#FFFDF9 !important; border-color:#E4DCCD !important;
+}
+html[data-theme="light"] .student-page .premium-signal-snapshot .dash-signal-levels small { color:#7B7166 !important; }
+html[data-theme="light"] .student-page .premium-signal-snapshot .dash-signal-foot { color:#776E63 !important; border-color:#E8E0D5 !important; }
+html[data-theme="light"] .student-page .dash-market-icon { background:#FFF1BC !important; border-color:#E1C55A !important; color:#9A6800 !important; }
+
+html[data-theme="light"] .student-page .signals-command-header {
+  background:
+    radial-gradient(300px 135px at 77% 35%,rgba(255,193,7,.18),transparent 70%),
+    linear-gradient(118deg,#FFFDF9,#FBF4E8 72%,#FFF7DD) !important;
+  border-color:#DFC76F !important;
+  box-shadow:0 16px 36px -31px rgba(74,57,35,.36) !important;
+}
+html[data-theme="light"] .student-page .signals-title-lockup h2 { color:#211E1A !important; }
+html[data-theme="light"] .student-page .signals-title-lockup p { color:#6F665B !important; }
+html[data-theme="light"] .student-page .signals-live-chip { background:#F2FFF8 !important; border-color:#BFE6D1 !important; }
+html[data-theme="light"] .student-page .signals-live-chip b { color:#235B40 !important; }
+html[data-theme="light"] .student-page .signals-live-chip small { color:#5F796A !important; }
+
+/* ---------- Responsive recovery ---------- */
+@media (max-width: 1280px) {
+  .student-page .compact-welcome-banner { grid-template-columns:minmax(0,1fr) minmax(230px,.65fr) !important; }
+  .student-page .compact-account-badge { grid-column:2 !important; }
+  .student-page .dashboard-compact-grid.primary-grid { grid-template-columns:minmax(0,1.4fr) minmax(320px,.8fr) !important; }
+  .student-page .dashboard-compact-grid.secondary-grid { grid-template-columns:minmax(0,1.25fr) minmax(340px,.85fr) !important; }
+}
+@media (max-width: 1100px) {
+  .student-page .dashboard-compact-grid.primary-grid,
+  .student-page .dashboard-compact-grid.secondary-grid { grid-template-columns:1fr !important; }
+  .student-page .compact-welcome-banner { grid-template-columns:minmax(0,1fr) minmax(220px,.65fr) !important; }
+  .student-page .market-desk-capsule { display:none !important; }
+  .student-page .compact-account-badge { grid-column:auto !important; }
+}
+@media (max-width: 900px) {
+  .student-page .app-shell { grid-template-columns:1fr !important; }
+  .student-page .app-side { width:272px !important; left:-282px !important; }
+  .student-page .app-side.open { left:0 !important; }
+  .student-page .app-main { margin-left:0 !important; width:100% !important; }
+  .student-page .app-content { padding:16px 14px 88px !important; }
+  .student-page .app-topbar { padding:0 14px !important; }
+  .student-page .app-burger { display:grid !important; place-items:center !important; }
+}
+@media (max-width: 700px) {
+  .student-page .compact-welcome-banner { grid-template-columns:1fr !important; min-height:0 !important; }
+  .student-page .compact-account-badge { width:100% !important; max-width:none !important; }
+  .student-page .compact-kpi-grid { grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+  .student-page .compact-kpi-grid .app-kpi { min-height:88px !important; }
+  .student-page .dash-signal-levels { grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+  .student-page .dash-signal-levels span:first-child { grid-column:1 / -1 !important; }
+}
+@media (max-width: 470px) {
+  .student-page .app-content { padding-left:10px !important; padding-right:10px !important; }
+  .student-page .compact-kpi-grid { grid-template-columns:1fr !important; }
+  .student-page .compact-welcome-copy h1 { font-size:25px !important; }
+  .student-page .analysis-mini-row { grid-template-columns:62px minmax(0,1fr) 26px !important; }
+  .student-page .analysis-thumb { width:58px !important; height:42px !important; }
+}
