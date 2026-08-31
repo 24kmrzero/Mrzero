@@ -1,5 +1,8 @@
 (async function () {
   const A = window.App;
+  // TEMPORARY: all signed-in student access is intentionally open until access rules are redesigned.
+  const TEMP_OPEN_ACCESS = true;
+  window.__24K_TEMP_OPEN_ACCESS__ = TEMP_OPEN_ACCESS;
   const state = {
     user: null, profile: null, courses: [], sessions: [], sessionLinks: {}, enrollments: [], payments: [],
     paymentMethods: [], signals: [], signalUpdates: [], charts: [], articles: [], announcements: [], resources: [], support: [], riskAccepted: false,
@@ -19,7 +22,7 @@
   document.getElementById('supportEmail').href = `mailto:${A.cfg.SUPPORT_EMAIL}`;
 
   const initials = (state.profile.full_name || state.profile.email || 'ST').split(/\s+/).slice(0, 2).map(x => x[0]).join('').toUpperCase();
-  document.getElementById('welcomeName').textContent = `Welcome back, ${state.profile.full_name || 'Student'}`;
+  document.getElementById('welcomeName').textContent = `Welcome back, ${state.profile.full_name || 'Student'} 👋`;
   document.getElementById('studentAvatar').textContent = initials;
 
   await loadAll();
@@ -71,7 +74,7 @@
 
   function renderKpis() {
     const activeSignals = state.signals.filter(s => !signalIsFinal(s)).length;
-    const approvedCourses = state.enrollments.filter(isEnrollmentActive).length;
+    const approvedCourses = TEMP_OPEN_ACCESS ? state.courses.length : state.enrollments.filter(isEnrollmentActive).length;
     const pending = state.payments.filter(p => ['initiated', 'received', 'under_review'].includes(p.status)).length;
     const finals = state.signals.filter(s => signalIsFinal(s) && s.status !== 'cancelled' && s.result_pips !== null);
     const wins = finals.filter(s => Number(s.result_pips) > 0).length;
@@ -107,23 +110,24 @@
     const resubmit = state.payments.find(p => p.status === 'resubmission_required');
     const declined = state.payments.find(p => p.status === 'declined');
     const alert = document.getElementById('dashboardAlert');
-    if (resubmit) alert.innerHTML = `<div class="notice bad"><i class="fa-solid fa-file-circle-exclamation"></i> Admin requested a new payment receipt. Open Payments and submit corrected proof. ${resubmit.admin_note?`<b>Reason: ${A.escapeHtml(resubmit.admin_note)}</b>`:''}</div>`;
+    if (TEMP_OPEN_ACCESS) alert.innerHTML = '';
+    else if (resubmit) alert.innerHTML = `<div class="notice bad"><i class="fa-solid fa-file-circle-exclamation"></i> Admin requested a new payment receipt. Open Payments and submit corrected proof. ${resubmit.admin_note?`<b>Reason: ${A.escapeHtml(resubmit.admin_note)}</b>`:''}</div>`;
     else if (pending) alert.innerHTML = `<div class="notice warn"><i class="fa-solid fa-hourglass-half"></i> Your payment <b>${A.escapeHtml(pending.invoice_no || '')}</b> is ${A.statusLabel(pending.status).toLowerCase()}. Course access will unlock only after admin approval.</div>`;
     else if (declined) alert.innerHTML = `<div class="notice bad"><i class="fa-solid fa-circle-xmark"></i> A payment was declined. Review the admin note in Payment History and submit a new receipt.</div>`;
     else alert.innerHTML = '';
 
-    document.getElementById('latestSignal').innerHTML = `<div class="dashboard-preview-link" data-goto="signals" role="button" tabindex="0" aria-label="Open Signals">${state.signals[0] ? signalCard(state.signals[0], true) : empty('No signal has been published yet.', 'fa-bolt')}</div>`;
+    document.getElementById('latestSignal').innerHTML = `<div class="dashboard-preview-link" data-goto="signals" role="button" tabindex="0" aria-label="Open Signals">${state.signals[0] ? signalCard(state.signals[0], true) : `<div class="dashboard-signal-empty"><span class="signal-empty-icon"><i class="fa-solid fa-bolt"></i></span><b>No signal has been published yet.</b><p>New high-quality setups will appear here as soon as they are published.</p><button type="button" class="app-btn gold small" data-refresh-dashboard><i class="fa-solid fa-rotate"></i> Refresh</button></div>`}</div>`;
     const coursePreview = state.courses.slice(0, 2);
     document.getElementById('dashboardCourses').innerHTML = coursePreview.length ? coursePreview.map(course => {
       const access = hasCourseAccess(course.id);
       const payment = latestPayment(course.id);
-      return `<div class="activity-item"><div class="activity-icon"><i class="fa-solid ${access ? 'fa-lock-open' : 'fa-lock'}"></i></div><div><b>${A.escapeHtml(course.title)}</b><small>${access ? 'Course access approved' : payment ? A.statusLabel(payment.status) : (course.course_type==='free'||Number(course.discount_price!=null?course.discount_price:course.price)===0 ? 'Free enrollment available' : `${A.formatMoney(course.discount_price!=null?course.discount_price:course.price, course.currency)} · Payment required`)}</small></div><button class="app-btn small ${access ? 'gold' : 'outline'}" data-open-course="${course.id}">${access ? 'Open' : 'Details'}</button></div>`;
+      return `<div class="activity-item dashboard-course-row"><div class="course-mini-cover ${course.thumbnail_url?'has-image':''}">${course.thumbnail_url?`<img src="${attr(course.thumbnail_url)}" alt="${attr(course.title)}">`:`<i class="fa-solid fa-graduation-cap"></i>`}</div><div class="course-mini-copy"><b>${A.escapeHtml(course.title)}</b><small>${access ? (TEMP_OPEN_ACCESS ? 'Full member access' : 'Course access approved') : payment ? A.statusLabel(payment.status) : (course.course_type==='free'||Number(course.discount_price!=null?course.discount_price:course.price)===0 ? 'Free enrollment available' : `${A.formatMoney(course.discount_price!=null?course.discount_price:course.price, course.currency)} · Payment required`)}</small></div><span class="course-access-chip"><i class="fa-solid fa-check"></i> Access Granted</span><button class="app-btn small gold" data-open-course="${course.id}">Open</button></div>`;
     }).join('') : empty('No course is currently available.', 'fa-graduation-cap');
 
     const next = state.sessions.filter(s => new Date(s.starts_at) >= new Date() && s.status !== 'cancelled')[0] || state.sessions.find(s => s.status === 'upcoming');
     document.getElementById('nextSession').innerHTML = `<div class="dashboard-preview-link" data-goto="courses" role="button" tabindex="0" aria-label="Open Courses and live sessions">${next ? sessionCompact(next) : empty('No upcoming class has been scheduled.', 'fa-calendar')}</div>`;
     const notice = state.announcements[0];
-    document.getElementById('latestAnnouncement').innerHTML = `<div class="dashboard-preview-link" data-goto="announcements" role="button" tabindex="0" aria-label="Open Announcements">${notice ? `<div class="announcement ${notice.priority === 'important' ? 'important' : ''}"><h4>${A.escapeHtml(notice.title)}</h4><p>${A.escapeHtml(notice.message)}</p><small>${A.formatDateTime(notice.published_at)}</small></div>` : empty('No announcement has been published.', 'fa-bullhorn')}</div>`;
+    document.getElementById('latestAnnouncement').innerHTML = `<div class="dashboard-preview-link" data-goto="announcements" role="button" tabindex="0" aria-label="Open Announcements">${notice ? `<div class="announcement dashboard-announcement ${notice.priority === 'important' ? 'important' : ''}"><span class="announcement-icon"><i class="fa-solid fa-bullhorn"></i></span><div><h4>${A.escapeHtml(notice.title)}</h4><p>${A.escapeHtml(notice.message)}</p><small><i class="fa-regular fa-calendar"></i> ${A.formatDate(notice.published_at)}</small></div><span class="announcement-more">Read More <i class="fa-solid fa-arrow-right"></i></span></div>` : empty('No announcement has been published.', 'fa-bullhorn')}</div>`;
   }
 
   function renderSignals() {
@@ -290,7 +294,7 @@
       const isInfinity = String(course.currency||'').toUpperCase()==='PKR';
       const paymentButtonText = payment?.status==='initiated' ? 'Continue Payment' : payment && ['received','under_review'].includes(payment.status) ? 'Payment Submitted' : payment?.status==='resubmission_required' ? 'Submit New Receipt' : ['failed','declined'].includes(payment?.status) ? 'Try Payment Again' : 'Pay Now';
       const paymentTone = ['declined','failed'].includes(payment?.status) ? 'bad' : 'warn';
-      return `<article class="course-card"><div class="course-cover ${course.thumbnail_url?'has-image':''}">${course.thumbnail_url?`<img src="${attr(course.thumbnail_url)}" alt="${attr(course.title)}" loading="lazy" decoding="async">`:'<i class="fa-solid fa-graduation-cap"></i>'}<span class="status-pill ${A.statusClass(course.status)}">${A.statusLabel(course.status)}</span></div><div class="course-body"><h3>${A.escapeHtml(course.title)}</h3><p>${A.escapeHtml(course.short_description || course.description || '')}</p><div class="course-meta"><span><i class="fa-solid fa-user-tie"></i> ${A.escapeHtml(course.instructor_name || A.cfg.INSTRUCTOR_NAME)}</span><span><i class="fa-solid fa-money-bill"></i> ${course.discount_price!=null?`<s>${A.formatMoney(course.price,course.currency)}</s> ${A.formatMoney(course.discount_price,course.currency)}`:A.formatMoney(course.price, course.currency)}</span>${nextSession?`<span><i class="fa-solid fa-calendar"></i> ${A.formatDateTime(nextSession.starts_at)}</span>`:`<span><i class="fa-solid fa-calendar"></i> Date to be announced</span>`}</div>${nextSession?`<div class="course-next-class"><small>Next Live Class</small><b>${A.escapeHtml(nextSession.title)}</b><span>${A.escapeHtml(nextSession.topic||'')}</span></div>`:''}<div class="notice ${access ? 'ok' : paymentTone}">${access ? '<b>Access approved.</b> Online class access is unlocked.' : `<b>${paymentText}.</b> ${payment?.status==='initiated'&&isInfinity?'Complete the secure hosted bank payment and receipt verification.':'Class date is visible, but online class access remains locked.'}`}</div><div class="course-actions"><button class="app-btn ${access ? 'gold' : 'outline'}" data-open-course="${course.id}"><i class="fa-solid fa-calendar-days"></i> View Live Class</button>${access ? '' : (course.course_type==='free'||actualPrice===0) ? `<button class="app-btn gold" data-free-enroll="${course.id}">Enroll Free</button>` : `<button class="app-btn gold" data-buy-course="${course.id}"><i class="fa-solid fa-building-columns"></i> ${paymentButtonText}</button>`}</div></div></article>`;
+      return `<article class="course-card"><div class="course-cover ${course.thumbnail_url?'has-image':''}">${course.thumbnail_url?`<img src="${attr(course.thumbnail_url)}" alt="${attr(course.title)}" loading="lazy" decoding="async">`:'<i class="fa-solid fa-graduation-cap"></i>'}<span class="status-pill ${A.statusClass(course.status)}">${A.statusLabel(course.status)}</span></div><div class="course-body"><h3>${A.escapeHtml(course.title)}</h3><p>${A.escapeHtml(course.short_description || course.description || '')}</p><div class="course-meta"><span><i class="fa-solid fa-user-tie"></i> ${A.escapeHtml(course.instructor_name || A.cfg.INSTRUCTOR_NAME)}</span><span><i class="fa-solid fa-money-bill"></i> ${course.discount_price!=null?`<s>${A.formatMoney(course.price,course.currency)}</s> ${A.formatMoney(course.discount_price,course.currency)}`:A.formatMoney(course.price, course.currency)}</span>${nextSession?`<span><i class="fa-solid fa-calendar"></i> ${A.formatDateTime(nextSession.starts_at)}</span>`:`<span><i class="fa-solid fa-calendar"></i> Date to be announced</span>`}</div>${nextSession?`<div class="course-next-class"><small>Next Live Class</small><b>${A.escapeHtml(nextSession.title)}</b><span>${A.escapeHtml(nextSession.topic||'')}</span></div>`:''}<div class="notice ${access ? 'ok' : paymentTone}">${access ? (TEMP_OPEN_ACCESS ? '<b>Member access open.</b> Published course content is available for now.' : '<b>Access approved.</b> Online class access is unlocked.') : `<b>${paymentText}.</b> ${payment?.status==='initiated'&&isInfinity?'Complete the secure hosted bank payment and receipt verification.':'Class date is visible, but online class access remains locked.'}`}</div><div class="course-actions"><button class="app-btn ${access ? 'gold' : 'outline'}" data-open-course="${course.id}"><i class="fa-solid fa-calendar-days"></i> View Live Class</button>${access ? '' : (course.course_type==='free'||actualPrice===0) ? `<button class="app-btn gold" data-free-enroll="${course.id}">Enroll Free</button>` : `<button class="app-btn gold" data-buy-course="${course.id}"><i class="fa-solid fa-building-columns"></i> ${paymentButtonText}</button>`}</div></div></article>`;
     }).join('') : empty('No course is currently published.', 'fa-graduation-cap');
   }
 
@@ -321,14 +325,14 @@
     const course = state.selectedCourse || state.courses.find(c => c.id === session.course_id);
     const effectivePrice = course ? Number(course.discount_price != null ? course.discount_price : course.price || 0) : 0;
     const isFree = course?.course_type === 'free' || effectivePrice === 0;
-    const lockedLabel = access ? 'Online class link not added yet' : (isFree ? 'Locked until enrollment' : 'Locked until payment approval');
+    const lockedLabel = access ? 'Online class link not added yet' : (TEMP_OPEN_ACCESS ? 'Online class link not added yet' : (isFree ? 'Locked until enrollment' : 'Locked until payment approval'));
     return `<article class="session-card"><div class="session-top"><span class="session-number">Session ${session.session_number}</span><span class="session-lock"><i class="fa-solid ${unlocked ? 'fa-lock-open' : 'fa-lock'}"></i></span></div><div class="session-body"><div class="signal-head"><h3>${A.escapeHtml(session.title)}</h3><span class="status-pill ${A.statusClass(session.status)}">${A.statusLabel(session.status)}</span></div><p>${A.escapeHtml(session.topic || '')}</p><div class="session-date"><span><i class="fa-solid fa-calendar"></i> ${A.formatDateTime(session.starts_at)}</span><span><i class="fa-solid fa-hourglass-half"></i> ${session.duration_minutes || 90} minutes</span><span><i class="fa-solid fa-video"></i> Online Class</span></div>${unlocked ? `<a class="app-btn green" href="${attr(link)}" target="_blank" rel="noopener"><i class="fa-solid fa-video"></i> Join Online Class</a>` : `<button class="app-btn outline" disabled><i class="fa-solid fa-lock"></i> ${lockedLabel}</button>`}</div></article>`;
   }
 
   function sessionCompact(session) {
     const course = state.courses.find(c => c.id === session.course_id);
     const access = hasCourseAccess(session.course_id);
-    return `<div class="session-body" style="padding:0"><span class="status-pill ${A.statusClass(session.status)}">${A.statusLabel(session.status)}</span><h3 style="margin-top:12px">${A.escapeHtml(session.title)}</h3><p>${A.escapeHtml(course?.title || '')}</p><div class="session-date"><span><i class="fa-solid fa-calendar"></i> ${A.formatDateTime(session.starts_at)}</span><span><i class="fa-solid fa-user-tie"></i> Malik Zameer</span></div><button class="app-btn ${access ? 'gold' : 'outline'}" data-open-course="${session.course_id}">${access ? 'Open Session' : 'View Locked Schedule'}</button></div>`;
+    return `<div class="session-body" style="padding:0"><span class="status-pill ${A.statusClass(session.status)}">${A.statusLabel(session.status)}</span><h3 style="margin-top:12px">${A.escapeHtml(session.title)}</h3><p>${A.escapeHtml(course?.title || '')}</p><div class="session-date"><span><i class="fa-solid fa-calendar"></i> ${A.formatDateTime(session.starts_at)}</span><span><i class="fa-solid fa-user-tie"></i> Malik Zameer</span></div><button class="app-btn ${access ? 'gold' : 'outline'}" data-open-course="${session.course_id}">${access ? 'Open Session' : (TEMP_OPEN_ACCESS ? 'View Schedule' : 'View Locked Schedule')}</button></div>`;
   }
 
   function renderPayments() {
@@ -369,10 +373,10 @@
     const verified = Boolean(state.profile?.email_verified);
     const banner = document.getElementById('emailVerificationBanner');
     const card = document.getElementById('emailVerificationCard');
-    if (banner) banner.innerHTML = verified ? '' : `<div class="notice warn email-verify-banner"><i class="fa-solid fa-envelope-circle-check"></i><div><b>Verify your email address</b><span> Your account is active, but protected content stays limited until your email is verified.</span></div><button type="button" class="app-btn small gold" data-request-email-verification>Verify Email</button></div>`;
+    if (banner) banner.innerHTML = verified ? '' : `<div class="notice warn email-verify-banner"><i class="fa-solid fa-envelope-circle-check"></i><div><b>Verify your email address</b><span> Secure your account and receive important class and account emails. Your member sections are currently available.</span></div><button type="button" class="app-btn small gold" data-request-email-verification>Verify Email</button></div>`;
     if (card) card.innerHTML = verified
       ? `<div class="email-verify-card-row"><div class="email-verify-icon verified"><i class="fa-solid fa-circle-check"></i></div><div><h3>Email Verified</h3><p class="muted">${A.escapeHtml(state.profile.email || '')} is verified and your account verification is complete.</p></div><span class="status-pill ok">Verified</span></div>`
-      : `<div class="email-verify-card-row"><div class="email-verify-icon"><i class="fa-solid fa-envelope"></i></div><div><h3>Email Verification</h3><p class="muted">Verify ${A.escapeHtml(state.profile.email || '')} to unlock verified-account access.</p></div><button type="button" class="app-btn gold" data-request-email-verification><i class="fa-solid fa-paper-plane"></i> Send Verification Email</button></div>`;
+      : `<div class="email-verify-card-row"><div class="email-verify-icon"><i class="fa-solid fa-envelope"></i></div><div><h3>Email Verification</h3><p class="muted">Verify ${A.escapeHtml(state.profile.email || '')} to secure your account and keep important email updates enabled.</p></div><button type="button" class="app-btn gold" data-request-email-verification><i class="fa-solid fa-paper-plane"></i> Send Verification Email</button></div>`;
   }
 
   async function requestEmailVerification(button) {
@@ -427,6 +431,15 @@
       if (signalHistory) openSignalHistory(signalHistory.dataset.studentSignalHistory);
       const verifyEmail = event.target.closest('[data-request-email-verification]');
       if (verifyEmail) await requestEmailVerification(verifyEmail);
+      const refreshDashboard = event.target.closest('[data-refresh-dashboard]');
+      if (refreshDashboard) {
+        event.preventDefault();
+        event.stopPropagation();
+        A.setLoading(refreshDashboard, true, 'Refreshing...');
+        try { await loadAll(); renderAll(); A.toast('Dashboard refreshed.', 'success'); }
+        catch (error) { A.toast(A.friendlyError(error, 'Could not refresh the dashboard.'), 'error'); }
+        finally { A.setLoading(refreshDashboard, false); }
+      }
     });
 
     document.getElementById('enableSignalAlerts')?.addEventListener('click', enableSignalAlerts);
@@ -642,7 +655,7 @@
     try {
       const changes = { full_name: String(values.full_name).trim(), whatsapp: String(values.whatsapp).trim(), country: String(values.country || '').trim(), experience: String(values.experience || '') };
       const { error } = await A.supabase.from('profiles').update(changes).eq('id', state.user.id); if (error) throw error;
-      Object.assign(state.profile, changes); document.getElementById('welcomeName').textContent = `Welcome back, ${state.profile.full_name}`;
+      Object.assign(state.profile, changes); document.getElementById('welcomeName').textContent = `Welcome back, ${state.profile.full_name} 👋`;
       A.toast('Profile updated successfully.', 'success');
     } catch (error) { A.toast(A.friendlyError(error, 'Could not update profile.'), 'error'); }
     finally { A.setLoading(button, false); }
@@ -697,7 +710,7 @@
 
   function latestPayment(courseId) { return state.payments.filter(p => p.course_id === courseId).sort((a,b) => new Date(b.created_at) - new Date(a.created_at))[0]; }
   function isEnrollmentActive(e) { return e.status === 'active' && (!e.access_expires_at || new Date(e.access_expires_at) > new Date()); }
-  function hasCourseAccess(courseId) { return state.enrollments.some(e => e.course_id === courseId && isEnrollmentActive(e)); }
+  function hasCourseAccess(courseId) { return TEMP_OPEN_ACCESS || state.enrollments.some(e => e.course_id === courseId && isEnrollmentActive(e)); }
   function empty(text, icon) { return `<div class="empty-state"><i class="fa-solid ${icon}"></i>${A.escapeHtml(text)}</div>`; }
   function num(value) { if (value === null || value === undefined || value === '') return '—'; return Number(value).toLocaleString('en-US', { maximumFractionDigits: 5 }); }
   function attr(value) { return A.escapeHtml(value).replace(/`/g, '&#96;'); }

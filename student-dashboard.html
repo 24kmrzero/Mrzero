@@ -7,8 +7,8 @@
 <script>(function(){try{var t=localStorage.getItem('24k-excellence-theme');document.documentElement.dataset.theme=t==='light'?'light':'dark'}catch(e){document.documentElement.dataset.theme='dark'}})();</script>
 <title>Student Panel | 24K Excellence</title>
 <link rel="icon" href="assets/logo.png">
-<link rel="stylesheet" href="app.css?v=9.48" onload="document.documentElement.classList.add('student-base-css-ready')">
-<link rel="stylesheet" href="assets/student-premium.css?v=9.48" onload="document.documentElement.classList.add('student-css-ready')">
+<link rel="stylesheet" href="app.css?v=9.50" onload="document.documentElement.classList.add('student-base-css-ready')">
+<link rel="stylesheet" href="assets/student-premium.css?v=9.50" onload="document.documentElement.classList.add('student-css-ready')">
 <style>html:not(.student-base-css-ready) body.student-page,html:not(.student-css-ready) body.student-page{visibility:hidden}</style>
 <script>setTimeout(function(){document.documentElement.classList.add('student-base-css-ready','student-css-ready')},1800);</script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -19,20 +19,36 @@
   <aside class="app-side" id="side">
     <div class="app-side-brand"><a class="app-logo-home" href="index.html" aria-label="Go to website home"><img src="assets/logo.png" alt="24K Digital Gold"></a></div>
     <div class="app-side-scroll">
-      <nav class="app-nav">
-        <p class="app-nav-label">OVERVIEW</p>
-        <a href="#" class="on" data-panel="dashboard"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
-        <p class="app-nav-label">SERVICES</p>
-        <a href="#" data-panel="signals"><i class="fa-solid fa-bolt"></i> Signals</a>
-        <a href="#" data-panel="charts"><i class="fa-solid fa-chart-line"></i> Charts</a>
-        <a href="#" data-panel="articles"><i class="fa-solid fa-newspaper"></i> Articles</a>
-        <a href="#" data-panel="courses"><i class="fa-solid fa-graduation-cap"></i> Courses</a>
-        <p class="app-nav-label">ACCOUNT</p>
-        <a href="#" data-panel="payments"><i class="fa-solid fa-receipt"></i> Payments <span class="nav-count" id="paymentCount">0</span></a>
-        <a href="#" data-panel="announcements"><i class="fa-solid fa-bullhorn"></i> Announcements <span class="nav-count" id="announcementCount">0</span></a>
-        <a href="#" data-panel="profile"><i class="fa-solid fa-user-gear"></i> Profile</a>
-        <a href="#" data-panel="support"><i class="fa-solid fa-headset"></i> Support</a>
+      <nav class="app-nav premium-side-nav">
+        <a href="#" class="on" data-panel="dashboard"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
+        <a href="#" data-panel="courses"><i class="fa-solid fa-graduation-cap"></i><span>Courses</span></a>
+        <a href="#" data-panel="signals"><i class="fa-solid fa-bolt"></i><span>Signals</span></a>
+        <a href="#" data-panel="charts"><i class="fa-solid fa-chart-line"></i><span>Charts</span></a>
+        <a href="#" data-panel="articles"><i class="fa-solid fa-newspaper"></i><span>Articles</span></a>
+        <a href="#" data-panel="payments"><i class="fa-solid fa-wallet"></i><span>Payments</span><span class="nav-count" id="paymentCount">0</span></a>
+        <a href="#" data-panel="announcements"><i class="fa-solid fa-bell"></i><span>Updates</span><span class="nav-count" id="announcementCount">0</span></a>
+        <a href="#" data-panel="profile"><i class="fa-regular fa-circle-user"></i><span>Profile</span></a>
+        <a href="#" data-panel="support"><i class="fa-solid fa-headset"></i><span>Support</span></a>
       </nav>
+
+      <div class="sidebar-member-card" role="button" tabindex="0" data-goto="profile" aria-label="Open profile">
+        <div class="sidebar-member-avatar" id="sideMemberAvatar">ST</div>
+        <div class="sidebar-member-copy"><strong id="sideMemberName">Member</strong><small><i class="fa-solid fa-crown"></i> 24K Member</small></div>
+        <i class="fa-solid fa-chevron-right sidebar-member-chevron"></i>
+      </div>
+
+      <div class="sidebar-benefits-card">
+        <span class="sidebar-benefits-crown"><i class="fa-solid fa-crown"></i></span>
+        <h3>24K Member Access</h3>
+        <p>Everything you need to learn, follow the market and stay connected.</p>
+        <ul>
+          <li><i class="fa-solid fa-check"></i> Premium Courses</li>
+          <li><i class="fa-solid fa-check"></i> Trading Signals</li>
+          <li><i class="fa-solid fa-check"></i> Market Learning</li>
+          <li><i class="fa-solid fa-check"></i> Member Support</li>
+        </ul>
+        <button type="button" class="sidebar-benefits-btn" data-goto="courses">Explore Courses <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
     </div>
     <div class="app-side-foot"><a href="index.html"><i class="fa-solid fa-house"></i> Website Home</a><button id="logoutButton"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button></div>
   </aside>
@@ -41,7 +57,7 @@
     <header class="app-topbar">
       <button class="app-burger" id="burger" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
       <div class="app-title"><strong id="welcomeName">Welcome back</strong><small>Signals, learning and live classes in one place</small></div>
-      <div class="app-search"><i class="fa-solid fa-magnifying-glass"></i><input id="globalSearch" type="search" placeholder="Search signals, charts, articles..."></div>
+      <div class="app-search"><i class="fa-solid fa-magnifying-glass"></i><input id="globalSearch" type="search" placeholder="Search signals, charts, articles, classes..."></div>
       <button class="app-theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme" title="Switch to light theme"><i class="fa-solid fa-sun"></i></button>
       <button class="app-notify" data-goto="announcements" aria-label="Announcements"><i class="fa-solid fa-bell"></i><span id="topNoticeCount">0</span></button>
       <div class="app-avatar" id="studentAvatar">ST</div>
@@ -49,18 +65,35 @@
 
     <div class="app-content">
       <section class="panel on" id="p-dashboard">
-        <div class="panel-heading dashboard-heading"><div><span class="panel-eyebrow"><i class="fa-solid fa-crown"></i> 24K Member Area</span><h1>Student Dashboard</h1><p>Your market content, live classes, course access and account updates in one premium workspace.</p></div><button class="app-btn gold" data-goto="courses"><i class="fa-solid fa-graduation-cap"></i> View Courses</button></div>
-        <div id="emailVerificationBanner"></div>
+        <div class="dashboard-command reference-hero">
+          <div class="hero-market-scene" aria-hidden="true">
+            <span class="hero-candle c1"></span><span class="hero-candle c2"></span><span class="hero-candle c3"></span><span class="hero-candle c4"></span><span class="hero-candle c5"></span><span class="hero-candle c6"></span><span class="hero-candle c7"></span><span class="hero-candle c8"></span>
+            <div class="hero-trend-line"></div>
+            <div class="hero-24k-mark">24K<span>EXCELLENCE</span></div>
+          </div>
+          <div class="dashboard-command-copy">
+            <span class="panel-eyebrow"><i class="fa-solid fa-crown"></i> 24K MEMBER AREA</span>
+            <h1>Your Premium Trading Hub</h1>
+            <p>Signals, live classes, premium courses and account updates — all in one focused member workspace.</p>
+          </div>
+          <div class="dashboard-command-actions">
+            <button class="app-btn gold hero-course-btn" data-goto="courses"><i class="fa-solid fa-graduation-cap"></i> View Courses <i class="fa-solid fa-arrow-right"></i></button>
+          </div>
+        </div>
+        <div class="dashboard-status-row">
+          <div id="emailVerificationBanner"></div>
+          <div class="member-access-strip"><span class="member-strip-icon"><i class="fa-solid fa-unlock-keyhole"></i></span><div><b>Full Member Access Active</b><small>Signals, Charts, Articles, Courses and member tools are open for now.</small></div><span class="member-active-pill">Active</span></div>
+        </div>
         <div id="dashboardAlert"></div>
         <div class="kpi-grid" id="studentKpis"></div>
         <div class="app-grid cols-2">
           <div>
-            <div class="app-card"><div class="app-card-head"><div><h3>Latest Signal</h3><p>Most recently published trading setup</p></div><button class="app-btn small outline" data-goto="signals">View All</button></div><div id="latestSignal"></div></div>
-            <div class="app-card"><div class="app-card-head"><div><h3>Your Courses</h3><p>Access live online classes after enrollment or payment approval</p></div><button class="app-btn small outline" data-goto="courses">Open Courses</button></div><div id="dashboardCourses"></div></div>
+            <div class="app-card premium-feature-card market-card"><div class="app-card-head"><div><span class="card-title-icon"><i class="fa-solid fa-bolt"></i></span><h3>Latest Signal</h3><p>Most recently published trading setup</p></div><button class="app-btn small outline" data-goto="signals">View All</button></div><div id="latestSignal"></div></div>
+            <div class="app-card premium-feature-card learning-card"><div class="app-card-head"><div><span class="card-title-icon"><i class="fa-solid fa-graduation-cap"></i></span><h3>Your Courses</h3><p>Your published courses and live learning schedule</p></div><button class="app-btn small outline" data-goto="courses">Open Courses</button></div><div id="dashboardCourses"></div></div>
           </div>
           <div>
-            <div class="app-card"><div class="app-card-head"><div><h3>Next Live Class</h3><p>Instructor: Malik Zameer</p></div></div><div id="nextSession"></div></div>
-            <div class="app-card"><div class="app-card-head"><div><h3>Latest Announcement</h3><p>Important updates from the admin</p></div><button class="app-btn small outline" data-goto="announcements">View All</button></div><div id="latestAnnouncement"></div></div>
+            <div class="app-card premium-feature-card live-card"><div class="app-card-head"><div><span class="card-title-icon live"><i class="fa-solid fa-video"></i></span><h3>Next Live Class</h3><p>Instructor: Malik Zameer</p></div><span class="live-watermark">LIVE</span></div><div id="nextSession"></div></div>
+            <div class="app-card premium-feature-card update-card"><div class="app-card-head"><div><span class="card-title-icon"><i class="fa-solid fa-bullhorn"></i></span><h3>Latest Announcement</h3><p>Important updates from the team</p></div><button class="app-btn small outline" data-goto="announcements">View All</button></div><div id="latestAnnouncement"></div></div>
           </div>
         </div>
       </section>
@@ -86,9 +119,9 @@
       </section>
 
       <section class="panel" id="p-courses">
-        <div class="panel-heading"><div><h2>Live Courses</h2><p>Online classes with Malik Zameer. Class access unlocks after enrollment or payment approval.</p></div></div>
+        <div class="panel-heading"><div><h2>Live Courses</h2><p>Online classes with Malik Zameer. Member access is currently open across all published courses.</p></div></div>
         <div class="course-list-grid" id="coursesGrid"></div>
-        <div id="sessionsArea" class="hidden" style="margin-top:26px"><div class="panel-heading"><div><h2 id="sessionCourseTitle">Course Sessions</h2><p>Schedule is visible to everyone; online class access unlocks after enrollment or payment approval.</p></div><button class="app-btn outline" id="closeSessions"><i class="fa-solid fa-arrow-left"></i> Back to Courses</button></div><div class="session-grid" id="sessionsGrid"></div><div id="resourcesArea" class="app-card hidden" style="margin-top:20px"><div class="app-card-head"><div><h3>Course Resources</h3><p>Optional files uploaded by the admin</p></div></div><div id="resourcesList"></div></div></div>
+        <div id="sessionsArea" class="hidden" style="margin-top:26px"><div class="panel-heading"><div><h2 id="sessionCourseTitle">Course Sessions</h2><p>Published session schedules and available online class links are open to signed-in members for now.</p></div><button class="app-btn outline" id="closeSessions"><i class="fa-solid fa-arrow-left"></i> Back to Courses</button></div><div class="session-grid" id="sessionsGrid"></div><div id="resourcesArea" class="app-card hidden" style="margin-top:20px"><div class="app-card-head"><div><h3>Course Resources</h3><p>Optional files uploaded by the admin</p></div></div><div id="resourcesList"></div></div></div>
       </section>
 
       <section class="panel" id="p-payments">
@@ -140,8 +173,9 @@
 
 <script src="assets/js/core.js?v=9.37"></script>
 <script src="assets/js/tracking.js?v=9.1"></script>
-<script src="assets/js/student.js?v=9.46"></script>
-<script src="assets/js/student-ui.js?v=9.48"></script>
+<script src="assets/js/student.js?v=9.50"></script>
+<script src="assets/js/student-ui.js?v=9.50"></script>
 <script src="assets/js/platform-v8-student.js?v=9.12"></script>
+<script src="assets/js/student-open-access.js?v=9.50"></script>
 </body>
 </html>
