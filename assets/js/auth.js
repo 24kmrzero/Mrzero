@@ -197,8 +197,9 @@
     const email = String(new FormData(form).get('email') || '').trim().toLowerCase();
     setLoading(button, true, 'Sending...');
     try {
+      sessionStorage.setItem('24k_recovery_kind', 'student');
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password.html`
+        redirectTo: `${window.location.origin}/reset-password/`
       });
       if (error) throw error;
       toast('Student password reset link sent.', 'success');

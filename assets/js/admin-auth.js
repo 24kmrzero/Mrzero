@@ -60,8 +60,9 @@
     const email = String(new FormData(form).get('email') || '').trim().toLowerCase();
     A.setLoading(button, true, 'Sending...');
     try {
+      sessionStorage.setItem('24k_recovery_kind', 'admin');
       const { error } = await A.supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/admin-reset-password.html`
+        redirectTo: `${window.location.origin}/reset-password/`
       });
       if (error) throw error;
       A.toast('Admin password reset link sent.', 'success');

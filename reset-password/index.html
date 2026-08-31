@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0A0A0A">
+<script>(function(){try{var t=localStorage.getItem('24k-excellence-theme');document.documentElement.dataset.theme=t==='light'?'light':'dark'}catch(e){document.documentElement.dataset.theme='dark'}})();</script>
+<title>Reset Password | 24K Excellence</title>
+<link rel="icon" href="../assets/logo.png">
+<link rel="stylesheet" href="../app.css?v=9.47">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+.reset-shell{min-height:100vh;display:grid;place-items:center;padding:28px 18px;box-sizing:border-box;background:var(--app-bg,#0a0a0a)}
+.reset-card{width:min(470px,100%);background:var(--card,#141414);border:1px solid rgba(255,193,7,.2);border-radius:22px;padding:28px;box-sizing:border-box;box-shadow:0 24px 60px rgba(0,0,0,.22)}
+.reset-logo{display:inline-flex;margin-bottom:18px}.reset-logo img{height:38px;width:auto}.reset-badge{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:800;letter-spacing:.08em;color:#ffc107;background:rgba(255,193,7,.1);border:1px solid rgba(255,193,7,.22);padding:8px 11px;border-radius:999px;margin-bottom:14px}.reset-card h1{margin:0 0 8px;font-size:28px}.reset-card .lead{margin:0 0 22px}.reset-status{display:none;gap:10px;align-items:flex-start;margin:0 0 18px;padding:13px 14px;border-radius:13px;font-size:13px;line-height:1.45}.reset-status.show{display:flex}.reset-status.error{background:rgba(220,38,38,.09);border:1px solid rgba(220,38,38,.25)}.reset-status.success{background:rgba(22,163,74,.09);border:1px solid rgba(22,163,74,.25)}.reset-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.reset-hidden{display:none!important}.reset-spinner{width:28px;height:28px;border-radius:50%;border:3px solid rgba(255,193,7,.22);border-top-color:#ffc107;animation:rr .7s linear infinite;margin:22px auto}@keyframes rr{to{transform:rotate(360deg)}}
+html[data-theme="light"] .reset-shell{background:#f6efe3}html[data-theme="light"] .reset-card{background:#fffdf9;color:#211e1a;border-color:rgba(118,82,0,.16)}
+</style>
+</head>
+<body class="app-page">
+<main class="reset-shell">
+  <section class="reset-card">
+    <a href="/" class="reset-logo" aria-label="Website home"><img src="../assets/logo.png" alt="24K Digital Gold"></a>
+    <div class="reset-badge"><i class="fa-solid fa-key"></i> SECURE PASSWORD RECOVERY</div>
+    <h1 id="resetTitle">Reset your password</h1>
+    <p class="muted lead" id="resetLead">Checking your secure recovery link...</p>
+
+    <div class="reset-spinner" id="resetSpinner" aria-label="Checking recovery link"></div>
+    <div class="reset-status" id="resetStatus"></div>
+
+    <form id="resetPasswordForm" class="reset-hidden">
+      <div class="form-field">
+        <label>New Password</label>
+        <input type="password" id="newPassword" autocomplete="new-password" minlength="8" required placeholder="Minimum 8 characters">
+      </div>
+      <div class="form-field">
+        <label>Confirm New Password</label>
+        <input type="password" id="confirmPassword" autocomplete="new-password" minlength="8" required placeholder="Enter the same password again">
+      </div>
+      <button class="app-btn gold" type="submit" id="resetSubmit"><i class="fa-solid fa-lock"></i> Update Password</button>
+    </form>
+
+    <div class="reset-actions reset-hidden" id="resetActions">
+      <a class="app-btn gold" id="requestNewLink" href="/admin-login/"><i class="fa-solid fa-envelope"></i> Request New Reset Link</a>
+      <a class="app-btn outline" href="/"><i class="fa-solid fa-house"></i> Website Home</a>
+    </div>
+  </section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../assets/js/config.js?v=9.47"></script>
+<script src="../assets/js/core.js?v=9.1"></script>
+<script src="../assets/js/reset-password.js?v=9.47"></script>
+</body>
+</html>
