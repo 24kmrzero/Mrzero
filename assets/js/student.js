@@ -11,6 +11,7 @@
   window.StudentBase = { state, reload: async () => { await loadAll(); renderAll(); return state; } };
   let openPanel;
   let signalStatusView = 'all';
+  let signalWorkspaceView = 'today';
 
   const result = await A.requireRole('student');
   if (!result) return;
@@ -87,19 +88,7 @@
       ['fa-graduation-cap', approvedCourses, 'My Courses', 'Programs & live classes', 'courses']
     ];
     document.getElementById('studentKpis').innerHTML = data.map(([icon, value, label, note, panel]) => `<button type="button" class="app-kpi dashboard-nav-card" data-goto="${panel}" aria-label="Open ${label}"><span class="kpi-icon"><i class="fa-solid ${icon}"></i></span><div><small>${label}</small><b>${value}</b><em>${note}</em></div><span class="kpi-spark"><i></i><i></i><i></i></span><i class="fa-solid fa-arrow-right dashboard-nav-arrow"></i></button>`).join('');
-
-    const todaySignals = state.signals.filter(s => dateKey(new Date(s.published_at || s.created_at || Date.now())) === todayKey).length;
-    const tpHits = state.signalUpdates.filter(u => /^tp\d+_hit$/.test(String(u.event_type || ''))).length;
-    const monthStart = new Date(); monthStart.setDate(1); monthStart.setHours(0,0,0,0);
-    const closedMonth = state.signals.filter(s => signalIsFinal(s) && new Date(s.closed_at || s.last_status_at || s.updated_at || s.published_at) >= monthStart).length;
-    const summary = [
-      ['fa-bolt', activeSignals, 'Active Signals', 'Live setups in market', 'gold'],
-      ['fa-calendar-days', todaySignals, "Today's Signals", 'Published today', 'calendar'],
-      ['fa-bullseye', tpHits, 'TP Hits', 'Successful targets', 'target'],
-      ['fa-circle-check', closedMonth, 'Closed Signals', 'This month', 'closed']
-    ];
-    const performance = document.getElementById('signalPerformance');
-    if (performance) performance.innerHTML = summary.map(([icon,value,label,note,tone]) => `<div class="signal-summary-card ${tone}"><span class="signal-summary-icon"><i class="fa-solid ${icon}"></i></span><div><b>${value}</b><strong>${label}</strong><small>${note}</small></div></div>`).join('');
+    renderSignalPerformance();
   }
 
   function renderDashboard() {
@@ -144,34 +133,107 @@
     }
   }
 
-  function renderSignals() {
+
+  function signalBaseRowsForWorkspace() {
+    const today = dateKey(new Date());
+    return state.signals.filter(signal => signalWorkspaceView === 'today'
+      ? dateKey(new Date(signal.published_at || signal.created_at || Date.now())) === today
+      : true);
+  }
+
+  function signalVisibleRows() {
     const query = document.getElementById('signalSearch')?.value.trim().toLowerCase() || '';
     const direction = document.getElementById('signalDirectionFilter')?.value || 'all';
     const instrument = document.getElementById('signalInstrumentFilter')?.value || 'all';
     const dateValue = document.getElementById('signalDateFilter')?.value || '';
-    syncSignalInstrumentFilter();
+    const baseRows = signalBaseRowsForWorkspace();
+    return baseRows.filter(signal => {
+      const searchable = `${signal.symbol || ''} ${signal.notes || ''} ${signal.direction || ''}`.toLowerCase();
+      const symbolKey = String(signal.symbol || '').replace('/','').toUpperCase();
+      const publishedKey = dateKey(new Date(signal.published_at || signal.created_at || Date.now()));
+      const dateMatch = signalWorkspaceView === 'today' ? true : (!dateValue || publishedKey === dateValue);
+      return (!query || searchable.includes(query))
+        && (direction === 'all' || String(signal.direction || '').toUpperCase() === direction)
+        && (instrument === 'all' || symbolKey === instrument)
+        && dateMatch
+        && matchesSignalStatus(signal, signalStatusView);
+    });
+  }
 
+  function renderSignalPerformance() {
+    const rows = signalBaseRowsForWorkspace();
+    const pips = rows.map(latestSignalPips).filter(value => value !== null && value !== undefined && Number.isFinite(Number(value))).map(Number);
+    const totalPips = pips.reduce((sum, value) => sum + value, 0);
+    const tpHits = rows.filter(signal => Number(signal.tp_hit || 0) > 0 || /^tp\d+_hit$/.test(String(signal.status || '').toLowerCase())).length;
+    const closed = rows.filter(signal => signalIsFinal(signal)).length;
+    const slHits = rows.filter(signal => String(signal.status || '').toLowerCase() === 'sl_hit').length;
+    const wins = rows.filter(signal => {
+      const pip = latestSignalPips(signal);
+      return (pip != null && Number(pip) > 0) || Number(signal.tp_hit || 0) > 0;
+    }).length;
+    const resolved = rows.filter(signal => signalIsFinal(signal) || Number(signal.tp_hit || 0) > 0 || signal.be_moved).length;
+    const winRate = resolved ? Math.round((wins / resolved) * 100) : 0;
+    const summary = signalWorkspaceView === 'today'
+      ? [
+          ['fa-bolt', rows.length, "Today's Signals", 'Published today', 'gold'],
+          ['fa-signal', rows.filter(signal => !signalIsFinal(signal)).length, 'Active Signals', 'Currently running setups', 'green'],
+          ['fa-bullseye', tpHits, 'TP Hits', 'Target progress today', 'target'],
+          ['fa-ban', slHits, 'SL Hits', 'Stopped-out trades today', 'bad'],
+          ['fa-chart-line', `${signed(totalPips)} Pips`, 'Today Performance', 'Total live + closed result', 'gold'],
+          ['fa-trophy', `${winRate}%`, 'Win Rate', 'Based on resolved signals', 'violet']
+        ]
+      : [
+          ['fa-clock-rotate-left', rows.length, 'History Signals', 'All published records', 'gold'],
+          ['fa-circle-check', closed, 'Closed Signals', 'Completed history', 'green'],
+          ['fa-bullseye', tpHits, 'TP Hits', 'Historical target hits', 'target'],
+          ['fa-ban', slHits, 'SL Hits', 'Historical stopped-out trades', 'bad'],
+          ['fa-chart-line', `${signed(totalPips)} Pips`, 'Total Performance', 'All visible rows', 'gold'],
+          ['fa-trophy', `${winRate}%`, 'Win Rate', 'Visible history only', 'violet']
+        ];
+    const root = document.getElementById('signalPerformance');
+    if (root) root.innerHTML = summary.map(([icon,value,label,note,tone]) => `<div class="signal-summary-card ${tone}"><span class="signal-summary-icon"><i class="fa-solid ${icon}"></i></span><div><b>${A.escapeHtml(String(value))}</b><strong>${label}</strong><small>${note}</small></div></div>`).join('');
+  }
+
+  function updateSignalWorkspaceUi() {
+    document.querySelectorAll('[data-signal-view]').forEach(btn => {
+      const active = btn.dataset.signalView === signalWorkspaceView;
+      btn.classList.toggle('active', active);
+      btn.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+    const meta = document.getElementById('signalWorkspaceMeta');
+    if (meta) meta.textContent = signalWorkspaceView === 'today'
+      ? "Today's live setups, target progress and performance summary."
+      : 'Full signal history with filters, results and published records.';
+    const dateInput = document.getElementById('signalDateFilter');
+    if (dateInput) {
+      if (signalWorkspaceView === 'today') {
+        dateInput.value = dateKey(new Date());
+        dateInput.disabled = true;
+      } else {
+        if (dateInput.disabled) dateInput.value = '';
+        dateInput.disabled = false;
+      }
+    }
+    const clearBtn = document.getElementById('signalClearFilters');
+    if (clearBtn) clearBtn.innerHTML = `<i class="fa-solid fa-eraser"></i> ${signalWorkspaceView === 'today' ? 'Reset Today View' : 'Clear Filters'}`;
+  }
+
+  function renderSignals() {
+    syncSignalInstrumentFilter();
+    updateSignalWorkspaceUi();
     document.querySelectorAll('[data-signal-status]').forEach(btn => {
       const selected = btn.dataset.signalStatus === signalStatusView;
       btn.classList.toggle('active', selected);
       btn.setAttribute('aria-selected', selected ? 'true' : 'false');
     });
 
-    const rows = state.signals.filter(s => {
-      const searchable = `${s.symbol || ''} ${s.notes || ''} ${s.direction || ''}`.toLowerCase();
-      const symbolKey = String(s.symbol || '').replace('/','').toUpperCase();
-      const publishedKey = dateKey(new Date(s.published_at || s.created_at || Date.now()));
-      return (!query || searchable.includes(query))
-        && (direction === 'all' || String(s.direction || '').toUpperCase() === direction)
-        && (instrument === 'all' || symbolKey === instrument)
-        && (!dateValue || publishedKey === dateValue)
-        && matchesSignalStatus(s, signalStatusView);
-    });
+    const rows = signalVisibleRows();
+    renderSignalPerformance();
 
     const grid = document.getElementById('signalsGrid');
     if (!grid) return;
     if (!rows.length) {
-      grid.innerHTML = `<div class="signal-table-empty"><i class="fa-solid fa-filter-circle-xmark"></i><b>No signals match these filters.</b><span>Try changing status, instrument or date.</span></div>`;
+      grid.innerHTML = `<div class="signal-table-empty"><i class="fa-solid fa-filter-circle-xmark"></i><b>${signalWorkspaceView === 'today' ? 'No today signals match this view.' : 'No signals match these filters.'}</b><span>${signalWorkspaceView === 'today' ? 'Try another status or refresh the live feed.' : 'Try changing status, instrument or date.'}</span></div>`;
     } else {
       grid.innerHTML = `<table class="premium-signal-table"><thead><tr><th>Time / Date</th><th>Instrument</th><th>Type</th><th>Entry Zone</th><th>SL</th><th>TP1</th><th>TP2</th><th>TP3</th><th>Current Pips</th><th>Status</th><th>Published By</th></tr></thead><tbody>${rows.map(signalTableRow).join('')}</tbody></table><div class="signal-table-footer">Showing 1 to ${rows.length} of ${rows.length} signal${rows.length === 1 ? '' : 's'}</div>`;
     }
@@ -184,7 +246,7 @@
     const select = document.getElementById('signalInstrumentFilter');
     if (!select) return;
     const selected = select.value || 'all';
-    const symbols = [...new Set(state.signals.map(s => String(s.symbol || '').replace('/','').toUpperCase()).filter(Boolean))].sort();
+    const symbols = [...new Set(signalBaseRowsForWorkspace().map(s => String(s.symbol || '').replace('/','').toUpperCase()).filter(Boolean))].sort();
     select.innerHTML = `<option value="all">All Instruments</option>${symbols.map(symbol => `<option value="${attr(symbol)}">${A.escapeHtml(displaySymbol(symbol))}</option>`).join('')}`;
     select.value = symbols.includes(selected) ? selected : 'all';
   }
@@ -410,13 +472,13 @@
     const query = document.getElementById('chartSearch')?.value.trim().toLowerCase() || '';
     const tf = document.getElementById('chartTimeframeFilter')?.value || 'all';
     const rows = state.charts.filter(c => (!query || `${c.title} ${c.symbol} ${c.summary}`.toLowerCase().includes(query)) && (tf === 'all' || c.timeframe === tf));
-    document.getElementById('chartsGrid').innerHTML = rows.length ? rows.map(chart => `<article class="content-card"><div class="content-cover ${chart.image_url ? 'has-image' : ''}">${safeMediaImage(chart.image_url, chart.title, 'fa-chart-candlestick')}</div><div class="content-body"><div class="course-meta"><span>${A.escapeHtml(chart.symbol)}</span><span>${A.escapeHtml(chart.timeframe || '—')}</span><span>${A.escapeHtml(chart.category || 'Market Analysis')}</span><span>${A.formatDate(chart.published_at)}</span></div><h3>${A.escapeHtml(chart.title)}</h3><p>${A.escapeHtml(chart.summary || '')}</p><div class="card-actions"><button class="app-btn small gold" data-read-chart="${chart.id}">View Details</button>${chart.image_url ? `<a class="app-btn small outline" href="${attr(chart.image_url)}" target="_blank" rel="noopener"><i class="fa-solid fa-up-right-from-square"></i> Full Chart</a>` : ''}</div></div></article>`).join('') : empty('No chart analysis matches your search.', 'fa-chart-line');
+    document.getElementById('chartsGrid').innerHTML = rows.length ? rows.map(chart => `<article class="content-card compact-media-card"><div class="content-cover media-thumb-16x9 ${chart.image_url ? 'has-image' : ''}">${safeMediaImage(chart.image_url, chart.title, 'fa-chart-candlestick')}</div><div class="content-body"><div class="course-meta content-meta-strong"><span>${A.escapeHtml(chart.symbol)}</span><span>${A.escapeHtml(chart.timeframe || '—')}</span><span>${A.escapeHtml(chart.category || 'Market Analysis')}</span><span>${A.formatDate(chart.published_at)}</span></div><h3>${A.escapeHtml(chart.title)}</h3><p>${A.escapeHtml(chart.summary || '')}</p><div class="card-actions"><button class="app-btn small gold" data-read-chart="${chart.id}">View Details</button>${chart.image_url ? `<a class="app-btn small outline" href="${attr(chart.image_url)}" target="_blank" rel="noopener"><i class="fa-solid fa-up-right-from-square"></i> Full Chart</a>` : ''}</div></div></article>`).join('') : empty('No chart analysis matches your search.', 'fa-chart-line');
   }
 
   function renderArticles() {
     const query = document.getElementById('articleSearch')?.value.trim().toLowerCase() || '';
     const rows = state.articles.filter(a => !query || `${a.title} ${a.excerpt} ${a.content}`.toLowerCase().includes(query));
-    document.getElementById('articlesGrid').innerHTML = rows.length ? rows.map(article => `<article class="content-card"><div class="content-cover ${article.cover_url ? 'has-image' : ''}">${safeMediaImage(article.cover_url, article.title, 'fa-book-open')}</div><div class="content-body"><div class="course-meta"><span>${A.escapeHtml(article.category || 'Education')}</span><span><i class="fa-solid fa-calendar"></i> ${A.formatDate(article.published_at)}</span></div><h3>${A.escapeHtml(article.title)}</h3><p>${A.escapeHtml(article.excerpt || '')}</p><button class="app-btn small gold" data-read-article="${article.id}">Read Article</button></div></article>`).join('') : empty('No article matches your search.', 'fa-newspaper');
+    document.getElementById('articlesGrid').innerHTML = rows.length ? rows.map(article => `<article class="content-card compact-media-card"><div class="content-cover media-thumb-16x9 ${article.cover_url ? 'has-image' : ''}">${safeMediaImage(article.cover_url, article.title, 'fa-book-open')}</div><div class="content-body"><div class="course-meta content-meta-strong"><span>${A.escapeHtml(article.category || 'Education')}</span><span><i class="fa-solid fa-calendar"></i> ${A.formatDate(article.published_at)}</span></div><h3>${A.escapeHtml(article.title)}</h3><p>${A.escapeHtml(article.excerpt || '')}</p><button class="app-btn small gold" data-read-article="${article.id}">Read Article</button></div></article>`).join('') : empty('No article matches your search.', 'fa-newspaper');
   }
 
   function upcomingCourseSession(courseId) {
@@ -433,7 +495,7 @@
 
   function courseCoverHtml(course) {
     const cleanUrl = String(course.thumbnail_url || '').trim();
-    return `<div class="course-cover ${cleanUrl ? 'has-image' : ''}"><i class="fa-solid fa-graduation-cap course-cover-fallback" aria-hidden="true"></i>${cleanUrl ? `<img src="${attr(cleanUrl)}" alt="${attr(course.title)}" loading="lazy" decoding="async" onerror="this.remove();this.parentElement.classList.remove('has-image')">` : ''}<span class="status-pill ${A.statusClass(course.status)}">${A.statusLabel(course.status)}</span></div>`;
+    return `<div class="course-cover media-thumb-16x9 ${cleanUrl ? 'has-image' : ''}"><i class="fa-solid fa-graduation-cap course-cover-fallback" aria-hidden="true"></i>${cleanUrl ? `<img src="${attr(cleanUrl)}" alt="${attr(course.title)}" loading="lazy" decoding="async" onerror="this.remove();this.parentElement.classList.remove('has-image')">` : ''}<span class="status-pill ${A.statusClass(course.status)}">${A.statusLabel(course.status)}</span></div>`;
   }
 
   function renderCourses() {
@@ -567,6 +629,8 @@
     document.body.addEventListener('click', async event => {
       const signalStatusButton = event.target.closest('[data-signal-status]');
       if (signalStatusButton) { signalStatusView = signalStatusButton.dataset.signalStatus || 'all'; renderSignals(); }
+      const signalWorkspaceButton = event.target.closest('[data-signal-view]');
+      if (signalWorkspaceButton) { signalWorkspaceView = signalWorkspaceButton.dataset.signalView || 'today'; signalStatusView = 'all'; renderSignals(); }
       const courseOpen = event.target.closest('[data-open-course]');
       if (courseOpen) { openPanel('courses'); showCourseSessions(courseOpen.dataset.openCourse); }
       const buy = event.target.closest('[data-buy-course]');
@@ -604,7 +668,7 @@
       const direction=document.getElementById('signalDirectionFilter'); if(direction) direction.value='all';
       const instrument=document.getElementById('signalInstrumentFilter'); if(instrument) instrument.value='all';
       const date=document.getElementById('signalDateFilter'); if(date) date.value='';
-      signalStatusView='all'; renderSignals();
+      signalStatusView='all'; if (signalWorkspaceView === 'history') { const date=document.getElementById('signalDateFilter'); if(date) date.value=''; } renderSignals();
     });
     document.getElementById('signalRefresh')?.addEventListener('click', async event => {
       const button=event.currentTarget; A.setLoading(button,true,'Refreshing...');

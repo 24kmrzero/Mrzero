@@ -3158,3 +3158,165 @@ html[data-theme="dark"] .student-page .content-cover .content-cover-fallback {
     radial-gradient(circle at 22% 20%, rgba(255,193,7,.18), transparent 38%),
     linear-gradient(135deg, #17140d 0%, #0f0f0f 58%, #080808 100%);
 }
+
+/* ======================================================================
+   V9.60 corrective readability + signal workspace + compact media cards
+   ====================================================================== */
+.student-page .app-title strong { font-size: 18px !important; }
+.student-page .app-title small,
+.student-page .panel-heading p,
+.student-page .app-card-head p,
+.student-page .announcement p,
+.student-page .course-body p,
+.student-page .content-body p,
+.student-page .session-body p,
+.student-page .notice,
+.student-page .muted,
+.student-page .signal-workspace-meta { font-size: 13px !important; line-height: 1.55 !important; }
+.student-page .panel-heading h2,
+.student-page .panel-heading h1 { font-size: clamp(28px,2.2vw,36px) !important; }
+.student-page .compact-welcome-banner h1,
+.student-page #dashboardWelcomeName { font-size: clamp(30px,2.4vw,40px) !important; }
+.student-page .app-kpi b { font-size: 28px !important; }
+.student-page .app-kpi small,
+.student-page .app-kpi em { font-size: 12px !important; }
+.student-page .app-card-head h3,
+.student-page .course-body h3,
+.student-page .content-body h3,
+.student-page .session-body h3,
+.student-page .dash-signal-command b,
+.student-page .member-desk-access b,
+.student-page .member-desk-metrics b,
+.student-page .activity-item b,
+.student-page .publisher-name { font-size: 16px !important; }
+.student-page .analysis-mini-row { min-height: 72px !important; grid-template-columns: 74px minmax(0,1fr) 30px !important; padding: 10px 12px !important; }
+.student-page .analysis-thumb { width: 74px !important; height: 48px !important; border-radius: 10px !important; }
+.student-page .analysis-mini-copy b { font-size: 15px !important; }
+.student-page .analysis-mini-copy small,
+.student-page .analysis-mini-copy em,
+.student-page .member-desk-access small,
+.student-page .member-desk-access em,
+.student-page .member-desk-metrics small,
+.student-page .member-desk-metrics em,
+.student-page .dash-signal-command small,
+.student-page .dash-signal-note,
+.student-page .class-meta-row,
+.student-page .activity-item small { font-size: 12px !important; }
+.student-page .signal-summary-card { min-height: 98px !important; padding: 16px !important; border-radius: 16px !important; }
+.student-page .signal-summary-card b { font-size: 24px !important; }
+.student-page .signal-summary-card strong { font-size: 13px !important; margin-top: 6px !important; }
+.student-page .signal-summary-card small { font-size: 11px !important; margin-top: 4px !important; }
+.student-page .signal-workspace-switch { display:flex; gap:12px; padding:16px 18px 0; flex-wrap:wrap; }
+.student-page .signal-workspace-switch button {
+  min-height: 44px; padding: 0 18px; border-radius: 13px; border:1px solid rgba(255,193,7,.18);
+  background: rgba(255,255,255,.03); color: inherit; font: 800 14px/1 inherit; cursor: pointer;
+}
+.student-page .signal-workspace-switch button.active {
+  color:#111; background: linear-gradient(135deg,#FFE39A,#FFC107 55%,#E6A600); border-color:#FFC107;
+  box-shadow:0 12px 24px -18px rgba(255,193,7,.65);
+}
+.student-page .signal-table-toolbar { display:flex; align-items:flex-start; justify-content:space-between; gap:18px; padding:18px !important; flex-wrap:wrap; }
+.student-page .signal-toolbar-left { display:grid; gap:12px; min-width:min(100%,760px); }
+.student-page .signal-workspace-meta { color: var(--student-muted); }
+.student-page .signal-status-tabs { display:flex; gap:10px; flex-wrap:wrap; }
+.student-page .signal-status-tabs button {
+  min-height: 42px !important; padding: 0 16px !important; border-radius: 12px !important; font-size: 13px !important; font-weight: 700 !important;
+}
+.student-page .signal-primary-filters { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+.student-page .signal-primary-filters select,
+.student-page .signal-date-control,
+.student-page .signal-date-control input,
+.student-page .signal-advanced-filters input,
+.student-page .signal-advanced-filters select,
+.student-page .filter-row input,
+.student-page .filter-row select { min-height: 46px !important; font-size: 14px !important; }
+.student-page .signal-advanced-filters { gap: 12px !important; padding: 0 18px 18px !important; }
+.student-page .signal-filter-clear,
+.student-page .signal-risk-link,
+.student-page .signal-alert-inline,
+.student-page .signal-action-btn { min-height: 44px !important; font-size: 13px !important; }
+.student-page .premium-signal-table { min-width: 1180px !important; }
+.student-page .premium-signal-table thead th { padding: 13px 12px !important; font-size: 11px !important; }
+.student-page .premium-signal-table tbody td { min-height: 68px !important; padding: 14px 12px !important; font-size: 13px !important; }
+.student-page .premium-signal-table td > b,
+.student-page .instrument-cell b,
+.student-page .table-pips,
+.student-page .table-direction,
+.student-page .signal-table-status { font-size: 14px !important; }
+.student-page .premium-signal-table td > small,
+.student-page .instrument-cell small { font-size: 11px !important; margin-top: 5px !important; }
+.student-page .signals-command-header h2 { font-size: 24px !important; }
+.student-page .signals-command-header p { font-size: 13px !important; }
+.student-page .signals-live-chip small { font-size: 11px !important; }
+.student-page .signals-live-chip b { font-size: 12px !important; }
+.student-page .content-grid {
+  display:grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 360px)) !important;
+  gap: 20px !important;
+  align-items:start !important;
+}
+.student-page .compact-media-card,
+.student-page .content-card { width:100%; max-width:360px; border-radius:18px !important; overflow:hidden; }
+.student-page .media-thumb-16x9,
+.student-page .course-cover,
+.student-page .content-cover {
+  aspect-ratio: 16 / 9 !important;
+  min-height: 0 !important;
+  height: auto !important;
+}
+.student-page .media-thumb-16x9.has-image img,
+.student-page .course-cover.has-image img,
+.student-page .content-cover.has-image img { width:100% !important; height:100% !important; min-height:0 !important; object-fit:cover !important; display:block !important; }
+.student-page .course-list-grid { display:grid !important; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)) !important; gap: 20px !important; }
+.student-page .course-card { border-radius: 18px !important; overflow:hidden; }
+.student-page .course-meta,
+.student-page .content-meta,
+.student-page .content-meta-strong { font-size: 12px !important; gap:10px 14px !important; }
+.student-page .card-actions { display:flex; gap:10px; flex-wrap:wrap; }
+.student-page .content-body,
+.student-page .course-body,
+.student-page .session-body { padding: 18px !important; }
+.student-page .content-body h3,
+.student-page .course-body h3,
+.student-page .session-body h3 { font-size: 22px !important; line-height: 1.2 !important; margin-bottom: 8px !important; }
+.student-page .content-body p,
+.student-page .course-body p { font-size: 14px !important; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+.student-page .app-btn.small { min-height: 38px !important; font-size: 12px !important; padding: 8px 12px !important; }
+.student-page .session-date,
+.student-page .course-next-class { font-size: 13px !important; }
+.student-page .member-desk-metrics button { min-height: 72px !important; }
+.student-page .member-desk-footer { font-size: 11px !important; }
+
+html[data-theme="light"] .student-page .signal-workspace-switch button { background:#FFFDF9; border-color:rgba(74,57,35,.15); color:#5F564C; }
+html[data-theme="light"] .student-page .signal-workspace-switch button.active { color:#17120A; background:linear-gradient(135deg,#FFE39A,#FFC107 55%,#E6A600); border-color:#E2AA00; }
+html[data-theme="light"] .student-page .signal-workspace-meta,
+html[data-theme="light"] .student-page .panel-heading p,
+html[data-theme="light"] .student-page .course-body p,
+html[data-theme="light"] .student-page .content-body p,
+html[data-theme="light"] .student-page .session-body p,
+html[data-theme="light"] .student-page .muted,
+html[data-theme="light"] .student-page .notice { color:#6F665B !important; }
+html[data-theme="light"] .student-page .signal-status-tabs button,
+html[data-theme="light"] .student-page .signal-primary-filters select,
+html[data-theme="light"] .student-page .signal-date-control,
+html[data-theme="light"] .student-page .signal-advanced-filters input,
+html[data-theme="light"] .student-page .signal-advanced-filters select { background:#FFFDF9 !important; border-color:rgba(74,57,35,.14) !important; color:#342F29 !important; }
+html[data-theme="light"] .student-page .content-grid .content-card,
+html[data-theme="light"] .student-page .course-card { background:#FFFDF9 !important; }
+
+@media (max-width: 1180px) {
+  .student-page .content-grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) !important; }
+}
+@media (max-width: 900px) {
+  .student-page .signal-table-toolbar { padding: 15px !important; }
+  .student-page .signal-advanced-filters { padding: 0 15px 15px !important; }
+  .student-page .signal-workspace-switch { padding: 15px 15px 0; }
+  .student-page .content-grid,
+  .student-page .course-list-grid { grid-template-columns: 1fr !important; }
+  .student-page .content-card,
+  .student-page .course-card { max-width:none; }
+}
+.student-page .signal-summary-card.gold .signal-summary-icon { background: rgba(255,193,7,.14) !important; color: #C78E07 !important; }
+.student-page .signal-summary-card.green .signal-summary-icon { background: rgba(34,183,99,.12) !important; color: #22B763 !important; }
+.student-page .signal-summary-card.bad .signal-summary-icon { background: rgba(224,74,74,.12) !important; color: #E04A4A !important; }
+.student-page .signal-summary-card.violet .signal-summary-icon { background: rgba(171,99,255,.12) !important; color: #B56DFF !important; }

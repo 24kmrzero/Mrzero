@@ -8,7 +8,7 @@
 <title>Student Panel | 24K Excellence</title>
 <link rel="icon" href="assets/logo.png">
 <link rel="stylesheet" href="app.css?v=9.59" onload="document.documentElement.classList.add('student-base-css-ready')">
-<link rel="stylesheet" href="assets/student-premium.css?v=9.59" onload="document.documentElement.classList.add('student-css-ready')">
+<link rel="stylesheet" href="assets/student-premium.css?v=9.60" onload="document.documentElement.classList.add('student-css-ready')">
 <style>html:not(.student-base-css-ready) body.student-page,html:not(.student-css-ready) body.student-page{visibility:hidden}</style>
 <script>setTimeout(function(){document.documentElement.classList.add('student-base-css-ready','student-css-ready')},1800);</script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -122,18 +122,25 @@
           </div>
         </div>
         <div id="latestSignalUpdate"></div>
-        <div class="signal-summary-grid" id="signalPerformance"></div>
+        <div class="signal-summary-grid signal-performance-grid" id="signalPerformance"></div>
 
         <div class="signal-table-card">
+          <div class="signal-workspace-switch" role="tablist" aria-label="Signals workspace">
+            <button type="button" class="active" data-signal-view="today">Today Signals</button>
+            <button type="button" data-signal-view="history">History</button>
+          </div>
           <div class="signal-table-toolbar">
-            <div class="signal-status-tabs" role="tablist" aria-label="Signal status">
-              <button type="button" class="active" data-signal-status="all">All</button>
-              <button type="button" data-signal-status="active">Active</button>
-              <button type="button" data-signal-status="pending">Pending</button>
-              <button type="button" data-signal-status="tp_hit">TP Hit</button>
-              <button type="button" data-signal-status="be">BE</button>
-              <button type="button" data-signal-status="closed">Closed</button>
-              <button type="button" data-signal-status="sl">SL</button>
+            <div class="signal-toolbar-left">
+              <div class="signal-workspace-meta" id="signalWorkspaceMeta">Today's live setups, target progress and performance summary.</div>
+              <div class="signal-status-tabs" role="tablist" aria-label="Signal status">
+                <button type="button" class="active" data-signal-status="all">All</button>
+                <button type="button" data-signal-status="active">Active</button>
+                <button type="button" data-signal-status="pending">Pending</button>
+                <button type="button" data-signal-status="tp_hit">TP Hit</button>
+                <button type="button" data-signal-status="be">BE</button>
+                <button type="button" data-signal-status="closed">Closed</button>
+                <button type="button" data-signal-status="sl">SL</button>
+              </div>
             </div>
             <div class="signal-primary-filters">
               <select id="signalInstrumentFilter"><option value="all">All Instruments</option></select>
@@ -218,7 +225,7 @@
 
 <script src="assets/js/core.js?v=9.37"></script>
 <script src="assets/js/tracking.js?v=9.1"></script>
-<script src="assets/js/student.js?v=9.59"></script>
+<script src="assets/js/student.js?v=9.60"></script>
 <script src="assets/js/student-ui.js?v=9.54"></script>
 <script src="assets/js/student-open-access.js?v=9.54"></script>
 </body>

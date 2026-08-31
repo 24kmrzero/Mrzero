@@ -458,9 +458,14 @@
 
       A.setLoading(button,true,'Refreshing course...');
       await loadAll();
-      const saved=state.courses.find(course=>String(course.id)===savedCourseId);
+      let saved=state.courses.find(course=>String(course.id)===savedCourseId);
       if(!saved)throw new Error(`Course was saved in the database but did not reload in Admin. Course ID: ${savedCourseId}`);
-      if(file&&String(saved.thumbnail_url||'')!==String(uploaded?.url||''))throw new Error('Thumbnail upload completed, but the refreshed course record does not contain the new thumbnail URL.');
+      if(file&&String(saved.thumbnail_url||'')!==String(uploaded?.url||'')){
+        await persistCourseThumbnail(savedCourseId,uploaded.url);
+        await loadAll();
+        saved=state.courses.find(course=>String(course.id)===savedCourseId);
+        if(String(saved?.thumbnail_url||'')!==String(uploaded?.url||''))throw new Error('Thumbnail upload completed, but the refreshed course record does not contain the new thumbnail URL.');
+      }
       f.reset();
       f.elements.id.value='';
       f.elements.existing_thumbnail_url.value='';
