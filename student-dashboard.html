@@ -6,19 +6,51 @@
 <meta name="theme-color" content="#0A0A0A">
 <script>(function(){try{var t=localStorage.getItem('24k-excellence-theme');document.documentElement.dataset.theme=t==='light'?'light':'dark'}catch(e){document.documentElement.dataset.theme='dark'}})();</script>
 <title>Student Panel | 24K Excellence</title>
-<link rel="icon" href="assets/logo.png">
+<link rel="icon" href="assets/logo-v965.png">
 <link rel="stylesheet" href="app.css?v=9.59" onload="document.documentElement.classList.add('student-base-css-ready')">
-<link rel="stylesheet" href="assets/student-premium.css?v=9.63" onload="document.documentElement.classList.add('student-css-ready')">
+<link rel="stylesheet" href="assets/student-premium.css?v=9.65" onload="document.documentElement.classList.add('student-css-ready')">
 <style>html:not(.student-base-css-ready) body.student-page,html:not(.student-css-ready) body.student-page{visibility:hidden}</style>
 <script>setTimeout(function(){document.documentElement.classList.add('student-base-css-ready','student-css-ready')},1800);</script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<link rel="stylesheet" href="assets/platform-v962.css?v=9.63">
+<link rel="stylesheet" href="assets/platform-v962.css?v=9.65">
+
+<style>
+.get-all-access-card,.profile-support-card,.profile-premium-history-card{overflow:hidden}
+.get-access-head{display:flex;gap:18px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.get-access-copy{display:flex;gap:14px;align-items:flex-start;flex:1 1 420px}
+.get-access-icon{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;font-size:22px;background:rgba(201,154,5,.14);color:#c99a05;flex:0 0 auto}
+.get-access-copy h3{margin:0 0 4px;font-size:1.15rem}
+.get-access-copy p{margin:0;color:var(--muted,#9aa0a6)}
+.access-kicker{display:inline-block;font-size:.74rem;letter-spacing:.12em;font-weight:700;color:#c99a05;margin-bottom:4px}
+#premiumAccessOverview{margin-top:16px}
+.all-access-modal-body{display:grid;gap:18px}
+.access-step[hidden], .access-hidden{display:none !important}
+.access-choice-grid,.access-broker-grid,.access-method-grid{display:grid;gap:14px}
+.access-choice-grid{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.access-broker-grid{grid-template-columns:repeat(auto-fit,minmax(140px,1fr));margin-top:14px}
+.access-method-grid{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin-top:14px}
+.access-choice-card,.access-broker-card,.access-method-card{width:100%;text-align:left;border:1px solid rgba(201,154,5,.18);border-radius:20px;background:rgba(255,255,255,.03);padding:18px;cursor:pointer;transition:.2s ease;display:grid;gap:10px}
+html[data-theme="light"] .access-choice-card,html[data-theme="light"] .access-broker-card,html[data-theme="light"] .access-method-card{background:#fff8ed}
+.access-choice-card:hover,.access-broker-card:hover,.access-method-card:hover,.access-choice-card.is-active,.access-broker-card.is-active{border-color:#c99a05;transform:translateY(-1px)}
+.access-choice-card i,.access-method-card i{font-size:22px;color:#c99a05}
+.access-choice-card h4,.access-method-card h4{margin:0;font-size:1rem}
+.access-choice-card p,.access-method-card p,.access-broker-card p{margin:0;color:var(--muted,#9aa0a6);font-size:.92rem}
+.access-broker-card{align-items:center;justify-items:center;text-align:center;font-weight:700}
+.access-back-btn{margin-bottom:4px}
+.access-broker-details{display:grid;gap:14px;margin-top:16px}
+.access-link-box{border:1px dashed rgba(201,154,5,.35);border-radius:16px;padding:14px;display:grid;gap:10px}
+.access-link-box small{color:var(--muted,#9aa0a6);text-transform:uppercase;letter-spacing:.08em}
+.access-link-actions{display:flex;gap:10px;flex-wrap:wrap}
+.profile-whatsapp-row{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.profile-whatsapp-row > div{flex:1 1 260px}
+@media (max-width: 760px){.get-access-head{align-items:flex-start}.get-access-copy{flex-basis:100%}.profile-whatsapp-row{align-items:flex-start}.access-choice-card,.access-broker-card,.access-method-card{padding:16px}}
+</style>
 </head>
 <body class="app-page student-page">
-<div id="pageLoader" class="loading-screen"><div><img src="assets/logo.png" alt="24K Digital Gold"><i class="fa-solid fa-spinner fa-spin"></i><p>Loading your student account...</p></div></div>
+<div id="pageLoader" class="loading-screen"><div><img src="assets/logo-v965.png" alt="24K Digital Gold"><i class="fa-solid fa-spinner fa-spin"></i><p>Loading your student account...</p></div></div>
 <div id="studentApp" class="app-shell hidden">
   <aside class="app-side" id="side">
-    <div class="app-side-brand"><a class="app-logo-home" href="index.html" aria-label="Go to website home"><img src="assets/logo.png" alt="24K Digital Gold"></a></div>
+    <div class="app-side-brand"><a class="app-logo-home" href="index.html" aria-label="Go to website home"><img src="assets/logo-v965.png" alt="24K Digital Gold"></a></div>
     <div class="app-side-scroll">
       <nav class="app-nav premium-side-nav">
         <a href="#" class="on" data-panel="dashboard"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
@@ -26,12 +58,10 @@
         <a href="#" data-panel="signals"><i class="fa-solid fa-bolt"></i><span>Signals</span></a>
         <a href="#" data-panel="charts"><i class="fa-solid fa-chart-line"></i><span>Charts</span></a>
         <a href="#" data-panel="articles"><i class="fa-solid fa-newspaper"></i><span>Articles</span></a>
-        <a href="#" data-panel="premium"><i class="fa-solid fa-crown"></i><span>Premium Access</span></a>
-        <a href="#" data-panel="payments"><i class="fa-solid fa-wallet"></i><span>Payments</span><span class="nav-count" id="paymentCount">0</span></a>
+                <a href="#" data-panel="payments"><i class="fa-solid fa-wallet"></i><span>Payments</span><span class="nav-count" id="paymentCount">0</span></a>
         <a href="#" data-panel="announcements"><i class="fa-solid fa-bell"></i><span>Updates</span><span class="nav-count" id="announcementCount">0</span></a>
         <a href="#" data-panel="profile"><i class="fa-regular fa-circle-user"></i><span>Profile</span></a>
-        <a href="#" data-panel="support"><i class="fa-solid fa-headset"></i><span>Support</span></a>
-      </nav>
+              </nav>
 
       <div class="sidebar-member-card" role="button" tabindex="0" data-goto="profile" aria-label="Open profile">
         <div class="sidebar-member-avatar" id="sideMemberAvatar">ST</div>
@@ -167,15 +197,7 @@
         <div id="sessionsArea" class="hidden" style="margin-top:26px"><div class="panel-heading"><div><h2 id="sessionCourseTitle">Course Sessions</h2><p>Published session schedules and available online class links are open to signed-in members for now.</p></div><button class="app-btn outline" id="closeSessions"><i class="fa-solid fa-arrow-left"></i> Back to Courses</button></div><div class="session-grid" id="sessionsGrid"></div><div id="resourcesArea" class="app-card hidden" style="margin-top:20px"><div class="app-card-head"><div><h3>Course Resources</h3><p>Optional files uploaded by the admin</p></div></div><div id="resourcesList"></div></div></div>
       </section>
 
-      <section class="panel" id="p-premium">
-        <div class="panel-heading"><div><h2>Premium Market Access</h2><p>Signals, Charts and Articles in one monthly package. Unlock by payment or approved IB/Broker verification.</p></div></div>
-        <div id="premiumAccessOverview"></div>
-        <div class="premium-access-grid">
-          <div class="app-card premium-plan-card"><div class="app-card-head"><div><h3><i class="fa-solid fa-crown"></i> Monthly Premium</h3><p>30-day renewable access to Signals, Charts and Articles.</p></div></div><div id="premiumPriceBox"></div><div class="premium-feature-list"><span><i class="fa-solid fa-check"></i> Trading Signals</span><span><i class="fa-solid fa-check"></i> Market Charts</span><span><i class="fa-solid fa-check"></i> Learning Articles</span></div><div class="inline-actions"><button type="button" class="app-btn gold" id="premiumPayLocal"><i class="fa-solid fa-building-columns"></i> Local Bank Transfer</button><button type="button" class="app-btn outline" id="premiumPayUsdt"><i class="fa-solid fa-coins"></i> USDT TRC20</button></div></div>
-          <div class="app-card premium-plan-card"><div class="app-card-head"><div><h3><i class="fa-solid fa-link"></i> IB / Broker Access</h3><p>Open or link your trading account under our IB/partner relationship.</p></div></div><div id="premiumIbStatus"></div><button type="button" class="app-btn gold" id="openIbVerification"><i class="fa-solid fa-shield-check"></i> Submit IB Verification</button></div>
-        </div>
-        <div class="app-card"><div class="app-card-head"><div><h3>Premium Payment History</h3><p>Monthly renewals and review status.</p></div></div><div class="table-scroll"><table class="payment-table"><thead><tr><th>Date</th><th>Method</th><th>Amount</th><th>Status</th><th>Access Until</th><th>Note</th></tr></thead><tbody id="premiumPaymentsBody"></tbody></table></div></div>
-      </section>
+      <section class="panel" id="p-premium" hidden aria-hidden="true"></section>
 
       <section class="panel" id="p-payments">
         <div class="panel-heading"><div><h2>Payment History</h2><p>Receipt status, admin decision and course access.</p></div><button class="app-btn gold" data-goto="courses"><i class="fa-solid fa-plus"></i> Buy a Course</button></div>
@@ -187,15 +209,38 @@
       </section>
 
       <section class="panel" id="p-profile">
-        <div class="panel-heading"><div><h2>Profile Settings</h2><p>Keep your contact information up to date.</p></div></div>
+        <div class="panel-heading"><div><h2>Profile & Access</h2><p>Manage your account details, premium access and WhatsApp support from one place.</p></div></div>
         <div class="app-card email-verification-card" id="emailVerificationCard"></div>
+
+        <div class="app-card get-all-access-card" id="getAllAccessCard">
+          <div class="get-access-head">
+            <div class="get-access-copy">
+              <span class="get-access-icon"><i class="fa-solid fa-crown"></i></span>
+              <div>
+                <span class="access-kicker">PREMIUM MARKET ACCESS</span>
+                <h3>Get All Access</h3>
+                <p>Unlock Signals, Charts and Articles with Paid Access or Free Access via IB / Broker.</p>
+              </div>
+            </div>
+            <button type="button" class="app-btn gold" id="openAllAccessModal"><i class="fa-solid fa-unlock-keyhole"></i> Get All Access</button>
+          </div>
+          <div id="premiumAccessOverview"></div>
+        </div>
+
+        <div class="app-card profile-premium-history-card">
+          <div class="app-card-head"><div><h3>Premium Payment History</h3><p>Monthly renewals and review status.</p></div></div>
+          <div class="table-scroll"><table class="payment-table"><thead><tr><th>Date</th><th>Method</th><th>Amount</th><th>Status</th><th>Access Until</th><th>Note</th></tr></thead><tbody id="premiumPaymentsBody"></tbody></table></div>
+        </div>
+
         <div class="app-card"><form id="profileForm"><div class="form-grid"><div class="form-field"><label>Full Name</label><input name="full_name" required></div><div class="form-field"><label>Email Address</label><input name="email" type="email" disabled></div><div class="form-field"><label>WhatsApp Number</label><input name="whatsapp" required></div><div class="form-field"><label>Country</label><input name="country"></div><div class="form-field full"><label>Trading Experience</label><select name="experience"><option value="beginner">Beginner</option><option value="intermediate">Intermediate</option><option value="advanced">Advanced</option></select></div></div><div class="inline-actions"><button class="app-btn gold" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save Profile</button></div></form></div>
+
+        <div class="app-card profile-support-card">
+          <div class="app-card-head"><div><h3>WhatsApp Support</h3><p>For account, payment, course or access help, contact our team directly on WhatsApp.</p></div></div>
+          <div class="whatsapp-support-only profile-whatsapp-row"><i class="fa-brands fa-whatsapp"></i><div><h3>24K WhatsApp Support</h3><p class="muted">Tap below to open WhatsApp and speak with the support team.</p></div><a id="supportWhatsApp" class="app-btn green" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Open WhatsApp</a></div>
+        </div>
       </section>
 
-      <section class="panel" id="p-support">
-        <div class="panel-heading"><div><h2>WhatsApp Support</h2><p>For account, payment, course or access help, contact our team directly on WhatsApp.</p></div></div>
-        <div class="app-card whatsapp-support-only"><i class="fa-brands fa-whatsapp"></i><div><h3>24K WhatsApp Support</h3><p class="muted">Tap below to open WhatsApp and speak with the support team.</p></div><a id="supportWhatsApp" class="app-btn green" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Open WhatsApp</a></div>
-      </section>
+      <section class="panel" id="p-support" hidden aria-hidden="true"></section>
     </div>
   </main>
 </div>
@@ -208,6 +253,7 @@
   <button type="button" data-goto="profile"><i class="fa-solid fa-user"></i><span>Profile</span></button>
 </nav>
 
+<div class="app-modal" id="allAccessModal" aria-hidden="true"><div class="app-modal-card large"><div class="app-modal-head"><div><h3>Get All Access</h3><small class="muted">Choose how you want to unlock Signals, Charts and Articles.</small></div><button class="modal-close" data-close-modal="allAccessModal"><i class="fa-solid fa-xmark"></i></button></div><div class="app-modal-body all-access-modal-body"><div class="notice info" id="allAccessCurrentStatus">Choose your preferred access option below.</div><div class="access-step" data-access-step="home"><div class="access-choice-grid"><button type="button" class="access-choice-card" data-access-step-target="paid"><i class="fa-solid fa-credit-card"></i><div><h4>Paid Access</h4><p>Choose Local Bank Transfer or USDT TRC20 for the 30-day Signals + Charts + Articles package.</p></div></button><button type="button" class="access-choice-card" data-access-step-target="ib"><i class="fa-solid fa-link"></i><div><h4>Free Access via IB / Broker</h4><p>Select Exness, XM or DPrime, use our partner link, then submit your linked trading account for review.</p></div></button></div></div><div class="access-step access-hidden" data-access-step="paid"><button type="button" class="app-btn outline access-back-btn" data-access-step-target="home"><i class="fa-solid fa-arrow-left"></i> Back</button><div class="notice info">Unlock the full Premium Market Access package below.</div><div id="premiumPriceBox"></div><div class="access-method-grid"><button type="button" class="access-method-card" id="premiumPayLocal"><i class="fa-solid fa-building-columns"></i><div><h4>Local Bank Transfer</h4><p>Open the secure hosted receipt page and complete your PKR payment.</p></div></button><button type="button" class="access-method-card" id="premiumPayUsdt"><i class="fa-solid fa-coins"></i><div><h4>USDT TRC20</h4><p>Pay with USDT on TRC20 and submit TXID plus receipt for review.</p></div></button></div></div><div class="access-step access-hidden" data-access-step="ib"><button type="button" class="app-btn outline access-back-btn" data-access-step-target="home"><i class="fa-solid fa-arrow-left"></i> Back</button><div class="notice info">Step 1: Choose your broker.</div><div class="access-broker-grid"><button type="button" class="access-broker-card" data-broker-select="Exness"><span>Exness</span><p>Partner broker</p></button><button type="button" class="access-broker-card" data-broker-select="XM"><span>XM</span><p>Partner broker</p></button><button type="button" class="access-broker-card" data-broker-select="DPrime"><span>DPrime</span><p>Partner broker</p></button></div><div class="access-broker-details access-hidden" id="allAccessBrokerDetails"><div id="premiumIbStatus"></div><div class="access-link-box"><small>Partner / Referral Link</small><div class="access-link-actions"><a id="allAccessBrokerLink" class="app-btn gold" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Broker Link</a><button type="button" class="app-btn outline" id="copyAllAccessBrokerLink"><i class="fa-solid fa-copy"></i> Copy Link</button></div></div><div class="notice info">Step 2: Tell us if you want to create a new account or link / change an existing account.</div><div class="access-choice-grid"><button type="button" class="access-choice-card" data-access-account-mode="new"><i class="fa-solid fa-user-plus"></i><div><h4>Create New Account</h4><p>Open a fresh trading account using our partner link, then submit your trading account ID.</p></div></button><button type="button" class="access-choice-card" data-access-account-mode="existing"><i class="fa-solid fa-rotate"></i><div><h4>Change / Link Existing Account</h4><p>Use your existing account and follow the partner / IB linking instructions for the selected broker.</p></div></button></div><div class="notice warn" id="allAccessModeGuide">Choose a broker and account option to see the next steps.</div><div class="inline-actions"><button type="button" class="app-btn gold" id="openIbVerification"><i class="fa-solid fa-shield-check"></i> Submit IB Verification</button></div></div></div></div></div></div>
 <div class="app-modal" id="paymentMethodChoiceModal" aria-hidden="true"><div class="app-modal-card"><div class="app-modal-head"><div><h3>Choose Payment Method</h3><small class="muted">Select how you want to pay for this course.</small></div><button class="modal-close" data-close-modal="paymentMethodChoiceModal"><i class="fa-solid fa-xmark"></i></button></div><div class="app-modal-body"><div id="paymentChoiceCourseSummary" class="notice info"></div><div class="app-grid cols-2"><button type="button" class="app-card" data-payment-choice="usdt" style="text-align:left;cursor:pointer"><div style="font-size:26px;margin-bottom:10px"><i class="fa-solid fa-coins"></i></div><h3 style="margin:0 0 6px">USDT TRC20</h3><p class="muted" style="margin:0">Pay with USDT on the TRC20 network and submit TXID + receipt for Admin review.</p></button><button type="button" class="app-card" data-payment-choice="local-bank" style="text-align:left;cursor:pointer"><div style="font-size:26px;margin-bottom:10px"><i class="fa-solid fa-building-columns"></i></div><h3 style="margin:0 0 6px">Local Bank Transfer</h3><p class="muted" style="margin:0">Continue to the secure local bank transfer payment page for PKR payment.</p></button></div><div class="notice warn" style="margin-top:14px">The course payment currency must match the selected method: PKR for Local Bank Transfer or USDT for USDT TRC20.</div></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="paymentMethodChoiceModal">Cancel</button></div></div></div>
 <div class="app-modal" id="paymentModal"><div class="app-modal-card"><div class="app-modal-head"><h3>Submit USDT Payment</h3><button class="modal-close" data-close-modal="paymentModal"><i class="fa-solid fa-xmark"></i></button></div><form id="paymentForm"><div class="app-modal-body"><div id="paymentCourseSummary" class="notice info"></div><div id="paymentMethodsBox"></div><div class="form-grid"><input type="hidden" name="course_id"><div class="form-field"><label>Network / Payment Method</label><select name="payment_method_id" id="paymentMethodSelect" required></select></div><div class="form-field"><label>Amount Paid (USDT)</label><input type="number" name="amount" min="0" step="0.01" required></div><div class="form-field full"><label>Transaction Hash / TXID</label><input name="transaction_reference" required placeholder="Paste TRC20 transaction hash"></div><div class="form-field full"><label>Payment Receipt</label><input type="file" name="receipt" accept="image/png,image/jpeg,image/webp,application/pdf" required><small class="muted">PNG, JPG, WEBP or PDF. Maximum 5 MB.</small></div><div class="form-field full"><label>Note (optional)</label><textarea name="student_note" placeholder="Any detail the admin should know"></textarea></div></div><label class="check-row" style="margin-top:15px"><input type="checkbox" required> I confirm that the USDT TRC20 transaction, TXID and receipt are genuine.</label></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="paymentModal">Cancel</button><button type="submit" class="app-btn gold">Submit Payment</button></div></form></div></div>
 
@@ -227,7 +273,7 @@
 
 <script src="assets/js/core.js?v=9.37"></script>
 <script src="assets/js/tracking.js?v=9.1"></script>
-<script src="assets/js/student.js?v=9.63"></script>
-<script src="assets/js/student-ui.js?v=9.63"></script>
+<script src="assets/js/student.js?v=9.65"></script>
+<script src="assets/js/student-ui.js?v=9.65"></script>
 </body>
 </html>

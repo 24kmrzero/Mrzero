@@ -134,7 +134,7 @@
       const premiumLabel=premiumOpen?(premiumSource==='trial'?'Free Trial Active':premiumSource==='ib'?'IB Access Active':premiumSource==='free'?'Premium Free':'Premium Active'):'Premium Locked';
       const premiumNote=premiumOpen?(state.premium?.days_left!=null?`${state.premium.days_left} day${Number(state.premium.days_left)===1?'':'s'} remaining`:'Signals, charts and articles are available.'):'Renew by payment or approved IB verification.';
       learning.innerHTML = `<div class="member-desk-shell">
-        <div class="member-desk-access ${premiumOpen?'':'is-locked'}" data-goto="premium" role="button" tabindex="0">
+        <div class="member-desk-access ${premiumOpen?'':'is-locked'}" data-goto="profile" role="button" tabindex="0">
           <span class="desk-crown"><i class="fa-solid ${premiumOpen?'fa-crown':'fa-lock'}"></i></span>
           <div><small>PREMIUM MARKET ACCESS</small><b>${A.escapeHtml(premiumLabel)}</b><em>${A.escapeHtml(premiumNote)}</em></div>
           <span class="desk-active ${premiumOpen?'':'locked'}"><i></i> ${premiumOpen?'ACTIVE':'LOCKED'}</span>
@@ -572,6 +572,7 @@
     const body=document.getElementById('premiumPaymentsBody');
     if(body) body.innerHTML=state.premiumPayments.length?state.premiumPayments.map(row=>`<tr><td>${A.formatDateTime(row.created_at)}</td><td>${A.escapeHtml(row.payment_method_name)}</td><td>${A.escapeHtml(row.currency==='PKR'?`PKR ${Number(row.amount||0).toLocaleString()}`:`${Number(row.amount||0).toLocaleString()} USDT`)}</td><td><span class="status-pill ${A.statusClass(row.status)}">${A.statusLabel(row.status)}</span></td><td>${row.access_expires_at?A.formatDateTime(row.access_expires_at):'—'}</td><td>${A.escapeHtml(row.admin_note||row.provider_rejection_reason||'—')}</td></tr>`).join(''):`<tr><td colspan="6">${empty('No premium payment history yet.','fa-crown')}</td></tr>`;
     ['premiumPayLocal','premiumPayUsdt','openIbVerification'].forEach(id=>{const el=document.getElementById(id);if(el)el.disabled=p.package_mode==='free'||(id==='openIbVerification'&&!p.ib_enabled);});
+    renderAccessSelection();
   }
 
   async function startPremiumLocalBank(button){
@@ -647,10 +648,94 @@
 
   function renderSupport() { const link=document.getElementById('supportWhatsApp'); if(link) link.href=`https://wa.me/${A.cfg.SUPPORT_WHATSAPP}`; }
 
+  const accessFlowState = { step:'home', broker:'', mode:'' };
+  const brokerAccessMeta = {
+    Exness: {
+      url: 'https://one.exnessonelink.com/a/be2kjlypr9',
+      newGuide: 'Create a new Exness account from our partner link. After registration and funding, return here and submit your trading account ID for approval.',
+      existingGuide: 'If you already have an Exness account, contact Exness live chat and request a partner / IB change to our partner relationship. Once updated, submit your trading account ID and proof.'
+    },
+    XM: {
+      url: 'https://affs.click/tr9cq',
+      newGuide: 'Open a fresh XM account from our partner link, then submit the trading account ID through IB Verification.',
+      existingGuide: 'If your current XM account is not under our partner, the simplest option is usually to create a new account from our partner link. If you can link or change it successfully, submit the updated trading account ID and proof.'
+    },
+    DPrime: {
+      url: 'https://my.dooprime.com/links/go/72929',
+      newGuide: 'Create a new DPrime account using our partner link, then submit your trading account ID for approval.',
+      existingGuide: 'If you already have a DPrime account, ask DPrime support or your account manager to link / move the account under our partner relationship, then submit the updated account proof.'
+    }
+  };
+
+  function setAccessStep(step='home'){
+    accessFlowState.step=step;
+    document.querySelectorAll('[data-access-step]').forEach(node=>node.classList.toggle('access-hidden', node.dataset.accessStep!==step));
+    document.querySelectorAll('[data-access-step-target]').forEach(btn=>btn.classList.toggle('is-active', btn.dataset.accessStepTarget===step && step!=='home'));
+    renderAccessSelection();
+  }
+
+  function renderAccessSelection(){
+    const current=document.getElementById('allAccessCurrentStatus');
+    const p=state.premium||{};
+    if(current){
+      const has=Boolean(p.has_access);
+      const title=has ? `Access Active${p.days_left!=null?` · ${p.days_left} day${Number(p.days_left)===1?'':'s'} left`:''}` : 'Access currently locked';
+      current.innerHTML=`<b>${A.escapeHtml(title)}</b><br><small>${has?'You already have access to Signals, Charts and Articles.':'Choose Paid Access or Free Access via IB / Broker below.'}</small>`;
+    }
+    document.querySelectorAll('[data-broker-select]').forEach(btn=>btn.classList.toggle('is-active', btn.dataset.brokerSelect===accessFlowState.broker));
+    document.querySelectorAll('[data-access-account-mode]').forEach(btn=>btn.classList.toggle('is-active', btn.dataset.accessAccountMode===accessFlowState.mode));
+    const details=document.getElementById('allAccessBrokerDetails');
+    const link=document.getElementById('allAccessBrokerLink');
+    const copy=document.getElementById('copyAllAccessBrokerLink');
+    const guide=document.getElementById('allAccessModeGuide');
+    const verify=document.getElementById('openIbVerification');
+    const meta=brokerAccessMeta[accessFlowState.broker];
+    if(details) details.classList.toggle('access-hidden', !(accessFlowState.step==='ib' && meta));
+    if(link){
+      link.href=meta?.url||'#';
+      link.setAttribute('data-link-url', meta?.url||'');
+      link.innerHTML=`<i class="fa-solid fa-arrow-up-right-from-square"></i> ${meta?`Open ${A.escapeHtml(accessFlowState.broker)} Link`:'Open Broker Link'}`;
+    }
+    if(copy) copy.disabled=!meta;
+    if(guide){
+      if(!meta) guide.innerHTML='Choose a broker and account option to see the next steps.';
+      else if(accessFlowState.mode==='new') guide.innerHTML=`<b>${A.escapeHtml(accessFlowState.broker)} — Create New Account</b><br>${A.escapeHtml(meta.newGuide)}`;
+      else if(accessFlowState.mode==='existing') guide.innerHTML=`<b>${A.escapeHtml(accessFlowState.broker)} — Change / Link Existing Account</b><br>${A.escapeHtml(meta.existingGuide)}`;
+      else guide.innerHTML=`Choose whether you want to create a new ${A.escapeHtml(accessFlowState.broker)} account or link / change an existing one.`;
+    }
+    if(verify) verify.disabled=!meta || !p.ib_enabled;
+  }
+
+  function openAllAccessModal(step='home'){
+    if(step==='home'){ accessFlowState.broker=''; accessFlowState.mode=''; }
+    setAccessStep(step);
+    A.openModal('allAccessModal');
+  }
+
+  async function copySelectedBrokerLink(){
+    const meta=brokerAccessMeta[accessFlowState.broker];
+    if(!meta?.url) return A.toast('Choose a broker first.','warning');
+    try{ await navigator.clipboard.writeText(meta.url); A.toast('Broker link copied.','success'); }
+    catch(error){ A.toast('Could not copy the broker link.','error'); }
+  }
+
+  function prefillIbVerificationForm(){
+    const form=document.getElementById('ibVerificationForm'); if(!form) return;
+    if(form.elements.broker && accessFlowState.broker) form.elements.broker.value=accessFlowState.broker;
+    if(form.elements.account_type) form.elements.account_type.value=accessFlowState.mode==='existing' ? 'Existing account / partner change' : accessFlowState.mode==='new' ? 'New partner account' : '';
+    if(form.elements.note){
+      const meta=brokerAccessMeta[accessFlowState.broker];
+      const modeText=accessFlowState.mode==='existing' ? 'Existing account / partner change' : accessFlowState.mode==='new' ? 'New account from partner link' : '';
+      const guide=meta ? (accessFlowState.mode==='existing' ? meta.existingGuide : accessFlowState.mode==='new' ? meta.newGuide : '') : '';
+      form.elements.note.value=[accessFlowState.broker?`Broker: ${accessFlowState.broker}`:'', modeText, guide].filter(Boolean).join(' — ');
+    }
+  }
+
+
   function bindEvents() {
     document.addEventListener('panel:open', event => {
       const key=event.detail.key;
-      if (['signals','charts','articles'].includes(key) && !state.premium?.has_access) { setTimeout(()=>openPanel('premium'),0); A.toast('Premium access is required for Signals, Charts and Articles.','warning'); return; }
+      if (['signals','charts','articles'].includes(key) && !state.premium?.has_access) { setTimeout(()=>{openPanel('profile');openAllAccessModal();},0); A.toast('Premium access is required for Signals, Charts and Articles.','warning'); return; }
       if (key === 'signals' && !state.riskAccepted) A.openModal('riskModal');
       if (key === 'courses') resetCourseView();
     });
@@ -687,9 +772,14 @@
       if (resource) await downloadResource(resource.dataset.downloadResource);
       const signalHistory = event.target.closest('[data-student-signal-history]');
       if (signalHistory) openSignalHistory(signalHistory.dataset.studentSignalHistory);
+      const openAccess=event.target.closest('#openAllAccessModal'); if(openAccess) openAllAccessModal();
+      const accessStepButton=event.target.closest('[data-access-step-target]'); if(accessStepButton){setAccessStep(accessStepButton.dataset.accessStepTarget||'home'); return;}
+      const brokerButton=event.target.closest('[data-broker-select]'); if(brokerButton){accessFlowState.broker=brokerButton.dataset.brokerSelect||''; if(!accessFlowState.mode) accessFlowState.mode='new'; renderAccessSelection(); return;}
+      const accessModeButton=event.target.closest('[data-access-account-mode]'); if(accessModeButton){accessFlowState.mode=accessModeButton.dataset.accessAccountMode||''; renderAccessSelection(); return;}
+      const copyBrokerLink=event.target.closest('#copyAllAccessBrokerLink'); if(copyBrokerLink){await copySelectedBrokerLink(); return;}
       const premiumLocal=event.target.closest('#premiumPayLocal'); if(premiumLocal) await startPremiumLocalBank(premiumLocal);
       const premiumUsdt=event.target.closest('#premiumPayUsdt'); if(premiumUsdt){const box=document.getElementById('premiumUsdtSummary');if(box)box.innerHTML=`<b>${Number(state.premium?.price_usdt||0).toLocaleString()} USDT</b> · ${Number(state.premium?.monthly_days||30)} days Premium Market Access`;A.openModal('premiumUsdtModal');}
-      const ibOpen=event.target.closest('#openIbVerification'); if(ibOpen) A.openModal('ibVerificationModal');
+      const ibOpen=event.target.closest('#openIbVerification'); if(ibOpen){prefillIbVerificationForm();A.openModal('ibVerificationModal');}
       const verifyEmail = event.target.closest('[data-request-email-verification]');
       if (verifyEmail) await requestEmailVerification(verifyEmail);
       const refreshDashboard = event.target.closest('[data-refresh-dashboard]');
@@ -725,7 +815,7 @@
     A.toast(permission==='granted'?'Live signal alerts enabled.':'Notification permission was not allowed.',permission==='granted'?'success':'warning');
   }
   function updateAlertButton(){const b=document.getElementById('enableSignalAlerts');if(!b)return;const enabled='Notification' in window&&Notification.permission==='granted';b.classList.toggle('enabled',enabled);b.innerHTML=`<i class="fa-solid fa-bell${enabled?'':'-slash'}"></i> ${enabled?'Live Alerts Enabled':'Enable Live Alerts'}`;}
-  function showSignalNotification(update){if(!update?.notify_users)return;A.toast(`${update.notification_title||'Signal Update'} — ${update.notification_message||''}`,'success');if('Notification' in window&&Notification.permission==='granted'&&document.visibilityState!=='visible'){new Notification(update.notification_title||'24K Signal Update',{body:update.notification_message||'',icon:'assets/logo.png'});}}
+  function showSignalNotification(update){if(!update?.notify_users)return;A.toast(`${update.notification_title||'Signal Update'} — ${update.notification_message||''}`,'success');if('Notification' in window&&Notification.permission==='granted'&&document.visibilityState!=='visible'){new Notification(update.notification_title||'24K Signal Update',{body:update.notification_message||'',icon:'assets/logo-v965.png'});}}
 
 
   let paymentChoiceContext = { courseId: null, triggerButton: null };
@@ -821,7 +911,7 @@
   }
 
   function handlePaymentReturn() {
-    const premiumParams=new URLSearchParams(location.search); if(premiumParams.get('premium_return')==='1'){openPanel('premium');A.toast('Premium payment return received. Status will update after provider confirmation.','info');}
+    const premiumParams=new URLSearchParams(location.search); if(premiumParams.get('premium_return')==='1'){openPanel('profile');A.toast('Premium payment return received. Status will update after provider confirmation.','info');}
     const params = new URLSearchParams(window.location.search);
     if (params.get('payment_return') !== '1') return;
     openPanel('payments');
