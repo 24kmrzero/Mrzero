@@ -144,6 +144,7 @@
     try {
       const { error } = await sb.auth.updateUser({ password });
       if (error) throw error;
+      try { await sb.functions.invoke('audit-event', { body: { action: 'password_changed', entity_type: 'profile', status: 'success', details: { account_role: accountRole || 'student' } } }); } catch {}
 
       status.className = 'reset-status success show';
       status.innerHTML = '<i class="fa-solid fa-circle-check"></i><span>Password updated successfully. Redirecting to login...</span>';

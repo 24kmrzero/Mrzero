@@ -1,0 +1,67 @@
+/* 24K Excellence V9.62 — combined Student/Admin/Team refinements */
+
+/* -------- Student: compact signal typography -------- */
+.student-page .premium-signal-table{min-width:1080px!important}
+.student-page .premium-signal-table thead th{height:34px!important;padding:7px 9px!important;font-size:9px!important;letter-spacing:.035em!important}
+.student-page .premium-signal-table tbody td{height:42px!important;min-height:42px!important;padding:6px 9px!important;font-size:10px!important;line-height:1.2!important}
+.student-page .premium-signal-table td>b,.student-page .instrument-cell b,.student-page .table-pips,.student-page .table-direction,.student-page .signal-table-status,.student-page .publisher-name{font-size:10px!important}
+.student-page .premium-signal-table td>small,.student-page .instrument-cell small{font-size:9px!important;margin-top:2px!important}
+.student-page .instrument-badge{width:28px!important;height:28px!important;min-width:28px!important;border-radius:8px!important;font-size:9px!important}
+.student-page .signal-table-footer{font-size:9px!important;padding:7px!important}
+
+/* -------- Courses -------- */
+.course-filter-tabs{display:flex;gap:8px;margin:0 0 18px;padding:5px;width:max-content;max-width:100%;border:1px solid rgba(255,193,7,.18);border-radius:12px;background:rgba(255,193,7,.035)}
+.course-filter-tabs button{min-width:78px;min-height:38px;padding:0 16px;border:0;border-radius:9px;background:transparent;color:inherit;font:800 12px/1 inherit;cursor:pointer}
+.course-filter-tabs button.active{color:#111;background:linear-gradient(135deg,#FFE39A,#FFC107 55%,#E6A600);box-shadow:0 8px 18px -13px rgba(255,193,7,.7)}
+.student-page .course-list-grid{grid-template-columns:repeat(auto-fill,minmax(330px,390px))!important;align-items:start!important}
+.student-page .course-cover{aspect-ratio:16/9!important;height:auto!important;min-height:0!important}
+.student-page .course-cover img{width:100%!important;height:100%!important;object-fit:cover!important}
+
+/* -------- Premium student panel -------- */
+.premium-access-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-bottom:16px}
+.premium-access-status{display:grid;grid-template-columns:54px minmax(0,1fr) auto;align-items:center;gap:14px;margin-bottom:18px;padding:18px;border:1px solid rgba(255,193,7,.2);border-radius:16px;background:linear-gradient(135deg,rgba(255,193,7,.09),rgba(255,255,255,.02))}
+.premium-access-status>span{width:54px;height:54px;display:grid;place-items:center;border-radius:15px;background:linear-gradient(135deg,#FFE39A,#FFC107);color:#111;font-size:20px}
+.premium-access-status small{font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#9b7a19}
+.premium-access-status h3{margin:3px 0 3px;font-size:20px}
+.premium-access-status p{margin:0;font-size:12px;color:#858585}
+.premium-access-status>b{padding:7px 10px;border-radius:999px;background:rgba(34,183,99,.12);color:#22b763;font-size:11px}
+.premium-access-status.locked>span{background:#242424;color:#ffc107;border:1px solid rgba(255,193,7,.2)}
+.premium-access-status.locked>b{display:none}
+.premium-plan-card{min-height:250px}
+.premium-plan-card .app-card-head h3 i{color:#ffc107;margin-right:7px}
+.premium-feature-list{display:grid;gap:9px;margin:16px 0}
+.premium-feature-list span{font-size:12px}.premium-feature-list i{color:#22b763;margin-right:7px}
+.premium-price{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:14px;border:1px solid rgba(255,193,7,.15);border-radius:12px;background:rgba(255,193,7,.04)}
+.premium-price span{display:grid;gap:3px}.premium-price b{font-size:19px}.premium-price small,.premium-price em{font-size:10px;color:#888;font-style:normal}
+.whatsapp-support-only{max-width:680px;display:grid;grid-template-columns:58px minmax(0,1fr) auto;align-items:center;gap:18px}
+.whatsapp-support-only>i{width:58px;height:58px;display:grid;place-items:center;border-radius:16px;background:rgba(22,156,89,.12);color:#169c59;font-size:30px}
+.whatsapp-support-only h3{margin:0 0 4px}.whatsapp-support-only p{margin:0}
+
+/* -------- Admin Premium / audit -------- */
+.premium-admin-grid{align-items:start}.premium-package-explainer>i{width:52px;height:52px;display:grid;place-items:center;border-radius:15px;background:linear-gradient(135deg,#FFE39A,#FFC107);color:#111;font-size:20px}
+.premium-admin-points{display:grid;gap:9px;margin-top:16px}.premium-admin-points span{display:grid;gap:2px;padding:10px;border:1px solid rgba(255,193,7,.12);border-radius:10px}.premium-admin-points b{color:#ffc107}
+.audit-filter-grid{display:grid;grid-template-columns:minmax(220px,2fr) repeat(4,minmax(130px,1fr));gap:10px;margin-bottom:14px}.audit-filter-grid input,.audit-filter-grid select{min-height:42px;padding:8px 11px;border-radius:10px;border:1px solid var(--app-line);background:var(--app-card);color:inherit}
+.audit-v962-table td small{display:block;margin-top:3px;color:var(--app-muted);font-size:9px}.audit-v962-table td{vertical-align:top}
+.course-auto-status .notice{margin:0;min-height:42px;display:flex;align-items:center;gap:8px}
+
+/* -------- Admin Signals / Charts / Articles: mirror student language -------- */
+#p-signals .admin-signal-workspace,#p-signals .table-scroll,#p-charts .content-grid,#p-articles .content-grid{border-radius:16px}
+#p-charts .content-grid,#p-articles .content-grid{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(320px,360px))!important;gap:18px!important;align-items:start!important}
+#p-charts .content-card,#p-articles .content-card{max-width:360px;overflow:hidden;border-radius:16px!important}
+#p-charts .content-cover,#p-articles .content-cover{aspect-ratio:16/9!important;height:auto!important;min-height:0!important;padding:0!important}
+#p-charts .content-cover img,#p-articles .content-cover img{width:100%!important;height:100%!important;object-fit:cover!important;display:block!important}
+#p-charts .content-body,#p-articles .content-body{padding:15px!important}
+#p-charts .content-body h3,#p-articles .content-body h3{font-size:16px!important;margin:7px 0}
+#p-charts .content-body p,#p-articles .content-body p{font-size:11px!important;line-height:1.45;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+#p-signals .admin-table th{font-size:8px!important}#p-signals .admin-table td{font-size:9px!important;padding-top:8px!important;padding-bottom:8px!important}
+
+/* -------- Team -------- */
+.team-page .team-stat-card,.team-page .team-link-card,.team-page .team-clients-card{border-radius:16px}
+
+/* -------- Light theme -------- */
+html[data-theme="light"] .course-filter-tabs{background:#fff9eb;border-color:#e4c86e}html[data-theme="light"] .course-filter-tabs button{color:#5b5145}
+html[data-theme="light"] .premium-access-status{background:linear-gradient(135deg,#fff5d2,#fffdf9);border-color:#e4c86e}html[data-theme="light"] .premium-access-status h3{color:#211e1a}html[data-theme="light"] .premium-access-status p,html[data-theme="light"] .premium-price small,html[data-theme="light"] .premium-price em{color:#6f665b}
+html[data-theme="light"] .premium-price{background:#fff9eb;border-color:#e7d59b}.audit-filter-grid input,.audit-filter-grid select{border-color:rgba(74,57,35,.16)}
+
+@media(max-width:1000px){.premium-access-grid,.premium-admin-grid{grid-template-columns:1fr}.audit-filter-grid{grid-template-columns:1fr 1fr}.whatsapp-support-only{grid-template-columns:50px 1fr}.whatsapp-support-only .app-btn{grid-column:1/-1;width:max-content}.student-page .course-list-grid{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))!important}}
+@media(max-width:640px){.audit-filter-grid{grid-template-columns:1fr}.premium-access-status{grid-template-columns:46px 1fr}.premium-access-status>b{grid-column:1/-1;width:max-content}.course-filter-tabs{width:100%}.course-filter-tabs button{flex:1}.student-page .course-list-grid{grid-template-columns:1fr!important}}

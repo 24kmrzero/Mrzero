@@ -11,6 +11,7 @@
 <style>html:not(.admin-css-ready) body.app-page{visibility:hidden}</style>
 <script>setTimeout(function(){document.documentElement.classList.add('admin-css-ready')},1800);</script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="assets/platform-v962.css?v=9.62">
 </head>
 <body class="app-page">
 <div id="pageLoader" class="loading-screen"><div><img src="assets/logo.png" alt="24K Digital Gold"><i class="fa-solid fa-spinner fa-spin"></i><p>Loading admin controls...</p></div></div>
@@ -141,7 +142,7 @@
                 <div class="form-field"><label>Instructor</label><input name="instructor_name" value="Malik Zameer" readonly></div>
                 <div class="form-field full"><label>Short Caption</label><textarea name="short_description" maxlength="220" required placeholder="One short line explaining what students will learn."></textarea></div>
                 <div class="form-field"><label>Course Type</label><select name="course_type"><option value="paid">Paid</option><option value="free">Free</option></select></div>
-                <div class="form-field"><label>Course Status</label><select name="status"><option value="upcoming">Upcoming</option><option value="active">Active</option><option value="completed">Completed</option><option value="draft">Draft</option></select></div>
+                <input type="hidden" name="status" value="active"><div class="form-field course-auto-status"><label>Course Status</label><div class="notice info"><i class="fa-solid fa-wand-magic-sparkles"></i> Automatic — calculated from the class schedule.</div></div>
                 <div class="form-field"><label>Regular Price</label><input type="number" min="0" step="0.01" name="price" value="0" required></div>
                 <div class="form-field"><label>Discount Price <span class="muted">(optional)</span></label><input type="number" min="0" step="0.01" name="discount_price"></div>
                 <div class="form-field"><label>Payment Currency</label><select name="currency"><option value="PKR">PKR — Local Bank Transfer</option><option value="USDT">USDT — USDT TRC20</option></select><small class="muted">PKR uses the built-in Local Bank Transfer flow. USDT TRC20 payments are reviewed manually by Admin.</small></div>
@@ -218,6 +219,6 @@
 
 <div class="app-modal" id="receiptPreviewModal"><div class="app-modal-card receipt-preview-card"><div class="app-modal-head"><div><h3>Payment Receipt</h3><small id="receiptPreviewSubtitle" class="muted">Secure temporary preview</small></div><button class="modal-close" data-close-modal="receiptPreviewModal"><i class="fa-solid fa-xmark"></i></button></div><div class="app-modal-body"><div id="receiptPreviewContent" class="receipt-preview-content"></div></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="receiptPreviewModal">Close</button><a id="receiptOpenExternal" class="app-btn gold" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Full Size</a></div></div></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js?v=9.20"></script><script src="assets/js/core.js?v=9.37"></script><script src="assets/js/admin.js?v=9.60"></script><script src="assets/js/platform-v8-admin.js?v=9.46"></script><script src="assets/js/dashboard-analytics-recovery.js?v=9.33"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js?v=9.20"></script><script src="assets/js/core.js?v=9.37"></script><script src="assets/js/admin.js?v=9.62"></script><script src="assets/js/platform-v8-admin.js?v=9.62"></script><script src="assets/js/platform-v962-admin.js?v=9.62"></script><script src="assets/js/dashboard-analytics-recovery.js?v=9.33"></script>
 </body>
 </html>

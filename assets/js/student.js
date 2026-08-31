@@ -1,12 +1,12 @@
 (async function () {
   const A = window.App;
   // TEMPORARY: all signed-in student access is intentionally open until access rules are redesigned.
-  const TEMP_OPEN_ACCESS = true;
+  const TEMP_OPEN_ACCESS = false;
   window.__24K_TEMP_OPEN_ACCESS__ = TEMP_OPEN_ACCESS;
   const state = {
     user: null, profile: null, courses: [], sessions: [], sessionLinks: {}, enrollments: [], payments: [],
-    paymentMethods: [], signals: [], signalUpdates: [], charts: [], articles: [], announcements: [], resources: [], support: [], riskAccepted: false,
-    selectedCourse: null
+    paymentMethods: [], signals: [], signalUpdates: [], charts: [], articles: [], announcements: [], resources: [], support: [], riskAccepted: false, premium: null, premiumPayments: [], ibVerifications: [],
+    selectedCourse: null, courseFilter: 'all'
   };
   window.StudentBase = { state, reload: async () => { await loadAll(); renderAll(); return state; } };
   let openPanel;
@@ -20,9 +20,8 @@
   state.user = result.user;
   state.profile = result.profile;
   openPanel = A.activateDashboardNavigation();
-  document.getElementById('logoutButton').addEventListener('click', A.logout);
-  document.getElementById('supportWhatsApp').href = `https://wa.me/${A.cfg.SUPPORT_WHATSAPP}`;
-  document.getElementById('supportEmail').href = `mailto:${A.cfg.SUPPORT_EMAIL}`;
+  document.getElementById('logoutButton').addEventListener('click', async()=>{await auditEvent('logout','session',null,'success',{});await A.logout();});
+  const supportWhatsApp = document.getElementById('supportWhatsApp'); if (supportWhatsApp) supportWhatsApp.href = `https://wa.me/${A.cfg.SUPPORT_WHATSAPP}`;
 
   const initials = (state.profile.full_name || state.profile.email || 'ST').split(/\s+/).slice(0, 2).map(x => x[0]).join('').toUpperCase();
   const memberName = state.profile.full_name || 'Member';
@@ -41,6 +40,7 @@
 
   async function loadAll() {
     const sb = A.supabase;
+    try { await sb.rpc('refresh_course_statuses_from_schedule'); } catch (error) { console.warn('Course schedule status refresh skipped:', error?.message || error); }
     const { data: freshProfile, error: profileError } = await sb.from('profiles').select('*').eq('id', state.user.id).maybeSingle();
     if (profileError) throw profileError;
     if (freshProfile) state.profile = freshProfile;
@@ -68,11 +68,22 @@
     state.signals=requests[6].data||[]; state.signalUpdates=requests[7].data||[]; state.charts=requests[8].data||[];
     state.articles=requests[9].data||[]; state.announcements=requests[10].data||[]; state.resources=requests[11].data||[]; state.support=requests[12].data||[];
     state.riskAccepted=Boolean(requests[13].data?.length);
+    const [premiumAccess,premiumPayments,ibRows] = await Promise.all([
+      sb.rpc('get_my_premium_access'),
+      sb.from('premium_payments').select('*').order('created_at',{ascending:false}),
+      sb.from('ib_verifications').select('*').order('created_at',{ascending:false})
+    ]);
+    if (premiumAccess.error) throw premiumAccess.error;
+    if (premiumPayments.error) throw premiumPayments.error;
+    if (ibRows.error) throw ibRows.error;
+    state.premium = premiumAccess.data || null;
+    state.premiumPayments = premiumPayments.data || [];
+    state.ibVerifications = ibRows.data || [];
   }
 
   function renderAll() {
     renderKpis(); renderDashboard(); renderSignals(); renderCharts(); renderArticles(); renderCourses();
-    renderPayments(); renderAnnouncements(); renderProfile(); renderEmailVerification(); renderSupport();
+    renderPayments(); renderAnnouncements(); renderProfile(); renderEmailVerification(); renderPremium(); renderSupport();
     document.getElementById('paymentCount').textContent = state.payments.filter(p => ['initiated', 'received', 'under_review', 'resubmission_required'].includes(p.status)).length;
     document.getElementById('announcementCount').textContent = state.announcements.length;
     window.dispatchEvent(new CustomEvent('24k:student-base-updated',{detail:state}));
@@ -118,11 +129,15 @@
       const nextClassText = nextPulseSession ? A.formatDateTime(nextPulseSession.starts_at) : 'Not scheduled';
       const latestNoticeTitle = latestNotice?.title || 'No new announcement';
       const publishedResources = state.resources.length;
+      const premiumOpen=Boolean(state.premium?.has_access);
+      const premiumSource=String(state.premium?.source||'locked');
+      const premiumLabel=premiumOpen?(premiumSource==='trial'?'Free Trial Active':premiumSource==='ib'?'IB Access Active':premiumSource==='free'?'Premium Free':'Premium Active'):'Premium Locked';
+      const premiumNote=premiumOpen?(state.premium?.days_left!=null?`${state.premium.days_left} day${Number(state.premium.days_left)===1?'':'s'} remaining`:'Signals, charts and articles are available.'):'Renew by payment or approved IB verification.';
       learning.innerHTML = `<div class="member-desk-shell">
-        <div class="member-desk-access">
-          <span class="desk-crown"><i class="fa-solid fa-crown"></i></span>
-          <div><small>24K MEMBER ACCESS</small><b>Workspace Open</b><em>Courses, signals and learning content are available.</em></div>
-          <span class="desk-active"><i></i> ACTIVE</span>
+        <div class="member-desk-access ${premiumOpen?'':'is-locked'}" data-goto="premium" role="button" tabindex="0">
+          <span class="desk-crown"><i class="fa-solid ${premiumOpen?'fa-crown':'fa-lock'}"></i></span>
+          <div><small>PREMIUM MARKET ACCESS</small><b>${A.escapeHtml(premiumLabel)}</b><em>${A.escapeHtml(premiumNote)}</em></div>
+          <span class="desk-active ${premiumOpen?'':'locked'}"><i></i> ${premiumOpen?'ACTIVE':'LOCKED'}</span>
         </div>
         <div class="member-desk-metrics">
           <button type="button" data-goto="profile"><span class="desk-metric-icon"><i class="fa-solid ${verified?'fa-circle-check':'fa-envelope'}"></i></span><small>Email security</small><b>${verified?'Verified':'Verify available'}</b><em>${verified?'Account protected':'Optional for now'}</em></button>
@@ -489,7 +504,9 @@
   }
 
   function renderCourses() {
-    document.getElementById('coursesGrid').innerHTML = state.courses.length ? state.courses.map(course => {
+    document.querySelectorAll('[data-course-filter]').forEach(btn=>btn.classList.toggle('active',btn.dataset.courseFilter===state.courseFilter));
+    const rows=state.courses.filter(course=>{const price=Number(course.discount_price!=null?course.discount_price:course.price||0);const isFree=course.course_type==='free'||price===0;return state.courseFilter==='all'||(state.courseFilter==='free'&&isFree)||(state.courseFilter==='paid'&&!isFree);});
+    document.getElementById('coursesGrid').innerHTML = rows.length ? rows.map(course => {
       const access = hasCourseAccess(course.id);
       const payment = latestPayment(course.id);
       const nextSession = upcomingCourseSession(course.id);
@@ -498,7 +515,7 @@
       const isInfinity = String(course.currency||'').toUpperCase()==='PKR';
       const paymentButtonText = payment?.status==='initiated' ? 'Continue Payment' : payment && ['received','under_review'].includes(payment.status) ? 'Payment Submitted' : payment?.status==='resubmission_required' ? 'Submit New Receipt' : ['failed','declined'].includes(payment?.status) ? 'Try Payment Again' : 'Pay Now';
       const paymentTone = ['declined','failed'].includes(payment?.status) ? 'bad' : 'warn';
-      return `<article class="course-card">${courseCoverHtml(course)}<div class="course-body"><h3>${A.escapeHtml(course.title)}</h3><p>${A.escapeHtml(course.short_description || course.description || '')}</p><div class="course-meta"><span><i class="fa-solid fa-user-tie"></i> ${A.escapeHtml(course.instructor_name || A.cfg.INSTRUCTOR_NAME)}</span><span><i class="fa-solid fa-money-bill"></i> ${course.discount_price!=null?`<s>${A.formatMoney(course.price,course.currency)}</s> ${A.formatMoney(course.discount_price,course.currency)}`:A.formatMoney(course.price, course.currency)}</span>${nextSession?`<span><i class="fa-solid fa-calendar"></i> ${A.formatDateTime(nextSession.starts_at)}</span>`:`<span><i class="fa-solid fa-calendar"></i> No upcoming class</span>`}</div>${nextSession?`<div class="course-next-class"><small>Next Live Class</small><b>${A.escapeHtml(nextSession.title)}</b><span>${A.escapeHtml(nextSession.topic||'')}</span></div>`:''}<div class="notice ${access ? 'ok' : paymentTone}">${access ? (TEMP_OPEN_ACCESS ? '<b>Member access open.</b> Published course content is available for now.' : '<b>Access approved.</b> Online class access is unlocked.') : `<b>${paymentText}.</b> ${payment?.status==='initiated'&&isInfinity?'Complete the secure hosted bank payment and receipt verification.':'Class date is visible, but online class access remains locked.'}`}</div><div class="course-actions"><button class="app-btn ${access ? 'gold' : 'outline'}" data-open-course="${course.id}"><i class="fa-solid fa-calendar-days"></i> View Live Class</button>${access ? '' : (course.course_type==='free'||actualPrice===0) ? `<button class="app-btn gold" data-free-enroll="${course.id}">Enroll Free</button>` : `<button class="app-btn gold" data-buy-course="${course.id}"><i class="fa-solid fa-building-columns"></i> ${paymentButtonText}</button>`}</div></div></article>`;
+      return `<article class="course-card">${courseCoverHtml(course)}<div class="course-body"><h3>${A.escapeHtml(course.title)}</h3><p>${A.escapeHtml(course.short_description || course.description || '')}</p><div class="course-meta"><span><i class="fa-solid fa-user-tie"></i> ${A.escapeHtml(course.instructor_name || A.cfg.INSTRUCTOR_NAME)}</span><span><i class="fa-solid fa-money-bill"></i> ${course.discount_price!=null?`<s>${A.formatMoney(course.price,course.currency)}</s> ${A.formatMoney(course.discount_price,course.currency)}`:A.formatMoney(course.price, course.currency)}</span>${nextSession?`<span><i class="fa-solid fa-calendar"></i> ${A.formatDateTime(nextSession.starts_at)}</span>`:`<span><i class="fa-solid fa-calendar"></i> No upcoming class</span>`}</div>${nextSession?`<div class="course-next-class"><small>Next Live Class</small><b>${A.escapeHtml(nextSession.title)}</b><span>${A.escapeHtml(nextSession.topic||'')}</span></div>`:''}<div class="notice ${access ? 'ok' : paymentTone}">${access ? '<b>Access approved.</b> Online class access is unlocked.' : `<b>${paymentText}.</b> ${payment?.status==='initiated'&&isInfinity?'Complete the secure hosted bank payment and receipt verification.':'Class date is visible, but online class access remains locked.'}`}</div><div class="course-actions"><button class="app-btn ${access ? 'gold' : 'outline'}" data-open-course="${course.id}"><i class="fa-solid fa-calendar-days"></i> View Live Class</button>${access ? '' : (course.course_type==='free'||actualPrice===0) ? `<button class="app-btn gold" data-free-enroll="${course.id}">Enroll Free</button>` : `<button class="app-btn gold" data-buy-course="${course.id}"><i class="fa-solid fa-building-columns"></i> ${paymentButtonText}</button>`}</div></div></article>`;
     }).join('') : empty('No course is currently published.', 'fa-graduation-cap');
   }
 
@@ -529,15 +546,43 @@
     const course = state.selectedCourse || state.courses.find(c => c.id === session.course_id);
     const effectivePrice = course ? Number(course.discount_price != null ? course.discount_price : course.price || 0) : 0;
     const isFree = course?.course_type === 'free' || effectivePrice === 0;
-    const lockedLabel = access ? 'Online class link not added yet' : (TEMP_OPEN_ACCESS ? 'Online class link not added yet' : (isFree ? 'Locked until enrollment' : 'Locked until payment approval'));
+    const lockedLabel = access ? 'Online class link not added yet' : (isFree ? 'Locked until enrollment' : 'Locked until payment approval');
     return `<article class="session-card"><div class="session-top"><span class="session-number">Session ${session.session_number}</span><span class="session-lock"><i class="fa-solid ${unlocked ? 'fa-lock-open' : 'fa-lock'}"></i></span></div><div class="session-body"><div class="signal-head"><h3>${A.escapeHtml(session.title)}</h3><span class="status-pill ${A.statusClass(session.status)}">${A.statusLabel(session.status)}</span></div><p>${A.escapeHtml(session.topic || '')}</p><div class="session-date"><span><i class="fa-solid fa-calendar"></i> ${A.formatDateTime(session.starts_at)}</span><span><i class="fa-solid fa-hourglass-half"></i> ${session.duration_minutes || 90} minutes</span><span><i class="fa-solid fa-video"></i> Online Class</span></div>${unlocked ? `<a class="app-btn green" href="${attr(link)}" target="_blank" rel="noopener"><i class="fa-solid fa-video"></i> Join Online Class</a>` : `<button class="app-btn outline" disabled><i class="fa-solid fa-lock"></i> ${lockedLabel}</button>`}</div></article>`;
   }
 
   function sessionCompact(session) {
     const course = state.courses.find(c => c.id === session.course_id);
     const access = hasCourseAccess(session.course_id);
-    return `<div class="session-body" style="padding:0"><span class="status-pill ${A.statusClass(session.status)}">${A.statusLabel(session.status)}</span><h3 style="margin-top:12px">${A.escapeHtml(session.title)}</h3><p>${A.escapeHtml(course?.title || '')}</p><div class="session-date"><span><i class="fa-solid fa-calendar"></i> ${A.formatDateTime(session.starts_at)}</span><span><i class="fa-solid fa-user-tie"></i> Malik Zameer</span></div><button class="app-btn ${access ? 'gold' : 'outline'}" data-open-course="${session.course_id}">${access ? 'Open Session' : (TEMP_OPEN_ACCESS ? 'View Schedule' : 'View Locked Schedule')}</button></div>`;
+    return `<div class="session-body" style="padding:0"><span class="status-pill ${A.statusClass(session.status)}">${A.statusLabel(session.status)}</span><h3 style="margin-top:12px">${A.escapeHtml(session.title)}</h3><p>${A.escapeHtml(course?.title || '')}</p><div class="session-date"><span><i class="fa-solid fa-calendar"></i> ${A.formatDateTime(session.starts_at)}</span><span><i class="fa-solid fa-user-tie"></i> Malik Zameer</span></div><button class="app-btn ${access ? 'gold' : 'outline'}" data-open-course="${session.course_id}">${access ? 'Open Session' : 'View Locked Schedule'}</button></div>`;
   }
+
+  function renderPremium() {
+    const p=state.premium||{};
+    const root=document.getElementById('premiumAccessOverview');
+    if(root){
+      const has=Boolean(p.has_access); const source=String(p.source||'locked');
+      const expiry=p.expires_at?A.formatDateTime(p.expires_at):'No expiry';
+      const title=has?(source==='trial'?'Free Trial Active':source==='ib'?'IB Access Active':source==='free'?'Premium Access Free':'Premium Access Active'):'Premium Access Locked';
+      root.innerHTML=`<div class="premium-access-status ${has?'active':'locked'}"><span><i class="fa-solid ${has?'fa-lock-open':'fa-lock'}"></i></span><div><small>Signals + Charts + Articles</small><h3>${A.escapeHtml(title)}</h3><p>${has?`Access source: ${A.escapeHtml(source.toUpperCase())} · ${p.expires_at?`Expires ${expiry}`:'No expiry'}`:'Choose monthly payment or IB verification to unlock premium content.'}</p></div>${p.days_left!=null?`<b>${p.days_left} day${Number(p.days_left)===1?'':'s'} left</b>`:''}</div>`;
+    }
+    const price=document.getElementById('premiumPriceBox');
+    if(price) price.innerHTML=p.package_mode==='free'?`<div class="premium-price"><b>FREE</b><small>Admin has opened Premium Market Access.</small></div>`:`<div class="premium-price"><span><b>PKR ${Number(p.price_pkr||0).toLocaleString()}</b><small>Local Bank Transfer</small></span><span><b>${Number(p.price_usdt||0).toLocaleString()} USDT</b><small>USDT TRC20</small></span><em>${Number(p.monthly_days||30)} days per renewal</em></div>`;
+    const ib=document.getElementById('premiumIbStatus');
+    if(ib){const latest=state.ibVerifications[0];ib.innerHTML=!p.ib_enabled?'<div class="notice warn">IB verification is currently disabled by Admin.</div>':latest?`<div class="notice ${latest.status==='approved'?'ok':latest.status==='declined'?'bad':'warn'}"><b>${A.statusLabel(latest.status)}</b> · ${A.escapeHtml(latest.broker)} / ${A.escapeHtml(latest.trading_account_id)}${latest.admin_note?`<br>${A.escapeHtml(latest.admin_note)}`:''}</div>`:'<div class="notice info">No IB verification submitted yet.</div>';}
+    const body=document.getElementById('premiumPaymentsBody');
+    if(body) body.innerHTML=state.premiumPayments.length?state.premiumPayments.map(row=>`<tr><td>${A.formatDateTime(row.created_at)}</td><td>${A.escapeHtml(row.payment_method_name)}</td><td>${A.escapeHtml(row.currency==='PKR'?`PKR ${Number(row.amount||0).toLocaleString()}`:`${Number(row.amount||0).toLocaleString()} USDT`)}</td><td><span class="status-pill ${A.statusClass(row.status)}">${A.statusLabel(row.status)}</span></td><td>${row.access_expires_at?A.formatDateTime(row.access_expires_at):'—'}</td><td>${A.escapeHtml(row.admin_note||row.provider_rejection_reason||'—')}</td></tr>`).join(''):`<tr><td colspan="6">${empty('No premium payment history yet.','fa-crown')}</td></tr>`;
+    ['premiumPayLocal','premiumPayUsdt','openIbVerification'].forEach(id=>{const el=document.getElementById(id);if(el)el.disabled=p.package_mode==='free'||(id==='openIbVerification'&&!p.ib_enabled);});
+  }
+
+  async function startPremiumLocalBank(button){
+    A.setLoading(button,true,'Opening secure payment...');
+    try{const {data,error}=await A.supabase.functions.invoke('create-premium-infinity-payment',{body:{}});if(error)throw error;if(!data?.redirect_url)throw new Error(data?.error||'Payment page was not returned.');await auditEvent('premium_payment_started','premium_package',data.payment_id,'success',{method:'local_bank'});location.href=data.redirect_url;}
+    catch(error){A.toast(A.friendlyError(error,'Could not start premium payment.'),'error');}
+    finally{A.setLoading(button,false);}
+  }
+  async function submitPremiumUsdt(event){event.preventDefault();const f=event.currentTarget,file=f.elements.receipt.files?.[0],button=f.querySelector('button[type=submit]');if(!file)return A.toast('Choose a payment receipt.','error');if(file.size>5*1024*1024)return A.toast('Receipt must be 5 MB or smaller.','error');A.setLoading(button,true,'Submitting...');let path='';try{path=`${state.user.id}/premium/${Date.now()}-${A.fileSafeName(file.name)}`;const upload=await A.supabase.storage.from('payment-receipts').upload(path,file,{contentType:file.type,upsert:false});if(upload.error)throw upload.error;const {error}=await A.supabase.rpc('submit_premium_usdt_payment',{p_reference:f.elements.transaction_reference.value.trim(),p_receipt_path:path,p_note:f.elements.student_note.value.trim()||null});if(error){await A.supabase.storage.from('payment-receipts').remove([path]);throw error;}await auditEvent('premium_payment_submitted','premium_package',null,'success',{method:'usdt'});A.closeModal('premiumUsdtModal');f.reset();await loadAll();renderAll();A.toast('Premium payment submitted for review.','success');}catch(error){A.toast(A.friendlyError(error,'Could not submit premium payment.'),'error');}finally{A.setLoading(button,false);}}
+  async function submitIbVerification(event){event.preventDefault();const f=event.currentTarget,file=f.elements.proof.files?.[0],button=f.querySelector('button[type=submit]');A.setLoading(button,true,'Submitting...');let path='';try{if(file){if(file.size>5*1024*1024)throw new Error('Proof must be 5 MB or smaller.');path=`${state.user.id}/${Date.now()}-${A.fileSafeName(file.name)}`;const up=await A.supabase.storage.from('ib-proofs').upload(path,file,{contentType:file.type,upsert:false});if(up.error)throw up.error;}const {data,error}=await A.supabase.rpc('submit_ib_verification',{p_broker:f.elements.broker.value.trim(),p_account_id:f.elements.trading_account_id.value.trim(),p_account_type:f.elements.account_type.value.trim()||null,p_proof_path:path||null,p_note:f.elements.note.value.trim()||null});if(error){if(path)await A.supabase.storage.from('ib-proofs').remove([path]);throw error;}await auditEvent('ib_verification_submitted','ib_verification',data?.id||null,'success',{});A.closeModal('ibVerificationModal');f.reset();await loadAll();renderAll();A.toast('IB verification submitted.','success');}catch(error){A.toast(A.friendlyError(error,'Could not submit IB verification.'),'error');}finally{A.setLoading(button,false);}}
+  async function auditEvent(action,entityType=null,entityId=null,status='success',details={}){try{await A.supabase.functions.invoke('audit-event',{body:{action,entity_type:entityType,entity_id:entityId,status,details}});}catch{}}
 
   function renderPayments() {
     const body = document.getElementById('paymentsBody');
@@ -600,16 +645,14 @@
     } finally { A.setLoading(button, false); }
   }
 
-  function renderSupport() {
-    const open = state.support.filter(s => !['resolved','closed'].includes(s.status)).length;
-    document.getElementById('supportCount').textContent = `${open} open request(s)`;
-    document.getElementById('supportRequests').innerHTML = state.support.length ? state.support.map(s => `<div class="activity-item"><div class="activity-icon"><i class="fa-solid fa-ticket"></i></div><div><b>${A.escapeHtml(s.subject)}</b><small>${A.escapeHtml(s.category)} · ${A.formatDateTime(s.created_at)}</small></div><span class="status-pill ${A.statusClass(s.status)}">${A.statusLabel(s.status)}</span></div>`).join('') : empty('You have not submitted a support request.', 'fa-headset');
-  }
+  function renderSupport() { const link=document.getElementById('supportWhatsApp'); if(link) link.href=`https://wa.me/${A.cfg.SUPPORT_WHATSAPP}`; }
 
   function bindEvents() {
     document.addEventListener('panel:open', event => {
-      if (!TEMP_OPEN_ACCESS && event.detail.key === 'signals' && !state.riskAccepted) A.openModal('riskModal');
-      if (event.detail.key === 'courses') resetCourseView();
+      const key=event.detail.key;
+      if (['signals','charts','articles'].includes(key) && !state.premium?.has_access) { setTimeout(()=>openPanel('premium'),0); A.toast('Premium access is required for Signals, Charts and Articles.','warning'); return; }
+      if (key === 'signals' && !state.riskAccepted) A.openModal('riskModal');
+      if (key === 'courses') resetCourseView();
     });
     ['chartSearch','chartTimeframeFilter'].forEach(id => document.getElementById(id)?.addEventListener('input', renderCharts));
     document.getElementById('articleSearch')?.addEventListener('input', renderArticles);
@@ -620,6 +663,8 @@
       if (signalStatusButton) { signalStatusView = signalStatusButton.dataset.signalStatus || 'all'; renderSignals(); }
       const signalWorkspaceButton = event.target.closest('[data-signal-view]');
       if (signalWorkspaceButton) { signalWorkspaceView = signalWorkspaceButton.dataset.signalView || 'active'; renderSignals(); }
+      const courseFilterButton=event.target.closest('[data-course-filter]');
+      if(courseFilterButton){state.courseFilter=courseFilterButton.dataset.courseFilter||'all';renderCourses();}
       const historyMarketButton = event.target.closest('[data-history-market]');
       if (historyMarketButton) { historyMarketFilter = historyMarketButton.dataset.historyMarket || 'all'; renderSignals(); }
       const historyDateButton = event.target.closest('[data-history-date]');
@@ -642,6 +687,9 @@
       if (resource) await downloadResource(resource.dataset.downloadResource);
       const signalHistory = event.target.closest('[data-student-signal-history]');
       if (signalHistory) openSignalHistory(signalHistory.dataset.studentSignalHistory);
+      const premiumLocal=event.target.closest('#premiumPayLocal'); if(premiumLocal) await startPremiumLocalBank(premiumLocal);
+      const premiumUsdt=event.target.closest('#premiumPayUsdt'); if(premiumUsdt){const box=document.getElementById('premiumUsdtSummary');if(box)box.innerHTML=`<b>${Number(state.premium?.price_usdt||0).toLocaleString()} USDT</b> · ${Number(state.premium?.monthly_days||30)} days Premium Market Access`;A.openModal('premiumUsdtModal');}
+      const ibOpen=event.target.closest('#openIbVerification'); if(ibOpen) A.openModal('ibVerificationModal');
       const verifyEmail = event.target.closest('[data-request-email-verification]');
       if (verifyEmail) await requestEmailVerification(verifyEmail);
       const refreshDashboard = event.target.closest('[data-refresh-dashboard]');
@@ -658,7 +706,8 @@
     updateAlertButton();
     document.getElementById('paymentForm').addEventListener('submit', submitPayment);
     document.getElementById('profileForm').addEventListener('submit', saveProfile);
-    document.getElementById('supportForm').addEventListener('submit', submitSupport);
+    document.getElementById('premiumUsdtForm')?.addEventListener('submit',submitPremiumUsdt);
+    document.getElementById('ibVerificationForm')?.addEventListener('submit',submitIbVerification);
     document.getElementById('riskForm').addEventListener('submit', acceptRisk);
     document.getElementById('globalSearch').addEventListener('keydown', event => {
       if (event.key !== 'Enter') return;
@@ -749,6 +798,7 @@
       if (error) throw error;
       if (!data?.redirect_url) throw new Error(data?.error || 'Payment provider did not return a secure payment page.');
       if (!/^https?:\/\//i.test(data.redirect_url)) throw new Error('Invalid payment redirect URL.');
+      await auditEvent('course_payment_started','course',courseId,'success',{method:'local_bank'});
       window.location.assign(data.redirect_url);
     } catch (error) {
       let paymentError = error;
@@ -771,6 +821,7 @@
   }
 
   function handlePaymentReturn() {
+    const premiumParams=new URLSearchParams(location.search); if(premiumParams.get('premium_return')==='1'){openPanel('premium');A.toast('Premium payment return received. Status will update after provider confirmation.','info');}
     const params = new URLSearchParams(window.location.search);
     if (params.get('payment_return') !== '1') return;
     openPanel('payments');
@@ -810,6 +861,7 @@
         const receiptHash = await A.hashFile(file);
         const { error } = await A.supabase.from('payments').insert({ id: paymentId, student_id: state.user.id, course_id: course.id, amount: Number(fd.get('amount')), payment_method_id: method?.id, payment_method_name: method?.name, transaction_reference: String(fd.get('transaction_reference')).trim(), student_note: String(fd.get('student_note') || '').trim(), receipt_path: path, receipt_hash: receiptHash, supersedes_payment_id: form.dataset.supersedesPaymentId || null, status: 'received' });
         if (error) { await A.supabase.storage.from('payment-receipts').remove([path]); throw error; }
+        await auditEvent('course_payment_submitted','payment',paymentId,'success',{course_id:course.id,method:method?.name||'USDT TRC20'});
         await flushMyEmailQueue();
         await loadAll();
       renderAll(); A.closeModal('paymentModal'); form.reset();
@@ -824,6 +876,7 @@
     try {
       const { error } = await A.supabase.rpc('enroll_free_course', { p_course_id: courseId });
         if (error) throw error;
+        await auditEvent('course_enrolled_free','course',courseId,'success',{});
         await flushMyEmailQueue();
         await loadAll();
       renderAll();
@@ -867,6 +920,7 @@
     try {
       const changes = { full_name: String(values.full_name).trim(), whatsapp: String(values.whatsapp).trim(), country: String(values.country || '').trim(), experience: String(values.experience || '') };
       const { error } = await A.supabase.from('profiles').update(changes).eq('id', state.user.id); if (error) throw error;
+      await auditEvent('profile_updated','profile',state.user.id,'success',{fields:['full_name','whatsapp','country','experience']});
       Object.assign(state.profile, changes);
       const dashName=document.getElementById('dashboardWelcomeName'); if(dashName) dashName.textContent=`${state.profile.full_name || 'Member'} 👋`;
       window.dispatchEvent(new CustomEvent('24k:student-base-updated',{detail:state}));
@@ -943,7 +997,7 @@
 
   function latestPayment(courseId) { return state.payments.filter(p => p.course_id === courseId).sort((a,b) => new Date(b.created_at) - new Date(a.created_at))[0]; }
   function isEnrollmentActive(e) { return e.status === 'active' && (!e.access_expires_at || new Date(e.access_expires_at) > new Date()); }
-  function hasCourseAccess(courseId) { return TEMP_OPEN_ACCESS || state.enrollments.some(e => e.course_id === courseId && isEnrollmentActive(e)); }
+  function hasCourseAccess(courseId) { return state.enrollments.some(e => e.course_id === courseId && isEnrollmentActive(e)); }
   function empty(text, icon) { return `<div class="empty-state"><i class="fa-solid ${icon}"></i>${A.escapeHtml(text)}</div>`; }
   function num(value) { if (value === null || value === undefined || value === '') return '—'; return Number(value).toLocaleString('en-US', { maximumFractionDigits: 5 }); }
   function attr(value) { return A.escapeHtml(value).replace(/`/g, '&#96;'); }

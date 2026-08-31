@@ -30,7 +30,7 @@
   const state = {
     profiles: [], courses: [], modules: [], lessons: [], sessions: [], resources: [], links: [],
     attributions: [], emailQueue: [], enrollments: [], signals: [], payments: [], support: [],
-    notifications: [], activities: [], auditLogs: [], enquiries: [], settings: [], teamAccounts: [], overview: null
+    notifications: [], activities: [], auditLogs: [], teamAccounts: [], overview: null
   };
 
   const analyticsState = {
@@ -54,9 +54,9 @@
 
   function openCleanAdminRouteAfterInstall() {
     const map = {
-      '/admin/enquiries': 'leads', '/admin/links': 'links',
+      '/admin/links': 'links',
       '/admin/notifications': 'admin-notifications',
-      '/admin/activity': 'audit', '/admin/settings': 'settings'
+      '/admin/activity': 'audit'
     };
     const path = location.pathname.replace(/\/+$/, '');
     const panel = map[path];
@@ -74,12 +74,16 @@
     const operationsLabel = [...nav.querySelectorAll('.app-nav-label')].find(node => node.textContent.trim() === 'OPERATIONS');
     if (operationsLabel && !nav.querySelector('[data-panel="links"]')) {
       const marker = document.createElement('div');
-      marker.innerHTML = navLink('leads', 'fa-address-book', 'Website Enquiries', 'enquiryCount') + navLink('links', 'fa-link', 'Link Manager') + navLink('admin-notifications', 'fa-bell', 'Admin Notifications', 'adminNotificationCount') + navLink('audit', 'fa-clock-rotate-left', 'Activity Logs') + navLink('settings', 'fa-gear', 'Settings');
+      marker.innerHTML = navLink('links', 'fa-link', 'Link Manager') + navLink('admin-notifications', 'fa-bell', 'Admin Notifications', 'adminNotificationCount') + navLink('audit', 'fa-clock-rotate-left', 'Activity Logs');
       [...marker.children].reverse().forEach(link => operationsLabel.after(link));
     }
 
     const content = document.querySelector('.app-content');
-    if (!document.getElementById('p-leads')) content.insertAdjacentHTML('beforeend', panelsHtml());
+    if (!document.getElementById('p-links')) content.insertAdjacentHTML('beforeend', panelsHtml());
+    document.getElementById('p-leads')?.remove();
+    document.getElementById('p-settings')?.remove();
+    document.getElementById('enquiryReviewModal')?.remove();
+    document.querySelector('#adminNotificationFilter option[value="enquiry"]')?.remove();
     enhanceStudentsPanel();
     installModals();
     enhanceDashboard();
@@ -101,7 +105,7 @@
         <div class="panel-heading"><div><h2>Link Manager</h2><p>Track the first click through signup and enrollment.</p></div><button class="app-btn outline" id="exportLinks"><i class="fa-solid fa-file-csv"></i> Export CSV</button></div>
         <div class="app-grid cols-2"><div class="app-card"><form id="linkForm"><input type="hidden" name="id"><div class="form-grid"><div class="form-field full"><label>Link Name</label><input name="name" required placeholder="August Free Course WhatsApp"></div><div class="form-field"><label>Destination</label><select name="destination_path"><option value="/">Home</option><option value="/courses">Courses</option><option value="/sign-in">Sign In</option><option value="/sign-up">Sign Up</option><option value="/free-course">Free Course</option><option value="/charts">Charts</option><option value="/articles">Articles</option></select></div><div class="form-field"><label>Reference Code</label><input name="ref_code" required placeholder="rabiafx"></div><div class="form-field"><label>Source</label><select name="source"><option>WhatsApp</option><option>Facebook</option><option>Instagram</option><option>YouTube</option><option>Direct</option><option>Other</option></select></div><div class="form-field full"><label>Campaign</label><input name="campaign" placeholder="free-course-august"></div><label class="check-row"><input type="checkbox" name="is_active" checked> Link active</label></div><div class="sticky-form-actions"><button class="app-btn outline" type="button" data-reset-form="linkForm">Clear</button><button class="app-btn gold" type="submit">Generate / Save Link</button></div></form></div><div class="app-card"><h3>Attribution Summary</h3><div id="linkSummary" class="performance-grid"></div><div id="topSources"></div></div></div>
         <div class="table-scroll"><table class="admin-table"><thead><tr><th>Link</th><th>Reference</th><th>Source</th><th>Clicks</th><th>Unique</th><th>Signups</th><th>Enrollments</th><th>Conversion</th><th>Last Activity</th><th>Status</th><th>Actions</th></tr></thead><tbody id="linkManagerBody"></tbody></table></div>
-        <div class="app-card team-management-card"><div class="app-card-head"><div><h3>Team Performance Accounts</h3><p>Assign one existing tracked link to each team member.</p></div><div class="inline-actions"><a class="app-btn outline" href="team/" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Team Panel</a><button class="app-btn gold" type="button" id="addTeamAccount"><i class="fa-solid fa-user-plus"></i> Add Team Account</button></div></div><div class="table-scroll"><table class="admin-table"><thead><tr><th>Team Member</th><th>Username</th><th>Assigned Link</th><th>Reference</th><th>Status</th><th>Actions</th></tr></thead><tbody id="teamAccountsBody"></tbody></table></div></div>
+        <div class="app-card team-management-card"><div class="app-card-head"><div><h3>Team Performance Accounts</h3><p>Assign one existing tracked link to each team member.</p></div><div class="inline-actions"><a class="app-btn outline" href="/team/" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Team Panel</a><button class="app-btn gold" type="button" id="addTeamAccount"><i class="fa-solid fa-user-plus"></i> Add Team Account</button></div></div><div class="table-scroll"><table class="admin-table"><thead><tr><th>Team Member</th><th>Username</th><th>Assigned Link</th><th>Reference</th><th>Status</th><th>Actions</th></tr></thead><tbody id="teamAccountsBody"></tbody></table></div></div>
       </section>
 
       <section class="panel" id="p-admin-notifications">
@@ -284,8 +288,6 @@
       ['notifications', A.supabase.from('admin_notifications').select('*').order('created_at', { ascending: false }).limit(300)],
       ['activities', A.supabase.from('user_activity_logs').select('*').order('created_at', { ascending: false }).limit(500)],
       ['auditLogs', A.supabase.from('admin_audit_logs').select('*').order('created_at', { ascending: false }).limit(500)],
-      ['enquiries', A.supabase.from('enquiries').select('*').order('created_at', { ascending: false }).limit(500)],
-      ['settings', A.supabase.from('platform_settings').select('*')],
       ['overview', A.supabase.from('admin_operations_overview').select('*').maybeSingle()]
     ];
     const results = await Promise.all(queries.map(async ([key, query]) => [key, await query]));
@@ -304,7 +306,7 @@
 
   function safeRender(name, fn) { try { fn(); } catch (error) { console.error(`Admin render failed: ${name}`, error); } }
   function renderAll() {
-    [['courses',populateCourseOptions],['structure',renderStructure],['enrollments',renderEnrollments],['enquiries',renderEnquiries],['links',renderLinks],['team',renderTeamAccounts],['users',renderUsers],['notifications',renderAdminNotifications],['audit',renderAudit],['settings',renderSettings],['analytics',renderOperationsDashboard],['tables',decorateBaseTables],['search',renderGlobalSearch]].forEach(([name,fn])=>safeRender(name,fn));
+    [['courses',populateCourseOptions],['structure',renderStructure],['enrollments',renderEnrollments],['links',renderLinks],['team',renderTeamAccounts],['users',renderUsers],['notifications',renderAdminNotifications],['audit',renderAudit],['analytics',renderOperationsDashboard],['tables',decorateBaseTables],['search',renderGlobalSearch]].forEach(([name,fn])=>safeRender(name,fn));
   }
 
   function renderBaseDependentViews() {
@@ -1045,7 +1047,6 @@
   function renderGlobalSearch() { const input = document.getElementById('adminSearch'); const root = document.getElementById('globalSearchResults'); if (!input || !root) return; const query = input.value.trim().toLowerCase(); if (query.length < 2) { root.classList.add('hidden'); return; } const results = [];
     state.profiles.filter(profile => profile.role === 'student' && `${profile.full_name} ${profile.email} ${profile.whatsapp}`.toLowerCase().includes(query)).slice(0, 5).forEach(profile => results.push({ type: 'User', title: profile.full_name || 'Student', subtitle: profile.email, panel: 'students', id: profile.id, action: 'user' }));
     state.payments.filter(row => `${row.invoice_no} ${row.transaction_reference} ${profileById(row.student_id)?.full_name}`.toLowerCase().includes(query)).slice(0, 5).forEach(row => results.push({ type: 'Payment', title: row.invoice_no || row.transaction_reference, subtitle: profileById(row.student_id)?.full_name || 'Student', panel: 'payments' }));
-    state.enquiries.filter(row => `${row.full_name} ${row.email} ${row.whatsapp || ''} ${row.service || ''}`.toLowerCase().includes(query)).slice(0, 5).forEach(row => results.push({ type: 'Enquiry', title: row.full_name, subtitle: row.service || row.email, panel: 'leads' }));
     state.signals.filter(row => `${row.symbol} ${row.notes || ''}`.toLowerCase().includes(query)).slice(0, 5).forEach(row => results.push({ type: 'Signal', title: row.symbol, subtitle: `${row.direction} · ${A.statusLabel(row.status)}`, panel: 'signals' }));
     state.courses.filter(row => `${row.title} ${row.slug}`.toLowerCase().includes(query)).slice(0, 5).forEach(row => results.push({ type: 'Course', title: row.title, subtitle: A.statusLabel(row.status), panel: 'courses' }));
     root.innerHTML = results.length ? results.slice(0, 15).map((row, index) => `<button data-global-result="${index}" data-result-panel="${row.panel}" data-result-action="${row.action || ''}" data-result-id="${row.id || ''}"><span>${esc(row.type)}</span><b>${esc(row.title)}</b><small>${esc(row.subtitle)}</small></button>`).join('') : '<div class="no-search-results">No matching records.</div>'; root._results = results; root.classList.remove('hidden'); }
@@ -1062,5 +1063,5 @@
   function profileById(id) { return state.profiles.find(row => row.id === id); }
   function courseById(id) { return state.courses.find(row => row.id === id); }
 
-  function subscribeRealtime() { let timer; const reload = () => { clearTimeout(timer); timer = setTimeout(async () => { try { if (window.AdminBase?.reload) await window.AdminBase.reload(); await refresh(); } catch (error) { console.error(error); } }, 400); }; let channel = A.supabase.channel('admin-operations-v9'); ['admin_notifications', 'user_activity_logs', 'email_queue', 'tracking_links', 'enquiries', 'enrollments', 'course_modules', 'course_lessons'].forEach(table => { channel = channel.on('postgres_changes', { event: '*', schema: 'public', table }, reload); }); channel.subscribe(); }
+  function subscribeRealtime() { let timer; const reload = () => { clearTimeout(timer); timer = setTimeout(async () => { try { if (window.AdminBase?.reload) await window.AdminBase.reload(); await refresh(); } catch (error) { console.error(error); } }, 400); }; let channel = A.supabase.channel('admin-operations-v9'); ['admin_notifications', 'user_activity_logs', 'email_queue', 'tracking_links', 'enrollments', 'course_modules', 'course_lessons'].forEach(table => { channel = channel.on('postgres_changes', { event: '*', schema: 'public', table }, reload); }); channel.subscribe(); }
 })();

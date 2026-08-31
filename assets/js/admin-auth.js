@@ -1,5 +1,6 @@
 (async function () {
   const A = window.App;
+  async function audit(action,status='success',details={},token=''){try{await fetch(`${A.cfg.SUPABASE_URL}/functions/v1/audit-event`,{method:'POST',headers:{'Content-Type':'application/json','apikey':A.cfg.SUPABASE_ANON_KEY,...(token?{'Authorization':`Bearer ${token}`}:{})},body:JSON.stringify({action,status,actor_email:details.email||null,details})});}catch{}}
   if (!A.configured || !A.supabase) {
     A.toast('Website setup is incomplete. Configure Supabase before using Admin Login.', 'error');
     document.querySelectorAll('form button[type="submit"]').forEach(button => button.disabled = true);
@@ -41,9 +42,11 @@
         await A.supabase.auth.signOut();
         throw new Error('This account is not authorized for Admin access.');
       }
+      await audit('admin_login','success',{email},data.session?.access_token||'');
       A.toast('Admin login successful.', 'success');
       window.location.replace('/admin/');
     } catch (error) {
+      await audit('login_failed','failed',{email,scope:'admin'});
       A.toast(A.friendlyError(error, 'Admin login failed.'), 'error');
       A.setLoading(button, false);
     }

@@ -8,10 +8,11 @@
 <title>Student Panel | 24K Excellence</title>
 <link rel="icon" href="assets/logo.png">
 <link rel="stylesheet" href="app.css?v=9.59" onload="document.documentElement.classList.add('student-base-css-ready')">
-<link rel="stylesheet" href="assets/student-premium.css?v=9.61" onload="document.documentElement.classList.add('student-css-ready')">
+<link rel="stylesheet" href="assets/student-premium.css?v=9.63" onload="document.documentElement.classList.add('student-css-ready')">
 <style>html:not(.student-base-css-ready) body.student-page,html:not(.student-css-ready) body.student-page{visibility:hidden}</style>
 <script>setTimeout(function(){document.documentElement.classList.add('student-base-css-ready','student-css-ready')},1800);</script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="assets/platform-v962.css?v=9.63">
 </head>
 <body class="app-page student-page">
 <div id="pageLoader" class="loading-screen"><div><img src="assets/logo.png" alt="24K Digital Gold"><i class="fa-solid fa-spinner fa-spin"></i><p>Loading your student account...</p></div></div>
@@ -25,6 +26,7 @@
         <a href="#" data-panel="signals"><i class="fa-solid fa-bolt"></i><span>Signals</span></a>
         <a href="#" data-panel="charts"><i class="fa-solid fa-chart-line"></i><span>Charts</span></a>
         <a href="#" data-panel="articles"><i class="fa-solid fa-newspaper"></i><span>Articles</span></a>
+        <a href="#" data-panel="premium"><i class="fa-solid fa-crown"></i><span>Premium Access</span></a>
         <a href="#" data-panel="payments"><i class="fa-solid fa-wallet"></i><span>Payments</span><span class="nav-count" id="paymentCount">0</span></a>
         <a href="#" data-panel="announcements"><i class="fa-solid fa-bell"></i><span>Updates</span><span class="nav-count" id="announcementCount">0</span></a>
         <a href="#" data-panel="profile"><i class="fa-regular fa-circle-user"></i><span>Profile</span></a>
@@ -159,9 +161,20 @@
       </section>
 
       <section class="panel" id="p-courses">
-        <div class="panel-heading"><div><h2>Live Courses</h2><p>Online classes with Malik Zameer. Member access is currently open across all published courses.</p></div></div>
+        <div class="panel-heading"><div><h2>Live Courses</h2><p>Online classes with Malik Zameer. Free and paid courses are managed separately from Premium Market Access.</p></div></div>
+        <div class="course-filter-tabs" role="tablist" aria-label="Course type"><button type="button" class="active" data-course-filter="all">All</button><button type="button" data-course-filter="free">Free</button><button type="button" data-course-filter="paid">Paid</button></div>
         <div class="course-list-grid" id="coursesGrid"></div>
         <div id="sessionsArea" class="hidden" style="margin-top:26px"><div class="panel-heading"><div><h2 id="sessionCourseTitle">Course Sessions</h2><p>Published session schedules and available online class links are open to signed-in members for now.</p></div><button class="app-btn outline" id="closeSessions"><i class="fa-solid fa-arrow-left"></i> Back to Courses</button></div><div class="session-grid" id="sessionsGrid"></div><div id="resourcesArea" class="app-card hidden" style="margin-top:20px"><div class="app-card-head"><div><h3>Course Resources</h3><p>Optional files uploaded by the admin</p></div></div><div id="resourcesList"></div></div></div>
+      </section>
+
+      <section class="panel" id="p-premium">
+        <div class="panel-heading"><div><h2>Premium Market Access</h2><p>Signals, Charts and Articles in one monthly package. Unlock by payment or approved IB/Broker verification.</p></div></div>
+        <div id="premiumAccessOverview"></div>
+        <div class="premium-access-grid">
+          <div class="app-card premium-plan-card"><div class="app-card-head"><div><h3><i class="fa-solid fa-crown"></i> Monthly Premium</h3><p>30-day renewable access to Signals, Charts and Articles.</p></div></div><div id="premiumPriceBox"></div><div class="premium-feature-list"><span><i class="fa-solid fa-check"></i> Trading Signals</span><span><i class="fa-solid fa-check"></i> Market Charts</span><span><i class="fa-solid fa-check"></i> Learning Articles</span></div><div class="inline-actions"><button type="button" class="app-btn gold" id="premiumPayLocal"><i class="fa-solid fa-building-columns"></i> Local Bank Transfer</button><button type="button" class="app-btn outline" id="premiumPayUsdt"><i class="fa-solid fa-coins"></i> USDT TRC20</button></div></div>
+          <div class="app-card premium-plan-card"><div class="app-card-head"><div><h3><i class="fa-solid fa-link"></i> IB / Broker Access</h3><p>Open or link your trading account under our IB/partner relationship.</p></div></div><div id="premiumIbStatus"></div><button type="button" class="app-btn gold" id="openIbVerification"><i class="fa-solid fa-shield-check"></i> Submit IB Verification</button></div>
+        </div>
+        <div class="app-card"><div class="app-card-head"><div><h3>Premium Payment History</h3><p>Monthly renewals and review status.</p></div></div><div class="table-scroll"><table class="payment-table"><thead><tr><th>Date</th><th>Method</th><th>Amount</th><th>Status</th><th>Access Until</th><th>Note</th></tr></thead><tbody id="premiumPaymentsBody"></tbody></table></div></div>
       </section>
 
       <section class="panel" id="p-payments">
@@ -180,10 +193,8 @@
       </section>
 
       <section class="panel" id="p-support">
-        <div class="panel-heading"><div><h2>Support</h2><p>Send a support request or contact the team directly.</p></div></div>
-        <div class="app-grid cols-3" style="margin-bottom:20px"><div class="app-card"><i class="fa-brands fa-whatsapp" style="font-size:28px;color:#169c59"></i><h3>WhatsApp Support</h3><p class="muted">Fast support for access and payment questions.</p><a id="supportWhatsApp" class="app-btn green" target="_blank">Open WhatsApp</a></div><div class="app-card"><i class="fa-solid fa-envelope" style="font-size:27px;color:#2767d8"></i><h3>Email Support</h3><p class="muted">Send details for account or technical issues.</p><a id="supportEmail" class="app-btn outline">Send Email</a></div><div class="app-card"><i class="fa-solid fa-clock" style="font-size:27px;color:#9c7200"></i><h3>Response Status</h3><p class="muted">Your submitted support tickets appear below.</p><b id="supportCount">0 open request(s)</b></div></div>
-        <div class="app-card"><div class="app-card-head"><div><h3>Submit Support Request</h3><p>Include clear details so the admin can help quickly.</p></div></div><form id="supportForm"><div class="form-grid"><div class="form-field"><label>Category</label><select name="category"><option>Payment</option><option>Course Access</option><option>Online Class</option><option>Signals</option><option>Account</option><option>Other</option></select></div><div class="form-field"><label>Subject</label><input name="subject" required></div><div class="form-field full"><label>Message</label><textarea name="message" required></textarea></div></div><div class="inline-actions"><button class="app-btn gold" type="submit">Submit Request</button></div></form></div>
-        <div class="app-card"><div class="app-card-head"><h3>My Requests</h3></div><div id="supportRequests"></div></div>
+        <div class="panel-heading"><div><h2>WhatsApp Support</h2><p>For account, payment, course or access help, contact our team directly on WhatsApp.</p></div></div>
+        <div class="app-card whatsapp-support-only"><i class="fa-brands fa-whatsapp"></i><div><h3>24K WhatsApp Support</h3><p class="muted">Tap below to open WhatsApp and speak with the support team.</p></div><a id="supportWhatsApp" class="app-btn green" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Open WhatsApp</a></div>
       </section>
     </div>
   </main>
@@ -200,6 +211,9 @@
 <div class="app-modal" id="paymentMethodChoiceModal" aria-hidden="true"><div class="app-modal-card"><div class="app-modal-head"><div><h3>Choose Payment Method</h3><small class="muted">Select how you want to pay for this course.</small></div><button class="modal-close" data-close-modal="paymentMethodChoiceModal"><i class="fa-solid fa-xmark"></i></button></div><div class="app-modal-body"><div id="paymentChoiceCourseSummary" class="notice info"></div><div class="app-grid cols-2"><button type="button" class="app-card" data-payment-choice="usdt" style="text-align:left;cursor:pointer"><div style="font-size:26px;margin-bottom:10px"><i class="fa-solid fa-coins"></i></div><h3 style="margin:0 0 6px">USDT TRC20</h3><p class="muted" style="margin:0">Pay with USDT on the TRC20 network and submit TXID + receipt for Admin review.</p></button><button type="button" class="app-card" data-payment-choice="local-bank" style="text-align:left;cursor:pointer"><div style="font-size:26px;margin-bottom:10px"><i class="fa-solid fa-building-columns"></i></div><h3 style="margin:0 0 6px">Local Bank Transfer</h3><p class="muted" style="margin:0">Continue to the secure local bank transfer payment page for PKR payment.</p></button></div><div class="notice warn" style="margin-top:14px">The course payment currency must match the selected method: PKR for Local Bank Transfer or USDT for USDT TRC20.</div></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="paymentMethodChoiceModal">Cancel</button></div></div></div>
 <div class="app-modal" id="paymentModal"><div class="app-modal-card"><div class="app-modal-head"><h3>Submit USDT Payment</h3><button class="modal-close" data-close-modal="paymentModal"><i class="fa-solid fa-xmark"></i></button></div><form id="paymentForm"><div class="app-modal-body"><div id="paymentCourseSummary" class="notice info"></div><div id="paymentMethodsBox"></div><div class="form-grid"><input type="hidden" name="course_id"><div class="form-field"><label>Network / Payment Method</label><select name="payment_method_id" id="paymentMethodSelect" required></select></div><div class="form-field"><label>Amount Paid (USDT)</label><input type="number" name="amount" min="0" step="0.01" required></div><div class="form-field full"><label>Transaction Hash / TXID</label><input name="transaction_reference" required placeholder="Paste TRC20 transaction hash"></div><div class="form-field full"><label>Payment Receipt</label><input type="file" name="receipt" accept="image/png,image/jpeg,image/webp,application/pdf" required><small class="muted">PNG, JPG, WEBP or PDF. Maximum 5 MB.</small></div><div class="form-field full"><label>Note (optional)</label><textarea name="student_note" placeholder="Any detail the admin should know"></textarea></div></div><label class="check-row" style="margin-top:15px"><input type="checkbox" required> I confirm that the USDT TRC20 transaction, TXID and receipt are genuine.</label></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="paymentModal">Cancel</button><button type="submit" class="app-btn gold">Submit Payment</button></div></form></div></div>
 
+<div class="app-modal" id="premiumUsdtModal"><div class="app-modal-card"><div class="app-modal-head"><div><h3>Premium — USDT TRC20</h3><small class="muted">Submit one monthly Premium Market Access payment.</small></div><button class="modal-close" data-close-modal="premiumUsdtModal"><i class="fa-solid fa-xmark"></i></button></div><form id="premiumUsdtForm"><div class="app-modal-body"><div id="premiumUsdtSummary" class="notice info"></div><div class="form-grid"><div class="form-field full"><label>Transaction Hash / TXID</label><input name="transaction_reference" required></div><div class="form-field full"><label>Payment Receipt</label><input name="receipt" type="file" accept="image/png,image/jpeg,image/webp,application/pdf" required><small class="muted">Maximum 5 MB.</small></div><div class="form-field full"><label>Note (optional)</label><textarea name="student_note"></textarea></div></div></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="premiumUsdtModal">Cancel</button><button type="submit" class="app-btn gold">Submit Premium Payment</button></div></form></div></div>
+<div class="app-modal" id="ibVerificationModal"><div class="app-modal-card"><div class="app-modal-head"><div><h3>IB / Broker Verification</h3><small class="muted">Submit the account you opened or linked under our IB/partner relationship.</small></div><button class="modal-close" data-close-modal="ibVerificationModal"><i class="fa-solid fa-xmark"></i></button></div><form id="ibVerificationForm"><div class="app-modal-body"><div class="form-grid"><div class="form-field"><label>Broker</label><input name="broker" required placeholder="Broker name"></div><div class="form-field"><label>Trading Account ID</label><input name="trading_account_id" required></div><div class="form-field"><label>Account Type (optional)</label><input name="account_type"></div><div class="form-field full"><label>Proof (optional)</label><input name="proof" type="file" accept="image/png,image/jpeg,image/webp,application/pdf"><small class="muted">Broker/account proof. Maximum 5 MB.</small></div><div class="form-field full"><label>Note (optional)</label><textarea name="note"></textarea></div></div></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="ibVerificationModal">Cancel</button><button type="submit" class="app-btn gold">Submit Verification</button></div></form></div></div>
+
 <div class="app-modal" id="chartModal"><div class="app-modal-card large"><div class="app-modal-head"><h3 id="chartModalTitle">Chart Details</h3><button class="modal-close" data-close-modal="chartModal"><i class="fa-solid fa-xmark"></i></button></div><div class="app-modal-body" id="chartModalContent"></div></div></div>
 
 <div class="app-modal" id="articleModal"><div class="app-modal-card large"><div class="app-modal-head"><h3 id="articleModalTitle">Article</h3><button class="modal-close" data-close-modal="articleModal"><i class="fa-solid fa-xmark"></i></button></div><div class="app-modal-body"><div id="articleModalContent" class="article-content"></div></div></div></div>
@@ -213,8 +227,7 @@
 
 <script src="assets/js/core.js?v=9.37"></script>
 <script src="assets/js/tracking.js?v=9.1"></script>
-<script src="assets/js/student.js?v=9.61"></script>
-<script src="assets/js/student-ui.js?v=9.54"></script>
-<script src="assets/js/student-open-access.js?v=9.54"></script>
+<script src="assets/js/student.js?v=9.63"></script>
+<script src="assets/js/student-ui.js?v=9.63"></script>
 </body>
 </html>

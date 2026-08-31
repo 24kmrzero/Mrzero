@@ -2,6 +2,7 @@
   'use strict';
   const { configured, supabase, toast, setLoading, openModal, closeModal, friendlyError, cfg } = window.App;
   const tracking = window.Tracking;
+  async function audit(action,status='success',details={},token='') { try { await fetch(`${cfg.SUPABASE_URL}/functions/v1/audit-event`, { method:'POST', headers:{'Content-Type':'application/json','apikey':cfg.SUPABASE_ANON_KEY,...(token?{'Authorization':`Bearer ${token}`}:{})}, body:JSON.stringify({action,status,actor_email:details.email||null,details}) }); } catch {} }
   if (!configured || !supabase) {
     toast('Website setup is incomplete. Add Supabase URL and publishable key in assets/js/config.js.', 'error');
     document.querySelectorAll('form button[type="submit"]').forEach(button => button.disabled = true);
@@ -58,6 +59,7 @@
   async function finishStudentLogin(user, profile = null) {
     profile = profile || await getProfileWithRetry(user.id);
     await tracking?.record('login').catch(() => {});
+    const {data:auditSession}=await supabase.auth.getSession(); await audit('student_login','success',{email:user.email||''},auditSession.session?.access_token||'');
     try {
       await supabase.rpc('record_user_activity', {
         p_activity_type: 'login',
@@ -129,6 +131,7 @@
       }
       await finishStudentLogin(data.user, profile);
     } catch (error) {
+      await audit('login_failed','failed',{email,scope:'student'});
       toast(friendlyError(error, 'Student login failed.'), 'error');
       setLoading(button, false);
     }
@@ -166,6 +169,7 @@
         }
       });
       if (error) throw error;
+      await audit('student_signup','success',{email},data.session?.access_token||'');
       form.reset();
 
       if (data.session?.user) {
@@ -182,6 +186,7 @@
       toast('Account created. Supabase email confirmation is still enabled.', 'warning');
       window.location.replace(checkEmailUrl());
     } catch (error) {
+      await audit('signup_attempt','failed',{email,scope:'student'});
       toast(friendlyError(error, 'Could not create student account.'), 'error');
       setLoading(button, false);
     }

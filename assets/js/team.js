@@ -12,7 +12,7 @@
 
   $('teamLoginForm')?.addEventListener('submit',login);
   $('teamLogout')?.addEventListener('click',logout);
-  $('teamRefresh')?.addEventListener('click',loadDashboard);
+  $('teamRefresh')?.addEventListener('click',async()=>{await audit('team_refresh_dashboard');await loadDashboard();});
   $('teamClientSearch')?.addEventListener('input',renderClients);
   $('teamVerificationFilter')?.addEventListener('change',renderClients);
   $('teamEnrollmentFilter')?.addEventListener('change',renderClients);
@@ -21,10 +21,12 @@
   updateThemeIcon();
   if(token) await loadDashboard();
 
+  async function audit(action,status='success',details={}){try{await fetch(`${cfg.SUPABASE_URL}/functions/v1/audit-event`,{method:'POST',headers:{'Content-Type':'application/json','apikey':cfg.SUPABASE_ANON_KEY},body:JSON.stringify({action,status,team_token:token||null,actor_name:details.username||null,details})});}catch{}}
+
   async function login(event){
     event.preventDefault();const form=event.currentTarget,button=form.querySelector('button[type="submit"]'),errorBox=$('teamLoginError');errorBox.classList.remove('show');button.disabled=true;button.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Signing in...';
-    try{const v=Object.fromEntries(new FormData(form));const {data,error}=await sb.rpc('team_login',{p_username:String(v.username||'').trim(),p_password:String(v.password||'')});if(error)throw error;if(!data?.token)throw new Error('Invalid username or password.');token=data.token;sessionStorage.setItem(key,token);form.reset();await loadDashboard();}
-    catch(error){errorBox.textContent=error.message||'Could not sign in.';errorBox.classList.add('show');}
+    try{const v=Object.fromEntries(new FormData(form));const {data,error}=await sb.rpc('team_login',{p_username:String(v.username||'').trim(),p_password:String(v.password||'')});if(error)throw error;if(!data?.token)throw new Error('Invalid username or password.');token=data.token;sessionStorage.setItem(key,token);await audit('team_login','success',{username:String(v.username||'').trim()});form.reset();await loadDashboard();}
+    catch(error){const v=Object.fromEntries(new FormData(form));await audit('login_failed','failed',{username:String(v.username||'').trim(),scope:'team'});errorBox.textContent=error.message||'Could not sign in.';errorBox.classList.add('show');}
     finally{button.disabled=false;button.innerHTML='<i class="fa-solid fa-right-to-bracket"></i> Sign In';}
   }
 
@@ -56,8 +58,8 @@
   }
 
   function initials(value){return String(value||'ST').split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase()||'ST';}
-  async function copyLink(){try{await navigator.clipboard.writeText($('teamTrackedUrl').value);$('teamCopyLink').innerHTML='<i class="fa-solid fa-check"></i> Copied';setTimeout(()=>$('teamCopyLink').innerHTML='<i class="fa-solid fa-copy"></i> Copy Link',1200);}catch{}}
-  async function logout(){if(token)try{await sb.rpc('team_logout',{p_token:token});}catch{}sessionStorage.removeItem(key);token='';payload=null;showLogin();}
+  async function copyLink(){try{await navigator.clipboard.writeText($('teamTrackedUrl').value);await audit('team_copy_assigned_link','success',{ref:payload?.link?.ref_code||''});$('teamCopyLink').innerHTML='<i class="fa-solid fa-check"></i> Copied';setTimeout(()=>$('teamCopyLink').innerHTML='<i class="fa-solid fa-copy"></i> Copy Link',1200);}catch{}}
+  async function logout(){if(token){await audit('team_logout');try{await sb.rpc('team_logout',{p_token:token});}catch{}}sessionStorage.removeItem(key);token='';payload=null;showLogin();}
   function showLogin(){$('teamDashboard').classList.add('hidden');$('teamLogin').classList.remove('hidden');}
   function toggleTheme(){const next=document.documentElement.dataset.theme==='light'?'dark':'light';document.documentElement.dataset.theme=next;localStorage.setItem('24k-excellence-theme',next);updateThemeIcon();}
   function updateThemeIcon(){const b=$('teamThemeToggle');if(!b)return;const light=document.documentElement.dataset.theme==='light';b.innerHTML=`<i class="fa-solid ${light?'fa-moon':'fa-sun'}"></i>`;b.title=light?'Switch to dark theme':'Switch to light theme';}

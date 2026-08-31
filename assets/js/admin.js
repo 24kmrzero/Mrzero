@@ -21,7 +21,8 @@
   if (!result) return;
   state.profile = result.profile;
   A.activateDashboardNavigation();
-  document.getElementById('logoutButton').addEventListener('click', A.logout);
+  async function auditSession(action){try{await A.supabase.functions.invoke('audit-event',{body:{action,entity_type:'session',status:'success',details:{scope:'admin'}}});}catch{}}
+  document.getElementById('logoutButton').addEventListener('click', async()=>{await auditSession('admin_logout');await A.logout();});
   await loadAll();
   renderAll();
   bindEvents();
@@ -31,6 +32,7 @@
 
   async function loadAll() {
     const sb=A.supabase;
+    try { await sb.rpc('refresh_course_statuses_from_schedule'); } catch (error) { console.warn('Course schedule status refresh skipped:', error?.message || error); }
     const responses=await Promise.all([
       sb.from('profiles').select('*').order('created_at',{ascending:false}),
       sb.from('courses').select('*').order('created_at',{ascending:false}),
@@ -420,7 +422,7 @@
         price,
         discount_price:discount,
         currency:['PKR','USDT'].includes(String(v.currency||'PKR').toUpperCase())?String(v.currency||'PKR').toUpperCase():'PKR',
-        status:v.status||'upcoming',
+        status:'active',
         enrollment_open:checked(f,'enrollment_open'),
         thumbnail_url:existingThumbnail||null,
         is_published:checked(f,'is_published'),
@@ -435,7 +437,7 @@
         topic:session.topic,
         starts_at:session.starts_at_iso,
         duration_minutes:session.duration_minutes,
-        status:v.status==='completed'?'completed':'upcoming',
+        status:'upcoming',
         meet_url:session.meet_url
       }));
       console.info('[24K] Saving course bundle',{course:coursePayload.title,type:coursePayload.course_type,currency:coursePayload.currency,sessions:sessionPayload.length,thumbnailSelected:Boolean(file)});
@@ -458,14 +460,9 @@
 
       A.setLoading(button,true,'Refreshing course...');
       await loadAll();
-      let saved=state.courses.find(course=>String(course.id)===savedCourseId);
+      const saved=state.courses.find(course=>String(course.id)===savedCourseId);
       if(!saved)throw new Error(`Course was saved in the database but did not reload in Admin. Course ID: ${savedCourseId}`);
-      if(file&&String(saved.thumbnail_url||'')!==String(uploaded?.url||'')){
-        await persistCourseThumbnail(savedCourseId,uploaded.url);
-        await loadAll();
-        saved=state.courses.find(course=>String(course.id)===savedCourseId);
-        if(String(saved?.thumbnail_url||'')!==String(uploaded?.url||''))throw new Error('Thumbnail upload completed, but the refreshed course record does not contain the new thumbnail URL.');
-      }
+      if(file&&String(saved.thumbnail_url||'')!==String(uploaded?.url||''))throw new Error('Thumbnail upload completed, but the refreshed course record does not contain the new thumbnail URL.');
       f.reset();
       f.elements.id.value='';
       f.elements.existing_thumbnail_url.value='';
