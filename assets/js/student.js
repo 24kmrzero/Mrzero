@@ -401,30 +401,52 @@
   }
 
 
+  function safeMediaImage(url, altText, fallbackIcon) {
+    const cleanUrl = String(url || '').trim();
+    return `<i class="fa-solid ${fallbackIcon} content-cover-fallback" aria-hidden="true"></i>${cleanUrl ? `<img src="${attr(cleanUrl)}" alt="${attr(altText || '')}" loading="lazy" decoding="async" onerror="this.remove();this.parentElement.classList.remove('has-image')">` : ''}`;
+  }
+
   function renderCharts() {
     const query = document.getElementById('chartSearch')?.value.trim().toLowerCase() || '';
     const tf = document.getElementById('chartTimeframeFilter')?.value || 'all';
     const rows = state.charts.filter(c => (!query || `${c.title} ${c.symbol} ${c.summary}`.toLowerCase().includes(query)) && (tf === 'all' || c.timeframe === tf));
-    document.getElementById('chartsGrid').innerHTML = rows.length ? rows.map(chart => `<article class="content-card"><div class="content-cover ${chart.image_url ? 'has-image' : ''}">${chart.image_url ? `<img src="${attr(chart.image_url)}" alt="${attr(chart.title)}" loading="lazy" decoding="async">` : '<i class="fa-solid fa-chart-candlestick"></i>'}</div><div class="content-body"><div class="course-meta"><span>${A.escapeHtml(chart.symbol)}</span><span>${A.escapeHtml(chart.timeframe || '—')}</span><span>${A.escapeHtml(chart.category || 'Market Analysis')}</span><span>${A.formatDate(chart.published_at)}</span></div><h3>${A.escapeHtml(chart.title)}</h3><p>${A.escapeHtml(chart.summary || '')}</p><div class="card-actions"><button class="app-btn small gold" data-read-chart="${chart.id}">View Details</button>${chart.image_url ? `<a class="app-btn small outline" href="${attr(chart.image_url)}" target="_blank"><i class="fa-solid fa-up-right-from-square"></i> Full Chart</a>` : ''}</div></div></article>`).join('') : empty('No chart analysis matches your search.', 'fa-chart-line');
+    document.getElementById('chartsGrid').innerHTML = rows.length ? rows.map(chart => `<article class="content-card"><div class="content-cover ${chart.image_url ? 'has-image' : ''}">${safeMediaImage(chart.image_url, chart.title, 'fa-chart-candlestick')}</div><div class="content-body"><div class="course-meta"><span>${A.escapeHtml(chart.symbol)}</span><span>${A.escapeHtml(chart.timeframe || '—')}</span><span>${A.escapeHtml(chart.category || 'Market Analysis')}</span><span>${A.formatDate(chart.published_at)}</span></div><h3>${A.escapeHtml(chart.title)}</h3><p>${A.escapeHtml(chart.summary || '')}</p><div class="card-actions"><button class="app-btn small gold" data-read-chart="${chart.id}">View Details</button>${chart.image_url ? `<a class="app-btn small outline" href="${attr(chart.image_url)}" target="_blank" rel="noopener"><i class="fa-solid fa-up-right-from-square"></i> Full Chart</a>` : ''}</div></div></article>`).join('') : empty('No chart analysis matches your search.', 'fa-chart-line');
   }
 
   function renderArticles() {
     const query = document.getElementById('articleSearch')?.value.trim().toLowerCase() || '';
     const rows = state.articles.filter(a => !query || `${a.title} ${a.excerpt} ${a.content}`.toLowerCase().includes(query));
-    document.getElementById('articlesGrid').innerHTML = rows.length ? rows.map(article => `<article class="content-card"><div class="content-cover ${article.cover_url ? 'has-image' : ''}">${article.cover_url ? `<img src="${attr(article.cover_url)}" alt="${attr(article.title)}" loading="lazy" decoding="async">` : '<i class="fa-solid fa-book-open"></i>'}</div><div class="content-body"><div class="course-meta"><span>${A.escapeHtml(article.category || 'Education')}</span><span><i class="fa-solid fa-calendar"></i> ${A.formatDate(article.published_at)}</span></div><h3>${A.escapeHtml(article.title)}</h3><p>${A.escapeHtml(article.excerpt || '')}</p><button class="app-btn small gold" data-read-article="${article.id}">Read Article</button></div></article>`).join('') : empty('No article matches your search.', 'fa-newspaper');
+    document.getElementById('articlesGrid').innerHTML = rows.length ? rows.map(article => `<article class="content-card"><div class="content-cover ${article.cover_url ? 'has-image' : ''}">${safeMediaImage(article.cover_url, article.title, 'fa-book-open')}</div><div class="content-body"><div class="course-meta"><span>${A.escapeHtml(article.category || 'Education')}</span><span><i class="fa-solid fa-calendar"></i> ${A.formatDate(article.published_at)}</span></div><h3>${A.escapeHtml(article.title)}</h3><p>${A.escapeHtml(article.excerpt || '')}</p><button class="app-btn small gold" data-read-article="${article.id}">Read Article</button></div></article>`).join('') : empty('No article matches your search.', 'fa-newspaper');
+  }
+
+  function upcomingCourseSession(courseId) {
+    const cutoff = Date.now() - (5 * 60 * 1000);
+    return state.sessions
+      .filter(session => {
+        if (session.course_id !== courseId) return false;
+        if (['cancelled','completed'].includes(String(session.status || '').toLowerCase())) return false;
+        const starts = new Date(session.starts_at).getTime();
+        return Number.isFinite(starts) && starts >= cutoff;
+      })
+      .sort((a,b) => new Date(a.starts_at) - new Date(b.starts_at))[0] || null;
+  }
+
+  function courseCoverHtml(course) {
+    const cleanUrl = String(course.thumbnail_url || '').trim();
+    return `<div class="course-cover ${cleanUrl ? 'has-image' : ''}"><i class="fa-solid fa-graduation-cap course-cover-fallback" aria-hidden="true"></i>${cleanUrl ? `<img src="${attr(cleanUrl)}" alt="${attr(course.title)}" loading="lazy" decoding="async" onerror="this.remove();this.parentElement.classList.remove('has-image')">` : ''}<span class="status-pill ${A.statusClass(course.status)}">${A.statusLabel(course.status)}</span></div>`;
   }
 
   function renderCourses() {
     document.getElementById('coursesGrid').innerHTML = state.courses.length ? state.courses.map(course => {
       const access = hasCourseAccess(course.id);
       const payment = latestPayment(course.id);
-      const nextSession=state.sessions.filter(s=>s.course_id===course.id&&s.status!=='cancelled').sort((a,b)=>new Date(a.starts_at)-new Date(b.starts_at))[0];
+      const nextSession = upcomingCourseSession(course.id);
       const actualPrice=course.discount_price!=null?Number(course.discount_price):Number(course.price);
       const paymentText = payment ? A.statusLabel(payment.status) : (course.course_type==='free'||actualPrice===0 ? 'Free enrollment' : 'Payment required');
       const isInfinity = String(course.currency||'').toUpperCase()==='PKR';
       const paymentButtonText = payment?.status==='initiated' ? 'Continue Payment' : payment && ['received','under_review'].includes(payment.status) ? 'Payment Submitted' : payment?.status==='resubmission_required' ? 'Submit New Receipt' : ['failed','declined'].includes(payment?.status) ? 'Try Payment Again' : 'Pay Now';
       const paymentTone = ['declined','failed'].includes(payment?.status) ? 'bad' : 'warn';
-      return `<article class="course-card"><div class="course-cover ${course.thumbnail_url?'has-image':''}">${course.thumbnail_url?`<img src="${attr(course.thumbnail_url)}" alt="${attr(course.title)}" loading="lazy" decoding="async">`:'<i class="fa-solid fa-graduation-cap"></i>'}<span class="status-pill ${A.statusClass(course.status)}">${A.statusLabel(course.status)}</span></div><div class="course-body"><h3>${A.escapeHtml(course.title)}</h3><p>${A.escapeHtml(course.short_description || course.description || '')}</p><div class="course-meta"><span><i class="fa-solid fa-user-tie"></i> ${A.escapeHtml(course.instructor_name || A.cfg.INSTRUCTOR_NAME)}</span><span><i class="fa-solid fa-money-bill"></i> ${course.discount_price!=null?`<s>${A.formatMoney(course.price,course.currency)}</s> ${A.formatMoney(course.discount_price,course.currency)}`:A.formatMoney(course.price, course.currency)}</span>${nextSession?`<span><i class="fa-solid fa-calendar"></i> ${A.formatDateTime(nextSession.starts_at)}</span>`:`<span><i class="fa-solid fa-calendar"></i> Date to be announced</span>`}</div>${nextSession?`<div class="course-next-class"><small>Next Live Class</small><b>${A.escapeHtml(nextSession.title)}</b><span>${A.escapeHtml(nextSession.topic||'')}</span></div>`:''}<div class="notice ${access ? 'ok' : paymentTone}">${access ? (TEMP_OPEN_ACCESS ? '<b>Member access open.</b> Published course content is available for now.' : '<b>Access approved.</b> Online class access is unlocked.') : `<b>${paymentText}.</b> ${payment?.status==='initiated'&&isInfinity?'Complete the secure hosted bank payment and receipt verification.':'Class date is visible, but online class access remains locked.'}`}</div><div class="course-actions"><button class="app-btn ${access ? 'gold' : 'outline'}" data-open-course="${course.id}"><i class="fa-solid fa-calendar-days"></i> View Live Class</button>${access ? '' : (course.course_type==='free'||actualPrice===0) ? `<button class="app-btn gold" data-free-enroll="${course.id}">Enroll Free</button>` : `<button class="app-btn gold" data-buy-course="${course.id}"><i class="fa-solid fa-building-columns"></i> ${paymentButtonText}</button>`}</div></div></article>`;
+      return `<article class="course-card">${courseCoverHtml(course)}<div class="course-body"><h3>${A.escapeHtml(course.title)}</h3><p>${A.escapeHtml(course.short_description || course.description || '')}</p><div class="course-meta"><span><i class="fa-solid fa-user-tie"></i> ${A.escapeHtml(course.instructor_name || A.cfg.INSTRUCTOR_NAME)}</span><span><i class="fa-solid fa-money-bill"></i> ${course.discount_price!=null?`<s>${A.formatMoney(course.price,course.currency)}</s> ${A.formatMoney(course.discount_price,course.currency)}`:A.formatMoney(course.price, course.currency)}</span>${nextSession?`<span><i class="fa-solid fa-calendar"></i> ${A.formatDateTime(nextSession.starts_at)}</span>`:`<span><i class="fa-solid fa-calendar"></i> No upcoming class</span>`}</div>${nextSession?`<div class="course-next-class"><small>Next Live Class</small><b>${A.escapeHtml(nextSession.title)}</b><span>${A.escapeHtml(nextSession.topic||'')}</span></div>`:''}<div class="notice ${access ? 'ok' : paymentTone}">${access ? (TEMP_OPEN_ACCESS ? '<b>Member access open.</b> Published course content is available for now.' : '<b>Access approved.</b> Online class access is unlocked.') : `<b>${paymentText}.</b> ${payment?.status==='initiated'&&isInfinity?'Complete the secure hosted bank payment and receipt verification.':'Class date is visible, but online class access remains locked.'}`}</div><div class="course-actions"><button class="app-btn ${access ? 'gold' : 'outline'}" data-open-course="${course.id}"><i class="fa-solid fa-calendar-days"></i> View Live Class</button>${access ? '' : (course.course_type==='free'||actualPrice===0) ? `<button class="app-btn gold" data-free-enroll="${course.id}">Enroll Free</button>` : `<button class="app-btn gold" data-buy-course="${course.id}"><i class="fa-solid fa-building-columns"></i> ${paymentButtonText}</button>`}</div></div></article>`;
     }).join('') : empty('No course is currently published.', 'fa-graduation-cap');
   }
 

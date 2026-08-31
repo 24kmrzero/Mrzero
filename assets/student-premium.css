@@ -3118,3 +3118,43 @@ html[data-theme="light"] .student-page .signals-live-chip small { color:#5F796A 
   object-position: center;
   display: block;
 }
+
+/* ======================================================================
+   24K Excellence v9.59 — resilient media previews
+   Keep course/chart/article cards usable even when a remote media URL fails.
+   ====================================================================== */
+.student-page #p-courses .course-cover,
+.student-page .content-cover {
+  position: relative;
+  isolation: isolate;
+}
+.student-page #p-courses .course-cover .course-cover-fallback,
+.student-page .content-cover .content-cover-fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: grid;
+  place-items: center;
+  font-size: clamp(28px, 4vw, 54px);
+  color: #d49d00;
+  background:
+    radial-gradient(circle at 22% 20%, rgba(255,214,84,.34), transparent 36%),
+    linear-gradient(135deg, #fff7db 0%, #f6ebca 48%, #efe0b5 100%);
+  transition: opacity .18s ease;
+}
+.student-page #p-courses .course-cover.has-image .course-cover-fallback,
+.student-page .content-cover.has-image .content-cover-fallback {
+  opacity: 0;
+}
+.student-page #p-courses .course-cover img,
+.student-page .content-cover img {
+  position: relative;
+  z-index: 1;
+}
+html[data-theme="dark"] .student-page #p-courses .course-cover .course-cover-fallback,
+html[data-theme="dark"] .student-page .content-cover .content-cover-fallback {
+  color: #ffc107;
+  background:
+    radial-gradient(circle at 22% 20%, rgba(255,193,7,.18), transparent 38%),
+    linear-gradient(135deg, #17140d 0%, #0f0f0f 58%, #080808 100%);
+}

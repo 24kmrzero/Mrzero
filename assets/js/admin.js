@@ -91,7 +91,9 @@
   function renderCharts(){document.getElementById('adminChartsGrid').innerHTML=state.charts.length?state.charts.map(c=>`<article class="content-card"><div class="content-cover ${c.image_url?'has-image':''}">${c.image_url?`<img src="${attr(c.image_url)}" alt="${attr(c.title)}" loading="lazy" decoding="async">`:'<i class="fa-solid fa-chart-line"></i>'}</div><div class="content-body"><div class="course-meta"><span>${A.escapeHtml(c.symbol)}</span><span>${A.escapeHtml(c.timeframe||'')}</span><span class="status-pill ${c.is_published?'ok':'warn'}">${c.is_published?'Published':'Draft'}</span></div><h3>${A.escapeHtml(c.title)}</h3><p>${A.escapeHtml(c.summary||'')}</p><div class="card-actions"><button class="app-btn small outline" data-edit="chart" data-id="${c.id}">Edit</button><button class="app-btn small danger" data-delete="chart" data-id="${c.id}">Delete</button></div></div></article>`).join(''):empty('No charts uploaded.','fa-chart-line');}
   function renderArticles(){document.getElementById('adminArticlesGrid').innerHTML=state.articles.length?state.articles.map(a=>`<article class="content-card"><div class="content-cover ${a.cover_url?'has-image':''}">${a.cover_url?`<img src="${attr(a.cover_url)}" alt="${attr(a.title)}" loading="lazy" decoding="async">`:'<i class="fa-solid fa-newspaper"></i>'}</div><div class="content-body"><div class="course-meta"><span>${A.formatDate(a.published_at)}</span><span class="status-pill ${a.is_published?'ok':'warn'}">${a.is_published?'Published':'Draft'}</span></div><h3>${A.escapeHtml(a.title)}</h3><p>${A.escapeHtml(a.excerpt||'')}</p><div class="card-actions"><button class="app-btn small outline" data-edit="article" data-id="${a.id}">Edit</button><button class="app-btn small danger" data-delete="article" data-id="${a.id}">Delete</button></div></div></article>`).join(''):empty('No articles created.','fa-newspaper');}
   function renderAnnouncements(){document.getElementById('adminAnnouncements').innerHTML=state.announcements.length?state.announcements.map(n=>`<article class="announcement ${n.priority==='important'?'important':''}"><div class="signal-head"><div><h4>${A.escapeHtml(n.title)}</h4><small>${A.formatDateTime(n.published_at)} · ${n.is_published?'Published':'Draft'}</small></div><div class="table-actions"><button class="app-btn small outline" data-edit="announcement" data-id="${n.id}">Edit</button><button class="app-btn small danger" data-delete="announcement" data-id="${n.id}">Delete</button></div></div><p>${A.escapeHtml(n.message)}</p></article>`).join(''):empty('No announcements created.','fa-bullhorn');}
-  function renderCourses(){document.getElementById('coursesBody').innerHTML=state.courses.length?state.courses.map(c=>{const next=state.sessions.filter(s=>s.course_id===c.id&&s.status!=='cancelled').sort((a,b)=>new Date(a.starts_at)-new Date(b.starts_at))[0];const hasLink=next&&Boolean(state.sessionLinks[next.id]);return `<tr><td><div class="table-course-cell">${c.thumbnail_url?`<img src="${attr(c.thumbnail_url)}" alt="" loading="lazy" decoding="async">`:'<span class="table-course-placeholder"><i class="fa-solid fa-graduation-cap"></i></span>'}<div><b>${A.escapeHtml(c.title)}</b><small>${A.escapeHtml(c.short_description||'No caption added')}</small></div></div></td><td>${coursePriceText(c)}</td><td><span class="status-pill ${A.statusClass(c.status)}">${A.statusLabel(c.status)}</span></td><td>${next?`<b>${A.escapeHtml(next.title)}</b><br><small>${A.formatDateTime(next.starts_at)}</small>`:'<span class="muted">Not scheduled</span>'}</td><td>${hasLink?'<span class="status-pill ok">Added</span>':'<span class="status-pill warn">Missing</span>'}</td><td>${c.is_published?'Yes':'No'}</td><td><div class="table-actions"><button class="app-btn small outline" data-edit="course" data-id="${c.id}">Edit</button><button class="app-btn small outline" data-goto="sessions">Sessions</button><button class="app-btn small danger" data-delete="course" data-id="${c.id}">Delete</button></div></td></tr>`}).join(''):`<tr><td colspan="7">${empty('No courses created.','fa-graduation-cap')}</td></tr>`;}
+  function nextCourseSession(courseId){const now=Date.now()-5*60*1000;return state.sessions.filter(s=>s.course_id===courseId&&s.status!=='cancelled'&&s.status!=='completed'&&new Date(s.starts_at).getTime()>=now).sort((a,b)=>new Date(a.starts_at)-new Date(b.starts_at))[0]||null;}
+  function adminCourseThumb(c){if(!c.thumbnail_url)return '<span class="table-course-placeholder"><i class="fa-solid fa-graduation-cap"></i></span>';return `<img src="${attr(c.thumbnail_url)}" alt="${attr(c.title||'Course thumbnail')}" loading="lazy" decoding="async" onerror="this.outerHTML='<span class=&quot;table-course-placeholder&quot;><i class=&quot;fa-solid fa-graduation-cap&quot;></i></span>'">`;}
+  function renderCourses(){document.getElementById('coursesBody').innerHTML=state.courses.length?state.courses.map(c=>{const next=nextCourseSession(c.id);const hasLink=next&&Boolean(state.sessionLinks[next.id]);return `<tr><td><div class="table-course-cell">${adminCourseThumb(c)}<div><b>${A.escapeHtml(c.title)}</b><small>${A.escapeHtml(c.short_description||'No caption added')}</small></div></div></td><td>${coursePriceText(c)}</td><td><span class="status-pill ${A.statusClass(c.status)}">${A.statusLabel(c.status)}</span></td><td>${next?`<b>${A.escapeHtml(next.title)}</b><br><small>${A.formatDateTime(next.starts_at)}</small>`:'<span class="muted">No upcoming class</span>'}</td><td>${next?(hasLink?'<span class="status-pill ok">Added</span>':'<span class="status-pill warn">Missing</span>'):'<span class="muted">—</span>'}</td><td>${c.is_published?'Yes':'No'}</td><td><div class="table-actions"><button class="app-btn small outline" data-edit="course" data-id="${c.id}">Edit</button><button class="app-btn small outline" data-goto="sessions">Sessions</button><button class="app-btn small danger" data-delete="course" data-id="${c.id}">Delete</button></div></td></tr>`}).join(''):`<tr><td colspan="7">${empty('No courses created.','fa-graduation-cap')}</td></tr>`;}
   function renderSessions(){document.getElementById('sessionsBody').innerHTML=state.sessions.length?state.sessions.map(s=>`<tr><td>${s.session_number}</td><td>${A.escapeHtml(courseName(s.course_id))}</td><td><b>${A.escapeHtml(s.title)}</b><br><small>${A.escapeHtml(s.topic||'')}</small></td><td>${A.formatDateTime(s.starts_at)}</td><td>${s.duration_minutes||90} min</td><td><span class="status-pill ${A.statusClass(s.status)}">${A.statusLabel(s.status)}</span></td><td>${state.sessionLinks[s.id]?'<span class="status-pill ok">Added</span>':'<span class="status-pill warn">Missing</span>'}</td><td><div class="table-actions"><button class="app-btn small outline" data-edit="session" data-id="${s.id}">Edit</button><button class="app-btn small danger" data-delete="session" data-id="${s.id}">Delete</button></div></td></tr>`).join(''):`<tr><td colspan="8">${empty('No online class sessions scheduled.','fa-video')}</td></tr>`;}
   function renderResources(){const root=document.getElementById('adminResources');if(!root)return;root.innerHTML=state.resources.length?state.resources.map(r=>`<div class="resource-row"><div><b>${A.escapeHtml(r.title)}</b><small class="muted" style="display:block">${A.escapeHtml(courseName(r.course_id))}${r.course_session_id?` · Session ${state.sessions.find(s=>s.id===r.course_session_id)?.session_number||''}`:''} · ${A.escapeHtml(r.file_name||'')}</small></div><button class="app-btn small danger" data-delete="resource" data-id="${r.id}">Delete</button></div>`).join(''):empty('No optional course resource uploaded.','fa-folder-open');}
   function renderPayments(){
@@ -171,7 +173,31 @@
   function openSignalHistory(id){const s=state.signals.find(x=>x.id===id);if(!s)return;const events=state.signalUpdates.filter(x=>x.signal_id===id).sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));document.getElementById('signalHistoryTitle').textContent=`${displaySymbol(s.symbol)} ${s.direction} History`;document.getElementById('signalHistoryContent').innerHTML=`<div class="signal-history-summary"><div><small>Entry</small><b>${entryText(s)}</b></div><div><small>Current Status</small><b>${A.statusLabel(s.status)}</b></div><div><small>Result</small><b>${s.result_pips==null?'—':`${signed(s.result_pips)} ${'pips'}`}</b></div><div><small>Published</small><b>${A.formatDateTime(s.published_at)}</b></div></div><div class="signal-timeline">${events.length?events.map(ev=>`<div class="timeline-event ${eventTone(ev.event_type)}"><span class="timeline-dot"></span><div><div class="timeline-title"><b>${eventLabel(ev.event_type)}</b><time>${A.formatDateTime(ev.created_at)}</time></div>${ev.notification_message?`<p>${A.escapeHtml(ev.notification_message)}</p>`:''}${ev.note?`<small>Note: ${A.escapeHtml(ev.note)}</small>`:''}${ev.result_pips!=null?`<span class="timeline-result">${signed(ev.result_pips)} ${'pips'}</span>`:''}</div></div>`).join(''):empty('No history recorded yet.','fa-clock-rotate-left')}</div>`;A.openModal('signalHistoryModal');}
 
   async function saveChart(e){e.preventDefault();const f=e.currentTarget,v=formValues(f),id=v.id||A.uid(),isEdit=Boolean(v.id),button=f.querySelector('button[type=submit]'),file=f.elements.image.files?.[0]||null;const picker=document.getElementById('chartInstrumentPicker');if(!v.symbol){picker?.classList.add('invalid');document.getElementById('chartInstrumentSearch')?.focus();return A.toast('Select a trading instrument from the dropdown.','error');}if(!String(v.title||'').trim())return A.toast('Chart title is required.','error');if(!String(v.summary||'').trim())return A.toast('Analysis summary is required.','error');if(!isEdit&&!file&&!v.existing_image_url)return A.toast('Choose a chart image before saving.','error');let uploaded=null,saved=false;A.setLoading(button,true,isEdit?'Updating chart...':'Uploading chart...');try{let image=String(v.existing_image_url||'');if(file){uploaded=await uploadPublicAsset(file,`charts/${id}`);image=uploaded.url;}const row={id,title:String(v.title).trim(),symbol:String(v.symbol).toUpperCase(),timeframe:v.timeframe,summary:String(v.summary).trim(),details:String(v.details||'').trim()||null,category:v.category||chartCategory(v.symbol),image_url:image,is_published:checked(f,'is_published'),featured:checked(f,'featured'),publish_at:v.publish_at?new Date(v.publish_at).toISOString():null,unpublish_at:v.unpublish_at?new Date(v.unpublish_at).toISOString():null,published_at:isEdit?undefined:new Date().toISOString(),created_by:state.profile.id};const clean=Object.fromEntries(Object.entries(row).filter(([,value])=>value!==undefined));const {error}=isEdit?await A.supabase.from('charts').update(omit(clean,'id','created_by')).eq('id',id):await A.supabase.from('charts').insert(clean);if(error)throw error;saved=true;if(uploaded&&v.existing_image_url&&v.existing_image_url!==uploaded.url){const oldPath=publicStoragePath(v.existing_image_url,'content-assets');if(oldPath)await A.supabase.storage.from('content-assets').remove([oldPath]);}await loadAll();renderAll();resetChartForm();document.getElementById('chartFormBox')?.classList.remove('open');A.toast(isEdit?'Chart updated successfully.':'Chart uploaded and published successfully.','success');}catch(error){if(uploaded&&!saved)await A.supabase.storage.from('content-assets').remove([uploaded.path]);console.error('Chart save failed:',error);A.toast(A.friendlyError(error,'Could not save chart. Check image permissions and try again.'),'error');}finally{A.setLoading(button,false);}}
-  async function saveArticle(e){e.preventDefault();const f=e.currentTarget,v=formValues(f),id=v.id||A.uid();let cover=v.existing_cover_url||'';const file=f.elements.cover.files[0];if(file)cover=await uploadPublic(file,`articles/${id}`);await save('articles',{id,title:v.title,slug:String(v.slug||slugify(v.title)).toLowerCase().trim().replace(/[^a-z0-9-]+/g,'-'),excerpt:v.excerpt,content:v.content,category:v.category,cover_url:cover,is_published:checked(f,'is_published'),featured:checked(f,'featured'),publish_at:v.publish_at?new Date(v.publish_at).toISOString():null,unpublish_at:v.unpublish_at?new Date(v.unpublish_at).toISOString():null,published_at:v.id?undefined:new Date().toISOString(),created_by:state.profile.id},v.id,f,'Article saved.');}
+  async function saveArticle(e){
+    e.preventDefault();
+    const f=e.currentTarget,v=formValues(f),id=v.id||A.uid(),isEdit=Boolean(v.id),button=f.querySelector('button[type=submit]'),file=f.elements.cover.files?.[0]||null;
+    let uploaded=null,saved=false;
+    A.setLoading(button,true,isEdit?'Updating article...':'Saving article...');
+    try{
+      if(file)validatePublicImage(file,'Article cover',f.elements.cover);
+      const existing=String(v.existing_cover_url||'').trim();
+      let cover=existing;
+      if(file){uploaded=await uploadPublicAsset(file,`articles/${id}`);cover=uploaded.url;}
+      const row={id,title:v.title,slug:String(v.slug||slugify(v.title)).toLowerCase().trim().replace(/[^a-z0-9-]+/g,'-'),excerpt:v.excerpt,content:v.content,category:v.category,cover_url:cover||null,is_published:checked(f,'is_published'),featured:checked(f,'featured'),publish_at:v.publish_at?new Date(v.publish_at).toISOString():null,unpublish_at:v.unpublish_at?new Date(v.unpublish_at).toISOString():null,published_at:isEdit?undefined:new Date().toISOString(),created_by:state.profile.id};
+      const clean=Object.fromEntries(Object.entries(row).filter(([,value])=>value!==undefined));
+      const {error}=isEdit?await A.supabase.from('articles').update(omit(clean,'id','created_by')).eq('id',id):await A.supabase.from('articles').insert(clean);
+      if(error)throw error;
+      saved=true;
+      if(uploaded&&existing&&existing!==uploaded.url){const oldPath=publicStoragePath(existing,'content-assets');if(oldPath){const cleanup=await A.supabase.storage.from('content-assets').remove([oldPath]);if(cleanup.error)console.warn('Old article cover cleanup skipped:',cleanup.error);}}
+      await loadAll();renderAll();f.reset();f.elements.id.value='';f.elements.existing_cover_url.value='';document.getElementById('articleFormBox')?.classList.remove('open');A.toast(isEdit?'Article updated successfully.':'Article saved successfully.','success');
+    }catch(error){
+      if(uploaded?.path&&!saved)try{await A.supabase.storage.from('content-assets').remove([uploaded.path]);}catch{}
+      console.error('Article save failed:',error);
+      let message=A.friendlyError(error,'Could not save article. Check the cover image and try again.');
+      if(/content-assets|bucket not found|storage|row-level security|permission/i.test(String(error?.message||'')))message+=' Run supabase/25_MEDIA_STORAGE_AND_THUMBNAIL_FIX.sql once, then retry.';
+      A.toast(message,'error',6500);
+    }finally{A.setLoading(button,false);}
+  }
   async function flushEmailQueueQuiet() {
     try {
       await A.supabase.functions.invoke('process-email-queue', { body: { limit: 50 } });
@@ -256,20 +282,26 @@
       if(meta)meta.textContent='Choose a new image only if you want to replace it.';
     }
   }
-  function validateCourseThumbnail(file){
+  function validatePublicImage(file,label='Image',field=null){
     if(!file)return;
-    const allowed=['image/png','image/jpeg','image/webp'];
-    if(!allowed.includes(file.type)){const err=new Error('Course thumbnail must be PNG, JPG or WEBP.');err.field=document.getElementById('courseForm')?.elements.thumbnail;throw err;}
-    if(file.size>8*1024*1024){const err=new Error('Course thumbnail must be 8 MB or smaller.');err.field=document.getElementById('courseForm')?.elements.thumbnail;throw err;}
+    const type=String(file.type||'').toLowerCase();
+    const ext=String(file.name||'').split('.').pop().toLowerCase();
+    const allowedTypes=['image/png','image/jpeg','image/webp'];
+    const allowedExt=['png','jpg','jpeg','webp'];
+    if((type&&!allowedTypes.includes(type))||(!type&&!allowedExt.includes(ext))){const err=new Error(`${label} must be PNG, JPG or WEBP.`);err.field=field;throw err;}
+    if(file.size<=0){const err=new Error(`${label} file is empty. Choose the image again.`);err.field=field;throw err;}
+    if(file.size>8*1024*1024){const err=new Error(`${label} must be 8 MB or smaller.`);err.field=field;throw err;}
   }
-  async function verifySavedCourseThumbnail(courseId,expectedUrl){
-    if(!courseId||!expectedUrl)return;
-    let {data,error}=await A.supabase.from('courses').select('id,thumbnail_url').eq('id',courseId).single();
-    if(error)throw error;
-    if(String(data?.thumbnail_url||'')===String(expectedUrl))return;
-    const fallback=await A.supabase.from('courses').update({thumbnail_url:expectedUrl,updated_at:new Date().toISOString()}).eq('id',courseId).select('id,thumbnail_url').single();
-    if(fallback.error)throw fallback.error;
-    if(String(fallback.data?.thumbnail_url||'')!==String(expectedUrl))throw new Error('Course saved, but the thumbnail URL was not stored. Please try again.');
+  function validateCourseThumbnail(file){return validatePublicImage(file,'Course thumbnail',document.getElementById('courseForm')?.elements.thumbnail||null);}
+  function imageContentType(file){const type=String(file?.type||'').toLowerCase();if(type)return type;const ext=String(file?.name||'').split('.').pop().toLowerCase();return ext==='png'?'image/png':ext==='webp'?'image/webp':'image/jpeg';}
+  async function persistCourseThumbnail(courseId,expectedUrl){
+    if(!courseId||!expectedUrl)throw new Error('Course thumbnail could not be linked because the saved course ID or image URL is missing.');
+    let saved=null;
+    const rpc=await A.supabase.rpc('admin_set_course_thumbnail',{p_course_id:courseId,p_thumbnail_url:expectedUrl});
+    if(!rpc.error&&rpc.data){saved=Array.isArray(rpc.data)?rpc.data[0]:rpc.data;}
+    else if(rpc.error&&!/could not find the function|pgrst202|schema cache/i.test(String(rpc.error.message||''))){throw rpc.error;}
+    if(!saved){const fallback=await A.supabase.from('courses').update({thumbnail_url:expectedUrl}).eq('id',courseId).select('id,thumbnail_url').single();if(fallback.error)throw fallback.error;saved=fallback.data;}
+    if(String(saved?.thumbnail_url||'')!==String(expectedUrl)){const check=await A.supabase.from('courses').select('id,thumbnail_url').eq('id',courseId).single();if(check.error)throw check.error;if(String(check.data?.thumbnail_url||'')!==String(expectedUrl))throw new Error('Course was saved, but the thumbnail URL was not stored in the course record.');}
   }
 
   function prepareCourseSaveUi(){
@@ -346,7 +378,7 @@
   async function saveCourse(e){
     e.preventDefault();
     const f=e.currentTarget,v=formValues(f),button=f.querySelector('button[type=submit]');
-    let uploaded=null;
+    let uploaded=null,courseBundleSaved=false,thumbnailCommitted=false,savedCourseId=String(v.id||'');
     clearCourseSaveError();
     A.setLoading(button,true,'Saving course...');
     try{
@@ -354,13 +386,11 @@
       const captionInput=f.elements.short_description;
       requireCourseField(v.title,'Course heading is required.',titleInput);
       requireCourseField(v.short_description,'Short caption is required.',captionInput);
-
       const type=v.course_type||'paid';
       const price=type==='free'?0:Number(v.price||0);
       const discount=type==='free'?null:n(v.discount_price);
       if(type==='paid'&&(!Number.isFinite(price)||price<=0)){const err=new Error('Paid course price must be greater than zero.');err.field=f.elements.price;throw err;}
       if(discount!==null&&(!Number.isFinite(discount)||discount<0||discount>price)){const err=new Error('Discount price must be between zero and the regular price.');err.field=f.elements.discount_price;throw err;}
-
       const sessions=collectCourseSessions();
       if(!sessions.length)throw new Error('Add at least one class session.');
       const sessionRows=[...document.querySelectorAll('[data-course-session-row]')];
@@ -376,19 +406,9 @@
         requireCourseField(session.meet_url,`${label} online class link is required.`,linkField);
         try{session.meet_url=normalizeSecureUrl(session.meet_url);if(linkField)linkField.value=session.meet_url;}catch(error){error.field=linkField;throw error;}
       });
-
-      const id=v.id||A.uid();
-      let thumbnail=v.existing_thumbnail_url||'';
       const file=f.elements.thumbnail.files?.[0]||null;
       validateCourseThumbnail(file);
-      if(file){
-        A.setLoading(button,true,'Uploading thumbnail...');
-        uploaded=await uploadPublicAsset(file,`courses/${id}`);
-        thumbnail=uploaded.url;
-        setCourseThumbnailPreview(null,thumbnail);
-        A.setLoading(button,true,'Saving course...');
-      }
-
+      const existingThumbnail=String(v.existing_thumbnail_url||'').trim();
       const caption=String(v.short_description||'').trim();
       const coursePayload={
         id:v.id||null,
@@ -402,7 +422,7 @@
         currency:['PKR','USDT'].includes(String(v.currency||'PKR').toUpperCase())?String(v.currency||'PKR').toUpperCase():'PKR',
         status:v.status||'upcoming',
         enrollment_open:checked(f,'enrollment_open'),
-        thumbnail_url:thumbnail||null,
+        thumbnail_url:existingThumbnail||null,
         is_published:checked(f,'is_published'),
         publish_at:v.publish_at?new Date(v.publish_at).toISOString():null,
         unpublish_at:v.unpublish_at?new Date(v.unpublish_at).toISOString():null,
@@ -418,22 +438,29 @@
         status:v.status==='completed'?'completed':'upcoming',
         meet_url:session.meet_url
       }));
-
-      console.info('[24K] Saving course bundle',{course:coursePayload.title,type:coursePayload.course_type,currency:coursePayload.currency,sessions:sessionPayload.length});
+      console.info('[24K] Saving course bundle',{course:coursePayload.title,type:coursePayload.course_type,currency:coursePayload.currency,sessions:sessionPayload.length,thumbnailSelected:Boolean(file)});
       const {data,error}=await A.supabase.rpc('admin_save_course_with_sessions_v2',{p_course:coursePayload,p_sessions:sessionPayload});
       if(error)throw error;
       if(!data?.course_id)throw new Error('Database returned no course ID. Save was not confirmed.');
+      courseBundleSaved=true;
+      savedCourseId=String(data.course_id);
+      f.elements.id.value=savedCourseId;
 
-      if(thumbnail)await verifySavedCourseThumbnail(data.course_id,thumbnail);
-
-      if(uploaded&&v.existing_thumbnail_url&&v.existing_thumbnail_url!==uploaded.url){
-        const oldPath=publicStoragePath(v.existing_thumbnail_url,'content-assets');
-        if(oldPath)await A.supabase.storage.from('content-assets').remove([oldPath]);
+      if(file){
+        A.setLoading(button,true,'Uploading thumbnail...');
+        uploaded=await uploadPublicAsset(file,`courses/${savedCourseId}`);
+        await persistCourseThumbnail(savedCourseId,uploaded.url);
+        thumbnailCommitted=true;
+        f.elements.existing_thumbnail_url.value=uploaded.url;
+        setCourseThumbnailPreview(null,uploaded.url);
+        if(existingThumbnail&&existingThumbnail!==uploaded.url){const oldPath=publicStoragePath(existingThumbnail,'content-assets');if(oldPath){const cleanup=await A.supabase.storage.from('content-assets').remove([oldPath]);if(cleanup.error)console.warn('Old course thumbnail cleanup skipped:',cleanup.error);}}
       }
 
+      A.setLoading(button,true,'Refreshing course...');
       await loadAll();
-      const saved=state.courses.some(course=>course.id===data.course_id);
-      if(!saved)throw new Error(`Course was saved in the database but did not reload in Admin. Course ID: ${data.course_id}`);
+      const saved=state.courses.find(course=>String(course.id)===savedCourseId);
+      if(!saved)throw new Error(`Course was saved in the database but did not reload in Admin. Course ID: ${savedCourseId}`);
+      if(file&&String(saved.thumbnail_url||'')!==String(uploaded?.url||''))throw new Error('Thumbnail upload completed, but the refreshed course record does not contain the new thumbnail URL.');
       f.reset();
       f.elements.id.value='';
       f.elements.existing_thumbnail_url.value='';
@@ -447,11 +474,14 @@
       const formTitle=document.getElementById('courseFormTitle');if(formTitle)formTitle.textContent='Add Course';
       renderAll();
       await flushEmailQueueQuiet();
-      A.toast(`Course and ${data.sessions_saved||sessions.length} class session${sessions.length===1?'':'s'} saved successfully.`,'success',5500);
+      A.toast(`Course, ${data.sessions_saved||sessions.length} class session${sessions.length===1?'':'s'}${file?' and thumbnail':''} saved successfully.`,'success',5500);
     }catch(error){
-      if(uploaded?.path)try{await A.supabase.storage.from('content-assets').remove([uploaded.path]);}catch{}
+      if(uploaded?.path&&!thumbnailCommitted)try{await A.supabase.storage.from('content-assets').remove([uploaded.path]);}catch{}
       console.error('Course save failed:',error);
-      courseSaveError(rawCourseError(error),error?.field);
+      let message=rawCourseError(error);
+      if(courseBundleSaved&&!thumbnailCommitted&&f.elements.thumbnail.files?.[0])message=`Course and class sessions were saved, but the thumbnail could not be saved. You can press Save again after fixing the thumbnail issue; the same course will be updated, not duplicated.\n\n${message}`;
+      if(/content-assets|bucket not found|storage|row-level security|permission/i.test(String(error?.message||'')))message+=`\n\nRun supabase/25_MEDIA_STORAGE_AND_THUMBNAIL_FIX.sql once, then retry the same course.`;
+      courseSaveError(message,error?.field||f.elements.thumbnail);
     }finally{A.setLoading(button,false);}
   }
   async function saveSession(e){
@@ -475,14 +505,14 @@
   async function save(table,row,existingId,form,message){const button=form.querySelector('button[type=submit]');A.setLoading(button,true,'Saving...');try{const clean=Object.fromEntries(Object.entries(row).filter(([,v])=>v!==undefined));const {error}=existingId?await A.supabase.from(table).update(omit(clean,'id','created_by')).eq('id',row.id):await A.supabase.from(table).insert(clean);if(error)throw error;await loadAll();form.reset();if(form.elements.id)form.elements.id.value='';form.closest('.admin-form-box')?.classList.remove('open');renderAll();A.toast(message,'success');}catch(error){A.toast(A.friendlyError(error,'Could not save record.'),'error');}finally{A.setLoading(button,false);}}
 
   function editRecord(type,id){const map={signal:['signals','signalForm','signalFormBox'],chart:['charts','chartForm','chartFormBox'],article:['articles','articleForm','articleFormBox'],announcement:['announcements','announcementForm','announcementFormBox'],course:['courses','courseForm','courseFormBox'],session:['sessions','sessionForm','sessionFormBox'],method:['methods','methodForm','methodFormBox']};const [key,formId,boxId]=map[type]||[];if(!key)return;const row=state[key].find(x=>x.id===id);if(!row)return;const f=document.getElementById(formId);f.reset();Object.entries(row).forEach(([k,val])=>{const el=f.elements[k];if(!el)return;if(el.type==='checkbox')el.checked=Boolean(val);else if(['starts_at','publish_at','unpublish_at','expires_at'].includes(k))el.value=isoToLocalInput(val);else el.value=val??'';});if(type==='signal'){selectInstrument(row.symbol);f.elements.id.value=id;const combined=document.getElementById('signalDirectionOrder');if(combined)combined.value=`${row.direction||'BUY'}|${row.order_type||'market'}`;syncSignalDirectionOrder(combined?.value);const title=document.getElementById('signalFormTitle');if(title)title.textContent='Edit Signal';renderSignalCalculationPreview();}if(type==='chart'){f.elements.existing_image_url.value=row.image_url||'';selectChartInstrument(row.symbol,false);renderChartImagePreview(null,row.image_url||'');}if(type==='article')f.elements.existing_cover_url.value=row.cover_url||'';if(type==='course'){const courseTitle=document.getElementById('courseFormTitle');if(courseTitle)courseTitle.textContent='Edit Course';f.elements.existing_thumbnail_url.value=row.thumbnail_url||'';setCourseThumbnailPreview(null,row.thumbnail_url||'');f.elements.short_description.value=row.short_description||row.description||'';f.elements.price.value=row.price||0;const courseSessions=state.sessions.filter(x=>x.course_id===id).sort((a,b)=>a.session_number-b.session_number).map(x=>({...x,meet_url:state.sessionLinks[x.id]||''}));renderCourseSessionEditor(courseSessions.length?courseSessions:[{}]);}if(type==='session')f.elements.meet_url.value=state.sessionLinks[id]||'';document.getElementById(boxId).classList.add('open');if(document.getElementById(boxId).classList.contains('app-modal'))document.getElementById(boxId).setAttribute('aria-hidden','false');else document.getElementById(boxId).scrollIntoView({behavior:'smooth',block:'start'});}
-  async function deleteRecord(type,id,button){if(type==='signal')return A.toast('Signals are preserved in history. Use Cancel Signal or hide it through Edit.','warning');const confirmation=await A.confirmAction({title:`Delete ${A.statusLabel(type)}`,message:'This action cannot be undone and may affect connected records.',confirmText:'Delete Permanently',danger:true});if(!confirmation.confirmed)return;A.setLoading(button,true,'Deleting...');const map={chart:['charts','charts'],article:['articles','articles'],announcement:['announcements','announcements'],course:['courses','courses'],session:['course_sessions','sessions'],resource:['course_resources','resources'],method:['payment_methods','methods']};const [table,key]=map[type]||[];if(!table)return A.setLoading(button,false);try{const row=state[key].find(x=>x.id===id);const chartPath=type==='chart'?publicStoragePath(row?.image_url,'content-assets'):'';if(type==='resource'&&row?.file_path)await A.supabase.storage.from('course-resources').remove([row.file_path]);const {error}=await A.supabase.from(table).delete().eq('id',id);if(error)throw error;if(chartPath){const cleanup=await A.supabase.storage.from('content-assets').remove([chartPath]);if(cleanup.error)console.warn('Chart image cleanup failed:',cleanup.error);}await loadAll();renderAll();A.toast(type==='chart'?'Chart and its image deleted successfully.':'Record deleted successfully.','success');}catch(error){A.toast(A.friendlyError(error,'Could not delete record.'),'error');}finally{A.setLoading(button,false);}}
+  async function deleteRecord(type,id,button){if(type==='signal')return A.toast('Signals are preserved in history. Use Cancel Signal or hide it through Edit.','warning');const confirmation=await A.confirmAction({title:`Delete ${A.statusLabel(type)}`,message:'This action cannot be undone and may affect connected records.',confirmText:'Delete Permanently',danger:true});if(!confirmation.confirmed)return;A.setLoading(button,true,'Deleting...');const map={chart:['charts','charts'],article:['articles','articles'],announcement:['announcements','announcements'],course:['courses','courses'],session:['course_sessions','sessions'],resource:['course_resources','resources'],method:['payment_methods','methods']};const [table,key]=map[type]||[];if(!table)return A.setLoading(button,false);try{const row=state[key].find(x=>x.id===id);const mediaUrl=type==='chart'?row?.image_url:type==='article'?row?.cover_url:type==='course'?row?.thumbnail_url:'';const mediaPath=publicStoragePath(mediaUrl,'content-assets');if(type==='resource'&&row?.file_path)await A.supabase.storage.from('course-resources').remove([row.file_path]);const {error}=await A.supabase.from(table).delete().eq('id',id);if(error)throw error;if(mediaPath){const cleanup=await A.supabase.storage.from('content-assets').remove([mediaPath]);if(cleanup.error)console.warn(`${type} media cleanup failed:`,cleanup.error);}await loadAll();renderAll();A.toast(mediaPath?`${A.statusLabel(type)} and its media deleted successfully.`:'Record deleted successfully.','success');}catch(error){A.toast(A.friendlyError(error,'Could not delete record.'),'error');}finally{A.setLoading(button,false);}}
 
 
   function openPaymentReview(id){const p=state.payments.find(x=>x.id===id);if(!p)return;const f=document.getElementById('paymentReviewForm');f.reset();f.elements.payment_id.value=id;f.elements.status.value=p.status==='approved'?'approved':p.status==='declined'?'declined':p.status==='resubmission_required'?'resubmission_required':'under_review';f.elements.admin_note.value=p.admin_note||'';if(f.elements.override_duplicate)f.elements.override_duplicate.checked=false;document.getElementById('reviewPaymentSummary').innerHTML=`<b>${A.escapeHtml(profileName(p.student_id))}</b><br>${A.escapeHtml(courseName(p.course_id))} · ${A.formatMoney(p.amount,courseCurrency(p.course_id))}<br>Reference: ${A.escapeHtml(p.transaction_reference||'—')}${p.duplicate_flag?`<div class="duplicate-warning"><i class="fa-solid fa-triangle-exclamation"></i><b>Duplicate warning</b><span>${A.escapeHtml(p.duplicate_reason||'This payment matches another record.')}</span></div>`:''}`;document.getElementById('duplicateOverrideWrap')?.classList.toggle('hidden',!p.duplicate_flag);A.openModal('paymentReviewModal');}
   async function reviewPayment(e){e.preventDefault();const f=e.currentTarget,v=formValues(f),button=f.querySelector('button[type=submit]');if(['declined','resubmission_required'].includes(v.status)&&!String(v.admin_note||'').trim())return A.toast('A clear reason is required.','error');const payment=state.payments.find(x=>x.id===v.payment_id);if(v.status==='approved'){const confirmation=await A.confirmAction({title:'Approve Payment & Unlock Course',message:`Approve ${profileName(payment?.student_id)} payment and activate ${courseName(payment?.course_id)}?`,confirmText:'Approve & Unlock'});if(!confirmation.confirmed)return;}A.setLoading(button,true,'Saving...');try{const {error}=await A.supabase.rpc('admin_review_payment_v2',{p_payment_id:v.payment_id,p_status:v.status,p_admin_note:v.admin_note||null,p_override_duplicate:Boolean(f.elements.override_duplicate?.checked)});if(error)throw error;await flushEmailQueueQuiet();await loadAll();A.closeModal('paymentReviewModal');renderAll();A.toast(v.status==='approved'?'Payment approved and course access activated.':v.status==='resubmission_required'?'New receipt requested from the student.':'Payment status updated successfully.','success');}catch(error){A.toast(A.friendlyError(error,'Could not update payment.'),'error');}finally{A.setLoading(button,false);}}
   async function viewReceipt(id){const p=state.payments.find(x=>x.id===id);if(!p?.receipt_path)return;const {data,error}=await A.supabase.storage.from('payment-receipts').createSignedUrl(p.receipt_path,180);if(error)return A.toast(A.friendlyError(error),'error');const url=data.signedUrl,content=document.getElementById('receiptPreviewContent'),external=document.getElementById('receiptOpenExternal');if(!content||!external)return window.open(url,'_blank','noopener');const isPdf=/\.pdf(?:$|\?)/i.test(p.receipt_path);content.innerHTML=isPdf?`<iframe src="${attr(url)}" title="Payment receipt PDF"></iframe>`:`<img src="${attr(url)}" alt="Payment receipt">`;external.href=url;document.getElementById('receiptPreviewSubtitle').textContent=`${profileName(p.student_id)} · ${p.invoice_no||p.transaction_reference||'Receipt'}`;A.openModal('receiptPreviewModal');}
   async function updateSupport(id,status,button){A.setLoading(button,true,'Updating...');try{const {error}=await A.supabase.rpc('admin_update_support',{p_request_id:id,p_status:status,p_note:null});if(error)throw error;await flushEmailQueueQuiet();await loadAll();renderAll();A.toast('Support request updated and student notified.','success');}catch(error){A.toast(A.friendlyError(error),'error');}finally{A.setLoading(button,false);}}
-  async function uploadPublicAsset(file,prefix){const allowed=['image/png','image/jpeg','image/webp'];if(!allowed.includes(file.type))throw new Error('Only PNG, JPG and WEBP images are allowed.');if(file.size>8*1024*1024)throw new Error('Image must be 8 MB or smaller.');const path=`${prefix}/${Date.now()}-${A.fileSafeName(file.name)}`;const {error}=await A.supabase.storage.from('content-assets').upload(path,file,{contentType:file.type,upsert:false,cacheControl:'3600'});if(error)throw error;const {data}=A.supabase.storage.from('content-assets').getPublicUrl(path);if(!data?.publicUrl){await A.supabase.storage.from('content-assets').remove([path]);throw new Error('Storage did not return a public image URL.');}return{path,url:data.publicUrl};}
+  async function uploadPublicAsset(file,prefix){validatePublicImage(file,'Image');const safe=A.fileSafeName(file.name||'image').replace(/^-+|-+$/g,'')||`image-${Date.now()}.jpg`;const path=`${prefix}/${Date.now()}-${A.uid().slice(0,8)}-${safe}`;const bucket=A.supabase.storage.from('content-assets');const upload=await bucket.upload(path,file,{contentType:imageContentType(file),upsert:false,cacheControl:'3600'});if(upload.error){const err=new Error(`Public media upload failed: ${upload.error.message||upload.error}`);err.code=upload.error.statusCode||upload.error.status||upload.error.code;throw err;}const {data}=bucket.getPublicUrl(path);const publicUrl=String(data?.publicUrl||'').trim();if(!publicUrl){await bucket.remove([path]);throw new Error('Storage accepted the image but did not return a public URL.');}return{path,url:publicUrl,bucket:'content-assets'};}
   async function uploadPublic(file,prefix){return(await uploadPublicAsset(file,prefix)).url;}
   function publicStoragePath(url,bucket){if(!url)return'';try{const marker=`/storage/v1/object/public/${bucket}/`;const parsed=new URL(url);const index=parsed.pathname.indexOf(marker);return index<0?'':decodeURIComponent(parsed.pathname.slice(index+marker.length));}catch{return'';}}
   function syncCourseTypeFields(){const f=document.getElementById('courseForm'),isFree=f.elements.course_type.value==='free';if(isFree){f.elements.price.value='0';f.elements.discount_price.value='';}f.elements.price.disabled=isFree;f.elements.discount_price.disabled=isFree;}
