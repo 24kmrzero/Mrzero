@@ -2145,3 +2145,174 @@ html[data-theme="light"] .student-page .signal-table-footer { color:#827A71; }
   .student-page .signal-status-tabs { min-width:570px; }
   .student-page .signal-table-toolbar { overflow-x:auto; }
 }
+
+/* ================================================================
+   V9.52 — 24K ORIGINAL DASHBOARD POLISH
+   Purpose: keep the compact professional density, but move away from
+   the reference layout and remove duplicated navigation in Member Pulse.
+   ================================================================ */
+
+/* 24K identity: welcome block gets a stronger asymmetric gold signature. */
+.student-page .compact-welcome-banner {
+  grid-template-columns:minmax(0,1fr) minmax(210px,.56fr) minmax(190px,.42fr) !important;
+  min-height:118px !important;
+  border-radius:18px !important;
+  overflow:hidden;
+}
+.student-page .compact-welcome-banner::after {
+  content:"24K";
+  position:absolute;
+  right:29%;
+  bottom:-26px;
+  font-size:92px;
+  line-height:1;
+  font-weight:950;
+  letter-spacing:-.08em;
+  color:rgba(255,193,7,.035);
+  pointer-events:none;
+}
+.student-page .compact-welcome-copy { padding-left:10px; border-left:3px solid #FFC107; }
+.student-page .compact-market-art { justify-content:flex-end; padding-right:18px; gap:17px; }
+.student-page .art-globe { transform:scale(.78); opacity:.56; }
+.student-page .art-bars { transform:skewX(-8deg); }
+
+/* KPI row is intentionally asymmetric: first card is the market-priority tile. */
+.student-page .compact-kpi-grid {
+  grid-template-columns:1.18fr 1fr 1fr 1fr !important;
+  gap:11px !important;
+}
+.student-page .compact-kpi-grid .app-kpi:first-child {
+  border-color:rgba(255,193,7,.27) !important;
+  background:linear-gradient(125deg,rgba(255,193,7,.085),rgba(255,193,7,.018) 48%,#101010 100%) !important;
+}
+.student-page .compact-kpi-grid .app-kpi:first-child .kpi-icon {
+  background:linear-gradient(145deg,#FFC928,#A96800) !important;
+  border-color:rgba(255,210,80,.36) !important;
+  color:#111 !important;
+  box-shadow:0 9px 24px -14px rgba(255,193,7,.8);
+}
+.student-page .compact-kpi-grid .app-kpi:nth-child(2) .kpi-spark { transform:rotate(5deg); }
+.student-page .compact-kpi-grid .app-kpi:nth-child(3) .kpi-spark { transform:rotate(-5deg); }
+
+/* Main cards now use a more 24K-specific split instead of a copied 55/45 grid. */
+.student-page .dashboard-compact-grid.primary-grid {
+  grid-template-columns:minmax(0,1.34fr) minmax(325px,.76fr) !important;
+}
+.student-page .dashboard-compact-grid.secondary-grid {
+  grid-template-columns:minmax(0,1.28fr) minmax(350px,.82fr) !important;
+}
+.student-page .signal-snapshot-card { border-left:3px solid rgba(255,193,7,.76) !important; }
+.student-page .live-learning-card { position:relative; overflow:hidden; }
+.student-page .live-learning-card::after {
+  content:"LIVE";
+  position:absolute;
+  right:-7px;
+  bottom:-10px;
+  font-size:55px;
+  font-weight:950;
+  letter-spacing:-.06em;
+  color:rgba(255,193,7,.035);
+  pointer-events:none;
+}
+.student-page .analysis-snapshot-card { position:relative; }
+.student-page .analysis-snapshot-card::before {
+  content:"";
+  position:absolute;
+  top:0; left:18px; right:58%; height:2px;
+  background:linear-gradient(90deg,#FFC107,transparent);
+  border-radius:999px;
+}
+
+/* Member Pulse replaces duplicated Courses/Charts/Signals/Profile quick buttons. */
+.student-page .member-pulse-card {
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(230px 170px at 100% 0%,rgba(255,193,7,.08),transparent 72%),
+    linear-gradient(150deg,#161616,#0F0F0F) !important;
+}
+.student-page .member-pulse-card::after {
+  content:"";
+  position:absolute;
+  width:160px;height:160px;
+  right:-86px;bottom:-90px;
+  border:1px solid rgba(255,193,7,.085);
+  border-radius:50%;
+  box-shadow:0 0 0 24px rgba(255,193,7,.02),0 0 0 48px rgba(255,193,7,.012);
+  pointer-events:none;
+}
+.student-page .member-pulse-grid { position:relative; z-index:1; display:grid; gap:7px; }
+.student-page .member-pulse-primary {
+  display:grid;
+  grid-template-columns:42px minmax(0,1fr) auto;
+  align-items:center;
+  gap:9px;
+  min-height:62px;
+  padding:9px 10px;
+  border:1px solid rgba(255,193,7,.15);
+  border-radius:11px;
+  background:linear-gradient(115deg,rgba(255,193,7,.075),rgba(255,255,255,.014));
+}
+.student-page .pulse-orbit {
+  width:39px;height:39px;display:grid;place-items:center;border-radius:50%;
+  background:radial-gradient(circle at 36% 30%,#FFE488,#FFC107 48%,#8C5C00 100%);
+  color:#16120A;
+  box-shadow:0 9px 24px -13px rgba(255,193,7,.86);
+}
+.student-page .member-pulse-primary small,.student-page .member-pulse-row small { display:block;color:#8D8067;font-size:6.5px;font-weight:950;letter-spacing:.09em; }
+.student-page .member-pulse-primary b { display:block;margin-top:2px;color:#F5F5F5;font-size:11px; }
+.student-page .member-pulse-primary em { display:block;margin-top:1px;color:#787878;font-size:7px;font-style:normal; }
+.student-page .pulse-live-dot { padding:4px 7px;border-radius:99px;background:rgba(48,198,130,.10);border:1px solid rgba(48,198,130,.16);color:#4ED995;font-size:6.5px;font-weight:950;letter-spacing:.04em; }
+.student-page .member-pulse-row {
+  width:100%; min-height:38px; display:grid; grid-template-columns:30px minmax(0,1fr) auto; align-items:center; gap:7px;
+  padding:5px 8px; border:1px solid rgba(255,255,255,.055); border-radius:9px; background:rgba(255,255,255,.015); color:inherit;
+}
+.student-page button.member-pulse-row { text-align:left; cursor:pointer; font:inherit; }
+.student-page button.member-pulse-row:hover { border-color:rgba(255,193,7,.20); background:rgba(255,193,7,.035); }
+.student-page .pulse-row-icon { width:27px;height:27px;display:grid;place-items:center;border-radius:8px;background:rgba(255,193,7,.07);color:#E1AA27;font-size:9px; }
+.student-page .pulse-row-icon.ok { background:rgba(48,198,130,.09);color:#4DD692; }
+.student-page .pulse-row-icon.warn { background:rgba(255,193,7,.08);color:#FFC107; }
+.student-page .member-pulse-row b { display:block;margin-top:1px;color:#D8D8D8;font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+.student-page .member-pulse-row > span:last-child,.student-page .member-pulse-row > i:last-child { color:#8B8170;font-size:7px;font-weight:800; }
+.student-page .pulse-update-row > i:last-child { color:#C99216; }
+.student-page .member-pulse-footer { display:flex;align-items:center;justify-content:space-between;gap:8px;padding:4px 2px 0;color:#777;font-size:6.8px; }
+.student-page .member-pulse-footer span { display:flex;align-items:center;gap:5px;min-width:0; }
+.student-page .member-pulse-footer span i { color:#C28B14; }
+.student-page .member-pulse-footer span b { color:#AFAFAF;font-weight:750; }
+.student-page .member-pulse-footer button { border:0;background:transparent;color:#D19A1C;font:850 7px/1 inherit;cursor:pointer; }
+.student-page .member-pulse-footer button:hover { color:#FFC107; }
+
+/* Light mode keeps the same 24K composition with premium warm contrast. */
+html[data-theme="light"] .student-page .compact-welcome-banner::after { color:rgba(163,110,0,.035); }
+html[data-theme="light"] .student-page .compact-kpi-grid .app-kpi:first-child {
+  background:linear-gradient(125deg,#FFF7DC,#FFFDF9 56%,#FFFDF9) !important;
+  border-color:#EACD77 !important;
+}
+html[data-theme="light"] .student-page .member-pulse-card {
+  background:
+    radial-gradient(230px 170px at 100% 0%,rgba(255,193,7,.10),transparent 72%),
+    #FFFDF9 !important;
+}
+html[data-theme="light"] .student-page .member-pulse-primary { background:linear-gradient(115deg,#FFF5D8,#FFFEFA);border-color:#EAD8A7; }
+html[data-theme="light"] .student-page .member-pulse-primary b { color:#2A241D; }
+html[data-theme="light"] .student-page .member-pulse-primary em { color:#7D7469; }
+html[data-theme="light"] .student-page .member-pulse-row { background:#FBF7EF;border-color:#E5DED4; }
+html[data-theme="light"] .student-page .member-pulse-row b { color:#37302A; }
+html[data-theme="light"] .student-page .member-pulse-row > span:last-child,html[data-theme="light"] .student-page .member-pulse-row > i:last-child { color:#766C60; }
+html[data-theme="light"] .student-page .member-pulse-footer { color:#80776D; }
+html[data-theme="light"] .student-page .member-pulse-footer span b { color:#554C43; }
+
+@media (max-width:1100px){
+  .student-page .compact-welcome-banner { grid-template-columns:minmax(0,1fr) 180px !important; }
+  .student-page .compact-market-art { display:none !important; }
+  .student-page .compact-account-badge { grid-column:2 !important; }
+  .student-page .compact-kpi-grid { grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+  .student-page .dashboard-compact-grid.primary-grid,.student-page .dashboard-compact-grid.secondary-grid { grid-template-columns:1fr !important; }
+}
+@media (max-width:640px){
+  .student-page .compact-welcome-banner { grid-template-columns:1fr !important; }
+  .student-page .compact-account-badge { grid-column:auto !important; }
+  .student-page .compact-kpi-grid { grid-template-columns:1fr 1fr !important; }
+  .student-page .member-pulse-primary { grid-template-columns:38px minmax(0,1fr); }
+  .student-page .pulse-live-dot { grid-column:2;justify-self:start; }
+}

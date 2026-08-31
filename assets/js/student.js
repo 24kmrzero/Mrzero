@@ -82,9 +82,9 @@
     const todayCharts = state.charts.filter(c => dateKey(new Date(c.published_at || c.created_at || Date.now())) === todayKey).length;
     const data = [
       ['fa-bolt', activeSignals, 'Active Signals', 'Live setups & partial TPs', 'signals'],
-      ['fa-chart-column', todayCharts, "Today's Charts", 'Market analysis', 'charts'],
-      ['fa-file-lines', state.articles.length, 'Recent Articles', 'Education & insights', 'articles'],
-      ['fa-graduation-cap', approvedCourses, 'My Courses', 'Course access & classes', 'courses']
+      ['fa-chart-column', todayCharts, 'Market Insights', 'Fresh chart analysis', 'charts'],
+      ['fa-file-lines', state.articles.length, 'Learning Library', 'Guides & education', 'articles'],
+      ['fa-graduation-cap', approvedCourses, 'Course Access', 'Programs & live classes', 'courses']
     ];
     document.getElementById('studentKpis').innerHTML = data.map(([icon, value, label, note, panel]) => `<button type="button" class="app-kpi dashboard-nav-card" data-goto="${panel}" aria-label="Open ${label}"><span class="kpi-icon"><i class="fa-solid ${icon}"></i></span><div><small>${label}</small><b>${value}</b><em>${note}</em></div><span class="kpi-spark"><i></i><i></i><i></i></span><i class="fa-solid fa-arrow-right dashboard-nav-arrow"></i></button>`).join('');
 
@@ -116,10 +116,24 @@
     const analysisWrap = document.getElementById('dashboardMarketAnalysis');
     if (analysisWrap) analysisWrap.innerHTML = analysis.length ? analysis.map(chart => `<button type="button" class="analysis-mini-row" data-read-chart="${chart.id}"><span class="analysis-thumb ${chart.image_url ? 'has-image' : ''}">${chart.image_url ? `<img src="${attr(chart.image_url)}" alt="${attr(chart.title)}">` : '<i class="fa-solid fa-chart-candlestick"></i>'}</span><span class="analysis-mini-copy"><b>${A.escapeHtml(chart.title)}</b><small>${A.escapeHtml(chart.symbol || 'Market')} · ${A.escapeHtml(chart.timeframe || 'Analysis')}</small><em>${A.formatDateTime(chart.published_at)}</em></span><i class="fa-solid fa-arrow-right"></i></button>`).join('') : `<div class="dashboard-empty-inline"><i class="fa-solid fa-chart-line"></i><span>No market analysis published yet.</span></div>`;
 
-    const upcoming = state.sessions.filter(s => new Date(s.starts_at) >= new Date() && s.status !== 'cancelled').length;
+    const upcomingSessions = state.sessions.filter(s => new Date(s.starts_at) >= new Date() && s.status !== 'cancelled').sort((a,b) => new Date(a.starts_at) - new Date(b.starts_at));
+    const nextPulseSession = upcomingSessions[0];
     const latestNotice = state.announcements[0];
     const learning = document.getElementById('dashboardLearningSnapshot');
-    if (learning) learning.innerHTML = `<div class="learning-mini-stats"><button data-goto="courses"><small>COURSES</small><b>${state.courses.length}</b><span>Published</span></button><button data-goto="courses"><small>UPCOMING</small><b>${upcoming}</b><span>Live classes</span></button><button data-goto="articles"><small>ARTICLES</small><b>${state.articles.length}</b><span>Learning posts</span></button><button data-goto="payments"><small>PAYMENTS</small><b>${state.payments.length}</b><span>History</span></button></div><div class="dashboard-quick-links"><button data-goto="courses"><i class="fa-solid fa-graduation-cap"></i> Courses</button><button data-goto="charts"><i class="fa-solid fa-chart-line"></i> Live Charts</button><button data-goto="signals"><i class="fa-solid fa-bolt"></i> Signals</button><button data-goto="profile"><i class="fa-regular fa-circle-user"></i> My Profile</button></div>${latestNotice ? `<button class="latest-update-strip" data-goto="announcements"><i class="fa-solid fa-bullhorn"></i><span><small>LATEST UPDATE</small><b>${A.escapeHtml(latestNotice.title)}</b></span><i class="fa-solid fa-arrow-right"></i></button>` : ''}`;
+    if (learning) {
+      const verified = Boolean(state.profile?.email_verified);
+      const joined = state.profile?.created_at ? new Date(state.profile.created_at) : null;
+      const joinedText = joined && !Number.isNaN(joined.getTime()) ? new Intl.DateTimeFormat('en-GB',{day:'2-digit',month:'short',year:'numeric'}).format(joined) : '24K Member';
+      const nextClassText = nextPulseSession ? A.formatDateTime(nextPulseSession.starts_at) : 'Not scheduled';
+      const noticeTitle = latestNotice?.title || 'No new announcement';
+      learning.innerHTML = `<div class="member-pulse-grid">
+        <div class="member-pulse-primary"><span class="pulse-orbit"><i class="fa-solid fa-crown"></i></span><div><small>MEMBER ACCESS</small><b>Open Access</b><em>All learning areas are currently available.</em></div><span class="pulse-live-dot">ACTIVE</span></div>
+        <div class="member-pulse-row"><span class="pulse-row-icon ${verified?'ok':'warn'}"><i class="fa-solid ${verified?'fa-circle-check':'fa-envelope'}"></i></span><div><small>EMAIL STATUS</small><b>${verified?'Verified':'Verification available'}</b></div><span>${verified?'Secure':'Optional'}</span></div>
+        <div class="member-pulse-row"><span class="pulse-row-icon"><i class="fa-regular fa-calendar"></i></span><div><small>NEXT LIVE CLASS</small><b>${A.escapeHtml(nextClassText)}</b></div><span>${upcomingSessions.length ? `${upcomingSessions.length} upcoming` : 'Waiting'}</span></div>
+        <button type="button" class="member-pulse-row pulse-update-row" data-goto="announcements"><span class="pulse-row-icon"><i class="fa-solid fa-bullhorn"></i></span><div><small>LATEST UPDATE</small><b>${A.escapeHtml(noticeTitle)}</b></div><i class="fa-solid fa-arrow-right"></i></button>
+        <div class="member-pulse-footer"><span><i class="fa-regular fa-id-badge"></i> Member since <b>${A.escapeHtml(joinedText)}</b></span><button type="button" data-goto="profile">Manage Account</button></div>
+      </div>`;
+    }
   }
 
   function renderSignals() {
