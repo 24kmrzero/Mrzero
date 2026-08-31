@@ -67,10 +67,43 @@
     });
   }
 
+
+
+  function isLegacyAccessMessage(value) {
+    var text = normalizeText(value);
+    return text.includes('protected content requires active access') ||
+      text.includes('protected content is locked') ||
+      text.includes('protected content stays limited') ||
+      text.includes('access is pending approval') ||
+      text.includes('course access will unlock only after admin approval');
+  }
+
+  function suppressLegacyAccessToast() {
+    // Older platform-v8 builds used a global App.toast access guard. During the
+    // temporary open-access phase, ignore only that legacy access warning.
+    if (window.App && typeof window.App.toast === 'function' && !window.App.__tempOpenAccessToastWrapped) {
+      var originalToast = window.App.toast.bind(window.App);
+      window.App.toast = function (message, tone) {
+        if (isLegacyAccessMessage(message)) return;
+        return originalToast(message, tone);
+      };
+      window.App.__tempOpenAccessToastWrapped = true;
+    }
+
+    // Also clean an already-painted legacy toast from cached scripts.
+    document.querySelectorAll('.toast,.app-toast,[role="status"],[role="alert"]').forEach(function (el) {
+      if (isLegacyAccessMessage(el.textContent)) {
+        el.classList.add('temp-access-hidden');
+        if (el.style) el.style.display = 'none';
+      }
+    });
+  }
+
   function apply() {
     document.body && document.body.classList.add('student-open-access');
     unlockNavigation(document);
     cleanLegacyAccessUi(document);
+    suppressLegacyAccessToast();
   }
 
   var scheduled = false;
