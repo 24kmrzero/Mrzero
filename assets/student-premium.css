@@ -3097,3 +3097,24 @@ html[data-theme="light"] .student-page .signals-live-chip small { color:#5F796A 
   .student-page .analysis-mini-row { grid-template-columns:62px minmax(0,1fr) 26px !important; }
   .student-page .analysis-thumb { width:58px !important; height:42px !important; }
 }
+
+/* ======================================================================
+   24K Excellence v9.57 — Course thumbnail ratio
+   Keep course artwork in the standard YouTube thumbnail aspect ratio (16:9).
+   ====================================================================== */
+.student-page #p-courses .course-cover {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  min-height: 0 !important;
+  height: auto !important;
+  overflow: hidden;
+}
+.student-page #p-courses .course-cover.has-image img {
+  width: 100%;
+  height: 100% !important;
+  min-height: 0 !important;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
