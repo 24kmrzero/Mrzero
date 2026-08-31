@@ -114,7 +114,7 @@
   function bindEvents(){
     prepareCourseSaveUi();
     document.querySelectorAll('[data-toggle-form]').forEach(btn=>btn.addEventListener('click',()=>{const box=document.getElementById(btn.dataset.toggleForm);box?.classList.add('open');if(box?.classList.contains('app-modal'))box.setAttribute('aria-hidden','false');if(btn.dataset.toggleForm==='signalFormBox'&&!document.getElementById('signalForm').elements.id.value)resetSignalForm();if(btn.dataset.toggleForm==='chartFormBox'&&!document.getElementById('chartForm').elements.id.value)resetChartForm();if(btn.dataset.toggleForm==='courseFormBox'&&!document.getElementById('courseForm').elements.id.value){const title=document.getElementById('courseFormTitle');if(title)title.textContent='Add Course';}}));
-    document.querySelectorAll('[data-cancel-form]').forEach(btn=>btn.addEventListener('click',()=>{const box=document.getElementById(btn.dataset.cancelForm);box?.classList.remove('open');if(box?.classList.contains('app-modal'))box.setAttribute('aria-hidden','true');box?.querySelector('form')?.reset();if(btn.dataset.cancelForm==='signalFormBox')resetSignalForm();if(btn.dataset.cancelForm==='chartFormBox')resetChartForm();if(btn.dataset.cancelForm==='courseFormBox'){const title=document.getElementById('courseFormTitle');if(title)title.textContent='Add Course';}}));
+    document.querySelectorAll('[data-cancel-form]').forEach(btn=>btn.addEventListener('click',()=>{const box=document.getElementById(btn.dataset.cancelForm);box?.classList.remove('open');if(box?.classList.contains('app-modal'))box.setAttribute('aria-hidden','true');box?.querySelector('form')?.reset();if(btn.dataset.cancelForm==='signalFormBox')resetSignalForm();if(btn.dataset.cancelForm==='chartFormBox')resetChartForm();if(btn.dataset.cancelForm==='courseFormBox'){const title=document.getElementById('courseFormTitle');if(title)title.textContent='Add Course';setCourseThumbnailPreview(null,'');}}));
     document.getElementById('resourceCourseSelect')?.addEventListener('change',updateResourceSessionOptions);document.getElementById('courseForm').elements.course_type.addEventListener('change',syncCourseTypeFields);syncCourseTypeFields();document.getElementById('addCourseSessionBtn').addEventListener('click',()=>{const editor=document.getElementById('courseSessionEditor'),count=editor.querySelectorAll('[data-course-session-row]').length;editor.insertAdjacentHTML('beforeend',courseSessionTemplate({},count));renumberCourseSessionRows();editor.querySelectorAll('[data-session-field="meet_url"]').forEach(prepareUrlInput);});document.getElementById('courseSessionEditor').addEventListener('click',e=>{const button=e.target.closest('[data-remove-course-session]');if(!button)return;const rows=document.querySelectorAll('[data-course-session-row]');if(rows.length===1)return A.toast('A course needs at least one class session.','warning');button.closest('[data-course-session-row]').remove();renumberCourseSessionRows();});document.getElementById('paymentStatusFilter').addEventListener('change',renderPayments);document.getElementById('paymentSearch').addEventListener('input',renderPayments);document.getElementById('adminSignalSearch').addEventListener('input',renderSignals);document.querySelectorAll('[data-admin-signal-view]').forEach(btn=>btn.addEventListener('click',()=>{document.getElementById('adminSignalView').value=btn.dataset.adminSignalView;renderSignals();}));
     document.getElementById('adminSearch').addEventListener('input',e=>{const q=e.currentTarget.value.trim().toLowerCase();document.querySelectorAll('.panel.on tbody tr,.panel.on article.content-card,.panel.on .announcement,.panel.on .resource-row').forEach(row=>row.classList.toggle('hidden',q&&!row.textContent.toLowerCase().includes(q)));});
     bindInstrumentPicker();
@@ -236,11 +236,56 @@
     }catch{throw new Error('Enter a valid secure HTTPS online class link.');}
   }
 
+  function setCourseThumbnailPreview(file,url){
+    const box=document.getElementById('courseThumbnailPreview');
+    const img=document.getElementById('courseThumbnailPreviewImage');
+    const label=document.getElementById('courseThumbnailPreviewLabel');
+    const meta=document.getElementById('courseThumbnailPreviewMeta');
+    if(!box||!img)return;
+    if(!file&&!url){box.style.display='none';img.removeAttribute('src');return;}
+    box.style.display='flex';
+    if(file){
+      const objectUrl=URL.createObjectURL(file);
+      img.onload=()=>URL.revokeObjectURL(objectUrl);
+      img.src=objectUrl;
+      if(label)label.textContent='New thumbnail selected';
+      if(meta)meta.textContent=`${file.name} · ${(file.size/1024/1024).toFixed(2)} MB`;
+    }else{
+      img.src=url;
+      if(label)label.textContent='Current saved thumbnail';
+      if(meta)meta.textContent='Choose a new image only if you want to replace it.';
+    }
+  }
+  function validateCourseThumbnail(file){
+    if(!file)return;
+    const allowed=['image/png','image/jpeg','image/webp'];
+    if(!allowed.includes(file.type)){const err=new Error('Course thumbnail must be PNG, JPG or WEBP.');err.field=document.getElementById('courseForm')?.elements.thumbnail;throw err;}
+    if(file.size>8*1024*1024){const err=new Error('Course thumbnail must be 8 MB or smaller.');err.field=document.getElementById('courseForm')?.elements.thumbnail;throw err;}
+  }
+  async function verifySavedCourseThumbnail(courseId,expectedUrl){
+    if(!courseId||!expectedUrl)return;
+    let {data,error}=await A.supabase.from('courses').select('id,thumbnail_url').eq('id',courseId).single();
+    if(error)throw error;
+    if(String(data?.thumbnail_url||'')===String(expectedUrl))return;
+    const fallback=await A.supabase.from('courses').update({thumbnail_url:expectedUrl,updated_at:new Date().toISOString()}).eq('id',courseId).select('id,thumbnail_url').single();
+    if(fallback.error)throw fallback.error;
+    if(String(fallback.data?.thumbnail_url||'')!==String(expectedUrl))throw new Error('Course saved, but the thumbnail URL was not stored. Please try again.');
+  }
+
   function prepareCourseSaveUi(){
     const courseForm=document.getElementById('courseForm');
     if(courseForm){
       courseForm.noValidate=true;
       courseForm.querySelectorAll('[data-session-field="meet_url"]').forEach(prepareUrlInput);
+      const thumbInput=courseForm.elements.thumbnail;
+      if(thumbInput&&!thumbInput.dataset.previewBound){
+        thumbInput.dataset.previewBound='1';
+        thumbInput.addEventListener('change',()=>{
+          const file=thumbInput.files?.[0]||null;
+          try{validateCourseThumbnail(file);setCourseThumbnailPreview(file,file?null:courseForm.elements.existing_thumbnail_url?.value||'');}
+          catch(error){thumbInput.value='';setCourseThumbnailPreview(null,courseForm.elements.existing_thumbnail_url?.value||'');courseSaveError(error.message,thumbInput);}
+        });
+      }
       const foot=courseForm.querySelector('.app-modal-foot');
       if(foot&&!document.getElementById('courseSaveError')){
         const box=document.createElement('div');
@@ -334,8 +379,15 @@
 
       const id=v.id||A.uid();
       let thumbnail=v.existing_thumbnail_url||'';
-      const file=f.elements.thumbnail.files[0];
-      if(file){uploaded=await uploadPublicAsset(file,`courses/${id}`);thumbnail=uploaded.url;}
+      const file=f.elements.thumbnail.files?.[0]||null;
+      validateCourseThumbnail(file);
+      if(file){
+        A.setLoading(button,true,'Uploading thumbnail...');
+        uploaded=await uploadPublicAsset(file,`courses/${id}`);
+        thumbnail=uploaded.url;
+        setCourseThumbnailPreview(null,thumbnail);
+        A.setLoading(button,true,'Saving course...');
+      }
 
       const caption=String(v.short_description||'').trim();
       const coursePayload={
@@ -372,6 +424,8 @@
       if(error)throw error;
       if(!data?.course_id)throw new Error('Database returned no course ID. Save was not confirmed.');
 
+      if(thumbnail)await verifySavedCourseThumbnail(data.course_id,thumbnail);
+
       if(uploaded&&v.existing_thumbnail_url&&v.existing_thumbnail_url!==uploaded.url){
         const oldPath=publicStoragePath(v.existing_thumbnail_url,'content-assets');
         if(oldPath)await A.supabase.storage.from('content-assets').remove([oldPath]);
@@ -383,6 +437,7 @@
       f.reset();
       f.elements.id.value='';
       f.elements.existing_thumbnail_url.value='';
+      setCourseThumbnailPreview(null,'');
       f.elements.instructor_name.value='Malik Zameer';
       f.elements.price.value='0';
       renderCourseSessionEditor();
@@ -419,7 +474,7 @@
   async function saveMethod(e){e.preventDefault();const f=e.currentTarget,v=formValues(f),id=v.id||A.uid();await save('payment_methods',{id,name:v.name,account_title:v.account_title,account_number:v.account_number,instructions:v.instructions,sort_order:Number(v.sort_order||0),is_active:checked(f,'is_active')},v.id,f,'Payment method saved.');}
   async function save(table,row,existingId,form,message){const button=form.querySelector('button[type=submit]');A.setLoading(button,true,'Saving...');try{const clean=Object.fromEntries(Object.entries(row).filter(([,v])=>v!==undefined));const {error}=existingId?await A.supabase.from(table).update(omit(clean,'id','created_by')).eq('id',row.id):await A.supabase.from(table).insert(clean);if(error)throw error;await loadAll();form.reset();if(form.elements.id)form.elements.id.value='';form.closest('.admin-form-box')?.classList.remove('open');renderAll();A.toast(message,'success');}catch(error){A.toast(A.friendlyError(error,'Could not save record.'),'error');}finally{A.setLoading(button,false);}}
 
-  function editRecord(type,id){const map={signal:['signals','signalForm','signalFormBox'],chart:['charts','chartForm','chartFormBox'],article:['articles','articleForm','articleFormBox'],announcement:['announcements','announcementForm','announcementFormBox'],course:['courses','courseForm','courseFormBox'],session:['sessions','sessionForm','sessionFormBox'],method:['methods','methodForm','methodFormBox']};const [key,formId,boxId]=map[type]||[];if(!key)return;const row=state[key].find(x=>x.id===id);if(!row)return;const f=document.getElementById(formId);f.reset();Object.entries(row).forEach(([k,val])=>{const el=f.elements[k];if(!el)return;if(el.type==='checkbox')el.checked=Boolean(val);else if(['starts_at','publish_at','unpublish_at','expires_at'].includes(k))el.value=isoToLocalInput(val);else el.value=val??'';});if(type==='signal'){selectInstrument(row.symbol);f.elements.id.value=id;const combined=document.getElementById('signalDirectionOrder');if(combined)combined.value=`${row.direction||'BUY'}|${row.order_type||'market'}`;syncSignalDirectionOrder(combined?.value);const title=document.getElementById('signalFormTitle');if(title)title.textContent='Edit Signal';renderSignalCalculationPreview();}if(type==='chart'){f.elements.existing_image_url.value=row.image_url||'';selectChartInstrument(row.symbol,false);renderChartImagePreview(null,row.image_url||'');}if(type==='article')f.elements.existing_cover_url.value=row.cover_url||'';if(type==='course'){const courseTitle=document.getElementById('courseFormTitle');if(courseTitle)courseTitle.textContent='Edit Course';f.elements.existing_thumbnail_url.value=row.thumbnail_url||'';f.elements.short_description.value=row.short_description||row.description||'';f.elements.price.value=row.price||0;const courseSessions=state.sessions.filter(x=>x.course_id===id).sort((a,b)=>a.session_number-b.session_number).map(x=>({...x,meet_url:state.sessionLinks[x.id]||''}));renderCourseSessionEditor(courseSessions.length?courseSessions:[{}]);}if(type==='session')f.elements.meet_url.value=state.sessionLinks[id]||'';document.getElementById(boxId).classList.add('open');if(document.getElementById(boxId).classList.contains('app-modal'))document.getElementById(boxId).setAttribute('aria-hidden','false');else document.getElementById(boxId).scrollIntoView({behavior:'smooth',block:'start'});}
+  function editRecord(type,id){const map={signal:['signals','signalForm','signalFormBox'],chart:['charts','chartForm','chartFormBox'],article:['articles','articleForm','articleFormBox'],announcement:['announcements','announcementForm','announcementFormBox'],course:['courses','courseForm','courseFormBox'],session:['sessions','sessionForm','sessionFormBox'],method:['methods','methodForm','methodFormBox']};const [key,formId,boxId]=map[type]||[];if(!key)return;const row=state[key].find(x=>x.id===id);if(!row)return;const f=document.getElementById(formId);f.reset();Object.entries(row).forEach(([k,val])=>{const el=f.elements[k];if(!el)return;if(el.type==='checkbox')el.checked=Boolean(val);else if(['starts_at','publish_at','unpublish_at','expires_at'].includes(k))el.value=isoToLocalInput(val);else el.value=val??'';});if(type==='signal'){selectInstrument(row.symbol);f.elements.id.value=id;const combined=document.getElementById('signalDirectionOrder');if(combined)combined.value=`${row.direction||'BUY'}|${row.order_type||'market'}`;syncSignalDirectionOrder(combined?.value);const title=document.getElementById('signalFormTitle');if(title)title.textContent='Edit Signal';renderSignalCalculationPreview();}if(type==='chart'){f.elements.existing_image_url.value=row.image_url||'';selectChartInstrument(row.symbol,false);renderChartImagePreview(null,row.image_url||'');}if(type==='article')f.elements.existing_cover_url.value=row.cover_url||'';if(type==='course'){const courseTitle=document.getElementById('courseFormTitle');if(courseTitle)courseTitle.textContent='Edit Course';f.elements.existing_thumbnail_url.value=row.thumbnail_url||'';setCourseThumbnailPreview(null,row.thumbnail_url||'');f.elements.short_description.value=row.short_description||row.description||'';f.elements.price.value=row.price||0;const courseSessions=state.sessions.filter(x=>x.course_id===id).sort((a,b)=>a.session_number-b.session_number).map(x=>({...x,meet_url:state.sessionLinks[x.id]||''}));renderCourseSessionEditor(courseSessions.length?courseSessions:[{}]);}if(type==='session')f.elements.meet_url.value=state.sessionLinks[id]||'';document.getElementById(boxId).classList.add('open');if(document.getElementById(boxId).classList.contains('app-modal'))document.getElementById(boxId).setAttribute('aria-hidden','false');else document.getElementById(boxId).scrollIntoView({behavior:'smooth',block:'start'});}
   async function deleteRecord(type,id,button){if(type==='signal')return A.toast('Signals are preserved in history. Use Cancel Signal or hide it through Edit.','warning');const confirmation=await A.confirmAction({title:`Delete ${A.statusLabel(type)}`,message:'This action cannot be undone and may affect connected records.',confirmText:'Delete Permanently',danger:true});if(!confirmation.confirmed)return;A.setLoading(button,true,'Deleting...');const map={chart:['charts','charts'],article:['articles','articles'],announcement:['announcements','announcements'],course:['courses','courses'],session:['course_sessions','sessions'],resource:['course_resources','resources'],method:['payment_methods','methods']};const [table,key]=map[type]||[];if(!table)return A.setLoading(button,false);try{const row=state[key].find(x=>x.id===id);const chartPath=type==='chart'?publicStoragePath(row?.image_url,'content-assets'):'';if(type==='resource'&&row?.file_path)await A.supabase.storage.from('course-resources').remove([row.file_path]);const {error}=await A.supabase.from(table).delete().eq('id',id);if(error)throw error;if(chartPath){const cleanup=await A.supabase.storage.from('content-assets').remove([chartPath]);if(cleanup.error)console.warn('Chart image cleanup failed:',cleanup.error);}await loadAll();renderAll();A.toast(type==='chart'?'Chart and its image deleted successfully.':'Record deleted successfully.','success');}catch(error){A.toast(A.friendlyError(error,'Could not delete record.'),'error');}finally{A.setLoading(button,false);}}
 
 
