@@ -7,10 +7,13 @@
 <script>(function(){try{var t=localStorage.getItem('24k-excellence-theme');document.documentElement.dataset.theme=t==='light'?'light':'dark'}catch(e){document.documentElement.dataset.theme='dark'}})();</script>
 <title>Student Panel | 24K Excellence</title>
 <link rel="icon" href="assets/logo.png">
-<link rel="stylesheet" href="app.css?v=9.46">
+<link rel="stylesheet" href="app.css?v=9.48" onload="document.documentElement.classList.add('student-base-css-ready')">
+<link rel="stylesheet" href="assets/student-premium.css?v=9.48" onload="document.documentElement.classList.add('student-css-ready')">
+<style>html:not(.student-base-css-ready) body.student-page,html:not(.student-css-ready) body.student-page{visibility:hidden}</style>
+<script>setTimeout(function(){document.documentElement.classList.add('student-base-css-ready','student-css-ready')},1800);</script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
-<body class="app-page">
+<body class="app-page student-page">
 <div id="pageLoader" class="loading-screen"><div><img src="assets/logo.png" alt="24K Digital Gold"><i class="fa-solid fa-spinner fa-spin"></i><p>Loading your student account...</p></div></div>
 <div id="studentApp" class="app-shell hidden">
   <aside class="app-side" id="side">
@@ -46,7 +49,7 @@
 
     <div class="app-content">
       <section class="panel on" id="p-dashboard">
-        <div class="panel-heading"><div><h1>Student Dashboard</h1><p>Your latest market content, course access and payment status.</p></div><button class="app-btn outline" data-goto="courses"><i class="fa-solid fa-graduation-cap"></i> View Courses</button></div>
+        <div class="panel-heading dashboard-heading"><div><span class="panel-eyebrow"><i class="fa-solid fa-crown"></i> 24K Member Area</span><h1>Student Dashboard</h1><p>Your market content, live classes, course access and account updates in one premium workspace.</p></div><button class="app-btn gold" data-goto="courses"><i class="fa-solid fa-graduation-cap"></i> View Courses</button></div>
         <div id="emailVerificationBanner"></div>
         <div id="dashboardAlert"></div>
         <div class="kpi-grid" id="studentKpis"></div>
@@ -113,6 +116,13 @@
   </main>
 </div>
 
+<nav class="student-mobile-nav" aria-label="Student quick navigation">
+  <button type="button" class="is-active" data-goto="dashboard"><i class="fa-solid fa-house"></i><span>Home</span></button>
+  <button type="button" data-goto="signals"><i class="fa-solid fa-bolt"></i><span>Signals</span></button>
+  <button type="button" data-goto="courses"><i class="fa-solid fa-graduation-cap"></i><span>Courses</span></button>
+  <button type="button" data-goto="payments"><i class="fa-solid fa-receipt"></i><span>Payments</span></button>
+  <button type="button" data-goto="profile"><i class="fa-solid fa-user"></i><span>Profile</span></button>
+</nav>
 
 <div class="app-modal" id="paymentMethodChoiceModal" aria-hidden="true"><div class="app-modal-card"><div class="app-modal-head"><div><h3>Choose Payment Method</h3><small class="muted">Select how you want to pay for this course.</small></div><button class="modal-close" data-close-modal="paymentMethodChoiceModal"><i class="fa-solid fa-xmark"></i></button></div><div class="app-modal-body"><div id="paymentChoiceCourseSummary" class="notice info"></div><div class="app-grid cols-2"><button type="button" class="app-card" data-payment-choice="usdt" style="text-align:left;cursor:pointer"><div style="font-size:26px;margin-bottom:10px"><i class="fa-solid fa-coins"></i></div><h3 style="margin:0 0 6px">USDT TRC20</h3><p class="muted" style="margin:0">Pay with USDT on the TRC20 network and submit TXID + receipt for Admin review.</p></button><button type="button" class="app-card" data-payment-choice="local-bank" style="text-align:left;cursor:pointer"><div style="font-size:26px;margin-bottom:10px"><i class="fa-solid fa-building-columns"></i></div><h3 style="margin:0 0 6px">Local Bank Transfer</h3><p class="muted" style="margin:0">Continue to the secure local bank transfer payment page for PKR payment.</p></button></div><div class="notice warn" style="margin-top:14px">The course payment currency must match the selected method: PKR for Local Bank Transfer or USDT for USDT TRC20.</div></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="paymentMethodChoiceModal">Cancel</button></div></div></div>
 <div class="app-modal" id="paymentModal"><div class="app-modal-card"><div class="app-modal-head"><h3>Submit USDT Payment</h3><button class="modal-close" data-close-modal="paymentModal"><i class="fa-solid fa-xmark"></i></button></div><form id="paymentForm"><div class="app-modal-body"><div id="paymentCourseSummary" class="notice info"></div><div id="paymentMethodsBox"></div><div class="form-grid"><input type="hidden" name="course_id"><div class="form-field"><label>Network / Payment Method</label><select name="payment_method_id" id="paymentMethodSelect" required></select></div><div class="form-field"><label>Amount Paid (USDT)</label><input type="number" name="amount" min="0" step="0.01" required></div><div class="form-field full"><label>Transaction Hash / TXID</label><input name="transaction_reference" required placeholder="Paste TRC20 transaction hash"></div><div class="form-field full"><label>Payment Receipt</label><input type="file" name="receipt" accept="image/png,image/jpeg,image/webp,application/pdf" required><small class="muted">PNG, JPG, WEBP or PDF. Maximum 5 MB.</small></div><div class="form-field full"><label>Note (optional)</label><textarea name="student_note" placeholder="Any detail the admin should know"></textarea></div></div><label class="check-row" style="margin-top:15px"><input type="checkbox" required> I confirm that the USDT TRC20 transaction, TXID and receipt are genuine.</label></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="paymentModal">Cancel</button><button type="submit" class="app-btn gold">Submit Payment</button></div></form></div></div>
@@ -131,6 +141,7 @@
 <script src="assets/js/core.js?v=9.37"></script>
 <script src="assets/js/tracking.js?v=9.1"></script>
 <script src="assets/js/student.js?v=9.46"></script>
+<script src="assets/js/student-ui.js?v=9.48"></script>
 <script src="assets/js/platform-v8-student.js?v=9.12"></script>
 </body>
 </html>
