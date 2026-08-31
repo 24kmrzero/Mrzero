@@ -8,11 +8,11 @@
 <title>Student Panel | 24K Excellence</title>
 <link rel="icon" href="assets/logo-v965.png">
 <link rel="stylesheet" href="app.css?v=9.59" onload="document.documentElement.classList.add('student-base-css-ready')">
-<link rel="stylesheet" href="assets/student-premium.css?v=9.66" onload="document.documentElement.classList.add('student-css-ready')">
+<link rel="stylesheet" href="assets/student-premium.css?v=9.67" onload="document.documentElement.classList.add('student-css-ready')">
 <style>html:not(.student-base-css-ready) body.student-page,html:not(.student-css-ready) body.student-page{visibility:hidden}</style>
 <script>setTimeout(function(){document.documentElement.classList.add('student-base-css-ready','student-css-ready')},1800);</script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<link rel="stylesheet" href="assets/platform-v962.css?v=9.66">
+<link rel="stylesheet" href="assets/platform-v962.css?v=9.67">
 
 <style>
 .profile-compact-shell{display:grid;gap:14px}
@@ -33,6 +33,12 @@
 .get-access-head{display:flex;gap:18px;justify-content:space-between;align-items:center;flex-wrap:wrap}.get-access-copy{display:flex;gap:14px;align-items:flex-start;flex:1 1 420px}.get-access-icon{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;font-size:22px;background:rgba(201,154,5,.14);color:#c99a05;flex:0 0 auto}.get-access-copy h3{margin:0 0 4px;font-size:1.15rem}.get-access-copy p{margin:0;color:var(--muted,#9aa0a6)}.access-kicker{display:inline-block;font-size:.74rem;letter-spacing:.12em;font-weight:700;color:#c99a05;margin-bottom:4px}
 .all-access-modal-body{display:grid;gap:18px}.access-step[hidden],.access-hidden{display:none!important}.access-choice-grid,.access-broker-grid,.access-method-grid{display:grid;gap:14px}.access-choice-grid{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}.access-broker-grid{grid-template-columns:repeat(auto-fit,minmax(140px,1fr));margin-top:14px}.access-method-grid{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin-top:14px}.access-choice-card,.access-broker-card,.access-method-card{width:100%;text-align:left;border:1px solid rgba(201,154,5,.18);border-radius:18px;background:rgba(255,255,255,.03);padding:16px;cursor:pointer;transition:.2s ease;display:grid;gap:9px}html[data-theme="light"] .access-choice-card,html[data-theme="light"] .access-broker-card,html[data-theme="light"] .access-method-card{background:#fff8ed}.access-choice-card:hover,.access-broker-card:hover,.access-method-card:hover,.access-choice-card.is-active,.access-broker-card.is-active{border-color:#c99a05;transform:translateY(-1px)}.access-choice-card i,.access-method-card i{font-size:21px;color:#c99a05}.access-choice-card h4,.access-method-card h4{margin:0;font-size:.98rem}.access-choice-card p,.access-method-card p,.access-broker-card p{margin:0;color:var(--muted,#9aa0a6);font-size:.88rem}.access-broker-card{align-items:center;justify-items:center;text-align:center;font-weight:700}.access-back-btn{margin-bottom:4px}.access-broker-details{display:grid;gap:14px;margin-top:16px}.access-link-box{border:1px dashed rgba(201,154,5,.35);border-radius:16px;padding:14px;display:grid;gap:10px}.access-link-box small{color:var(--muted,#9aa0a6);text-transform:uppercase;letter-spacing:.08em}.access-link-actions{display:flex;gap:10px;flex-wrap:wrap}
 @media(max-width:760px){.account-access-row{align-items:flex-start;padding:13px}.account-row-side{width:100%;justify-content:flex-start;padding-left:54px}.personal-info-card{padding:14px!important}.access-choice-card,.access-broker-card,.access-method-card{padding:14px}}
+</style>
+
+<style id="access-modal-hard-fix">
+#openAllAccessModal{pointer-events:auto!important;cursor:pointer!important;touch-action:manipulation!important}
+#allAccessModal.access-force-open{display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;z-index:999999!important}
+#allAccessModal.access-force-open .app-modal-card{visibility:visible!important;opacity:1!important;pointer-events:auto!important}
 </style>
 </head>
 <body class="app-page student-page">
@@ -192,7 +198,7 @@
             <div class="account-access-row">
               <span class="account-row-icon"><i class="fa-solid fa-crown"></i></span>
               <div class="account-row-copy"><h3>Premium Market Access</h3><p>Signals + Charts + Articles</p></div>
-              <div class="account-row-side"><span id="premiumCompactStatus" class="compact-access-state locked"><i class="fa-solid fa-circle"></i> Checking...</span><button type="button" class="app-btn gold" id="openAllAccessModal"><i class="fa-solid fa-unlock-keyhole"></i> Manage Access</button></div>
+              <div class="account-row-side"><span id="premiumCompactStatus" class="compact-access-state locked"><i class="fa-solid fa-circle"></i> Checking...</span><button type="button" class="app-btn gold" id="openAllAccessModal" onclick="return window.__24KOpenAllAccess(event)" style="position:relative;z-index:5;pointer-events:auto"><i class="fa-solid fa-unlock-keyhole"></i> Manage Access</button></div>
             </div>
             <div class="account-access-row">
               <span class="account-row-icon whatsapp"><i class="fa-brands fa-whatsapp"></i></span>
@@ -235,12 +241,77 @@
 
 <div class="app-modal" id="riskModal"><div class="app-modal-card"><div class="app-modal-head"><h3>Risk Disclaimer Required</h3></div><form id="riskForm"><div class="app-modal-body"><div class="risk-box"><b>Trading involves financial risk.</b><br>Signals and charts provided by 24K Excellence are for educational purposes only. They do not guarantee profit, and you remain responsible for every trading decision and loss.</div><label class="check-row" style="margin-top:16px"><input type="checkbox" name="accept" required> I have read and accept the Risk Disclaimer.</label></div><div class="app-modal-foot"><a class="app-btn outline" href="risk-disclaimer.html" target="_blank">Read Full Disclaimer</a><button class="app-btn gold" type="submit">Accept & Continue</button></div></form></div></div>
 
+<script id="access-modal-hard-fix-script">
+(function(){
+  'use strict';
+  var brokerLinks={
+    Exness:'https://one.exnessonelink.com/a/be2kjlypr9',
+    XM:'https://affs.click/tr9cq',
+    DPrime:'https://my.dooprime.com/links/go/72929'
+  };
+  function modal(){ return document.getElementById('allAccessModal'); }
+  function showStep(step){
+    document.querySelectorAll('#allAccessModal [data-access-step]').forEach(function(el){
+      el.classList.toggle('access-hidden', el.getAttribute('data-access-step')!==step);
+    });
+  }
+  function closeAccess(){
+    var m=modal(); if(!m) return;
+    m.classList.remove('open','access-force-open');
+    m.setAttribute('aria-hidden','true');
+    m.style.removeProperty('display');
+    m.style.removeProperty('visibility');
+    m.style.removeProperty('opacity');
+    m.style.removeProperty('pointer-events');
+    document.body.classList.remove('modal-open');
+  }
+  window.__24KOpenAllAccess=function(ev){
+    if(ev){ ev.preventDefault(); ev.stopPropagation(); }
+    var m=modal();
+    if(!m){ console.error('24K access modal missing'); return false; }
+    showStep('home');
+    m.classList.add('open','access-force-open');
+    m.setAttribute('aria-hidden','false');
+    m.style.setProperty('display','flex','important');
+    m.style.setProperty('visibility','visible','important');
+    m.style.setProperty('opacity','1','important');
+    m.style.setProperty('pointer-events','auto','important');
+    document.body.classList.add('modal-open');
+    return false;
+  };
+  document.addEventListener('click',function(ev){
+    var openBtn=ev.target.closest && ev.target.closest('#openAllAccessModal');
+    if(openBtn){ window.__24KOpenAllAccess(ev); return; }
+    var closeBtn=ev.target.closest && ev.target.closest('#allAccessModal [data-close-modal="allAccessModal"]');
+    if(closeBtn){ ev.preventDefault(); closeAccess(); return; }
+    var stepBtn=ev.target.closest && ev.target.closest('#allAccessModal [data-access-step-target]');
+    if(stepBtn){ ev.preventDefault(); showStep(stepBtn.getAttribute('data-access-step-target')||'home'); return; }
+    var brokerBtn=ev.target.closest && ev.target.closest('#allAccessModal [data-broker-select]');
+    if(brokerBtn){
+      var broker=brokerBtn.getAttribute('data-broker-select')||'';
+      document.querySelectorAll('#allAccessModal [data-broker-select]').forEach(function(b){b.classList.toggle('is-active',b===brokerBtn);});
+      var details=document.getElementById('allAccessBrokerDetails'); if(details) details.classList.remove('access-hidden');
+      var link=document.getElementById('allAccessBrokerLink'); if(link && brokerLinks[broker]){link.href=brokerLinks[broker];link.setAttribute('data-link-url',brokerLinks[broker]);link.innerHTML='<i class="fa-solid fa-arrow-up-right-from-square"></i> Open '+broker+' Link';}
+      return;
+    }
+    var copyBtn=ev.target.closest && ev.target.closest('#copyAllAccessBrokerLink');
+    if(copyBtn){
+      ev.preventDefault();
+      var link=document.getElementById('allAccessBrokerLink'); var url=link && link.getAttribute('data-link-url');
+      if(url && navigator.clipboard) navigator.clipboard.writeText(url).catch(function(){});
+      return;
+    }
+    if(ev.target===modal()) closeAccess();
+  },true);
+  document.addEventListener('keydown',function(ev){ if(ev.key==='Escape' && modal() && modal().classList.contains('access-force-open')) closeAccess(); });
+})();
+</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/js/config.js"></script>
 
 <script src="assets/js/core.js?v=9.37"></script>
 <script src="assets/js/tracking.js?v=9.1"></script>
-<script src="assets/js/student.js?v=9.66"></script>
-<script src="assets/js/student-ui.js?v=9.66"></script>
+<script src="assets/js/student.js?v=9.67"></script>
+<script src="assets/js/student-ui.js?v=9.67"></script>
 </body>
 </html>
