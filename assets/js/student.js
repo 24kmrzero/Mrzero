@@ -10,7 +10,7 @@
   };
   window.StudentBase = { state, reload: async () => { await loadAll(); renderAll(); return state; } };
   let openPanel;
-  let signalView = 'active';
+  let signalStatusView = 'all';
 
   const result = await A.requireRole('student');
   if (!result) return;
@@ -22,7 +22,10 @@
   document.getElementById('supportEmail').href = `mailto:${A.cfg.SUPPORT_EMAIL}`;
 
   const initials = (state.profile.full_name || state.profile.email || 'ST').split(/\s+/).slice(0, 2).map(x => x[0]).join('').toUpperCase();
-  document.getElementById('welcomeName').textContent = `Welcome back, ${state.profile.full_name || 'Student'} 👋`;
+  const memberName = state.profile.full_name || 'Member';
+  const dashboardWelcome = document.getElementById('dashboardWelcomeName');
+  if (dashboardWelcome) dashboardWelcome.textContent = `${memberName} 👋`;
+  initDashboardClock();
   document.getElementById('studentAvatar').textContent = initials;
 
   await loadAll();
@@ -75,91 +78,170 @@
   function renderKpis() {
     const activeSignals = state.signals.filter(s => !signalIsFinal(s)).length;
     const approvedCourses = TEMP_OPEN_ACCESS ? state.courses.length : state.enrollments.filter(isEnrollmentActive).length;
-    const pending = state.payments.filter(p => ['initiated', 'received', 'under_review'].includes(p.status)).length;
-    const finals = state.signals.filter(s => signalIsFinal(s) && s.status !== 'cancelled' && s.result_pips !== null);
-    const wins = finals.filter(s => Number(s.result_pips) > 0).length;
-    const losses = finals.filter(s => Number(s.result_pips) < 0).length;
-    const breakeven = finals.filter(s => Number(s.result_pips) === 0).length;
-    const forex = finals.filter(s => resultUnit(s.symbol) === 'pips');
-    const markets = [];
-    const totalPips = forex.reduce((sum,s)=>sum+Number(s.result_pips||0),0);
-    const totalPoints = 0;
-    const weekStart = new Date(); weekStart.setDate(weekStart.getDate()-7);
-    const monthStart = new Date(); monthStart.setDate(1); monthStart.setHours(0,0,0,0);
-    const weekPips = forex.filter(s=>new Date(s.closed_at)>=weekStart).reduce((sum,s)=>sum+Number(s.result_pips||0),0);
-    const monthPips = forex.filter(s=>new Date(s.closed_at)>=monthStart).reduce((sum,s)=>sum+Number(s.result_pips||0),0);
-    const winRate = finals.length ? Math.round((wins / finals.length) * 100) : 0;
+    const todayKey = dateKey(new Date());
+    const todayCharts = state.charts.filter(c => dateKey(new Date(c.published_at || c.created_at || Date.now())) === todayKey).length;
     const data = [
-      ['fa-bolt', activeSignals, 'Active Signals', 'signals'],
-      ['fa-chart-line', state.charts.length, 'Published Charts', 'charts'],
-      ['fa-newspaper', state.articles.length, 'Learning Articles', 'articles'],
-      ['fa-graduation-cap', approvedCourses, 'Unlocked Courses', 'courses'],
-      ['fa-receipt', pending, 'Pending Payments', 'payments']
+      ['fa-bolt', activeSignals, 'Active Signals', 'Live setups & partial TPs', 'signals'],
+      ['fa-chart-column', todayCharts, "Today's Charts", 'Market analysis', 'charts'],
+      ['fa-file-lines', state.articles.length, 'Recent Articles', 'Education & insights', 'articles'],
+      ['fa-graduation-cap', approvedCourses, 'My Courses', 'Course access & classes', 'courses']
     ];
-    document.getElementById('studentKpis').innerHTML = data.map(([icon, value, label, panel]) => `<button type="button" class="app-kpi dashboard-nav-card" data-goto="${panel}" aria-label="Open ${label}"><i class="fa-solid ${icon}"></i><div><b>${value}</b><small>${label}</small></div><i class="fa-solid fa-arrow-right dashboard-nav-arrow"></i></button>`).join('');
-    document.getElementById('signalPerformance').innerHTML = [
-      ['Total Pips', signed(finals.filter(s=>s.status!=='cancelled').reduce((sum,s)=>sum+Number(s.result_pips||0),0))], ['Active Signals', state.signals.filter(s=>!signalIsFinal(s)).length], ['This Week Pips', signed(weekPips)],
-      ['This Month Pips', signed(monthPips)], ['Win Rate', `${winRate}%`], ['Closed Signals', finals.length],
-      ['Wins / Losses', `${wins} / ${losses}`], ['Breakeven', breakeven]
-    ].map(([label, value]) => `<div class="performance-item"><small>${label}</small><b>${value}</b></div>`).join('');
+    document.getElementById('studentKpis').innerHTML = data.map(([icon, value, label, note, panel]) => `<button type="button" class="app-kpi dashboard-nav-card" data-goto="${panel}" aria-label="Open ${label}"><span class="kpi-icon"><i class="fa-solid ${icon}"></i></span><div><small>${label}</small><b>${value}</b><em>${note}</em></div><span class="kpi-spark"><i></i><i></i><i></i></span><i class="fa-solid fa-arrow-right dashboard-nav-arrow"></i></button>`).join('');
+
+    const todaySignals = state.signals.filter(s => dateKey(new Date(s.published_at || s.created_at || Date.now())) === todayKey).length;
+    const tpHits = state.signalUpdates.filter(u => /^tp\d+_hit$/.test(String(u.event_type || ''))).length;
+    const monthStart = new Date(); monthStart.setDate(1); monthStart.setHours(0,0,0,0);
+    const closedMonth = state.signals.filter(s => signalIsFinal(s) && new Date(s.closed_at || s.last_status_at || s.updated_at || s.published_at) >= monthStart).length;
+    const summary = [
+      ['fa-bolt', activeSignals, 'Active Signals', 'Live setups in market', 'gold'],
+      ['fa-calendar-days', todaySignals, "Today's Signals", 'Published today', 'calendar'],
+      ['fa-bullseye', tpHits, 'TP Hits', 'Successful targets', 'target'],
+      ['fa-circle-check', closedMonth, 'Closed Signals', 'This month', 'closed']
+    ];
+    const performance = document.getElementById('signalPerformance');
+    if (performance) performance.innerHTML = summary.map(([icon,value,label,note,tone]) => `<div class="signal-summary-card ${tone}"><span class="signal-summary-icon"><i class="fa-solid ${icon}"></i></span><div><b>${value}</b><strong>${label}</strong><small>${note}</small></div></div>`).join('');
   }
 
-
   function renderDashboard() {
-    const pending = state.payments.find(p => ['received', 'under_review'].includes(p.status));
-    const resubmit = state.payments.find(p => p.status === 'resubmission_required');
-    const declined = state.payments.find(p => p.status === 'declined');
     const alert = document.getElementById('dashboardAlert');
-    if (TEMP_OPEN_ACCESS) alert.innerHTML = '';
-    else if (resubmit) alert.innerHTML = `<div class="notice bad"><i class="fa-solid fa-file-circle-exclamation"></i> Admin requested a new payment receipt. Open Payments and submit corrected proof. ${resubmit.admin_note?`<b>Reason: ${A.escapeHtml(resubmit.admin_note)}</b>`:''}</div>`;
-    else if (pending) alert.innerHTML = `<div class="notice warn"><i class="fa-solid fa-hourglass-half"></i> Your payment <b>${A.escapeHtml(pending.invoice_no || '')}</b> is ${A.statusLabel(pending.status).toLowerCase()}. Course access will unlock only after admin approval.</div>`;
-    else if (declined) alert.innerHTML = `<div class="notice bad"><i class="fa-solid fa-circle-xmark"></i> A payment was declined. Review the admin note in Payment History and submit a new receipt.</div>`;
-    else alert.innerHTML = '';
+    if (alert) alert.innerHTML = '';
 
-    document.getElementById('latestSignal').innerHTML = `<div class="dashboard-preview-link" data-goto="signals" role="button" tabindex="0" aria-label="Open Signals">${state.signals[0] ? signalCard(state.signals[0], true) : `<div class="dashboard-signal-empty"><span class="signal-empty-icon"><i class="fa-solid fa-bolt"></i></span><b>No signal has been published yet.</b><p>New high-quality setups will appear here as soon as they are published.</p><button type="button" class="app-btn gold small" data-refresh-dashboard><i class="fa-solid fa-rotate"></i> Refresh</button></div>`}</div>`;
-    const coursePreview = state.courses.slice(0, 2);
-    document.getElementById('dashboardCourses').innerHTML = coursePreview.length ? coursePreview.map(course => {
-      const access = hasCourseAccess(course.id);
-      const payment = latestPayment(course.id);
-      return `<div class="activity-item dashboard-course-row"><div class="course-mini-cover ${course.thumbnail_url?'has-image':''}">${course.thumbnail_url?`<img src="${attr(course.thumbnail_url)}" alt="${attr(course.title)}">`:`<i class="fa-solid fa-graduation-cap"></i>`}</div><div class="course-mini-copy"><b>${A.escapeHtml(course.title)}</b><small>${access ? (TEMP_OPEN_ACCESS ? 'Full member access' : 'Course access approved') : payment ? A.statusLabel(payment.status) : (course.course_type==='free'||Number(course.discount_price!=null?course.discount_price:course.price)===0 ? 'Free enrollment available' : `${A.formatMoney(course.discount_price!=null?course.discount_price:course.price, course.currency)} · Payment required`)}</small></div><span class="course-access-chip"><i class="fa-solid fa-check"></i> Access Granted</span><button class="app-btn small gold" data-open-course="${course.id}">Open</button></div>`;
-    }).join('') : empty('No course is currently available.', 'fa-graduation-cap');
+    const latest = state.signals[0];
+    document.getElementById('latestSignal').innerHTML = latest ? dashboardSignalSnapshot(latest) : `<div class="dashboard-empty-compact"><span><i class="fa-solid fa-bolt"></i></span><b>No active market signal right now.</b><small>Fresh setups will appear here automatically.</small><button type="button" class="text-link-btn" data-refresh-dashboard>Refresh <i class="fa-solid fa-rotate"></i></button></div>`;
 
     const next = state.sessions.filter(s => new Date(s.starts_at) >= new Date() && s.status !== 'cancelled')[0] || state.sessions.find(s => s.status === 'upcoming');
-    document.getElementById('nextSession').innerHTML = `<div class="dashboard-preview-link" data-goto="courses" role="button" tabindex="0" aria-label="Open Courses and live sessions">${next ? sessionCompact(next) : empty('No upcoming class has been scheduled.', 'fa-calendar')}</div>`;
-    const notice = state.announcements[0];
-    document.getElementById('latestAnnouncement').innerHTML = `<div class="dashboard-preview-link" data-goto="announcements" role="button" tabindex="0" aria-label="Open Announcements">${notice ? `<div class="announcement dashboard-announcement ${notice.priority === 'important' ? 'important' : ''}"><span class="announcement-icon"><i class="fa-solid fa-bullhorn"></i></span><div><h4>${A.escapeHtml(notice.title)}</h4><p>${A.escapeHtml(notice.message)}</p><small><i class="fa-regular fa-calendar"></i> ${A.formatDate(notice.published_at)}</small></div><span class="announcement-more">Read More <i class="fa-solid fa-arrow-right"></i></span></div>` : empty('No announcement has been published.', 'fa-bullhorn')}</div>`;
+    document.getElementById('nextSession').innerHTML = next ? dashboardClassSnapshot(next) : `<div class="dashboard-empty-compact class-empty"><span><i class="fa-solid fa-calendar-check"></i></span><b>No upcoming class scheduled</b><small>Your next live class will appear here when published.</small><button type="button" class="text-link-btn" data-goto="courses">Open Courses <i class="fa-solid fa-arrow-right"></i></button></div>`;
+
+    const analysis = state.charts.slice(0, 3);
+    const analysisWrap = document.getElementById('dashboardMarketAnalysis');
+    if (analysisWrap) analysisWrap.innerHTML = analysis.length ? analysis.map(chart => `<button type="button" class="analysis-mini-row" data-read-chart="${chart.id}"><span class="analysis-thumb ${chart.image_url ? 'has-image' : ''}">${chart.image_url ? `<img src="${attr(chart.image_url)}" alt="${attr(chart.title)}">` : '<i class="fa-solid fa-chart-candlestick"></i>'}</span><span class="analysis-mini-copy"><b>${A.escapeHtml(chart.title)}</b><small>${A.escapeHtml(chart.symbol || 'Market')} · ${A.escapeHtml(chart.timeframe || 'Analysis')}</small><em>${A.formatDateTime(chart.published_at)}</em></span><i class="fa-solid fa-arrow-right"></i></button>`).join('') : `<div class="dashboard-empty-inline"><i class="fa-solid fa-chart-line"></i><span>No market analysis published yet.</span></div>`;
+
+    const upcoming = state.sessions.filter(s => new Date(s.starts_at) >= new Date() && s.status !== 'cancelled').length;
+    const latestNotice = state.announcements[0];
+    const learning = document.getElementById('dashboardLearningSnapshot');
+    if (learning) learning.innerHTML = `<div class="learning-mini-stats"><button data-goto="courses"><small>COURSES</small><b>${state.courses.length}</b><span>Published</span></button><button data-goto="courses"><small>UPCOMING</small><b>${upcoming}</b><span>Live classes</span></button><button data-goto="articles"><small>ARTICLES</small><b>${state.articles.length}</b><span>Learning posts</span></button><button data-goto="payments"><small>PAYMENTS</small><b>${state.payments.length}</b><span>History</span></button></div><div class="dashboard-quick-links"><button data-goto="courses"><i class="fa-solid fa-graduation-cap"></i> Courses</button><button data-goto="charts"><i class="fa-solid fa-chart-line"></i> Live Charts</button><button data-goto="signals"><i class="fa-solid fa-bolt"></i> Signals</button><button data-goto="profile"><i class="fa-regular fa-circle-user"></i> My Profile</button></div>${latestNotice ? `<button class="latest-update-strip" data-goto="announcements"><i class="fa-solid fa-bullhorn"></i><span><small>LATEST UPDATE</small><b>${A.escapeHtml(latestNotice.title)}</b></span><i class="fa-solid fa-arrow-right"></i></button>` : ''}`;
   }
 
   function renderSignals() {
     const query = document.getElementById('signalSearch')?.value.trim().toLowerCase() || '';
-    const status = document.getElementById('signalStatusFilter')?.value || 'all';
     const direction = document.getElementById('signalDirectionFilter')?.value || 'all';
-    const activeRows = state.signals.filter(s => !signalIsFinal(s));
-    const historyRows = state.signals.filter(signalIsFinal);
-    const activeCount = document.getElementById('activeSignalsTabCount');
-    const historyCount = document.getElementById('historySignalsTabCount');
-    if (activeCount) activeCount.textContent = activeRows.length;
-    if (historyCount) historyCount.textContent = historyRows.length;
-    document.querySelectorAll('[data-signal-view]').forEach(btn => {
-      const selected = btn.dataset.signalView === signalView;
+    const instrument = document.getElementById('signalInstrumentFilter')?.value || 'all';
+    const dateValue = document.getElementById('signalDateFilter')?.value || '';
+    syncSignalInstrumentFilter();
+
+    document.querySelectorAll('[data-signal-status]').forEach(btn => {
+      const selected = btn.dataset.signalStatus === signalStatusView;
       btn.classList.toggle('active', selected);
       btn.setAttribute('aria-selected', selected ? 'true' : 'false');
     });
-    const baseRows = signalView === 'active' ? activeRows : historyRows;
-    const rows = baseRows.filter(s => {
-      const result = Number(s.result_pips || 0);
-      const statusMatch = signalView === 'active' || status === 'all' || (status === 'wins' && result > 0) || (status === 'losses' && result < 0) || (status === 'breakeven' && s.status === 'breakeven_hit') || (status === 'cancelled' && s.status === 'cancelled');
-      return (!query || `${s.symbol} ${s.notes || ''}`.toLowerCase().includes(query)) && statusMatch && (direction === 'all' || s.direction === direction);
+
+    const rows = state.signals.filter(s => {
+      const searchable = `${s.symbol || ''} ${s.notes || ''} ${s.direction || ''}`.toLowerCase();
+      const symbolKey = String(s.symbol || '').replace('/','').toUpperCase();
+      const publishedKey = dateKey(new Date(s.published_at || s.created_at || Date.now()));
+      return (!query || searchable.includes(query))
+        && (direction === 'all' || String(s.direction || '').toUpperCase() === direction)
+        && (instrument === 'all' || symbolKey === instrument)
+        && (!dateValue || publishedKey === dateValue)
+        && matchesSignalStatus(s, signalStatusView);
     });
-    const statusFilter = document.getElementById('signalStatusFilter');
-    if (statusFilter) statusFilter.classList.toggle('hidden', signalView === 'active');
-    document.getElementById('signalsGrid').innerHTML = rows.length
-      ? (signalView === 'history' ? renderSignalHistoryGroups(rows) : renderSignalDateGroups(rows, signalView))
-      : empty(signalView === 'active' ? 'No active signal is available.' : 'No closed signal matches these filters.', 'fa-filter');
-    const latest=state.signalUpdates.find(u=>u.notify_users);
-    document.getElementById('latestSignalUpdate').innerHTML=latest?`<div class="signal-update-banner"><i class="fa-solid fa-bell"></i><div><b>${A.escapeHtml(latest.notification_title||eventLabel(latest.event_type))}</b><small style="display:block;color:#888">${A.escapeHtml(latest.notification_message||'')} · ${A.formatDateTime(latest.created_at)}</small></div></div>`:'';
+
+    const grid = document.getElementById('signalsGrid');
+    if (!grid) return;
+    if (!rows.length) {
+      grid.innerHTML = `<div class="signal-table-empty"><i class="fa-solid fa-filter-circle-xmark"></i><b>No signals match these filters.</b><span>Try changing status, instrument or date.</span></div>`;
+    } else {
+      grid.innerHTML = `<table class="premium-signal-table"><thead><tr><th>Time / Date</th><th>Instrument</th><th>Type</th><th>Entry Zone</th><th>SL</th><th>TP1</th><th>TP2</th><th>TP3</th><th>Current Pips</th><th>Status</th><th>Published By</th></tr></thead><tbody>${rows.map(signalTableRow).join('')}</tbody></table><div class="signal-table-footer">Showing 1 to ${rows.length} of ${rows.length} signal${rows.length === 1 ? '' : 's'}</div>`;
+    }
+
+    const latest = state.signalUpdates.find(u => u.notify_users);
+    document.getElementById('latestSignalUpdate').innerHTML = latest ? `<div class="signal-update-banner compact"><i class="fa-solid fa-bell"></i><div><b>${A.escapeHtml(latest.notification_title||eventLabel(latest.event_type))}</b><small>${A.escapeHtml(latest.notification_message||'')} · ${A.formatDateTime(latest.created_at)}</small></div></div>` : '';
   }
 
+  function syncSignalInstrumentFilter() {
+    const select = document.getElementById('signalInstrumentFilter');
+    if (!select) return;
+    const selected = select.value || 'all';
+    const symbols = [...new Set(state.signals.map(s => String(s.symbol || '').replace('/','').toUpperCase()).filter(Boolean))].sort();
+    select.innerHTML = `<option value="all">All Instruments</option>${symbols.map(symbol => `<option value="${attr(symbol)}">${A.escapeHtml(displaySymbol(symbol))}</option>`).join('')}`;
+    select.value = symbols.includes(selected) ? selected : 'all';
+  }
+
+  function matchesSignalStatus(signal, key) {
+    if (!key || key === 'all') return true;
+    const status = String(signal.status || '').toLowerCase();
+    const order = String(signal.order_type || '').toLowerCase();
+    if (key === 'active') return !signalIsFinal(signal) && !['pending','waiting'].includes(status);
+    if (key === 'pending') return ['pending','waiting'].includes(status) || status.includes('pending') || (!signalIsFinal(signal) && (order.includes('limit') || order.includes('stop')) && !signal.activated_at && status !== 'active');
+    if (key === 'tp_hit') return Number(signal.tp_hit || 0) > 0 || /^tp\d+_hit$/.test(status);
+    if (key === 'be') return Boolean(signal.be_moved) || ['breakeven_hit','move_to_be','be'].includes(status);
+    if (key === 'closed') return signalIsFinal(signal);
+    if (key === 'sl') return status === 'sl_hit';
+    return true;
+  }
+
+  function signalTableRow(signal) {
+    const d = new Date(signal.published_at || signal.created_at || Date.now());
+    const time = Number.isNaN(d.getTime()) ? '—' : new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Karachi',hour:'2-digit',minute:'2-digit',hour12:true}).format(d);
+    const date = Number.isNaN(d.getTime()) ? '—' : new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Karachi',day:'2-digit',month:'short',year:'numeric'}).format(d);
+    const symbol = String(signal.symbol || '').replace('/','').toUpperCase();
+    const meta = instrumentMeta(symbol);
+    const currentPips = latestSignalPips(signal);
+    const pipClass = currentPips == null ? '' : Number(currentPips) > 0 ? 'positive' : Number(currentPips) < 0 ? 'negative' : 'neutral';
+    const pipText = currentPips == null ? '—' : `${signed(currentPips)} Pips`;
+    const status = signalDisplayStatus(signal);
+    return `<tr data-student-signal-history="${signal.id}" tabindex="0"><td><b>${A.escapeHtml(time)}</b><small>${A.escapeHtml(date)}</small></td><td><div class="instrument-cell"><span class="instrument-badge ${meta.tone}">${meta.icon}</span><div><b>${A.escapeHtml(displaySymbol(symbol))}</b><small>${A.escapeHtml(meta.name)}</small></div></div></td><td><span class="table-direction ${String(signal.direction||'').toLowerCase()}">${A.escapeHtml(signal.direction || '—')}</span></td><td><b>${entryText(signal)}</b></td><td>${num(signal.stop_loss)}</td><td>${num(signal.take_profit_1)}</td><td>${num(signal.take_profit_2)}</td><td>${num(signal.take_profit_3)}</td><td><b class="table-pips ${pipClass}">${A.escapeHtml(pipText)}</b></td><td><span class="signal-table-status ${status.tone}">${A.escapeHtml(status.label)}</span></td><td><span class="publisher-name">Malik Zameer</span></td></tr>`;
+  }
+
+  function latestSignalPips(signal) {
+    if (signal.result_pips !== null && signal.result_pips !== undefined) return Number(signal.result_pips);
+    const update = state.signalUpdates.find(u => u.signal_id === signal.id && u.result_pips !== null && u.result_pips !== undefined);
+    return update ? Number(update.result_pips) : null;
+  }
+
+  function signalDisplayStatus(signal) {
+    const status = String(signal.status || '').toLowerCase();
+    if (status === 'sl_hit') return { label:'SL Hit', tone:'sl' };
+    if (status === 'cancelled') return { label:'Cancelled', tone:'closed' };
+    if (status === 'breakeven_hit' || signal.be_moved) return { label:'BE', tone:'be' };
+    if (Number(signal.tp_hit || 0) > 0 && !signalIsFinal(signal)) return { label:`TP${Math.min(3,Number(signal.tp_hit||0))} Hit`, tone:'tp' };
+    if (/^tp\d+_hit$/.test(status)) return { label:A.statusLabel(status), tone:'tp' };
+    if (signalIsFinal(signal)) return { label:A.statusLabel(status || 'closed'), tone:'closed' };
+    if (status.includes('pending') || status === 'waiting') return { label:'Pending', tone:'pending' };
+    return { label:'Active', tone:'active' };
+  }
+
+  function instrumentMeta(symbol) {
+    const map = {
+      XAUUSD:{icon:'<i class="fa-solid fa-coins"></i>',name:'Gold / USD',tone:'gold'},
+      XAGUSD:{icon:'<i class="fa-solid fa-circle-half-stroke"></i>',name:'Silver / USD',tone:'silver'},
+      EURUSD:{icon:'€',name:'Euro / USD',tone:'blue'},
+      GBPUSD:{icon:'£',name:'GBP / USD',tone:'navy'},
+      AUDUSD:{icon:'A$',name:'AUD / USD',tone:'blue'},
+      USDJPY:{icon:'¥',name:'USD / JPY',tone:'red'},
+      USOIL:{icon:'<i class="fa-solid fa-droplet"></i>',name:'Crude Oil',tone:'black'},
+      BTCUSD:{icon:'₿',name:'Bitcoin / USD',tone:'orange'}
+    };
+    return map[symbol] || {icon:'<i class="fa-solid fa-chart-line"></i>',name:displaySymbol(symbol),tone:'gold'};
+  }
+
+  function dashboardSignalSnapshot(signal) {
+    const status = signalDisplayStatus(signal);
+    const pips = latestSignalPips(signal);
+    return `<button type="button" class="dashboard-signal-snapshot" data-goto="signals"><div class="dash-signal-top"><div><b>${A.escapeHtml(displaySymbol(signal.symbol))}</b><span class="table-direction ${String(signal.direction||'').toLowerCase()}">${A.escapeHtml(signal.direction || '—')}</span></div><span class="signal-table-status ${status.tone}">${A.escapeHtml(status.label)}</span></div><div class="dash-signal-note">${A.escapeHtml(signal.notes || 'Live trade setup')}</div><div class="dash-signal-levels"><span><small>ENTRY</small><b>${entryText(signal)}</b></span><span><small>STOP LOSS</small><b>${num(signal.stop_loss)}</b></span><span><small>TP1</small><b>${num(signal.take_profit_1)}</b></span><span><small>TP2</small><b>${num(signal.take_profit_2)}</b></span><span><small>TP3</small><b>${num(signal.take_profit_3)}</b></span></div><div class="dash-signal-foot"><small>Opened ${A.formatDateTime(signal.published_at)}</small><b class="table-pips ${pips>0?'positive':pips<0?'negative':''}">${pips==null?'Live':`${signed(pips)} Pips`}</b></div></button>`;
+  }
+
+  function dashboardClassSnapshot(session) {
+    const course = state.courses.find(c => c.id === session.course_id);
+    return `<button type="button" class="dashboard-class-snapshot" data-open-course="${session.course_id}"><div class="class-status-row"><span class="class-upcoming">${A.escapeHtml(A.statusLabel(session.status || 'upcoming'))}</span><span class="class-live-icon"><i class="fa-solid fa-video"></i></span></div><h4>${A.escapeHtml(session.title)}</h4><p>${A.escapeHtml(course?.title || '24K Excellence')}</p><div class="class-meta-row"><span><i class="fa-regular fa-calendar"></i>${A.formatDateTime(session.starts_at)}</span><span><i class="fa-solid fa-user-tie"></i>Malik Zameer</span></div><span class="class-open-link">Open Class <i class="fa-solid fa-arrow-right"></i></span></button>`;
+  }
+
+  function dateKey(date) {
+    if (!(date instanceof Date) || Number.isNaN(date.getTime())) return '';
+    const parts = new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Karachi',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(date);
+    const map = Object.fromEntries(parts.map(part => [part.type, part.value]));
+    return `${map.year}-${map.month}-${map.day}`;
+  }
 
   function renderSignalDateGroups(rows, view = 'active') {
     const groups = new Map();
@@ -373,7 +455,11 @@
     const verified = Boolean(state.profile?.email_verified);
     const banner = document.getElementById('emailVerificationBanner');
     const card = document.getElementById('emailVerificationCard');
-    if (banner) banner.innerHTML = verified ? '' : `<div class="notice warn email-verify-banner"><i class="fa-solid fa-envelope-circle-check"></i><div><b>Verify your email address</b><span> Secure your account and receive important class and account emails. Your member sections are currently available.</span></div><button type="button" class="app-btn small gold" data-request-email-verification>Verify Email</button></div>`;
+    const accountBadge = document.getElementById('dashboardAccountBadge');
+    if (banner) banner.innerHTML = '';
+    if (accountBadge) accountBadge.innerHTML = verified
+      ? `<span class="account-check"><i class="fa-solid fa-check"></i></span><span><b>Account Verified</b><small>Email verification complete</small></span>`
+      : `<span class="account-check pending"><i class="fa-solid fa-envelope"></i></span><span><b>Verify Email</b><small>Recommended for account security</small></span><button type="button" data-request-email-verification>Verify</button>`;
     if (card) card.innerHTML = verified
       ? `<div class="email-verify-card-row"><div class="email-verify-icon verified"><i class="fa-solid fa-circle-check"></i></div><div><h3>Email Verified</h3><p class="muted">${A.escapeHtml(state.profile.email || '')} is verified and your account verification is complete.</p></div><span class="status-pill ok">Verified</span></div>`
       : `<div class="email-verify-card-row"><div class="email-verify-icon"><i class="fa-solid fa-envelope"></i></div><div><h3>Email Verification</h3><p class="muted">Verify ${A.escapeHtml(state.profile.email || '')} to secure your account and keep important email updates enabled.</p></div><button type="button" class="app-btn gold" data-request-email-verification><i class="fa-solid fa-paper-plane"></i> Send Verification Email</button></div>`;
@@ -400,17 +486,17 @@
 
   function bindEvents() {
     document.addEventListener('panel:open', event => {
-      if (event.detail.key === 'signals' && !state.riskAccepted) A.openModal('riskModal');
+      if (!TEMP_OPEN_ACCESS && event.detail.key === 'signals' && !state.riskAccepted) A.openModal('riskModal');
       if (event.detail.key === 'courses') resetCourseView();
     });
-    ['signalSearch','signalStatusFilter','signalDirectionFilter'].forEach(id => document.getElementById(id)?.addEventListener('input', renderSignals));
+    ['signalSearch','signalDirectionFilter','signalInstrumentFilter','signalDateFilter'].forEach(id => { const el=document.getElementById(id); el?.addEventListener('input', renderSignals); el?.addEventListener('change', renderSignals); });
     ['chartSearch','chartTimeframeFilter'].forEach(id => document.getElementById(id)?.addEventListener('input', renderCharts));
     document.getElementById('articleSearch')?.addEventListener('input', renderArticles);
     document.getElementById('closeSessions').addEventListener('click', resetCourseView);
 
     document.body.addEventListener('click', async event => {
-      const signalViewButton = event.target.closest('[data-signal-view]');
-      if (signalViewButton) { signalView = signalViewButton.dataset.signalView; renderSignals(); }
+      const signalStatusButton = event.target.closest('[data-signal-status]');
+      if (signalStatusButton) { signalStatusView = signalStatusButton.dataset.signalStatus || 'all'; renderSignals(); }
       const courseOpen = event.target.closest('[data-open-course]');
       if (courseOpen) { openPanel('courses'); showCourseSessions(courseOpen.dataset.openCourse); }
       const buy = event.target.closest('[data-buy-course]');
@@ -442,6 +528,20 @@
       }
     });
 
+    document.getElementById('signalFilterToggle')?.addEventListener('click', () => document.getElementById('signalFilterBar')?.classList.toggle('open'));
+    document.getElementById('signalClearFilters')?.addEventListener('click', () => {
+      const search=document.getElementById('signalSearch'); if(search) search.value='';
+      const direction=document.getElementById('signalDirectionFilter'); if(direction) direction.value='all';
+      const instrument=document.getElementById('signalInstrumentFilter'); if(instrument) instrument.value='all';
+      const date=document.getElementById('signalDateFilter'); if(date) date.value='';
+      signalStatusView='all'; renderSignals();
+    });
+    document.getElementById('signalRefresh')?.addEventListener('click', async event => {
+      const button=event.currentTarget; A.setLoading(button,true,'Refreshing...');
+      try { await loadAll(); renderAll(); A.toast('Signals refreshed.','success'); }
+      catch(error){ A.toast(A.friendlyError(error,'Could not refresh signals.'),'error'); }
+      finally { A.setLoading(button,false); }
+    });
     document.getElementById('enableSignalAlerts')?.addEventListener('click', enableSignalAlerts);
     updateAlertButton();
     document.getElementById('paymentForm').addEventListener('submit', submitPayment);
@@ -655,7 +755,9 @@
     try {
       const changes = { full_name: String(values.full_name).trim(), whatsapp: String(values.whatsapp).trim(), country: String(values.country || '').trim(), experience: String(values.experience || '') };
       const { error } = await A.supabase.from('profiles').update(changes).eq('id', state.user.id); if (error) throw error;
-      Object.assign(state.profile, changes); document.getElementById('welcomeName').textContent = `Welcome back, ${state.profile.full_name} 👋`;
+      Object.assign(state.profile, changes);
+      const dashName=document.getElementById('dashboardWelcomeName'); if(dashName) dashName.textContent=`${state.profile.full_name || 'Member'} 👋`;
+      window.dispatchEvent(new CustomEvent('24k:student-base-updated',{detail:state}));
       A.toast('Profile updated successfully.', 'success');
     } catch (error) { A.toast(A.friendlyError(error, 'Could not update profile.'), 'error'); }
     finally { A.setLoading(button, false); }
@@ -682,6 +784,25 @@
     finally { A.setLoading(button, false); }
   }
 
+
+  function initDashboardClock() {
+    const update = () => {
+      const now = new Date();
+      const time = new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Karachi',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(now);
+      const shortTime = new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Karachi',hour:'numeric',minute:'2-digit',hour12:true}).format(now);
+      const date = new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Karachi',weekday:'short',day:'2-digit',month:'short',year:'numeric'}).format(now);
+      const topClock=document.getElementById('topbarClock'); if(topClock) topClock.textContent=time;
+      const dashClock=document.getElementById('dashboardClock'); if(dashClock) dashClock.textContent=`${shortTime} PKT`;
+      const topDate=document.getElementById('topbarDate'); if(topDate) topDate.textContent=date;
+      const dashDate=document.getElementById('dashboardToday'); if(dashDate) dashDate.textContent=date;
+      const utc=now.getUTCHours()+now.getUTCMinutes()/60;
+      const active=(start,end)=>start<=end?(utc>=start&&utc<end):(utc>=start||utc<end);
+      const sessions={sydney:active(22,7),tokyo:active(0,9),london:active(7,16),newyork:active(12,21)};
+      document.querySelectorAll('[data-session]').forEach(el=>el.classList.toggle('is-open',Boolean(sessions[el.dataset.session])));
+    };
+    update();
+    if (!window.__24K_DASH_CLOCK__) window.__24K_DASH_CLOCK__=setInterval(update,1000);
+  }
 
   function subscribeRealtime() {
     let timer;

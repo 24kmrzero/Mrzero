@@ -7,8 +7,8 @@
 <script>(function(){try{var t=localStorage.getItem('24k-excellence-theme');document.documentElement.dataset.theme=t==='light'?'light':'dark'}catch(e){document.documentElement.dataset.theme='dark'}})();</script>
 <title>Student Panel | 24K Excellence</title>
 <link rel="icon" href="assets/logo.png">
-<link rel="stylesheet" href="app.css?v=9.50" onload="document.documentElement.classList.add('student-base-css-ready')">
-<link rel="stylesheet" href="assets/student-premium.css?v=9.50" onload="document.documentElement.classList.add('student-css-ready')">
+<link rel="stylesheet" href="app.css?v=9.51" onload="document.documentElement.classList.add('student-base-css-ready')">
+<link rel="stylesheet" href="assets/student-premium.css?v=9.51" onload="document.documentElement.classList.add('student-css-ready')">
 <style>html:not(.student-base-css-ready) body.student-page,html:not(.student-css-ready) body.student-page{visibility:hidden}</style>
 <script>setTimeout(function(){document.documentElement.classList.add('student-base-css-ready','student-css-ready')},1800);</script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -56,8 +56,10 @@
   <main class="app-main">
     <header class="app-topbar">
       <button class="app-burger" id="burger" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
-      <div class="app-title"><strong id="welcomeName">Welcome back</strong><small>Signals, learning and live classes in one place</small></div>
-      <div class="app-search"><i class="fa-solid fa-magnifying-glass"></i><input id="globalSearch" type="search" placeholder="Search signals, charts, articles, classes..."></div>
+      <div class="app-title dashboard-top-title"><strong>Dashboard</strong><small id="topbarDate">Loading date...</small></div>
+      <div class="top-market-clock" aria-label="Pakistan trading time"><span class="clock-dot"></span><b id="topbarClock">--:--:--</b><span class="top-timezone">PKT (GMT+5)</span></div>
+      <div class="market-session-chips" aria-label="Market sessions"><span data-session="sydney">SYD</span><span data-session="tokyo">TYO</span><span data-session="london">LDN</span><span data-session="newyork">NY</span></div>
+      <div class="app-search"><i class="fa-solid fa-magnifying-glass"></i><input id="globalSearch" type="search" placeholder="Search anything..."></div>
       <button class="app-theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme" title="Switch to light theme"><i class="fa-solid fa-sun"></i></button>
       <button class="app-notify" data-goto="announcements" aria-label="Announcements"><i class="fa-solid fa-bell"></i><span id="topNoticeCount">0</span></button>
       <div class="app-avatar" id="studentAvatar">ST</div>
@@ -65,45 +67,86 @@
 
     <div class="app-content">
       <section class="panel on" id="p-dashboard">
-        <div class="dashboard-command reference-hero">
-          <div class="hero-market-scene" aria-hidden="true">
-            <span class="hero-candle c1"></span><span class="hero-candle c2"></span><span class="hero-candle c3"></span><span class="hero-candle c4"></span><span class="hero-candle c5"></span><span class="hero-candle c6"></span><span class="hero-candle c7"></span><span class="hero-candle c8"></span>
-            <div class="hero-trend-line"></div>
-            <div class="hero-24k-mark">24K<span>EXCELLENCE</span></div>
+        <div class="compact-welcome-banner">
+          <div class="compact-welcome-copy">
+            <span class="compact-kicker">WELCOME BACK,</span>
+            <h1 id="dashboardWelcomeName">24K Member 👋</h1>
+            <p>Your live market, learning and account overview — updated in real time.</p>
+            <div class="compact-welcome-meta">
+              <span><i class="fa-regular fa-calendar"></i><b id="dashboardToday">—</b></span>
+              <span><i class="fa-regular fa-clock"></i><b id="dashboardClock">—</b></span>
+              <span class="live-chip"><i></i> LIVE</span>
+            </div>
           </div>
-          <div class="dashboard-command-copy">
-            <span class="panel-eyebrow"><i class="fa-solid fa-crown"></i> 24K MEMBER AREA</span>
-            <h1>Your Premium Trading Hub</h1>
-            <p>Signals, live classes, premium courses and account updates — all in one focused member workspace.</p>
+          <div class="compact-market-art" aria-hidden="true">
+            <div class="art-bars"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="art-globe"><span></span></div>
           </div>
-          <div class="dashboard-command-actions">
-            <button class="app-btn gold hero-course-btn" data-goto="courses"><i class="fa-solid fa-graduation-cap"></i> View Courses <i class="fa-solid fa-arrow-right"></i></button>
-          </div>
+          <div id="dashboardAccountBadge" class="compact-account-badge"></div>
         </div>
-        <div class="dashboard-status-row">
-          <div id="emailVerificationBanner"></div>
-          <div class="member-access-strip"><span class="member-strip-icon"><i class="fa-solid fa-unlock-keyhole"></i></span><div><b>Full Member Access Active</b><small>Signals, Charts, Articles, Courses and member tools are open for now.</small></div><span class="member-active-pill">Active</span></div>
-        </div>
+        <div id="emailVerificationBanner" class="compact-email-banner"></div>
         <div id="dashboardAlert"></div>
-        <div class="kpi-grid" id="studentKpis"></div>
-        <div class="app-grid cols-2">
-          <div>
-            <div class="app-card premium-feature-card market-card"><div class="app-card-head"><div><span class="card-title-icon"><i class="fa-solid fa-bolt"></i></span><h3>Latest Signal</h3><p>Most recently published trading setup</p></div><button class="app-btn small outline" data-goto="signals">View All</button></div><div id="latestSignal"></div></div>
-            <div class="app-card premium-feature-card learning-card"><div class="app-card-head"><div><span class="card-title-icon"><i class="fa-solid fa-graduation-cap"></i></span><h3>Your Courses</h3><p>Your published courses and live learning schedule</p></div><button class="app-btn small outline" data-goto="courses">Open Courses</button></div><div id="dashboardCourses"></div></div>
+        <div class="kpi-grid compact-kpi-grid" id="studentKpis"></div>
+
+        <div class="dashboard-compact-grid primary-grid">
+          <div class="app-card compact-dashboard-card signal-snapshot-card">
+            <div class="compact-card-head"><div><span>MARKET SIGNAL</span><h3>Latest Signal</h3></div><button class="text-link-btn" data-goto="signals">View All <i class="fa-solid fa-arrow-right"></i></button></div>
+            <div id="latestSignal"></div>
           </div>
-          <div>
-            <div class="app-card premium-feature-card live-card"><div class="app-card-head"><div><span class="card-title-icon live"><i class="fa-solid fa-video"></i></span><h3>Next Live Class</h3><p>Instructor: Malik Zameer</p></div><span class="live-watermark">LIVE</span></div><div id="nextSession"></div></div>
-            <div class="app-card premium-feature-card update-card"><div class="app-card-head"><div><span class="card-title-icon"><i class="fa-solid fa-bullhorn"></i></span><h3>Latest Announcement</h3><p>Important updates from the team</p></div><button class="app-btn small outline" data-goto="announcements">View All</button></div><div id="latestAnnouncement"></div></div>
+          <div class="app-card compact-dashboard-card live-learning-card">
+            <div class="compact-card-head"><div><span>LIVE LEARNING</span><h3>Next Live Class</h3></div><button class="text-link-btn" data-goto="courses">My Courses <i class="fa-solid fa-arrow-right"></i></button></div>
+            <div id="nextSession"></div>
+          </div>
+        </div>
+
+        <div class="dashboard-compact-grid secondary-grid">
+          <div class="app-card compact-dashboard-card analysis-snapshot-card">
+            <div class="compact-card-head"><div><span>MARKET INTELLIGENCE</span><h3>Latest Market Analysis</h3></div><button class="text-link-btn" data-goto="charts">Explore <i class="fa-solid fa-arrow-right"></i></button></div>
+            <div id="dashboardMarketAnalysis"></div>
+          </div>
+          <div class="app-card compact-dashboard-card learning-snapshot-card">
+            <div class="compact-card-head"><div><span>YOUR LEARNING</span><h3>Member Snapshot</h3></div><button class="text-link-btn" data-goto="courses">Open Courses <i class="fa-solid fa-arrow-right"></i></button></div>
+            <div id="dashboardLearningSnapshot"></div>
           </div>
         </div>
       </section>
 
       <section class="panel" id="p-signals">
-        <div class="panel-heading"><div><h2>Trading Signals</h2><p>Live signal management, animated TP progress and complete official result history.</p></div><div class="inline-actions"><button class="app-btn outline live-alert-btn" id="enableSignalAlerts"><i class="fa-solid fa-bell"></i> Enable Live Alerts</button><a class="app-btn outline" href="risk-disclaimer.html" target="_blank"><i class="fa-solid fa-triangle-exclamation"></i> Risk Disclaimer</a></div></div>
+        <div class="signals-page-header">
+          <div><h2>Trading Signals <i class="fa-solid fa-tower-broadcast"></i></h2><p>Track active setups, updates and completed trades.</p></div>
+          <div class="signals-header-actions">
+            <button class="signal-action-btn" type="button" id="signalRefresh"><i class="fa-solid fa-rotate"></i> Refresh</button>
+            <button class="signal-action-btn primary" type="button" id="signalFilterToggle"><i class="fa-solid fa-sliders"></i> Filters</button>
+          </div>
+        </div>
         <div id="latestSignalUpdate"></div>
-        <div class="performance-grid" id="signalPerformance"></div>
-        <div class="signal-view-tabs" role="tablist" aria-label="Signal view"><button type="button" class="signal-view-tab active" data-signal-view="active" role="tab" aria-selected="true"><i class="fa-solid fa-bolt"></i> Active Signals <span id="activeSignalsTabCount">0</span></button><button type="button" class="signal-view-tab" data-signal-view="history" role="tab" aria-selected="false"><i class="fa-solid fa-clock-rotate-left"></i> History <span id="historySignalsTabCount">0</span></button></div><div class="filter-row"><input id="signalSearch" type="search" placeholder="Search pair or note..."><select id="signalStatusFilter"><option value="all">All Results</option><option value="wins">Wins</option><option value="losses">Losses</option><option value="breakeven">Breakeven</option><option value="cancelled">Cancelled</option></select><select id="signalDirectionFilter"><option value="all">Buy & Sell</option><option value="BUY">Buy</option><option value="SELL">Sell</option></select></div>
-        <div class="signal-grid" id="signalsGrid"></div>
+        <div class="signal-summary-grid" id="signalPerformance"></div>
+
+        <div class="signal-table-card">
+          <div class="signal-table-toolbar">
+            <div class="signal-status-tabs" role="tablist" aria-label="Signal status">
+              <button type="button" class="active" data-signal-status="all">All</button>
+              <button type="button" data-signal-status="active">Active</button>
+              <button type="button" data-signal-status="pending">Pending</button>
+              <button type="button" data-signal-status="tp_hit">TP Hit</button>
+              <button type="button" data-signal-status="be">BE</button>
+              <button type="button" data-signal-status="closed">Closed</button>
+              <button type="button" data-signal-status="sl">SL</button>
+            </div>
+            <div class="signal-primary-filters">
+              <select id="signalInstrumentFilter"><option value="all">All Instruments</option></select>
+              <div class="signal-date-control"><i class="fa-regular fa-calendar"></i><input id="signalDateFilter" type="date" aria-label="Filter signals by date"></div>
+            </div>
+          </div>
+          <div class="signal-advanced-filters" id="signalFilterBar">
+            <div class="filter-field"><i class="fa-solid fa-magnifying-glass"></i><input id="signalSearch" type="search" placeholder="Search pair or note..."></div>
+            <select id="signalDirectionFilter"><option value="all">Buy & Sell</option><option value="BUY">Buy</option><option value="SELL">Sell</option></select>
+            <button class="signal-filter-clear" type="button" id="signalClearFilters"><i class="fa-solid fa-eraser"></i> Clear</button>
+            <a class="signal-risk-link" href="risk-disclaimer.html" target="_blank"><i class="fa-solid fa-triangle-exclamation"></i> Risk Disclaimer</a>
+            <button class="signal-alert-inline" type="button" id="enableSignalAlerts"><i class="fa-solid fa-bell"></i> Enable Live Alerts</button>
+          </div>
+          <div class="signal-table-scroll" id="signalsGrid"></div>
+        </div>
       </section>
 
       <section class="panel" id="p-charts">
@@ -173,9 +216,9 @@
 
 <script src="assets/js/core.js?v=9.37"></script>
 <script src="assets/js/tracking.js?v=9.1"></script>
-<script src="assets/js/student.js?v=9.50"></script>
-<script src="assets/js/student-ui.js?v=9.50"></script>
+<script src="assets/js/student.js?v=9.51"></script>
+<script src="assets/js/student-ui.js?v=9.51"></script>
 <script src="assets/js/platform-v8-student.js?v=9.12"></script>
-<script src="assets/js/student-open-access.js?v=9.50"></script>
+<script src="assets/js/student-open-access.js?v=9.51"></script>
 </body>
 </html>
