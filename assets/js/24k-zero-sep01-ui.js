@@ -495,27 +495,30 @@ function initSignalRealtime(){
 
 /* ---------- 5. App-like mobile shell ---------- */
 function buildMobileNav(){
-  if(route!=="student"||matchMedia("(min-width: 781px)").matches) return;
+  if(!["student","admin"].includes(route)||matchMedia("(min-width: 781px)").matches) return;
   if(document.querySelector(".z24-mobile-nav")) return;
-  const existing=all("nav a,aside a,[data-panel]").filter(a=>{
-    const t=norm(a.textContent);
-    return ["dashboard","courses","signals","updates","profile"].some(x=>t===x||t.startsWith(x+" "));
-  });
-  const wanted=["dashboard","courses","signals","updates","profile"];
+  const wanted=route==="student"
+    ? ["dashboard","courses","signals","announcements","profile"]
+    : ["dashboard","courses","signals","students","payments"];
+  const aliases={announcements:["announcements","updates"],students:["students","users"],payments:["payments"]};
+  const existing=all("nav a,aside a,[data-panel]");
   const chosen=[];
   wanted.forEach(name=>{
-    const a=existing.find(x=>norm(x.textContent)===name||norm(x.textContent).startsWith(name+" "));
+    const names=aliases[name]||[name];
+    const a=existing.find(x=>names.some(n=>norm(x.textContent)===n||norm(x.textContent).startsWith(n+" ")||norm(x.dataset&&x.dataset.panel)===n));
     if(a) chosen.push([name,a]);
   });
   if(chosen.length<3) return;
   const nav=document.createElement("nav");
   nav.className="z24-mobile-nav";
-  nav.setAttribute("aria-label","Student navigation");
-  const icons={dashboard:"⌂",courses:"▤",signals:"↗",updates:"●",profile:"◎"};
+  nav.setAttribute("aria-label",route==="student"?"Student navigation":"Admin navigation");
+  const icons={dashboard:"⌂",courses:"▤",signals:"↗",announcements:"●",profile:"◎",students:"♙",payments:"$"};
+  const labels={announcements:"Updates",students:"Users",payments:"Payments"};
   chosen.forEach(([name,original])=>{
     const b=document.createElement("button");
     b.type="button";b.dataset.z24Mobile=name;
-    b.innerHTML=`<span>${icons[name]||"•"}</span><small>${name[0].toUpperCase()+name.slice(1)}</small>`;
+    const label=labels[name]||name[0].toUpperCase()+name.slice(1);
+    b.innerHTML=`<span>${icons[name]||"•"}</span><small>${label}</small>`;
     b.addEventListener("click",()=>{
       safeClick(original);
       all("button",nav).forEach(x=>x.classList.toggle("active",x===b));
