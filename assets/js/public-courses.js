@@ -1,90 +1,61 @@
 (async function(){
   'use strict';
   const A=window.App;
+  const path=(location.pathname||'/').replace(/\/+/g,'/');
+  const isCourses=/\/courses(?:\/|\/index\.html)?$/i.test(path);
+  const isHome=path==='/'||/\/index\.html$/i.test(path);
+  if(!isHome&&!isCourses)return;
+
+  const normalize=v=>String(v||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').replace(/\s+/g,' ').trim();
+  const esc=v=>String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+  const absHref=(href,fallback)=>{try{return href?new URL(href,location.href).pathname+new URL(href,location.href).search:fallback}catch(_){return fallback}};
+  const oldAnchors=[...document.querySelectorAll('a')];
+  const byText=t=>oldAnchors.find(a=>normalize(a.textContent).includes(normalize(t)));
+  const loginHref=absHref(byText('Student Login')?.getAttribute('href'),'/login.html');
+  const signupHref=absHref(byText('Create Account')?.getAttribute('href')||byText('Join Free')?.getAttribute('href'),'/sign-up/');
+  const existingLogo=[...document.images].find(img=>/logo|24k/i.test(`${img.alt||''} ${img.src||''}`));
+  const logoSrc=existingLogo?.src||'';
+  const originalMentor=[...document.images].find(img=>/zameer|mentor/i.test(`${img.alt||''} ${img.src||''}`));
+  const aboutImage=originalMentor?.src||'/assets/images/mentor-hero-v1010.png';
+
+  function ensureCss(){
+    if(document.getElementById('v1010-public-css'))return;
+    const l=document.createElement('link');l.id='v1010-public-css';l.rel='stylesheet';l.href='/assets/css/v1010-public-premium.css?v=1010';document.head.appendChild(l);
+  }
+  ensureCss();
+
+  const logo=logoSrc?`<img src="${esc(logoSrc)}" alt="24K MR ZERO">`:`<span class="v1010-logo-fallback">24K<small>MR ZERO</small></span>`;
+  const nav=(active='home')=>`<div class="v1010-nav-wrap"><div class="v1010-container v1010-nav" id="v1010Nav"><a class="v1010-logo" href="/">${logo}</a><button class="v1010-menu" id="v1010Menu" aria-label="Open navigation">☰</button><nav class="v1010-navlinks"><a data-nav="home" class="${active==='home'?'active':''}" href="/">Home</a><a data-nav="mentor" href="/#mentor">About Mentor</a><a data-nav="services" href="/#services">Services</a><a data-nav="courses" class="${active==='courses'?'active':''}" href="/courses/">Courses</a><a data-nav="reviews" href="/#reviews">Reviews</a><a data-nav="contact" href="/#contact">Contact</a></nav><div class="v1010-nav-actions"><a class="v1010-btn v1010-btn-outline" href="${esc(loginHref)}">♟ Student Login</a><a class="v1010-btn v1010-btn-gold" href="/courses/">🎓 View Courses</a></div></div></div>`;
+
+  const footer=()=>`<footer class="v1010-footer"><div class="v1010-container"><div class="v1010-footer-grid"><div><a class="v1010-logo" href="/">${logo}</a><p>Professional Forex education, mentorship and community for traders who want to grow with skill and discipline.</p></div><div><h4>Quick Links</h4><div class="v1010-footer-links"><a href="/">Home</a><a href="/#mentor">About Mentor</a><a href="/courses/">Courses</a><a href="/#reviews">Reviews</a><a href="/#contact">Contact</a></div></div><div><h4>Services</h4><div class="v1010-footer-links"><a href="/#services">VIP Trading Community</a><a href="/courses/">Professional Forex Course</a><a href="/courses/">One-to-One Mentorship</a><a href="/#services">Market Analysis</a></div></div><div><h4>Support & Legal</h4><div class="v1010-footer-links"><a href="${esc(loginHref)}">Student Login</a><a href="/#contact">Contact Us</a><a href="/#risk">Risk Disclosure</a></div></div></div><div class="v1010-disclaimer"><span>© 2026 24K Excellence Education System. All Rights Reserved.</span><span id="risk">Risk Disclaimer: Trading Forex involves risk and may not be suitable for all investors. Past performance is not indicative of future results.</span></div></div></footer>`;
+
+  function homeMarkup(){return `<div class="v1010-shell v1010-market-bg">${nav('home')}<main>
+    <section class="v1010-hero"><div class="v1010-container"><div class="v1010-hero-grid"><div><span class="v1010-kicker">◉ STRUCTURED FOREX EDUCATION</span><h1>Build Your Market Knowledge <span class="v1010-accent">with Structured Forex Education</span></h1><p class="v1010-hero-copy">Learn market foundations, technical concepts, risk awareness and disciplined decision-making through structured courses and live learning sessions.</p><div class="v1010-checks"><div class="v1010-check"><i>✓</i>Beginner-to-Advanced Learning</div><div class="v1010-check"><i>✓</i>Live Zoom Class Sessions</div><div class="v1010-check"><i>✓</i>Practical Market Education</div><div class="v1010-check"><i>✓</i>Risk & Trading Discipline Focus</div></div><div class="v1010-hero-actions"><a class="v1010-btn v1010-btn-dark" href="/courses/">Explore Our Courses →</a><a class="v1010-btn" href="#mentor">♟ Meet the Mentor</a></div></div><div class="v1010-mentor-stage"><img class="v1010-mentor-img" src="/assets/images/mentor-hero-v1010.png" alt="24K mentor"><div class="v1010-float"><div class="v1010-float-icon">🎓</div><div><b>Live</b><small>Online Learning</small></div></div><div class="v1010-float"><div class="v1010-float-icon">↗</div><div><b>Market</b><small>Education</small></div></div><div class="v1010-float"><div class="v1010-float-icon">◆</div><div><b>Risk</b><small>Awareness</small></div></div></div></div><div class="v1010-trustbar"><div class="v1010-trustitem"><span>🎓</span><div><b>Structured Courses</b><small>Clear learning paths</small></div></div><div class="v1010-trustitem"><span>▣</span><div><b>Live Sessions</b><small>Scheduled Zoom learning</small></div></div><div class="v1010-trustitem"><span>↗</span><div><b>Market Learning</b><small>Practical concepts</small></div></div><div class="v1010-trustitem"><span>♟</span><div><b>Member Dashboard</b><small>Learning in one place</small></div></div></div></div></section>
+    <section class="v1010-section v1010-section-soft" id="mentor"><div class="v1010-container"><div class="v1010-about-grid"><div class="v1010-about-photo"><img src="${esc(aboutImage)}" alt="Malik Zameer"><div class="v1010-verified">✓ Verified <b>Trading Educator</b></div></div><div class="v1010-about"><span class="v1010-kicker">MEET YOUR MENTOR</span><h2>Meet <span class="v1010-accent">Malik Zameer</span></h2><div class="v1010-subhead">Professional Forex Educator & Market Analyst</div><p>Malik Zameer leads 24K Excellence learning sessions focused on market foundations, technical analysis, risk awareness and disciplined trading habits.</p><div class="v1010-chips"><span class="v1010-chip">Price Action Trading</span><span class="v1010-chip">Market Structure</span><span class="v1010-chip">Risk Management</span><span class="v1010-chip">Trading Psychology</span><span class="v1010-chip">Forex & Gold Analysis</span></div><div class="v1010-service-grid" id="services"><article class="v1010-service"><div class="v1010-service-body"><div class="v1010-service-icon">♛</div><h3>VIP Trading Community</h3><p>An exclusive community with live analysis, insights and daily support.</p><ul><li>Daily Market Updates</li><li>Live Trade Setups</li><li>Community Support</li></ul></div><a href="${esc(signupHref)}">Learn More →</a></article><article class="v1010-service"><div class="v1010-service-body"><div class="v1010-service-icon">🎓</div><h3>Professional Forex Course</h3><p>Structured courses from market foundations to advanced learning.</p><ul><li>Step-by-Step Learning</li><li>Practical Strategies</li><li>Course Access as Listed</li></ul></div><a href="/courses/">View Courses →</a></article><article class="v1010-service"><div class="v1010-service-body"><div class="v1010-service-icon">♟</div><h3>One-to-One Mentorship</h3><p>Personalised mentorship designed to accelerate structured improvement.</p><ul><li>Personal Guidance</li><li>Custom Trading Plan</li><li>Regular Feedback</li></ul></div><a href="/courses/">Apply Now →</a></article></div></div></div></div></section>
+    <section class="v1010-section" id="courses"><div class="v1010-container"><div class="v1010-title"><span class="eyebrow">LEARN WITH 24K</span><h2>Featured <span class="v1010-accent">Courses</span></h2><p>Three focused learning paths, displayed in one clean row. Course pricing and availability load directly from the platform.</p></div><div id="homeCoursesGrid" class="v1010-course-grid"><div class="v1010-loading">Loading current courses…</div></div><div class="v1010-viewall"><a class="v1010-btn v1010-btn-dark" href="/courses/">View All Courses →</a></div></div></section>
+    <section class="v1010-section v1010-section-soft" id="reviews"><div class="v1010-container"><div class="v1010-title"><span class="eyebrow">STUDENT EXPERIENCE</span><h2>Built for <span class="v1010-accent">Structured Learning</span></h2><p>Clear education, practical examples and a member dashboard in one place.</p></div><div class="v1010-experience-grid"><article class="v1010-exp"><span>🎓</span><h3>Structured Courses</h3><p>Clear modules and live-session schedules help members follow learning in sequence.</p></article><article class="v1010-exp"><span>↗</span><h3>Market Learning</h3><p>Signals, charts and articles are presented as educational material with clear access status.</p></article><article class="v1010-exp"><span>✓</span><h3>Account Controls</h3><p>Students can view payment status, course access, verification and support from one secure panel.</p></article></div></div></section>
+    <section class="v1010-section v1010-section-dark" id="contact"><div class="v1010-container"><div class="v1010-contactbox"><div class="v1010-contact-copy"><span class="v1010-kicker">START YOUR LEARNING JOURNEY</span><h2>Ready to Build a More Disciplined Trading Journey?</h2><p>Explore current courses or sign in to your Student Panel to manage your learning and access.</p><div class="v1010-contact-actions"><a class="v1010-btn v1010-btn-dark" href="/courses/">Start Learning Today →</a><a class="v1010-btn" href="#mentor">Meet the Mentor</a></div></div><div class="v1010-contact-panel"><h3>Already a 24K Student?</h3><p>Open your secure Student Panel for courses, market learning, payments, account access and support.</p><a class="v1010-btn v1010-btn-gold" href="${esc(loginHref)}">Open Student Login →</a></div></div></div></section>
+  </main>${footer()}</div>`}
+
+  function coursesMarkup(){return `<div class="v1010-shell v1010-market-bg">${nav('courses')}<main><section class="v1010-courses-hero"><div class="v1010-container"><span class="v1010-kicker">24K EXCELLENCE COURSES</span><h1>Choose Your <span class="v1010-accent">Course</span></h1><p>Start learning today and choose the path that matches your current level. Live course information is loaded directly from the 24K platform.</p></div></section><section class="v1010-catalogue"><div class="v1010-container"><div id="publicCoursesGrid" class="v1010-course-grid"><div class="v1010-loading">Loading courses…</div></div></div></section><section class="v1010-benefits"><div class="v1010-container v1010-benefit-row"><div class="v1010-benefit"><b>Expert Guidance</b><small>Learn with structured direction</small></div><div class="v1010-benefit"><b>Practical Learning</b><small>Real market examples</small></div><div class="v1010-benefit"><b>Structured Progress</b><small>Clear course pathways</small></div><div class="v1010-benefit"><b>Member Support</b><small>Account & learning access</small></div></div></section></main>${footer()}</div>`}
+
+  document.body.classList.add('v1010-public');
+  document.body.innerHTML=isCourses?coursesMarkup():homeMarkup();
+  const menu=document.getElementById('v1010Menu');menu?.addEventListener('click',()=>document.getElementById('v1010Nav')?.classList.toggle('open'));
+  document.querySelectorAll('.v1010-navlinks a').forEach(a=>a.addEventListener('click',()=>document.getElementById('v1010Nav')?.classList.remove('open')));
+
   const home=document.getElementById('homeCoursesGrid');
   const catalogue=document.getElementById('publicCoursesGrid');
   const grids=[home,catalogue].filter(Boolean);
-  if(!grids.length)return;
-
-  const esc=v=>String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
-  const money=(n,currency)=>{
-    const value=Number(n||0),c=String(currency||'USD').toUpperCase();
-    if(value===0)return'Free';
-    if(c==='USDT')return`${value.toLocaleString()} USDT`;
-    if(c==='PKR')return`PKR ${value.toLocaleString()}`;
-    if(c==='USD')return`USD ${value.toLocaleString()}`;
-    return`${c} ${value.toLocaleString()}`;
-  };
-  const empty=msg=>`<div class="public-course-loading"><i class="fa-solid fa-circle-info"></i><p>${esc(msg)}</p></div>`;
-  const normalize=v=>String(v||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').replace(/\s+/g,' ').trim();
-  const homeRank=course=>{
-    const t=normalize(course.title);
-    if((t.includes('basic')&&t.includes('level 1'))||t==='basic level 1 course')return 0;
-    if(t==='level 2'||t==='level 2 course'||(t.includes('level 2')&&!t.includes('level 1')))return 1;
-    if(t.includes('1 to 1 mentorship')||t.includes('1 1 mentorship')||t.includes('one to one mentorship'))return 2;
-    return 50;
-  };
-
-  function injectStyles(){
-    if(document.getElementById('v990-home-course-grid-style'))return;
-    const style=document.createElement('style');style.id='v990-home-course-grid-style';style.textContent=`
-      #homeCoursesGrid.v990-home-course-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:24px!important;align-items:stretch!important;width:100%!important}
-      #homeCoursesGrid.v990-home-course-grid>.public-course-card{min-width:0!important;width:100%!important;height:100%!important;margin:0!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
-      #homeCoursesGrid.v990-home-course-grid .public-course-media{flex:0 0 auto!important;min-height:190px!important}
-      #homeCoursesGrid.v990-home-course-grid .big-card-body{display:flex!important;flex:1 1 auto!important;flex-direction:column!important;min-width:0!important}
-      #homeCoursesGrid.v990-home-course-grid .big-card-body>p{flex:1 1 auto!important}
-      #homeCoursesGrid.v990-home-course-grid .big-card-body>.btn{margin-top:auto!important;align-self:flex-start!important}
-      #homeCoursesGrid.v990-home-course-grid .public-course-meta{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;flex-wrap:wrap!important}
-      #homeCoursesGrid.v990-home-course-grid h3,#homeCoursesGrid.v990-home-course-grid p{overflow-wrap:anywhere!important}
-      @media(max-width:980px){#homeCoursesGrid.v990-home-course-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
-      @media(max-width:680px){#homeCoursesGrid.v990-home-course-grid{grid-template-columns:1fr!important;gap:16px!important}#homeCoursesGrid.v990-home-course-grid .public-course-media{min-height:170px!important}}
-    `;document.head.appendChild(style);
-  }
-
+  const money=(n,currency)=>{const value=Number(n||0),c=String(currency||'USD').toUpperCase();if(value===0)return'Free';if(c==='USDT')return`${value.toLocaleString()} USDT`;if(c==='PKR')return`PKR ${value.toLocaleString()}`;if(c==='USD')return`USD ${value.toLocaleString()}`;return`${c} ${value.toLocaleString()}`};
+  const rank=course=>{const t=normalize(course.title);if((t.includes('basic')&&t.includes('level 1'))||t==='basic level 1 course')return 0;if(t==='level 2'||t==='level 2 course'||(t.includes('level 2')&&!t.includes('level 1')))return 1;if(t.includes('1 to 1 mentorship')||t.includes('1 1 mentorship')||t.includes('one to one mentorship'))return 2;return 50};
   function card(course){
-    const effective=course.discount_price!=null?Number(course.discount_price):Number(course.price||0);
-    const isFree=String(course.course_type||'').toLowerCase()==='free'||effective===0;
-    const price=money(effective,course.currency);
-    const original=course.discount_price!=null&&Number(course.price||0)>effective?`<span class="public-course-old-price">${esc(money(course.price,course.currency))}</span>`:'';
-    const thumb=course.thumbnail_url?`<img src="${esc(course.thumbnail_url)}" alt="${esc(course.title)}" loading="lazy" decoding="async">`:`<div class="public-course-placeholder"><i class="fa-solid fa-graduation-cap"></i></div>`;
-    const slug=encodeURIComponent(course.slug||'');
-    const cta=`/sign-up/${slug?`?course=${slug}`:''}`;
-    return `<article class="big-card public-course-card"><div class="public-course-media">${thumb}</div><div class="big-card-body"><div class="public-course-meta"><span>${isFree?'FREE COURSE':'PAID COURSE'}</span><strong>${original}<b>${esc(price)}</b></strong></div><h3>${esc(course.title||'Course')}</h3><p>${esc(course.description||'Structured learning with 24K Excellence.')}</p><a href="${cta}" class="btn btn-dark">${isFree?'Create Account':'View Course'} <i class="fa-solid fa-arrow-right"></i></a></div></article>`;
+    const effective=course.discount_price!=null?Number(course.discount_price):Number(course.price||0),isFree=String(course.course_type||'').toLowerCase()==='free'||effective===0,price=money(effective,course.currency),old=course.discount_price!=null&&Number(course.price||0)>effective?`<span class="v1010-course-old">${esc(money(course.price,course.currency))}</span>`:'',thumb=course.thumbnail_url?`<img src="${esc(course.thumbnail_url)}" alt="${esc(course.title)}" loading="lazy" decoding="async">`:`<div class="v1010-course-placeholder">🎓</div>`,slug=encodeURIComponent(course.slug||''),cta=`/sign-up/${slug?`?course=${slug}`:''}`;
+    return `<article class="v1010-course-card"><div class="v1010-course-media">${thumb}</div><div class="v1010-course-body"><div class="v1010-course-top"><span class="v1010-course-badge">${isFree?'FREE COURSE':'PAID COURSE'}</span><span class="v1010-course-price">${old}${esc(price)}</span></div><h3>${esc(course.title||'Course')}</h3><p>${esc(course.short_description||course.description||'Structured learning with 24K Excellence.')}</p><a class="v1010-btn ${isFree?'v1010-btn-dark':'v1010-btn-gold'}" href="${cta}">${isFree?'Create Account':'View Course'} →</a></div></article>`;
   }
-
-  function selectHome(rows){
-    const exact=rows.filter(c=>homeRank(c)<50).sort((a,b)=>homeRank(a)-homeRank(b));
-    const used=new Set(exact.map(c=>String(c.id)));
-    const rest=rows.filter(c=>!used.has(String(c.id)));
-    return exact.concat(rest).slice(0,3);
-  }
-
-  function render(rows){
-    if(home){
-      injectStyles();
-      home.classList.add('v990-home-course-grid');
-      const selected=selectHome(rows);
-      home.innerHTML=selected.length?selected.map(card).join(''):empty('No published courses are available right now.');
-    }
-    if(catalogue)catalogue.innerHTML=rows.length?rows.map(card).join(''):empty('No published courses are available right now.');
-  }
-
-  // Show a recent cached catalogue immediately, then refresh from Supabase.
-  try{
-    const cached=JSON.parse(sessionStorage.getItem('24k-public-courses-v990')||'null');
-    if(cached&&Array.isArray(cached.rows)&&Date.now()-Number(cached.at||0)<10*60*1000)render(cached.rows);
-  }catch(_){/* cache is optional */}
-
-  if(!A?.supabase){if(!home?.children.length&&!catalogue?.children.length)grids.forEach(g=>g.innerHTML=empty('Course information is temporarily unavailable.'));return;}
-  try{
-    const {data,error}=await A.supabase.from('courses').select('id,title,slug,description,thumbnail_url,course_type,price,discount_price,currency,is_published,created_at').eq('is_published',true).order('created_at',{ascending:false}).limit(24);
-    if(error)throw error;
-    const rows=data||[];
-    try{sessionStorage.setItem('24k-public-courses-v990',JSON.stringify({at:Date.now(),rows}));}catch(_){/* optional */}
-    render(rows);
-  }catch(error){
-    console.error('Public courses load failed:',error);
-    const hasRendered=grids.some(g=>g.querySelector('.public-course-card'));
-    if(!hasRendered)grids.forEach(g=>g.innerHTML=empty('Current courses could not be loaded. Please try again shortly.'));
-  }
+  function selectHome(rows){const exact=rows.filter(c=>rank(c)<50).sort((a,b)=>rank(a)-rank(b));const used=new Set(exact.map(c=>String(c.id)));return exact.concat(rows.filter(c=>!used.has(String(c.id)))).slice(0,3)}
+  function render(rows){if(home)home.innerHTML=selectHome(rows).map(card).join('')||'<div class="v1010-loading">No published courses are available right now.</div>';if(catalogue){const sorted=[...rows].sort((a,b)=>rank(a)-rank(b));catalogue.innerHTML=sorted.map(card).join('')||'<div class="v1010-loading">No published courses are available right now.</div>'}}
+  try{const cached=JSON.parse(sessionStorage.getItem('24k-public-courses-v1010')||'null');if(cached&&Array.isArray(cached.rows)&&Date.now()-Number(cached.at||0)<10*60*1000)render(cached.rows)}catch(_){ }
+  if(!A?.supabase){if(!grids.some(g=>g.querySelector('.v1010-course-card')))grids.forEach(g=>g.innerHTML='<div class="v1010-loading">Course information is temporarily unavailable.</div>');return}
+  try{const {data,error}=await A.supabase.from('courses').select('id,title,slug,description,short_description,thumbnail_url,course_type,price,discount_price,currency,is_published,created_at').eq('is_published',true).order('created_at',{ascending:false}).limit(24);if(error)throw error;const rows=data||[];try{sessionStorage.setItem('24k-public-courses-v1010',JSON.stringify({at:Date.now(),rows}))}catch(_){ }render(rows)}catch(error){console.error('Public courses load failed:',error);if(!grids.some(g=>g.querySelector('.v1010-course-card')))grids.forEach(g=>g.innerHTML='<div class="v1010-loading">Current courses could not be loaded. Please try again shortly.</div>')}
 })();
