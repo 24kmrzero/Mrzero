@@ -1,0 +1,90 @@
+/* 24K Zero — Sep 01 2026 combined UI patch */
+html.z24-modal-open,html.z24-modal-open body{overflow:hidden!important}
+.z24-logo-clickable{cursor:pointer!important}
+.z24-access-trigger{cursor:pointer!important;pointer-events:auto!important}
+.z24-access-modal{position:fixed;inset:0;z-index:2147483000;display:none;align-items:center;justify-content:center;padding:22px}
+.z24-access-modal.open{display:flex}
+.z24-access-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.67);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px)}
+.z24-access-sheet{position:relative;width:min(940px,96vw);max-height:min(90vh,900px);display:flex;flex-direction:column;overflow:hidden;border-radius:22px;border:1px solid rgba(206,163,41,.30);background:var(--card-bg,var(--card,#111214));color:var(--text-color,var(--text,#f5f5f5));box-shadow:0 32px 100px rgba(0,0,0,.48)}
+.z24-access-head{display:grid;grid-template-columns:44px 1fr 44px;gap:12px;align-items:center;min-height:78px;padding:14px 18px;border-bottom:1px solid rgba(206,163,41,.18);background:linear-gradient(180deg,rgba(210,168,42,.08),transparent)}
+.z24-access-titlebox{min-width:0}.z24-access-head h2{margin:2px 0 3px;font-size:21px;line-height:1.15}
+.z24-eyebrow{font-size:10px;font-weight:900;letter-spacing:.13em;color:#d6aa2a}
+.z24-flowline{font-size:11px;opacity:.64;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.z24-icon-btn{display:grid;place-items:center;width:40px;height:40px;padding:0;border-radius:12px;border:1px solid rgba(206,163,41,.24);background:rgba(255,255,255,.035);color:inherit;font-size:23px;cursor:pointer}
+.z24-access-body{padding:18px;overflow:auto;overscroll-behavior:contain}
+.z24-modalized-content{display:block!important;visibility:visible!important;opacity:1!important;position:relative!important;inset:auto!important;transform:none!important;width:100%!important;max-width:none!important;height:auto!important;max-height:none!important;margin:0!important}
+.z24-access-foot{display:flex;justify-content:flex-end;gap:9px;padding:13px 18px calc(13px + env(safe-area-inset-bottom));border-top:1px solid rgba(206,163,41,.16);background:var(--card-bg,var(--card,#111214))}
+.z24-btn{min-height:43px;padding:0 17px;border-radius:12px;border:1px solid rgba(206,163,41,.25);font:inherit;font-weight:800;cursor:pointer}
+.z24-btn-main{background:linear-gradient(135deg,#e5bc4d,#bd8f16);color:#151006;border-color:transparent}
+.z24-btn-ghost{background:transparent;color:inherit}
+.z24-mini-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.z24-mini-grid>div,.z24-step-copy{padding:14px;border:1px solid rgba(206,163,41,.18);border-radius:14px;background:rgba(206,163,41,.055)}
+.z24-mini-grid small,.z24-step-copy span{display:block;font-size:10px;letter-spacing:.08em;opacity:.62;margin-bottom:4px}
+.z24-mini-grid b,.z24-step-copy b{display:block}
+.z24-muted{opacity:.67;line-height:1.55}
+.z24-fallback-actions,.z24-broker-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:10px 0 16px}
+.z24-choice{min-height:52px;border:1px solid rgba(206,163,41,.22);border-radius:14px;background:rgba(255,255,255,.025);color:inherit;font-weight:800;cursor:pointer}
+.z24-empty{padding:28px!important;text-align:center!important;opacity:.58}
+.z24-buy{color:#21a56a!important;font-weight:900}.z24-sell{color:#e05252!important;font-weight:900}
+.z24-status{text-transform:capitalize}
+.z24-signal-cards{display:grid;gap:10px;margin-top:12px}
+.z24-signal-card{padding:14px;border:1px solid rgba(206,163,41,.16);border-radius:15px;background:var(--card-bg,var(--card,#111214))}
+.z24-signal-card-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:11px}
+.z24-signal-values{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.z24-signal-values span{padding:9px;border-radius:10px;background:rgba(127,127,127,.07);font-weight:700}
+.z24-signal-values small{display:block;opacity:.54;font-size:9px;text-transform:uppercase;margin-bottom:3px}
+.z24-mobile-nav{display:none}
+
+@media(max-width:780px){
+  html,body{max-width:100%;overflow-x:hidden}
+  body{overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent}
+  body.z24-mobile-enhanced{padding-bottom:calc(78px + env(safe-area-inset-bottom))!important}
+  body.z24-mobile-enhanced main,
+  body.z24-mobile-enhanced .main,
+  body.z24-mobile-enhanced .main-content,
+  body.z24-mobile-enhanced .content,
+  body.z24-mobile-enhanced .dashboard-content{max-width:100%;padding-left:12px!important;padding-right:12px!important;box-sizing:border-box}
+  body.z24-mobile-enhanced .stats-grid,
+  body.z24-mobile-enhanced .kpi-grid,
+  body.z24-mobile-enhanced .summary-grid,
+  body.z24-mobile-enhanced [class*="stats-grid"],
+  body.z24-mobile-enhanced [class*="kpi-grid"]{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+  body.z24-mobile-enhanced .dashboard-grid,
+  body.z24-mobile-enhanced .profile-grid,
+  body.z24-mobile-enhanced .course-grid,
+  body.z24-mobile-enhanced [class*="dashboard-grid"],
+  body.z24-mobile-enhanced [class*="profile-grid"]{grid-template-columns:1fr!important;gap:11px!important}
+  body.z24-mobile-enhanced button,
+  body.z24-mobile-enhanced a[role=button],
+  body.z24-mobile-enhanced input,
+  body.z24-mobile-enhanced select{min-height:44px}
+  body.z24-mobile-enhanced input,
+  body.z24-mobile-enhanced select,
+  body.z24-mobile-enhanced textarea{font-size:16px!important;max-width:100%;box-sizing:border-box}
+  body.z24-mobile-enhanced table{font-size:12px}
+  body.z24-mobile-enhanced .table-wrap,
+  body.z24-mobile-enhanced [class*="table-wrap"],
+  body.z24-mobile-enhanced .table-responsive{overflow-x:auto!important;-webkit-overflow-scrolling:touch}
+  .z24-mobile-nav{position:fixed;z-index:2147482000;left:8px;right:8px;bottom:calc(7px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(5,minmax(0,1fr));min-height:62px;padding:6px;border:1px solid rgba(206,163,41,.20);border-radius:19px;background:rgba(14,15,16,.94);box-shadow:0 12px 40px rgba(0,0,0,.35);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+  .z24-mobile-nav button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:0;border:0;border-radius:13px;background:transparent;color:#aaa;cursor:pointer}
+  .z24-mobile-nav button.active{color:#f0c857;background:rgba(213,169,43,.10)}
+  .z24-mobile-nav span{font-size:18px;line-height:1}.z24-mobile-nav small{font-size:9px;font-weight:800;white-space:nowrap}
+  .z24-access-modal{padding:0;align-items:flex-end}
+  .z24-access-sheet{width:100vw;max-width:none;max-height:94dvh;border-radius:24px 24px 0 0;border-left:0;border-right:0;border-bottom:0;animation:z24SheetUp .22s ease-out}
+  .z24-access-head{position:sticky;top:0;z-index:4;min-height:68px;padding:10px 12px;background:var(--card-bg,var(--card,#111214))}
+  .z24-access-head h2{font-size:18px}.z24-flowline{font-size:9px}
+  .z24-access-body{padding:12px 12px 18px}
+  .z24-access-body .grid,
+  .z24-access-body [style*="grid-template-columns"]{grid-template-columns:1fr!important}
+  .z24-access-body button,.z24-access-body .btn{min-height:46px;border-radius:13px!important}
+  .z24-access-foot{position:sticky;bottom:0;z-index:4;display:grid;grid-template-columns:.8fr 1fr 1fr;padding:10px 12px calc(10px + env(safe-area-inset-bottom))}
+  .z24-access-foot .z24-btn{padding:0 8px;font-size:12px}
+  .z24-mini-grid,.z24-fallback-actions,.z24-broker-grid{grid-template-columns:1fr}
+  .z24-signal-values{grid-template-columns:1fr 1fr}
+}
+@media(max-width:390px){
+  .z24-mobile-nav small{font-size:8px}
+  .z24-signal-values{grid-template-columns:1fr}
+}
+@keyframes z24SheetUp{from{transform:translateY(28px);opacity:.7}to{transform:none;opacity:1}}
+@media(prefers-reduced-motion:reduce){.z24-access-sheet{animation:none!important}}
