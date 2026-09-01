@@ -1,8 +1,8 @@
-24K Zero V10.10 — Premium Landing + Public Courses UI
-- Same navbar on Home and Courses
-- Premium reference-inspired landing redesign
-- Uploaded mentor hero image integrated
-- 3-column featured courses (Level 1, Level 2, 1-to-1 Mentorship)
-- Dynamic Supabase course data preserved
-- Responsive mobile/tablet UI
-- No SQL required
+24K Zero V10.11 — Exact Reference Landing Recreation
+- Recreated public Home layout to closely match supplied reference screenshots.
+- Same navbar locked on Home and Courses.
+- Uses supplied transparent mentor image in hero.
+- Hero + stats strip, mentor/service cards, featured courses, reviews, contact block and footer rebuilt to reference proportions.
+- Public Courses page rebuilt in matching black/yellow course-card style.
+- Course content/prices still load from Supabase.
+- No SQL required.
