@@ -1,7 +1,7 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0A0A0A"><title>Sign Up | 24K Excellence</title><script>(function(){try{var t=localStorage.getItem('24k-excellence-theme');document.documentElement.dataset.theme=t==='light'?'light':'dark'}catch(e){document.documentElement.dataset.theme='dark'}})();</script><style>html,body{margin:0;min-height:100%;background:#0a0a0a}html[data-theme="light"],html[data-theme="light"] body{background:#f6efe3}.route-loader{position:fixed;inset:0;display:grid;place-items:center;font:600 14px Arial,sans-serif;color:#c6a54b;background:inherit}.route-loader:after{content:'';width:26px;height:26px;border:3px solid rgba(198,165,75,.25);border-top-color:#c6a54b;border-radius:50%;animation:r .7s linear infinite}@keyframes r{to{transform:rotate(360deg)}}</style></head><body><div class="route-loader" aria-label="Loading"></div><script>
 (function(){
   var fallback='/login.html?tab=signup';
-  fetch('/login.html?v=9.62',{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.text();}).then(function(html){
+  fetch('/login.html?v=9.68',{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.text();}).then(function(html){
     html=html.replace('<head>','<head><base href="/"><style id="route-cloak">body{visibility:hidden!important}</style>');
     html=html.replace('</body>','<script>window.addEventListener("load",function(){var c=document.getElementById("route-cloak");if(c)c.remove();document.body.style.visibility="visible";});<\/script></body>');
     document.open();document.write(html);document.close();

@@ -1,53 +1,36 @@
-(async function () {
-  const grid = document.getElementById('publicCoursesGrid');
-  if (!grid) return;
-  const cfg = window.APP_CONFIG || {};
-  if (!window.supabase?.createClient || !cfg.SUPABASE_URL || !cfg.SUPABASE_ANON_KEY) {
-    grid.innerHTML = empty('Course catalogue is temporarily unavailable.');
-    return;
+(async function(){
+  'use strict';
+  const A=window.App;
+  const grids=[document.getElementById('homeCoursesGrid'),document.getElementById('publicCoursesGrid')].filter(Boolean);
+  if(!grids.length) return;
+  const esc=v=>String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+  const money=(n,currency)=>{
+    const value=Number(n||0); const c=String(currency||'PKR').toUpperCase();
+    if(value===0) return 'Free';
+    if(c==='USDT') return `${value.toLocaleString()} USDT`;
+    if(c==='PKR') return `PKR ${value.toLocaleString()}`;
+    return `${c} ${value.toLocaleString()}`;
+  };
+  const empty=(msg)=>`<div class="public-course-loading"><i class="fa-solid fa-circle-info"></i><p>${esc(msg)}</p></div>`;
+  if(!A?.supabase){grids.forEach(g=>g.innerHTML=empty('Course information is temporarily unavailable. Please use Student Login or try again shortly.'));return;}
+  try{
+    const {data,error}=await A.supabase.from('courses').select('id,title,slug,description,thumbnail_url,course_type,price,discount_price,currency,is_published,created_at').eq('is_published',true).order('created_at',{ascending:false}).limit(12);
+    if(error) throw error;
+    const rows=data||[];
+    if(!rows.length){grids.forEach(g=>g.innerHTML=empty('No published courses are available right now.'));return;}
+    const cards=rows.map(course=>{
+      const effective=course.discount_price!=null?Number(course.discount_price):Number(course.price||0);
+      const isFree=String(course.course_type||'').toLowerCase()==='free'||effective===0;
+      const price=money(effective,course.currency);
+      const original=course.discount_price!=null&&Number(course.price||0)>effective?`<span class="public-course-old-price">${esc(money(course.price,course.currency))}</span>`:'';
+      const thumb=course.thumbnail_url?`<img src="${esc(course.thumbnail_url)}" alt="${esc(course.title)}" loading="lazy" decoding="async">`:`<div class="public-course-placeholder"><i class="fa-solid fa-graduation-cap"></i></div>`;
+      const slug=encodeURIComponent(course.slug||'');
+      const cta=isFree?`/sign-up/${slug?`?course=${slug}`:''}`:`/sign-up/${slug?`?course=${slug}`:''}`;
+      return `<article class="big-card public-course-card"><div class="public-course-media">${thumb}</div><div class="big-card-body"><div class="public-course-meta"><span>${isFree?'FREE COURSE':'PAID COURSE'}</span><strong>${original}<b>${esc(price)}</b></strong></div><h3>${esc(course.title||'Course')}</h3><p>${esc(course.description||'Structured learning with 24K Excellence.')}</p><a href="${cta}" class="btn btn-dark">${isFree?'Create Account':'View Course'} <i class="fa-solid fa-arrow-right"></i></a></div></article>`;
+    }).join('');
+    grids.forEach(g=>g.innerHTML=cards);
+  }catch(error){
+    console.error('Public courses load failed:',error);
+    grids.forEach(g=>g.innerHTML=empty('Current courses could not be loaded. Please try again shortly.'));
   }
-
-  const client = window.__trackingSupabase || window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY, {
-    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
-  });
-  const { data, error } = await client.from('courses').select('*').eq('is_published', true).order('created_at', { ascending: false });
-  if (error) {
-    console.error(error);
-    grid.innerHTML = empty('Could not load courses. Please refresh the page.');
-    return;
-  }
-  const courses = data || [];
-  grid.innerHTML = courses.length ? courses.map(courseCard).join('') : empty('No course is currently open for enrollment.');
-
-  function courseCard(course) {
-    const effectivePrice = course.discount_price !== null && course.discount_price !== undefined ? Number(course.discount_price) : Number(course.price || 0);
-    const isFree = course.course_type === 'free' || effectivePrice === 0;
-    const params = new URLSearchParams(location.search);
-    params.set('course', course.slug);
-    const target = isFree ? `free-course/?${params.toString()}` : `sign-up/?${params.toString()}`;
-    const status = label(course.status || 'upcoming');
-    const price = isFree ? '100% FREE' : money(effectivePrice, course.currency);
-    const regular = !isFree && course.discount_price !== null && Number(course.discount_price) < Number(course.price) ? `<small class="public-course-old-price">${money(course.price, course.currency)}</small>` : '';
-    return `<article class="big public-course-card reveal ${isFree ? 'free' : ''}">
-      <span class="chip ${isFree ? 'beg' : 'prem'}">${isFree ? 'Free Course' : 'Paid Course'}</span>
-      <div class="public-course-image ${course.thumbnail_url ? 'has-image' : ''}">${course.thumbnail_url ? `<img src="${attr(course.thumbnail_url)}" alt="${attr(course.title)}" loading="lazy" decoding="async">` : '<i class="fa-solid fa-graduation-cap"></i>'}<span class="public-course-status">${escapeHtml(status)}</span></div>
-      <div class="big-head"><div><h3>${escapeHtml(course.title)}</h3><p class="big-sub">— Instructor: ${escapeHtml(course.instructor_name || 'Malik Zameer')}</p><p class="big-desc">${escapeHtml(course.short_description || course.description || '')}</p></div></div>
-      <div class="public-course-facts"><span><i class="fa-solid fa-video"></i> Live Online Classes</span><span><i class="fa-solid fa-list-check"></i> Structured Modules & Lessons</span><span><i class="fa-solid fa-calendar"></i> ${course.start_date ? date(course.start_date) : 'Schedule announced by Admin'}</span></div>
-      <div class="public-course-price">${regular}<strong>${price}</strong><small>${isFree ? 'NO PAYMENT REQUIRED' : 'PAYMENT APPROVAL REQUIRED'}</small></div>
-      ${course.enrollment_open ? `<a href="${attr(target)}" class="btn ${isFree ? 'btn-green' : 'btn-yellow'} btn-block">${isFree ? 'Enroll in Free Course' : 'Enroll & Submit Payment'} <i class="fa-solid fa-arrow-right"></i></a>` : '<button class="btn btn-block" disabled>Enrollment Closed</button>'}
-    </article>`;
-  }
-
-  function empty(text) {
-    return `<div class="public-course-loading"><i class="fa-solid fa-graduation-cap"></i><p>${escapeHtml(text)}</p></div>`;
-  }
-  function escapeHtml(value = '') { return String(value).replace(/[&<>'"]/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[char])); }
-  function attr(value) { return escapeHtml(value).replace(/`/g, '&#96;'); }
-  function label(value) { return String(value || '').replaceAll('_', ' ').replace(/\b\w/g, character => character.toUpperCase()); }
-  function money(value, currency = 'USD') { try { return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(Number(value)); } catch { return `${currency} ${Number(value).toFixed(2)}`; } }
-  function date(value) { return new Intl.DateTimeFormat('en-GB', { day:'2-digit', month:'short', year:'numeric' }).format(new Date(value)); }
-})().catch(error => {
-  console.error(error);
-  const grid = document.getElementById('publicCoursesGrid');
-  if (grid) grid.innerHTML = '<div class="public-course-loading"><i class="fa-solid fa-circle-exclamation"></i><p>Could not load courses.</p></div>';
-});
+})();

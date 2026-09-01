@@ -40,7 +40,6 @@
 
   async function loadAll() {
     const sb = A.supabase;
-    try { await sb.rpc('refresh_course_statuses_from_schedule'); } catch (error) { console.warn('Course schedule status refresh skipped:', error?.message || error); }
     const { data: freshProfile, error: profileError } = await sb.from('profiles').select('*').eq('id', state.user.id).maybeSingle();
     if (profileError) throw profileError;
     if (freshProfile) state.profile = freshProfile;
@@ -57,7 +56,6 @@
       sb.from('articles').select('*').eq('is_published', true).order('published_at', { ascending: false }),
       sb.from('announcements').select('*').eq('is_published', true).order('published_at', { ascending: false }),
       sb.from('course_resources').select('*').order('created_at', { ascending: false }),
-      sb.from('support_requests').select('*').eq('student_id', state.user.id).order('created_at', { ascending: false }),
       sb.from('terms_acceptances').select('id').eq('user_id', state.user.id).eq('document_type', 'risk_disclaimer').eq('version', A.cfg.RISK_VERSION).limit(1)
     ]);
     const firstError = requests.find(item => item.error)?.error;
@@ -66,8 +64,8 @@
     state.sessionLinks=Object.fromEntries((requests[2].data||[]).map(row=>[row.course_session_id,row.meet_url]));
     state.enrollments=requests[3].data||[]; state.payments=requests[4].data||[]; state.paymentMethods=requests[5].data||[];
     state.signals=requests[6].data||[]; state.signalUpdates=requests[7].data||[]; state.charts=requests[8].data||[];
-    state.articles=requests[9].data||[]; state.announcements=requests[10].data||[]; state.resources=requests[11].data||[]; state.support=requests[12].data||[];
-    state.riskAccepted=Boolean(requests[13].data?.length);
+    state.articles=requests[9].data||[]; state.announcements=requests[10].data||[]; state.resources=requests[11].data||[]; state.support=[];
+    state.riskAccepted=Boolean(requests[12].data?.length);
     const [premiumAccess,premiumPayments,ibRows] = await Promise.all([
       sb.rpc('get_my_premium_access'),
       sb.from('premium_payments').select('*').order('created_at',{ascending:false}),
@@ -716,26 +714,16 @@
     if(verify) verify.disabled=!meta || !p.ib_enabled;
   }
 
-  function forceOpenModal(id){
-    const modal=document.getElementById(id);
-    if(!modal){ A.toast('Access window could not be loaded. Please refresh the page.','error'); return false; }
-    try{
-      if(typeof A.openModal==='function') A.openModal(id);
-      if(!modal.classList.contains('open')) modal.classList.add('open');
-      modal.setAttribute('aria-hidden','false');
-      document.body.classList.add('modal-open');
-      return true;
-    }catch(error){
-      console.error('Modal open failed:',error);
-      modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); document.body.classList.add('modal-open');
+  function openAllAccessModal(){
+    try { if (typeof openPanel === 'function') openPanel('profile'); } catch {}
+    const details=document.getElementById('premiumAccessDetails');
+    if(details){
+      details.open=true;
+      setTimeout(()=>details.scrollIntoView({behavior:'smooth',block:'center'}),80);
       return true;
     }
-  }
-
-  function openAllAccessModal(step='home'){
-    if(step==='home'){ accessFlowState.broker=''; accessFlowState.mode=''; }
-    setAccessStep(step);
-    forceOpenModal('allAccessModal');
+    A.toast('Open Profile to manage Premium access.','info');
+    return false;
   }
 
   async function copySelectedBrokerLink(){
@@ -768,8 +756,6 @@
     ['chartSearch','chartTimeframeFilter'].forEach(id => document.getElementById(id)?.addEventListener('input', renderCharts));
     document.getElementById('articleSearch')?.addEventListener('input', renderArticles);
     document.getElementById('closeSessions').addEventListener('click', resetCourseView);
-    const allAccessButton=document.getElementById('openAllAccessModal');
-    if(allAccessButton) allAccessButton.addEventListener('click', event=>{event.preventDefault();event.stopPropagation();openAllAccessModal('home');});
 
     document.body.addEventListener('click', async event => {
       const signalStatusButton = event.target.closest('[data-signal-status]');
@@ -842,7 +828,7 @@
     A.toast(permission==='granted'?'Live signal alerts enabled.':'Notification permission was not allowed.',permission==='granted'?'success':'warning');
   }
   function updateAlertButton(){const b=document.getElementById('enableSignalAlerts');if(!b)return;const enabled='Notification' in window&&Notification.permission==='granted';b.classList.toggle('enabled',enabled);b.innerHTML=`<i class="fa-solid fa-bell${enabled?'':'-slash'}"></i> ${enabled?'Live Alerts Enabled':'Enable Live Alerts'}`;}
-  function showSignalNotification(update){if(!update?.notify_users)return;A.toast(`${update.notification_title||'Signal Update'} — ${update.notification_message||''}`,'success');if('Notification' in window&&Notification.permission==='granted'&&document.visibilityState!=='visible'){new Notification(update.notification_title||'24K Signal Update',{body:update.notification_message||'',icon:'assets/logo-v965.png'});}}
+  function showSignalNotification(update){if(!update?.notify_users)return;A.toast(`${update.notification_title||'Signal Update'} — ${update.notification_message||''}`,'success');if('Notification' in window&&Notification.permission==='granted'&&document.visibilityState!=='visible'){new Notification(update.notification_title||'24K Signal Update',{body:update.notification_message||'',icon:'assets/logo.png?v=9.68'});}}
 
 
   let paymentChoiceContext = { courseId: null, triggerButton: null };
@@ -938,7 +924,7 @@
   }
 
   function handlePaymentReturn() {
-    const premiumParams=new URLSearchParams(location.search); if(premiumParams.get('premium_return')==='1'){openPanel('profile');A.toast('Premium payment return received. Status will update after provider confirmation.','info');}
+    const premiumParams=new URLSearchParams(location.search); if(premiumParams.get('premium_return')==='1'){openPanel('profile');setTimeout(()=>openAllAccessModal(),80);A.toast('Premium payment return received. Status will update after provider confirmation.','info');}
     const params = new URLSearchParams(window.location.search);
     if (params.get('payment_return') !== '1') return;
     openPanel('payments');
