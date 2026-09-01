@@ -539,19 +539,29 @@
   }
 
   function sessionCard(session, access) {
-    const link = state.sessionLinks[session.id];
-    const unlocked = access && Boolean(link);
     const course = state.selectedCourse || state.courses.find(c => c.id === session.course_id);
     const effectivePrice = course ? Number(course.discount_price != null ? course.discount_price : course.price || 0) : 0;
     const isFree = course?.course_type === 'free' || effectivePrice === 0;
-    const lockedLabel = access ? 'Online class link not added yet' : (isFree ? 'Locked until enrollment' : 'Locked until payment approval');
-    return `<article class="session-card"><div class="session-top"><span class="session-number">Session ${session.session_number}</span><span class="session-lock"><i class="fa-solid ${unlocked ? 'fa-lock-open' : 'fa-lock'}"></i></span></div><div class="session-body"><div class="signal-head"><h3>${A.escapeHtml(session.title)}</h3><span class="status-pill ${A.statusClass(session.status)}">${A.statusLabel(session.status)}</span></div><p>${A.escapeHtml(session.topic || '')}</p><div class="session-date"><span><i class="fa-solid fa-calendar"></i> ${A.formatDateTime(session.starts_at)}</span><span><i class="fa-solid fa-hourglass-half"></i> ${session.duration_minutes || 90} minutes</span><span><i class="fa-solid fa-video"></i> Online Class</span></div>${unlocked ? `<a class="app-btn green" href="${attr(link)}" target="_blank" rel="noopener"><i class="fa-solid fa-video"></i> Join Online Class</a>` : `<button class="app-btn outline" disabled><i class="fa-solid fa-lock"></i> ${lockedLabel}</button>`}</div></article>`;
+    const accessText=access||isFree?'Session schedule available':'Course access is required for the class schedule.';
+    return `<article class="session-card"><div class="session-top"><span class="session-number">Session ${session.session_number}</span><span class="session-lock"><i class="fa-solid fa-video"></i></span></div><div class="session-body"><div class="signal-head"><h3>${A.escapeHtml(session.title)}</h3><span class="status-pill ${A.statusClass(session.status)}">${A.statusLabel(session.status)}</span></div><p>${A.escapeHtml(session.topic || '')}</p><div class="session-date"><span><i class="fa-solid fa-calendar"></i> ${A.formatDateTime(session.starts_at)}</span><span><i class="fa-solid fa-hourglass-half"></i> ${session.duration_minutes || 90} minutes</span><span><i class="fa-solid fa-video"></i> Zoom</span></div><div class="session-community-note"><i class="fa-brands fa-whatsapp"></i><span>Zoom link will be shared in the WhatsApp Community.</span></div><small class="muted" style="display:block;margin-top:9px">${A.escapeHtml(accessText)}</small></div></article>`;
   }
 
   function sessionCompact(session) {
     const course = state.courses.find(c => c.id === session.course_id);
     const access = hasCourseAccess(session.course_id);
     return `<div class="session-body" style="padding:0"><span class="status-pill ${A.statusClass(session.status)}">${A.statusLabel(session.status)}</span><h3 style="margin-top:12px">${A.escapeHtml(session.title)}</h3><p>${A.escapeHtml(course?.title || '')}</p><div class="session-date"><span><i class="fa-solid fa-calendar"></i> ${A.formatDateTime(session.starts_at)}</span><span><i class="fa-solid fa-user-tie"></i> Malik Zameer</span></div><button class="app-btn ${access ? 'gold' : 'outline'}" data-open-course="${session.course_id}">${access ? 'Open Session' : 'View Locked Schedule'}</button></div>`;
+  }
+
+  async function loadPremiumState(){
+    const [premiumAccess,premiumPayments,ibRows]=await Promise.all([
+      A.supabase.rpc('get_my_premium_access'),
+      A.supabase.from('premium_payments').select('*').order('created_at',{ascending:false}),
+      A.supabase.from('ib_verifications').select('*').order('created_at',{ascending:false})
+    ]);
+    if(premiumAccess.error)throw premiumAccess.error;
+    if(premiumPayments.error)throw premiumPayments.error;
+    if(ibRows.error)throw ibRows.error;
+    state.premium=premiumAccess.data||null;state.premiumPayments=premiumPayments.data||[];state.ibVerifications=ibRows.data||[];
   }
 
   function renderPremium() {
@@ -579,7 +589,9 @@
     if(historyCount) historyCount.textContent=`${state.premiumPayments.length} payment${state.premiumPayments.length===1?'':'s'}`;
     const body=document.getElementById('premiumPaymentsBody');
     if(body) body.innerHTML=state.premiumPayments.length?state.premiumPayments.map(row=>`<tr><td>${A.formatDateTime(row.created_at)}</td><td>${A.escapeHtml(row.payment_method_name)}</td><td>${A.escapeHtml(row.currency==='PKR'?`PKR ${Number(row.amount||0).toLocaleString()}`:`${Number(row.amount||0).toLocaleString()} USDT`)}</td><td><span class="status-pill ${A.statusClass(row.status)}">${A.statusLabel(row.status)}</span></td><td>${row.access_expires_at?A.formatDateTime(row.access_expires_at):'—'}</td><td>${A.escapeHtml(row.admin_note||row.provider_rejection_reason||'—')}</td></tr>`).join(''):`<tr><td colspan="6">${empty('No premium payment history yet.','fa-crown')}</td></tr>`;
-    ['premiumPayLocal','premiumPayUsdt','openIbVerification'].forEach(id=>{const el=document.getElementById(id);if(el)el.disabled=p.package_mode==='free'||(id==='openIbVerification'&&!p.ib_enabled);});
+    ['premiumPayLocal','premiumPayUsdt'].forEach(id=>{const el=document.getElementById(id);if(el)el.disabled=p.package_mode==='free';});
+    const ibSubmit=document.querySelector('#ibVerificationForm button[type="submit"]');if(ibSubmit)ibSubmit.disabled=!p.ib_enabled;
+    renderIbBrokerInstructions();
     renderAccessSelection();
   }
 
@@ -590,7 +602,46 @@
     finally{A.setLoading(button,false);}
   }
   async function submitPremiumUsdt(event){event.preventDefault();const f=event.currentTarget,file=f.elements.receipt.files?.[0],button=f.querySelector('button[type=submit]');if(!file)return A.toast('Choose a payment receipt.','error');if(file.size>5*1024*1024)return A.toast('Receipt must be 5 MB or smaller.','error');A.setLoading(button,true,'Submitting...');let path='';try{path=`${state.user.id}/premium/${Date.now()}-${A.fileSafeName(file.name)}`;const upload=await A.supabase.storage.from('payment-receipts').upload(path,file,{contentType:file.type,upsert:false});if(upload.error)throw upload.error;const {error}=await A.supabase.rpc('submit_premium_usdt_payment',{p_reference:f.elements.transaction_reference.value.trim(),p_receipt_path:path,p_note:f.elements.student_note.value.trim()||null});if(error){await A.supabase.storage.from('payment-receipts').remove([path]);throw error;}await auditEvent('premium_payment_submitted','premium_package',null,'success',{method:'usdt'});A.closeModal('premiumUsdtModal');f.reset();await loadAll();renderAll();A.toast('Premium payment submitted for review.','success');}catch(error){A.toast(A.friendlyError(error,'Could not submit premium payment.'),'error');}finally{A.setLoading(button,false);}}
-  async function submitIbVerification(event){event.preventDefault();const f=event.currentTarget,file=f.elements.proof.files?.[0],button=f.querySelector('button[type=submit]');A.setLoading(button,true,'Submitting...');let path='';try{if(file){if(file.size>5*1024*1024)throw new Error('Proof must be 5 MB or smaller.');path=`${state.user.id}/${Date.now()}-${A.fileSafeName(file.name)}`;const up=await A.supabase.storage.from('ib-proofs').upload(path,file,{contentType:file.type,upsert:false});if(up.error)throw up.error;}const {data,error}=await A.supabase.rpc('submit_ib_verification',{p_broker:f.elements.broker.value.trim(),p_account_id:f.elements.trading_account_id.value.trim(),p_account_type:f.elements.account_type.value.trim()||null,p_proof_path:path||null,p_note:f.elements.note.value.trim()||null});if(error){if(path)await A.supabase.storage.from('ib-proofs').remove([path]);throw error;}await auditEvent('ib_verification_submitted','ib_verification',data?.id||null,'success',{});A.closeModal('ibVerificationModal');f.reset();await loadAll();renderAll();A.toast('IB verification submitted.','success');}catch(error){A.toast(A.friendlyError(error,'Could not submit IB verification.'),'error');}finally{A.setLoading(button,false);}}
+  async function submitIbVerification(event){
+    event.preventDefault();
+    const f=event.currentTarget,button=f.querySelector('button[type=submit]');
+    const depositFile=f.elements.deposit_proof.files?.[0];
+    const confirmationFile=f.elements.confirmation_proof.files?.[0]||null;
+    if(!depositFile)return A.toast('Deposit proof is required.','error');
+    if(depositFile.size>5*1024*1024)return A.toast('Deposit proof must be 5 MB or smaller.','error');
+    if(confirmationFile&&confirmationFile.size>5*1024*1024)return A.toast('Confirmation proof must be 5 MB or smaller.','error');
+    const amount=Number(f.elements.deposit_amount.value||0);
+    if(!Number.isFinite(amount)||amount<=0)return A.toast('Enter a valid deposit amount.','error');
+    A.setLoading(button,true,'Submitting...');
+    const uploaded=[];
+    try{
+      const depositPath=`${state.user.id}/deposit/${Date.now()}-${A.fileSafeName(depositFile.name)}`;
+      const dep=await A.supabase.storage.from('ib-proofs').upload(depositPath,depositFile,{contentType:depositFile.type,upsert:false});
+      if(dep.error)throw dep.error;uploaded.push(depositPath);
+      let confirmationPath=null;
+      if(confirmationFile){
+        confirmationPath=`${state.user.id}/confirmation/${Date.now()}-${A.fileSafeName(confirmationFile.name)}`;
+        const conf=await A.supabase.storage.from('ib-proofs').upload(confirmationPath,confirmationFile,{contentType:confirmationFile.type,upsert:false});
+        if(conf.error)throw conf.error;uploaded.push(confirmationPath);
+      }
+      const {data,error}=await A.supabase.rpc('submit_ib_verification_v969',{
+        p_broker:f.elements.broker.value,
+        p_account_id:f.elements.trading_account_id.value.trim(),
+        p_account_type:f.elements.account_type.value,
+        p_deposit_amount:amount,
+        p_deposit_proof_path:depositPath,
+        p_confirmation_proof_path:confirmationPath,
+        p_note:f.elements.note.value.trim()||null
+      });
+      if(error)throw error;
+      await auditEvent('ib_verification_submitted','ib_verification',data?.id||null,'success',{broker:f.elements.broker.value,account_action:f.elements.account_type.value,deposit_amount:amount});
+      f.reset();renderIbBrokerInstructions();await loadPremiumState();renderPremium();
+      A.toast('IB verification submitted for Admin review.','success');
+    }catch(error){
+      if(uploaded.length)try{await A.supabase.storage.from('ib-proofs').remove(uploaded);}catch{}
+      A.toast(A.friendlyError(error,'Could not submit IB verification.'),'error');
+    }finally{A.setLoading(button,false);}
+  }
   async function auditEvent(action,entityType=null,entityId=null,status='success',details={}){try{await A.supabase.functions.invoke('audit-event',{body:{action,entity_type:entityType,entity_id:entityId,status,details}});}catch{}}
 
   function renderPayments() {
@@ -660,20 +711,44 @@
   const brokerAccessMeta = {
     Exness: {
       url: 'https://one.exnessonelink.com/a/be2kjlypr9',
-      newGuide: 'Create a new Exness account from our partner link. After registration and funding, return here and submit your trading account ID for approval.',
-      existingGuide: 'If you already have an Exness account, contact Exness live chat and request a partner / IB change to our partner relationship. Once updated, submit your trading account ID and proof.'
+      newGuide: 'Open our Exness partner link and create your trading account. Fund the account, then submit the Trading Account ID, deposit amount and deposit proof below.',
+      existingGuide: 'Login to Exness → open Live Chat → type “Change Partner” → open the official partner-change link sent by Exness Support → Reason: Education → submit our partner link → for “Where did you find us?” write “website” → save the confirmation email/screenshot.'
     },
     XM: {
       url: 'https://affs.click/tr9cq',
-      newGuide: 'Open a fresh XM account from our partner link, then submit the trading account ID through IB Verification.',
-      existingGuide: 'If your current XM account is not under our partner, the simplest option is usually to create a new account from our partner link. If you can link or change it successfully, submit the updated trading account ID and proof.'
+      newGuide: 'Open our XM partner link → login with your existing XM profile → Create New Account → create a new trading account under the partner link → transfer/fund the new account → save the new Trading Account ID and confirmation proof.',
+      existingGuide: 'XM partner shift flow: open our XM partner link → login with your existing XM profile → Create New Account → create a new trading account under the partner link → transfer/fund the new account → save the Trading Account ID and confirmation proof.'
     },
     DPrime: {
       url: 'https://my.dooprime.com/links/go/72929',
-      newGuide: 'Create a new DPrime account using our partner link, then submit your trading account ID for approval.',
-      existingGuide: 'If you already have a DPrime account, ask DPrime support or your account manager to link / move the account under our partner relationship, then submit the updated account proof.'
+      newGuide: 'Open our DPrime partner link and create your account. After funding, submit the Trading Account ID, deposit amount and deposit proof below.',
+      existingGuide: 'Email en.support@dooprime.com → Subject: Shift Account → write: “Kindly shift my trading account under this partner link: https://my.dooprime.com/links/go/72929. Thank you for your support.” → wait for confirmation and save the confirmation proof.'
     }
   };
+
+  function renderIbBrokerInstructions(){
+    const form=document.getElementById('ibVerificationForm');
+    const box=document.getElementById('ibBrokerInstructions');
+    const wrap=document.getElementById('ibPartnerLinkWrap');
+    const link=document.getElementById('ibSelectedPartnerLink');
+    if(!form||!box)return;
+    const broker=form.elements.broker?.value||'';
+    const mode=form.elements.account_type?.value||'new';
+    const meta=brokerAccessMeta[broker];
+    wrap?.classList.toggle('hidden',!meta);
+    if(link&&meta){link.href=meta.url;link.innerHTML=`<i class="fa-solid fa-arrow-up-right-from-square"></i> Open ${A.escapeHtml(broker)} Partner Link`;}
+    if(!meta){box.innerHTML='<b>Choose a broker.</b>Select Exness, XM or DPrime to see the correct account / partner instructions.';return;}
+    const heading=mode==='existing'?'Partner / IB Shift':'Create New Account';
+    const guide=mode==='existing'?meta.existingGuide:meta.newGuide;
+    box.innerHTML=`<b>${A.escapeHtml(broker)} — ${A.escapeHtml(heading)}</b>${A.escapeHtml(guide)}`;
+  }
+
+  async function copyIbPartnerLink(){
+    const form=document.getElementById('ibVerificationForm');const meta=brokerAccessMeta[form?.elements.broker?.value||''];
+    if(!meta)return A.toast('Choose a broker first.','warning');
+    try{await navigator.clipboard.writeText(meta.url);A.toast('Partner link copied.','success');}catch{A.toast('Could not copy partner link.','error');}
+  }
+
 
   function setAccessStep(step='home'){
     accessFlowState.step=step;
@@ -753,6 +828,12 @@
       if (key === 'signals' && !state.riskAccepted) A.openModal('riskModal');
       if (key === 'courses') resetCourseView();
     });
+    document.querySelectorAll('[data-signal-view]').forEach(button=>button.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();signalWorkspaceView=button.dataset.signalView==='history'?'history':'active';renderSignals();}));
+    document.querySelectorAll('[data-history-market]').forEach(button=>button.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();historyMarketFilter=button.dataset.historyMarket||'all';renderSignals();}));
+    document.querySelectorAll('[data-history-date]').forEach(button=>button.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();historyDateFilter=button.dataset.historyDate||'month';renderSignals();}));
+    document.getElementById('ibBrokerSelect')?.addEventListener('change',renderIbBrokerInstructions);
+    document.getElementById('ibAccountAction')?.addEventListener('change',renderIbBrokerInstructions);
+    document.getElementById('ibCopyPartnerLink')?.addEventListener('click',copyIbPartnerLink);
     ['chartSearch','chartTimeframeFilter'].forEach(id => document.getElementById(id)?.addEventListener('input', renderCharts));
     document.getElementById('articleSearch')?.addEventListener('input', renderArticles);
     document.getElementById('closeSessions').addEventListener('click', resetCourseView);
@@ -761,13 +842,11 @@
       const signalStatusButton = event.target.closest('[data-signal-status]');
       if (signalStatusButton) { signalStatusView = signalStatusButton.dataset.signalStatus || 'all'; renderSignals(); }
       const signalWorkspaceButton = event.target.closest('[data-signal-view]');
-      if (signalWorkspaceButton) { signalWorkspaceView = signalWorkspaceButton.dataset.signalView || 'active'; renderSignals(); }
+      if (signalWorkspaceButton) return;
       const courseFilterButton=event.target.closest('[data-course-filter]');
       if(courseFilterButton){state.courseFilter=courseFilterButton.dataset.courseFilter||'all';renderCourses();}
-      const historyMarketButton = event.target.closest('[data-history-market]');
-      if (historyMarketButton) { historyMarketFilter = historyMarketButton.dataset.historyMarket || 'all'; renderSignals(); }
-      const historyDateButton = event.target.closest('[data-history-date]');
-      if (historyDateButton) { historyDateFilter = historyDateButton.dataset.historyDate || 'month'; renderSignals(); }
+      const historyMarketButton = event.target.closest('[data-history-market]'); if(historyMarketButton)return;
+      const historyDateButton = event.target.closest('[data-history-date]'); if(historyDateButton)return;
       const courseOpen = event.target.closest('[data-open-course]');
       if (courseOpen) { openPanel('courses'); showCourseSessions(courseOpen.dataset.openCourse); }
       const buy = event.target.closest('[data-buy-course]');
@@ -1073,20 +1152,44 @@
     if (!window.__24K_DASH_CLOCK__) window.__24K_DASH_CLOCK__=setInterval(update,1000);
   }
 
+  async function refreshSignalState(){
+    const [signals,updates]=await Promise.all([
+      A.supabase.from('signals').select('*').eq('is_published',true).order('published_at',{ascending:false}),
+      A.supabase.from('signal_updates').select('*').order('created_at',{ascending:false})
+    ]);
+    if(signals.error)throw signals.error;
+    if(updates.error)throw updates.error;
+    state.signals=signals.data||[];state.signalUpdates=updates.data||[];
+    renderSignals();renderKpis();renderDashboard();
+  }
+
   function subscribeRealtime() {
-    let timer;
-    const refresh = () => { clearTimeout(timer); timer = setTimeout(async () => { try { await loadAll(); renderAll(); } catch (error) { console.error('Realtime refresh failed', error); } }, 350); };
-    A.supabase.channel(`student-${state.user.id}`)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'signals' }, refresh)
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'signal_updates' }, payload => { showSignalNotification(payload.new); refresh(); })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'charts' }, refresh)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'articles' }, refresh)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'announcements' }, refresh)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'payments', filter: `student_id=eq.${state.user.id}` }, refresh)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'course_sessions' }, refresh)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'enrollments', filter: `student_id=eq.${state.user.id}` }, refresh)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'course_progress', filter: `student_id=eq.${state.user.id}` }, refresh)
-      .subscribe();
+    let generalTimer,signalTimer,premiumTimer;
+    const refreshGeneral=()=>{clearTimeout(generalTimer);generalTimer=setTimeout(async()=>{try{await loadAll();renderAll();}catch(error){console.error('Realtime refresh failed',error);}},300);};
+    const refreshSignals=()=>{clearTimeout(signalTimer);signalTimer=setTimeout(async()=>{try{await refreshSignalState();}catch(error){console.error('Signal realtime refresh failed',error);}},120);};
+    const refreshPremium=()=>{clearTimeout(premiumTimer);premiumTimer=setTimeout(async()=>{try{await loadPremiumState();renderPremium();}catch(error){console.error('Premium realtime refresh failed',error);}},180);};
+    const channel=A.supabase.channel(`student-live-v969-${state.user.id}`)
+      .on('postgres_changes',{event:'*',schema:'public',table:'signals'},refreshSignals)
+      .on('postgres_changes',{event:'*',schema:'public',table:'signal_updates'},payload=>{if(payload.eventType==='INSERT')showSignalNotification(payload.new);refreshSignals();})
+      .on('postgres_changes',{event:'*',schema:'public',table:'charts'},refreshGeneral)
+      .on('postgres_changes',{event:'*',schema:'public',table:'articles'},refreshGeneral)
+      .on('postgres_changes',{event:'*',schema:'public',table:'announcements'},refreshGeneral)
+      .on('postgres_changes',{event:'*',schema:'public',table:'payments',filter:`student_id=eq.${state.user.id}`},refreshGeneral)
+      .on('postgres_changes',{event:'*',schema:'public',table:'premium_payments',filter:`student_id=eq.${state.user.id}`},refreshPremium)
+      .on('postgres_changes',{event:'*',schema:'public',table:'ib_verifications',filter:`student_id=eq.${state.user.id}`},refreshPremium)
+      .on('postgres_changes',{event:'*',schema:'public',table:'course_sessions'},refreshGeneral)
+      .on('postgres_changes',{event:'*',schema:'public',table:'enrollments',filter:`student_id=eq.${state.user.id}`},refreshGeneral)
+      .subscribe(status=>{
+        if(status==='SUBSCRIBED'){
+          if(window.__24K_SIGNAL_FALLBACK_POLL__){clearInterval(window.__24K_SIGNAL_FALLBACK_POLL__);window.__24K_SIGNAL_FALLBACK_POLL__=null;}
+          return;
+        }
+        if(status==='CHANNEL_ERROR'||status==='TIMED_OUT'||status==='CLOSED'){
+          console.warn('Student realtime channel status:',status);
+          if(!window.__24K_SIGNAL_FALLBACK_POLL__) window.__24K_SIGNAL_FALLBACK_POLL__=setInterval(()=>refreshSignals(),15000);
+        }
+      });
+    window.__24K_STUDENT_REALTIME_CHANNEL__=channel;
   }
 
   function signalIsFinal(s){return Boolean(s.closed_at)||['tp3_hit','tp4_hit','sl_hit','breakeven_hit','manually_closed','cancelled'].includes(s.status);}

@@ -1,0 +1,63 @@
+
+/* 24K Excellence V9.69 — global typography + readability normalization */
+:root{
+  --v969-body-size:15px;
+  --v969-body-line:1.5;
+  --v969-small-size:12.5px;
+  --v969-label-size:13px;
+  --v969-table-size:12.5px;
+}
+html{font-size:16px}
+body,button,input,select,textarea{font-family:"Barlow",Arial,sans-serif}
+h1,h2,h3,h4,h5,h6,.app-title strong,.brand{font-family:"Sora","Barlow",Arial,sans-serif}
+
+body{font-size:var(--v969-body-size);line-height:var(--v969-body-line);text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit}
+.app-page,.team-page,.login-page{font-size:15px}
+.app-topbar .app-title strong{font-size:15px;line-height:1.25}
+.app-topbar .app-title small,.muted,small{font-size:var(--v969-small-size);line-height:1.45}
+.app-nav a,.student-mobile-nav button{font-size:13.5px}
+.panel-heading h1{font-size:clamp(24px,2vw,30px);line-height:1.15}
+.panel-heading h2{font-size:clamp(21px,1.8vw,26px);line-height:1.2}
+.app-card h3,.content-card h3,.team-link-card h3,.team-clients-card h3{font-size:17px;line-height:1.3}
+.form-field label{font-size:var(--v969-label-size);font-weight:700}
+.form-field input,.form-field select,.form-field textarea{font-size:14px;line-height:1.35}
+.app-btn{font-size:13.5px;line-height:1.2}
+.app-btn.small{font-size:12px}
+.status-pill{font-size:11.5px;line-height:1.25}
+.admin-table,.payment-table,.team-table,.premium-signal-table{font-size:var(--v969-table-size);line-height:1.4}
+.admin-table th,.payment-table th,.team-table th,.premium-signal-table th{font-size:11.5px;letter-spacing:.02em;white-space:nowrap}
+.admin-table td,.payment-table td,.team-table td,.premium-signal-table td{font-size:var(--v969-table-size)}
+.signal-admin-table td,.signal-admin-table td span,.signal-admin-table td b,.signal-admin-table .target-mini{font-size:12.5px!important;line-height:1.4!important}
+.signal-admin-table td small,.signal-admin-table small{font-size:11.5px!important;line-height:1.35!important;opacity:1!important}
+html[data-theme="light"] .signal-admin-table td,html[data-theme="light"] .signal-admin-table td span,html[data-theme="light"] .signal-admin-table td b,html[data-theme="light"] .signal-admin-table .target-mini{color:#312d27}
+html[data-theme="light"] .signal-admin-table td small,html[data-theme="light"] .signal-admin-table small{color:#6f665b!important}
+html[data-theme="dark"] .signal-admin-table td,html[data-theme="dark"] .signal-admin-table td span,html[data-theme="dark"] .signal-admin-table td b,html[data-theme="dark"] .signal-admin-table .target-mini{color:#f1eee8}
+html[data-theme="dark"] .signal-admin-table td small,html[data-theme="dark"] .signal-admin-table small{color:#aaa39a!important}
+.compact-history-table td{font-size:12px!important}.compact-history-table th{font-size:11.5px!important}
+.team-kpi b{font-size:clamp(24px,2.4vw,34px)}
+.team-kpi small,.team-kpi span{font-size:12.5px}
+.hero h1{font-size:clamp(38px,5vw,62px);line-height:1.04}
+.hero-sub,.mentor-bio{font-size:clamp(15px,1.35vw,18px);line-height:1.6}
+.nav-menu a,.nav-cta a{font-size:14px}
+.session-community-note{display:flex;align-items:center;gap:9px;margin-top:14px;padding:11px 13px;border:1px solid rgba(255,193,7,.22);border-radius:12px;background:rgba(255,193,7,.07);font-size:12.5px;font-weight:700}
+.session-community-note i{color:#f2b400}
+.ib-instruction-box{margin-top:12px;padding:13px 14px;border:1px solid rgba(255,193,7,.22);border-radius:14px;background:rgba(255,193,7,.06);font-size:13px;line-height:1.55}
+.ib-instruction-box b{display:block;margin-bottom:4px}
+.ib-instruction-box ol{margin:7px 0 0 18px;padding:0}.ib-instruction-box li{margin:3px 0}
+.team-whatsapp-btn{white-space:nowrap}
+@media(max-width:900px){
+  :root{--v969-body-size:14.5px;--v969-table-size:12px}
+  .panel-heading h1{font-size:24px}.panel-heading h2{font-size:21px}
+  .app-card h3,.content-card h3{font-size:16px}
+  .hero h1{font-size:clamp(34px,9vw,48px)}
+}
+@media(max-width:600px){
+  .app-nav a{font-size:13px}.app-btn{font-size:13px}.form-field input,.form-field select,.form-field textarea{font-size:14px}
+  .admin-table,.payment-table,.team-table,.premium-signal-table{font-size:12px}
+}
+
+/* V9.69 Signals contrast guard */
+.signal-admin-table td,.signal-admin-table .signal-entry-main,.signal-admin-table .signal-targets,.signal-admin-table .signal-result{opacity:1!important}
+html[data-theme="light"] .signal-admin-table td{color:#2b2722!important}
+html[data-theme="dark"] .signal-admin-table td{color:#f1eee8!important}

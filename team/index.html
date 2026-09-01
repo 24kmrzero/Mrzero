@@ -6,15 +6,16 @@
 <meta name="theme-color" content="#10100e">
 <script>(function(){try{var t=localStorage.getItem('24k-excellence-theme');document.documentElement.dataset.theme=t==='light'?'light':'dark'}catch(e){document.documentElement.dataset.theme='dark'}})();</script>
 <title>Team Performance | 24K Excellence</title>
-<link rel="icon" href="../assets/logo.png?v=9.68">
-<link rel="stylesheet" href="../app.css?v=9.46">
+<link rel="icon" href="../assets/logo.png?v=9.69">
+<link rel="stylesheet" href="../app.css?v=9.69">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<link rel="stylesheet" href="../assets/platform-v962.css?v=9.68">
+<link rel="stylesheet" href="../assets/platform-v962.css?v=9.69">
+<link rel="stylesheet" href="../assets/v969-fixes.css?v=9.69">
 </head>
 <body class="team-page">
 <div id="teamLogin" class="team-login-wrap">
   <form class="team-login-card" id="teamLoginForm">
-    <a href="/" aria-label="Website home"><img src="../assets/logo.png?v=9.68" alt="24K Digital Gold"></a>
+    <a href="/" aria-label="Website home"><img src="../assets/logo.png?v=9.69" alt="24K Digital Gold"></a>
     <div class="team-login-badge"><i class="fa-solid fa-chart-column"></i> TEAM ACCESS</div>
     <h1>Team Performance Panel</h1>
     <p>Use the username and password created by Admin. No email account is required.</p>
@@ -27,7 +28,7 @@
 
 <div id="teamDashboard" class="team-dashboard hidden">
   <header class="team-topbar">
-    <a href="/" aria-label="Website home"><img src="../assets/logo.png?v=9.68" alt="24K Digital Gold"></a>
+    <a href="/" aria-label="Website home"><img src="../assets/logo.png?v=9.69" alt="24K Digital Gold"></a>
     <div class="team-topbar-actions">
       <button class="app-theme-toggle" type="button" id="teamThemeToggle" aria-label="Toggle theme"><i class="fa-solid fa-sun"></i></button>
       <span class="team-identity" id="teamIdentity"></span>
@@ -50,13 +51,13 @@
 
     <section class="team-clients-card">
       <div class="app-card-head"><div><h3>Attributed Clients</h3><p>Historical and new clients credited to your assigned link.</p></div><div class="team-client-count"><b id="teamClientCount">0</b><span>Clients</span></div></div>
-      <div class="team-filter-row"><div class="team-search"><i class="fa-solid fa-magnifying-glass"></i><input id="teamClientSearch" type="search" placeholder="Search name, email or WhatsApp..."></div><select id="teamVerificationFilter"><option value="all">All Verification</option><option value="verified">Verified</option><option value="unverified">Unverified</option></select><select id="teamEnrollmentFilter"><option value="all">All Clients</option><option value="enrolled">Enrolled</option><option value="not-enrolled">Not Enrolled</option></select></div>
-      <div class="table-scroll"><table class="team-table"><thead><tr><th>Client</th><th>WhatsApp</th><th>Signup Date</th><th>Verification</th><th>Course / Enrollment</th></tr></thead><tbody id="teamClientsBody"></tbody></table></div>
+      <div class="team-filter-row"><div class="team-search"><i class="fa-solid fa-magnifying-glass"></i><input id="teamClientSearch" type="search" placeholder="Search client name..."></div><select id="teamVerificationFilter"><option value="all">All Verification</option><option value="verified">Verified</option><option value="unverified">Unverified</option></select><select id="teamEnrollmentFilter"><option value="all">All Clients</option><option value="enrolled">Enrolled</option><option value="not-enrolled">Not Enrolled</option></select></div>
+      <div class="table-scroll"><table class="team-table"><thead><tr><th>Client</th><th>Contact</th><th>Signup Date</th><th>Verification</th><th>Course / Enrollment</th></tr></thead><tbody id="teamClientsBody"></tbody></table></div>
     </section>
   </main>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../assets/js/config.js?v=9.68"></script>
-<script src="../assets/js/team.js?v=9.68"></script>
+<script src="../assets/js/config.js?v=9.69"></script>
+<script src="../assets/js/team.js?v=9.69"></script>
 </body>
 </html>
