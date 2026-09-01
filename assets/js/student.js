@@ -791,14 +791,12 @@
 
   function openAllAccessModal(){
     try { if (typeof openPanel === 'function') openPanel('profile'); } catch {}
-    const details=document.getElementById('premiumAccessDetails');
-    if(details){
-      details.open=true;
-      setTimeout(()=>details.scrollIntoView({behavior:'smooth',block:'center'}),80);
-      return true;
-    }
-    A.toast('Open Profile to manage Premium access.','info');
-    return false;
+    const modal=document.getElementById('premiumAccessModal');
+    if(!modal){A.toast('Premium access window is unavailable. Please refresh the page.','error');return false;}
+    renderAccessSelection();
+    renderIbBrokerInstructions();
+    A.openModal('premiumAccessModal');
+    return true;
   }
 
   async function copySelectedBrokerLink(){
@@ -865,6 +863,7 @@
       if (resource) await downloadResource(resource.dataset.downloadResource);
       const signalHistory = event.target.closest('[data-student-signal-history]');
       if (signalHistory) openSignalHistory(signalHistory.dataset.studentSignalHistory);
+      const managePremium=event.target.closest('#managePremiumAccess'); if(managePremium){event.preventDefault();openAllAccessModal();return;}
       const accessStepButton=event.target.closest('[data-access-step-target]'); if(accessStepButton){setAccessStep(accessStepButton.dataset.accessStepTarget||'home'); return;}
       const brokerButton=event.target.closest('[data-broker-select]'); if(brokerButton){accessFlowState.broker=brokerButton.dataset.brokerSelect||''; if(!accessFlowState.mode) accessFlowState.mode='new'; renderAccessSelection(); return;}
       const accessModeButton=event.target.closest('[data-access-account-mode]'); if(accessModeButton){accessFlowState.mode=accessModeButton.dataset.accessAccountMode||''; renderAccessSelection(); return;}

@@ -12,7 +12,7 @@
 <script>setTimeout(function(){document.documentElement.classList.add('admin-css-ready')},1800);</script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <link rel="stylesheet" href="assets/platform-v962.css?v=9.69">
-<link rel="stylesheet" href="assets/v969-fixes.css?v=9.69">
+<link rel="stylesheet" href="assets/v969-fixes.css?v=9.70">
 </head>
 <body class="app-page">
 <div id="pageLoader" class="loading-screen"><div><img src="assets/logo.png?v=9.69" alt="24K Digital Gold"><i class="fa-solid fa-spinner fa-spin"></i><p>Loading admin controls...</p></div></div>
@@ -93,7 +93,7 @@
           <input type="hidden" id="adminSignalView" value="active">
         </div>
         <div class="filter-row"><input id="adminSignalSearch" type="search" placeholder="Search pair or note..."></div>
-        <div class="table-scroll"><table class="admin-table signal-admin-table"><thead><tr><th>Signal</th><th>Order</th><th>Entry / SL</th><th>Targets & Progress</th><th>Status</th><th>Result</th><th>Published</th><th>Actions</th></tr></thead><tbody id="signalsBody"></tbody></table></div>
+        <div class="table-scroll"><table class="admin-table signal-admin-table admin-signal-user-style"><thead><tr><th>Time</th><th>Date</th><th>Instrument</th><th>Type</th><th>Entry</th><th>SL</th><th>TP1</th><th>TP2</th><th>TP3</th><th>Current Pips</th><th>Status</th><th>Actions</th></tr></thead><tbody id="signalsBody"></tbody></table></div>
       </section>
 
       <section class="panel" id="p-charts">
@@ -220,6 +220,6 @@
 
 <div class="app-modal" id="receiptPreviewModal"><div class="app-modal-card receipt-preview-card"><div class="app-modal-head"><div><h3>Payment Receipt</h3><small id="receiptPreviewSubtitle" class="muted">Secure temporary preview</small></div><button class="modal-close" data-close-modal="receiptPreviewModal"><i class="fa-solid fa-xmark"></i></button></div><div class="app-modal-body"><div id="receiptPreviewContent" class="receipt-preview-content"></div></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="receiptPreviewModal">Close</button><a id="receiptOpenExternal" class="app-btn gold" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Full Size</a></div></div></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js?v=9.69"></script><script src="assets/js/core.js?v=9.69"></script><script src="assets/js/admin.js?v=9.69"></script><script src="assets/js/platform-v8-admin.js?v=9.69"></script><script src="assets/js/platform-v962-admin.js?v=9.69"></script><script src="assets/js/dashboard-analytics-recovery.js?v=9.69"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js?v=9.69"></script><script src="assets/js/core.js?v=9.69"></script><script src="assets/js/admin.js?v=9.70"></script><script src="assets/js/platform-v8-admin.js?v=9.69"></script><script src="assets/js/platform-v962-admin.js?v=9.70"></script><script src="assets/js/dashboard-analytics-recovery.js?v=9.69"></script>
 </body>
 </html>
