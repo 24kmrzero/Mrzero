@@ -1,52 +1,44 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0A0A0A"><title>24K Excellence Student</title><script>(function(){try{var t=localStorage.getItem('24k-excellence-theme');document.documentElement.dataset.theme=t==='light'?'light':'dark'}catch(e){document.documentElement.dataset.theme='dark'}})();</script><style>html,body{margin:0;min-height:100%;background:#0a0a0a}html[data-theme="light"],html[data-theme="light"] body{background:#f6efe3}.route-loader{position:fixed;inset:0;display:grid;place-items:center;background:inherit;color:#c99a05;font:700 14px Arial,sans-serif;z-index:99999}.route-loader span{display:grid;gap:14px;justify-items:center}.route-loader i{display:block;width:28px;height:28px;border:3px solid rgba(201,154,5,.22);border-top-color:#c99a05;border-radius:50%;animation:r .72s linear infinite}@keyframes r{to{transform:rotate(360deg)}}</style></head><body><div class="route-loader" aria-label="Loading"><span><i></i>Loading 24K Student...</span></div><script>(function(){
-  var fallback='/student-dashboard.html#signals';
-  function fetchText(url,ms){
-    var c=new AbortController(),t=setTimeout(function(){c.abort();},ms||9000);
-    return fetch(url,{cache:'force-cache',credentials:'same-origin',signal:c.signal}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.text();}).finally(function(){clearTimeout(t);});
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0A0A0A"><title>24K Excellence Student</title><script>(function(){try{var t=localStorage.getItem('24k-excellence-theme');document.documentElement.dataset.theme=t==='light'?'light':'dark'}catch(e){document.documentElement.dataset.theme='dark'}})();</script><style>html,body{margin:0;min-height:100%;background:#0a0a0a}html[data-theme="light"],html[data-theme="light"] body{background:#f6efe3}.route-loader{position:fixed;inset:0;display:grid;place-items:center;background:inherit;color:#c99a05;font:700 14px Arial,sans-serif;z-index:99999}.route-loader span{display:grid;gap:14px;justify-items:center}.route-loader i{display:block;width:28px;height:28px;border:3px solid rgba(201,154,5,.22);border-top-color:#c99a05;border-radius:50%;animation:r .72s linear infinite}.route-loader small{max-width:360px;text-align:center;color:#8f8f8f;font-weight:500;line-height:1.5}@keyframes r{to{transform:rotate(360deg)}}</style></head><body><div class="route-loader" aria-label="Loading"><span><i></i>Loading 24K Student...<small id="routeStatus">Preparing your dashboard</small></span></div><script>(function(){
+  var panel='signals';
+  var fallback='/student-dashboard.html#'+panel;
+  var cacheKey='24k:v991:student-shell';
+  function writePage(page){
+    if(panel&&panel!=='dashboard'){
+      page=page.replace(/<body([^>]*)>/i,function(m,a){return '<body'+a+'><script>try{location.hash='+JSON.stringify('#')+'+'+JSON.stringify(panel)+';}catch(e){}<\/script>';});
+    }
+    document.open();document.write(page);document.close();
   }
   function patchStudent(code){
     if(code.indexOf('brokerAccessMeta')>=0){
       if(!/var\s+brokerAccessMeta\s*=\s*\{\}/.test(code)) code=code.replace(/const\s+A\s*=\s*window\.App\s*;/,'const A = window.App;\n  var brokerAccessMeta = {};');
       code=code.replace(/\b(?:const|let)\s+brokerAccessMeta\s*=/g,'brokerAccessMeta =');
     }
-    code=code.replace(/if\s*\(profileError\)\s*throw\s+profileError\s*;/g,"if (profileError) console.warn('[V9.90] Profile refresh failed; continuing with authenticated profile.', profileError);");
-    code=code.replace(/if\s*\(firstError\)\s*throw\s+firstError\s*;/g,"if (firstError) console.warn('[V9.90] Some student data could not load; continuing with available data.', firstError);");
-    code=code.replace(/if\s*\(premiumAccess\.error\)\s*throw\s+premiumAccess\.error\s*;/g,"if (premiumAccess.error) console.warn('[V9.90] Premium access data unavailable.', premiumAccess.error);");
-    code=code.replace(/if\s*\(premiumPayments\.error\)\s*throw\s+premiumPayments\.error\s*;/g,"if (premiumPayments.error) console.warn('[V9.90] Premium payments data unavailable.', premiumPayments.error);");
-    code=code.replace(/if\s*\(ibRows\.error\)\s*throw\s+ibRows\.error\s*;/g,"if (ibRows.error) console.warn('[V9.90] IB verification data unavailable.', ibRows.error);");
-    var boot=/await\s+loadAll\(\);\s*renderAll\(\);\s*bindEvents\(\);\s*subscribeRealtime\(\);\s*document\.getElementById\(['\"]pageLoader['\"]\)\.classList\.add\(['\"]hidden['\"]\);\s*document\.getElementById\(['\"]studentApp['\"]\)\.classList\.remove\(['\"]hidden['\"]\);\s*handlePaymentReturn\(\);/;
-    if(boot.test(code)){
-      code=code.replace(boot,`var __v990InitialLoad = loadAll();
-  var __v990Loaded = false;
-  try {
-    await Promise.race([
-      __v990InitialLoad.then(function(){ __v990Loaded = true; }),
-      new Promise(function(resolve){ setTimeout(resolve, 4500); })
-    ]);
-  } catch (error) { console.error('[V9.90] Student initial data load:', error); }
-  try { renderAll(); } catch (error) { console.error('[V9.90] Student initial render:', error); }
-  try { bindEvents(); subscribeRealtime(); handlePaymentReturn(); } catch (error) { console.error('[V9.90] Student event bootstrap:', error); }
-  var __v990Loader=document.getElementById('pageLoader'); if(__v990Loader)__v990Loader.classList.add('hidden');
-  var __v990App=document.getElementById('studentApp'); if(__v990App)__v990App.classList.remove('hidden');
-  window.__24K_STUDENT_BOOTSTRAP_READY__=true;
-  if(!__v990Loaded){
-    __v990InitialLoad.then(function(){try{renderAll();}catch(error){console.error('[V9.90] Student late render:',error);}}).catch(function(error){console.error('[V9.90] Student background load:',error);});
-  }`);
-    }
     return code;
   }
-  Promise.all([
-    fetchText('/student-dashboard.html?v=9.90',9000),
-    fetchText('/assets/js/student.js?v=9.90',9000).catch(function(){return null;})
-  ]).then(function(parts){
-    var page=parts[0],studentCode=parts[1];
+  function fetchText(url,ms){
+    var c=new AbortController(),t=setTimeout(function(){c.abort();},ms||7000);
+    return fetch(url,{cache:'force-cache',credentials:'same-origin',signal:c.signal}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.text();}).finally(function(){clearTimeout(t);});
+  }
+  try{
+    var cached=sessionStorage.getItem(cacheKey);
+    if(cached){writePage(cached);return;}
+  }catch(e){}
+  var status=document.getElementById('routeStatus');
+  var pagePromise=fetchText('/student-dashboard.html',7000);
+  var jsPromise=fetchText('/assets/js/student.js',7000);
+  Promise.all([pagePromise,jsPromise]).then(function(parts){
+    var page=parts[0],studentCode=patchStudent(parts[1]);
     page=page.replace('<head>','<head><base href="/">');
-    if(studentCode){
-      studentCode=patchStudent(studentCode).replace(/<\/script/gi,'<\\/script');
-      var tag=/<script\b[^>]*\bsrc=(['\"])[^'\"]*assets\/js\/student\.js[^'\"]*\1[^>]*><\/script>/i;
-      if(tag.test(page))page=page.replace(tag,'<script>'+studentCode+'<\/script>');
-    }
-    page=page.replace('</body>','<script src="/assets/js/v971-student-signal-history.js?v=9.90"><\/script><script src="/assets/js/v990-student-runtime-fixes.js?v=9.90"><\/script><script>setTimeout(function(){var l=document.getElementById("pageLoader"),a=document.getElementById("studentApp");if(l&&!l.classList.contains("hidden")){console.warn("[V9.90] Loader watchdog released the Student UI.");l.classList.add("hidden");if(a)a.classList.remove("hidden");}},6500);<\/script></body>');
-    document.open();document.write(page);document.close();
-  }).catch(function(error){console.error('[V9.90] Student clean route load failed',error);location.replace(fallback);});
+    studentCode=studentCode.replace(/<\/script/gi,'<\\/script');
+    var tag=/<script\b[^>]*\bsrc=(['"])[^'"]*assets\/js\/student\.js[^'"]*\1[^>]*><\/script>/i;
+    if(!tag.test(page)) throw new Error('student.js script tag not found');
+    page=page.replace(tag,'<script>'+studentCode+'<\/script>');
+    page=page.replace('</body>','<script src="/assets/js/v971-student-signal-history.js?v=9.91"><\/script><script src="/assets/js/v990-student-runtime-fixes.js?v=9.91"><\/script><script>(function(){var started=Date.now();var timer=setInterval(function(){var l=document.getElementById("pageLoader"),a=document.getElementById("studentApp");if(!l||l.classList.contains("hidden")||(a&&!a.classList.contains("hidden"))){clearInterval(timer);return;}if(Date.now()-started>15000){clearInterval(timer);console.error("[V9.91] Student bootstrap exceeded 15s; keeping loader instead of showing an empty dashboard.");if(window.App&&typeof window.App.toast==="function")window.App.toast("Dashboard data is taking longer than expected. Please refresh once.","error",6000);}},500);})();<\/script></body>');
+    try{sessionStorage.setItem(cacheKey,page);}catch(e){}
+    writePage(page);
+  }).catch(function(error){
+    console.error('[V9.91] Student clean route bootstrap failed',error);
+    if(status)status.textContent='Opening the direct student dashboard…';
+    setTimeout(function(){location.replace(fallback);},120);
+  });
 })();</script></body></html>
