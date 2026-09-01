@@ -1,8 +1,1 @@
-24K Zero V10.11 — Exact Reference Landing Recreation
-- Recreated public Home layout to closely match supplied reference screenshots.
-- Same navbar locked on Home and Courses.
-- Uses supplied transparent mentor image in hero.
-- Hero + stats strip, mentor/service cards, featured courses, reviews, contact block and footer rebuilt to reference proportions.
-- Public Courses page rebuilt in matching black/yellow course-card style.
-- Course content/prices still load from Supabase.
-- No SQL required.
+V10.12 — Public landing visual QA fix
