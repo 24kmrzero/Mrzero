@@ -1,104 +1,19 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0A0A0A"><meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate"><title>24K Excellence Student</title><script>(function(){try{var t=localStorage.getItem('24k-excellence-theme');document.documentElement.dataset.theme=t==='light'?'light':'dark'}catch(e){document.documentElement.dataset.theme='dark'}})();</script><style>html,body{margin:0;min-height:100%;background:#0a0a0a}html[data-theme="light"],html[data-theme="light"] body{background:#f6efe3}.route-loader{position:fixed;inset:0;display:grid;place-items:center;background:inherit;color:#c99a05;font:700 14px Arial,sans-serif;z-index:99999}.route-loader span{display:grid;gap:14px;justify-items:center}.route-loader i{display:block;width:28px;height:28px;border:3px solid rgba(201,154,5,.22);border-top-color:#c99a05;border-radius:50%;animation:r .72s linear infinite}.route-loader small{max-width:390px;text-align:center;color:#8f8f8f;font-weight:500;line-height:1.5}@keyframes r{to{transform:rotate(360deg)}}</style></head><body><div class="route-loader" aria-label="Loading"><span><i></i>Loading 24K Student...<small id="routeStatus">Opening your account</small></span></div><script>(function(){
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+<title>Opening 24K Student</title>
+<script>
+(function(){
   'use strict';
-  var panel='articles';
-  var fallback='/student-dashboard.html#'+panel;
-  var done=false;
-  var status=document.getElementById('routeStatus');
-  try{
-    ['24k:v980:student-shell','24k:v990:student-shell','24k:v991:student-shell','24k:v992:student-shell'].forEach(function(k){sessionStorage.removeItem(k);});
-    for(var i=sessionStorage.length-1;i>=0;i--){var k=sessionStorage.key(i);if(k&&/^24k:v(?:98|99)\d*:student-shell$/.test(k))sessionStorage.removeItem(k);}
-  }catch(e){}
-
-  function patchStudent(code){
-    // V9.93: the live Student build referenced brokerAccessMeta before its lexical
-    // declaration. Convert the original declaration into an assignment and create
-    // one function-safe var before any possible early reference.
-    if(code.indexOf('brokerAccessMeta')>=0){
-      code=code.replace(/\b(?:const|let|var)\s+brokerAccessMeta\s*=/g,'brokerAccessMeta =');
-      var strict=/^\s*(['"])use strict\1\s*;/.exec(code);
-      if(strict) code=code.slice(0,strict[0].length)+'\nvar brokerAccessMeta = {};'+code.slice(strict[0].length);
-      else code='var brokerAccessMeta = {};\n'+code;
-    }
-    return code;
-  }
-
-  function fetchText(url,ms){
-    var c=new AbortController(),t=setTimeout(function(){try{c.abort();}catch(e){}},ms);
-    return fetch(url,{cache:'no-store',credentials:'same-origin',signal:c.signal}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status+' for '+url);return r.text();}).finally(function(){clearTimeout(t);});
-  }
-
-  function bootGuard(){
-    return `<script>(function(){
-      if(window.__24K_V993_BOOT_GUARD__)return;window.__24K_V993_BOOT_GUARD__=true;
-      window.__24K_STUDENT_BOOT_STARTED__=Date.now();
-      window.addEventListener('error',function(e){window.__24K_STUDENT_BOOT_ERROR__=String(e&&e.message||'JavaScript error');console.error('[V9.93 Student boot]',e&&e.error||e);});
-      window.addEventListener('unhandledrejection',function(e){window.__24K_STUDENT_BOOT_ERROR__=String(e&&e.reason&&e.reason.message||e&&e.reason||'Promise rejected');console.error('[V9.93 Student boot rejection]',e&&e.reason);});
-      var nativeFetch=window.fetch&&window.fetch.bind(window),deadline=Date.now()+25000;
-      if(nativeFetch)window.fetch=function(input,init){
-        init=init||{};var u='';try{u=typeof input==='string'?input:String(input&&input.url||'');}catch(_){}
-        var guarded=Date.now()<deadline&&(/\.supabase\.co\//i.test(u)||/\/(?:rest|auth|functions)\/v1\//i.test(u));
-        if(!guarded||init.signal)return nativeFetch(input,init);
-        var c=new AbortController(),timer=setTimeout(function(){try{c.abort();}catch(_){}},12000),copy=Object.assign({},init,{signal:c.signal});
-        return nativeFetch(input,copy).finally(function(){clearTimeout(timer);});
-      };
-    })();<\/script>`;
-  }
-
-  function recoveryScript(){
-    return `<script>(function(){
-      var panel=$'articles',attempt=0;
-      function visible(el){if(!el)return false;try{var s=getComputedStyle(el);return s.display!=='none'&&s.visibility!=='hidden'&&s.opacity!=='0';}catch(_){return true;}}
-      function findInnerLoader(){
-        var all=Array.from(document.querySelectorAll('body *'));
-        return all.find(function(el){var t=String(el.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();return t.indexOf('loading your student account')>=0&&visible(el);})||null;
-      }
-      function shellReady(){return !!document.querySelector('aside,nav,[class*="sidebar" i],[class*="dashboard" i],[class*="student-shell" i],main');}
-      function pulse(){
-        var loader=findInnerLoader();if(!loader)return;
-        attempt++;
-        try{location.hash=panel==='dashboard'?'dashboard':panel;window.dispatchEvent(new HashChangeEvent('hashchange'));window.dispatchEvent(new Event('24k:student-base-updated'));}catch(_){}
-        if(attempt===1){setTimeout(pulse,3500);return;}
-        // If the application shell exists but its blocking loader failed to release,
-        // hide only the loader overlay. Do not replace or blank the dashboard.
-        if(shellReady()){
-          var n=loader;for(var i=0;i<5&&n&&n!==document.body;i++,n=n.parentElement){
-            try{var cs=getComputedStyle(n),r=n.getBoundingClientRect();if((cs.position==='fixed'||cs.position==='absolute')&&r.width>innerWidth*.72&&r.height>innerHeight*.72){n.style.setProperty('display','none','important');break;}}catch(_){}
-          }
-        }
-      }
-      setTimeout(pulse,12500);
-    })();<\/script>`;
-  }
-
-  function writePage(page,studentCode){
-    if(done)return;done=true;
-    if(panel&&panel!=='dashboard') page=page.replace(/<body([^>]*)>/i,function(m,a){return '<body'+a+'><script>try{location.hash='+JSON.stringify('#')+'+'+JSON.stringify(panel)+';}catch(e){}<\/script>';});
-    page=page.replace('<head>','<head><base href="/">'+bootGuard());
-
-    // CRITICAL V9.93 FIX: removing the external student.js tag and executing the
-    // transformed source at the END of body preserves defer/end-of-DOM semantics.
-    // Previous patches inlined it at the original tag position (often in <head>),
-    // which could run Student initialization before its DOM existed.
-    var tag=/<script\b[^>]*\bsrc=(['"])[^'"]*assets\/js\/student\.js[^'"]*\1[^>]*><\/script>/i;
-    if(!tag.test(page))throw new Error('student.js script tag not found');
-    page=page.replace(tag,'<!-- v9.93 student.js moved to end of body -->');
-    studentCode=patchStudent(studentCode).replace(/<\/script/gi,'<\\/script');
-    var tail='<script>'+studentCode+'<\/script><script src="/assets/js/v971-student-signal-history.js?v=9.93"><\/script><script src="/assets/js/v990-student-runtime-fixes.js?v=9.93"><\/script>'+recoveryScript();
-    page=page.replace('</body>',tail+'</body>');
-    document.open();document.write(page);document.close();
-  }
-
-  var hard=setTimeout(function(){
-    if(done)return;done=true;
-    if(status)status.textContent='Opening the direct Student Panel…';
-    location.replace(fallback);
-  },9000);
-  if(status)status.textContent='Loading account files…';
-  Promise.all([fetchText('/student-dashboard.html?v=9.93',7000),fetchText('/assets/js/student.js?v=9.93',7000)]).then(function(parts){
-    clearTimeout(hard);writePage(parts[0],parts[1]);
-  }).catch(function(error){
-    console.error('[V9.93] Student clean route bootstrap failed',error);clearTimeout(hard);
-    if(done)return;done=true;if(status)status.textContent='Opening the direct Student Panel…';
-    setTimeout(function(){location.replace(fallback);},80);
-  });
-})();</script></body></html>
+  var section='articles';
+  var target='/student/#'+section;
+  if(location.pathname==='/student/' && location.hash==='#'+section) return;
+  location.replace(target);
+})();
+</script>
+<noscript><meta http-equiv="refresh" content="0;url=/student/#articles"></noscript>
+</head><body></body></html>
