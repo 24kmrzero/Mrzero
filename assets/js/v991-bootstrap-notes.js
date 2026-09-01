@@ -1,1 +1,1 @@
-window.__24K_V991__={studentBootstrap:'no-premature-render',routeCache:'session'};
+// Superseded by V9.92 clean-route bootstrap.

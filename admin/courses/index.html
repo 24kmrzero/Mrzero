@@ -1,17 +1,20 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0A0A0A"><title>24K Excellence Admin</title><script>(function(){try{var t=localStorage.getItem('24k-excellence-theme');document.documentElement.dataset.theme=t==='light'?'light':'dark'}catch(e){document.documentElement.dataset.theme='dark'}})();</script><style>html,body{margin:0;min-height:100%;background:#0a0a0a}html[data-theme="light"],html[data-theme="light"] body{background:#f6efe3}.route-loader{position:fixed;inset:0;display:grid;place-items:center;background:inherit;color:#c99a05;font:700 14px Arial,sans-serif;z-index:99999}.route-loader span{display:grid;gap:14px;justify-items:center}.route-loader i{display:block;width:28px;height:28px;border:3px solid rgba(201,154,5,.22);border-top-color:#c99a05;border-radius:50%;animation:r .72s linear infinite}@keyframes r{to{transform:rotate(360deg)}}</style></head><body><div class="route-loader" aria-label="Loading"><span><i></i>Loading 24K Admin...</span></div><script>(function(){
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0A0A0A"><meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate"><title>24K Excellence Admin</title><script>(function(){try{var t=localStorage.getItem('24k-excellence-theme');document.documentElement.dataset.theme=t==='light'?'light':'dark'}catch(e){document.documentElement.dataset.theme='dark'}})();</script><style>html,body{margin:0;min-height:100%;background:#0a0a0a}html[data-theme="light"],html[data-theme="light"] body{background:#f6efe3}.route-loader{position:fixed;inset:0;display:grid;place-items:center;background:inherit;color:#c99a05;font:700 14px Arial,sans-serif;z-index:99999}.route-loader span{display:grid;gap:14px;justify-items:center}.route-loader i{display:block;width:28px;height:28px;border:3px solid rgba(201,154,5,.22);border-top-color:#c99a05;border-radius:50%;animation:r .72s linear infinite}@keyframes r{to{transform:rotate(360deg)}}</style></head><body><div class="route-loader" aria-label="Loading"><span><i></i>Loading 24K Admin...</span></div><script>(function(){
+  'use strict';
   var panel='courses';
   var fallback='/admin-dashboard.html#'+panel;
-  var cacheKey='24k:v991:admin-shell';
-  function writePage(page){
-    if(panel&&panel!=='dashboard') page=page.replace(/<body([^>]*)>/i,function(m,a){return '<body'+a+'><script>try{location.hash='+JSON.stringify('#')+'+'+JSON.stringify(panel)+';}catch(e){}<\/script>';});
-    document.open();document.write(page);document.close();
-  }
-  try{var cached=sessionStorage.getItem(cacheKey);if(cached){writePage(cached);return;}}catch(e){}
-  var c=new AbortController(),t=setTimeout(function(){c.abort();},7000);
-  fetch('/admin-dashboard.html',{cache:'force-cache',credentials:'same-origin',signal:c.signal}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.text();}).then(function(page){
+  var done=false;
+  try{
+    ['24k:v980:admin-shell','24k:v990:admin-shell','24k:v991:admin-shell'].forEach(function(k){sessionStorage.removeItem(k);});
+    for(var i=sessionStorage.length-1;i>=0;i--){var k=sessionStorage.key(i);if(k&&/^24k:v(?:98|99)\d*:admin-shell$/.test(k))sessionStorage.removeItem(k);}
+  }catch(e){}
+  var c=new AbortController();
+  var timeout=setTimeout(function(){try{c.abort();}catch(e){}},6000);
+  var hard=setTimeout(function(){if(done)return;done=true;location.replace(fallback);},8000);
+  fetch('/admin-dashboard.html',{cache:'default',credentials:'same-origin',signal:c.signal}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.text();}).then(function(page){
+    if(done)return;done=true;clearTimeout(hard);
+    if(panel&&panel!=='dashboard')page=page.replace(/<body([^>]*)>/i,function(m,a){return '<body'+a+'><script>try{location.hash='+JSON.stringify('#')+'+'+JSON.stringify(panel)+';}catch(e){}<\/script>';});
     page=page.replace('<head>','<head><base href="/">');
-    page=page.replace('</body>','<script src="/assets/js/v972-admin-course-actions.js?v=9.91"><\/script><script src="/assets/js/v990-admin-ui.js?v=9.91"><\/script><script>window.addEventListener("load",function(){try{window.dispatchEvent(new CustomEvent("24k:admin-base-updated"));}catch(e){}});<\/script></body>');
-    try{sessionStorage.setItem(cacheKey,page);}catch(e){}
-    writePage(page);
-  }).catch(function(error){console.error('[V9.91] Admin clean route load failed',error);location.replace(fallback);}).finally(function(){clearTimeout(t);});
+    page=page.replace('</body>','<script src="/assets/js/v972-admin-course-actions.js?v=9.92"><\/script><script src="/assets/js/v990-admin-ui.js?v=9.92"><\/script><script>window.addEventListener("load",function(){try{window.dispatchEvent(new CustomEvent("24k:admin-base-updated"));}catch(e){}});<\/script></body>');
+    document.open();document.write(page);document.close();
+  }).catch(function(error){console.error('[V9.92] Admin clean route load failed',error);if(!done){done=true;clearTimeout(hard);location.replace(fallback);}}).finally(function(){clearTimeout(timeout);});
 })();</script></body></html>
