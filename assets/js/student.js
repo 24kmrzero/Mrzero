@@ -15,6 +15,29 @@
   let historyMarketFilter = 'all';
   let historyDateFilter = 'month';
 
+  // V10.21: Premium Access state must be initialized before the first renderAll().
+  // Previously these const declarations lived below the initial await/load/render path,
+  // so renderPremium() -> renderAccessSelection() hit the temporal dead zone and crashed
+  // with: Cannot access 'brokerAccessMeta' before initialization.
+  const accessFlowState = { step:'home', broker:'', mode:'' };
+  const brokerAccessMeta = {
+    Exness: {
+      url: 'https://one.exnessonelink.com/a/be2kjlypr9',
+      newGuide: 'Open our Exness partner link and create your trading account. Fund the account, then submit the Trading Account ID, deposit amount and deposit proof below.',
+      existingGuide: 'Login to Exness → open Live Chat → type “Change Partner” → open the official partner-change link sent by Exness Support → Reason: Education → submit our partner link → for “Where did you find us?” write “website” → save the confirmation email/screenshot.'
+    },
+    XM: {
+      url: 'https://affs.click/tr9cq',
+      newGuide: 'Open our XM partner link → login with your existing XM profile → Create New Account → create a new trading account under the partner link → transfer/fund the new account → save the new Trading Account ID and confirmation proof.',
+      existingGuide: 'XM partner shift flow: open our XM partner link → login with your existing XM profile → Create New Account → create a new trading account under the partner link → transfer/fund the new account → save the Trading Account ID and confirmation proof.'
+    },
+    DPrime: {
+      url: 'https://my.dooprime.com/links/go/72929',
+      newGuide: 'Open our DPrime partner link and create your account. After funding, submit the Trading Account ID, deposit amount and deposit proof below.',
+      existingGuide: 'Email en.support@dooprime.com → Subject: Shift Account → write: “Kindly shift my trading account under this partner link: https://my.dooprime.com/links/go/72929. Thank you for your support.” → wait for confirmation and save the confirmation proof.'
+    }
+  };
+
   // V10.20: bind Manage Access before any async dashboard loading. This makes
   // the control reliable even if a later optional render/data request fails.
   function forceOpenPremiumAccessModal() {
@@ -745,25 +768,6 @@
   }
 
   function renderSupport() { const link=document.getElementById('supportWhatsApp'); if(link) link.href=`https://wa.me/${A.cfg.SUPPORT_WHATSAPP}`; }
-
-  const accessFlowState = { step:'home', broker:'', mode:'' };
-  const brokerAccessMeta = {
-    Exness: {
-      url: 'https://one.exnessonelink.com/a/be2kjlypr9',
-      newGuide: 'Open our Exness partner link and create your trading account. Fund the account, then submit the Trading Account ID, deposit amount and deposit proof below.',
-      existingGuide: 'Login to Exness → open Live Chat → type “Change Partner” → open the official partner-change link sent by Exness Support → Reason: Education → submit our partner link → for “Where did you find us?” write “website” → save the confirmation email/screenshot.'
-    },
-    XM: {
-      url: 'https://affs.click/tr9cq',
-      newGuide: 'Open our XM partner link → login with your existing XM profile → Create New Account → create a new trading account under the partner link → transfer/fund the new account → save the new Trading Account ID and confirmation proof.',
-      existingGuide: 'XM partner shift flow: open our XM partner link → login with your existing XM profile → Create New Account → create a new trading account under the partner link → transfer/fund the new account → save the Trading Account ID and confirmation proof.'
-    },
-    DPrime: {
-      url: 'https://my.dooprime.com/links/go/72929',
-      newGuide: 'Open our DPrime partner link and create your account. After funding, submit the Trading Account ID, deposit amount and deposit proof below.',
-      existingGuide: 'Email en.support@dooprime.com → Subject: Shift Account → write: “Kindly shift my trading account under this partner link: https://my.dooprime.com/links/go/72929. Thank you for your support.” → wait for confirmation and save the confirmation proof.'
-    }
-  };
 
   function renderIbBrokerInstructions(){
     const form=document.getElementById('ibVerificationForm');
