@@ -15,6 +15,41 @@
   let historyMarketFilter = 'all';
   let historyDateFilter = 'month';
 
+  // V10.20: bind Manage Access before any async dashboard loading. This makes
+  // the control reliable even if a later optional render/data request fails.
+  function forceOpenPremiumAccessModal() {
+    const modal = document.getElementById('premiumAccessModal');
+    if (!modal) { A.toast('Premium access window is unavailable. Please refresh the page.', 'error'); return false; }
+    try { if (state.premium) { renderPremium(); renderAccessSelection(); renderIbBrokerInstructions(); } } catch (error) { console.warn('Premium access pre-render:', error); }
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden','false');
+    document.body.classList.add('modal-open');
+    const current = document.getElementById('allAccessCurrentStatus');
+    if (current && state.premium?.has_access) {
+      const days = state.premium?.days_left != null ? ` · ${state.premium.days_left} day${Number(state.premium.days_left)===1?'':'s'} left` : '';
+      current.innerHTML = `<b>Access Active${days}</b><br><small>Your current access remains active. You can still submit a new Paid Access or IB / Broker verification request below.</small>`;
+    }
+    return true;
+  }
+
+  function installCriticalAccessBindings() {
+    if (window.__24K_ACCESS_CRITICAL_BOUND__) return;
+    window.__24K_ACCESS_CRITICAL_BOUND__ = true;
+    document.addEventListener('click', event => {
+      const button = event.target?.closest?.('#managePremiumAccess');
+      if (!button) return;
+      event.preventDefault();
+      forceOpenPremiumAccessModal();
+    }, true);
+    const form = document.getElementById('ibVerificationForm');
+    if (form && !form.dataset.v1020Bound) {
+      form.dataset.v1020Bound = '1';
+      form.addEventListener('submit', submitIbVerification);
+    }
+  }
+  installCriticalAccessBindings();
+  window.__24K_OPEN_PREMIUM_ACCESS__ = forceOpenPremiumAccessModal;
+
   const result = await A.requireRole('student');
   if (!result) return;
   state.user = result.user;
@@ -82,7 +117,7 @@
   function renderAll() {
     renderKpis(); renderDashboard(); renderSignals(); renderCharts(); renderArticles(); renderCourses();
     renderPayments(); renderAnnouncements(); renderProfile(); renderEmailVerification(); renderPremium(); renderSupport();
-    document.getElementById('paymentCount').textContent = state.payments.filter(p => ['initiated', 'received', 'under_review', 'resubmission_required'].includes(p.status)).length;
+    const paymentCount=document.getElementById('paymentCount'); if(paymentCount) paymentCount.textContent = state.payments.filter(p => ['initiated', 'received', 'under_review', 'resubmission_required'].includes(p.status)).length;
     document.getElementById('announcementCount').textContent = state.announcements.length;
     window.dispatchEvent(new CustomEvent('24k:student-base-updated',{detail:state}));
   }
@@ -589,8 +624,11 @@
     if(historyCount) historyCount.textContent=`${state.premiumPayments.length} payment${state.premiumPayments.length===1?'':'s'}`;
     const body=document.getElementById('premiumPaymentsBody');
     if(body) body.innerHTML=state.premiumPayments.length?state.premiumPayments.map(row=>`<tr><td>${A.formatDateTime(row.created_at)}</td><td>${A.escapeHtml(row.payment_method_name)}</td><td>${A.escapeHtml(row.currency==='PKR'?`PKR ${Number(row.amount||0).toLocaleString()}`:`${Number(row.amount||0).toLocaleString()} USDT`)}</td><td><span class="status-pill ${A.statusClass(row.status)}">${A.statusLabel(row.status)}</span></td><td>${row.access_expires_at?A.formatDateTime(row.access_expires_at):'—'}</td><td>${A.escapeHtml(row.admin_note||row.provider_rejection_reason||'—')}</td></tr>`).join(''):`<tr><td colspan="6">${empty('No premium payment history yet.','fa-crown')}</td></tr>`;
-    ['premiumPayLocal','premiumPayUsdt'].forEach(id=>{const el=document.getElementById(id);if(el)el.disabled=p.package_mode==='free';});
-    const ibSubmit=document.querySelector('#ibVerificationForm button[type="submit"]');if(ibSubmit)ibSubmit.disabled=!p.ib_enabled;
+    const localBankEnabled = state.paymentMethods.some(m => /^(local bank transfer|infinity(?: money solutions)?)$/i.test(String(m.name||'').trim()));
+    const usdtEnabled = state.paymentMethods.some(m => /usdt|trc\s*20|trc20/i.test(`${m.name||''} ${m.instructions||''}`));
+    const premiumLocal=document.getElementById('premiumPayLocal'); if(premiumLocal){premiumLocal.disabled=p.package_mode==='free'||!localBankEnabled;premiumLocal.classList.toggle('method-disabled',!localBankEnabled);premiumLocal.title=localBankEnabled?'':'Local Bank Transfer is currently disabled by Admin.';}
+    const premiumUsdt=document.getElementById('premiumPayUsdt'); if(premiumUsdt){premiumUsdt.disabled=p.package_mode==='free'||!usdtEnabled;premiumUsdt.classList.toggle('method-disabled',!usdtEnabled);premiumUsdt.title=usdtEnabled?'':'USDT TRC20 is currently disabled by Admin.';}
+    const ibSubmit=document.querySelector('#ibVerificationForm button[type="submit"]');if(ibSubmit)ibSubmit.disabled=(p.ib_enabled===false);
     renderIbBrokerInstructions();
     renderAccessSelection();
   }
@@ -646,6 +684,7 @@
 
   function renderPayments() {
     const body = document.getElementById('paymentsBody');
+    if (!body) return;
     if (!state.payments.length) { body.innerHTML = `<tr><td colspan="9">${empty('No payment has been submitted yet.', 'fa-receipt')}</td></tr>`; return; }
     body.innerHTML = state.payments.map(p => {
       const course = p.courses || state.courses.find(c => c.id === p.course_id) || {};
@@ -763,7 +802,7 @@
     if(current){
       const has=Boolean(p.has_access);
       const title=has ? `Access Active${p.days_left!=null?` · ${p.days_left} day${Number(p.days_left)===1?'':'s'} left`:''}` : 'Access currently locked';
-      current.innerHTML=`<b>${A.escapeHtml(title)}</b><br><small>${has?'You already have access to Signals, Charts and Articles.':'Choose Paid Access or Free Access via IB / Broker below.'}</small>`;
+      current.innerHTML=`<b>${A.escapeHtml(title)}</b><br><small>${has?'Your current access remains active. You can still submit a new Paid Access or IB / Broker verification request below.':'Choose Paid Access or Free Access via IB / Broker below.'}</small>`;
     }
     document.querySelectorAll('[data-broker-select]').forEach(btn=>btn.classList.toggle('is-active', btn.dataset.brokerSelect===accessFlowState.broker));
     document.querySelectorAll('[data-access-account-mode]').forEach(btn=>btn.classList.toggle('is-active', btn.dataset.accessAccountMode===accessFlowState.mode));
@@ -786,17 +825,12 @@
       else if(accessFlowState.mode==='existing') guide.innerHTML=`<b>${A.escapeHtml(accessFlowState.broker)} — Change / Link Existing Account</b><br>${A.escapeHtml(meta.existingGuide)}`;
       else guide.innerHTML=`Choose whether you want to create a new ${A.escapeHtml(accessFlowState.broker)} account or link / change an existing one.`;
     }
-    if(verify) verify.disabled=!meta || !p.ib_enabled;
+    if(verify) verify.disabled=!meta || p.ib_enabled===false;
   }
 
   function openAllAccessModal(){
     try { if (typeof openPanel === 'function') openPanel('profile'); } catch {}
-    const modal=document.getElementById('premiumAccessModal');
-    if(!modal){A.toast('Premium access window is unavailable. Please refresh the page.','error');return false;}
-    renderAccessSelection();
-    renderIbBrokerInstructions();
-    A.openModal('premiumAccessModal');
-    return true;
+    return forceOpenPremiumAccessModal();
   }
 
   async function copySelectedBrokerLink(){
@@ -863,7 +897,6 @@
       if (resource) await downloadResource(resource.dataset.downloadResource);
       const signalHistory = event.target.closest('[data-student-signal-history]');
       if (signalHistory) openSignalHistory(signalHistory.dataset.studentSignalHistory);
-      const managePremium=event.target.closest('#managePremiumAccess'); if(managePremium){event.preventDefault();openAllAccessModal();return;}
       const accessStepButton=event.target.closest('[data-access-step-target]'); if(accessStepButton){setAccessStep(accessStepButton.dataset.accessStepTarget||'home'); return;}
       const brokerButton=event.target.closest('[data-broker-select]'); if(brokerButton){accessFlowState.broker=brokerButton.dataset.brokerSelect||''; if(!accessFlowState.mode) accessFlowState.mode='new'; renderAccessSelection(); return;}
       const accessModeButton=event.target.closest('[data-access-account-mode]'); if(accessModeButton){accessFlowState.mode=accessModeButton.dataset.accessAccountMode||''; renderAccessSelection(); return;}
@@ -888,7 +921,6 @@
     document.getElementById('paymentForm').addEventListener('submit', submitPayment);
     document.getElementById('profileForm').addEventListener('submit', saveProfile);
     document.getElementById('premiumUsdtForm')?.addEventListener('submit',submitPremiumUsdt);
-    document.getElementById('ibVerificationForm')?.addEventListener('submit',submitIbVerification);
     document.getElementById('riskForm').addEventListener('submit', acceptRisk);
     document.getElementById('globalSearch').addEventListener('keydown', event => {
       if (event.key !== 'Enter') return;
@@ -920,8 +952,13 @@
     paymentChoiceContext = { courseId, triggerButton };
     const payable = course.discount_price != null ? Number(course.discount_price) : Number(course.price);
     const currency = String(course.currency || '').toUpperCase();
+    const localBankEnabled = state.paymentMethods.some(m => /^(local bank transfer|infinity(?: money solutions)?)$/i.test(String(m.name||'').trim()));
+    const usdtEnabled = state.paymentMethods.some(m => /usdt|trc\s*20|trc20/i.test(`${m.name||''} ${m.instructions||''}`));
+    const localChoice=document.querySelector('[data-payment-choice="local-bank"]'); if(localChoice){localChoice.disabled=!localBankEnabled;localChoice.classList.toggle('method-disabled',!localBankEnabled);localChoice.style.opacity=localBankEnabled?'':'0.45';}
+    const usdtChoice=document.querySelector('[data-payment-choice="usdt"]'); if(usdtChoice){usdtChoice.disabled=!usdtEnabled;usdtChoice.classList.toggle('method-disabled',!usdtEnabled);usdtChoice.style.opacity=usdtEnabled?'':'0.45';}
     const summary = document.getElementById('paymentChoiceCourseSummary');
-    if (summary) summary.innerHTML = `<b>${A.escapeHtml(course.title)}</b><br>Amount: ${A.formatMoney(payable, currency || 'PKR')}<br><small>Choose your preferred payment method below.</small>`;
+    if (summary) summary.innerHTML = `<b>${A.escapeHtml(course.title)}</b><br>Amount: ${A.formatMoney(payable, currency || 'PKR')}<br><small>${localBankEnabled||usdtEnabled?'Choose an available payment method below.':'Payment methods are temporarily disabled by Admin.'}</small>`;
+    if(!localBankEnabled&&!usdtEnabled) A.toast('Payment methods are temporarily unavailable. Please contact Admin.','warning');
     A.openModal('paymentMethodChoiceModal');
   }
 
@@ -932,12 +969,16 @@
     const currency = String(course.currency || '').toUpperCase();
 
     if (choice === 'local-bank') {
+      const enabled=state.paymentMethods.some(m=>/^(local bank transfer|infinity(?: money solutions)?)$/i.test(String(m.name||'').trim()));
+      if(!enabled) return A.toast('Local Bank Transfer is currently disabled by Admin.','warning');
       if (currency !== 'PKR') return A.toast('Local Bank Transfer is available for courses priced in PKR. This course is currently priced in USDT.', 'warning');
       A.closeModal('paymentMethodChoiceModal');
       return startInfinityPayment(courseId, triggerButton);
     }
 
     if (choice === 'usdt') {
+      const enabled=state.paymentMethods.some(m=>/usdt|trc\s*20|trc20/i.test(`${m.name||''} ${m.instructions||''}`));
+      if(!enabled) return A.toast('USDT TRC20 is currently disabled by Admin.','warning');
       if (currency !== 'USDT') return A.toast('USDT TRC20 is available for courses priced in USDT. This course is currently priced in PKR.', 'warning');
       A.closeModal('paymentMethodChoiceModal');
       return openUsdtPaymentModal(courseId);
@@ -1005,7 +1046,7 @@
     const premiumParams=new URLSearchParams(location.search); if(premiumParams.get('premium_return')==='1'){openPanel('profile');setTimeout(()=>openAllAccessModal(),80);A.toast('Premium payment return received. Status will update after provider confirmation.','info');}
     const params = new URLSearchParams(window.location.search);
     if (params.get('payment_return') !== '1') return;
-    openPanel('payments');
+    openPanel('courses');
     const payment = state.payments.find(p => Number(p.provider_request_id) === Number(params.get('request_id')));
     if (payment?.status === 'approved') A.toast('Payment verified successfully. Your course access is now active.', 'success');
     else if (payment?.status === 'declined') A.toast(payment.provider_rejection_reason || payment.admin_note || 'Payment was rejected.', 'error');
@@ -1014,7 +1055,7 @@
       const clean = new URL(window.location.href);
       clean.searchParams.delete('payment_return');
       clean.searchParams.delete('request_id');
-      history.replaceState({}, '', `${clean.pathname}${clean.search}#payments`);
+      history.replaceState({}, '', `${clean.pathname}${clean.search}#courses`);
     } catch { /* cosmetic URL cleanup only */ }
   }
 
@@ -1047,7 +1088,7 @@
         await loadAll();
       renderAll(); A.closeModal('paymentModal'); form.reset();
       A.toast('Receipt received. Admin approval is required before course access unlocks.', 'success');
-      openPanel('payments');
+      openPanel('courses');
     } catch (error) { A.toast(A.friendlyError(error, 'Payment submission failed.'), 'error'); }
     finally { A.setLoading(button, false); }
   }
@@ -1176,6 +1217,7 @@
       .on('postgres_changes',{event:'*',schema:'public',table:'payments',filter:`student_id=eq.${state.user.id}`},refreshGeneral)
       .on('postgres_changes',{event:'*',schema:'public',table:'premium_payments',filter:`student_id=eq.${state.user.id}`},refreshPremium)
       .on('postgres_changes',{event:'*',schema:'public',table:'ib_verifications',filter:`student_id=eq.${state.user.id}`},refreshPremium)
+      .on('postgres_changes',{event:'*',schema:'public',table:'payment_methods'},refreshGeneral)
       .on('postgres_changes',{event:'*',schema:'public',table:'course_sessions'},refreshGeneral)
       .on('postgres_changes',{event:'*',schema:'public',table:'enrollments',filter:`student_id=eq.${state.user.id}`},refreshGeneral)
       .subscribe(status=>{

@@ -9,7 +9,6 @@
     signals: '/student/signals/',
     charts: '/student/charts/',
     articles: '/student/articles/',
-    payments: '/student/payments/',
     updates: '/student/updates/',
     profile: '/student/profile/'
   };
@@ -26,8 +25,8 @@
     charts: 'charts',
     article: 'articles',
     articles: 'articles',
-    payment: 'payments',
-    payments: 'payments',
+    payment: 'courses',
+    payments: 'courses',
     update: 'updates',
     updates: 'updates',
     notification: 'updates',
@@ -47,7 +46,7 @@
   function sectionFromPath(pathname) {
     var path = String(pathname || '').toLowerCase().replace(/\/+$/, '/');
     if (path === '/student/' || path === '/student/index.html' || path === '/student/dashboard/' || path === '/student/dashboard/index.html') return 'dashboard';
-    var match = path.match(/^\/student\/(courses|signals|charts|articles|payments|updates|profile)(?:\/|\/index\.html)?$/);
+    var match = path.match(/^\/student\/(courses|signals|charts|articles|updates|profile)(?:\/|\/index\.html)?$/);
     if (match) return normalizeSection(match[1]);
     if (/\/student-dashboard\.html$/.test(path)) return normalizeSection(location.hash) || 'dashboard';
     return '';
@@ -130,7 +129,7 @@
     var text = String(el.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
     var exact = {
       dashboard: 'dashboard', courses: 'courses', signals: 'signals', charts: 'charts',
-      articles: 'articles', payments: 'payments', updates: 'updates', profile: 'profile'
+      articles: 'articles', updates: 'updates', profile: 'profile'
     };
     return exact[text] || '';
   }

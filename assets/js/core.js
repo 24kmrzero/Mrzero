@@ -294,8 +294,8 @@
     };
     const studentRoutes = {
       dashboard: '/student/', signals: '/student/signals/', charts: '/student/charts/', articles: '/student/articles/',
-      courses: '/student/courses/', payments: '/student/payments/', announcements: '/student/announcements/',
-      profile: '/student/profile/', support: '/student/support/'
+      courses: '/student/courses/', announcements: '/student/updates/',
+      profile: '/student/profile/', support: '/student/profile/'
     };
     const routeMap = authScope === 'admin' ? adminRoutes : studentRoutes;
     const reverseRoutes = Object.fromEntries(Object.entries(routeMap).map(([key, path]) => [path.replace(/\/+$/, '') || '/', key]));
@@ -303,7 +303,7 @@
       const path = location.pathname.replace(/\/+$/, '') || '/';
       if (reverseRoutes[path]) return reverseRoutes[path];
       if (authScope === 'admin' && (path === '/admin-dashboard.html' || path === '/admin-dashboard')) return 'dashboard';
-      if (authScope !== 'admin' && (path === '/student-dashboard.html' || path === '/student-dashboard')) return 'dashboard';
+      if (authScope !== 'admin' && (path === '/student-dashboard.html' || path === '/student-dashboard')) { const requested=location.hash.replace('#',''); return ['dashboard','courses','signals','charts','articles','announcements','profile'].includes(requested)?requested:'dashboard'; }
       return '';
     };
 

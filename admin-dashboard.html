@@ -13,6 +13,13 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <link rel="stylesheet" href="assets/platform-v962.css?v=9.69">
 <link rel="stylesheet" href="assets/v969-fixes.css?v=9.70">
+
+<style id="v1020-payment-toggle-style">
+.method-toggle-btn{min-width:74px!important;justify-content:center!important;border-radius:999px!important;font-weight:900!important;letter-spacing:.04em!important}
+.method-toggle-btn.is-on{background:rgba(34,197,94,.12)!important;border-color:rgba(34,197,94,.4)!important;color:#65e88a!important}
+.method-toggle-btn.is-off{background:rgba(239,68,68,.09)!important;border-color:rgba(239,68,68,.35)!important;color:#ff7c7c!important}
+.method-toggle-btn i{font-size:9px!important}
+</style>
 </head>
 <body class="app-page">
 <div id="pageLoader" class="loading-screen"><div><img src="assets/logo.png?v=9.69" alt="24K Digital Gold"><i class="fa-solid fa-spinner fa-spin"></i><p>Loading admin controls...</p></div></div>
@@ -23,7 +30,7 @@
       <p class="app-nav-label">OVERVIEW</p><a href="#" class="on" data-panel="dashboard"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
       <p class="app-nav-label">CONTENT</p><a href="#" data-panel="signals"><i class="fa-solid fa-bolt"></i> Signals</a><a href="#" data-panel="charts"><i class="fa-solid fa-chart-line"></i> Charts</a><a href="#" data-panel="articles"><i class="fa-solid fa-newspaper"></i> Articles</a><a href="#" data-panel="announcements"><i class="fa-solid fa-bullhorn"></i> Announcements</a>
       <p class="app-nav-label">COURSES</p><a href="#" data-panel="courses"><i class="fa-solid fa-graduation-cap"></i> Courses</a><a href="#" data-panel="sessions"><i class="fa-solid fa-video"></i> Zoom Sessions</a>
-      <p class="app-nav-label">OPERATIONS</p><a href="#" data-panel="payments"><i class="fa-solid fa-receipt"></i> Payments <span class="nav-count" id="pendingPaymentCount">0</span></a><a href="#" data-panel="students"><i class="fa-solid fa-users"></i> Students</a><a href="#" data-panel="support"><i class="fa-solid fa-headset"></i> Support</a><a href="#" data-panel="methods"><i class="fa-solid fa-building-columns"></i> Payment Methods</a>
+      <p class="app-nav-label">OPERATIONS</p><a href="#" data-panel="payments"><i class="fa-solid fa-receipt"></i> Payments <span class="nav-count" id="pendingPaymentCount">0</span></a><a href="#" data-panel="students"><i class="fa-solid fa-users"></i> Students</a><a href="#" data-panel="support"><i class="fa-solid fa-headset"></i> Support</a><a href="#" data-panel="methods"><i class="fa-solid fa-building-columns"></i> Payment Methods</a><a href="/admin/team-performance/" data-admin-team-manager="true" data-nav-key="team-manager"><i class="fa-solid fa-people-group"></i> Team Manager</a><a href="/admin/link-manager/" data-panel="links"><i class="fa-solid fa-link"></i> Link Manager</a>
     </nav></div>
     <div class="app-side-foot"><a href="index.html"><i class="fa-solid fa-house"></i> Website Home</a><button id="logoutButton"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button></div>
   </aside>
@@ -204,9 +211,9 @@
       <section class="panel" id="p-support"><div class="panel-heading"><div><h2>Support Requests</h2><p>Update request status after resolving student issues.</p></div></div><div class="table-scroll"><table class="admin-table"><thead><tr><th>Student</th><th>Category</th><th>Subject</th><th>Message</th><th>Submitted</th><th>Status</th><th>Actions</th></tr></thead><tbody id="supportBody"></tbody></table></div></section>
 
       <section class="panel" id="p-methods">
-        <div class="panel-heading"><div><h2>Payment Methods</h2><p>Local Bank Transfer is a built-in payment method and cannot be changed. Add or manage your USDT TRC20 wallet below.</p></div><button class="app-btn gold" data-toggle-form="methodFormBox"><i class="fa-solid fa-plus"></i> Add USDT Method</button></div>
+        <div class="panel-heading"><div><h2>Payment Methods</h2><p>Local Bank Transfer is built in and cannot be edited, but it can be turned ON/OFF. Add, manage or temporarily disable your USDT TRC20 wallet below.</p></div><button class="app-btn gold" data-toggle-form="methodFormBox"><i class="fa-solid fa-plus"></i> Add USDT Method</button></div>
         <div class="app-card admin-form-box" id="methodFormBox"><form id="methodForm"><input type="hidden" name="id"><div class="form-grid"><div class="form-field"><label>Method Name</label><input name="name" required value="USDT TRC20" placeholder="USDT TRC20"></div><div class="form-field"><label>Account Title <span class="muted">(optional)</span></label><input name="account_title" placeholder="24K Zero"></div><div class="form-field"><label>USDT TRC20 Wallet Address</label><input name="account_number" required placeholder="TRON / TRC20 wallet address"></div><div class="form-field"><label>Sort Order</label><input type="number" name="sort_order" value="0"></div><div class="form-field full"><label>Instructions</label><textarea name="instructions" placeholder="Send exact USDT amount using TRC20 network, then submit TXID and receipt."></textarea></div><label class="check-row"><input type="checkbox" name="is_active" checked> Active</label></div><div class="inline-actions"><button type="button" class="app-btn outline" data-cancel-form="methodFormBox">Cancel</button><button class="app-btn gold" type="submit">Save USDT Method</button></div></form></div>
-        <div class="table-scroll"><table class="admin-table"><thead><tr><th>Method</th><th>Account Title</th><th>Account / Wallet</th><th>Instructions</th><th>Status</th><th>Actions</th></tr></thead><tbody id="methodsBody"></tbody></table></div>
+        <div class="table-scroll"><table class="admin-table"><thead><tr><th>Method</th><th>Account Title</th><th>Account / Wallet</th><th>Instructions</th><th>ON / OFF</th><th>Status</th><th>Actions</th></tr></thead><tbody id="methodsBody"></tbody></table></div>
       </section>
     </div>
   </main>
@@ -220,6 +227,6 @@
 
 <div class="app-modal" id="receiptPreviewModal"><div class="app-modal-card receipt-preview-card"><div class="app-modal-head"><div><h3>Payment Receipt</h3><small id="receiptPreviewSubtitle" class="muted">Secure temporary preview</small></div><button class="modal-close" data-close-modal="receiptPreviewModal"><i class="fa-solid fa-xmark"></i></button></div><div class="app-modal-body"><div id="receiptPreviewContent" class="receipt-preview-content"></div></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="receiptPreviewModal">Close</button><a id="receiptOpenExternal" class="app-btn gold" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Full Size</a></div></div></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js?v=9.69"></script><script src="assets/js/core.js?v=10.14"></script><script src="assets/js/admin.js?v=9.70"></script><script src="assets/js/platform-v8-admin.js?v=10.14"></script><script src="assets/js/platform-v962-admin.js?v=9.70"></script><script src="assets/js/dashboard-analytics-recovery.js?v=9.69"></script><script src="assets/js/v1014-admin-link-manager-fix.js?v=10.14"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js?v=9.69"></script><script src="assets/js/core.js?v=10.20"></script><script src="assets/js/admin.js?v=10.20"></script><script src="assets/js/platform-v8-admin.js?v=10.14"></script><script src="assets/js/platform-v962-admin.js?v=9.70"></script><script src="assets/js/dashboard-analytics-recovery.js?v=9.69"></script><script src="assets/js/v1014-admin-link-manager-fix.js?v=10.20"></script>
 </body>
 </html>

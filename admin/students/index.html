@@ -14,7 +14,7 @@
     if(done)return;done=true;clearTimeout(hard);
     if(panel&&panel!=='dashboard')page=page.replace(/<body([^>]*)>/i,function(m,a){return '<body'+a+'><script>try{location.hash='+JSON.stringify('#')+'+'+JSON.stringify(panel)+';}catch(e){}<\/script>';});
     page=page.replace('<head>','<head><base href="/">');
-    page=page.replace('</body>','<script src="/assets/js/v972-admin-course-actions.js?v=9.92"><\/script><script src="/assets/js/v990-admin-ui.js?v=9.92"><\/script><script>window.addEventListener("load",function(){try{window.dispatchEvent(new CustomEvent("24k:admin-base-updated"));}catch(e){}});<\/script></body>');
+    page=page.replace('</body>','<script src="/assets/js/v972-admin-course-actions.js?v=9.92"><\/script><script src="/assets/js/v990-admin-ui.js?v=10.20"><\/script><script>window.addEventListener("load",function(){try{window.dispatchEvent(new CustomEvent("24k:admin-base-updated"));}catch(e){}});<\/script></body>');
     document.open();document.write(page);document.close();
   }).catch(function(error){console.error('[V9.92] Admin clean route load failed',error);if(!done){done=true;clearTimeout(hard);location.replace(fallback);}}).finally(function(){clearTimeout(timeout);});
 })();</script></body></html>

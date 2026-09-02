@@ -3,7 +3,7 @@
   if (window.__24K_V990_ADMIN_UI__) return;
   window.__24K_V990_ADMIN_UI__ = true;
 
-  const VERSION = '9.90';
+  const VERSION = '10.20';
   const GOLD = '#f6bf26';
   const qs = (s,r=document) => { try { return r.querySelector(s); } catch (_) { return null; } };
   const qsa = (s,r=document) => { try { return Array.from(r.querySelectorAll(s)); } catch (_) { return []; } };
@@ -124,7 +124,7 @@
   }
 
   function navSignature(el){
-    const panel=(el.getAttribute?.('data-panel')||el.getAttribute?.('data-goto')||'').toLowerCase();
+    const panel=(el.getAttribute?.('data-panel')||el.getAttribute?.('data-goto')||el.getAttribute?.('data-nav-key')||'').toLowerCase();
     const href=(el.getAttribute?.('href')||'').toLowerCase();
     const label=lower(el).replace(/\b\d+\b/g,'').replace(/\s+/g,' ').trim();
     return `${panel} ${href} ${label}`.trim();
@@ -150,6 +150,7 @@
     ]],
     ['Operations',[
       ['Premium Access',['premium-access','premium access']],
+      ['Team Manager',['team-manager','team manager','team-performance','team performance']],
       ['Link Manager',['link-manager','link manager']],
       ['Admin Notifications',['admin-notifications','admin notifications']],
       ['Activity Logs',['activity-logs','activity logs']]
@@ -160,7 +161,7 @@
     const sig=navSignature(el);
     return aliases.some(alias=>{
       const key=String(alias).toLowerCase();
-      const panel=(el.getAttribute?.('data-panel')||el.getAttribute?.('data-goto')||'').toLowerCase();
+      const panel=(el.getAttribute?.('data-panel')||el.getAttribute?.('data-goto')||el.getAttribute?.('data-nav-key')||'').toLowerCase();
       if(panel===key) return true;
       if(key==='sessions' && panel==='sessions') return true;
       if(key==='methods' && panel==='methods') return true;
