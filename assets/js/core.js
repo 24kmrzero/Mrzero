@@ -286,9 +286,9 @@
     const side = document.getElementById('side');
     const adminRoutes = {
       dashboard: '/admin/', signals: '/admin/signals/', charts: '/admin/charts/', articles: '/admin/articles/',
-      announcements: '/admin/announcements/', courses: '/admin/courses/', sessions: '/admin/sessions/',
-      calendar: '/admin/calendar/', leads: '/admin/enquiries/', links: '/admin/links/',
-      'admin-notifications': '/admin/notifications/', delivery: '/admin/delivery/', audit: '/admin/activity/',
+      announcements: '/admin/announcements/', courses: '/admin/courses/', sessions: '/admin/zoom-sessions/',
+      calendar: '/admin/calendar/', leads: '/admin/enquiries/', links: '/admin/link-manager/',
+      'admin-notifications': '/admin/admin-notifications/', delivery: '/admin/delivery/', audit: '/admin/activity-logs/',
       settings: '/admin/settings/', payments: '/admin/payments/', students: '/admin/students/',
       support: '/admin/support/', methods: '/admin/payment-methods/'
     };

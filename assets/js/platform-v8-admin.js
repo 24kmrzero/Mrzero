@@ -55,8 +55,11 @@
   function openCleanAdminRouteAfterInstall() {
     const map = {
       '/admin/links': 'links',
+      '/admin/link-manager': 'links',
       '/admin/notifications': 'admin-notifications',
-      '/admin/activity': 'audit'
+      '/admin/admin-notifications': 'admin-notifications',
+      '/admin/activity': 'audit',
+      '/admin/activity-logs': 'audit'
     };
     const path = location.pathname.replace(/\/+$/, '');
     const panel = map[path];
@@ -70,12 +73,15 @@
 
   function installUi() {
     const nav = document.querySelector('.app-nav');
-    const courseLabel = [...nav.querySelectorAll('.app-nav-label')].find(node => node.textContent.trim() === 'COURSES');
-    const operationsLabel = [...nav.querySelectorAll('.app-nav-label')].find(node => node.textContent.trim() === 'OPERATIONS');
-    if (operationsLabel && !nav.querySelector('[data-panel="links"]')) {
+    const navLabels = [...nav.querySelectorAll('.app-nav-label,.v980-nav-label,.v990-nav-label')];
+    const courseLabel = navLabels.find(node => node.textContent.trim().toUpperCase() === 'COURSES');
+    const operationsLabel = navLabels.find(node => node.textContent.trim().toUpperCase() === 'OPERATIONS');
+    if (!nav.querySelector('[data-panel="links"]')) {
       const marker = document.createElement('div');
       marker.innerHTML = navLink('links', 'fa-link', 'Link Manager') + navLink('admin-notifications', 'fa-bell', 'Admin Notifications', 'adminNotificationCount') + navLink('audit', 'fa-clock-rotate-left', 'Activity Logs');
-      [...marker.children].reverse().forEach(link => operationsLabel.after(link));
+      const missing = [...marker.children].filter(link => !nav.querySelector(`[data-panel="${link.dataset.panel}"]`));
+      if (operationsLabel) missing.reverse().forEach(link => operationsLabel.after(link));
+      else missing.forEach(link => nav.appendChild(link));
     }
 
     const content = document.querySelector('.app-content');

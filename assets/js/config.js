@@ -130,41 +130,4 @@ window.APP_CONFIG = {
   window.__24K_STUDENT_AUTH_HOTFIX__ = '9.96';
 })();
 
-/* 24K Student Manage Access direct loader — v9.98 */
-(function load24KManageAccessDirect(){
-  'use strict';
-  var path=String((window.location&&window.location.pathname)||'').toLowerCase();
-  var isStudent=path.indexOf('/student')!==-1 || path.endsWith('/student-dashboard.html');
-  if(!isStudent || window.__24K_V998_LOADER__) return;
-  window.__24K_V998_LOADER__=true;
-  function load(){
-    if(document.getElementById('v998-manage-access-script')) return;
-    var sc=document.createElement('script');
-    sc.id='v998-manage-access-script';
-    sc.src='/assets/js/v998-manage-access-direct.js?v=9.98.2';
-    sc.async=false;
-    (document.head||document.documentElement).appendChild(sc);
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',load,{once:true});
-  else load();
-})();
-
-/* 24K Student single-shell clean routing — v10.01 */
-(function load24KStudentCleanRoutes(){
-  'use strict';
-  var path=String((window.location&&window.location.pathname)||'').toLowerCase();
-  var isAdmin=path.indexOf('/admin')!==-1 || path.indexOf('admin-login')!==-1;
-  var isStudent=!isAdmin && (path.indexOf('/student')!==-1 || path.endsWith('/student-dashboard.html'));
-  if(!isStudent || window.__24K_V1001_ROUTE_LOADER__) return;
-  window.__24K_V1001_ROUTE_LOADER__=true;
-  function load(){
-    if(document.getElementById('v1001-student-clean-routes-script')) return;
-    var sc=document.createElement('script');
-    sc.id='v1001-student-clean-routes-script';
-    sc.src='/assets/js/v1001-student-clean-routes.js?v=10.01.1';
-    sc.async=false;
-    (document.head||document.documentElement).appendChild(sc);
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',load,{once:true});
-  else load();
-})();
+/* V10.14: Manage Access now uses the native Student premium modal handler. */
