@@ -77,7 +77,68 @@
   if (!result) return;
   state.user = result.user;
   state.profile = result.profile;
-  openPanel = A.activateDashboardNavigation();
+  // V10.22: Student-specific navigation. Do not rely on the generic Core router
+  // or clean-route wrappers for in-panel navigation. All Student tabs switch the
+  // already-loaded dashboard shell directly, so no auth/bootstrap reload occurs.
+  function installStudentNavigation() {
+    const routeMap = {
+      dashboard: '/student/',
+      courses: '/student/courses/',
+      signals: '/student/signals/',
+      charts: '/student/charts/',
+      articles: '/student/articles/',
+      announcements: '/student/updates/',
+      profile: '/student/profile/'
+    };
+    const pathMap = Object.fromEntries(Object.entries(routeMap).map(([key,path]) => [path.replace(/\/+$/, '') || '/', key]));
+    const normalize = value => {
+      const raw = String(value || '').toLowerCase().replace(/^#/, '').replace(/^\/+|\/+$/g, '');
+      if (raw === 'updates' || raw === 'update' || raw === 'notifications') return 'announcements';
+      if (raw === 'course') return 'courses';
+      if (raw === 'signal') return 'signals';
+      if (raw === 'chart') return 'charts';
+      if (raw === 'article') return 'articles';
+      if (raw === 'account') return 'profile';
+      return routeMap[raw] ? raw : '';
+    };
+    const keyFromLocation = () => {
+      const path = (location.pathname || '').replace(/\/+$/, '') || '/';
+      if (pathMap[path]) return pathMap[path];
+      if (/\/student-dashboard\.html$/i.test(path)) return normalize(location.hash) || 'dashboard';
+      return normalize(location.hash) || 'dashboard';
+    };
+    const open = (key, updateUrl = true) => {
+      key = normalize(key) || 'dashboard';
+      const panel = document.getElementById(`p-${key}`);
+      if (!panel) return false;
+      document.querySelectorAll('.panel').forEach(el => el.classList.toggle('on', el === panel));
+      document.querySelectorAll('[data-panel]').forEach(el => el.classList.toggle('on', normalize(el.dataset.panel) === key));
+      document.querySelectorAll('[data-goto]').forEach(el => el.classList.toggle('is-active', normalize(el.dataset.goto) === key));
+      document.getElementById('side')?.classList.remove('open');
+      if (updateUrl && history.replaceState) history.replaceState({studentPanel:key}, '', routeMap[key] || '/student/');
+      try { window.scrollTo({top:0,behavior:'auto'}); } catch (_) {}
+      document.dispatchEvent(new CustomEvent('panel:open', {detail:{key}}));
+      return true;
+    };
+
+    if (!window.__24K_STUDENT_NAV_V1022__) {
+      window.__24K_STUDENT_NAV_V1022__ = true;
+      document.addEventListener('click', event => {
+        const target = event.target?.closest?.('[data-panel],[data-goto]');
+        if (!target) return;
+        const key = normalize(target.dataset.panel || target.dataset.goto);
+        if (!key || !document.getElementById(`p-${key}`)) return;
+        event.preventDefault();
+        event.stopPropagation();
+        open(key, true);
+      }, true);
+      window.addEventListener('popstate', () => open(keyFromLocation(), false));
+      document.getElementById('burger')?.addEventListener('click', () => document.getElementById('side')?.classList.toggle('open'));
+    }
+    setTimeout(() => open(keyFromLocation(), true), 0);
+    return open;
+  }
+  openPanel = installStudentNavigation();
   document.getElementById('logoutButton').addEventListener('click', async()=>{await auditEvent('logout','session',null,'success',{});await A.logout();});
   const supportWhatsApp = document.getElementById('supportWhatsApp'); if (supportWhatsApp) supportWhatsApp.href = `https://wa.me/${A.cfg.SUPPORT_WHATSAPP}`;
 
