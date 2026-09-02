@@ -73,13 +73,9 @@
   installCriticalAccessBindings();
   window.__24K_OPEN_PREMIUM_ACCESS__ = forceOpenPremiumAccessModal;
 
-  const result = await A.requireRole('student');
-  if (!result) return;
-  state.user = result.user;
-  state.profile = result.profile;
-  // V10.22: Student-specific navigation. Do not rely on the generic Core router
-  // or clean-route wrappers for in-panel navigation. All Student tabs switch the
-  // already-loaded dashboard shell directly, so no auth/bootstrap reload occurs.
+  // V10.23: bind one Student router before auth/data loading so navigation has
+  // exactly one owner. The old V10.01 route shim is no longer loaded because it
+  // captured sidebar clicks with stopImmediatePropagation() before this router.
   function installStudentNavigation() {
     const routeMap = {
       dashboard: '/student/',
@@ -90,7 +86,6 @@
       announcements: '/student/updates/',
       profile: '/student/profile/'
     };
-    const pathMap = Object.fromEntries(Object.entries(routeMap).map(([key,path]) => [path.replace(/\/+$/, '') || '/', key]));
     const normalize = value => {
       const raw = String(value || '').toLowerCase().replace(/^#/, '').replace(/^\/+|\/+$/g, '');
       if (raw === 'updates' || raw === 'update' || raw === 'notifications') return 'announcements';
@@ -101,28 +96,49 @@
       if (raw === 'account') return 'profile';
       return routeMap[raw] ? raw : '';
     };
-    const keyFromLocation = () => {
-      const path = (location.pathname || '').replace(/\/+$/, '') || '/';
-      if (pathMap[path]) return pathMap[path];
-      if (/\/student-dashboard\.html$/i.test(path)) return normalize(location.hash) || 'dashboard';
-      return normalize(location.hash) || 'dashboard';
+    const pathMap = {
+      '/student': 'dashboard', '/student/': 'dashboard',
+      '/student/courses': 'courses', '/student/courses/': 'courses',
+      '/student/signals': 'signals', '/student/signals/': 'signals',
+      '/student/charts': 'charts', '/student/charts/': 'charts',
+      '/student/articles': 'articles', '/student/articles/': 'articles',
+      '/student/updates': 'announcements', '/student/updates/': 'announcements',
+      '/student/profile': 'profile', '/student/profile/': 'profile'
     };
-    const open = (key, updateUrl = true) => {
+    const keyFromLocation = () => {
+      const hashKey = normalize(location.hash);
+      if (/\/student-dashboard\.html$/i.test(location.pathname || '') && hashKey) return hashKey;
+      return pathMap[location.pathname] || hashKey || 'dashboard';
+    };
+    const open = (key, updateUrl = true, push = false) => {
       key = normalize(key) || 'dashboard';
       const panel = document.getElementById(`p-${key}`);
       if (!panel) return false;
+
       document.querySelectorAll('.panel').forEach(el => el.classList.toggle('on', el === panel));
-      document.querySelectorAll('[data-panel]').forEach(el => el.classList.toggle('on', normalize(el.dataset.panel) === key));
-      document.querySelectorAll('[data-goto]').forEach(el => el.classList.toggle('is-active', normalize(el.dataset.goto) === key));
+      document.querySelectorAll('[data-panel]').forEach(el => {
+        const active = normalize(el.dataset.panel) === key;
+        el.classList.toggle('on', active);
+        if (active) el.setAttribute('aria-current', 'page');
+        else el.removeAttribute('aria-current');
+      });
+      document.querySelectorAll('.student-mobile-nav [data-goto]').forEach(el => {
+        el.classList.toggle('is-active', normalize(el.dataset.goto) === key);
+      });
       document.getElementById('side')?.classList.remove('open');
-      if (updateUrl && history.replaceState) history.replaceState({studentPanel:key}, '', routeMap[key] || '/student/');
-      try { window.scrollTo({top:0,behavior:'auto'}); } catch (_) {}
-      document.dispatchEvent(new CustomEvent('panel:open', {detail:{key}}));
+
+      if (updateUrl && history.replaceState) {
+        const target = routeMap[key] || '/student/';
+        const method = push && location.pathname !== target ? 'pushState' : 'replaceState';
+        history[method]({ studentPanel: key }, '', target);
+      }
+      try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch (_) {}
+      document.dispatchEvent(new CustomEvent('panel:open', { detail: { key } }));
       return true;
     };
 
-    if (!window.__24K_STUDENT_NAV_V1022__) {
-      window.__24K_STUDENT_NAV_V1022__ = true;
+    if (!window.__24K_STUDENT_NAV_V1023__) {
+      window.__24K_STUDENT_NAV_V1023__ = true;
       document.addEventListener('click', event => {
         const target = event.target?.closest?.('[data-panel],[data-goto]');
         if (!target) return;
@@ -130,15 +146,22 @@
         if (!key || !document.getElementById(`p-${key}`)) return;
         event.preventDefault();
         event.stopPropagation();
-        open(key, true);
+        event.stopImmediatePropagation?.();
+        open(key, true, true);
       }, true);
-      window.addEventListener('popstate', () => open(keyFromLocation(), false));
+      window.addEventListener('popstate', () => open(keyFromLocation(), false, false));
       document.getElementById('burger')?.addEventListener('click', () => document.getElementById('side')?.classList.toggle('open'));
     }
-    setTimeout(() => open(keyFromLocation(), true), 0);
-    return open;
+    return { open, keyFromLocation };
   }
-  openPanel = installStudentNavigation();
+
+  const studentNavigation = installStudentNavigation();
+  openPanel = studentNavigation.open;
+
+  const result = await A.requireRole('student');
+  if (!result) return;
+  state.user = result.user;
+  state.profile = result.profile;
   document.getElementById('logoutButton').addEventListener('click', async()=>{await auditEvent('logout','session',null,'success',{});await A.logout();});
   const supportWhatsApp = document.getElementById('supportWhatsApp'); if (supportWhatsApp) supportWhatsApp.href = `https://wa.me/${A.cfg.SUPPORT_WHATSAPP}`;
 
@@ -152,6 +175,7 @@
   await loadAll();
   renderAll();
   bindEvents();
+  studentNavigation.open(studentNavigation.keyFromLocation(), true, false);
   subscribeRealtime();
   document.getElementById('pageLoader').classList.add('hidden');
   document.getElementById('studentApp').classList.remove('hidden');
