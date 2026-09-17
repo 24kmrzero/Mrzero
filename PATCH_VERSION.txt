@@ -1,1 +1,3 @@
-24K Zero V10.30 - Exact Reference Landing + Premium Motion
+24K Zero V10.40 — Final Reference Landing Rebuild
+Scope: Public landing + public courses only
+SQL: none
