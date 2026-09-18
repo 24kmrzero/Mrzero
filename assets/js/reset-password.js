@@ -14,6 +14,7 @@
   const newPassword = document.getElementById('newPassword');
   const confirmPassword = document.getElementById('confirmPassword');
 
+  const resetMode = new URLSearchParams(location.search).get('mode') || '';
   let accountRole = sessionStorage.getItem('24k_recovery_kind') || '';
 
   function decode(value) {
@@ -48,10 +49,10 @@
     spinner?.classList.add('reset-hidden');
     actions?.classList.add('reset-hidden');
     form?.classList.remove('reset-hidden');
-    title.textContent = accountRole === 'admin' ? 'Set a new Admin password' : 'Set a new password';
+    title.textContent = accountRole === 'admin' ? 'Set a new Admin password' : (resetMode === 'invite' ? 'Set your account password' : 'Set a new password');
     lead.textContent = accountRole === 'admin'
       ? 'Enter a new password for your authorized Admin account.'
-      : 'Enter a new password for your student account.';
+      : (resetMode === 'invite' ? 'Your 24K MR ZERO account is ready. Choose a secure password to finish setup.' : 'Enter a new password for your student account.');
   }
 
   if (!A.configured || !sb) {
@@ -147,7 +148,7 @@
       try { await sb.functions.invoke('audit-event', { body: { action: 'password_changed', entity_type: 'profile', status: 'success', details: { account_role: accountRole || 'student' } } }); } catch {}
 
       status.className = 'reset-status success show';
-      status.innerHTML = '<i class="fa-solid fa-circle-check"></i><span>Password updated successfully. Redirecting to login...</span>';
+      status.innerHTML = '<i class="fa-solid fa-circle-check"></i><span>Password set successfully. Redirecting to login...</span>';
       form.classList.add('reset-hidden');
       sessionStorage.removeItem('24k_recovery_kind');
       await sb.auth.signOut().catch(() => {});
