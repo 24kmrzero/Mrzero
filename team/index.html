@@ -1,1 +1,129 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Team Performance | 24K Excellence</title><meta name="theme-color" content="#08090b"><link rel="preconnect" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="/assets/css/v100-team-performance.css?v=10.00"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="/assets/js/config.js"></script></head><body><div class="tp-loading"><div><div class="tp-spinner"></div><div>Loading Team Performance...</div></div></div><script src="/assets/js/v100-team-performance.js?v=10.00"></script></body></html>
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Team Performance | 24K MR ZERO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="/assets/css/v110-team-command-center.css?v=11.0">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/assets/js/config.js"></script>
+</head>
+<body>
+  <div id="teamLogin" class="team-login-wrap">
+    <div class="team-login-card">
+      <img src="/assets/logo-v965.png" alt="24K MR ZERO" class="team-login-logo">
+      <span class="eyebrow">TEAM PERFORMANCE</span>
+      <h1>Performance & Earnings Command Center</h1>
+      <p>Track your assigned links, clients, conversions, broker lots, VIP activity and earnings in one place.</p>
+      <form id="teamLoginForm" class="team-login-form">
+        <label>Username<input name="username" autocomplete="username" required></label>
+        <label>Password<input name="password" type="password" autocomplete="current-password" required></label>
+        <button type="submit" class="gold-btn"><i class="fa-solid fa-right-to-bracket"></i> Sign In</button>
+      </form>
+      <div id="teamLoginError" class="login-error"></div>
+    </div>
+  </div>
+
+  <div id="teamApp" class="team-app hidden">
+    <aside class="team-side">
+      <div class="brand"><img src="/assets/logo-v965.png" alt="24K"><div><b>Team Performance</b><span>24K Excellence</span></div></div>
+      <nav id="teamNav">
+        <button class="nav-btn active" data-view="overview"><i class="fa-solid fa-gauge-high"></i><span>Overview</span></button>
+        <button class="nav-btn" data-view="links"><i class="fa-solid fa-link"></i><span>My Links</span></button>
+        <button class="nav-btn" data-view="daily"><i class="fa-solid fa-clipboard-check"></i><span>Daily Report</span></button>
+        <button class="nav-btn" data-view="clients"><i class="fa-solid fa-users"></i><span>My Clients</span></button>
+        <button class="nav-btn" data-view="earnings"><i class="fa-solid fa-sack-dollar"></i><span>Earnings</span></button>
+        <button class="nav-btn" data-view="performance"><i class="fa-solid fa-chart-line"></i><span>Performance</span></button>
+        <button class="nav-btn" data-view="history"><i class="fa-solid fa-clock-rotate-left"></i><span>History</span></button>
+      </nav>
+      <div class="side-bottom">
+        <button id="teamTheme" class="nav-btn"><i class="fa-solid fa-sun"></i><span>Theme</span></button>
+        <button id="teamLogout" class="nav-btn"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></button>
+      </div>
+    </aside>
+
+    <main class="team-main">
+      <header class="team-topbar">
+        <div><span class="eyebrow">24K TEAM</span><h1 id="teamMemberName">Team Member</h1><p id="teamMonthLabel">Performance overview</p></div>
+        <div class="top-actions">
+          <select id="teamMonth"></select>
+          <button id="teamRefresh" class="icon-btn" title="Refresh"><i class="fa-solid fa-rotate"></i></button>
+        </div>
+      </header>
+
+      <section class="view active" data-view-panel="overview">
+        <div class="hero-grid">
+          <article class="hero-card animated-glow">
+            <div><span class="eyebrow">MONTHLY PERFORMANCE</span><h2 id="heroName">Team Performance</h2><p>Your links, clients, conversions and next commission targets update from one command center.</p></div>
+            <div class="hero-mark">24K</div>
+          </article>
+          <article class="summary-card"><span>Assigned Links</span><b id="assignedLinksCount">0</b><small>Active tracked links</small></article>
+        </div>
+        <div id="kpiGrid" class="kpi-grid"></div>
+        <div id="progressGrid" class="progress-grid"></div>
+        <div class="two-col">
+          <article class="panel-card"><div class="card-head"><div><span class="eyebrow">BROKER LOTS</span><h3>Broker Lots Performance</h3></div><small>Shared overall level</small></div><div id="brokerGrid" class="broker-grid"></div></article>
+          <article class="panel-card"><div class="card-head"><div><span class="eyebrow">TREND</span><h3>6-Month Earnings</h3></div></div><div id="trendChart" class="trend-chart"></div></article>
+        </div>
+        <article class="panel-card"><div class="card-head"><div><span class="eyebrow">NEXT LEVEL IMPACT</span><h3>What unlocks next?</h3></div></div><div id="nextImpact" class="impact-row"></div></article>
+      </section>
+
+      <section class="view" data-view-panel="links">
+        <div class="section-head"><div><span class="eyebrow">ATTRIBUTION</span><h2>My Assigned Links</h2><p>Every link keeps its own clicks, signups, enrollments and conversion history.</p></div></div>
+        <div id="linksGrid" class="links-grid"></div>
+      </section>
+
+      <section class="view" data-view-panel="daily">
+        <div class="section-head"><div><span class="eyebrow">DAILY REPORT</span><h2>Submit Today’s Report</h2><p>One editable report per day. Course enrollments and VIP conversions are tracked automatically from the platform.</p></div></div>
+        <div class="daily-layout">
+          <form id="dailyReportForm" class="panel-card form-card">
+            <div class="form-grid">
+              <label>Report Date<input id="reportDate" type="date" required></label>
+              <label>New Broker Accounts<input id="newBrokerAccounts" type="number" min="0" value="0"></label>
+              <label>IB / Partner Shifts<input id="ibPartnerShifts" type="number" min="0" value="0"></label>
+              <label>XM Weekly Lots<input id="xmWeeklyLots" type="number" min="0" step="0.01" value="0"></label>
+              <label>DPrime Weekly Lots<input id="dprimeWeeklyLots" type="number" min="0" step="0.01" value="0"></label>
+              <label>Exness Weekly Lots<input id="exnessWeeklyLots" type="number" min="0" step="0.01" value="0"></label>
+              <label class="full">Notes<textarea id="reportNotes" rows="4" placeholder="Optional notes for Admin"></textarea></label>
+            </div>
+            <div class="report-auto"><div><span>Auto Course Enrollments</span><b id="autoEnrollments">0</b></div><div><span>VIP Conversions</span><b id="autoVipConversions">0</b></div></div>
+            <button class="gold-btn" type="submit"><i class="fa-solid fa-paper-plane"></i> Submit / Update Report</button>
+            <div id="dailyStatus" class="form-status"></div>
+          </form>
+          <article class="panel-card"><div class="card-head"><h3>This Month’s Reports</h3></div><div id="dailyReportsList" class="stack-list"></div></article>
+        </div>
+      </section>
+
+      <section class="view" data-view-panel="clients">
+        <div class="section-head"><div><span class="eyebrow">ATTRIBUTED CLIENTS</span><h2>My Clients</h2><p>See the original tracked link and course status for every attributed client.</p></div></div>
+        <div class="filter-bar"><input id="clientSearch" type="search" placeholder="Search client…"><select id="clientCourseFilter"><option value="all">All Clients</option><option value="level1">Basic Level 1</option><option value="level2">Level 2</option><option value="vip">VIP</option></select></div>
+        <div class="table-wrap"><table><thead><tr><th>Client</th><th>Source Link</th><th>Signup</th><th>Courses</th><th>VIP</th><th>Action</th></tr></thead><tbody id="clientsBody"></tbody></table></div>
+      </section>
+
+      <section class="view" data-view-panel="earnings">
+        <div class="section-head"><div><span class="eyebrow">EARNINGS</span><h2>Commission & Earnings</h2><p>Course, VIP and broker-lot earnings with shared next-level progress.</p></div></div>
+        <div id="earningsCards" class="kpi-grid"></div>
+        <div id="earningsProgress" class="progress-grid"></div>
+      </section>
+
+      <section class="view" data-view-panel="performance">
+        <div class="section-head performance-head"><div><span class="eyebrow">PERFORMANCE</span><h2>Conversion Performance</h2></div><div class="preset-row"><button data-range="today">Today</button><button data-range="yesterday">Yesterday</button><button data-range="7">Last 7 Days</button><button data-range="lastmonth">Last Month</button><button data-range="custom">Custom</button></div></div>
+        <div id="customRange" class="custom-range hidden"><input id="rangeStart" type="date"><input id="rangeEnd" type="date"><button id="applyRange" class="gold-btn">Apply</button></div>
+        <div id="rangeKpis" class="kpi-grid"></div>
+        <article class="panel-card"><div class="card-head"><h3>Conversion Funnel</h3></div><div id="funnel" class="funnel"></div></article>
+        <article class="panel-card"><div class="card-head"><h3>Link Performance</h3></div><div id="rangeLinks" class="table-wrap"></div></article>
+      </section>
+
+      <section class="view" data-view-panel="history">
+        <div class="section-head"><div><span class="eyebrow">HISTORY</span><h2>Monthly History</h2><p>Review monthly earnings, course sales, VIP and lots performance.</p></div></div>
+        <div id="historyGrid" class="history-grid"></div>
+      </section>
+    </main>
+  </div>
+  <script src="/assets/js/v110-team-command-center.js?v=11.0"></script>
+</body>
+</html>

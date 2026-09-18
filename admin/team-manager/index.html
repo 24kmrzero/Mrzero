@@ -1,1 +1,21 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta http-equiv="refresh" content="0;url=/admin/team-performance/"><script>location.replace('/admin/team-performance/');</script></head><body></body></html>
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Team Manager | 24K Admin</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="/assets/css/v110-team-manager-admin.css?v=11.0">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="/assets/js/config.js"></script>
+</head>
+<body>
+<main class="tm-wrap">
+  <header class="tm-top"><div><span>24K EXCELLENCE ADMIN</span><h1>Team Manager</h1><p>Assign multiple tracked links, review daily reports and approve VIP conversions.</p></div><div class="tm-actions"><a href="/admin/link-manager/">Link Manager</a><a href="/admin/team-performance/">Performance Editor</a><a href="/admin/">← Admin</a></div></header>
+  <nav class="tm-tabs"><button class="active" data-tab="assignments">Accounts & Links</button><button data-tab="reports">Daily Reports</button><button data-tab="vip">VIP Reviews</button></nav>
+  <section class="tm-panel active" data-panel="assignments">
+    <div class="tm-grid"><article class="tm-card"><h2>Team Accounts</h2><p>Select a team member to manage all assigned tracking links.</p><select id="teamSelect"></select><div id="teamMeta" class="tm-note"></div></article><article class="tm-card"><h2>Assigned Links</h2><p>A member can have multiple links. Stats remain separate by link in the Team Panel.</p><div id="linkChecklist" class="link-checklist"></div><button id="saveAssignments" class="gold-btn">Save Link Assignments</button><div id="assignStatus" class="status-line"></div></article></div>
+  </section>
+  <section class="tm-panel" data-panel="reports"><div class="tm-head"><div><h2>Daily Report Review</h2><p>Approve or reject submitted team reports.</p></div><select id="reportStatusFilter"><option value="submitted">Submitted</option><option value="all">All</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select></div><div id="reportsList" class="review-list"></div></section>
+  <section class="tm-panel" data-panel="vip"><div class="tm-head"><div><h2>VIP Conversion Review</h2><p>Approve $50 VIP conversions attributed to team links.</p></div><select id="vipStatusFilter"><option value="submitted">Submitted</option><option value="all">All</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select></div><div id="vipList" class="review-list"></div></section>
+</main>
+<script src="/assets/js/v110-team-manager-admin.js?v=11.0"></script>
+</body></html>
