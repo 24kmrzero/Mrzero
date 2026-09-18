@@ -2,8 +2,12 @@
   'use strict';
   const A=window.App;if(!A?.supabase)return;
   const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-  for(let i=0;i<120&&!window.AdminOps;i++)await sleep(100);
-  if(!window.AdminOps)return;
+  // Premium Access and Activity Logs only need the base Admin shell + App client.
+  // Do not wait for window.AdminOps: that object is created only after the larger
+  // platform-v8 refresh finishes and slow Supabase responses used to make this
+  // panel appear late or not at all. Wait only for the Admin shell to exist.
+  for(let i=0;i<100&&!document.getElementById('adminApp');i++)await sleep(50);
+  if(!document.getElementById('adminApp'))return;
   const esc=v=>A.escapeHtml(v??'');
   const state={settings:null,payments:[],ib:[],audit:[]};
   install();bind();await refresh();subscribe();

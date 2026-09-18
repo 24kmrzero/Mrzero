@@ -288,9 +288,9 @@
       dashboard: '/admin/', signals: '/admin/signals/', charts: '/admin/charts/', articles: '/admin/articles/',
       announcements: '/admin/announcements/', courses: '/admin/courses/', sessions: '/admin/zoom-sessions/',
       calendar: '/admin/calendar/', leads: '/admin/enquiries/', links: '/admin/link-manager/',
-      'admin-notifications': '/admin/admin-notifications/', delivery: '/admin/delivery/', audit: '/admin/activity-logs/',
-      settings: '/admin/settings/', payments: '/admin/payments/', students: '/admin/students/',
-      support: '/admin/support/', methods: '/admin/payment-methods/'
+      'premium-access': '/admin/premium-access/', 'admin-notifications': '/admin/admin-notifications/',
+      audit: '/admin/activity-logs/', delivery: '/admin/delivery/', settings: '/admin/settings/',
+      payments: '/admin/payments/', students: '/admin/students/', support: '/admin/support/', methods: '/admin/payment-methods/'
     };
     const studentRoutes = {
       dashboard: '/student/', signals: '/student/signals/', charts: '/student/charts/', articles: '/student/articles/',
@@ -298,20 +298,51 @@
       profile: '/student/profile/', support: '/student/profile/'
     };
     const routeMap = authScope === 'admin' ? adminRoutes : studentRoutes;
+    const aliases = authScope === 'admin' ? {
+      'link-manager': 'links', links: 'links',
+      'zoom-sessions': 'sessions', sessions: 'sessions',
+      'payment-methods': 'methods', methods: 'methods',
+      'activity-logs': 'audit', activity: 'audit', audit: 'audit',
+      notifications: 'admin-notifications', 'admin-notifications': 'admin-notifications',
+      'premium-access': 'premium-access'
+    } : { updates: 'announcements', announcements: 'announcements' };
+    const normalizeKey = key => aliases[String(key || '').replace(/^#/, '').trim()] || String(key || '').replace(/^#/, '').trim();
     const reverseRoutes = Object.fromEntries(Object.entries(routeMap).map(([key, path]) => [path.replace(/\/+$/, '') || '/', key]));
     const cleanPath = () => {
       const path = location.pathname.replace(/\/+$/, '') || '/';
       if (reverseRoutes[path]) return reverseRoutes[path];
-      if (authScope === 'admin' && (path === '/admin-dashboard.html' || path === '/admin-dashboard')) return 'dashboard';
-      if (authScope !== 'admin' && (path === '/student-dashboard.html' || path === '/student-dashboard')) { const requested=location.hash.replace('#',''); return ['dashboard','courses','signals','charts','articles','announcements','profile'].includes(requested)?requested:'dashboard'; }
+      if (authScope === 'admin' && (path === '/admin-dashboard.html' || path === '/admin-dashboard')) {
+        const requested = normalizeKey(location.hash);
+        return routeMap[requested] ? requested : 'dashboard';
+      }
+      if (authScope !== 'admin' && (path === '/student-dashboard.html' || path === '/student-dashboard')) {
+        const requested = normalizeKey(location.hash);
+        return ['dashboard','courses','signals','charts','articles','announcements','profile'].includes(requested) ? requested : 'dashboard';
+      }
       return '';
     };
 
-    const open = (key, updateUrl = true) => {
+    const retryCounts = new Map();
+    const open = (rawKey, updateUrl = true) => {
+      const key = normalizeKey(rawKey);
       const links = [...document.querySelectorAll('[data-panel]')];
       const panels = [...document.querySelectorAll('.panel')];
-      if (!panels.some(panel => panel.id === `p-${key}`)) return false;
-      links.forEach(link => link.classList.toggle('on', link.dataset.panel === key));
+      if (!panels.some(panel => panel.id === `p-${key}`)) {
+        // Some Admin panels (Link Manager, Premium Access, Notifications and Audit)
+        // are installed by feature modules after the base shell becomes visible.
+        // Keep the requested clean route pending instead of navigating through a
+        // second fetch/document.write bootstrap.
+        if (authScope === 'admin' && routeMap[key]) {
+          const attempts = retryCounts.get(key) || 0;
+          if (attempts < 150) {
+            retryCounts.set(key, attempts + 1);
+            setTimeout(() => open(key, updateUrl), 100);
+          }
+        }
+        return false;
+      }
+      retryCounts.delete(key);
+      links.forEach(link => link.classList.toggle('on', normalizeKey(link.dataset.panel) === key));
       panels.forEach(panel => panel.classList.toggle('on', panel.id === `p-${key}`));
       side?.classList.remove('open');
       if (updateUrl && history.replaceState) {
@@ -328,17 +359,17 @@
       document.addEventListener('click', event => {
         const target = event.target.closest('[data-panel],[data-goto]');
         if (!target) return;
-        const key = target.dataset.panel || target.dataset.goto;
+        const key = normalizeKey(target.dataset.panel || target.dataset.goto);
         if (open(key, true)) event.preventDefault();
       });
       window.addEventListener('popstate', () => {
-        const key = cleanPath() || location.hash.replace('#', '') || 'dashboard';
+        const key = cleanPath() || normalizeKey(location.hash) || 'dashboard';
         open(key, false);
       });
     }
 
     document.getElementById('burger')?.addEventListener('click', () => side?.classList.toggle('open'));
-    const initial = cleanPath() || location.hash.replace('#', '') || 'dashboard';
+    const initial = cleanPath() || normalizeKey(location.hash) || 'dashboard';
     setTimeout(() => open(initial, true), 0);
     return open;
   }

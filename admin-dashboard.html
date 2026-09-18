@@ -25,14 +25,32 @@
 <div id="pageLoader" class="loading-screen"><div><img src="assets/logo.png?v=9.69" alt="24K Digital Gold"><i class="fa-solid fa-spinner fa-spin"></i><p>Loading admin controls...</p></div></div>
 <div id="adminApp" class="app-shell hidden">
   <aside class="app-side" id="side">
-    <div class="app-side-brand"><a class="app-logo-home" href="index.html" aria-label="Go to website home"><img src="assets/logo.png?v=9.69" alt="24K Digital Gold"></a></div>
+    <div class="app-side-brand"><a class="app-logo-home" href="/admin/" aria-label="Open Admin Dashboard"><img src="assets/logo.png?v=9.69" alt="24K Digital Gold"></a></div>
     <div class="app-side-scroll"><nav class="app-nav">
-      <p class="app-nav-label">OVERVIEW</p><a href="#" class="on" data-panel="dashboard"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
-      <p class="app-nav-label">CONTENT</p><a href="#" data-panel="signals"><i class="fa-solid fa-bolt"></i> Signals</a><a href="#" data-panel="charts"><i class="fa-solid fa-chart-line"></i> Charts</a><a href="#" data-panel="articles"><i class="fa-solid fa-newspaper"></i> Articles</a><a href="#" data-panel="announcements"><i class="fa-solid fa-bullhorn"></i> Announcements</a>
-      <p class="app-nav-label">COURSES</p><a href="#" data-panel="courses"><i class="fa-solid fa-graduation-cap"></i> Courses</a><a href="#" data-panel="sessions"><i class="fa-solid fa-video"></i> Zoom Sessions</a>
-      <p class="app-nav-label">OPERATIONS</p><a href="#" data-panel="payments"><i class="fa-solid fa-receipt"></i> Payments <span class="nav-count" id="pendingPaymentCount">0</span></a><a href="#" data-panel="students"><i class="fa-solid fa-users"></i> Students</a><a href="#" data-panel="support"><i class="fa-solid fa-headset"></i> Support</a><a href="#" data-panel="methods"><i class="fa-solid fa-building-columns"></i> Payment Methods</a><a href="/admin/team-manager/" data-admin-team-manager="true" data-nav-key="team-manager"><i class="fa-solid fa-people-group"></i> Team Manager</a><a href="/admin/team-performance/" data-nav-key="team-performance"><i class="fa-solid fa-chart-column"></i> Performance Editor</a><a href="/admin/link-manager/" data-panel="links"><i class="fa-solid fa-link"></i> Link Manager</a>
+      <p class="app-nav-label">OVERVIEW</p>
+      <a href="/admin/" class="on" data-panel="dashboard"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+      <p class="app-nav-label">CONTENT</p>
+      <a href="/admin/signals/" data-panel="signals"><i class="fa-solid fa-bolt"></i> Signals</a>
+      <a href="/admin/charts/" data-panel="charts"><i class="fa-solid fa-chart-line"></i> Charts</a>
+      <a href="/admin/articles/" data-panel="articles"><i class="fa-solid fa-newspaper"></i> Articles</a>
+      <a href="/admin/announcements/" data-panel="announcements"><i class="fa-solid fa-bullhorn"></i> Announcements</a>
+      <p class="app-nav-label">COURSES</p>
+      <a href="/admin/courses/" data-panel="courses"><i class="fa-solid fa-graduation-cap"></i> Courses</a>
+      <a href="/admin/zoom-sessions/" data-panel="sessions"><i class="fa-solid fa-video"></i> Zoom Sessions</a>
+      <p class="app-nav-label">MANAGEMENT</p>
+      <a href="/admin/payments/" data-panel="payments"><i class="fa-solid fa-receipt"></i> Payments <span class="nav-count" id="pendingPaymentCount">0</span></a>
+      <a href="/admin/students/" data-panel="students"><i class="fa-solid fa-users"></i> Students</a>
+      <a href="/admin/payment-methods/" data-panel="methods"><i class="fa-solid fa-building-columns"></i> Payment Methods</a>
+      <a href="/admin/support/" data-panel="support"><i class="fa-solid fa-headset"></i> Support</a>
+      <p class="app-nav-label">OPERATIONS</p>
+      <a href="/admin/premium-access/" data-panel="premium-access"><i class="fa-solid fa-crown"></i> Premium Access</a>
+      <a href="/admin/team-manager/" data-admin-team-manager="true" data-nav-key="team-manager"><i class="fa-solid fa-people-group"></i> Team Manager</a>
+      <a href="/admin/team-performance/" data-nav-key="team-performance"><i class="fa-solid fa-chart-column"></i> Performance Editor</a>
+      <a href="/admin/link-manager/" data-panel="links"><i class="fa-solid fa-link"></i> Link Manager</a>
+      <a href="/admin/admin-notifications/" data-panel="admin-notifications"><i class="fa-solid fa-bell"></i> Admin Notifications <span class="nav-count" id="adminNotificationCount">0</span></a>
+      <a href="/admin/activity-logs/" data-panel="audit"><i class="fa-solid fa-clock-rotate-left"></i> Activity Logs</a>
     </nav></div>
-    <div class="app-side-foot"><a href="index.html"><i class="fa-solid fa-house"></i> Website Home</a><button id="logoutButton"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button></div>
+    <div class="app-side-foot"><a href="/"><i class="fa-solid fa-house"></i> Website Home</a><button id="logoutButton"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button></div>
   </aside>
 
   <main class="app-main">
@@ -227,6 +245,6 @@
 
 <div class="app-modal" id="receiptPreviewModal"><div class="app-modal-card receipt-preview-card"><div class="app-modal-head"><div><h3>Payment Receipt</h3><small id="receiptPreviewSubtitle" class="muted">Secure temporary preview</small></div><button class="modal-close" data-close-modal="receiptPreviewModal"><i class="fa-solid fa-xmark"></i></button></div><div class="app-modal-body"><div id="receiptPreviewContent" class="receipt-preview-content"></div></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="receiptPreviewModal">Close</button><a id="receiptOpenExternal" class="app-btn gold" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Full Size</a></div></div></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js?v=9.69"></script><script src="assets/js/core.js?v=10.20"></script><script src="assets/js/admin.js?v=10.20"></script><script src="assets/js/platform-v8-admin.js?v=10.14"></script><script src="assets/js/platform-v962-admin.js?v=9.70"></script><script src="assets/js/dashboard-analytics-recovery.js?v=9.69"></script><script src="assets/js/v1014-admin-link-manager-fix.js?v=10.20"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js?v=11.11"></script><script src="assets/js/core.js?v=11.11"></script><script src="assets/js/admin.js?v=11.11"></script><script src="assets/js/platform-v8-admin.js?v=11.11"></script><script src="assets/js/platform-v962-admin.js?v=11.11"></script><script src="assets/js/dashboard-analytics-recovery.js?v=11.11"></script><script src="assets/js/v972-admin-course-actions.js?v=11.11"></script><script src="assets/js/v990-admin-ui.js?v=11.11"></script>
 </body>
 </html>

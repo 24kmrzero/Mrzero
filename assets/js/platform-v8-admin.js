@@ -76,13 +76,22 @@
     const navLabels = [...nav.querySelectorAll('.app-nav-label,.v980-nav-label,.v990-nav-label')];
     const courseLabel = navLabels.find(node => node.textContent.trim().toUpperCase() === 'COURSES');
     const operationsLabel = navLabels.find(node => node.textContent.trim().toUpperCase() === 'OPERATIONS');
-    if (!nav.querySelector('[data-panel="links"]')) {
-      const marker = document.createElement('div');
-      marker.innerHTML = navLink('links', 'fa-link', 'Link Manager') + navLink('admin-notifications', 'fa-bell', 'Admin Notifications', 'adminNotificationCount') + navLink('audit', 'fa-clock-rotate-left', 'Activity Logs');
-      const missing = [...marker.children].filter(link => !nav.querySelector(`[data-panel="${link.dataset.panel}"]`));
-      if (operationsLabel) missing.reverse().forEach(link => operationsLabel.after(link));
-      else missing.forEach(link => nav.appendChild(link));
-    }
+    // Install each operational navigation item independently. Older builds only
+    // added Notifications/Audit when Link Manager was missing, so a pre-existing
+    // Link Manager could accidentally hide the other two entries.
+    const requiredNav = [
+      ['links', 'fa-link', 'Link Manager', ''],
+      ['admin-notifications', 'fa-bell', 'Admin Notifications', 'adminNotificationCount'],
+      ['audit', 'fa-clock-rotate-left', 'Activity Logs', '']
+    ];
+    requiredNav.forEach(([panel, icon, text, badgeId]) => {
+      if (nav.querySelector(`[data-panel="${panel}"]`)) return;
+      const holder = document.createElement('div');
+      holder.innerHTML = navLink(panel, icon, text, badgeId);
+      const link = holder.firstElementChild;
+      if (operationsLabel) operationsLabel.insertAdjacentElement('beforebegin', link);
+      else nav.appendChild(link);
+    });
 
     const content = document.querySelector('.app-content');
     if (!document.getElementById('p-links')) content.insertAdjacentHTML('beforeend', panelsHtml());

@@ -150,10 +150,11 @@
     ]],
     ['Operations',[
       ['Premium Access',['premium-access','premium access']],
-      ['Team Manager',['team-manager','team manager','team-performance','team performance']],
-      ['Link Manager',['link-manager','link manager']],
+      ['Team Manager',['team-manager','team manager']],
+      ['Performance Editor',['team-performance','team performance','performance editor']],
+      ['Link Manager',['links','link-manager','link manager']],
       ['Admin Notifications',['admin-notifications','admin notifications']],
-      ['Activity Logs',['activity-logs','activity logs']]
+      ['Activity Logs',['audit','activity-logs','activity logs']]
     ]]
   ];
 
