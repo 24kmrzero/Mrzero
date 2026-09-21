@@ -296,7 +296,7 @@
     const queries = [
       ['modules', A.supabase.from('course_modules').select('*').order('module_number')],
       ['lessons', A.supabase.from('course_lessons').select('*').order('lesson_number')],
-      ['links', A.supabase.from('admin_link_performance').select('*').order('created_at', { ascending: false })],
+      ['links', A.supabase.rpc('admin_get_link_performance')],
       ['attributions', A.supabase.from('user_attributions').select('*')],
       ['emailQueue', A.supabase.from('email_queue').select('*').order('created_at', { ascending: false }).limit(500)],
       ['enrollments', A.supabase.from('enrollments').select('*').order('created_at', { ascending: false })],

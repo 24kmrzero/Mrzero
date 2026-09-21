@@ -172,7 +172,6 @@
       });
       if (response.error) throw response.error;
       if (response.data?.error) throw new Error(response.data.error);
-      await tracking?.record('signup').catch(() => {});
       await audit('student_signup','success',{email});
       form.reset();
       sessionStorage.setItem('24k_pending_signup_email', email);

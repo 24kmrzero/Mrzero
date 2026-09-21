@@ -53,13 +53,36 @@ async function loadOverview(){
 }
 
 async function loadLinks(){
- const [links,events]=await Promise.all([safe('links',one(sb.from('tracking_links').select('*').order('created_at',{ascending:false}))),safe('events',one(sb.from('tracking_events').select('id,link_id,event_type,created_at').order('created_at',{ascending:false}).limit(10000)))]);state.links=links||[];state.events=events||[];renderLinks();
+ const r=await sb.rpc('admin_get_link_performance');
+ if(r.error){console.warn('links',r.error.message);state.links=[];}else state.links=r.data||[];
+ state.events=[];
+ renderLinks();
+}
+function trackedLinkUrl(l){
+ const raw=String(l.destination_path||'/').trim()||'/';
+ const path=raw==='/'?'/':`/${raw.replace(/^\/+|\/+$/g,'')}/`;
+ const u=new URL(path,location.origin);
+ u.searchParams.set('ref',String(l.ref_code||''));
+ if(l.source)u.searchParams.set('source',l.source);
+ if(l.campaign)u.searchParams.set('campaign',l.campaign);
+ if(l.course_slug)u.searchParams.set('course',l.course_slug);
+ return u.toString();
 }
 function renderLinks(){
- const q=($('#linkSearch')?.value||'').toLowerCase(),type=$('#linkType')?.value||'all'; const counts={};state.events.forEach(e=>{counts[e.link_id]??={};counts[e.link_id][e.event_type]=(counts[e.link_id][e.event_type]||0)+1});
- const rows=state.links.filter(l=>(type==='all'||(type==='ad'&&l.is_ad_link)||(type==='normal'&&!l.is_ad_link))&&(!q||`${l.name} ${l.ref_code} ${l.campaign||''}`.toLowerCase().includes(q)));
- const clicks=state.events.filter(e=>e.event_type==='click').length,signups=state.events.filter(e=>e.event_type==='signup').length,enr=state.events.filter(e=>e.event_type==='enrollment').length; $('#linkKpis').innerHTML=[['Active Links',state.links.filter(x=>x.is_active).length],['Clicks',clicks],['Signups',signups],['Enrollments',enr]].map(([a,b])=>`<div class="kpi"><div><b>${b}</b><span>${a}</span></div></div>`).join('');
- $('#linksBody').innerHTML=rows.length?rows.map(l=>{const c=counts[l.id]||{},cv=(c.click?Math.round((c.enrollment||0)/c.click*100):0);const url=`${location.origin}${l.destination_path||'/'}?ref=${encodeURIComponent(l.ref_code)}`;return `<tr><td><b>${esc(l.name)}</b><small>${esc(l.ref_code)}</small></td><td>${esc(l.destination_path)}</td><td>${esc(l.source)}<small>${esc(l.campaign||'')}</small></td><td>${c.click||0}</td><td>${c.signup||0}</td><td>${c.enrollment||0}</td><td>${cv}%</td><td>${badge(l.is_active?'active':'inactive')}</td><td><div class="row-actions"><button class="mini" data-copy-link="${esc(url)}">Copy</button><button class="mini" data-edit-link="${esc(l.id)}">Edit</button><button class="mini" data-toggle-link="${esc(l.id)}">${l.is_active?'Disable':'Enable'}</button></div></td></tr>`}).join(''):empty();
+ const q=($('#linkSearch')?.value||'').toLowerCase(),type=$('#linkType')?.value||'all';
+ const rows=state.links.filter(l=>(type==='all'||(type==='ad'&&l.is_ad_link)||(type==='normal'&&!l.is_ad_link))&&(!q||`${l.name} ${l.ref_code} ${l.campaign||''} ${l.course_title||''}`.toLowerCase().includes(q)));
+ const clicks=state.links.reduce((s,l)=>s+Number(l.total_clicks||0),0);
+ const unique=state.links.reduce((s,l)=>s+Number(l.unique_visitors||0),0);
+ const signups=state.links.reduce((s,l)=>s+Number(l.signups||0),0);
+ const enr=state.links.reduce((s,l)=>s+Number(l.enrollments||0),0);
+ $('#linkKpis').innerHTML=[['Active Links',state.links.filter(x=>x.is_active).length],['Clicks',clicks],['Unique',unique],['Signups',signups],['Enrollments',enr]].map(([a,b])=>`<div class="kpi"><div><b>${b}</b><span>${a}</span></div></div>`).join('');
+ $('#linksBody').innerHTML=rows.length?rows.map(l=>{
+   const url=trackedLinkUrl(l);
+   const teams=Array.isArray(l.assigned_teams)?l.assigned_teams:[];
+   const meta=[l.is_ad_link?'Ad Link':'Normal',l.round_robin?'Round Robin':'Fixed Assignment',l.course_title||''].filter(Boolean).join(' · ');
+   const teamText=teams.length?teams.map(t=>t.display_name).join(', '):'Unassigned';
+   return `<tr><td><b>${esc(l.name)}</b><small>${esc(l.ref_code)}${meta?` · ${esc(meta)}`:''}</small></td><td>${esc(l.destination_path)}<small>${esc(l.course_title||'')}</small></td><td>${esc(l.source)}<small>${esc(l.campaign||'')} · ${esc(teamText)}</small></td><td>${Number(l.total_clicks||0)}</td><td>${Number(l.unique_visitors||0)}</td><td>${Number(l.signups||0)}</td><td>${Number(l.enrollments||0)}</td><td>${Number(l.conversion_rate||0).toFixed(1)}%</td><td>${badge(l.is_active?'active':'inactive')}</td><td><div class="row-actions"><button class="mini" data-copy-link="${esc(url)}">Copy</button><button class="mini" data-edit-link="${esc(l.id)}">Edit</button><button class="mini" data-toggle-link="${esc(l.id)}">${l.is_active?'Disable':'Enable'}</button></div></td></tr>`;
+ }).join(''):empty();
 }
 
 async function loadEnrollments(){
@@ -125,7 +148,7 @@ function bindUI(){
  document.addEventListener('change',async e=>{if(e.target.matches('[data-flag-scope]')){try{await one(sb.from('feature_flags').upsert({scope:e.target.dataset.flagScope,feature_key:e.target.dataset.flagKey,enabled:e.target.checked,updated_by:state.me.user.id,updated_at:new Date().toISOString()}));toast('Feature visibility updated.','success')}catch(x){err(x)}}if(e.target.matches('[data-mentor-flag]')){const mid=$('#mentorSelect').value;if(!mid)return;try{await one(sb.from('mentor_permissions').upsert({mentor_id:mid,feature_key:e.target.dataset.mentorFlag,enabled:e.target.checked,updated_by:state.me.user.id,updated_at:new Date().toISOString()}));await loadMentorPerms();toast('Mentor permission updated.','success')}catch(x){err(x)}}});
 }
 function bindForms(){
- $('#linkForm').addEventListener('submit',async e=>{e.preventDefault();const f=e.currentTarget,o=formObj(f),id=o.id;delete o.id;o.updated_at=new Date().toISOString();o.created_by=state.me.user.id;try{let q=id?sb.from('tracking_links').update(o).eq('id',id):sb.from('tracking_links').insert(o);await one(q);closeModal('linkModal');f.reset();await loadLinks();toast('Tracking link saved.','success')}catch(x){err(x)}});
+ $('#linkForm').addEventListener('submit',async e=>{e.preventDefault();const f=e.currentTarget,o=formObj(f),id=o.id;delete o.id;o.name=String(o.name||'').trim();o.ref_code=String(o.ref_code||'').trim().toLowerCase().replace(/[^a-z0-9_-]+/g,'-').replace(/^-+|-+$/g,'');if(!o.ref_code)return toast('Reference code is required.','error');const raw=String(o.destination_path||'/').trim()||'/';o.destination_path=raw==='/'?'/':`/${raw.replace(/^\/+|\/+$/g,'')}/`;o.course_id=o.course_id||null;o.campaign=o.campaign||null;o.referral_whatsapp=o.referral_whatsapp||null;o.updated_at=new Date().toISOString();if(!id)o.created_by=state.me.user.id;try{let q=id?sb.from('tracking_links').update(o).eq('id',id):sb.from('tracking_links').insert(o);await one(q);closeModal('linkModal');f.reset();await loadLinks();toast('Tracking link saved.','success')}catch(x){err(x)}});
  $('#batchForm').addEventListener('submit',async e=>{e.preventDefault();const f=e.currentTarget,o=formObj(f),id=o.id;delete o.id;o.batch_number=o.batch_number?Number(o.batch_number):null;o.created_by=state.me.user.id;o.updated_at=new Date().toISOString();try{if(o.is_current)await one(sb.from('course_batches').update({is_current:false}).eq('course_id',o.course_id));await one(id?sb.from('course_batches').update(o).eq('id',id):sb.from('course_batches').insert(o));closeModal('batchModal');f.reset();await loadBatches();toast('Batch saved.','success')}catch(x){err(x)}});
  $('#manualEnrollmentForm').addEventListener('submit',async e=>{e.preventDefault();const f=e.currentTarget,o=formObj(f);try{const r=await sb.rpc('admin_v12_manual_enrollment',{p_student_id:o.student_id,p_course_id:o.course_id,p_amount:Number(o.amount||0),p_payment_date:o.payment_date,p_note:o.note,p_batch_id:o.batch_id});if(r.error)throw r.error;closeModal('manualEnrollmentModal');f.reset();await Promise.all([loadEnrollments(),loadOverview(),loadFinance()]);toast(`Enrollment activated (${r.data?.invoice_no||'manual payment'}).`,'success')}catch(x){err(x)}});
  $('#transferForm').addEventListener('submit',async e=>{e.preventDefault();const f=e.currentTarget,o=formObj(f);try{const r=await sb.rpc('admin_v12_transfer_client',{p_student_id:o.student_id,p_team_id:o.team_id,p_note:o.note});if(r.error)throw r.error;closeModal('transferModal');f.reset();await Promise.all([loadClients(),loadBase()]);toast('Client manager changed.','success')}catch(x){err(x)}});

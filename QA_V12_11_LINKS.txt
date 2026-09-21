@@ -1,0 +1,27 @@
+V12.11 LINK SYSTEM QA
+
+LIVE BACKEND
+- record_tracking_event type mismatch fixed (tracking_events.id BIGINT).
+- Event type constraint aligned with click/signup/verification/login/enrollment/enquiry/whatsapp_routed/payment/conversion.
+- Repeated clicks are allowed; total clicks and unique visitors are now distinct.
+- Anonymous browser signup duplicates are ignored; signup is canonical server-side.
+- admin_get_link_performance is Admin-only and database-aggregated.
+- resolve_tracking_link returns only active-link metadata.
+- Round-robin uses assigned eligible Team members first, with global active-team fallback.
+- free-course-enroll Edge Function upgraded to v4.
+
+LIVE SMOKE TEST
+- Temporary QA link created.
+- Same visitor clicked twice.
+- Expected metrics verified: Clicks=2, Unique=1.
+- Admin Link Performance RPC matched.
+- QA link/events deleted after test.
+
+FRONTEND
+- New canonical Link Manager route /admin/operations/#links.
+- Link stats use server aggregation (no 10,000-event truncation).
+- Copy URL preserves source/campaign/course context.
+- First-touch attribution stays fixed while each actual clicked link gets its own click.
+- Redundant anonymous signup tracking removed.
+- Course, Ad Link, Round Robin, Active and fallback WhatsApp fields supported.
+- JS syntax checks passed.

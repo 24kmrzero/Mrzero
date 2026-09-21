@@ -1,0 +1,17 @@
+24K MR ZERO V12.11 LINK SYSTEM
+
+LIVE SUPABASE ALREADY UPDATED:
+- record_tracking_event BIGINT return fixed.
+- tracking event CHECK constraint aligned.
+- total clicks and unique visitors separated.
+- anonymous duplicate signup events blocked.
+- admin_get_link_performance RPC added.
+- resolve_tracking_link RPC added.
+- round-robin Team assignment aligned.
+- free-course-enroll Edge Function upgraded to v4.
+
+UPLOAD/OVERWRITE WEBSITE FILES FROM THIS PATCH.
+Then hard refresh (Ctrl+Shift+R).
+
+Canonical Link Manager:
+  /admin/link-manager/ -> /admin/operations/#links
