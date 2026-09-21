@@ -1,0 +1,22 @@
+24K MR ZERO V12.12 — UNIFIED TEAM & LINKS
+
+New user-friendly Admin workflow:
+Admin > Team & Links
+
+Tabs:
+1) Team Members
+2) Tracking Links
+3) Ad Links
+4) Reports & VIP
+
+Key improvements:
+- Create Team, Link, Ad Link and Team assignment in one place.
+- Link form includes Team assignment directly.
+- Ad Link keeps Course + Round Robin + fallback WhatsApp.
+- Tracking and Ad links have separate tabs and KPIs.
+- Old Link Manager routes redirect to Team & Links.
+- Admin sidebar keeps only one Team & Links item.
+- Master Operations points to Team & Links instead of maintaining a second Link Manager.
+
+Live Supabase RPC admin_set_link_team_assignments has already been deployed.
+Upload/overwrite this patch, then hard refresh.

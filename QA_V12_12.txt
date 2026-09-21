@@ -1,0 +1,15 @@
+V12.12 UNIFIED TEAM & LINKS QA
+
+- Team account create/edit: integrated.
+- Team link checklist assignment: integrated.
+- Normal Tracking Link create/edit: integrated.
+- Ad Link create/edit: integrated.
+- Link -> Team assignment inside link form: integrated.
+- Ad Link Course selection: required by UI.
+- Round Robin toggle: integrated.
+- Fallback WhatsApp: integrated.
+- Link stats: uses admin_get_link_performance.
+- Reports/VIP review preserved.
+- Old Link Manager redirects to unified page.
+- Admin sidebar duplicate Link Manager removed.
+- JS syntax: PASS.
