@@ -1,0 +1,71 @@
+24K MR ZERO V12.14 — FINAL QA
+
+LIVE BACKEND VERIFIED
+- Basic Level 1 Course exists: FREE, USD 0, published/open, 5-class course description.
+- Level 2 Course exists: PAID, USD 250, published/open, 5-class course description.
+- admin_get_link_leads returns the required lead-detail payload.
+- admin_get_premium_center returns Admin Premium data.
+- free-course-enroll Edge Function is ACTIVE v6.
+- Current-link lead tracking includes course, enrollment, manager and email-status metadata.
+- Enrollment source_ref/source_type/assigned_team_id are persisted by tracked free-course flow.
+
+LIVE LEAD-DETAIL SMOKE TEST
+- Temporary QA Ad Link created.
+- 1 successful signup/lead inserted.
+- Email status verified as Sent.
+- WhatsApp routed event verified.
+- admin_get_link_leads returned Total Leads=1, Email Sent=1, Routed=1 and one detail row.
+- Temporary QA link/events deleted after the test (0 remaining).
+
+ADMIN UX / ROUTING
+- Original Dashboard is the single visual shell for main Admin routes.
+- Main sidebar reduced to 9 daily sections:
+  Dashboard / Content / Courses / Students / Payments / Team & Links / Premium / Support / Operations.
+- Content groups Signals / Charts / Articles / Announcements.
+- Courses keeps Live Classes as a secondary action.
+- Payments keeps Payment Methods as a secondary action.
+- Team & Links has only Team / Links tabs.
+- Premium has Users / Requests; Grant Access and Settings are modals.
+- Operations stays outside as a main section; Advanced Operations is secondary.
+- Top bell remains the Admin Notifications entry point.
+- Activity Logs are available from Operations.
+- Direct clean Admin URLs redirect into the same Dashboard shell.
+- Team Performance and Advanced Operations use the same Dashboard shell styling.
+
+FALSE PERMISSION ERROR
+- Optional extended Admin module failures no longer trigger the global red permission toast.
+- Optional base Admin data modules are isolated; one optional failure does not crash the whole Admin loader.
+- Real unauthorized users are still blocked by the Admin role check.
+
+TEAM & LINKS
+- Create Team member from Team tab.
+- Create Link starts with Normal Link / Ad Link.
+- Ref Code and round-robin terminology are hidden from normal Admin use.
+- Lead assignment is Team Member or Auto Distribute.
+- Ad Link includes Course, Ad Platform and Campaign.
+- Correct server-aggregated link performance is used.
+- Link Details shows Total Leads, Clicks, Enrollments, Email Sent, Routed.
+- Link Details rows: Date & Time / Name / Email / WhatsApp / Client ID / Course / Assigned Team / Source / Email / Routed.
+- Filters: Date Range / Team / Course / Source.
+- Lead means successful signup/form submission, not a click.
+
+COURSES / PAYMENT
+- Course editor supports USD.
+- Course can be saved before class dates are entered.
+- Level 1 and Level 2 details remain editable from Admin.
+- USD-priced course can use USDT TRC20 payment at the same numeric course amount (e.g. USD 250 -> pay 250 USDT).
+
+TRACKING
+- V12.11 first-touch/current-click tracking fix included.
+- Duplicate anonymous signup tracking removed.
+- Current clicked link receives its own click.
+- Source/Campaign/Course can resolve from the tracking link record.
+
+STATIC QA
+- Changed JavaScript files pass node --check.
+- Duplicate IDs: none on Admin Dashboard, Team Performance, Advanced Operations.
+- Required Admin shell/link-detail strings present.
+- No V12.13 standalone Admin shell references in active Admin pages.
+- ZIP integrity: PASS.
+
+Scope statement: current requested Admin, course, Team/Links, Premium and tracked-link flows passed the above QA. This is not a claim that every legacy feature in the full platform has zero warnings/issues.

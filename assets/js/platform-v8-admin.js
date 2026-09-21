@@ -79,11 +79,7 @@
     // Install each operational navigation item independently. Older builds only
     // added Notifications/Audit when Link Manager was missing, so a pre-existing
     // Link Manager could accidentally hide the other two entries.
-    const requiredNav = [
-      ['links', 'fa-link', 'Link Manager', ''],
-      ['admin-notifications', 'fa-bell', 'Admin Notifications', 'adminNotificationCount'],
-      ['audit', 'fa-clock-rotate-left', 'Activity Logs', '']
-    ];
+    const requiredNav = [];
     requiredNav.forEach(([panel, icon, text, badgeId]) => {
       if (nav.querySelector(`[data-panel="${panel}"]`)) return;
       const holder = document.createElement('div');
@@ -308,8 +304,9 @@
     const results = await Promise.all(queries.map(async ([key, query]) => [key, await query]));
     const failures = results.filter(([, result]) => result.error);
     if (failures.length) {
-      const missingPatch = failures.some(([, result]) => /does not exist|schema cache|relation/i.test(result.error.message || ''));
-      A.toast(missingPatch ? 'V9 database patch is required before all Admin tools can load.' : A.friendlyError(failures[0][1].error), 'error', 6000);
+      // These are extended/optional Admin modules. A valid Admin session should not
+      // receive a global red permission toast because one secondary table/view is unavailable.
+      failures.forEach(([key, result]) => console.warn(`Optional Admin module skipped: ${key}`, result.error?.message || result.error));
     }
     results.forEach(([key, result]) => {
       if (result.error) return;

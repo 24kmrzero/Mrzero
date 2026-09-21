@@ -1,19 +1,10 @@
-<!doctype html>
-<html lang="en" data-auth-scope="admin" data-theme="dark">
-<head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
-  <meta name="theme-color" content="#08090b"><title>Master Operations | 24K MR ZERO</title>
-  <link rel="icon" href="/assets/logo.png"><link rel="preconnect" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <link rel="stylesheet" href="/assets/css/v120-admin-operations.css?v=12.00">
-</head>
-<body>
-  <div id="opsLoader" class="ops-loading"><div><i class="fa-solid fa-spinner fa-spin"></i><p>Loading 24K Master Operations...</p></div></div>
-  <div id="opsApp" class="ops-shell" hidden>
-    <aside class="ops-side">
-      <div class="ops-brand"><img src="/assets/logo.png" alt="24K"><div><b>Advanced Operations</b><small>24K MR ZERO</small></div></div>
-      <nav class="ops-nav" id="opsNav">
+<!doctype html><html lang="en" data-auth-scope="admin"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><meta name="theme-color" content="#0A0A0A"><title>Advanced Operations | 24K Excellence</title><link rel="icon" href="/assets/logo.png?v=9.69"><link rel="stylesheet" href="/app.css?v=9.69"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"><link rel="stylesheet" href="/assets/platform-v962.css?v=9.69"><link rel="stylesheet" href="/assets/v969-fixes.css?v=9.70"><link rel="stylesheet" href="/assets/css/v120-admin-operations.css?v=12.00"><link rel="stylesheet" href="/assets/v1214-admin-unified.css?v=12.14"><style>
+body{background:#080808}#opsLoader{position:fixed;inset:0;z-index:9999}.app-content .ops-nav{display:flex;gap:7px;overflow:auto;padding:0 0 12px;margin:0 0 14px;border-bottom:1px solid #262626}.app-content .ops-nav button{min-width:max-content}.app-content .ops-content{padding:0}.app-content .ops-top{padding:0 0 14px;background:transparent;border:0}.app-content .ops-main{min-width:0}.app-content .ops-view{display:none}.app-content .ops-view.active{display:block}@media(max-width:760px){.app-content .ops-nav{padding-bottom:8px}}
+</style></head><body class="app-page"><div id="opsLoader" class="ops-loading"><div><i class="fa-solid fa-spinner fa-spin"></i><p>Loading Advanced Operations...</p></div></div><div id="opsApp" class="app-shell" hidden><aside class="app-side" id="side"><div class="app-side-brand"><a class="app-logo-home" href="/admin/" aria-label="Open Admin Dashboard"><img src="/assets/logo.png?v=9.69" alt="24K MR ZERO"></a></div><div class="app-side-scroll"><nav class="app-nav">
+<a href="/admin/"><i class="fa-solid fa-gauge-high"></i> Dashboard</a><a href="/admin/content/"><i class="fa-solid fa-layer-group"></i> Content</a><a href="/admin/courses/"><i class="fa-solid fa-graduation-cap"></i> Courses</a><a href="/admin/students/"><i class="fa-solid fa-users"></i> Students</a><a href="/admin/payments/"><i class="fa-solid fa-receipt"></i> Payments</a><a href="/admin/team-manager/"><i class="fa-solid fa-people-group"></i> Team & Links</a><a href="/admin/premium-access/"><i class="fa-solid fa-crown"></i> Premium</a><a href="/admin/support/"><i class="fa-solid fa-headset"></i> Support</a><a class="on" href="/admin/operations/"><i class="fa-solid fa-briefcase"></i> Operations</a>
+</nav></div><div class="app-side-foot"><a href="/"><i class="fa-solid fa-house"></i> Website Home</a><button id="logoutButton"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button></div></aside><main class="app-main"><header class="app-topbar"><button class="app-burger" id="burger"><i class="fa-solid fa-bars"></i></button><div class="app-title"><strong>24K Excellence Admin</strong><small>Simple control panel for daily Admin work</small></div><div class="app-search"><i class="fa-solid fa-magnifying-glass"></i><input type="search" placeholder="Advanced Operations"></div><a class="app-btn small outline" href="/admin/operations/"><i class="fa-solid fa-arrow-left"></i> Operations</a><button class="app-theme-toggle" type="button" data-theme-toggle><i class="fa-solid fa-sun"></i></button><div class="app-avatar">AD</div></header><div class="app-content"><nav class="ops-nav" id="opsNav">
         <button data-view="overview" class="active"><i class="fa-solid fa-gauge-high"></i><span>Overview</span></button>
-        <a href="/admin/team-manager/#links" style="text-decoration:none"><button type="button"><i class="fa-solid fa-bullseye"></i><span>Team & Links</span></button></a>
+        
         <button data-view="enrollments"><i class="fa-solid fa-user-graduate"></i><span>Enrollments</span></button>
         <button data-view="batches"><i class="fa-solid fa-layer-group"></i><span>Course Batches</span></button>
         <button data-view="clients"><i class="fa-solid fa-people-arrows"></i><span>Client Ownership</span></button>
@@ -24,10 +15,7 @@
         <button data-view="email"><i class="fa-solid fa-envelope-open-text"></i><span>Email Campaigns</span></button>
         <button data-view="desk"><i class="fa-solid fa-comments"></i><span>Live Desk</span></button>
       </nav>
-      <a class="ops-back btn" href="/admin/"><i class="fa-solid fa-arrow-left"></i> <span>Admin Dashboard</span></a>
-    </aside>
-    <main class="ops-main">
-      <header class="ops-top"><div><h1 id="opsTitle">Advanced Operations</h1><small id="opsSubtitle">Power tools — use only when needed</small></div><div class="actions"><button class="btn" id="opsRefresh"><i class="fa-solid fa-rotate"></i> Refresh</button><a class="btn gold" href="/team/" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i> Team Panel</a></div></header>
+      <header class="ops-top v14-ops-head"><div><h1 id="opsTitle">Master Operations</h1><small id="opsSubtitle">Complete operational control center</small></div><div class="actions"><button class="btn" id="opsRefresh"><i class="fa-solid fa-rotate"></i> Refresh</button><a class="btn gold" href="/team/" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i> Team Panel</a></div></header>
       <div class="ops-content">
         <section class="ops-view active" data-panel="overview">
           <div class="ops-head"><div><h2>Operations Overview</h2><p>Live user, enrollment, sales, team, finance and support snapshot.</p></div></div>
@@ -89,8 +77,7 @@
           <div class="chat-layout"><div class="thread-list" id="threadList"></div><div class="chat-panel"><div class="messages" id="messages"><div class="empty">Select a conversation.</div></div><form id="chatForm" class="chat-compose"><input id="chatMessage" placeholder="Reply to this conversation..." required><button class="btn gold">Send</button></form></div></div>
         </section>
       </div>
-    </main>
-  </div>
+    </div></main></div>
 
   <div id="linkModal" class="modal"><div class="modal-card"><div class="modal-head"><h3>Create / Edit Tracking Link</h3><button class="close" data-close="linkModal">×</button></div><form id="linkForm" class="form-grid"><input type="hidden" name="id"><div class="field full"><label>Link Name</label><input name="name" required></div><div class="field"><label>Destination</label><select name="destination_path"><option value="/free-course">Free Course Form</option><option value="/">Home</option><option value="/courses/">Courses</option><option value="/sign-up/">Sign Up</option><option value="/sign-in/">Sign In</option><option value="/student/">Student Panel</option></select></div><div class="field"><label>Reference Code</label><input name="ref_code" required placeholder="amal-b3-fb"></div><div class="field"><label>Source</label><select name="source"><option>Facebook</option><option>Instagram</option><option>WhatsApp</option><option>YouTube</option><option>Email</option><option>Google</option><option>Other</option></select></div><div class="field"><label>Campaign</label><input name="campaign"></div><div class="field full"><label>Course (optional)</label><select name="course_id" id="linkCourse"><option value="">Auto / none</option></select></div><div class="field full"><label>Fallback WhatsApp (optional)</label><input name="referral_whatsapp" placeholder="+60... Used only if no eligible Team manager is available"></div><label class="switch"><input type="checkbox" name="is_ad_link"> Ad / lead-generation link</label><label class="switch"><input type="checkbox" name="round_robin" checked> Round-robin lead assignment</label><label class="switch"><input type="checkbox" name="is_active" checked> Active</label><div class="field full form-actions"><button type="button" class="btn" data-close="linkModal">Cancel</button><button class="btn gold">Save Link</button></div></form></div></div>
 
@@ -107,12 +94,4 @@
   <div id="campaignModal" class="modal"><div class="modal-card"><div class="modal-head"><h3>Marketing Email Campaign</h3><button class="close" data-close="campaignModal">×</button></div><form id="campaignForm" class="form-grid"><div class="field full"><label>Subject</label><input name="subject" required></div><div class="field"><label>Audience</label><select name="audience"><option value="all_students">All Students</option><option value="free_students">Free Students</option><option value="paid_students">Paid Students</option><option value="course_students">Specific Course</option></select></div><div class="field"><label>Course</label><select name="course_id" id="campaignCourse"><option value="">Select if needed</option></select></div><div class="field full"><label>Email HTML / Content</label><textarea name="body_html" required style="min-height:220px" placeholder="Write your campaign content. Basic HTML is supported."></textarea></div><div class="field full form-actions"><button type="button" class="btn" data-close="campaignModal">Cancel</button><button class="btn gold">Save Draft</button></div></form></div></div>
 
   <div id="toast" class="toast"></div>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="/assets/js/config.js?v=12.00"></script><script src="/assets/js/core.js?v=12.00"></script><script src="/assets/js/v120-admin-operations.js?v=12.11"></script>
-<script>
-setTimeout(function(){
-  var v=new URLSearchParams(location.search).get('view');
-  if(!v)return;
-  var b=document.querySelector('[data-view="'+v+'"]');
-  if(b)b.click();
-},900);
-</script></body></html>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="/assets/js/config.js?v=12.14"></script><script src="/assets/js/core.js?v=12.14"></script><script src="/assets/js/v120-admin-operations.js?v=12.11"></script><script>(function(){document.getElementById('burger')?.addEventListener('click',()=>document.getElementById('side')?.classList.toggle('open'));document.getElementById('logoutButton')?.addEventListener('click',async()=>{try{await window.App?.logout?.()}catch{location.href='/admin-login.html'}});setTimeout(()=>{const v=new URLSearchParams(location.search).get('view');if(v)document.querySelector('[data-view="'+v+'"]')?.click()},900)})();</script></body></html>

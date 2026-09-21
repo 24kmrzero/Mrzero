@@ -1,0 +1,20 @@
+24K MR ZERO V12.14 — FINAL USER-FRIENDLY ADMIN + LINK LEADS
+
+LIVE SUPABASE IS ALREADY UPDATED
+- Basic Level 1 Course: FREE, USD 0.
+- Level 2 Course: PAID, USD 250.
+- Required Link Performance / Link Resolution / Team assignment RPCs are live.
+- admin_get_link_leads is live.
+- Premium Admin RPCs are live.
+- free-course-enroll Edge Function is ACTIVE v6.
+
+WEBSITE DEPLOYMENT
+1. Upload/overwrite the files in this ZIP, preserving the folder structure.
+2. Do NOT run the SQL backups on the same live project; they are included for recovery/reference only.
+3. Hard refresh Admin: Ctrl + Shift + R.
+4. Open /admin/ and test Dashboard -> Content -> Courses -> Students -> Payments -> Team & Links -> Premium -> Support -> Operations.
+5. Test one Normal Link and one Ad Link using Link Details.
+
+IMPORTANT
+- The Admin shell is intentionally shared. Page navigation changes the center content while the sidebar/topbar/theme remain the same.
+- Technical link settings are handled in the background; normal Admin flow uses human-friendly labels.

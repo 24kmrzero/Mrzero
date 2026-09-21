@@ -33,25 +33,32 @@
   async function loadAll() {
     const sb=A.supabase;
     try { await sb.rpc('refresh_course_statuses_from_schedule'); } catch (error) { console.warn('Course schedule status refresh skipped:', error?.message || error); }
-    const responses=await Promise.all([
-      sb.from('profiles').select('*').order('created_at',{ascending:false}),
-      sb.from('courses').select('*').order('created_at',{ascending:false}),
-      sb.from('course_sessions').select('*').order('starts_at'),
-      sb.from('course_session_links').select('*'),
-      sb.from('payments').select('*').order('created_at',{ascending:false}),
-      sb.from('signals').select('*').order('published_at',{ascending:false}),
-      sb.from('signal_updates').select('*').order('created_at',{ascending:false}),
-      sb.from('charts').select('*').order('published_at',{ascending:false}),
-      sb.from('articles').select('*').order('published_at',{ascending:false}),
-      sb.from('announcements').select('*').order('published_at',{ascending:false}),
-      sb.from('course_resources').select('*').order('created_at',{ascending:false}),
-      sb.from('support_requests').select('*').order('created_at',{ascending:false}),
-      sb.from('payment_methods').select('*').order('sort_order')
-    ]);
-    const error=responses.find(r=>r.error)?.error;
-    if(error) throw error;
-    [state.profiles,state.courses,state.sessions,,state.payments,state.signals,state.signalUpdates,state.charts,state.articles,state.announcements,state.resources,state.support,state.methods]=responses.map(r=>r.data||[]);
-    state.sessionLinks=Object.fromEntries((responses[3].data||[]).map(r=>[r.course_session_id,r.meet_url]));
+    const requests=[
+      ['profiles',sb.from('profiles').select('*').order('created_at',{ascending:false}),true],
+      ['courses',sb.from('courses').select('*').order('created_at',{ascending:false}),true],
+      ['sessions',sb.from('course_sessions').select('*').order('starts_at'),false],
+      ['sessionLinks',sb.from('course_session_links').select('*'),false],
+      ['payments',sb.from('payments').select('*').order('created_at',{ascending:false}),true],
+      ['signals',sb.from('signals').select('*').order('published_at',{ascending:false}),false],
+      ['signalUpdates',sb.from('signal_updates').select('*').order('created_at',{ascending:false}),false],
+      ['charts',sb.from('charts').select('*').order('published_at',{ascending:false}),false],
+      ['articles',sb.from('articles').select('*').order('published_at',{ascending:false}),false],
+      ['announcements',sb.from('announcements').select('*').order('published_at',{ascending:false}),false],
+      ['resources',sb.from('course_resources').select('*').order('created_at',{ascending:false}),false],
+      ['support',sb.from('support_requests').select('*').order('created_at',{ascending:false}),false],
+      ['methods',sb.from('payment_methods').select('*').order('sort_order'),false]
+    ];
+    const results=await Promise.all(requests.map(async([key,query,critical])=>[key,critical,await query]));
+    for(const [key,critical,response] of results){
+      if(response.error){
+        if(critical) throw response.error;
+        console.warn(`Optional Admin data skipped: ${key}`,response.error?.message||response.error);
+        if(key==='sessionLinks') state.sessionLinks={}; else if(key in state) state[key]=[];
+        continue;
+      }
+      if(key==='sessionLinks') state.sessionLinks=Object.fromEntries((response.data||[]).map(r=>[r.course_session_id,r.meet_url]));
+      else if(key in state) state[key]=response.data||[];
+    }
   }
 
   function renderAll(){populateCourseSelects();renderDashboard();renderSignals();renderCharts();renderArticles();renderAnnouncements();renderCourses();renderSessions();renderResources();renderPayments();renderStudents();renderSupport();renderMethods();const p=state.payments.filter(x=>['received','under_review'].includes(x.status)).length;document.getElementById('pendingPaymentCount').textContent=p;document.getElementById('topPendingCount').textContent=p;window.dispatchEvent(new CustomEvent('24k:admin-base-updated',{detail:state}));}
@@ -387,11 +394,12 @@
       const discount=type==='free'?null:n(v.discount_price);
       if(type==='paid'&&(!Number.isFinite(price)||price<=0)){const err=new Error('Paid course price must be greater than zero.');err.field=f.elements.price;throw err;}
       if(discount!==null&&(!Number.isFinite(discount)||discount<0||discount>price)){const err=new Error('Discount price must be between zero and the regular price.');err.field=f.elements.discount_price;throw err;}
-      const sessions=collectCourseSessions();
-      if(!sessions.length)throw new Error('Add at least one class session.');
       const sessionRows=[...document.querySelectorAll('[data-course-session-row]')];
+      const rawSessions=collectCourseSessions();
+      const activeSessionIndexes=rawSessions.map((session,index)=>({session,index})).filter(({session})=>session.id||session.starts_at||session.topic||!/^Class \d+$/i.test(session.title||'')).map(x=>x.index);
+      const sessions=activeSessionIndexes.map((originalIndex,index)=>({...rawSessions[originalIndex],session_number:index+1,_originalIndex:originalIndex}));
       sessions.forEach((session,index)=>{
-        const row=sessionRows[index];
+        const row=sessionRows[session._originalIndex];
         const label=`Class ${session.session_number}`;
         requireCourseField(session.title,`${label} title is required.`,row?.querySelector('[data-session-field="title"]'));
         requireCourseField(session.topic,`${label} topic is required.`,row?.querySelector('[data-session-field="topic"]'));
@@ -413,7 +421,7 @@
         course_type:type,
         price,
         discount_price:discount,
-        currency:['PKR','USDT'].includes(String(v.currency||'PKR').toUpperCase())?String(v.currency||'PKR').toUpperCase():'PKR',
+        currency:['PKR','USDT','USD'].includes(String(v.currency||'USD').toUpperCase())?String(v.currency||'USD').toUpperCase():'USD',
         status:'active',
         enrollment_open:checked(f,'enrollment_open'),
         thumbnail_url:existingThumbnail||null,
@@ -468,7 +476,7 @@
       const formTitle=document.getElementById('courseFormTitle');if(formTitle)formTitle.textContent='Add Course';
       renderAll();
       await flushEmailQueueQuiet();
-      A.toast(`Course, ${data.sessions_saved||sessions.length} class session${sessions.length===1?'':'s'}${file?' and thumbnail':''} saved successfully.`,'success',5500);
+      A.toast(sessions.length?`Course, ${data.sessions_saved||sessions.length} class session${sessions.length===1?'':'s'}${file?' and thumbnail':''} saved successfully.`:`Course${file?' and thumbnail':''} saved successfully. Add class dates later from Live Classes.`,'success',5500);
     }catch(error){
       if(uploaded?.path&&!thumbnailCommitted)try{await A.supabase.storage.from('content-assets').remove([uploaded.path]);}catch{}
       console.error('Course save failed:',error);
@@ -524,5 +532,5 @@
   function updateResourceSessionOptions(){const c=document.getElementById('resourceCourseSelect').value;document.getElementById('resourceSessionSelect').innerHTML='<option value="">General Course Resource</option>'+state.sessions.filter(s=>s.course_id===c).map(s=>`<option value="${s.id}">Session ${s.session_number}: ${A.escapeHtml(s.title)}</option>`).join('');}
   function subscribeRealtime(){let timer;const refresh=()=>{clearTimeout(timer);timer=setTimeout(async()=>{try{await loadAll();renderAll();}catch(e){console.error(e);}},350);};A.supabase.channel('admin-live').on('postgres_changes',{event:'*',schema:'public',table:'signals'},refresh).on('postgres_changes',{event:'*',schema:'public',table:'signal_updates'},refresh).on('postgres_changes',{event:'*',schema:'public',table:'payments'},refresh).on('postgres_changes',{event:'*',schema:'public',table:'support_requests'},refresh).on('postgres_changes',{event:'*',schema:'public',table:'profiles'},refresh).subscribe();}
 
-  function formValues(f){return Object.fromEntries(new FormData(f).entries());}function checked(f,nm){return Boolean(f.elements[nm]?.checked);}function omit(o,...k){return Object.fromEntries(Object.entries(o).filter(([x])=>!k.includes(x)));}function slugify(t){return String(t).toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')+'-'+Date.now().toString().slice(-5);}function n(v){return v===''||v==null?null:Number(v);}function num(v){return v==null?'—':Number(v).toLocaleString('en-US',{maximumFractionDigits:5});}function signed(v){const x=Number(v||0);return `${x>0?'+':''}${Number.isInteger(x)?x:x.toFixed(1)}`;}function referenceEntry(a,b){return a==null?null:b==null?a:(Number(a)+Number(b))/2;}function displaySymbol(s){const x=String(s||'').replace('/','').toUpperCase();return x.length===6?`${x.slice(0,3)}/${x.slice(3)}`:x;}function entryText(s){return `${num(s.entry_from)}${s.entry_to!=null?` – ${num(s.entry_to)}`:''}`;}function formatMeasure(v,u){return v==null||!Number.isFinite(v)?'—':`${Number(v.toFixed(1)).toLocaleString()} ${u}`;}function audienceLabel(v){return {all_students:'All Students',course_students:'Course Students',premium_users:'Premium Users'}[v]||'All Students';}function eventLabel(v){return {published:'Signal Published',edited:'Signal Edited',move_to_be:'SL Moved to Breakeven',tp1_hit:'TP1 Hit',tp2_hit:'TP2 Hit',tp3_hit:'TP3 Hit',tp4_hit:'TP4 Hit',sl_hit:'SL Hit',breakeven_hit:'Breakeven Hit',manually_closed:'Trade Closed Manually',cancelled:'Signal Cancelled'}[v]||A.statusLabel(v);}function eventTone(v){return v==='sl_hit'||v==='cancelled'?'bad':v==='breakeven_hit'||v==='move_to_be'?'warn':v==='edited'?'neutral':'ok';}function pktToIso(v){return new Date(`${v}:00+05:00`).toISOString();}function isoToLocalInput(v){if(!v)return'';const d=new Date(v),pad=x=>String(x).padStart(2,'0');return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;}function isoToPktInput(v){if(!v)return'';return new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Karachi',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(v)).replace(' ','T');}function profileName(id){return state.profiles.find(p=>p.id===id)?.full_name||'Student';}function profileEmail(id){return state.profiles.find(p=>p.id===id)?.email||'';}function courseName(id){return state.courses.find(c=>c.id===id)?.title||'Course';}function courseCurrency(id){const raw=String(state.courses.find(c=>c.id===id)?.currency||'PKR').toUpperCase();return raw==='USD'||raw==='MYR'?'USDT':raw;}function empty(t,i){return `<div class="empty-state"><i class="fa-solid ${i}"></i>${A.escapeHtml(t)}</div>`;}function attr(v){return A.escapeHtml(v).replace(/`/g,'&#96;');}
+  function formValues(f){return Object.fromEntries(new FormData(f).entries());}function checked(f,nm){return Boolean(f.elements[nm]?.checked);}function omit(o,...k){return Object.fromEntries(Object.entries(o).filter(([x])=>!k.includes(x)));}function slugify(t){return String(t).toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')+'-'+Date.now().toString().slice(-5);}function n(v){return v===''||v==null?null:Number(v);}function num(v){return v==null?'—':Number(v).toLocaleString('en-US',{maximumFractionDigits:5});}function signed(v){const x=Number(v||0);return `${x>0?'+':''}${Number.isInteger(x)?x:x.toFixed(1)}`;}function referenceEntry(a,b){return a==null?null:b==null?a:(Number(a)+Number(b))/2;}function displaySymbol(s){const x=String(s||'').replace('/','').toUpperCase();return x.length===6?`${x.slice(0,3)}/${x.slice(3)}`:x;}function entryText(s){return `${num(s.entry_from)}${s.entry_to!=null?` – ${num(s.entry_to)}`:''}`;}function formatMeasure(v,u){return v==null||!Number.isFinite(v)?'—':`${Number(v.toFixed(1)).toLocaleString()} ${u}`;}function audienceLabel(v){return {all_students:'All Students',course_students:'Course Students',premium_users:'Premium Users'}[v]||'All Students';}function eventLabel(v){return {published:'Signal Published',edited:'Signal Edited',move_to_be:'SL Moved to Breakeven',tp1_hit:'TP1 Hit',tp2_hit:'TP2 Hit',tp3_hit:'TP3 Hit',tp4_hit:'TP4 Hit',sl_hit:'SL Hit',breakeven_hit:'Breakeven Hit',manually_closed:'Trade Closed Manually',cancelled:'Signal Cancelled'}[v]||A.statusLabel(v);}function eventTone(v){return v==='sl_hit'||v==='cancelled'?'bad':v==='breakeven_hit'||v==='move_to_be'?'warn':v==='edited'?'neutral':'ok';}function pktToIso(v){return new Date(`${v}:00+05:00`).toISOString();}function isoToLocalInput(v){if(!v)return'';const d=new Date(v),pad=x=>String(x).padStart(2,'0');return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;}function isoToPktInput(v){if(!v)return'';return new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Karachi',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(v)).replace(' ','T');}function profileName(id){return state.profiles.find(p=>p.id===id)?.full_name||'Student';}function profileEmail(id){return state.profiles.find(p=>p.id===id)?.email||'';}function courseName(id){return state.courses.find(c=>c.id===id)?.title||'Course';}function courseCurrency(id){const raw=String(state.courses.find(c=>c.id===id)?.currency||'USD').toUpperCase();return ['USD','PKR','USDT','MYR'].includes(raw)?raw:'USD';}function empty(t,i){return `<div class="empty-state"><i class="fa-solid ${i}"></i>${A.escapeHtml(t)}</div>`;}function attr(v){return A.escapeHtml(v).replace(/`/g,'&#96;');}
 })().catch(error=>{console.error(error);window.App?.toast(window.App.friendlyError(error,'Could not load admin panel.'),'error');document.getElementById('pageLoader')?.classList.add('hidden');document.getElementById('adminApp')?.classList.remove('hidden');});

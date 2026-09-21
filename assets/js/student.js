@@ -1095,7 +1095,7 @@
     if (choice === 'usdt') {
       const enabled=state.paymentMethods.some(m=>/usdt|trc\s*20|trc20/i.test(`${m.name||''} ${m.instructions||''}`));
       if(!enabled) return A.toast('USDT TRC20 is currently disabled by Admin.','warning');
-      if (currency !== 'USDT') return A.toast('USDT TRC20 is available for courses priced in USDT. This course is currently priced in PKR.', 'warning');
+      if (!['USDT','USD'].includes(currency)) return A.toast('USDT TRC20 is available for USD / USDT priced courses. This course uses a different currency.', 'warning');
       A.closeModal('paymentMethodChoiceModal');
       return openUsdtPaymentModal(courseId);
     }
@@ -1111,7 +1111,7 @@
     if (!usdtMethods.length) return A.toast('USDT TRC20 payment method is not configured yet. Please contact Admin.', 'warning');
     const form = document.getElementById('paymentForm');
     form.reset(); form.elements.course_id.value = course.id; form.dataset.supersedesPaymentId = pending?.status==='resubmission_required'?pending.id:''; const payable=course.discount_price!=null?Number(course.discount_price):Number(course.price); form.elements.amount.value = payable;
-    document.getElementById('paymentCourseSummary').innerHTML = `<b>${A.escapeHtml(course.title)}</b><br>Instructor: Malik Zameer · Amount: USDT ${Number(payable).toLocaleString('en-US',{maximumFractionDigits:2})}<br><small>Pay using TRC20 network and submit the TXID + receipt for Admin approval.</small>`;
+    document.getElementById('paymentCourseSummary').innerHTML = `<b>${A.escapeHtml(course.title)}</b><br>Instructor: Malik Zameer · Amount: ${String(course.currency||'').toUpperCase()==='USD'?`USD ${Number(payable).toLocaleString('en-US',{maximumFractionDigits:2})} (Pay ${Number(payable).toLocaleString('en-US',{maximumFractionDigits:2})} USDT)`:`USDT ${Number(payable).toLocaleString('en-US',{maximumFractionDigits:2})}`}<br><small>Pay using TRC20 network and submit the TXID + receipt for Admin approval.</small>`;
     document.getElementById('paymentMethodSelect').innerHTML = usdtMethods.map(m => `<option value="${m.id}">${A.escapeHtml(m.name)}</option>`).join('');
     renderPaymentMethodInfo();
     document.getElementById('paymentMethodSelect').onchange = renderPaymentMethodInfo;
