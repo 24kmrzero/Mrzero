@@ -64,11 +64,27 @@
     A.setLoading(button, true, 'Sending...');
     try {
       sessionStorage.setItem('24k_recovery_kind', 'admin');
-      const { error } = await A.supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password/`
-      });
-      if (error) throw error;
-      A.toast('Admin password reset link sent.', 'success');
+      let deliveredByCustomFlow = false;
+      try {
+        const { data, error } = await A.supabase.functions.invoke('request-password-reset', {
+          body: { email, account_role: 'admin' }
+        });
+        if (error) throw error;
+        if (data?.error) throw new Error(data.error);
+        deliveredByCustomFlow = true;
+      } catch (customError) {
+        console.warn('Branded password reset delivery unavailable; using account email fallback.', customError?.message || customError);
+      }
+
+      if (!deliveredByCustomFlow) {
+        const siteUrl = String(A.cfg.SITE_URL || window.location.origin).replace(/\/$/, '');
+        const { error } = await A.supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${siteUrl}/reset-password/`
+        });
+        if (error) throw error;
+      }
+
+      A.toast('If this Admin account exists, a secure password reset link has been sent. Check Inbox and Spam.', 'success');
       A.closeModal('adminForgotModal');
     } catch (error) {
       A.toast(A.friendlyError(error, 'Could not send Admin reset link.'), 'error');

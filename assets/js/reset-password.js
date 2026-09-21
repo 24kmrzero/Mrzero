@@ -67,10 +67,19 @@
   }
 
   async function resolveSession() {
+    const search = new URLSearchParams(location.search);
+    const tokenHash = search.get('token_hash');
+    const tokenType = search.get('type');
+    if (tokenHash && tokenType) {
+      const verified = await sb.auth.verifyOtp({ token_hash: tokenHash, type: tokenType });
+      if (!verified.error && verified.data?.session?.user) return verified.data.session;
+      if (verified.error) console.warn('Recovery token verification failed:', verified.error.message || verified.error);
+    }
+
     let { data, error } = await sb.auth.getSession();
     if (!error && data?.session?.user) return data.session;
 
-    const code = new URLSearchParams(location.search).get('code');
+    const code = search.get('code');
     if (code) {
       const exchanged = await sb.auth.exchangeCodeForSession(code);
       if (!exchanged.error && exchanged.data?.session?.user) return exchanged.data.session;

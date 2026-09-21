@@ -1,0 +1,14 @@
+24K MR ZERO V12.06 QA
+
+PASS - Student auth.js JavaScript syntax
+PASS - Admin auth.js JavaScript syntax
+PASS - reset-password.js JavaScript syntax
+PASS - Forgot Password popup no longer names backend provider
+PASS - Signup success message no longer names backend provider
+PASS - Recovery page supports direct token_hash + recovery verification
+PASS - Password reset request keeps generic anti-enumeration response
+PASS - Server-side rate limits: 3/email + 12/IP per 15 minutes
+PASS - Raw email/IP are not stored in password_reset_requests
+PASS - Native Auth password reset retained as fallback
+
+Edge Function TypeScript was statically checked. Local tsc only reports expected Deno/remote-import environment resolution errors; no application syntax error was reported.

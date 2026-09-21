@@ -179,7 +179,7 @@
       if (data.session?.user) {
         await tracking?.record('signup').catch(() => {});
         const profile = await getProfileWithRetry(data.session.user.id);
-        toast('Account created successfully. Email confirmation is disabled in Supabase, so no verification email was required.', 'warning');
+        toast('Account created successfully. Email confirmation is not required for this account.', 'success');
         await finishStudentLogin(data.session.user, profile);
         return;
       }
@@ -207,11 +207,27 @@
     setLoading(button, true, 'Sending...');
     try {
       sessionStorage.setItem('24k_recovery_kind', 'student');
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password/`
-      });
-      if (error) throw error;
-      toast('Student password reset link sent.', 'success');
+      let deliveredByCustomFlow = false;
+      try {
+        const { data, error } = await supabase.functions.invoke('request-password-reset', {
+          body: { email, account_role: 'student' }
+        });
+        if (error) throw error;
+        if (data?.error) throw new Error(data.error);
+        deliveredByCustomFlow = true;
+      } catch (customError) {
+        console.warn('Branded password reset delivery unavailable; using account email fallback.', customError?.message || customError);
+      }
+
+      if (!deliveredByCustomFlow) {
+        const cfgSite = String(cfg.SITE_URL || window.location.origin).replace(/\/$/, '');
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${cfgSite}/reset-password/`
+        });
+        if (error) throw error;
+      }
+
+      toast('If an account exists for this email, a secure password reset link has been sent. Please check Inbox and Spam.', 'success');
       closeModal('forgotModal'); form.reset();
     } catch (error) { toast(friendlyError(error, 'Could not send reset link.'), 'error'); }
     finally { setLoading(button, false); }
