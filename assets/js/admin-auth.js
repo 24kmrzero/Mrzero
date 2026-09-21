@@ -2,7 +2,7 @@
   const A = window.App;
   async function audit(action,status='success',details={},token=''){try{await fetch(`${A.cfg.SUPABASE_URL}/functions/v1/audit-event`,{method:'POST',headers:{'Content-Type':'application/json','apikey':A.cfg.SUPABASE_ANON_KEY,...(token?{'Authorization':`Bearer ${token}`}:{})},body:JSON.stringify({action,status,actor_email:details.email||null,details})});}catch{}}
   if (!A.configured || !A.supabase) {
-    A.toast('Website setup is incomplete. Configure Supabase before using Admin Login.', 'error');
+    A.toast('Admin authentication setup is incomplete. Please contact support.', 'error');
     document.querySelectorAll('form button[type="submit"]').forEach(button => button.disabled = true);
     return;
   }
@@ -64,32 +64,17 @@
     A.setLoading(button, true, 'Sending...');
     try {
       sessionStorage.setItem('24k_recovery_kind', 'admin');
-      let deliveredByCustomFlow = false;
-      try {
-        const { data, error } = await A.supabase.functions.invoke('request-password-reset', {
-          body: { email, account_role: 'admin' }
-        });
-        if (error) throw error;
-        if (data?.error) throw new Error(data.error);
-        deliveredByCustomFlow = true;
-      } catch (customError) {
-        console.warn('Branded password reset delivery unavailable; using account email fallback.', customError?.message || customError);
-      }
-
-      if (!deliveredByCustomFlow) {
-        const siteUrl = String(A.cfg.SITE_URL || window.location.origin).replace(/\/$/, '');
-        const { error } = await A.supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: `${siteUrl}/reset-password/`
-        });
-        if (error) throw error;
-      }
-
+      const response = await A.supabase.functions.invoke('auth-email', { body: { action: 'password_reset', email } });
+      if (response.error) throw response.error;
+      if (response.data?.error) throw new Error(response.data.error);
       A.toast('If this Admin account exists, a secure password reset link has been sent. Check Inbox and Spam.', 'success');
       A.closeModal('adminForgotModal');
     } catch (error) {
+      console.error('Admin password reset email failed:', error);
       A.toast(A.friendlyError(error, 'Could not send Admin reset link.'), 'error');
     } finally {
       A.setLoading(button, false);
     }
   });
+
 })();

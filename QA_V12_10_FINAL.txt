@@ -1,0 +1,37 @@
+24K MR ZERO — V12.10 FINAL VERIFIED QA
+
+FINAL STATIC QA
+- JavaScript syntax: 60 files checked, 0 syntax errors.
+- Active HTML pages checked: 15.
+- Broken local asset references: 0.
+- Duplicate HTML IDs: 0.
+- Active Infinity gateway calls: 0.
+- Critical changed script cache versions: all v=12.10.
+- Team lot-progress UI uses 0.3 / 0.5 / 0.7 / 1.0 tiers.
+
+LIVE SUPABASE QA
+- Team legacy schema columns remaining: 0.
+- Team command center smoke test: PASS.
+- Team range metrics smoke test: PASS.
+- Temporary QA Team accounts after cleanup: 0.
+- Infinity DB functions remaining: 0.
+- Email queue pending: 0.
+- Email queue failed: 0.
+- Email delivery cron active: YES.
+- Recent email cron responses: HTTP 200, provider SMTP.
+- Verified duplicate cleanup indexes remaining: 0.
+
+FIXES INCLUDED
+- Team Manager “column x.team_id does not exist” root cause fixed.
+- Legacy Team table columns normalized to current V12 names.
+- Team Email / WhatsApp fields returned correctly in Admin Team Manager.
+- Shared broker lot commission tiers aligned to 0.3 / 0.5 / 0.7 / 1.0.
+- Team login failed-attempt lockout protection.
+- Lead assignment respects active assignments and Receive Leads.
+- Browser cache bust for changed auth/student/admin/team scripts.
+- User-facing configuration messages made provider-neutral.
+- Reproducible idempotent SQL migration included.
+
+NOT MASS-CHANGED
+- Legacy overlapping RLS policies were not bulk-deleted because that is higher-risk and not required for current functionality.
+- pg_net extension schema was not moved because current email cron depends on it.

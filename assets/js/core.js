@@ -375,7 +375,7 @@
   }
 
   async function getCurrentUser() {
-    if (!configured || !supabase) throw new Error('Supabase is not configured. Add the project URL and publishable key in assets/js/config.js.');
+    if (!configured || !supabase) throw new Error('Website connection is unavailable. Please contact support.');
 
     // Read the persisted local session first. This prevents a normal page refresh
     // from being treated as a logout while Supabase is restoring/refreshing tokens.
@@ -396,7 +396,7 @@
   }
 
   async function getProfile(userId) {
-    if (!configured || !supabase) throw new Error('Supabase is not configured. Add the project URL and publishable key in assets/js/config.js.');
+    if (!configured || !supabase) throw new Error('Website connection is unavailable. Please contact support.');
     try { await supabase.rpc('sync_current_access_status'); } catch (error) { console.warn('Access status sync skipped:', error?.message || error); }
     const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single();
     if (error) throw error;

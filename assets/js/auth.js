@@ -4,7 +4,7 @@
   const tracking = window.Tracking;
   async function audit(action,status='success',details={},token='') { try { await fetch(`${cfg.SUPABASE_URL}/functions/v1/audit-event`, { method:'POST', headers:{'Content-Type':'application/json','apikey':cfg.SUPABASE_ANON_KEY,...(token?{'Authorization':`Bearer ${token}`}:{})}, body:JSON.stringify({action,status,actor_email:details.email||null,details}) }); } catch {} }
   if (!configured || !supabase) {
-    toast('Website setup is incomplete. Add Supabase URL and publishable key in assets/js/config.js.', 'error');
+    toast('Website authentication setup is incomplete. Please contact support.', 'error');
     document.querySelectorAll('form button[type="submit"]').forEach(button => button.disabled = true);
     return;
   }
@@ -150,14 +150,12 @@
     const email = String(values.email || '').trim().toLowerCase();
     setLoading(button, true, 'Creating account...');
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password: String(values.password || ''),
-        options: {
-          // This is only a fallback if mandatory Supabase confirmation is accidentally left ON.
-          // Normal V9.46 flow uses an immediate session and application-level verification later.
-          emailRedirectTo: `${window.location.origin}/sign-in/?verified=1`,
-          data: {
+      const response = await supabase.functions.invoke('auth-email', {
+        body: {
+          action: 'signup',
+          email,
+          password: String(values.password || ''),
+          metadata: {
             full_name: String(values.full_name || '').trim(),
             whatsapp: String(values.whatsapp || '').trim(),
             country: String(values.country || '').trim(),
@@ -172,22 +170,14 @@
           }
         }
       });
-      if (error) throw error;
-      await audit('student_signup','success',{email},data.session?.access_token||'');
+      if (response.error) throw response.error;
+      if (response.data?.error) throw new Error(response.data.error);
+      await tracking?.record('signup').catch(() => {});
+      await audit('student_signup','success',{email});
       form.reset();
-
-      if (data.session?.user) {
-        await tracking?.record('signup').catch(() => {});
-        const profile = await getProfileWithRetry(data.session.user.id);
-        toast('Account created successfully. Email confirmation is not required for this account.', 'success');
-        await finishStudentLogin(data.session.user, profile);
-        return;
-      }
-
-      // Safe fallback when Supabase mandatory Confirm Email is still enabled.
       sessionStorage.setItem('24k_pending_signup_email', email);
       localStorage.setItem('24k_pending_signup_email', email);
-      toast('Account created. We sent a verification email—check your inbox and spam folder before signing in.', 'success');
+      toast('Account created. A verification email has been sent. Check Inbox and Spam.', 'success');
       window.location.replace(checkEmailUrl());
     } catch (error) {
       await audit('signup_attempt','failed',{email,scope:'student'});
@@ -207,29 +197,15 @@
     setLoading(button, true, 'Sending...');
     try {
       sessionStorage.setItem('24k_recovery_kind', 'student');
-      let deliveredByCustomFlow = false;
-      try {
-        const { data, error } = await supabase.functions.invoke('request-password-reset', {
-          body: { email, account_role: 'student' }
-        });
-        if (error) throw error;
-        if (data?.error) throw new Error(data.error);
-        deliveredByCustomFlow = true;
-      } catch (customError) {
-        console.warn('Branded password reset delivery unavailable; using account email fallback.', customError?.message || customError);
-      }
-
-      if (!deliveredByCustomFlow) {
-        const cfgSite = String(cfg.SITE_URL || window.location.origin).replace(/\/$/, '');
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: `${cfgSite}/reset-password/`
-        });
-        if (error) throw error;
-      }
-
-      toast('If an account exists for this email, a secure password reset link has been sent. Please check Inbox and Spam.', 'success');
+      const response = await supabase.functions.invoke('auth-email', { body: { action: 'password_reset', email } });
+      if (response.error) throw response.error;
+      if (response.data?.error) throw new Error(response.data.error);
+      toast('If an account exists for this email, a secure password reset link has been sent. Check Inbox and Spam.', 'success');
       closeModal('forgotModal'); form.reset();
-    } catch (error) { toast(friendlyError(error, 'Could not send reset link.'), 'error'); }
-    finally { setLoading(button, false); }
+    } catch (error) {
+      console.error('Password reset email failed:', error);
+      toast(friendlyError(error, 'Could not send reset link.'), 'error');
+    } finally { setLoading(button, false); }
   });
+
 })();

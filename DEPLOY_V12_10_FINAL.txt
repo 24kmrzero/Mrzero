@@ -1,0 +1,20 @@
+24K MR ZERO — V12.10 FINAL VERIFIED AUDIT PATCH
+
+LIVE SUPABASE STATUS
+- Team legacy schema normalized to current V12 column names.
+- Team Manager missing-column error fixed.
+- Admin Team Manager returns Email + WhatsApp.
+- Team command center / range metrics smoke-tested successfully.
+- Shared lot tiers normalized to 0.3 / 0.5 / 0.7 / 1.0.
+- Team login gets failed-attempt lockout protection.
+- Lead assignment respects active link assignments and Receive Leads.
+- SMTP email worker/reset flow remains operational.
+- Infinity DB payment RPCs remain removed; bank + USDT are manual Admin approval.
+- Duplicate verified indexes removed and selected function search_path values hardened.
+
+DEPLOY WEBSITE FILES
+Overwrite the files included in this ZIP, then hard refresh (Ctrl+Shift+R).
+
+SQL
+The V12.10 database migration has ALREADY been applied to the connected live Supabase project.
+28_PROJECT_FINAL_AUDIT_V12_10.sql is included as the reproducible backup/migration file. Do not rerun it on the same live project unless needed; it is designed to be idempotent.
