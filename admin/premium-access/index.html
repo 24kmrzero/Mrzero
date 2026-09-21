@@ -1,1 +1,69 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Opening 24K Admin</title></head><body><script>(function(){location.replace('/admin-dashboard.html#premium-access');})();</script><noscript><meta http-equiv="refresh" content="0;url=/admin-dashboard.html#premium-access"></noscript></body></html>
+<!doctype html>
+<html lang="en" data-auth-scope="admin" data-theme="dark">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<meta name="theme-color" content="#090909"><title>Premium | 24K Admin</title>
+<link rel="icon" href="/assets/logo.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="/assets/css/v1213-admin-friendly.css?v=12.13">
+
+</head>
+<body class="uf-page" data-friendly-section="premium">
+<div class="uf-shell">
+<aside class="uf-side">
+      <a class="uf-brand" href="/admin/"><img src="/assets/logo.png" alt="24K"><div><b>24K Admin</b><small>Simple Control Panel</small></div></a>
+      <button class="uf-close" type="button" data-close-side aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+      <nav class="uf-nav"><a class="" href="/admin/"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></a>
+<a class="" href="/admin/content/"><i class="fa-solid fa-layer-group"></i><span>Content</span></a>
+<a class="" href="/admin/courses/"><i class="fa-solid fa-graduation-cap"></i><span>Courses</span></a>
+<a class="" href="/admin/students/"><i class="fa-solid fa-users"></i><span>Students</span></a>
+<a class="" href="/admin/payments/"><i class="fa-solid fa-receipt"></i><span>Payments</span></a>
+<a class="" href="/admin/team-manager/"><i class="fa-solid fa-people-group"></i><span>Team & Links</span></a>
+<a class="on" href="/admin/premium-access/"><i class="fa-solid fa-crown"></i><span>Premium</span></a>
+<a class="" href="/admin/support/"><i class="fa-solid fa-headset"></i><span>Support</span></a>
+<a class="" href="/admin/operations/"><i class="fa-solid fa-briefcase"></i><span>Operations</span></a></nav>
+      <div class="uf-side-foot"><a href="/"><i class="fa-solid fa-house"></i><span>Website Home</span></a><button type="button" data-friendly-logout><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Logout</span></button></div>
+    </aside>
+<div class="uf-main">
+<header class="uf-top"><button class="uf-menu" type="button" data-open-side><i class="fa-solid fa-bars"></i></button><div><h1>Premium</h1><p>Premium users, requests and settings — without the heavy old screen.</p></div><a class="uf-admin-home" href="/admin/"><i class="fa-solid fa-gauge-high"></i> Admin Home</a></header>
+<main class="uf-content">
+<div class="uf-hero"><div><h2>Premium access made simple</h2><p>See who has access, grant or extend access, and review payment / broker requests.</p></div><div class="uf-actions"><button class="uf-btn gold" id="grantPremium"><i class="fa-solid fa-crown"></i> Grant Access</button><button class="uf-btn" id="premiumSettings"><i class="fa-solid fa-gear"></i> Settings</button></div></div>
+<div id="premiumKpis" class="uf-kpis"></div>
+<div class="uf-tabs"><button class="on" data-prem-tab="users">Premium Users</button><button data-prem-tab="requests">Requests</button></div>
+<section class="uf-panel on" data-prem-panel="users">
+  <div class="uf-toolbar"><input id="premiumSearch" placeholder="Search student..."><select id="premiumFilter"><option value="all">All Students</option><option value="active">Active Premium</option><option value="expired">No Active Access</option></select></div>
+  <div class="uf-table-wrap"><table class="uf-table"><thead><tr><th>Student</th><th>Access</th><th>Expires</th><th>Days Left</th><th>Action</th></tr></thead><tbody id="premiumUsersBody"></tbody></table></div>
+</section>
+<section class="uf-panel" data-prem-panel="requests">
+  <div class="uf-grid">
+    <div class="uf-card"><div class="uf-section-head"><div><h2>Premium Payments</h2><p>Approve monthly payment proofs.</p></div></div><div id="premiumPaymentsList" class="uf-list"></div></div>
+    <div class="uf-card"><div class="uf-section-head"><div><h2>IB / Broker Requests</h2><p>Approve broker access requests.</p></div></div><div id="premiumIbList" class="uf-list"></div></div>
+  </div>
+</section>
+
+<div class="uf-modal" id="grantModal"><div class="uf-modal-card"><div class="uf-modal-head"><h3>Grant / Extend Premium</h3><button class="uf-x" data-close-modal="grantModal">×</button></div><form id="grantForm"><div class="uf-modal-body"><div class="uf-form">
+<div class="uf-field full"><label>Student</label><select name="user_id" id="grantStudent" required></select></div>
+<div class="uf-field"><label>Access Days</label><input name="days" type="number" min="1" value="30" required></div>
+<div class="uf-field"><label>Internal Note <span style="color:#666">(optional)</span></label><input name="note" placeholder="e.g. Manual VIP access"></div>
+</div></div><div class="uf-modal-foot"><button class="uf-btn" type="button" data-close-modal="grantModal">Cancel</button><button class="uf-btn gold" type="submit">Grant / Extend</button></div></form></div></div>
+
+<div class="uf-modal" id="settingsModal"><div class="uf-modal-card"><div class="uf-modal-head"><h3>Premium Settings</h3><button class="uf-x" data-close-modal="settingsModal">×</button></div><form id="settingsForm"><div class="uf-modal-body"><div class="uf-form">
+<div class="uf-field"><label>Package Mode</label><select name="package_mode"><option value="paid">Paid</option><option value="free">Free</option></select></div>
+<div class="uf-field"><label>Free Trial Days</label><input name="trial_days" type="number" min="0"></div>
+<label class="uf-check"><input name="trial_enabled" type="checkbox"> Free Trial Enabled</label>
+<label class="uf-check"><input name="ib_enabled" type="checkbox"> IB / Broker Access Enabled</label>
+<div class="uf-field"><label>Price — PKR</label><input name="price_pkr" type="number" min="0" step="0.01"></div>
+<div class="uf-field"><label>Price — USDT</label><input name="price_usdt" type="number" min="0" step="0.01"></div>
+<div class="uf-field"><label>IB Access Days</label><input name="ib_access_days" type="number" min="1"></div>
+<div class="uf-field"><label>Monthly Renewal</label><input value="30 days" readonly></div>
+</div></div><div class="uf-modal-foot"><button class="uf-btn" type="button" data-close-modal="settingsModal">Cancel</button><button class="uf-btn gold" type="submit">Save Settings</button></div></form></div></div>
+<div class="uf-toast" id="ufToast"></div>
+</main>
+</div></div>
+<div class="uf-backdrop" data-close-side></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/assets/js/config.js?v=12.13"></script>
+<script src="/assets/js/core.js?v=12.13"></script>
+<script src="/assets/js/v1213-friendly-shell.js?v=12.13"></script>
+<script src="/assets/js/v1213-premium-simple.js?v=12.13"></script>
+</body></html>

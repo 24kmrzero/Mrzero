@@ -1,0 +1,33 @@
+V12.13 USER-FRIENDLY ADMIN QA
+
+Navigation
+- 9 main Admin sections only.
+- Duplicate Link Manager removed from daily navigation.
+- Payment Methods merged under Payments.
+- Live Classes merged under Courses.
+- Activity Logs moved under Operations.
+- Admin Notifications remain accessible from existing Admin functionality, not a main sidebar item.
+
+Team & Links
+- 2 tabs only: Team / Links.
+- Team create/edit modal.
+- Normal Link / Ad Link choice first.
+- Ref code auto-generated.
+- Round Robin renamed/hidden as Auto Distribute.
+- Lead assignment is one simple dropdown.
+- Analytics moved to Details modal.
+- Team Performance remains a separate secondary button.
+
+Premium
+- 2 tabs only: Premium Users / Requests.
+- Grant / Extend form is Student + Days + Note.
+- Settings are hidden in a modal.
+- Premium Payments + IB requests are grouped under Requests.
+
+Operations
+- Simple 6-card hub.
+- Original advanced Operations preserved at /admin/operations/advanced/.
+
+Static QA
+- All package JavaScript passed node --check.
+- ZIP integrity passed.

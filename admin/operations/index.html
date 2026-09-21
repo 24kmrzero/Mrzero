@@ -1,111 +1,46 @@
 <!doctype html>
 <html lang="en" data-auth-scope="admin" data-theme="dark">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
-  <meta name="theme-color" content="#08090b"><title>Master Operations | 24K MR ZERO</title>
-  <link rel="icon" href="/assets/logo.png"><link rel="preconnect" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <link rel="stylesheet" href="/assets/css/v120-admin-operations.css?v=12.00">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<meta name="theme-color" content="#090909"><title>Operations | 24K Admin</title>
+<link rel="icon" href="/assets/logo.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="/assets/css/v1213-admin-friendly.css?v=12.13">
+
 </head>
-<body>
-  <div id="opsLoader" class="ops-loading"><div><i class="fa-solid fa-spinner fa-spin"></i><p>Loading 24K Master Operations...</p></div></div>
-  <div id="opsApp" class="ops-shell" hidden>
-    <aside class="ops-side">
-      <div class="ops-brand"><img src="/assets/logo.png" alt="24K"><div><b>Master Operations</b><small>24K MR ZERO</small></div></div>
-      <nav class="ops-nav" id="opsNav">
-        <button data-view="overview" class="active"><i class="fa-solid fa-gauge-high"></i><span>Overview</span></button>
-        <a href="/admin/team-manager/#ads" style="text-decoration:none"><button type="button"><i class="fa-solid fa-bullseye"></i><span>Team & Links</span></button></a>
-        <button data-view="enrollments"><i class="fa-solid fa-user-graduate"></i><span>Enrollments</span></button>
-        <button data-view="batches"><i class="fa-solid fa-layer-group"></i><span>Course Batches</span></button>
-        <button data-view="clients"><i class="fa-solid fa-people-arrows"></i><span>Client Ownership</span></button>
-        <button data-view="finance"><i class="fa-solid fa-coins"></i><span>Finance & Accounts</span></button>
-        <button data-view="ea"><i class="fa-solid fa-microchip"></i><span>EA & Indicator</span></button>
-        <button data-view="access"><i class="fa-solid fa-toggle-on"></i><span>Access Control</span></button>
-        <button data-view="mentors"><i class="fa-solid fa-chalkboard-user"></i><span>Mentor Access</span></button>
-        <button data-view="email"><i class="fa-solid fa-envelope-open-text"></i><span>Email Campaigns</span></button>
-        <button data-view="desk"><i class="fa-solid fa-comments"></i><span>Live Desk</span></button>
-      </nav>
-      <a class="ops-back btn" href="/admin/"><i class="fa-solid fa-arrow-left"></i> <span>Admin Dashboard</span></a>
+<body class="uf-page" data-friendly-section="operations">
+<div class="uf-shell">
+<aside class="uf-side">
+      <a class="uf-brand" href="/admin/"><img src="/assets/logo.png" alt="24K"><div><b>24K Admin</b><small>Simple Control Panel</small></div></a>
+      <button class="uf-close" type="button" data-close-side aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+      <nav class="uf-nav"><a class="" href="/admin/"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></a>
+<a class="" href="/admin/content/"><i class="fa-solid fa-layer-group"></i><span>Content</span></a>
+<a class="" href="/admin/courses/"><i class="fa-solid fa-graduation-cap"></i><span>Courses</span></a>
+<a class="" href="/admin/students/"><i class="fa-solid fa-users"></i><span>Students</span></a>
+<a class="" href="/admin/payments/"><i class="fa-solid fa-receipt"></i><span>Payments</span></a>
+<a class="" href="/admin/team-manager/"><i class="fa-solid fa-people-group"></i><span>Team & Links</span></a>
+<a class="" href="/admin/premium-access/"><i class="fa-solid fa-crown"></i><span>Premium</span></a>
+<a class="" href="/admin/support/"><i class="fa-solid fa-headset"></i><span>Support</span></a>
+<a class="on" href="/admin/operations/"><i class="fa-solid fa-briefcase"></i><span>Operations</span></a></nav>
+      <div class="uf-side-foot"><a href="/"><i class="fa-solid fa-house"></i><span>Website Home</span></a><button type="button" data-friendly-logout><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Logout</span></button></div>
     </aside>
-    <main class="ops-main">
-      <header class="ops-top"><div><h1 id="opsTitle">Master Operations</h1><small id="opsSubtitle">Complete operational control center</small></div><div class="actions"><button class="btn" id="opsRefresh"><i class="fa-solid fa-rotate"></i> Refresh</button><a class="btn gold" href="/team/" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i> Team Panel</a></div></header>
-      <div class="ops-content">
-        <section class="ops-view active" data-panel="overview">
-          <div class="ops-head"><div><h2>Operations Overview</h2><p>Live user, enrollment, sales, team, finance and support snapshot.</p></div></div>
-          <div id="overviewKpis" class="kpis"></div>
-          <div class="grid2"><div class="card"><h3>Operational Alerts</h3><div id="overviewAlerts"></div></div><div class="card"><h3>Source of Truth</h3><div class="notice">Enrollments use <b>enrollments</b>; payment history uses <b>payments</b>; client ownership uses <b>team_client_attribution</b>; finance is synced idempotently from approved payment IDs; marketing uses tracked-link event IDs.</div></div></div>
-        </section>
+<div class="uf-main">
+<header class="uf-top"><button class="uf-menu" type="button" data-open-side><i class="fa-solid fa-bars"></i></button><div><h1>Operations</h1><p>Finance, tools and advanced business controls.</p></div><a class="uf-admin-home" href="/admin/"><i class="fa-solid fa-gauge-high"></i> Admin Home</a></header>
+<main class="uf-content">
+<div class="uf-hero"><div><h2>Business Operations</h2><p>Advanced business tools stay outside the daily Admin flow. Open only the area you need.</p></div></div>
+<div class="uf-grid cols3">
+<a class="uf-card uf-card-link" href="/admin/operations/advanced/?view=finance"><div class="uf-card-icon"><i class="fa-solid fa-coins"></i></div><h3>Finance & Accounts</h3><p>Income, expenses, staff salaries and partner payouts.</p></a>
+<a class="uf-card uf-card-link" href="/admin/operations/advanced/?view=ea"><div class="uf-card-icon"><i class="fa-solid fa-microchip"></i></div><h3>EA & Indicators</h3><p>Products, requests and licensed file delivery.</p></a>
+<a class="uf-card uf-card-link" href="/admin/operations/advanced/?view=mentors"><div class="uf-card-icon"><i class="fa-solid fa-chalkboard-user"></i></div><h3>Mentor Access</h3><p>Control which educational modules each mentor can use.</p></a>
+<a class="uf-card uf-card-link" href="/admin/operations/advanced/?view=desk"><div class="uf-card-icon"><i class="fa-solid fa-comments"></i></div><h3>Live Desk</h3><p>Website/customer conversations and human support handoff.</p></a>
+<a class="uf-card uf-card-link" href="/admin/activity-logs/"><div class="uf-card-icon"><i class="fa-solid fa-clock-rotate-left"></i></div><h3>Activity Logs</h3><p>Review Admin, Student and Team activity history.</p></a>
+<a class="uf-card uf-card-link" href="/admin/operations/advanced/"><div class="uf-card-icon"><i class="fa-solid fa-sliders"></i></div><h3>Advanced Tools</h3><p>Enrollments, batches, client ownership, access control and email campaigns.</p></a>
+</div></main>
+</div></div>
+<div class="uf-backdrop" data-close-side></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/assets/js/config.js?v=12.13"></script>
+<script src="/assets/js/core.js?v=12.13"></script>
+<script src="/assets/js/v1213-friendly-shell.js?v=12.13"></script>
 
-        <section class="ops-view" data-panel="links">
-          <div class="ops-head"><div><h2>Ad Links & Attribution</h2><p>Create tracked campaigns for free-course forms and other destinations.</p></div><button class="btn gold" data-open="linkModal"><i class="fa-solid fa-plus"></i> New Link</button></div>
-          <div id="linkKpis" class="kpis"></div><div class="card"><div class="toolbar"><input id="linkSearch" placeholder="Search name, ref or campaign..."><select id="linkType"><option value="all">All Links</option><option value="ad">Ad Links</option><option value="normal">Normal Links</option></select></div><div class="table-wrap"><table class="table"><thead><tr><th>Link</th><th>Destination</th><th>Source</th><th>Clicks</th><th>Unique</th><th>Signups</th><th>Enrollments</th><th>Conversion</th><th>Status</th><th>Action</th></tr></thead><tbody id="linksBody"></tbody></table></div></div>
-        </section>
-
-        <section class="ops-view" data-panel="enrollments">
-          <div class="ops-head"><div><h2>Payments & Enrollments Center</h2><p>Free and paid course records in one workspace. Manual paid additions create separate payment history.</p></div><button class="btn gold" data-open="manualEnrollmentModal"><i class="fa-solid fa-user-plus"></i> Add User Manually</button></div>
-          <div id="enrollmentKpis" class="kpis"></div><div class="card"><div class="toolbar"><input id="enrollmentSearch" placeholder="Search user, email, client ID or course..."><select id="enrollmentCourse"><option value="all">All Courses</option></select><select id="enrollmentStatus"><option value="all">All Statuses</option><option value="active">Active</option><option value="expired">Expired</option><option value="revoked">Revoked</option></select></div><div class="table-wrap"><table class="table"><thead><tr><th>Student</th><th>Course / Batch</th><th>Payment</th><th>Source</th><th>Manager</th><th>Enrolled</th><th>Status</th></tr></thead><tbody id="enrollmentsBody"></tbody></table></div></div>
-        </section>
-
-        <section class="ops-view" data-panel="batches">
-          <div class="ops-head"><div><h2>Course Batch Manager</h2><p>Keep Batch 1/2/3 history while marking one current batch per course.</p></div><button class="btn gold" data-open="batchModal"><i class="fa-solid fa-plus"></i> New Batch</button></div>
-          <div class="card"><div class="table-wrap"><table class="table"><thead><tr><th>Course</th><th>Batch</th><th>Dates</th><th>Enrollment</th><th>Current</th><th>Status</th><th>Action</th></tr></thead><tbody id="batchesBody"></tbody></table></div></div>
-        </section>
-
-        <section class="ops-view" data-panel="clients">
-          <div class="ops-head"><div><h2>Client Ownership</h2><p>Persistent manager attribution. Only Admin can transfer a client.</p></div></div>
-          <div class="card"><div class="toolbar"><input id="clientSearch" placeholder="Search client, email, Client ID or manager..."><select id="clientManager"><option value="all">All Managers</option></select></div><div class="table-wrap"><table class="table"><thead><tr><th>Client</th><th>Manager</th><th>Source</th><th>Status</th><th>Next Follow-up</th><th>Assigned</th><th>Action</th></tr></thead><tbody id="clientsBody"></tbody></table></div></div>
-        </section>
-
-        <section class="ops-view" data-panel="finance">
-          <div class="ops-head"><div><h2>Finance & Accounts</h2><p>Revenue, expenses, staff salaries and partner payouts. Approved course payments sync automatically.</p></div><button class="btn gold" data-open="financeEntryModal"><i class="fa-solid fa-plus"></i> Add Entry</button></div>
-          <div id="financeKpis" class="kpis"></div>
-          <div class="tabs"><button class="btn active" data-fin-tab="ledger">Ledger</button><button class="btn" data-fin-tab="staff">Staff & Salary</button><button class="btn" data-fin-tab="partners">Partners</button></div>
-          <div data-fin-panel="ledger"><div class="card"><div class="toolbar"><input id="financeSearch" placeholder="Search category, note or reference..."><select id="financeType"><option value="all">Income + Expense</option><option value="income">Income</option><option value="expense">Expense</option></select><input id="financeMonth" type="month"></div><div class="table-wrap"><table class="table"><thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Source</th><th>Note</th></tr></thead><tbody id="financeBody"></tbody></table></div></div></div>
-          <div data-fin-panel="staff" hidden><div class="grid2"><div class="card"><h3>Staff</h3><form id="staffForm" class="form-grid"><div class="field"><label>Name</label><input name="name" required></div><div class="field"><label>Position</label><input name="position"></div><div class="field"><label>Base Salary</label><input name="base_salary" type="number" step="0.01" min="0" required></div><div class="field"><label>Currency</label><input name="currency" value="USD"></div><div class="field full form-actions"><button class="btn gold">Save Staff</button></div></form><div id="staffList"></div></div><div class="card"><h3>Monthly Salary Run</h3><form id="salaryForm" class="form-grid"><div class="field full"><label>Staff</label><select name="staff_id" id="salaryStaff" required></select></div><div class="field"><label>Month</label><input name="salary_month" type="month" required></div><div class="field"><label>Base</label><input name="base_salary" type="number" step="0.01" min="0" required></div><div class="field"><label>Bonus</label><input name="bonus" type="number" step="0.01" value="0"></div><div class="field"><label>Deduction</label><input name="deduction" type="number" step="0.01" value="0"></div><div class="field"><label>Advance</label><input name="advance" type="number" step="0.01" value="0"></div><div class="field"><label>Status</label><select name="status"><option>pending</option><option>partial</option><option>paid</option></select></div><div class="field"><label>Due Date</label><input name="due_date" type="date"></div><div class="field full form-actions"><button class="btn gold">Save Salary Month</button></div></form><div id="salaryList"></div></div></div></div>
-          <div data-fin-panel="partners" hidden><div class="grid2"><div class="card"><h3>Partners</h3><form id="partnerForm" class="form-grid"><div class="field"><label>Partner Name</label><input name="name" required></div><div class="field"><label>Profit Share %</label><input name="profit_share_percent" type="number" min="0" max="100" step="0.01" required></div><div class="field full form-actions"><button class="btn gold">Save Partner</button></div></form><div id="partnerList"></div></div><div class="card"><h3>Partner Payout</h3><form id="payoutForm" class="form-grid"><div class="field full"><label>Partner</label><select name="partner_id" id="payoutPartner" required></select></div><div class="field"><label>Month</label><input name="payout_month" type="month" required></div><div class="field"><label>Net Profit</label><input name="net_profit" type="number" step="0.01" required></div><div class="field"><label>Share %</label><input name="share_percent" type="number" step="0.01" required></div><div class="field"><label>Amount Due</label><input name="amount_due" type="number" step="0.01" required></div><div class="field"><label>Amount Paid</label><input name="amount_paid" type="number" step="0.01" value="0"></div><div class="field full form-actions"><button class="btn gold">Save Payout</button></div></form><div id="payoutList"></div></div></div></div>
-        </section>
-
-        <section class="ops-view" data-panel="ea">
-          <div class="ops-head"><div><h2>EA & Indicator</h2><p>Products, broker/account verification and user-specific licensed file delivery.</p></div><button class="btn gold" data-open="productModal"><i class="fa-solid fa-plus"></i> Add Product</button></div>
-          <div class="grid2"><div class="card"><h3>Products</h3><div id="productsList"></div></div><div class="card"><h3>Requests</h3><div id="requestsList"></div></div></div>
-        </section>
-
-        <section class="ops-view" data-panel="access">
-          <div class="ops-head"><div><h2>Site & Admin Tabs</h2><p>Turn features ON/OFF without deleting any data.</p></div></div>
-          <div class="grid2"><div class="card"><h3>Student Site Tabs</h3><div id="studentFlags"></div></div><div class="card"><h3>Admin Tabs</h3><div id="adminFlags"></div></div></div>
-        </section>
-
-        <section class="ops-view" data-panel="mentors">
-          <div class="ops-head"><div><h2>Mentor Access</h2><p>Mentors only see explicitly enabled educational/content modules.</p></div></div>
-          <div class="grid2"><div class="card"><h3>Select Mentor</h3><select id="mentorSelect" style="width:100%"></select><div class="notice" style="margin-top:12px">To create a Mentor, change an existing profile role to <b>mentor</b> from the Users/Admin workflow. Finance, payments and team controls remain unavailable.</div></div><div class="card"><h3>Permissions</h3><div id="mentorPermissions"></div></div></div>
-        </section>
-
-        <section class="ops-view" data-panel="email">
-          <div class="ops-head"><div><h2>Email Campaigns</h2><p>Marketing campaigns are separate from transactional account/payment emails.</p></div><button class="btn gold" data-open="campaignModal"><i class="fa-solid fa-plus"></i> New Campaign</button></div>
-          <div class="card"><div class="table-wrap"><table class="table"><thead><tr><th>Subject</th><th>Audience</th><th>Status</th><th>Recipients</th><th>Sent</th><th>Created</th><th>Action</th></tr></thead><tbody id="campaignsBody"></tbody></table></div></div>
-        </section>
-
-        <section class="ops-view" data-panel="desk">
-          <div class="ops-head"><div><h2>Live Desk</h2><p>Website/customer conversations with automatic first response and human handoff.</p></div></div>
-          <div class="chat-layout"><div class="thread-list" id="threadList"></div><div class="chat-panel"><div class="messages" id="messages"><div class="empty">Select a conversation.</div></div><form id="chatForm" class="chat-compose"><input id="chatMessage" placeholder="Reply to this conversation..." required><button class="btn gold">Send</button></form></div></div>
-        </section>
-      </div>
-    </main>
-  </div>
-
-  <div id="linkModal" class="modal"><div class="modal-card"><div class="modal-head"><h3>Create / Edit Tracking Link</h3><button class="close" data-close="linkModal">×</button></div><form id="linkForm" class="form-grid"><input type="hidden" name="id"><div class="field full"><label>Link Name</label><input name="name" required></div><div class="field"><label>Destination</label><select name="destination_path"><option value="/free-course">Free Course Form</option><option value="/">Home</option><option value="/courses/">Courses</option><option value="/sign-up/">Sign Up</option><option value="/sign-in/">Sign In</option><option value="/student/">Student Panel</option></select></div><div class="field"><label>Reference Code</label><input name="ref_code" required placeholder="amal-b3-fb"></div><div class="field"><label>Source</label><select name="source"><option>Facebook</option><option>Instagram</option><option>WhatsApp</option><option>YouTube</option><option>Email</option><option>Google</option><option>Other</option></select></div><div class="field"><label>Campaign</label><input name="campaign"></div><div class="field full"><label>Course (optional)</label><select name="course_id" id="linkCourse"><option value="">Auto / none</option></select></div><div class="field full"><label>Fallback WhatsApp (optional)</label><input name="referral_whatsapp" placeholder="+60... Used only if no eligible Team manager is available"></div><label class="switch"><input type="checkbox" name="is_ad_link"> Ad / lead-generation link</label><label class="switch"><input type="checkbox" name="round_robin" checked> Round-robin lead assignment</label><label class="switch"><input type="checkbox" name="is_active" checked> Active</label><div class="field full form-actions"><button type="button" class="btn" data-close="linkModal">Cancel</button><button class="btn gold">Save Link</button></div></form></div></div>
-
-  <div id="manualEnrollmentModal" class="modal"><div class="modal-card"><div class="modal-head"><h3>Add Paid Enrollment Manually</h3><button class="close" data-close="manualEnrollmentModal">×</button></div><form id="manualEnrollmentForm" class="form-grid"><div class="field full"><label>Existing User</label><select name="student_id" id="manualStudent" required></select></div><div class="field"><label>Paid Course</label><select name="course_id" id="manualCourse" required></select></div><div class="field"><label>Batch</label><select name="batch_id" id="manualBatch"><option value="">No batch</option></select></div><div class="field"><label>Amount</label><input name="amount" type="number" min="0" step="0.01" required></div><div class="field"><label>Payment Date</label><input name="payment_date" type="date" required></div><div class="field full"><label>Admin Note</label><textarea name="note"></textarea></div><div class="field full"><div class="notice">Creates a <b>new approved payment record</b>. Old rejected/expired payment history is not overwritten.</div></div><div class="field full form-actions"><button type="button" class="btn" data-close="manualEnrollmentModal">Cancel</button><button class="btn gold">Approve & Activate Access</button></div></form></div></div>
-
-  <div id="batchModal" class="modal"><div class="modal-card"><div class="modal-head"><h3>Course Batch</h3><button class="close" data-close="batchModal">×</button></div><form id="batchForm" class="form-grid"><input type="hidden" name="id"><div class="field full"><label>Course</label><select name="course_id" id="batchCourse" required></select></div><div class="field"><label>Batch Name</label><input name="batch_name" required placeholder="Batch 3"></div><div class="field"><label>Batch Number</label><input name="batch_number" type="number" min="1"></div><div class="field"><label>Start Date</label><input name="start_date" type="date"></div><div class="field"><label>End Date</label><input name="end_date" type="date"></div><div class="field"><label>Status</label><select name="status"><option>upcoming</option><option>active</option><option>completed</option><option>archived</option><option>draft</option></select></div><label class="switch"><input type="checkbox" name="enrollment_open" checked> Enrollment Open</label><label class="switch"><input type="checkbox" name="is_current"> Current Batch</label><div class="field full"><label>Notes</label><textarea name="notes"></textarea></div><div class="field full form-actions"><button type="button" class="btn" data-close="batchModal">Cancel</button><button class="btn gold">Save Batch</button></div></form></div></div>
-
-  <div id="transferModal" class="modal"><div class="modal-card"><div class="modal-head"><h3>Change Client Manager</h3><button class="close" data-close="transferModal">×</button></div><form id="transferForm" class="form-grid"><input type="hidden" name="student_id"><div class="field full"><label>New Manager</label><select name="team_id" id="transferTeam" required></select></div><div class="field full"><label>Transfer Note</label><textarea name="note" placeholder="Reason / internal note"></textarea></div><div class="field full form-actions"><button type="button" class="btn" data-close="transferModal">Cancel</button><button class="btn gold">Transfer Client</button></div></form></div></div>
-
-  <div id="financeEntryModal" class="modal"><div class="modal-card"><div class="modal-head"><h3>Add Finance Entry</h3><button class="close" data-close="financeEntryModal">×</button></div><form id="financeEntryForm" class="form-grid"><div class="field"><label>Date</label><input name="entry_date" type="date" required></div><div class="field"><label>Type</label><select name="entry_type"><option value="income">Income</option><option value="expense">Expense</option></select></div><div class="field"><label>Category</label><input name="category" required placeholder="IB Revenue / Advertising / Office"></div><div class="field"><label>Sub-category</label><input name="subcategory"></div><div class="field"><label>Amount</label><input name="amount" type="number" min="0" step="0.01" required></div><div class="field"><label>Currency</label><input name="currency" value="USD"></div><div class="field full"><label>Note</label><textarea name="note"></textarea></div><div class="field full form-actions"><button type="button" class="btn" data-close="financeEntryModal">Cancel</button><button class="btn gold">Post Entry</button></div></form></div></div>
-
-  <div id="productModal" class="modal"><div class="modal-card"><div class="modal-head"><h3>EA / Indicator Product</h3><button class="close" data-close="productModal">×</button></div><form id="productForm" class="form-grid"><input type="hidden" name="id"><div class="field full"><label>Title</label><input name="title" required></div><div class="field"><label>Version</label><input name="version"></div><div class="field"><label>Type</label><select name="product_type"><option>EA</option><option>Indicator</option></select></div><div class="field"><label>Platform</label><select name="platform"><option>MT5</option><option>MT4</option><option>Both</option></select></div><div class="field"><label>Access</label><select name="access_type"><option value="free">Free</option><option value="paid">Paid</option></select></div><div class="field"><label>Price</label><input name="price" type="number" min="0" step="0.01" value="0"></div><div class="field"><label>Status</label><select name="status"><option>draft</option><option>published</option><option>archived</option></select></div><div class="field full"><label>Short Description</label><textarea name="short_description"></textarea></div><div class="field full"><label>Installation Instructions</label><textarea name="installation_instructions"></textarea></div><div class="field full form-actions"><button type="button" class="btn" data-close="productModal">Cancel</button><button class="btn gold">Save Product</button></div></form></div></div>
-
-  <div id="campaignModal" class="modal"><div class="modal-card"><div class="modal-head"><h3>Marketing Email Campaign</h3><button class="close" data-close="campaignModal">×</button></div><form id="campaignForm" class="form-grid"><div class="field full"><label>Subject</label><input name="subject" required></div><div class="field"><label>Audience</label><select name="audience"><option value="all_students">All Students</option><option value="free_students">Free Students</option><option value="paid_students">Paid Students</option><option value="course_students">Specific Course</option></select></div><div class="field"><label>Course</label><select name="course_id" id="campaignCourse"><option value="">Select if needed</option></select></div><div class="field full"><label>Email HTML / Content</label><textarea name="body_html" required style="min-height:220px" placeholder="Write your campaign content. Basic HTML is supported."></textarea></div><div class="field full form-actions"><button type="button" class="btn" data-close="campaignModal">Cancel</button><button class="btn gold">Save Draft</button></div></form></div></div>
-
-  <div id="toast" class="toast"></div>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="/assets/js/config.js?v=12.00"></script><script src="/assets/js/core.js?v=12.00"></script><script src="/assets/js/v120-admin-operations.js?v=12.11"></script>
 </body></html>

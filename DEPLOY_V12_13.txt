@@ -1,0 +1,32 @@
+24K MR ZERO V12.13 — USER-FRIENDLY ADMIN
+
+NEW SIMPLE SIDEBAR
+Dashboard
+Content
+Courses
+Students
+Payments
+Team & Links
+Premium
+Support
+Operations
+
+WHAT CHANGED
+- Content: one hub -> Signals / Charts / Articles / Announcements.
+- Courses: one hub -> Manage Courses / Live Classes.
+- Payments: one hub -> Review Payments / Payment Methods.
+- Team & Links: only 2 tabs: Team + Links.
+- Team assignment happens inside Create Link.
+- Normal Link vs Ad Link is chosen first; Ref Code, Round Robin and technical fields are hidden/automatic.
+- Premium: standalone simple page with Premium Users + Requests only.
+- Premium Settings moved to a Settings modal.
+- Grant/Extend Premium access uses a simple Student + Days form.
+- Operations: first screen has only Finance, EA & Indicators, Mentor Access, Live Desk, Logs and Advanced Tools.
+- Old advanced Operations screen is preserved under /admin/operations/advanced/.
+- Technical / power-user features are preserved, not deleted.
+
+LIVE SUPABASE
+- admin_manage_premium_access_v12_13 RPC already deployed.
+
+DEPLOY
+Upload/overwrite the files in this ZIP, then hard refresh (Ctrl+Shift+R).

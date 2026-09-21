@@ -1,129 +1,105 @@
 <!doctype html>
-<html lang="en" data-theme="dark" data-auth-scope="admin">
+<html lang="en" data-auth-scope="admin" data-theme="dark">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="robots" content="noindex"><meta name="theme-color" content="#090909">
-  <title>Team & Links | 24K Admin</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <link rel="stylesheet" href="/assets/css/v110-team-manager-admin.css?v=11.0">
-  <style>
-    .tl-kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin:14px 0}
-    .tl-kpi{padding:16px;border:1px solid rgba(255,193,7,.22);border-radius:14px;background:rgba(255,255,255,.025)}
-    .tl-kpi b{display:block;font-size:22px;color:#ffc107}.tl-kpi span{font-size:12px;color:#aaa}
-    .tl-toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}.tl-toolbar input,.tl-toolbar select{min-height:42px}
-    .tl-table-wrap{overflow:auto}.tl-table{width:100%;border-collapse:collapse;min-width:1040px}
-    .tl-table th,.tl-table td{padding:12px;border-bottom:1px solid rgba(255,255,255,.08);text-align:left;vertical-align:top}
-    .tl-table th{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#9a9a9a}
-    .tl-table td small{display:block;color:#8f8f8f;margin-top:4px}.tl-table .mini{margin:2px}
-    .tl-modal{position:fixed;inset:0;background:rgba(0,0,0,.78);display:none;align-items:center;justify-content:center;padding:20px;z-index:9999}
-    .tl-modal.open{display:flex}.tl-modal-card{width:min(820px,100%);max-height:92vh;overflow:auto;background:#101010;border:1px solid rgba(255,193,7,.35);border-radius:18px}
-    .tl-modal-head,.tl-modal-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 20px;border-bottom:1px solid rgba(255,255,255,.08)}
-    .tl-modal-foot{border-top:1px solid rgba(255,255,255,.08);border-bottom:0}.tl-modal-body{padding:20px}
-    .tl-form{display:grid;grid-template-columns:1fr 1fr;gap:14px}.tl-form label{display:flex;flex-direction:column;gap:7px;font-size:12px;color:#bbb}.tl-form .full{grid-column:1/-1}
-    .tl-form input,.tl-form select,.tl-form textarea{width:100%;box-sizing:border-box;background:#090909;color:#fff;border:1px solid #303030;border-radius:10px;padding:11px}
-    .tl-team-picks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.tl-team-picks label{display:flex;flex-direction:row;align-items:center;padding:10px;border:1px solid #2d2d2d;border-radius:10px;background:#0b0b0b}
-    .tl-chip{display:inline-block;padding:4px 8px;border-radius:999px;background:#1c1c1c;border:1px solid #333;font-size:11px;margin:2px}
-    .tl-chip.gold{border-color:#725b00;color:#ffd45a}.tl-empty{padding:24px;text-align:center;color:#888}
-    .tl-actions{display:flex;gap:7px;flex-wrap:wrap}.tl-close{background:none;border:0;color:#fff;font-size:20px;cursor:pointer}
-    .tl-section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
-    .tl-section-head p{margin:4px 0 0;color:#999}.tm-tabs{overflow:auto;white-space:nowrap}
-    @media(max-width:800px){.tl-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.tl-form{grid-template-columns:1fr}.tl-team-picks{grid-template-columns:1fr}.tm-grid{grid-template-columns:1fr}}
-  </style>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/assets/js/config.js?v=12.12"></script>
-  <script src="/assets/js/core.js?v=12.12"></script>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<meta name="theme-color" content="#090909"><title>Team & Links | 24K Admin</title>
+<link rel="icon" href="/assets/logo.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="/assets/css/v1213-admin-friendly.css?v=12.13">
+
 </head>
-<body>
-<main class="tm-wrap">
-  <header class="tm-top">
-    <div><span>24K EXCELLENCE ADMIN</span><h1>Team & Links</h1><p>Create Team accounts, tracking links and Ad Links from one place.</p></div>
-    <div class="tm-actions"><a href="/team/" target="_blank">Open Team Panel</a><a href="/admin/team-performance/">Performance</a><a href="/admin/">← Admin</a></div>
-  </header>
+<body class="uf-page" data-friendly-section="team">
+<div class="uf-shell">
+<aside class="uf-side">
+      <a class="uf-brand" href="/admin/"><img src="/assets/logo.png" alt="24K"><div><b>24K Admin</b><small>Simple Control Panel</small></div></a>
+      <button class="uf-close" type="button" data-close-side aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+      <nav class="uf-nav"><a class="" href="/admin/"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></a>
+<a class="" href="/admin/content/"><i class="fa-solid fa-layer-group"></i><span>Content</span></a>
+<a class="" href="/admin/courses/"><i class="fa-solid fa-graduation-cap"></i><span>Courses</span></a>
+<a class="" href="/admin/students/"><i class="fa-solid fa-users"></i><span>Students</span></a>
+<a class="" href="/admin/payments/"><i class="fa-solid fa-receipt"></i><span>Payments</span></a>
+<a class="on" href="/admin/team-manager/"><i class="fa-solid fa-people-group"></i><span>Team & Links</span></a>
+<a class="" href="/admin/premium-access/"><i class="fa-solid fa-crown"></i><span>Premium</span></a>
+<a class="" href="/admin/support/"><i class="fa-solid fa-headset"></i><span>Support</span></a>
+<a class="" href="/admin/operations/"><i class="fa-solid fa-briefcase"></i><span>Operations</span></a></nav>
+      <div class="uf-side-foot"><a href="/"><i class="fa-solid fa-house"></i><span>Website Home</span></a><button type="button" data-friendly-logout><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Logout</span></button></div>
+    </aside>
+<div class="uf-main">
+<header class="uf-top"><button class="uf-menu" type="button" data-open-side><i class="fa-solid fa-bars"></i></button><div><h1>Team & Links</h1><p>Create Team members and links in a simple two-step workflow.</p></div><a class="uf-admin-home" href="/admin/"><i class="fa-solid fa-gauge-high"></i> Admin Home</a></header>
+<main class="uf-content">
+<div class="uf-hero"><div><h2>Team and links, without technical settings</h2><p>Create a Team member, then create a link and choose where the lead should go. Ref codes and routing rules are handled automatically.</p></div><div class="uf-actions"><a class="uf-btn" href="/admin/team-performance/"><i class="fa-solid fa-chart-column"></i> Team Performance</a></div></div>
+<div id="teamKpis" class="uf-kpis"></div>
+<div class="uf-tabs"><button class="on" data-tab="team">Team</button><button data-tab="links">Links</button></div>
 
-  <nav class="tm-tabs">
-    <button class="active" data-tab="team">Team Members</button>
-    <button data-tab="links">Tracking Links</button>
-    <button data-tab="ads">Ad Links</button>
-    <button data-tab="reviews">Reports & VIP</button>
-  </nav>
+<section class="uf-panel on" data-panel="team">
+  <div class="uf-section-head"><div><h2>Team Members</h2><p>People who can receive new leads.</p></div><button class="uf-btn gold" id="addTeam"><i class="fa-solid fa-user-plus"></i> Add Team Member</button></div>
+  <div class="uf-toolbar"><input id="teamSearch" placeholder="Search team member..."></div>
+  <div id="teamList" class="uf-list"></div>
+</section>
 
-  <section class="tm-panel active" data-panel="team">
-    <div class="tm-grid">
-      <article class="tm-card">
-        <div class="tl-section-head"><div><h2>Team Members</h2><p>Create or select a Team account.</p></div><button id="newTeamAccount" class="gold-btn" type="button">+ New Team</button></div>
-        <select id="teamSelect"></select><div id="teamMeta" class="tm-note"></div>
-      </article>
-      <article class="tm-card">
-        <h2>Assigned Links</h2><p>Tick all links this Team member should receive leads from.</p>
-        <div id="linkChecklist" class="link-checklist"></div>
-        <button id="saveAssignments" class="gold-btn">Save Assignments</button><div id="assignStatus" class="status-line"></div>
-      </article>
-    </div>
-    <article class="tm-card full team-account-editor">
-      <h2>Create / Edit Team Account</h2>
-      <form id="teamAccountForm" class="team-account-form">
-        <input type="hidden" name="team_id">
-        <label>Name<input name="display_name" required></label>
-        <label>Username<input name="username" required></label>
-        <label>Email<input name="email" type="email" placeholder="Optional"></label>
-        <label>WhatsApp<input name="whatsapp" placeholder="e.g. +60..."></label>
-        <label>Password<input name="password" type="password" placeholder="Required for new account; blank keeps current"></label>
-        <label class="check"><input name="is_active" type="checkbox" checked> Active</label>
-        <label class="check"><input name="receive_leads" type="checkbox" checked> Receive New Leads</label>
-        <button class="gold-btn" type="submit">Save Team Account</button><div id="teamAccountStatus" class="status-line"></div>
-      </form>
-    </article>
-  </section>
+<section class="uf-panel" data-panel="links">
+  <div class="uf-section-head"><div><h2>Links</h2><p>Normal links and Ad Links are managed together.</p></div><button class="uf-btn gold" id="addLink"><i class="fa-solid fa-plus"></i> Create Link</button></div>
+  <div class="uf-toolbar"><input id="linkSearch" placeholder="Search link, campaign or course..."><select id="linkFilter"><option value="all">All Links</option><option value="normal">Normal Links</option><option value="ad">Ad Links</option></select></div>
+  <div class="uf-table-wrap"><table class="uf-table"><thead><tr><th>Name</th><th>Type</th><th>Goes To</th><th>Lead Goes To</th><th>Leads</th><th>Status</th><th>Action</th></tr></thead><tbody id="linksBody"></tbody></table></div>
+</section>
 
-  <section class="tm-panel" data-panel="links">
-    <div class="tl-section-head"><div><h2>Tracking / Referral Links</h2><p>Normal referral links for signup, landing pages and campaigns.</p></div><button class="gold-btn" data-new-link="normal">+ New Tracking Link</button></div>
-    <div id="normalKpis" class="tl-kpis"></div>
-    <div class="tm-card full">
-      <div class="tl-toolbar"><input id="normalSearch" placeholder="Search link, ref, campaign..."></div>
-      <div class="tl-table-wrap"><table class="tl-table"><thead><tr><th>Link</th><th>Destination</th><th>Source</th><th>Team</th><th>Clicks</th><th>Unique</th><th>Signups</th><th>Enrollments</th><th>Conv.</th><th>Status</th><th>Action</th></tr></thead><tbody id="normalLinksBody"></tbody></table></div>
-    </div>
-  </section>
+<div class="uf-modal" id="teamModal"><div class="uf-modal-card">
+  <div class="uf-modal-head"><h3 id="teamModalTitle">Add Team Member</h3><button class="uf-x" data-close-modal="teamModal">×</button></div>
+  <form id="teamForm"><input type="hidden" name="team_id"><div class="uf-modal-body"><div class="uf-form">
+    <div class="uf-field"><label>Name</label><input name="display_name" required placeholder="e.g. Hassan"></div>
+    <div class="uf-field"><label>Username</label><input name="username" required placeholder="hassan"></div>
+    <div class="uf-field"><label>WhatsApp Number</label><input name="whatsapp" placeholder="+60..."></div>
+    <div class="uf-field"><label>Email <span style="color:#666">(optional)</span></label><input name="email" type="email"></div>
+    <div class="uf-field full"><label>Password</label><input name="password" type="password" placeholder="Required for new account"></div>
+    <div class="uf-field full"><details class="uf-details"><summary>Account Settings</summary><div><label class="uf-check"><input name="receive_leads" type="checkbox" checked> Accept New Leads</label><br><label class="uf-check"><input name="is_active" type="checkbox" checked> Account Active</label></div></details></div>
+  </div></div>
+  <div class="uf-modal-foot"><button type="button" class="uf-btn" data-close-modal="teamModal">Cancel</button><button class="uf-btn gold" type="submit">Save Team Member</button></div></form>
+</div></div>
 
-  <section class="tm-panel" data-panel="ads">
-    <div class="tl-section-head"><div><h2>Ad Links</h2><p>Tracked ad links for course forms. Course + Team assignment + Round Robin stay together.</p></div><button class="gold-btn" data-new-link="ad">+ New Ad Link</button></div>
-    <div id="adKpis" class="tl-kpis"></div>
-    <div class="tm-card full">
-      <div class="tl-toolbar"><input id="adSearch" placeholder="Search ad link, ref, campaign..."></div>
-      <div class="tl-table-wrap"><table class="tl-table"><thead><tr><th>Ad Link</th><th>Course</th><th>Source</th><th>Team / Routing</th><th>Clicks</th><th>Unique</th><th>Signups</th><th>Enrollments</th><th>Conv.</th><th>Status</th><th>Action</th></tr></thead><tbody id="adLinksBody"></tbody></table></div>
-    </div>
-  </section>
-
-  <section class="tm-panel" data-panel="reviews">
-    <div class="tm-grid">
-      <article class="tm-card"><div class="tm-head"><div><h2>Daily Reports</h2><p>Approve or reject submitted reports.</p></div><select id="reportStatusFilter"><option value="submitted">Submitted</option><option value="all">All</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select></div><div id="reportsList" class="review-list"></div></article>
-      <article class="tm-card"><div class="tm-head"><div><h2>VIP Reviews</h2><p>Review VIP conversions attributed to Team links.</p></div><select id="vipStatusFilter"><option value="submitted">Submitted</option><option value="all">All</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select></div><div id="vipList" class="review-list"></div></article>
-    </div>
-  </section>
-</main>
-
-<div class="tl-modal" id="linkModal">
-  <div class="tl-modal-card">
-    <div class="tl-modal-head"><div><h2 id="linkModalTitle">New Link</h2><small id="linkModalNote">Create and assign from one form.</small></div><button class="tl-close" data-close-link>×</button></div>
-    <form id="linkForm">
-      <input type="hidden" name="id"><input type="hidden" name="is_ad_link">
-      <div class="tl-modal-body">
-        <div class="tl-form">
-          <label>Link Name<input name="name" required placeholder="e.g. Hassan Referral"></label>
-          <label>Ref Code<input name="ref_code" required placeholder="hassan"></label>
-          <label>Source<input name="source" required placeholder="WhatsApp / Meta Ads / TikTok"></label>
-          <label>Campaign<input name="campaign" placeholder="Campaign name"></label>
-          <label class="full">Destination<input name="destination_path" required placeholder="/sign-up/"></label>
-          <label class="full" id="courseField">Course<select name="course_id" id="linkCourse"><option value="">No specific course</option></select></label>
-          <label class="full">Fallback WhatsApp<input name="referral_whatsapp" placeholder="+60... Only used if no eligible Team member is available"></label>
-          <label class="full">Assign Team Members<div id="linkTeamPicks" class="tl-team-picks"></div></label>
-          <label class="check"><input type="checkbox" name="round_robin"> Round Robin between selected Team members</label>
-          <label class="check"><input type="checkbox" name="is_active" checked> Active</label>
+<div class="uf-modal" id="linkModal"><div class="uf-modal-card">
+  <div class="uf-modal-head"><div><h3 id="linkModalTitle">Create Link</h3><small style="color:#777">Technical settings are automatic.</small></div><button class="uf-x" data-close-modal="linkModal">×</button></div>
+  <form id="linkForm"><input type="hidden" name="id"><input type="hidden" name="ref_code">
+    <div class="uf-modal-body">
+      <div class="uf-field full" style="margin-bottom:12px"><label>Link Type</label><div class="uf-choice-grid">
+        <button class="uf-choice on" type="button" data-link-type="normal"><b>Normal Link</b><small>WhatsApp, referral or direct sharing</small></button>
+        <button class="uf-choice" type="button" data-link-type="ad"><b>Ad Link</b><small>Meta, TikTok, YouTube or paid campaigns</small></button>
+      </div></div>
+      <input type="hidden" name="link_type" value="normal">
+      <div class="uf-form">
+        <div class="uf-field full"><label>Link Name</label><input name="name" required placeholder="e.g. Hassan WhatsApp"></div>
+        <div data-normal-fields class="full">
+          <div class="uf-form">
+            <div class="uf-field"><label>Send Visitor To</label><select name="normal_destination"><option value="/sign-up/">Sign Up</option><option value="/">Home</option><option value="/courses/">Courses</option><option value="/free-course/">Free Course Form</option></select></div>
+            <div class="uf-field"><label>Shared On</label><select name="normal_source"><option>WhatsApp</option><option>Instagram</option><option>Facebook</option><option>TikTok</option><option>YouTube</option><option>Direct</option><option>Other</option></select></div>
+          </div>
         </div>
+        <div data-ad-fields class="full" style="display:none">
+          <div class="uf-form">
+            <div class="uf-field"><label>Select Course</label><select name="course_id" id="linkCourse"><option value="">Select Course</option></select></div>
+            <div class="uf-field"><label>Ad Platform</label><select name="ad_source"><option>Meta Ads</option><option>TikTok Ads</option><option>YouTube Ads</option><option>Google Ads</option><option>Other</option></select></div>
+            <div class="uf-field full"><label>Campaign Name</label><input name="campaign" placeholder="e.g. Pakistan Free Course"></div>
+          </div>
+        </div>
+        <div class="uf-field full"><label>Lead Goes To</label><select name="lead_to" id="leadTo"><option value="auto">Auto Distribute Between Active Team</option></select></div>
+        <div class="uf-field full"><details class="uf-details"><summary>Advanced</summary><div><label class="uf-check"><input name="is_active" type="checkbox" checked> Link Active</label></div></details></div>
       </div>
-      <div class="tl-modal-foot"><button type="button" class="gold-btn" style="background:#222;color:#fff" data-close-link>Cancel</button><button class="gold-btn" type="submit">Save Link</button></div>
-    </form>
-  </div>
-</div>
+    </div>
+    <div class="uf-modal-foot"><button type="button" class="uf-btn" data-close-modal="linkModal">Cancel</button><button class="uf-btn gold" type="submit">Create Link</button></div>
+  </form>
+</div></div>
 
-<script src="/assets/js/v1212-team-links-admin.js?v=12.12"></script>
+<div class="uf-modal" id="detailsModal"><div class="uf-modal-card">
+  <div class="uf-modal-head"><h3 id="detailsTitle">Link Details</h3><button class="uf-x" data-close-modal="detailsModal">×</button></div>
+  <div class="uf-modal-body"><div id="detailsKpis" class="uf-kpis"></div><div id="detailsInfo" class="uf-note"></div></div>
+  <div class="uf-modal-foot"><button class="uf-btn" type="button" data-close-modal="detailsModal">Close</button></div>
+</div></div>
+<div class="uf-toast" id="ufToast"></div>
+</main>
+</div></div>
+<div class="uf-backdrop" data-close-side></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/assets/js/config.js?v=12.13"></script>
+<script src="/assets/js/core.js?v=12.13"></script>
+<script src="/assets/js/v1213-friendly-shell.js?v=12.13"></script>
+<script src="/assets/js/v1213-team-links-simple.js?v=12.13"></script>
 </body></html>
