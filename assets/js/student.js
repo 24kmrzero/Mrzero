@@ -656,10 +656,9 @@
       const nextSession = upcomingCourseSession(course.id);
       const actualPrice=course.discount_price!=null?Number(course.discount_price):Number(course.price);
       const paymentText = payment ? A.statusLabel(payment.status) : (course.course_type==='free'||actualPrice===0 ? 'Free enrollment' : 'Payment required');
-      const isInfinity = String(course.currency||'').toUpperCase()==='PKR';
       const paymentButtonText = payment?.status==='initiated' ? 'Continue Payment' : payment && ['received','under_review'].includes(payment.status) ? 'Payment Submitted' : payment?.status==='resubmission_required' ? 'Submit New Receipt' : ['failed','declined'].includes(payment?.status) ? 'Try Payment Again' : 'Pay Now';
       const paymentTone = ['declined','failed'].includes(payment?.status) ? 'bad' : 'warn';
-      return `<article class="course-card">${courseCoverHtml(course)}<div class="course-body"><h3>${A.escapeHtml(course.title)}</h3><p>${A.escapeHtml(course.short_description || course.description || '')}</p><div class="course-meta"><span><i class="fa-solid fa-user-tie"></i> ${A.escapeHtml(course.instructor_name || A.cfg.INSTRUCTOR_NAME)}</span><span><i class="fa-solid fa-money-bill"></i> ${course.discount_price!=null?`<s>${A.formatMoney(course.price,course.currency)}</s> ${A.formatMoney(course.discount_price,course.currency)}`:A.formatMoney(course.price, course.currency)}</span>${nextSession?`<span><i class="fa-solid fa-calendar"></i> ${A.formatDateTime(nextSession.starts_at)}</span>`:`<span><i class="fa-solid fa-calendar"></i> No upcoming class</span>`}</div>${nextSession?`<div class="course-next-class"><small>Next Live Class</small><b>${A.escapeHtml(nextSession.title)}</b><span>${A.escapeHtml(nextSession.topic||'')}</span></div>`:''}<div class="notice ${access ? 'ok' : paymentTone}">${access ? '<b>Access approved.</b> Online class access is unlocked.' : `<b>${paymentText}.</b> ${payment?.status==='initiated'&&isInfinity?'Complete the secure hosted bank payment and receipt verification.':'Class date is visible, but online class access remains locked.'}`}</div><div class="course-actions"><button class="app-btn ${access ? 'gold' : 'outline'}" data-open-course="${course.id}"><i class="fa-solid fa-calendar-days"></i> View Live Class</button>${access ? '' : (course.course_type==='free'||actualPrice===0) ? `<button class="app-btn gold" data-free-enroll="${course.id}">Enroll Free</button>` : `<button class="app-btn gold" data-buy-course="${course.id}"><i class="fa-solid fa-building-columns"></i> ${paymentButtonText}</button>`}</div></div></article>`;
+      return `<article class="course-card">${courseCoverHtml(course)}<div class="course-body"><h3>${A.escapeHtml(course.title)}</h3><p>${A.escapeHtml(course.short_description || course.description || '')}</p><div class="course-meta"><span><i class="fa-solid fa-user-tie"></i> ${A.escapeHtml(course.instructor_name || A.cfg.INSTRUCTOR_NAME)}</span><span><i class="fa-solid fa-money-bill"></i> ${course.discount_price!=null?`<s>${A.formatMoney(course.price,course.currency)}</s> ${A.formatMoney(course.discount_price,course.currency)}`:A.formatMoney(course.price, course.currency)}</span>${nextSession?`<span><i class="fa-solid fa-calendar"></i> ${A.formatDateTime(nextSession.starts_at)}</span>`:`<span><i class="fa-solid fa-calendar"></i> No upcoming class</span>`}</div>${nextSession?`<div class="course-next-class"><small>Next Live Class</small><b>${A.escapeHtml(nextSession.title)}</b><span>${A.escapeHtml(nextSession.topic||'')}</span></div>`:''}<div class="notice ${access ? 'ok' : paymentTone}">${access ? '<b>Access approved.</b> Online class access is unlocked.' : `<b>${paymentText}.</b> Class date is visible, but online class access remains locked until Admin approves your payment.`}</div><div class="course-actions"><button class="app-btn ${access ? 'gold' : 'outline'}" data-open-course="${course.id}"><i class="fa-solid fa-calendar-days"></i> View Live Class</button>${access ? '' : (course.course_type==='free'||actualPrice===0) ? `<button class="app-btn gold" data-free-enroll="${course.id}">Enroll Free</button>` : `<button class="app-btn gold" data-buy-course="${course.id}"><i class="fa-solid fa-building-columns"></i> ${paymentButtonText}</button>`}</div></div></article>`;
     }).join('') : empty('No course is currently published.', 'fa-graduation-cap');
   }
 
@@ -735,7 +734,7 @@
     if(historyCount) historyCount.textContent=`${state.premiumPayments.length} payment${state.premiumPayments.length===1?'':'s'}`;
     const body=document.getElementById('premiumPaymentsBody');
     if(body) body.innerHTML=state.premiumPayments.length?state.premiumPayments.map(row=>`<tr><td>${A.formatDateTime(row.created_at)}</td><td>${A.escapeHtml(row.payment_method_name)}</td><td>${A.escapeHtml(row.currency==='PKR'?`PKR ${Number(row.amount||0).toLocaleString()}`:`${Number(row.amount||0).toLocaleString()} USDT`)}</td><td><span class="status-pill ${A.statusClass(row.status)}">${A.statusLabel(row.status)}</span></td><td>${row.access_expires_at?A.formatDateTime(row.access_expires_at):'—'}</td><td>${A.escapeHtml(row.admin_note||row.provider_rejection_reason||'—')}</td></tr>`).join(''):`<tr><td colspan="6">${empty('No premium payment history yet.','fa-crown')}</td></tr>`;
-    const localBankEnabled = state.paymentMethods.some(m => /^(local bank transfer|infinity(?: money solutions)?)$/i.test(String(m.name||'').trim()));
+    const localBankEnabled = state.paymentMethods.some(m => /^local bank transfer$/i.test(String(m.name||'').trim()));
     const usdtEnabled = state.paymentMethods.some(m => /usdt|trc\s*20|trc20/i.test(`${m.name||''} ${m.instructions||''}`));
     const premiumLocal=document.getElementById('premiumPayLocal'); if(premiumLocal){premiumLocal.disabled=p.package_mode==='free'||!localBankEnabled;premiumLocal.classList.toggle('method-disabled',!localBankEnabled);premiumLocal.title=localBankEnabled?'':'Local Bank Transfer is currently disabled by Admin.';}
     const premiumUsdt=document.getElementById('premiumPayUsdt'); if(premiumUsdt){premiumUsdt.disabled=p.package_mode==='free'||!usdtEnabled;premiumUsdt.classList.toggle('method-disabled',!usdtEnabled);premiumUsdt.title=usdtEnabled?'':'USDT TRC20 is currently disabled by Admin.';}
@@ -745,11 +744,38 @@
   }
 
   async function startPremiumLocalBank(button){
-    A.setLoading(button,true,'Opening secure payment...');
-    try{const {data,error}=await A.supabase.functions.invoke('create-premium-infinity-payment',{body:{}});if(error)throw error;if(!data?.redirect_url)throw new Error(data?.error||'Payment page was not returned.');await auditEvent('premium_payment_started','premium_package',data.payment_id,'success',{method:'local_bank'});location.href=data.redirect_url;}
-    catch(error){A.toast(A.friendlyError(error,'Could not start premium payment.'),'error');}
+    const method=state.paymentMethods.find(m=>/^local bank transfer$/i.test(String(m.name||'').trim()));
+    if(!method) return A.toast('Local Bank Transfer is currently disabled by Admin.','warning');
+    const box=document.getElementById('premiumBankSummary');
+    if(box) box.innerHTML=`<b>PKR ${Number(state.premium?.price_pkr||0).toLocaleString()}</b> · ${Number(state.premium?.monthly_days||30)} days Premium Market Access<br><small>Transfer manually, then submit your bank reference and receipt for Admin approval.</small>`;
+    const info=document.getElementById('premiumBankMethodInfo');
+    if(info) info.innerHTML=`<div class="notice warn"><b>${A.escapeHtml(method.name)}</b><br>Account title: ${A.escapeHtml(method.account_title||'—')}<br>Account / IBAN: ${A.escapeHtml(method.account_number||'—')}<br>${A.escapeHtml(method.instructions||'')}</div>`;
+    document.getElementById('premiumBankForm')?.reset();
+    A.openModal('premiumBankModal');
+  }
+
+  async function submitPremiumBank(event){
+    event.preventDefault();
+    const f=event.currentTarget,file=f.elements.receipt.files?.[0],button=f.querySelector('button[type=submit]');
+    if(!file)return A.toast('Choose a bank payment receipt.','error');
+    if(file.size>5*1024*1024)return A.toast('Receipt must be 5 MB or smaller.','error');
+    const reference=String(f.elements.transaction_reference.value||'').trim();
+    if(reference.length<3)return A.toast('Enter a valid bank transaction reference.','error');
+    A.setLoading(button,true,'Submitting...');
+    let path='';
+    try{
+      path=`${state.user.id}/premium-bank/${Date.now()}-${A.fileSafeName(file.name)}`;
+      const upload=await A.supabase.storage.from('payment-receipts').upload(path,file,{contentType:file.type,upsert:false});
+      if(upload.error)throw upload.error;
+      const {error}=await A.supabase.rpc('submit_premium_bank_payment',{p_reference:reference,p_receipt_path:path,p_note:String(f.elements.student_note.value||'').trim()||null});
+      if(error){await A.supabase.storage.from('payment-receipts').remove([path]);throw error;}
+      await auditEvent('premium_payment_submitted','premium_package',null,'success',{method:'local_bank'});
+      A.closeModal('premiumBankModal');f.reset();await loadAll();renderAll();await flushMyEmailQueue();
+      A.toast('Bank payment submitted. Admin approval is required before access unlocks.','success');
+    }catch(error){A.toast(A.friendlyError(error,'Could not submit bank payment.'),'error');}
     finally{A.setLoading(button,false);}
   }
+
   async function submitPremiumUsdt(event){event.preventDefault();const f=event.currentTarget,file=f.elements.receipt.files?.[0],button=f.querySelector('button[type=submit]');if(!file)return A.toast('Choose a payment receipt.','error');if(file.size>5*1024*1024)return A.toast('Receipt must be 5 MB or smaller.','error');A.setLoading(button,true,'Submitting...');let path='';try{path=`${state.user.id}/premium/${Date.now()}-${A.fileSafeName(file.name)}`;const upload=await A.supabase.storage.from('payment-receipts').upload(path,file,{contentType:file.type,upsert:false});if(upload.error)throw upload.error;const {error}=await A.supabase.rpc('submit_premium_usdt_payment',{p_reference:f.elements.transaction_reference.value.trim(),p_receipt_path:path,p_note:f.elements.student_note.value.trim()||null});if(error){await A.supabase.storage.from('payment-receipts').remove([path]);throw error;}await auditEvent('premium_payment_submitted','premium_package',null,'success',{method:'usdt'});A.closeModal('premiumUsdtModal');f.reset();await loadAll();renderAll();await flushMyEmailQueue();A.toast('Premium payment submitted for review.','success');}catch(error){A.toast(A.friendlyError(error,'Could not submit premium payment.'),'error');}finally{A.setLoading(button,false);}}
   async function submitIbVerification(event){
     event.preventDefault();
@@ -801,21 +827,14 @@
       const course = p.courses || state.courses.find(c => c.id === p.course_id) || {};
       const latest = latestPayment(p.course_id);
       const canResubmit = p.status === 'resubmission_required' && latest?.id === p.id;
-      const isInfinity = p.provider === 'infinity';
-      const action = isInfinity
-        ? (p.status === 'initiated' && latest?.id === p.id
-            ? `<button class="app-btn small gold" data-buy-course="${p.course_id}"><i class="fa-solid fa-arrow-up-right-from-square"></i> Continue</button>`
-            : ['failed','declined'].includes(p.status) && latest?.id === p.id
-              ? `<button class="app-btn small outline" data-buy-course="${p.course_id}"><i class="fa-solid fa-rotate-right"></i> Try Again</button>`
-              : '<span class="status-pill neutral">Hosted</span>')
-        : canResubmit
-          ? `<button class="app-btn small gold" data-buy-course="${p.course_id}"><i class="fa-solid fa-upload"></i> New Receipt</button>`
-          : p.status === 'resubmission_required' && latest?.id !== p.id
-            ? '<span class="status-pill neutral">Superseded</span>'
-            : p.receipt_path
-              ? `<button class="app-btn small outline" data-view-receipt="${p.id}"><i class="fa-solid fa-eye"></i> View</button>`
-              : '—';
-      return `<tr><td><b>${A.escapeHtml(p.invoice_no || 'Pending')}</b></td><td>${A.escapeHtml(course.title || 'Course')}</td><td>${A.formatMoney(p.amount, course.currency || 'PKR')}</td><td>${A.escapeHtml(isInfinity ? 'Local Bank Transfer' : (p.payment_method_name || p.method || '—'))}</td><td>${A.escapeHtml(p.transaction_reference || '—')}</td><td>${A.formatDateTime(p.created_at)}</td><td><span class="status-pill ${A.statusClass(p.status)}">${A.statusLabel(p.status)}</span></td><td>${A.escapeHtml(p.admin_note || p.decline_reason || '—')}</td><td>${action}</td></tr>`;
+      const action = canResubmit
+        ? `<button class="app-btn small gold" data-buy-course="${p.course_id}"><i class="fa-solid fa-upload"></i> New Receipt</button>`
+        : p.status === 'resubmission_required' && latest?.id !== p.id
+          ? '<span class="status-pill neutral">Superseded</span>'
+          : p.receipt_path
+            ? `<button class="app-btn small outline" data-view-receipt="${p.id}"><i class="fa-solid fa-eye"></i> View</button>`
+            : '—';
+      return `<tr><td><b>${A.escapeHtml(p.invoice_no || 'Pending')}</b></td><td>${A.escapeHtml(course.title || 'Course')}</td><td>${A.formatMoney(p.amount, course.currency || 'PKR')}</td><td>${A.escapeHtml(p.payment_method_name || p.method || '—')}</td><td>${A.escapeHtml(p.transaction_reference || '—')}</td><td>${A.formatDateTime(p.created_at)}</td><td><span class="status-pill ${A.statusClass(p.status)}">${A.statusLabel(p.status)}</span></td><td>${A.escapeHtml(p.admin_note || p.decline_reason || '—')}</td><td>${action}</td></tr>`;
     }).join('');
   }
 
@@ -848,14 +867,12 @@
     if(!email)return A.toast('Your account email is missing. Please contact Admin.','error');
     A.setLoading(button, true, 'Sending...');
     try {
-      const { error } = await A.supabase.auth.resend({
-        type:'signup',
-        email,
-        options:{ emailRedirectTo:`${window.location.origin}/sign-in/?verified=1` }
-      });
-      if (error) throw error;
-      A.toast('Verification email sent. Check your inbox and spam folder.', 'success');
+      const response = await A.supabase.functions.invoke('auth-email', { body:{ action:'resend_verification', email } });
+      if (response.error) throw response.error;
+      if (response.data?.error) throw new Error(response.data.error);
+      A.toast(response.data?.already_verified ? 'Your email is already verified.' : 'Verification email sent. Check Inbox and Spam.', 'success');
     } catch (error) {
+      console.error('Verification email failed:', error);
       A.toast(A.friendlyError(error, 'Could not send verification email.'), 'error');
     } finally { A.setLoading(button, false); }
   }
@@ -1016,8 +1033,10 @@
 
     updateAlertButton();
     document.getElementById('paymentForm').addEventListener('submit', submitPayment);
+    document.getElementById('bankPaymentForm')?.addEventListener('submit', submitBankPayment);
     document.getElementById('profileForm').addEventListener('submit', saveProfile);
     document.getElementById('premiumUsdtForm')?.addEventListener('submit',submitPremiumUsdt);
+    document.getElementById('premiumBankForm')?.addEventListener('submit',submitPremiumBank);
     document.getElementById('riskForm').addEventListener('submit', acceptRisk);
     document.getElementById('globalSearch').addEventListener('keydown', event => {
       if (event.key !== 'Enter') return;
@@ -1049,7 +1068,7 @@
     paymentChoiceContext = { courseId, triggerButton };
     const payable = course.discount_price != null ? Number(course.discount_price) : Number(course.price);
     const currency = String(course.currency || '').toUpperCase();
-    const localBankEnabled = state.paymentMethods.some(m => /^(local bank transfer|infinity(?: money solutions)?)$/i.test(String(m.name||'').trim()));
+    const localBankEnabled = state.paymentMethods.some(m => /^local bank transfer$/i.test(String(m.name||'').trim()));
     const usdtEnabled = state.paymentMethods.some(m => /usdt|trc\s*20|trc20/i.test(`${m.name||''} ${m.instructions||''}`));
     const localChoice=document.querySelector('[data-payment-choice="local-bank"]'); if(localChoice){localChoice.disabled=!localBankEnabled;localChoice.classList.toggle('method-disabled',!localBankEnabled);localChoice.style.opacity=localBankEnabled?'':'0.45';}
     const usdtChoice=document.querySelector('[data-payment-choice="usdt"]'); if(usdtChoice){usdtChoice.disabled=!usdtEnabled;usdtChoice.classList.toggle('method-disabled',!usdtEnabled);usdtChoice.style.opacity=usdtEnabled?'':'0.45';}
@@ -1066,11 +1085,11 @@
     const currency = String(course.currency || '').toUpperCase();
 
     if (choice === 'local-bank') {
-      const enabled=state.paymentMethods.some(m=>/^(local bank transfer|infinity(?: money solutions)?)$/i.test(String(m.name||'').trim()));
+      const enabled=state.paymentMethods.some(m=>/^local bank transfer$/i.test(String(m.name||'').trim()));
       if(!enabled) return A.toast('Local Bank Transfer is currently disabled by Admin.','warning');
       if (currency !== 'PKR') return A.toast('Local Bank Transfer is available for courses priced in PKR. This course is currently priced in USDT.', 'warning');
       A.closeModal('paymentMethodChoiceModal');
-      return startInfinityPayment(courseId, triggerButton);
+      return openLocalBankPaymentModal(courseId);
     }
 
     if (choice === 'usdt') {
@@ -1099,6 +1118,27 @@
     A.openModal('paymentModal');
   }
 
+
+  async function openLocalBankPaymentModal(courseId) {
+    const course = state.courses.find(c => c.id === courseId);
+    if (!course) return;
+    const pending = latestPayment(courseId);
+    if (pending && ['received','under_review'].includes(pending.status)) return A.toast('Your payment is already being processed.', 'warning');
+
+    const method = state.paymentMethods.find(m => /^local bank transfer$/i.test(String(m.name||'').trim()));
+    if (!method) return A.toast('Local Bank Transfer is not configured yet. Please contact Admin.', 'warning');
+
+    const form = document.getElementById('bankPaymentForm');
+    if (!form) return A.toast('Bank payment form is unavailable.', 'error');
+    form.reset();
+    form.elements.course_id.value = course.id;
+    form.dataset.supersedesPaymentId = pending?.status==='resubmission_required' ? pending.id : '';
+    const payable=course.discount_price!=null?Number(course.discount_price):Number(course.price);
+    document.getElementById('bankPaymentCourseSummary').innerHTML = `<b>${A.escapeHtml(course.title)}</b><br>Amount: PKR ${Number(payable).toLocaleString('en-US',{maximumFractionDigits:2})}<br><small>Transfer manually and submit your reference + receipt for Admin approval.</small>`;
+    document.getElementById('bankPaymentMethodInfo').innerHTML = `<div class="notice warn"><b>${A.escapeHtml(method.name)}</b><br>Account title: ${A.escapeHtml(method.account_title||'—')}<br>Account / IBAN: ${A.escapeHtml(method.account_number||'—')}<br>${A.escapeHtml(method.instructions||'')}</div>`;
+    A.openModal('bankPaymentModal');
+  }
+
   async function flushMyEmailQueue() {
     try {
       const response = await A.supabase.functions.invoke('process-email-queue', { body: { limit: 10, retry_failed: true } });
@@ -1111,58 +1151,54 @@
     }
   }
 
-  async function startInfinityPayment(courseId, triggerButton=null) {
-    const course = state.courses.find(c => c.id === courseId);
-    if (!course) return;
-    const button = triggerButton || document.querySelector(`[data-buy-course="${courseId}"]`);
-    A.setLoading(button, true, 'Opening Local Bank Transfer...');
-    try {
-      const { data, error } = await A.supabase.functions.invoke('create-infinity-payment', { body: { course_id: courseId } });
-      if (error) throw error;
-      if (!data?.redirect_url) throw new Error(data?.error || 'Payment provider did not return a secure payment page.');
-      if (!/^https?:\/\//i.test(data.redirect_url)) throw new Error('Invalid payment redirect URL.');
-      await auditEvent('course_payment_started','course',courseId,'success',{method:'local_bank'});
-      window.location.assign(data.redirect_url);
-    } catch (error) {
-      let paymentError = error;
-      try {
-        const response = error?.context;
-        if (response && typeof response.clone === 'function') {
-          const payload = await response.clone().json().catch(()=>null);
-          if (payload?.error) {
-            const extra = [payload.code, payload.details, payload.hint].filter(Boolean).join(' · ');
-            paymentError = new Error(`${payload.error}${extra ? ` (${extra})` : ''}`);
-          }
-        }
-      } catch { /* preserve original function error */ }
-      await loadAll().catch(()=>{});
-      renderAll();
-      A.toast(A.friendlyError(paymentError, 'Could not open Local Bank Transfer. Please try again.'), 'error');
-    } finally {
-      A.setLoading(button, false);
-    }
-  }
-
   function handlePaymentReturn() {
-    const premiumParams=new URLSearchParams(location.search); if(premiumParams.get('premium_return')==='1'){openPanel('profile');setTimeout(()=>openAllAccessModal(),80);A.toast('Premium payment return received. Status will update after provider confirmation.','info');}
     const params = new URLSearchParams(window.location.search);
-    if (params.get('payment_return') !== '1') return;
-    openPanel('courses');
-    const payment = state.payments.find(p => Number(p.provider_request_id) === Number(params.get('request_id')));
-    if (payment?.status === 'approved') A.toast('Payment verified successfully. Your course access is now active.', 'success');
-    else if (payment?.status === 'declined') A.toast(payment.provider_rejection_reason || payment.admin_note || 'Payment was rejected.', 'error');
-    else A.toast('Payment verification is being finalized. This page will update automatically.', 'warning');
+    if (!params.has('payment_return') && !params.has('premium_return') && !params.has('request_id')) return;
     try {
       const clean = new URL(window.location.href);
       clean.searchParams.delete('payment_return');
+      clean.searchParams.delete('premium_return');
       clean.searchParams.delete('request_id');
-      history.replaceState({}, '', `${clean.pathname}${clean.search}#courses`);
-    } catch { /* cosmetic URL cleanup only */ }
+      history.replaceState({}, '', `${clean.pathname}${clean.search}${clean.hash}`);
+    } catch { /* cosmetic cleanup only */ }
   }
 
   function renderPaymentMethodInfo() {
     const method = state.paymentMethods.find(m => m.id === document.getElementById('paymentMethodSelect').value);
     document.getElementById('paymentMethodsBox').innerHTML = method ? `<div class="notice warn"><b>${A.escapeHtml(method.name)}</b><br>Account title: ${A.escapeHtml(method.account_title || '—')}<br>USDT TRC20 wallet: ${A.escapeHtml(method.account_number || '—')}<br>${A.escapeHtml(method.instructions || '')}</div>` : '';
+  }
+
+
+  async function submitBankPayment(event) {
+    event.preventDefault();
+    const form=event.currentTarget,button=form.querySelector('button[type="submit"]');
+    const course=state.courses.find(c=>c.id===String(form.elements.course_id.value||''));
+    const file=form.elements.receipt.files?.[0];
+    if(!course)return A.toast('Course not found.','error');
+    if(!file)return A.toast('Please select a bank payment receipt.','error');
+    if(file.size>5*1024*1024)return A.toast('Receipt must be 5 MB or smaller.','error');
+    const reference=String(form.elements.transaction_reference.value||'').trim();
+    if(reference.length<3)return A.toast('Enter a valid bank transaction reference.','error');
+    A.setLoading(button,true,'Uploading receipt...');
+    let path='';
+    try{
+      path=`${state.user.id}/bank/${Date.now()}-${A.fileSafeName(file.name)}`;
+      const upload=await A.supabase.storage.from('payment-receipts').upload(path,file,{upsert:false,contentType:file.type});
+      if(upload.error)throw upload.error;
+      const {error}=await A.supabase.rpc('submit_course_bank_payment',{
+        p_course_id:course.id,
+        p_reference:reference,
+        p_receipt_path:path,
+        p_note:String(form.elements.student_note.value||'').trim()||null
+      });
+      if(error){await A.supabase.storage.from('payment-receipts').remove([path]);throw error;}
+      await auditEvent('course_payment_submitted','course',course.id,'success',{method:'local_bank'});
+      await flushMyEmailQueue();await loadAll();renderAll();
+      A.closeModal('bankPaymentModal');form.reset();
+      A.toast('Bank receipt received. Admin approval is required before course access unlocks.','success');
+      openPanel('courses');
+    }catch(error){A.toast(A.friendlyError(error,'Bank payment submission failed.'),'error');}
+    finally{A.setLoading(button,false);}
   }
 
   async function submitPayment(event) {

@@ -1,0 +1,21 @@
+24K MR ZERO V12.09 — MANUAL BANK PAYMENT PATCH
+
+Backend already updated live:
+- Infinity DB RPCs removed.
+- Infinity Edge Functions disabled.
+- Local Bank Transfer is manual Admin approval.
+- submit_course_bank_payment RPC added.
+- submit_premium_bank_payment RPC added.
+- Admin review remains the source of truth for course/premium access.
+
+Upload/overwrite these 4 website files:
+- assets/js/student.js
+- assets/js/admin.js
+- student-dashboard.html
+- admin-dashboard.html
+
+After upload:
+- Hard refresh browser.
+- Admin > Payment Methods > Edit "Local Bank Transfer".
+- Enter Account Title + Account Number/IBAN + instructions.
+- Student Bank flow: transfer -> reference + receipt -> Admin Review -> Approve -> access.
