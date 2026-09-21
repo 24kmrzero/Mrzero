@@ -14,7 +14,7 @@
   if (sessionData.session?.user) {
     try {
       const profile = await A.getProfile(sessionData.session.user.id);
-      if (profile.role === 'admin') {
+      if (['admin','super_admin'].includes(profile.role)) {
         window.location.replace('/admin/');
         return;
       }
@@ -38,7 +38,7 @@
       const { data, error } = await A.supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
       const profile = await A.getProfile(data.user.id);
-      if (profile.role !== 'admin') {
+      if (!['admin','super_admin'].includes(profile.role)) {
         await A.supabase.auth.signOut();
         throw new Error('This account is not authorized for Admin access.');
       }

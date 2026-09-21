@@ -1,3 +1,1 @@
-24K Zero V10.40 — Final Reference Landing Rebuild
-Scope: Public landing + public courses only
-SQL: none
+V12.00 — Master Operations + PipSePaisa Operational Flow Integration

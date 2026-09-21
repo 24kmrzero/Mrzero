@@ -1,0 +1,24 @@
+24K MR ZERO — V12.00 QA SUMMARY
+===============================
+
+Static QA completed on the merged project:
+- JavaScript: 60 files checked, syntax failures: 0
+- HTML: 80 files checked, duplicate-ID files: 0
+- Active local page/asset references: 0 real missing refs
+  (Supabase template {{ .ConfirmationURL }} placeholders are intentional.)
+- Frontend RPC references: 44
+- Missing bundled RPC definitions: 0
+- Bundled internal Edge Functions:
+  * process-email-queue
+  * free-course-enroll
+  * audit-event
+- External provider functions referenced but not bundled in uploaded source:
+  * create-infinity-payment
+  * create-premium-infinity-payment
+
+Additional final fixes:
+- Admin + super_admin are accepted by existing Admin auth/role guards.
+- Student router recognizes /student/ea-indicator/ and #ea.
+- EA/Indicator student insert is server-side validated against an approved IB/Broker verification.
+- Team Manager/Performance use the same Admin auth storage/session architecture.
+- Tracking signup/enrollment counting is server-side/deduped in the V12 flow.

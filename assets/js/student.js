@@ -84,6 +84,7 @@
       charts: '/student/charts/',
       articles: '/student/articles/',
       announcements: '/student/updates/',
+      ea: '/student/ea-indicator/',
       profile: '/student/profile/'
     };
     const normalize = value => {
@@ -93,6 +94,7 @@
       if (raw === 'signal') return 'signals';
       if (raw === 'chart') return 'charts';
       if (raw === 'article') return 'articles';
+      if (raw === 'ea' || raw === 'ea-indicator' || raw === 'indicator') return 'ea';
       if (raw === 'account') return 'profile';
       return routeMap[raw] ? raw : '';
     };
@@ -103,6 +105,7 @@
       '/student/charts': 'charts', '/student/charts/': 'charts',
       '/student/articles': 'articles', '/student/articles/': 'articles',
       '/student/updates': 'announcements', '/student/updates/': 'announcements',
+      '/student/ea-indicator': 'ea', '/student/ea-indicator/': 'ea',
       '/student/profile': 'profile', '/student/profile/': 'profile'
     };
     const keyFromLocation = () => {
@@ -747,7 +750,7 @@
     catch(error){A.toast(A.friendlyError(error,'Could not start premium payment.'),'error');}
     finally{A.setLoading(button,false);}
   }
-  async function submitPremiumUsdt(event){event.preventDefault();const f=event.currentTarget,file=f.elements.receipt.files?.[0],button=f.querySelector('button[type=submit]');if(!file)return A.toast('Choose a payment receipt.','error');if(file.size>5*1024*1024)return A.toast('Receipt must be 5 MB or smaller.','error');A.setLoading(button,true,'Submitting...');let path='';try{path=`${state.user.id}/premium/${Date.now()}-${A.fileSafeName(file.name)}`;const upload=await A.supabase.storage.from('payment-receipts').upload(path,file,{contentType:file.type,upsert:false});if(upload.error)throw upload.error;const {error}=await A.supabase.rpc('submit_premium_usdt_payment',{p_reference:f.elements.transaction_reference.value.trim(),p_receipt_path:path,p_note:f.elements.student_note.value.trim()||null});if(error){await A.supabase.storage.from('payment-receipts').remove([path]);throw error;}await auditEvent('premium_payment_submitted','premium_package',null,'success',{method:'usdt'});A.closeModal('premiumUsdtModal');f.reset();await loadAll();renderAll();A.toast('Premium payment submitted for review.','success');}catch(error){A.toast(A.friendlyError(error,'Could not submit premium payment.'),'error');}finally{A.setLoading(button,false);}}
+  async function submitPremiumUsdt(event){event.preventDefault();const f=event.currentTarget,file=f.elements.receipt.files?.[0],button=f.querySelector('button[type=submit]');if(!file)return A.toast('Choose a payment receipt.','error');if(file.size>5*1024*1024)return A.toast('Receipt must be 5 MB or smaller.','error');A.setLoading(button,true,'Submitting...');let path='';try{path=`${state.user.id}/premium/${Date.now()}-${A.fileSafeName(file.name)}`;const upload=await A.supabase.storage.from('payment-receipts').upload(path,file,{contentType:file.type,upsert:false});if(upload.error)throw upload.error;const {error}=await A.supabase.rpc('submit_premium_usdt_payment',{p_reference:f.elements.transaction_reference.value.trim(),p_receipt_path:path,p_note:f.elements.student_note.value.trim()||null});if(error){await A.supabase.storage.from('payment-receipts').remove([path]);throw error;}await auditEvent('premium_payment_submitted','premium_package',null,'success',{method:'usdt'});A.closeModal('premiumUsdtModal');f.reset();await loadAll();renderAll();await flushMyEmailQueue();A.toast('Premium payment submitted for review.','success');}catch(error){A.toast(A.friendlyError(error,'Could not submit premium payment.'),'error');}finally{A.setLoading(button,false);}}
   async function submitIbVerification(event){
     event.preventDefault();
     const f=event.currentTarget,button=f.querySelector('button[type=submit]');
@@ -782,7 +785,7 @@
       if(error)throw error;
       await auditEvent('ib_verification_submitted','ib_verification',data?.id||null,'success',{broker:f.elements.broker.value,account_action:f.elements.account_type.value,deposit_amount:amount});
       f.reset();renderIbBrokerInstructions();await loadPremiumState();renderPremium();
-      A.toast('IB verification submitted for Admin review.','success');
+      await flushMyEmailQueue();A.toast('IB verification submitted for Admin review.','success');
     }catch(error){
       if(uploaded.length)try{await A.supabase.storage.from('ib-proofs').remove(uploaded);}catch{}
       A.toast(A.friendlyError(error,'Could not submit IB verification.'),'error');
@@ -841,12 +844,17 @@
 
   async function requestEmailVerification(button) {
     if (state.profile?.email_verified) return A.toast('Your email is already verified.', 'info');
+    const email=String(state.profile?.email||state.user?.email||'').trim().toLowerCase();
+    if(!email)return A.toast('Your account email is missing. Please contact Admin.','error');
     A.setLoading(button, true, 'Sending...');
     try {
-      const { data, error } = await A.supabase.rpc('request_app_email_verification');
+      const { error } = await A.supabase.auth.resend({
+        type:'signup',
+        email,
+        options:{ emailRedirectTo:`${window.location.origin}/sign-in/?verified=1` }
+      });
       if (error) throw error;
-      await A.supabase.functions.invoke('process-email-queue', { body: { limit: 5 } }).catch(() => null);
-      A.toast(data?.message || 'Verification email sent. Check your inbox.', 'success');
+      A.toast('Verification email sent. Check your inbox and spam folder.', 'success');
     } catch (error) {
       A.toast(A.friendlyError(error, 'Could not send verification email.'), 'error');
     } finally { A.setLoading(button, false); }
@@ -1093,9 +1101,13 @@
 
   async function flushMyEmailQueue() {
     try {
-      await A.supabase.functions.invoke('process-email-queue', { body: { limit: 10 } });
+      const response = await A.supabase.functions.invoke('process-email-queue', { body: { limit: 10, retry_failed: true } });
+      if (response.error) throw response.error;
+      if (Number(response.data?.failed || 0) > 0) console.warn('Some queued email(s) failed:', response.data);
+      return response.data || null;
     } catch (error) {
-      console.warn('Email delivery will retry later:', error);
+      console.warn('Email delivery could not run:', error?.message || error);
+      return null;
     }
   }
 
@@ -1246,7 +1258,7 @@
     try {
       const row = { id: A.uid(), student_id: state.user.id, category: values.category, subject: String(values.subject).trim(), message: String(values.message).trim(), status: 'open', created_at: new Date().toISOString() };
       const { error } = await A.supabase.from('support_requests').insert({ student_id: state.user.id, category: row.category, subject: row.subject, message: row.message }); if (error) throw error; await loadAll();
-      form.reset(); renderSupport(); A.toast('Support request submitted.', 'success');
+      form.reset(); renderSupport(); await flushMyEmailQueue(); A.toast('Support request submitted.', 'success');
     } catch (error) { A.toast(A.friendlyError(error, 'Could not submit request.'), 'error'); }
     finally { A.setLoading(button, false); }
   }

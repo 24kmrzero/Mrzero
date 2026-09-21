@@ -30,6 +30,7 @@
 
   const reason = params.get('reason');
   if (reason === 'student-required') toast('Please sign in with a student account.', 'info');
+  if (params.get('verified') === '1') toast('Email verified successfully. You can sign in now.', 'success');
 
   const checkEmailUrl = () => '/check-email/';
   const studentHome = () => '/student/';
@@ -69,6 +70,9 @@
         p_details: {}
       });
     } catch (error) { console.warn('Activity log skipped:', error?.message || error); }
+    // Deliver any queued transactional emails that belong to this student (welcome, approvals, reminders, etc.).
+    try { await supabase.functions.invoke('process-email-queue', { body: { limit: 10, retry_failed: true } }); }
+    catch (error) { console.warn('Queued email delivery skipped:', error?.message || error); }
 
     const intent = tracking?.context().courseIntent || profile?.pending_course_slug || null;
     if (intent) {
@@ -152,7 +156,7 @@
         options: {
           // This is only a fallback if mandatory Supabase confirmation is accidentally left ON.
           // Normal V9.46 flow uses an immediate session and application-level verification later.
-          emailRedirectTo: `${window.location.origin}/sign-in/`,
+          emailRedirectTo: `${window.location.origin}/sign-in/?verified=1`,
           data: {
             full_name: String(values.full_name || '').trim(),
             whatsapp: String(values.whatsapp || '').trim(),
@@ -175,7 +179,7 @@
       if (data.session?.user) {
         await tracking?.record('signup').catch(() => {});
         const profile = await getProfileWithRetry(data.session.user.id);
-        toast('Account created successfully. Verify your email later from the Student Panel.', 'success');
+        toast('Account created successfully. Email confirmation is disabled in Supabase, so no verification email was required.', 'warning');
         await finishStudentLogin(data.session.user, profile);
         return;
       }
@@ -183,7 +187,7 @@
       // Safe fallback when Supabase mandatory Confirm Email is still enabled.
       sessionStorage.setItem('24k_pending_signup_email', email);
       localStorage.setItem('24k_pending_signup_email', email);
-      toast('Account created. Supabase email confirmation is still enabled.', 'warning');
+      toast('Account created. We sent a verification email—check your inbox and spam folder before signing in.', 'success');
       window.location.replace(checkEmailUrl());
     } catch (error) {
       await audit('signup_attempt','failed',{email,scope:'student'});

@@ -187,7 +187,7 @@
     }
 
     [state.notifications, state.reads, state.modules, state.lessons, state.progress] = responses.map(item => item.data || []);
-    platformAllowed = ['active', 'grace'].includes(A.effectiveAccessStatus(state.profile)) || state.profile?.role === 'admin';
+    platformAllowed = ['active', 'grace'].includes(A.effectiveAccessStatus(state.profile)) || ['admin','super_admin'].includes(state.profile?.role);
     renderAccess();
     renderNotifications();
     renderCourseProgressForSelected();
@@ -197,7 +197,7 @@
     const profile = state.profile;
     if (!profile) return;
     const status = A.effectiveAccessStatus(profile);
-    platformAllowed = ['active', 'grace'].includes(status) || profile.role === 'admin';
+    platformAllowed = ['active', 'grace'].includes(status) || ['admin','super_admin'].includes(profile.role);
     const expiry = profile.lifetime_access ? 'Lifetime' : profile.access_expires_at ? A.formatDateTime(profile.access_expires_at) : 'No expiry set';
     const supportLink = document.getElementById('accessSupportLink');
     if (supportLink) supportLink.href = `https://wa.me/${A.cfg.SUPPORT_WHATSAPP}`;

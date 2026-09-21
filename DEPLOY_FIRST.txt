@@ -1,0 +1,19 @@
+24K MR ZERO — EMAIL SYSTEM V11.13
+
+DEPLOY ORDER
+1) Upload/overwrite the patch files in your website repository root.
+2) Supabase SQL Editor: run 24_EMAIL_SYSTEM_V11_13.sql once.
+3) Deploy Edge Function: supabase/functions/process-email-queue/index.ts
+4) Edge Function Secrets: RESEND_API_KEY, EMAIL_FROM, SITE_URL, EMAIL_QUEUE_SECRET.
+5) Supabase Authentication: enable Confirm email + configure Custom SMTP.
+6) Supabase Authentication > URL Configuration:
+   Site URL: https://www.24kmrzero.com
+   Redirect URL: https://www.24kmrzero.com/**
+7) Copy the supplied Auth templates from supabase/templates/ into Supabase Authentication > Email Templates.
+8) Recommended: configure EMAIL_CRON_SETUP.sql so admin alerts/reminders and queued mail send automatically even when nobody is online.
+9) Test in this order: Invite User, new Signup, Password Reset, free enrollment, payment submit, payment approve/reject, Premium, IB, Support.
+
+IMPORTANT
+- Supabase Auth Invite/Signup/Reset/Email Change emails cannot be fixed by website code alone. Custom SMTP must be configured in the Supabase project.
+- Do not expose RESEND_API_KEY or EMAIL_QUEUE_SECRET in browser JavaScript.
+- Live class/Zoom URLs are not sent by transactional email. Students are told to use the official WhatsApp Community.

@@ -1,0 +1,138 @@
+24K MR ZERO — V12.00 MASTER OPERATIONS
+=======================================
+
+This is a cumulative incremental patch for the uploaded V10.40 project.
+It includes the prior V11.13 email system, V11.14 tracked free enrollment,
+and the new V12 Master Operations integration.
+
+DO NOT delete your existing Supabase project or existing Infinity payment Edge Functions.
+
+1) WEBSITE FILES
+----------------
+Upload/overwrite the contents of this patch at your website repository root.
+Preserve the same folder structure.
+
+2) SUPABASE SQL — RUN IN THIS ORDER
+-----------------------------------
+A. If V11.13 email SQL was NOT previously run:
+   24_EMAIL_SYSTEM_V11_13.sql
+
+B. Then run:
+   25_MASTER_OPERATIONS_V12.sql
+
+V12 SQL is additive and is designed to preserve existing production data/history.
+It adds/updates the operational tables, RLS, RPC compatibility layer, Team/Finance/
+Tracking/EA/Mentor/Live Desk systems and required policies/functions.
+
+3) EDGE FUNCTIONS — DEPLOY/REDEPLOY
+------------------------------------
+supabase functions deploy process-email-queue --no-verify-jwt
+supabase functions deploy free-course-enroll --no-verify-jwt
+supabase functions deploy audit-event --no-verify-jwt
+
+Required/used secrets:
+- RESEND_API_KEY
+- EMAIL_FROM
+- SITE_URL
+- EMAIL_QUEUE_SECRET
+
+Optional:
+- FREE_COURSE_SLUG  (if you want to force one specific free course)
+
+Supabase supplies SUPABASE_URL and service-role environment values to Edge Functions.
+
+4) AUTH EMAILS / SMTP
+----------------------
+Keep Custom SMTP enabled in Supabase Auth.
+Templates bundled under supabase/templates are reference copies of:
+- Confirm signup
+- Invite user
+- Reset password
+- Change email
+
+If you already configured these in the Supabase dashboard, do not overwrite them unless desired.
+
+5) IMPORTANT — INFINITY PAYMENT FUNCTIONS
+------------------------------------------
+The uploaded source project invokes these external-provider functions:
+- create-infinity-payment
+- create-premium-infinity-payment
+
+Their source/API contract was NOT present in the uploaded project and is NOT fabricated in V12.
+If they already exist in production, KEEP THEM DEPLOYED. Do not delete them.
+
+6) NEW V12 ROUTES
+------------------
+/admin/operations/           Master Operations
+/mentor-login.html           Mentor login
+/mentor/                     Mentor Panel
+/student/ea-indicator/       Student EA & Indicator route
+/free-course/                Tracked free-course enrollment form
+
+Existing:
+/admin/team-manager/
+/admin/team-performance/
+/team/
+
+7) MASTER OPERATIONS INCLUDES
+------------------------------
+- Ad/tracked links + attribution
+- 3-field free-course lead form
+- Account creation + password setup email
+- Current course batch enrollment
+- Round-robin Team lead assignment
+- Assigned-manager WhatsApp routing
+- Persistent client ownership + Admin transfer
+- Payments/enrollments operational center
+- Course batch history/current-batch control
+- Finance ledger + automatic course income sync
+- Staff / salary monthly records
+- Partners / payouts
+- EA & Indicator products/requests/licensed private files
+- Server-side EA broker verification requirement
+- Student EA & Indicator module
+- Mentor Panel + module permissions
+- Student/Admin feature flags
+- Marketing email campaigns via email_queue
+- Live Desk threads/messages
+- Admin activity/audit logging
+- Legacy/current RPC compatibility layer
+- Super Admin compatibility with existing Admin login/guards
+
+8) TEAM RULES
+-------------
+- Team account Active + Receive Leads toggles
+- Round-robin skips inactive/Receive Leads OFF managers
+- Client ownership persists independently from link naming
+- Only Admin changes ownership
+- Earnings/history remain month-specific
+- Months before Sep 2026 remain visible but are treated as already settled
+- XM + DPrime + Exness use combined shared lot tier:
+  0.3 -> 0.5 -> 0.7 -> 1.0
+
+9) ZOOM RULE
+------------
+V12 does NOT expose Zoom join links on the public/student website.
+Class schedule/details can be shown; actual class link continues through WhatsApp Community.
+
+10) POST-DEPLOY QUICK TEST
+---------------------------
+- Admin login works with role admin or super_admin
+- /admin/operations/ loads
+- Create one tracked/ad link
+- Open /free-course/?ref=YOUR_CODE and submit a test lead
+- Confirm account + enrollment + manager assignment + password email
+- Check Team My Clients
+- Create one batch and mark current
+- Add one finance test entry
+- Verify a broker/IB account, then submit an EA request
+- Confirm unverified broker account EA request is blocked
+- Test Mentor login/permissions
+- Test Live Desk message/reply
+- Test one email campaign with a small audience
+
+11) CACHE
+---------
+After deployment, hard refresh the browser (Ctrl + Shift + R).
+
+PATCH: V12.00 — Master Operations + PipSePaisa Operational Flow Integration

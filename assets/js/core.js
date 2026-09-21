@@ -101,7 +101,7 @@
 
   const effectiveAccessStatus = profile => {
     if (!profile) return 'locked';
-    if (profile.role === 'admin') return 'active';
+    if (['admin','super_admin'].includes(profile.role)) return 'active';
     if (profile.email_verified === false) return 'pending';
     if (['locked', 'suspended', 'pending'].includes(profile.status)) return profile.status;
     if (profile.lifetime_access) return 'active';
@@ -294,7 +294,7 @@
     };
     const studentRoutes = {
       dashboard: '/student/', signals: '/student/signals/', charts: '/student/charts/', articles: '/student/articles/',
-      courses: '/student/courses/', announcements: '/student/updates/',
+      courses: '/student/courses/', announcements: '/student/updates/', ea: '/student/ea-indicator/',
       profile: '/student/profile/', support: '/student/profile/'
     };
     const routeMap = authScope === 'admin' ? adminRoutes : studentRoutes;
@@ -317,7 +317,7 @@
       }
       if (authScope !== 'admin' && (path === '/student-dashboard.html' || path === '/student-dashboard')) {
         const requested = normalizeKey(location.hash);
-        return ['dashboard','courses','signals','charts','articles','announcements','profile'].includes(requested) ? requested : 'dashboard';
+        return ['dashboard','courses','signals','charts','articles','announcements','ea','profile'].includes(requested) ? requested : 'dashboard';
       }
       return '';
     };
@@ -409,7 +409,7 @@
       const user = await getCurrentUser();
       if (!user) throw new Error('No active session');
       const profile = await getProfile(user.id);
-      if (profile.role !== role) {
+      if (role === 'admin' ? !['admin','super_admin'].includes(profile.role) : profile.role !== role) {
         await supabase.auth.signOut().catch(() => {});
         const reason = role === 'admin' ? 'admin-required' : 'student-required';
         window.location.replace(`${loginUrl}${loginUrl.includes('?') ? '&' : '?'}reason=${reason}`);

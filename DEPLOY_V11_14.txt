@@ -1,0 +1,43 @@
+24K MR ZERO — V11.14 TRACKED FREE ENROLLMENT
+
+WHAT THIS PATCH DOES
+- Existing Link Manager destination /free-course now opens the premium 3-field enrollment form.
+- Requires an active tracking link ref code.
+- Creates a Supabase Auth student account for a new email.
+- Automatically enrolls the account into the current published free Batch 3 / Basic Level 1 course.
+- Preserves tracking attribution and records signup/enrollment against the tracked link when the tables are available.
+- Sends a secure Supabase Invite email to new users so they can set their password.
+- Existing users receive a password recovery/setup email instead of creating a duplicate account.
+- Reuses /reset-password/ as the secure password setup page.
+
+UPLOAD / OVERWRITE
+1. free-course/index.html
+2. assets/css/v1114-free-course-enrollment.css
+3. assets/js/v1114-free-course-enrollment.js
+4. assets/js/reset-password.js
+5. reset-password/index.html
+6. supabase/functions/free-course-enroll/index.ts
+
+EDGE FUNCTION
+Deploy the new function:
+  supabase functions deploy free-course-enroll --no-verify-jwt
+
+Required Edge Function secrets:
+- SUPABASE_URL (normally provided automatically)
+- SUPABASE_SERVICE_ROLE_KEY (normally provided automatically)
+- SITE_URL=https://YOUR-LIVE-DOMAIN
+
+Optional:
+- FREE_COURSE_SLUG=basic-level-1-course
+  Set this only if you want to force one exact free course. Without it, the function first looks for Batch 3, then Basic Level 1, then the latest published free course.
+
+AUTH EMAILS
+Keep the Supabase Auth SMTP + Invite User + Reset Password templates configured as already completed.
+
+TRACKED LINK
+In Admin > Link Manager use Destination = Free Course.
+The generated link will look like:
+  https://YOUR-DOMAIN/free-course/?ref=TEAMCODE&source=Facebook&campaign=batch-3
+
+SECURITY
+The form does NOT email a plaintext password. It emails a one-time secure Supabase link. The student chooses their own password on /reset-password/.

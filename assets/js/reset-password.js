@@ -107,7 +107,7 @@
     let role = accountRole;
     try {
       const profile = await A.getProfile(session.user.id);
-      if (profile?.role === 'admin') role = 'admin';
+      if (['admin','super_admin'].includes(profile?.role)) role = 'admin';
       else if (profile?.role === 'student') role = 'student';
     } catch (error) {
       console.warn('Could not resolve recovery account role:', error?.message || error);
