@@ -1,0 +1,21 @@
+24K MR ZERO V12.15 HOTFIX
+
+FIXED
+- Admin Content: saveChart is not defined.
+- Admin Content: missing saveArticle handler.
+- Admin Signals: missing signal-history handler.
+- Team Member form now includes Greeting: Sir / Miss.
+- Assigned Team response now includes Greeting.
+- Free-course tracked enrollment automatically hands the user to the assigned Team member's WhatsApp.
+- WhatsApp message is pre-filled with course/batch + Client ID.
+- Green Open WhatsApp button remains as fallback.
+
+IMPORTANT
+A website cannot silently press WhatsApp's Send button.
+The website can automatically open WhatsApp with the message already typed; the user presses Send.
+
+LIVE SUPABASE
+V12.15 Team greeting migration is already applied.
+
+DEPLOY
+Overwrite the files in this patch, then hard refresh Admin and Free Course pages.

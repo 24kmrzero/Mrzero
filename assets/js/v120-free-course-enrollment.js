@@ -25,6 +25,13 @@
       : '<span>Complete Free Enrollment</span><i class="fa-solid fa-arrow-right"></i>';
   }
 
+  function managerGreeting(manager) {
+    const rawName = String(manager?.display_name || 'your manager').trim();
+    if (/^(sir|miss|ms\.?|mrs\.?)\s+/i.test(rawName)) return rawName;
+    const salutation = String(manager?.salutation || '').trim();
+    return salutation ? `${salutation} ${rawName}` : rawName;
+  }
+
   function trackingContext() {
     const t = window.Tracking?.context?.() || {};
     return {
@@ -90,17 +97,48 @@
         const manager = payload.manager || {};
         if (manager.whatsapp) {
           const managerName = String(manager.display_name || 'your manager');
-          const batch = String(payload.batch_name || 'Free Course');
-          const clientId = String(payload.client_id || '');
-          const text = `Hello ${managerName}, I have enrolled in ${batch}${clientId ? ` (Client ID ${clientId})` : ''}. Kindly verify and share next steps.`;
+          const greetingName = managerGreeting(manager);
+          const batch = String(payload.batch_name || payload.course_title || 'the course');
+          const clientId = String(payload.client_id || '').trim();
+          const lines = [
+            `Hello ${greetingName},`,
+            `Maine ${batch} mein enrollment complete kar li hai.`,
+            clientId ? `Mera Client ID: ${clientId}` : '',
+            'Kindly confirm kar dein.'
+          ].filter(Boolean);
+          const text = lines.join('\n');
           const digits = String(manager.whatsapp).replace(/\D/g, '');
           const href = `https://wa.me/${digits}?text=${encodeURIComponent(text)}`;
           const old = success.querySelector('.manager-connect');
           if (old) old.remove();
-          success.insertAdjacentHTML('beforeend', `<div class="manager-connect"><p>You are being connected to <b>${managerName.replace(/[<>&"']/g,'')}</b> for next steps.</p><a class="manager-whatsapp" href="${href}" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Open WhatsApp</a></div>`);
-          success.querySelector('.manager-whatsapp')?.addEventListener('click', () => {
-            window.Tracking?.record?.('whatsapp_routed', { course_id: payload.course_id || null, manager_id: manager.team_id || null, enrollment_id: payload.enrollment_id || null }).catch(() => {});
-          });
+          success.insertAdjacentHTML('beforeend', `<div class="manager-connect"><p>Enrollment complete. Connecting you to <b>${greetingName.replace(/[<>&"']/g,'')}</b> on WhatsApp…</p><a class="manager-whatsapp" href="${href}" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Open WhatsApp</a></div>`);
+
+          let routed = false;
+          const recordRoute = async () => {
+            if (routed) return;
+            routed = true;
+            try {
+              await window.Tracking?.record?.(
+                'whatsapp_routed',
+                {
+                  course_id: payload.course_id || null,
+                  manager_id: manager.team_id || null,
+                  enrollment_id: payload.enrollment_id || null
+                },
+                context.ref
+              );
+            } catch (_) {}
+          };
+
+          success.querySelector('.manager-whatsapp')?.addEventListener('click', () => { recordRoute(); });
+
+          // User requested PipSePaisa-style automatic handoff.
+          // WhatsApp still requires the user to press Send; websites cannot silently send a WhatsApp message.
+          setTimeout(async () => {
+            if (document.visibilityState !== 'visible') return;
+            await recordRoute();
+            window.location.href = href;
+          }, 1400);
         }
       }
       toast('Enrollment completed. Check your email to set your password.', 'success');

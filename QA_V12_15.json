@@ -1,0 +1,12 @@
+{
+  "js_syntax": "PASS",
+  "admin_missing_event_callbacks": [],
+  "critical_handlers": {
+    "saveChart": true,
+    "saveArticle": true,
+    "openSignalHistory": true
+  },
+  "team_salutation_ui": true,
+  "whatsapp_auto_handoff": true,
+  "whatsapp_prefilled_client_id": true
+}
