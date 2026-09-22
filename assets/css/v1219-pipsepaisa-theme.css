@@ -147,3 +147,35 @@ body.mentor-page,.mentor-main,.mentor-content{background:var(--psp-cream)!import
   .app-content,.mentor-content{padding:10px!important}
   .team-login-card{border-radius:18px!important}
 }
+
+
+/* V12.20 mobile consolidation */
+.v1216-admin-mobile-nav{display:none!important}
+.v1218-admin-mobile-nav{
+  background:#fffdf8!important;
+  border-top:1px solid var(--psp-line)!important;
+  box-shadow:0 -8px 24px rgba(55,35,6,.08)!important
+}
+.v1218-admin-mobile-nav button{color:#7b8798!important}
+.v1218-admin-mobile-nav button.on{color:var(--psp-orange-dark)!important;background:#fff0da!important;border-radius:10px!important}
+.team-profile-card{
+  background:#fffdf8!important;
+  border-color:var(--psp-line)!important;
+  color:var(--psp-text)!important
+}
+.team-profile-card>small{color:var(--psp-orange-dark)!important}
+.team-profile-card h3{color:var(--psp-text)!important}
+.team-profile-card p{color:var(--psp-muted)!important}
+.team-sheet-close{background:#fffaf2!important;color:var(--psp-text)!important;border-color:var(--psp-line)!important}
+.team-profile-shortcuts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:14px}
+.team-profile-shortcuts button,.team-profile-actions button{
+  min-height:46px;border-radius:12px;border:1px solid var(--psp-line)!important;
+  background:#fffaf2!important;color:var(--psp-text)!important;font-weight:800;text-align:left;padding:10px 12px
+}
+.team-profile-shortcuts button i,.team-profile-actions button i{width:22px;color:var(--psp-orange-dark)!important}
+.team-profile-actions button.danger{color:#c62e3d!important;border-color:#efbcc1!important}
+.mentor-profile-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.mentor-profile-links .mentor-btn{justify-content:flex-start;text-align:left}
+@media(max-width:420px){
+  .team-profile-shortcuts,.mentor-profile-links{grid-template-columns:1fr}
+}
