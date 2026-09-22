@@ -512,7 +512,7 @@
     try {
       const changes = { full_name: String(values.full_name).trim(), whatsapp: String(values.whatsapp).trim(), country: String(values.country || '').trim(), experience: String(values.experience || '') };
       const { error } = await A.supabase.from('profiles').update(changes).eq('id', state.user.id); if (error) throw error;
-      Object.assign(state.profile, changes); document.getElementById('welcomeName').textContent = `Welcome back, ${state.profile.full_name}`;
+      Object.assign(state.profile,changes);const welcome=document.getElementById('dashboardWelcomeName')||document.getElementById('welcomeName');if(welcome)welcome.textContent=`${state.profile.full_name||'24K Member'} 👋`;window.dispatchEvent(new CustomEvent('24k:student-base-updated',{detail:state}));
       A.toast('Profile updated successfully.', 'success');
     } catch (error) { A.toast(A.friendlyError(error, 'Could not update profile.'), 'error'); }
     finally { A.setLoading(button, false); }
