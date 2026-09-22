@@ -8,6 +8,7 @@
   const notice = document.getElementById('linkNotice');
   const toastEl = document.getElementById('toast');
   const params = new URLSearchParams(location.search);
+  let linkReady = false;
 
   function toast(message, type = 'info') {
     if (!toastEl) return;
@@ -19,7 +20,7 @@
 
   function setLoading(on) {
     if (!button) return;
-    button.disabled = on;
+    button.disabled = on || !linkReady;
     button.innerHTML = on
       ? '<i class="fa-solid fa-spinner fa-spin"></i><span>Creating Your Account...</span>'
       : '<span>Complete Free Enrollment</span><i class="fa-solid fa-arrow-right"></i>';
@@ -44,9 +45,9 @@
   }
 
 
-  async function hydrateLinkDetails() {
+  async function hydrateLinkDetails(attempt = 0) {
     const context = trackingContext();
-    if (!context.ref) return;
+    if (!context.ref) return false;
     try {
       let link = null;
       if (window.Tracking?.resolve) link = await window.Tracking.resolve(context.ref);
@@ -55,8 +56,8 @@
         const res = await fallback.rpc('resolve_tracking_link', { p_ref_code: context.ref.toLowerCase() });
         if (!res.error) link = res.data;
       }
-      if (!link) return;
-      const title = String(link.course_title || '24K Free Course').trim();
+      if (!link?.course_id || !link?.course_title) throw new Error('Course details not found.');
+      const title = String(link.course_title).trim();
       const ct = document.getElementById('enrollCourseTitle');
       if (ct) ct.textContent = title;
       const pill = document.getElementById('enrollBatchPill');
@@ -65,13 +66,28 @@
         pill.innerHTML = `FREE COURSE ENROLLMENT <span>•</span> ${String(batchLabel).toUpperCase()}`;
       }
       document.title = `${title} Enrollment | 24K MR ZERO`;
-    } catch (_) {}
+      linkReady = true;
+      if (button) button.disabled = false;
+      if (notice) notice.hidden = true;
+      return true;
+    } catch (_) {
+      if (attempt < 2) {
+        setTimeout(() => hydrateLinkDetails(attempt + 1), 350 * (attempt + 1));
+      } else {
+        linkReady = false;
+        if (button) button.disabled = true;
+        if (notice) {
+          notice.hidden = false;
+          notice.textContent = 'Could not load this course link. Please reopen the official enrollment link.';
+        }
+      }
+      return false;
+    }
   }
 
   const initial = trackingContext();
   hydrateLinkDetails();
-  window.addEventListener('DOMContentLoaded', hydrateLinkDetails, { once:true });
-  setTimeout(hydrateLinkDetails, 450);
+  window.addEventListener('DOMContentLoaded', () => hydrateLinkDetails(), { once:true });
   if (initial.ref) {
     setTimeout(() => {
       try { window.Tracking?.record?.('form_opened', { course_slug: initial.course_slug || null }, initial.ref); } catch (_) {}
@@ -97,6 +113,7 @@
     const context = trackingContext();
 
     if (!context.ref) return toast('Please open this page using your official registration link.', 'error');
+    if (!linkReady) return toast('Course details are still loading. Please try again in a moment.', 'error');
     if (fullName.length < 2) return toast('Please enter your full name.', 'error');
     if (!/^\S+@\S+\.\S+$/.test(email)) return toast('Please enter a valid email address.', 'error');
     if (whatsapp.replace(/\D/g, '').length < 7) return toast('Please enter your active WhatsApp number with country code.', 'error');
