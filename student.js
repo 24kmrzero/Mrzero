@@ -15,12 +15,12 @@
   state.profile = result.profile;
   openPanel = A.activateDashboardNavigation();
   document.getElementById('logoutButton').addEventListener('click', A.logout);
-  document.getElementById('supportWhatsApp').href = `https://wa.me/${A.cfg.SUPPORT_WHATSAPP}`;
-  document.getElementById('supportEmail').href = `mailto:${A.cfg.SUPPORT_EMAIL}`;
+  const supportWhatsApp=document.getElementById('supportWhatsApp');if(supportWhatsApp)supportWhatsApp.href=`https://wa.me/${A.cfg.SUPPORT_WHATSAPP}`;
+  const supportEmail=document.getElementById('supportEmail');if(supportEmail)supportEmail.href=`mailto:${A.cfg.SUPPORT_EMAIL}`;
 
   const initials = (state.profile.full_name || state.profile.email || 'ST').split(/\s+/).slice(0, 2).map(x => x[0]).join('').toUpperCase();
-  document.getElementById('welcomeName').textContent = `Welcome back, ${state.profile.full_name || 'Student'}`;
-  document.getElementById('studentAvatar').textContent = initials;
+  const welcome=document.getElementById('dashboardWelcomeName')||document.getElementById('welcomeName');if(welcome)welcome.textContent=`${state.profile.full_name || '24K Member'} 👋`;
+  const avatar=document.getElementById('studentAvatar');if(avatar)avatar.textContent = initials;
 
   await loadAll();
   renderAll();
@@ -60,8 +60,8 @@
   function renderAll() {
     renderKpis(); renderDashboard(); renderSignals(); renderCharts(); renderArticles(); renderCourses();
     renderPayments(); renderAnnouncements(); renderProfile(); renderSupport();
-    document.getElementById('paymentCount').textContent = state.payments.filter(p => ['received', 'under_review', 'resubmission_required'].includes(p.status)).length;
-    document.getElementById('announcementCount').textContent = state.announcements.length;
+    const paymentCount=document.getElementById('paymentCount');if(paymentCount)paymentCount.textContent=state.payments.filter(p=>['received','under_review','resubmission_required'].includes(p.status)).length;
+    const announcementCount=document.getElementById('announcementCount');if(announcementCount)announcementCount.textContent=state.announcements.length;
     window.dispatchEvent(new CustomEvent('24k:student-base-updated',{detail:state}));
   }
 
@@ -110,16 +110,20 @@
 
     document.getElementById('latestSignal').innerHTML = `<div class="dashboard-preview-link" data-goto="signals" role="button" tabindex="0" aria-label="Open Signals">${state.signals[0] ? signalCard(state.signals[0], true) : empty('No signal has been published yet.', 'fa-bolt')}</div>`;
     const coursePreview = state.courses.slice(0, 2);
-    document.getElementById('dashboardCourses').innerHTML = coursePreview.length ? coursePreview.map(course => {
-      const access = hasCourseAccess(course.id);
-      const payment = latestPayment(course.id);
-      return `<div class="activity-item"><div class="activity-icon"><i class="fa-solid ${access ? 'fa-lock-open' : 'fa-lock'}"></i></div><div><b>${A.escapeHtml(course.title)}</b><small>${access ? 'Course access approved' : payment ? A.statusLabel(payment.status) : `${A.formatMoney(course.discount_price!=null?course.discount_price:course.price, course.currency)} · Payment required`}</small></div><button class="app-btn small ${access ? 'gold' : 'outline'}" data-open-course="${course.id}">${access ? 'Open' : 'Details'}</button></div>`;
-    }).join('') : empty('No course is currently available.', 'fa-graduation-cap');
+    const legacyCourses=document.getElementById('dashboardCourses');
+    if(legacyCourses)legacyCourses.innerHTML=coursePreview.length?coursePreview.map(course=>{const access=hasCourseAccess(course.id),payment=latestPayment(course.id);return `<div class="activity-item"><div class="activity-icon"><i class="fa-solid ${access?'fa-lock-open':'fa-lock'}"></i></div><div><b>${A.escapeHtml(course.title)}</b><small>${access?'Course access approved':payment?A.statusLabel(payment.status):`${A.formatMoney(course.discount_price!=null?course.discount_price:course.price,course.currency)} · Payment required`}</small></div><button class="app-btn small ${access?'gold':'outline'}" data-open-course="${course.id}">${access?'Open':'Details'}</button></div>`}).join(''):empty('No course is currently available.','fa-graduation-cap');
 
     const next = state.sessions.filter(s => new Date(s.starts_at) >= new Date() && s.status !== 'cancelled')[0] || state.sessions.find(s => s.status === 'upcoming');
     document.getElementById('nextSession').innerHTML = `<div class="dashboard-preview-link" data-goto="courses" role="button" tabindex="0" aria-label="Open Courses and live sessions">${next ? sessionCompact(next) : empty('No upcoming class has been scheduled.', 'fa-calendar')}</div>`;
-    const notice = state.announcements[0];
-    document.getElementById('latestAnnouncement').innerHTML = `<div class="dashboard-preview-link" data-goto="announcements" role="button" tabindex="0" aria-label="Open Announcements">${notice ? `<div class="announcement ${notice.priority === 'important' ? 'important' : ''}"><h4>${A.escapeHtml(notice.title)}</h4><p>${A.escapeHtml(notice.message)}</p><small>${A.formatDateTime(notice.published_at)}</small></div>` : empty('No announcement has been published.', 'fa-bullhorn')}</div>`;
+
+    const analysis=document.getElementById('dashboardMarketAnalysis'),chart=state.charts[0];
+    if(analysis)analysis.innerHTML=chart?`<button type="button" class="dashboard-preview-link compact-snapshot-button" data-read-chart="${chart.id}"><div class="activity-item"><div class="activity-icon"><i class="fa-solid fa-chart-line"></i></div><div><b>${A.escapeHtml(chart.title||chart.symbol||'Market Analysis')}</b><small>${A.escapeHtml(chart.symbol||'Market')} · ${A.formatDateTime(chart.published_at||chart.created_at)}</small></div></div></button>`:empty('No market analysis has been published yet.','fa-chart-line');
+
+    const desk=document.getElementById('dashboardLearningSnapshot');
+    if(desk){const unlocked=state.enrollments.filter(isEnrollmentActive).length;desk.innerHTML=`<div class="member-pulse-grid"><div><small>Courses</small><b>${unlocked}</b></div><div><small>Articles</small><b>${state.articles.length}</b></div><div><small>Announcements</small><b>${state.announcements.length}</b></div></div>`;}
+
+    const notice = state.announcements[0],legacyNotice=document.getElementById('latestAnnouncement');
+    if(legacyNotice)legacyNotice.innerHTML=`<div class="dashboard-preview-link" data-goto="announcements" role="button" tabindex="0" aria-label="Open Announcements">${notice?`<div class="announcement ${notice.priority==='important'?'important':''}"><h4>${A.escapeHtml(notice.title)}</h4><p>${A.escapeHtml(notice.message)}</p><small>${A.formatDateTime(notice.published_at)}</small></div>`:empty('No announcement has been published.','fa-bullhorn')}</div>`;
   }
 
   function renderSignals() {
@@ -148,8 +152,8 @@
     document.getElementById('signalsGrid').innerHTML = rows.length
       ? (signalView === 'history' ? renderSignalHistoryGroups(rows) : renderSignalDateGroups(rows, signalView))
       : empty(signalView === 'active' ? 'No active signal is available.' : 'No closed signal matches these filters.', 'fa-filter');
-    const latest=state.signalUpdates.find(u=>u.notify_users);
-    document.getElementById('latestSignalUpdate').innerHTML=latest?`<div class="signal-update-banner"><i class="fa-solid fa-bell"></i><div><b>${A.escapeHtml(latest.notification_title||eventLabel(latest.event_type))}</b><small style="display:block;color:#888">${A.escapeHtml(latest.notification_message||'')} · ${A.formatDateTime(latest.created_at)}</small></div></div>`:'';
+    const latest=state.signalUpdates.find(u=>u.notify_users),latestBox=document.getElementById('latestSignalUpdate');
+    if(latestBox)latestBox.innerHTML=latest?`<div class="signal-update-banner"><i class="fa-solid fa-bell"></i><div><b>${A.escapeHtml(latest.notification_title||eventLabel(latest.event_type))}</b><small style="display:block;color:#888">${A.escapeHtml(latest.notification_message||'')} · ${A.formatDateTime(latest.created_at)}</small></div></div>`:'';
   }
 
 
@@ -325,6 +329,7 @@
 
   function renderPayments() {
     const body = document.getElementById('paymentsBody');
+    if(!body)return;
     if (!state.payments.length) { body.innerHTML = `<tr><td colspan="9">${empty('No payment has been submitted yet.', 'fa-receipt')}</td></tr>`; return; }
     body.innerHTML = state.payments.map(p => {
       const course = p.courses || state.courses.find(c => c.id === p.course_id) || {};
@@ -352,8 +357,10 @@
 
   function renderSupport() {
     const open = state.support.filter(s => !['resolved','closed'].includes(s.status)).length;
-    document.getElementById('supportCount').textContent = `${open} open request(s)`;
-    document.getElementById('supportRequests').innerHTML = state.support.length ? state.support.map(s => `<div class="activity-item"><div class="activity-icon"><i class="fa-solid fa-ticket"></i></div><div><b>${A.escapeHtml(s.subject)}</b><small>${A.escapeHtml(s.category)} · ${A.formatDateTime(s.created_at)}</small></div><span class="status-pill ${A.statusClass(s.status)}">${A.statusLabel(s.status)}</span></div>`).join('') : empty('You have not submitted a support request.', 'fa-headset');
+    const count=document.getElementById('supportCount'),box=document.getElementById('supportRequests');
+    if(count)count.textContent=`${open} open request(s)`;
+    if(!box)return;
+    box.innerHTML = state.support.length ? state.support.map(s => `<div class="activity-item"><div class="activity-icon"><i class="fa-solid fa-ticket"></i></div><div><b>${A.escapeHtml(s.subject)}</b><small>${A.escapeHtml(s.category)} · ${A.formatDateTime(s.created_at)}</small></div><span class="status-pill ${A.statusClass(s.status)}">${A.statusLabel(s.status)}</span></div>`).join('') : empty('You have not submitted a support request.', 'fa-headset');
   }
 
   function bindEvents() {
@@ -391,13 +398,13 @@
     updateAlertButton();
     document.getElementById('paymentForm').addEventListener('submit', submitPayment);
     document.getElementById('profileForm').addEventListener('submit', saveProfile);
-    document.getElementById('supportForm').addEventListener('submit', submitSupport);
+    document.getElementById('supportForm')?.addEventListener('submit', submitSupport);
     document.getElementById('riskForm').addEventListener('submit', acceptRisk);
     document.getElementById('globalSearch').addEventListener('keydown', event => {
       if (event.key !== 'Enter') return;
       const q = event.currentTarget.value.trim().toLowerCase();
       if (!q) return;
-      if (state.signals.some(x => `${x.symbol} ${x.notes}`.toLowerCase().includes(q))) { openPanel('signals'); document.getElementById('signalSearch').value = q; renderSignals(); }
+      if (state.signals.some(x => `${x.symbol} ${x.notes}`.toLowerCase().includes(q))) { openPanel('signals'); const s=document.getElementById('signalSearch');if(s)s.value=q;renderSignals(); }
       else if (state.charts.some(x => `${x.title} ${x.symbol}`.toLowerCase().includes(q))) { openPanel('charts'); document.getElementById('chartSearch').value = q; renderCharts(); }
       else { openPanel('articles'); document.getElementById('articleSearch').value = q; renderArticles(); }
     });
