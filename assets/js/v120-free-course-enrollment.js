@@ -35,7 +35,7 @@
   function trackingContext() {
     const t = window.Tracking?.context?.() || {};
     return {
-      ref: String(t.ref || params.get('ref') || '').trim(),
+      ref: String(params.get('ref') || t.ref || '').trim(),
       source: String(t.source || params.get('source') || '').trim(),
       campaign: String(t.campaign || params.get('campaign') || '').trim(),
       visitor_id: String(t.visitorId || '').trim(),
