@@ -835,3 +835,63 @@ html[data-theme="dark"] .v1218-admin-mobile-nav,
 html[data-theme="dark"] .student-mobile-nav,
 html[data-theme="dark"] .team-mobile-nav,
 html[data-theme="dark"] .mentor-mobile-nav{background:#101720!important;border-top:1px solid var(--p-dark-line)!important;box-shadow:none!important}
+
+
+/* V12.24 — final navigation, dashboard and auth alignment */
+.v1218-nav-group{
+  display:block!important;margin:10px 8px 4px!important;font-size:7px!important;line-height:1!important;
+  letter-spacing:.14em!important;font-weight:800!important;text-transform:uppercase!important;color:#7f94a6!important
+}
+.v1218-command{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:18px!important}
+.v1218-command-actions{display:flex!important;align-items:center!important;gap:7px!important;flex:0 0 auto!important}
+.v1218-date-chip{display:inline-flex!important;align-items:center!important;min-height:31px!important;padding:0 10px!important;border-radius:8px!important;font-size:8px!important;font-weight:700!important}
+html[data-theme="light"] .v1218-date-chip{background:#fffaf2!important;border:1px solid var(--p-line)!important;color:#596779!important}
+html[data-theme="dark"] .v1218-date-chip{background:#171f29!important;border:1px solid var(--p-dark-line)!important;color:#b8c2cc!important}
+.v1218-dashboard-grid-bottom{margin-top:8px!important;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr)!important}
+.v1218-ops-list{display:grid!important;gap:0!important;margin-top:5px!important}
+.v1218-op-row{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;padding:9px 2px!important;border-bottom:1px solid!important}
+.v1218-op-row:last-child{border-bottom:0!important}
+.v1218-op-row b{display:block!important;font-size:9px!important}
+.v1218-op-row small{display:block!important;font-size:7.5px!important;margin-top:2px!important;text-transform:capitalize!important}
+.v1218-op-row>span{font-size:7px!important;white-space:nowrap!important}
+.v1218-empty{padding:20px 8px!important;text-align:center!important;font-size:9px!important}
+html[data-theme="light"] .v1218-op-row{border-color:#eee1cc!important}
+html[data-theme="light"] .v1218-op-row small,html[data-theme="light"] .v1218-op-row>span{color:var(--p-muted)!important}
+html[data-theme="dark"] .v1218-op-row{border-color:#26313b!important}
+html[data-theme="dark"] .v1218-op-row small,html[data-theme="dark"] .v1218-op-row>span{color:var(--p-dark-muted)!important}
+
+/* Shared login/auth pages */
+body.app-page .auth-page{min-height:100dvh!important;display:grid!important;grid-template-columns:minmax(0,1fr) minmax(380px,520px)!important;background:var(--p-cream)!important}
+body.app-page .auth-showcase{display:flex!important;flex-direction:column!important;justify-content:center!important;padding:clamp(34px,6vw,88px)!important;background:linear-gradient(145deg,#071827,#10293c)!important;color:#fff!important}
+body.app-page .auth-showcase>a img{width:150px!important;max-height:82px!important;object-fit:contain!important;margin-bottom:28px!important}
+body.app-page .auth-showcase h1{font-size:clamp(34px,4vw,58px)!important;line-height:1.02!important;margin:0 0 18px!important;color:#fff!important}
+body.app-page .auth-showcase h1 span{color:#f7bd56!important}
+body.app-page .auth-showcase p{max-width:620px!important;font-size:13px!important;line-height:1.65!important;color:#c3ced8!important}
+body.app-page .auth-benefits{display:grid!important;gap:10px!important;margin-top:22px!important}
+body.app-page .auth-benefits span{font-size:11px!important;color:#e7edf2!important}
+body.app-page .auth-benefits i{color:#f5ad36!important;width:20px!important}
+body.app-page .auth-panel{display:grid!important;place-items:center!important;padding:28px!important;background:var(--p-cream)!important}
+body.app-page .auth-box{width:min(430px,100%)!important;padding:28px!important;border-radius:16px!important;background:var(--p-card)!important;border:1px solid var(--p-line)!important;box-shadow:0 18px 50px rgba(55,35,7,.10)!important;color:var(--p-text)!important}
+body.app-page .auth-box h2{font-size:23px!important;margin:14px 0 6px!important;color:var(--p-text)!important}
+body.app-page .auth-page-badge{width:max-content!important;border-radius:999px!important;padding:6px 9px!important;background:#fff0d6!important;color:#a86300!important;border:1px solid #efcf98!important;font-size:8px!important;font-weight:800!important}
+body.app-page .auth-form{gap:11px!important}
+body.app-page .auth-form input,body.app-page .auth-form select{height:42px!important;background:#fff!important;border:1px solid var(--p-line)!important;color:var(--p-text)!important}
+body.app-page .auth-links{font-size:9px!important}
+body.app-page .auth-tabs{background:#f7eddd!important;border:1px solid var(--p-line)!important;border-radius:9px!important;padding:3px!important}
+body.app-page .auth-tabs button{min-height:34px!important;border-radius:7px!important;color:#6b7580!important}
+body.app-page .auth-tabs button.on{background:var(--p-orange)!important;color:#111!important}
+html[data-theme="dark"] body.app-page .auth-page,html[data-theme="dark"] body.app-page .auth-panel{background:var(--p-dark)!important}
+html[data-theme="dark"] body.app-page .auth-box{background:var(--p-dark-2)!important;border-color:var(--p-dark-line)!important;color:var(--p-dark-text)!important;box-shadow:none!important}
+html[data-theme="dark"] body.app-page .auth-box h2{color:var(--p-dark-text)!important}
+html[data-theme="dark"] body.app-page .auth-form input,html[data-theme="dark"] body.app-page .auth-form select{background:#0d131a!important;border-color:var(--p-dark-line)!important;color:var(--p-dark-text)!important}
+html[data-theme="dark"] body.app-page .auth-tabs{background:#171f29!important;border-color:var(--p-dark-line)!important}
+html[data-theme="dark"] body.app-page .auth-tabs button{color:#b5c0ca!important}
+
+@media(max-width:900px){
+  .v1218-command{align-items:flex-start!important;flex-direction:column!important}
+  .v1218-command-actions{width:100%!important;flex-wrap:wrap!important}
+  .v1218-dashboard-grid-bottom{grid-template-columns:1fr!important}
+  body.app-page .auth-page{grid-template-columns:1fr!important}
+  body.app-page .auth-showcase{display:none!important}
+  body.app-page .auth-panel{min-height:100dvh!important;padding:16px!important}
+}
