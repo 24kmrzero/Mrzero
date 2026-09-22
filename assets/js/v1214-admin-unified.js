@@ -68,6 +68,7 @@ function installOperations(){
 }
 
 function installNav(){
+ if(document.querySelector('script[src*="v1218-admin-reference.js"]'))return;
  const nav=$('.app-nav');if(!nav)return;
  nav.innerHTML=`
   <a href="/admin/" data-panel="dashboard"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
@@ -162,7 +163,6 @@ function bind(){
 }
 
 async function init(){
- for(let i=0;i<120&&!window.AdminOps;i++)await wait(100);
  for(let i=0;i<120&&$('#adminApp')?.classList.contains('hidden');i++)await wait(100);
  installContentHub();installTeamLinks();installPremium();installOperations();installModals();installNav();installQuickAdd();bind();
  // Add USD option to course editor because Level 2 is priced in USD.
