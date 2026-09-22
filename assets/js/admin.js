@@ -423,7 +423,7 @@
         title:String(v.title).trim(),
         slug:String(v.slug||slugify(v.title)).toLowerCase().trim().replace(/[^a-z0-9-]+/g,'-').replace(/^-+|-+$/g,''),
         short_description:caption,
-        instructor_name:String(v.instructor_name||'Malik Zameer').trim()||'Malik Zameer',
+        instructor_name:String(v.instructor_name||'Mr. Zameer').trim()||'Mr. Zameer',
         course_type:type,
         price,
         discount_price:discount,
@@ -473,7 +473,7 @@
       f.elements.id.value='';
       f.elements.existing_thumbnail_url.value='';
       setCourseThumbnailPreview(null,'');
-      f.elements.instructor_name.value='Malik Zameer';
+      f.elements.instructor_name.value='Mr. Zameer';
       f.elements.price.value='0';
       renderCourseSessionEditor();
       prepareCourseSaveUi();

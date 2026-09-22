@@ -490,7 +490,7 @@
       <div class="class-visual-lockup"><span class="class-visual-icon"><i class="fa-solid fa-video"></i></span><div><small>UPCOMING LIVE SESSION</small><b>${A.escapeHtml(countdown)}</b></div></div>
       <div class="class-status-row"><span class="class-upcoming">${A.escapeHtml(A.statusLabel(session.status || 'upcoming'))}</span><span class="class-course-chip">${A.escapeHtml(course?.course_type === 'free' ? 'Free Course' : 'Member Class')}</span></div>
       <h4>${A.escapeHtml(session.title)}</h4><p>${A.escapeHtml(course?.title || '24K Excellence')}</p>
-      <div class="class-meta-row"><span><i class="fa-regular fa-calendar"></i>${A.formatDateTime(session.starts_at)}</span><span><i class="fa-solid fa-user-tie"></i>Malik Zameer</span></div>
+      <div class="class-meta-row"><span><i class="fa-regular fa-calendar"></i>${A.formatDateTime(session.starts_at)}</span><span><i class="fa-solid fa-user-tie"></i>Mr. Zameer</span></div>
       <span class="class-open-link">View class details <i class="fa-solid fa-arrow-right"></i></span>
     </button>`;
   }
@@ -694,7 +694,7 @@
   function sessionCompact(session) {
     const course = state.courses.find(c => c.id === session.course_id);
     const access = hasCourseAccess(session.course_id);
-    return `<div class="session-body" style="padding:0"><span class="status-pill ${A.statusClass(session.status)}">${A.statusLabel(session.status)}</span><h3 style="margin-top:12px">${A.escapeHtml(session.title)}</h3><p>${A.escapeHtml(course?.title || '')}</p><div class="session-date"><span><i class="fa-solid fa-calendar"></i> ${A.formatDateTime(session.starts_at)}</span><span><i class="fa-solid fa-user-tie"></i> Malik Zameer</span></div><button class="app-btn ${access ? 'gold' : 'outline'}" data-open-course="${session.course_id}">${access ? 'Open Session' : 'View Locked Schedule'}</button></div>`;
+    return `<div class="session-body" style="padding:0"><span class="status-pill ${A.statusClass(session.status)}">${A.statusLabel(session.status)}</span><h3 style="margin-top:12px">${A.escapeHtml(session.title)}</h3><p>${A.escapeHtml(course?.title || '')}</p><div class="session-date"><span><i class="fa-solid fa-calendar"></i> ${A.formatDateTime(session.starts_at)}</span><span><i class="fa-solid fa-user-tie"></i> Mr. Zameer</span></div><button class="app-btn ${access ? 'gold' : 'outline'}" data-open-course="${session.course_id}">${access ? 'Open Session' : 'View Locked Schedule'}</button></div>`;
   }
 
   async function loadPremiumState(){
@@ -1111,7 +1111,7 @@
     if (!usdtMethods.length) return A.toast('USDT TRC20 payment method is not configured yet. Please contact Admin.', 'warning');
     const form = document.getElementById('paymentForm');
     form.reset(); form.elements.course_id.value = course.id; form.dataset.supersedesPaymentId = pending?.status==='resubmission_required'?pending.id:''; const payable=course.discount_price!=null?Number(course.discount_price):Number(course.price); form.elements.amount.value = payable;
-    document.getElementById('paymentCourseSummary').innerHTML = `<b>${A.escapeHtml(course.title)}</b><br>Instructor: Malik Zameer · Amount: ${String(course.currency||'').toUpperCase()==='USD'?`USD ${Number(payable).toLocaleString('en-US',{maximumFractionDigits:2})} (Pay ${Number(payable).toLocaleString('en-US',{maximumFractionDigits:2})} USDT)`:`USDT ${Number(payable).toLocaleString('en-US',{maximumFractionDigits:2})}`}<br><small>Pay using TRC20 network and submit the TXID + receipt for Admin approval.</small>`;
+    document.getElementById('paymentCourseSummary').innerHTML = `<b>${A.escapeHtml(course.title)}</b><br>Instructor: Mr. Zameer · Amount: ${String(course.currency||'').toUpperCase()==='USD'?`USD ${Number(payable).toLocaleString('en-US',{maximumFractionDigits:2})} (Pay ${Number(payable).toLocaleString('en-US',{maximumFractionDigits:2})} USDT)`:`USDT ${Number(payable).toLocaleString('en-US',{maximumFractionDigits:2})}`}<br><small>Pay using TRC20 network and submit the TXID + receipt for Admin approval.</small>`;
     document.getElementById('paymentMethodSelect').innerHTML = usdtMethods.map(m => `<option value="${m.id}">${A.escapeHtml(m.name)}</option>`).join('');
     renderPaymentMethodInfo();
     document.getElementById('paymentMethodSelect').onchange = renderPaymentMethodInfo;

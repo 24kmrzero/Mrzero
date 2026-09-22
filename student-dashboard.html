@@ -48,6 +48,7 @@
 #managePremiumAccess{pointer-events:auto!important;cursor:pointer!important}
 </style>
 <link rel="stylesheet" href="assets/v969-fixes.css?v=9.70">
+<link rel="stylesheet" href="assets/css/v1216-mobile-app.css?v=12.16">
 </head>
 <body class="app-page student-page">
 <div id="pageLoader" class="loading-screen"><div><img src="assets/logo.png?v=9.69" alt="24K Digital Gold"><i class="fa-solid fa-spinner fa-spin"></i><p>Loading your student account...</p></div></div>
@@ -180,7 +181,7 @@
       </section>
 
       <section class="panel" id="p-courses">
-        <div class="panel-heading"><div><h2>Live Courses</h2><p>Online classes with Malik Zameer. Free and paid courses are managed separately from Premium Market Access.</p></div></div>
+        <div class="panel-heading"><div><h2>Live Courses</h2><p>Online classes with Mr. Zameer. Free and paid courses are managed separately from Premium Market Access.</p></div></div>
         <div class="course-filter-tabs" role="tablist" aria-label="Course type"><button type="button" class="active" data-course-filter="all">All</button><button type="button" data-course-filter="free">Free</button><button type="button" data-course-filter="paid">Paid</button></div>
         <div class="course-list-grid" id="coursesGrid"></div>
         <div id="sessionsArea" class="hidden" style="margin-top:26px"><div class="panel-heading"><div><h2 id="sessionCourseTitle">Course Sessions</h2><p>Published Zoom session schedules. The Zoom join link is shared in the WhatsApp Community.</p></div><button class="app-btn outline" id="closeSessions"><i class="fa-solid fa-arrow-left"></i> Back to Courses</button></div><div class="session-grid" id="sessionsGrid"></div><div id="resourcesArea" class="app-card hidden" style="margin-top:20px"><div class="app-card-head"><div><h3>Course Resources</h3><p>Optional files uploaded by the admin</p></div></div><div id="resourcesList"></div></div></div>
@@ -220,14 +221,86 @@
   </main>
 </div>
 
-<nav class="student-mobile-nav" aria-label="Student quick navigation">
+<nav class="student-mobile-nav" aria-label="Student app navigation">
   <button type="button" class="is-active" data-goto="dashboard"><i class="fa-solid fa-house"></i><span>Home</span></button>
-  <button type="button" data-goto="signals"><i class="fa-solid fa-bolt"></i><span>Signals</span></button>
   <button type="button" data-goto="courses"><i class="fa-solid fa-graduation-cap"></i><span>Courses</span></button>
+  <button type="button" data-goto="signals"><i class="fa-solid fa-bolt"></i><span>Signals</span></button>
+  <button type="button" data-mobile-premium><i class="fa-solid fa-crown"></i><span>Premium</span></button>
   <button type="button" data-goto="profile"><i class="fa-solid fa-user"></i><span>Profile</span></button>
 </nav>
 
-<div class="app-modal premium-access-modal" id="premiumAccessModal" aria-hidden="true"><div class="app-modal-card large"><div class="app-modal-head"><div><h3>Get All Access</h3><small class="muted">Choose Paid Access or Free Access via IB / Broker.</small></div><button class="modal-close" data-close-modal="premiumAccessModal"><i class="fa-solid fa-xmark"></i></button></div><div class="app-modal-body premium-access-modal-body"><div class="notice info" id="allAccessCurrentStatus"><b>Manage Premium Access</b><br><small>You can submit a new Paid Access or IB / Broker verification request even while a Free Trial or Premium Access is active.</small></div><div id="premiumPriceBox"></div><div class="profile-access-choice-grid modal-access-choice-grid"><details class="profile-access-choice modal-choice-card"><summary><i class="fa-solid fa-credit-card"></i><span><b>Paid Access</b><small>30-day Signals + Charts + Articles package</small></span><i class="fa-solid fa-chevron-down"></i></summary><div class="profile-access-choice-body"><div class="access-method-grid"><button type="button" class="access-method-card" id="premiumPayLocal"><i class="fa-solid fa-building-columns"></i><div><h4>Local Bank Transfer</h4><p>Transfer PKR manually, then submit your bank reference and receipt for Admin review.</p></div></button><button type="button" class="access-method-card" id="premiumPayUsdt"><i class="fa-solid fa-coins"></i><div><h4>USDT TRC20</h4><p>Submit TXID and receipt for Admin review.</p></div></button></div></div></details><details class="profile-access-choice modal-choice-card"><summary><i class="fa-solid fa-link"></i><span><b>Free Access via IB / Broker</b><small>Exness, XM or DPrime verification</small></span><i class="fa-solid fa-chevron-down"></i></summary><div class="profile-access-choice-body"><div id="premiumIbStatus"></div><form id="ibVerificationForm" class="inline-ib-form"><div class="form-grid"><div class="form-field"><label>Step 1 — Choose Broker</label><select name="broker" id="ibBrokerSelect" required><option value="">Choose broker</option><option value="Exness">Exness</option><option value="XM">XM</option><option value="DPrime">DPrime</option></select></div><div class="form-field"><label>Step 2 — Account Action</label><select name="account_type" id="ibAccountAction" required><option value="new">Create New Account</option><option value="existing">Partner / IB Shift</option></select></div><div class="form-field full hidden" id="ibPartnerLinkWrap"><label>Official Partner Link</label><div class="access-link-box"><div class="access-link-actions"><a id="ibSelectedPartnerLink" class="app-btn outline" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Partner Link</a><button type="button" class="app-btn outline" id="ibCopyPartnerLink"><i class="fa-solid fa-copy"></i> Copy Link</button></div></div></div><div class="form-field full"><div class="ib-instruction-box" id="ibBrokerInstructions"><b>Choose a broker.</b>Select Exness, XM or DPrime to see the correct account / partner instructions.</div></div><div class="form-field"><label>Trading Account Number / ID</label><input name="trading_account_id" required maxlength="80" autocomplete="off"></div><div class="form-field"><label>Deposit Amount</label><input name="deposit_amount" type="number" min="0.01" step="0.01" required placeholder="Enter deposited amount"></div><div class="form-field"><label>Deposit Proof</label><input name="deposit_proof" type="file" accept="image/png,image/jpeg,image/webp,application/pdf" required><small class="muted">Required · deposit screenshot/receipt · max 5 MB.</small></div><div class="form-field"><label>Broker / Partner Confirmation Proof <span class="muted">(optional)</span></label><input name="confirmation_proof" type="file" accept="image/png,image/jpeg,image/webp,application/pdf"><small class="muted">Confirmation email/screenshot where available · max 5 MB.</small></div><div class="form-field full"><label>Note <span class="muted">(optional)</span></label><textarea name="note" maxlength="500" placeholder="Any useful account/linking detail"></textarea></div></div><div class="inline-actions"><button type="submit" class="app-btn gold"><i class="fa-solid fa-shield-check"></i> Submit for Verification</button></div></form></div></details></div></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="premiumAccessModal">Close</button></div></div></div>
+<div class="app-modal premium-access-modal" id="premiumAccessModal" aria-hidden="true">
+  <div class="app-modal-card large">
+    <div class="app-modal-head"><div><h3>Get All Access</h3><small class="muted">Choose one simple path. We’ll guide you step by step.</small></div><button class="modal-close" data-close-modal="premiumAccessModal"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="app-modal-body all-access-modal-body">
+      <div class="notice info" id="allAccessCurrentStatus"><b>Checking your access…</b></div>
+
+      <section class="access-step" data-access-step="home">
+        <h4 class="access-step-title">How would you like to get access?</h4>
+        <p class="access-step-copy">Choose Paid Access or Free Access through one of our supported brokers.</p>
+        <div class="access-choice-grid">
+          <button type="button" class="access-choice-card" data-access-step-target="paid"><i class="fa-solid fa-credit-card"></i><span><h4>Paid Access</h4><p>30-day Signals + Charts + Articles package.</p></span><i class="fa-solid fa-chevron-right"></i></button>
+          <button type="button" class="access-choice-card" data-access-step-target="ib"><i class="fa-solid fa-link"></i><span><h4>Free Access via Broker</h4><p>Verify Exness, XM or DPrime account.</p></span><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+      </section>
+
+      <section class="access-step access-hidden" data-access-step="paid">
+        <button type="button" class="app-btn small outline access-back-btn" data-access-step-target="home"><i class="fa-solid fa-arrow-left"></i> Back</button>
+        <div class="access-progress"><span class="on"></span><span class="on"></span><span></span></div>
+        <h4 class="access-step-title">Paid Access</h4><p class="access-step-copy">Choose your preferred payment method. Admin activates access after payment verification.</p>
+        <div id="premiumPriceBox"></div>
+        <div class="access-method-grid">
+          <button type="button" class="access-method-card" id="premiumPayLocal"><i class="fa-solid fa-building-columns"></i><div><h4>Local Bank Transfer</h4><p>Transfer locally and submit reference + receipt.</p></div></button>
+          <button type="button" class="access-method-card" id="premiumPayUsdt"><i class="fa-solid fa-coins"></i><div><h4>USDT TRC20</h4><p>Submit TXID + receipt for Admin review.</p></div></button>
+        </div>
+      </section>
+
+      <section class="access-step access-hidden" data-access-step="ib">
+        <button type="button" class="app-btn small outline access-back-btn" data-access-step-target="home"><i class="fa-solid fa-arrow-left"></i> Back</button>
+        <div class="access-progress"><span class="on"></span><span class="on"></span><span></span></div>
+        <h4 class="access-step-title">Free Access via Broker</h4><p class="access-step-copy">Step 1: choose your broker. Step 2: choose New Account or Existing Account / IB Shift.</p>
+        <div id="premiumIbStatus"></div>
+        <div class="access-broker-grid">
+          <button type="button" class="access-broker-card" data-broker-select="Exness"><i class="fa-solid fa-chart-line"></i><b>Exness</b></button>
+          <button type="button" class="access-broker-card" data-broker-select="XM"><i class="fa-solid fa-chart-simple"></i><b>XM</b></button>
+          <button type="button" class="access-broker-card" data-broker-select="DPrime"><i class="fa-solid fa-arrow-trend-up"></i><b>DPrime</b></button>
+        </div>
+        <div class="access-broker-details access-hidden" id="allAccessBrokerDetails">
+          <div class="access-method-grid">
+            <button type="button" class="access-method-card" data-access-account-mode="new"><i class="fa-solid fa-user-plus"></i><div><h4>Create New Account</h4><p>Use our partner link and create a new broker account.</p></div></button>
+            <button type="button" class="access-method-card" data-access-account-mode="existing"><i class="fa-solid fa-right-left"></i><div><h4>Shift Existing Account</h4><p>Follow broker steps to change/link your partner.</p></div></button>
+          </div>
+          <div class="access-link-box"><small>Official Broker Link</small><div class="access-link-actions"><a id="allAccessBrokerLink" class="app-btn gold" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Broker Link</a><button type="button" class="app-btn outline" id="copyAllAccessBrokerLink"><i class="fa-solid fa-copy"></i> Copy</button></div></div>
+          <div class="ib-instruction-box" id="allAccessModeGuide">Choose an account option to see the next steps.</div>
+          <button type="button" class="app-btn gold" id="openIbVerification"><i class="fa-solid fa-shield-check"></i> Continue to Verification</button>
+        </div>
+      </section>
+    </div>
+    <div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="premiumAccessModal">Close</button></div>
+  </div>
+</div>
+
+<div class="app-modal" id="ibVerificationModal" aria-hidden="true">
+  <div class="app-modal-card large">
+    <div class="app-modal-head"><div><h3>Broker Verification</h3><small class="muted">Submit your broker details and proof for Admin review.</small></div><button class="modal-close" data-close-modal="ibVerificationModal"><i class="fa-solid fa-xmark"></i></button></div>
+    <form id="ibVerificationForm" class="inline-ib-form">
+      <div class="app-modal-body">
+        <div class="form-grid">
+          <div class="form-field"><label>Broker</label><select name="broker" id="ibBrokerSelect" required><option value="">Choose broker</option><option value="Exness">Exness</option><option value="XM">XM</option><option value="DPrime">DPrime</option></select></div>
+          <div class="form-field"><label>Account Action</label><select name="account_type" id="ibAccountAction" required><option value="new">Create New Account</option><option value="existing">Partner / IB Shift</option></select></div>
+          <div class="form-field full hidden" id="ibPartnerLinkWrap"><label>Official Partner Link</label><div class="access-link-box"><div class="access-link-actions"><a id="ibSelectedPartnerLink" class="app-btn outline" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Partner Link</a><button type="button" class="app-btn outline" id="ibCopyPartnerLink"><i class="fa-solid fa-copy"></i> Copy Link</button></div></div></div>
+          <div class="form-field full"><div class="ib-instruction-box" id="ibBrokerInstructions"><b>Choose a broker.</b> Select Exness, XM or DPrime to see the correct instructions.</div></div>
+          <div class="form-field"><label>Trading Account Number / ID</label><input name="trading_account_id" required maxlength="80" autocomplete="off"></div>
+          <div class="form-field"><label>Deposit Amount</label><input name="deposit_amount" type="number" min="0.01" step="0.01" required placeholder="Enter deposited amount"></div>
+          <div class="form-field"><label>Deposit Proof</label><input name="deposit_proof" type="file" accept="image/png,image/jpeg,image/webp,application/pdf" required><small class="muted">Required · screenshot/receipt · max 5 MB.</small></div>
+          <div class="form-field"><label>Broker / Partner Confirmation <span class="muted">(optional)</span></label><input name="confirmation_proof" type="file" accept="image/png,image/jpeg,image/webp,application/pdf"><small class="muted">Confirmation screenshot/email · max 5 MB.</small></div>
+          <div class="form-field full"><label>Note <span class="muted">(optional)</span></label><textarea name="note" maxlength="500" placeholder="Any useful account/linking detail"></textarea></div>
+        </div>
+      </div>
+      <div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="ibVerificationModal">Back</button><button type="submit" class="app-btn gold"><i class="fa-solid fa-shield-check"></i> Submit for Verification</button></div>
+    </form>
+  </div>
+</div>
 <div class="app-modal" id="paymentMethodChoiceModal" aria-hidden="true"><div class="app-modal-card"><div class="app-modal-head"><div><h3>Choose Payment Method</h3><small class="muted">Select how you want to pay for this course.</small></div><button class="modal-close" data-close-modal="paymentMethodChoiceModal"><i class="fa-solid fa-xmark"></i></button></div><div class="app-modal-body"><div id="paymentChoiceCourseSummary" class="notice info"></div><div class="app-grid cols-2"><button type="button" class="app-card" data-payment-choice="usdt" style="text-align:left;cursor:pointer"><div style="font-size:26px;margin-bottom:10px"><i class="fa-solid fa-coins"></i></div><h3 style="margin:0 0 6px">USDT TRC20</h3><p class="muted" style="margin:0">Pay with USDT on the TRC20 network and submit TXID + receipt for Admin review.</p></button><button type="button" class="app-card" data-payment-choice="local-bank" style="text-align:left;cursor:pointer"><div style="font-size:26px;margin-bottom:10px"><i class="fa-solid fa-building-columns"></i></div><h3 style="margin:0 0 6px">Local Bank Transfer</h3><p class="muted" style="margin:0">Transfer PKR manually and submit the bank reference + receipt for Admin review.</p></button></div><div class="notice warn" style="margin-top:14px">PKR Bank Transfer and USDT TRC20 payments are both verified manually by Admin before access is activated.</div></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="paymentMethodChoiceModal">Cancel</button></div></div></div>
 <div class="app-modal" id="bankPaymentModal"><div class="app-modal-card"><div class="app-modal-head"><div><h3>Submit Bank Transfer</h3><small class="muted">Manual bank payment — Admin verification required.</small></div><button class="modal-close" data-close-modal="bankPaymentModal"><i class="fa-solid fa-xmark"></i></button></div><form id="bankPaymentForm"><input type="hidden" name="course_id"><div class="app-modal-body"><div id="bankPaymentCourseSummary" class="notice info"></div><div id="bankPaymentMethodInfo"></div><div class="form-grid"><div class="form-field full"><label>Bank Transaction Reference</label><input name="transaction_reference" required placeholder="Reference / transaction ID"></div><div class="form-field full"><label>Payment Receipt</label><input name="receipt" type="file" accept="image/png,image/jpeg,image/webp,application/pdf" required><small class="muted">PNG, JPG, WEBP or PDF. Maximum 5 MB.</small></div><div class="form-field full"><label>Note (optional)</label><textarea name="student_note" placeholder="Any detail the Admin should know"></textarea></div></div><label class="check-row" style="margin-top:15px"><input type="checkbox" required> I confirm that this bank transfer and receipt are genuine.</label></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="bankPaymentModal">Cancel</button><button type="submit" class="app-btn gold">Submit for Admin Review</button></div></form></div></div>
 <div class="app-modal" id="paymentModal"><div class="app-modal-card"><div class="app-modal-head"><h3>Submit USDT Payment</h3><button class="modal-close" data-close-modal="paymentModal"><i class="fa-solid fa-xmark"></i></button></div><form id="paymentForm"><div class="app-modal-body"><div id="paymentCourseSummary" class="notice info"></div><div id="paymentMethodsBox"></div><div class="form-grid"><input type="hidden" name="course_id"><div class="form-field"><label>Network / Payment Method</label><select name="payment_method_id" id="paymentMethodSelect" required></select></div><div class="form-field"><label>Amount Paid (USDT)</label><input type="number" name="amount" min="0" step="0.01" required></div><div class="form-field full"><label>Transaction Hash / TXID</label><input name="transaction_reference" required placeholder="Paste TRC20 transaction hash"></div><div class="form-field full"><label>Payment Receipt</label><input type="file" name="receipt" accept="image/png,image/jpeg,image/webp,application/pdf" required><small class="muted">PNG, JPG, WEBP or PDF. Maximum 5 MB.</small></div><div class="form-field full"><label>Note (optional)</label><textarea name="student_note" placeholder="Any detail the admin should know"></textarea></div></div><label class="check-row" style="margin-top:15px"><input type="checkbox" required> I confirm that the USDT TRC20 transaction, TXID and receipt are genuine.</label></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="paymentModal">Cancel</button><button type="submit" class="app-btn gold">Submit Payment</button></div></form></div></div>
@@ -250,5 +323,6 @@
 <script src="assets/js/student.js?v=12.14"></script>
 <script src="assets/js/student-ui.js?v=9.70"></script>
 <script src="assets/js/v120-student-ea.js?v=12.00"></script><script src="assets/js/v120-feature-flags.js?v=12.00"></script>
+<script src="assets/js/v1216-mobile-app.js?v=12.16"></script>
 </body>
 </html>

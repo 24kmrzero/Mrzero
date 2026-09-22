@@ -187,7 +187,7 @@
     }
 
     [state.notifications, state.reads, state.modules, state.lessons, state.progress] = responses.map(item => item.data || []);
-    platformAllowed = ['active', 'grace'].includes(A.effectiveAccessStatus(state.profile)) || ['admin','super_admin'].includes(state.profile?.role);
+    platformAllowed = ['active', 'grace'].includes(A.effectiveAccessStatus(state.profile)) || state.profile?.role === 'admin';
     renderAccess();
     renderNotifications();
     renderCourseProgressForSelected();
@@ -197,7 +197,7 @@
     const profile = state.profile;
     if (!profile) return;
     const status = A.effectiveAccessStatus(profile);
-    platformAllowed = ['active', 'grace'].includes(status) || ['admin','super_admin'].includes(profile.role);
+    platformAllowed = ['active', 'grace'].includes(status) || profile.role === 'admin';
     const expiry = profile.lifetime_access ? 'Lifetime' : profile.access_expires_at ? A.formatDateTime(profile.access_expires_at) : 'No expiry set';
     const supportLink = document.getElementById('accessSupportLink');
     if (supportLink) supportLink.href = `https://wa.me/${A.cfg.SUPPORT_WHATSAPP}`;
@@ -342,9 +342,7 @@
     const session = state.sessions.find(item => item.id === lesson?.course_session_id);
     if (!lesson || !session) return A.toast('Live-class information is not available yet.', 'warning');
     if (!platformAllowed || !activeEnrollment(lesson.course_id)) return A.toast('An active approved enrollment is required for this class.', 'warning');
-    const link = state.sessionLinks[session.id];
-    if (link) window.open(link, '_blank', 'noopener');
-    else A.toast(`${session.title} is scheduled for ${A.formatDateTime(session.starts_at)}. The online class link is locked or has not been added yet.`, 'warning');
+    A.toast(`${session.title} is scheduled for ${A.formatDateTime(session.starts_at)}. Zoom join links are shared manually in the WhatsApp Community by your manager.`, 'info');
   }
 
   async function openResourceLesson(lessonId, button) {

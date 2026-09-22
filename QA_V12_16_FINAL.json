@@ -1,0 +1,30 @@
+{
+  "version": "12.16",
+  "result": "PASS",
+  "base": "V12.15 incremental",
+  "checks": {
+    "asset_js_syntax": "PASS (50 JS files)",
+    "inline_js_syntax": "PASS",
+    "css_parse": "PASS",
+    "html_local_assets": "PASS (71 references)",
+    "html_local_links": "PASS (53 links)",
+    "duplicate_html_ids": "PASS",
+    "runtime_branding_mr_zameer": "PASS",
+    "runtime_batch3_stale_copy": "PASS",
+    "runtime_google_meet_wording": "PASS",
+    "student_zoom_link_exposure": "BLOCKED by UI and DB policy",
+    "enrollment_unique_student_course": "PASS",
+    "one_current_batch_per_course": "PASS",
+    "mentor_owned_select_policies": "PASS (3/3)",
+    "new_admin_rpc_anon_execute": "BLOCKED (7/7)",
+    "mentor_email_resolver_public_access": "BLOCKED",
+    "edge_process_email_queue": "ACTIVE v13",
+    "edge_free_course_enroll": "ACTIVE v6",
+    "edge_admin_mentor_account": "ACTIVE v1",
+    "edge_mentor_login": "ACTIVE v2"
+  },
+  "known_non_blocking": [
+    "Existing legacy Supabase advisor warnings remain for a separate hardening pass (legacy SECURITY DEFINER grants, multiple permissive RLS policies, pg_net in public schema).",
+    "Final visual appearance can still vary slightly by browser/font rendering; functional/static checks are passed."
+  ]
+}

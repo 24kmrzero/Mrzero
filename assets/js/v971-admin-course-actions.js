@@ -100,7 +100,7 @@
     f.reset();
     if (f.elements.id) f.elements.id.value='';
     if (f.elements.existing_thumbnail_url) f.elements.existing_thumbnail_url.value='';
-    if (f.elements.instructor_name) f.elements.instructor_name.value='Malik Zameer';
+    if (f.elements.instructor_name) f.elements.instructor_name.value='Mr. Zameer';
     if (f.elements.course_type) f.elements.course_type.value='paid';
     if (f.elements.price) f.elements.price.value='0';
     if (f.elements.currency) f.elements.currency.value='PKR';
@@ -119,7 +119,7 @@
     if (!course || !f) return toast('Course could not be found. Please refresh the page.','error');
     f.reset();
     const values={
-      id:course.id, title:course.title||'', instructor_name:course.instructor_name||'Malik Zameer',
+      id:course.id, title:course.title||'', instructor_name:course.instructor_name||'Mr. Zameer',
       short_description:course.short_description||course.description||'', course_type:course.course_type || (Number(course.price||0)===0?'free':'paid'),
       price:course.price??0, discount_price:course.discount_price??'', currency:course.currency||'PKR',
       slug:course.slug||slugify(course.title), description:course.description||'', access_days:course.access_days??'',
@@ -166,7 +166,7 @@
     const existingId=String(f.elements.id?.value||'').trim();
     return {
       id:existingId||null,title,slug:slugify(f.elements.slug?.value||title),short_description:caption,description:caption,
-      instructor_name:'Malik Zameer',course_type:type,price:regular,discount_price:discount,
+      instructor_name:'Mr. Zameer',course_type:type,price:regular,discount_price:discount,
       currency:['PKR','USDT'].includes(String(f.elements.currency?.value||'PKR').toUpperCase())?String(f.elements.currency.value).toUpperCase():'PKR',
       status:'active',enrollment_open:Boolean(f.elements.enrollment_open?.checked),thumbnail_url:String(f.elements.existing_thumbnail_url?.value||'').trim()||null,
       is_published:Boolean(f.elements.is_published?.checked),publish_at:null,unpublish_at:null,featured:false

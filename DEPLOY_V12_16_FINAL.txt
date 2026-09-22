@@ -1,0 +1,45 @@
+24K MR ZERO — V12.16 FINAL PREMIUM MOBILE + MENTOR PATCH
+=========================================================
+
+This is an INCREMENTAL patch for the current V12.15 website.
+Upload/copy the files using the same relative paths and overwrite existing files when prompted.
+Do not delete unrelated project files.
+
+LIVE BACKEND STATUS
+- V12.16 database migrations are already applied to Supabase project jsmthmmkafgvzzcjjihp.
+- process-email-queue is ACTIVE v13.
+- free-course-enroll is ACTIVE v6.
+- admin-mentor-account is ACTIVE v1.
+- mentor-login is ACTIVE v2.
+- No Edge Function secret changes are required by this patch.
+
+If restoring/deploying to another environment:
+1) Apply 37_V12_16_FINAL.sql after the existing V12.15 schema.
+2) Deploy supabase/functions/admin-mentor-account with JWT verification ON.
+3) Deploy supabase/functions/mentor-login with JWT verification OFF (login endpoint).
+4) Deploy supabase/functions/process-email-queue with JWT verification OFF only if your existing worker uses its own queue-secret/Admin authorization, as the included function does.
+5) Upload the frontend patch files.
+
+V12.16 SCOPE — 16 REQUESTED CHANGE GROUPS
+1. Admin-created Mentor accounts with Signals / Charts / Articles permissions.
+2. Public Mr. Zameer branding consistency.
+3. Mobile homepage aligned to the approved compact reference layout.
+4. Get All Access redesigned as a simple Paid / Free Broker step flow.
+5. Premium mobile-app experience for Student, Team and Mentor panels (Admin also receives mobile app navigation improvements).
+6. Enrollment success / manager handoff with Client ID and WhatsApp routing.
+7. Batch-wise enrollment dashboard / counts.
+8. Admin email delivery status visibility.
+9. Automatic current-batch assignment for free and paid enrollments.
+10. Manager Leads ON/OFF availability.
+11. Course enrollment Open/Closed control.
+12. Password recovery for Student, Team and Mentor flows.
+13. Student/lead manager reassignment.
+14. Clear enrollment statuses.
+15. Duplicate protection: one enrollment per student+course; same student may enroll in another course.
+16. CSV exports for students, enrollments, payments and Team leads.
+
+IMPORTANT PRODUCT RULE
+Zoom/class join links are not exposed to Students on the website. The schedule may be shown, but the manager/WhatsApp Community handles the join link.
+
+ROLLBACK
+Keep the previous V12.15 patch/archive available. Frontend files can be restored from V12.15 if needed. Database changes are additive/compatible with the existing schema; do not manually drop live data tables.
