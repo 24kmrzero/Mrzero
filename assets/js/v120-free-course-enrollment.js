@@ -46,9 +46,15 @@
 
   async function hydrateLinkDetails() {
     const context = trackingContext();
-    if (!context.ref || !window.Tracking?.resolve) return;
+    if (!context.ref) return;
     try {
-      const link = await window.Tracking.resolve(context.ref);
+      let link = null;
+      if (window.Tracking?.resolve) link = await window.Tracking.resolve(context.ref);
+      if (!link && window.supabase?.createClient && cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY) {
+        const fallback = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY, {auth:{persistSession:false,autoRefreshToken:false}});
+        const res = await fallback.rpc('resolve_tracking_link', { p_ref_code: context.ref.toLowerCase() });
+        if (!res.error) link = res.data;
+      }
       if (!link) return;
       const title = String(link.course_title || '24K Free Course').trim();
       const ct = document.getElementById('enrollCourseTitle');
@@ -61,6 +67,8 @@
 
   const initial = trackingContext();
   hydrateLinkDetails();
+  window.addEventListener('DOMContentLoaded', hydrateLinkDetails, { once:true });
+  setTimeout(hydrateLinkDetails, 450);
   if (initial.ref) {
     setTimeout(() => {
       try { window.Tracking?.record?.('form_opened', { course_slug: initial.course_slug || null }, initial.ref); } catch (_) {}
