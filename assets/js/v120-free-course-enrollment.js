@@ -49,12 +49,12 @@
   async function recordFormOpened(link) {
     if (formOpenedRecorded || !link?.ref_code) return;
     try {
-      await window.Tracking?.record?.('form_opened', {
+      const eventId = await window.Tracking?.record?.('form_opened', {
         course_id: link.course_id || null,
         course_slug: link.course_slug || null,
         batch_id: link.batch_id || null
       }, link.ref_code);
-      formOpenedRecorded = true;
+      if (eventId) formOpenedRecorded = true;
     } catch (_) {}
   }
 
