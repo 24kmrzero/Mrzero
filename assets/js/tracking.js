@@ -96,6 +96,7 @@
   function clearDestination() { localStorage.removeItem(PREFIX + 'destination'); }
 
   window.Tracking = { context, record, resolve, get, set, clearCourseIntent, clearDestination, visitorId };
+  initStandaloneClient().catch(error => console.warn('24K tracking client init skipped:', error?.message || error));
 
   window.addEventListener('DOMContentLoaded', async () => {
     await initStandaloneClient();
