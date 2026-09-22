@@ -9,6 +9,7 @@
   const toastEl = document.getElementById('toast');
   const params = new URLSearchParams(location.search);
   let linkReady = false;
+  let formOpenedRecorded = false;
 
   function toast(message, type = 'info') {
     if (!toastEl) return;
@@ -45,6 +46,18 @@
   }
 
 
+  async function recordFormOpened(link) {
+    if (formOpenedRecorded || !link?.ref_code) return;
+    try {
+      await window.Tracking?.record?.('form_opened', {
+        course_id: link.course_id || null,
+        course_slug: link.course_slug || null,
+        batch_id: link.batch_id || null
+      }, link.ref_code);
+      formOpenedRecorded = true;
+    } catch (_) {}
+  }
+
   async function hydrateLinkDetails(attempt = 0) {
     const context = trackingContext();
     if (!context.ref) return false;
@@ -69,6 +82,7 @@
       linkReady = true;
       if (button) button.disabled = false;
       if (notice) notice.hidden = true;
+      await recordFormOpened(link);
       return true;
     } catch (_) {
       if (attempt < 2) {
@@ -88,11 +102,6 @@
   const initial = trackingContext();
   hydrateLinkDetails();
   window.addEventListener('DOMContentLoaded', () => hydrateLinkDetails(), { once:true });
-  if (initial.ref) {
-    setTimeout(() => {
-      try { window.Tracking?.record?.('form_opened', { course_slug: initial.course_slug || null }, initial.ref); } catch (_) {}
-    }, 250);
-  }
 
   if (!initial.ref && notice) {
     notice.hidden = false;
