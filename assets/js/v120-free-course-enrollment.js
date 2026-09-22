@@ -60,7 +60,10 @@
       const ct = document.getElementById('enrollCourseTitle');
       if (ct) ct.textContent = title;
       const pill = document.getElementById('enrollBatchPill');
-      if (pill) pill.innerHTML = `FREE COURSE ENROLLMENT <span>•</span> ${String(link.course_slug || 'CURRENT BATCH').replace(/[-_]+/g,' ').toUpperCase()}`;
+      if (pill) {
+        const batchLabel = link.batch_name || (link.batch_number ? `BATCH ${link.batch_number}` : 'CURRENT BATCH');
+        pill.innerHTML = `FREE COURSE ENROLLMENT <span>•</span> ${String(batchLabel).toUpperCase()}`;
+      }
       document.title = `${title} Enrollment | 24K MR ZERO`;
     } catch (_) {}
   }
