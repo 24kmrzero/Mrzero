@@ -895,3 +895,27 @@ html[data-theme="dark"] body.app-page .auth-tabs button{color:#b5c0ca!important}
   body.app-page .auth-showcase{display:none!important}
   body.app-page .auth-panel{min-height:100dvh!important;padding:16px!important}
 }
+
+
+/* V12.24 Part 2 — Team, Mentor and Student mobile/runtime hardening */
+.team-main,.mentor-main,.student-page .app-main{min-width:0!important}
+.team-main .table-wrap,.team-main .table-scroll,.mentor-main .table-wrap,.mentor-main .table-scroll,.student-page .table-wrap,.student-page .table-scroll{max-width:100%!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important}
+.team-main table,.mentor-main table,.student-page table{width:100%!important}
+.team-main input,.team-main select,.team-main textarea,.mentor-main input,.mentor-main select,.mentor-main textarea,.student-page input,.student-page select,.student-page textarea{max-width:100%!important}
+.team-mobile-nav,.mentor-mobile-nav,.student-mobile-nav{z-index:2147482000!important}
+@media(max-width:900px){
+  .team-main>.view,.mentor-content,.student-page .app-content{width:100%!important;max-width:100%!important;overflow-x:hidden!important}
+  .team-flow-cards,.team-overview-kpis,.earning-cards,.mentor-performance-kpis,.signal-summary-grid,.student-page .app-grid{min-width:0!important}
+  .live-desk-shell{grid-template-columns:1fr!important;min-height:auto!important}
+  .live-desk-list,.live-desk-profile{max-height:340px!important}
+  .client-work-card,.panel-card,.mentor-card,.student-page .app-card{min-width:0!important}
+}
+@media(max-width:620px){
+  .team-main table,.mentor-main table,.student-page table{min-width:680px!important}
+  .student-page .account-access-row{align-items:flex-start!important;gap:10px!important}
+  .student-page .account-row-side{width:100%!important;align-items:stretch!important}
+  .student-page .account-row-side .app-btn{width:100%!important;justify-content:center!important}
+  .premium-access-modal .app-modal-card{width:min(100% - 14px,620px)!important;max-height:92dvh!important}
+  .premium-access-modal .app-modal-body{overflow:auto!important}
+  .access-choice-grid,.access-method-grid,.access-broker-grid{grid-template-columns:1fr!important}
+}
