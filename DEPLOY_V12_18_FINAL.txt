@@ -1,0 +1,25 @@
+24K MR ZERO — V12.18 FINAL PATCH
+
+CURRENT LIVE PROJECT (jsmthmmkafgvzzcjjihp)
+- Supabase V12.18 database changes are ALREADY APPLIED live.
+- Do NOT run 39_V12_18_REFERENCE_STRUCTURE.sql again on the current live project.
+- Upload/replace only the files contained in this incremental patch ZIP.
+
+OTHER / FRESH ENVIRONMENTS
+- Apply 39_V12_18_REFERENCE_STRUCTURE.sql once before uploading the frontend files.
+
+MAIN V12.18 CHANGES
+- Admin: PipSePaisa-reference information structure adapted to 24K black/gold branding.
+- Admin Link Manager: tracked link analytics + per-link lead details.
+- Admin Ad Link: clicks, unique clicks, form opened/submitted, enrollments, WhatsApp routed, team routing and lead detail table.
+- Lead detail rows: Lead Date & Time + Assigned Manager + exact Assigned Date & Time.
+- Team Panel: Overview, My Clients, Search Client, Daily Report, Live Chat, Earnings, Performance and History reference structure.
+- Mentor Panel: Performance, Signals, Charts, Articles, Courses, News and Settings reference structure.
+- Public Ad Link enrollment form: compact 3-field Name / Email / WhatsApp flow with dynamic course title and manager handoff.
+- Mobile: compact app-style navigation/layout for the changed Admin, Team and Mentor surfaces.
+
+DATA / SAFETY
+- Existing users, payments, enrollments, team attribution and historical records are not deleted.
+- Existing V12.17 manager-assignment history remains intact.
+- Admin link RPCs stay blocked from anonymous callers.
+- Team RPCs remain token-gated because Team Panel uses its own expiring team-session token.

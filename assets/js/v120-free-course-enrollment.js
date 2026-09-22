@@ -43,7 +43,30 @@
     };
   }
 
+
+  async function hydrateLinkDetails() {
+    const context = trackingContext();
+    if (!context.ref || !window.Tracking?.resolve) return;
+    try {
+      const link = await window.Tracking.resolve(context.ref);
+      if (!link) return;
+      const title = String(link.course_title || '24K Free Course').trim();
+      const ct = document.getElementById('enrollCourseTitle');
+      if (ct) ct.textContent = title;
+      const pill = document.getElementById('enrollBatchPill');
+      if (pill) pill.innerHTML = `FREE COURSE ENROLLMENT <span>•</span> ${String(link.course_slug || 'CURRENT BATCH').replace(/[-_]+/g,' ').toUpperCase()}`;
+      document.title = `${title} Enrollment | 24K MR ZERO`;
+    } catch (_) {}
+  }
+
   const initial = trackingContext();
+  hydrateLinkDetails();
+  if (initial.ref) {
+    setTimeout(() => {
+      try { window.Tracking?.record?.('form_opened', { course_slug: initial.course_slug || null }, initial.ref); } catch (_) {}
+    }, 250);
+  }
+
   if (!initial.ref && notice) {
     notice.hidden = false;
     notice.textContent = 'This enrollment page must be opened from an active 24K MR ZERO registration link.';
@@ -111,7 +134,9 @@
           const href = `https://wa.me/${digits}?text=${encodeURIComponent(text)}`;
           const old = success.querySelector('.manager-connect');
           if (old) old.remove();
-          success.insertAdjacentHTML('beforeend', `<div class="manager-connect"><p>Enrollment complete. Connecting you to <b>${greetingName.replace(/[<>&"']/g,'')}</b> on WhatsApp…</p><a class="manager-whatsapp" href="${href}" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Open WhatsApp</a></div>`);
+          const safeManager = greetingName.replace(/[<>&"']/g,'');
+          const safeClient = clientId.replace(/[<>&"']/g,'');
+          success.insertAdjacentHTML('beforeend', `<div class="manager-connect"><p>Enrollment complete. You are being connected to <b>${safeManager}</b>.</p><div class="manager-details"><div><small>Client ID</small><b>${safeClient || 'Generated'}</b></div><div><small>Assigned Manager</small><b>${safeManager}</b></div></div><a class="manager-whatsapp" href="${href}" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Open WhatsApp</a></div>`);
 
           let routed = false;
           const recordRoute = async () => {

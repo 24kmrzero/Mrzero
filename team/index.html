@@ -2,24 +2,26 @@
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Team Performance | 24K MR ZERO</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#090a0d">
+  <title>Team Panel | 24K MR ZERO</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <link rel="stylesheet" href="/assets/css/v110-team-command-center.css?v=11.0">
-  <link rel="stylesheet" href="/assets/css/v1216-team-mobile.css?v=12.16">
+  <link rel="stylesheet" href="/assets/css/v110-team-command-center.css?v=12.18">
+  <link rel="stylesheet" href="/assets/css/v1216-team-mobile.css?v=12.18">
+  <link rel="stylesheet" href="/assets/css/v1218-team-reference.css?v=12.18">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/assets/js/config.js"></script>
+  <script src="/assets/js/config.js?v=12.18"></script>
 </head>
 <body>
   <div id="teamLogin" class="team-login-wrap">
     <div class="team-login-card">
       <img src="/assets/logo-v965.png" alt="24K MR ZERO" class="team-login-logo">
-      <span class="eyebrow">TEAM PERFORMANCE</span>
-      <h1>Performance & Earnings Command Center</h1>
-      <p>Track your assigned links, clients, conversions, broker lots, VIP activity and earnings in one place.</p>
+      <span class="eyebrow">TEAM PERFORMANCE &amp; EARNINGS</span>
+      <h1>Team Command Center</h1>
+      <p>Your clients, follow-ups, daily work, live conversations and earnings in one simple workspace.</p>
       <form id="teamLoginForm" class="team-login-form">
         <label>Username<input name="username" autocomplete="username" required></label>
         <label>Password<input name="password" type="password" autocomplete="current-password" required></label>
@@ -33,16 +35,20 @@
 
   <div id="teamApp" class="team-app hidden">
     <aside class="team-side">
-      <div class="brand"><img src="/assets/logo-v965.png" alt="24K"><div><b>Team Performance</b><span>24K Excellence</span></div></div>
+      <div class="brand"><img src="/assets/logo-v965.png" alt="24K"><div><b>24K MR ZERO</b><span>TEAM PERFORMANCE &amp; EARNINGS</span></div></div>
+      <small class="team-nav-label">COMMAND CENTER</small>
       <nav id="teamNav">
-        <button class="nav-btn active" data-view="overview"><i class="fa-solid fa-gauge-high"></i><span>Overview</span></button>
-        <button class="nav-btn" data-view="links"><i class="fa-solid fa-link"></i><span>My Links</span></button>
-        <button class="nav-btn" data-view="daily"><i class="fa-solid fa-clipboard-check"></i><span>Daily Report</span></button>
-        <button class="nav-btn" data-view="clients"><i class="fa-solid fa-users"></i><span>My Clients</span></button>
-        <button class="nav-btn" data-view="earnings"><i class="fa-solid fa-sack-dollar"></i><span>Earnings</span></button>
-        <button class="nav-btn" data-view="performance"><i class="fa-solid fa-chart-line"></i><span>Performance</span></button>
-        <button class="nav-btn" data-view="history"><i class="fa-solid fa-clock-rotate-left"></i><span>History</span></button>
+        <button class="nav-btn active" data-view="overview"><i class="fa-solid fa-house"></i><span>Overview</span></button>
+        <button class="nav-btn" data-view="clients"><i class="fa-solid fa-user-group"></i><span>My Clients</span></button>
+        <button class="nav-btn" data-view="search"><i class="fa-solid fa-magnifying-glass"></i><span>Search Client</span></button>
+        <button class="nav-btn" data-view="daily"><i class="fa-solid fa-check"></i><span>Daily Report</span></button>
+        <button class="nav-btn" data-view="chat"><i class="fa-regular fa-message"></i><span>Live Chat</span><em id="teamChatBadge" class="nav-badge" hidden>0</em></button>
+        <button class="nav-btn" data-view="earnings"><i class="fa-solid fa-dollar-sign"></i><span>Earnings</span></button>
+        <button class="nav-btn" data-view="performance"><i class="fa-solid fa-arrow-trend-up"></i><span>Performance</span></button>
+        <button class="nav-btn" data-view="history"><i class="fa-regular fa-clock"></i><span>History</span></button>
       </nav>
+      <button class="team-install-card" type="button" id="teamInstallButton"><span><i class="fa-solid fa-download"></i></span><b>Install 24K Team</b><small>Add Team Panel to this device</small></button>
+      <div class="team-flow-note"><b>SIMPLE TEAM FLOW</b><p>My Clients = your work list. Search Client = check who owns a client. Team members cannot transfer ownership; only Admin can change manager.</p></div>
       <div class="side-bottom">
         <button id="teamTheme" class="nav-btn"><i class="fa-solid fa-sun"></i><span>Theme</span></button>
         <button id="teamLogout" class="nav-btn"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></button>
@@ -51,79 +57,114 @@
 
     <main class="team-main">
       <header class="team-topbar">
-        <div><span class="eyebrow">24K TEAM</span><h1 id="teamMemberName">Team Member</h1><p id="teamMonthLabel">Performance overview</p></div>
+        <div class="team-page-title"><h1 id="teamPageTitle">Team Overview</h1><p id="teamPageSubtitle">Your clients, follow-ups and earnings at a glance.</p></div>
         <div class="top-actions">
-          <select id="teamMonth"></select>
+          <select id="teamMonth" aria-label="Month"></select>
           <button id="teamRefresh" class="icon-btn" title="Refresh"><i class="fa-solid fa-rotate"></i></button>
+          <button id="teamThemeTop" class="icon-btn" title="Theme"><i class="fa-solid fa-moon"></i></button>
+          <div class="team-user-chip"><span id="teamAvatar">TM</span><div><b id="teamMemberName">Team Member</b><small id="teamUsername">@team</small></div></div>
         </div>
       </header>
 
       <section class="view active" data-view-panel="overview">
-        <div class="hero-grid">
-          <article class="hero-card animated-glow">
-            <div><span class="eyebrow">MONTHLY PERFORMANCE</span><h2 id="heroName">Team Performance</h2><p>Your links, clients, conversions and next commission targets update from one command center.</p></div>
-            <div class="hero-mark">24K</div>
-          </article>
-          <article class="summary-card"><span>Assigned Links</span><b id="assignedLinksCount">0</b><small>Active tracked links</small></article>
+        <article class="team-month-hero">
+          <div><span class="eyebrow">SELECTED MONTH</span><h2><span id="heroName">Team Member</span> — <span id="teamMonthLabel">Current Month</span></h2><p>Focus on new leads, follow-ups and conversions. Old tracking clients and new Ad/Auto leads stay together.</p></div>
+          <div class="today-attention"><small>TODAY</small><b><span id="todayAttention">0</span> leads need attention</b><em id="overviewMiniText">0 total clients · 0 converted this month</em></div>
+        </article>
+        <div class="team-flow-cards">
+          <article><span>1</span><b>My Clients</b><p>All old tracking clients + new Ad/Auto leads assigned to you.</p></article>
+          <article><span>2</span><b>Contact &amp; Follow Up</b><p>Use WhatsApp from My Clients and keep daily calls/messages/follow-ups updated.</p></article>
+          <article><span>3</span><b>Daily Report</b><p>Enter manual work only. Course registrations and enrollments are automatic.</p></article>
+          <article><span>4</span><b>Earnings &amp; Performance</b><p>Commission, lots and monthly performance are calculated from approved system data.</p></article>
         </div>
-        <div id="kpiGrid" class="kpi-grid"></div>
-        <div id="progressGrid" class="progress-grid"></div>
-        <div class="two-col">
-          <article class="panel-card"><div class="card-head"><div><span class="eyebrow">BROKER LOTS</span><h3>Broker Lots Performance</h3></div><small>Shared overall level</small></div><div id="brokerGrid" class="broker-grid"></div></article>
-          <article class="panel-card"><div class="card-head"><div><span class="eyebrow">TREND</span><h3>6-Month Earnings</h3></div></div><div id="trendChart" class="trend-chart"></div></article>
+        <div id="overviewKpis" class="team-overview-kpis"></div>
+        <div class="team-overview-split">
+          <article class="panel-card"><div class="card-head"><div><h3>Recent Assigned Clients</h3><small>Latest old + new clients assigned to you.</small></div><button class="tiny-btn" data-view-jump="clients">Open My Clients</button></div><div id="recentClients" class="recent-client-list"></div></article>
+          <article class="panel-card"><div class="card-head"><div><h3>Today’s Work</h3><small>Simple action summary for today.</small></div></div><div id="todayWork" class="today-work-list"></div></article>
         </div>
-        <article class="panel-card"><div class="card-head"><div><span class="eyebrow">NEXT LEVEL IMPACT</span><h3>What unlocks next?</h3></div></div><div id="nextImpact" class="impact-row"></div></article>
-      </section>
-
-      <section class="view" data-view-panel="links">
-        <div class="section-head"><div><span class="eyebrow">ATTRIBUTION</span><h2>My Assigned Links</h2><p>Every link keeps its own clicks, signups, enrollments and conversion history.</p></div></div>
-        <div id="linksGrid" class="links-grid"></div>
-      </section>
-
-      <section class="view" data-view-panel="daily">
-        <div class="section-head"><div><span class="eyebrow">DAILY REPORT</span><h2>Submit Today’s Report</h2><p>One editable report per day. Course enrollments and VIP conversions are tracked automatically from the platform.</p></div></div>
-        <div class="daily-layout">
-          <form id="dailyReportForm" class="panel-card form-card">
-            <div class="form-grid">
-              <label>Report Date<input id="reportDate" type="date" required></label>
-              <label>New Broker Accounts<input id="newBrokerAccounts" type="number" min="0" value="0"></label>
-              <label>IB / Partner Shifts<input id="ibPartnerShifts" type="number" min="0" value="0"></label>
-              <label>XM Weekly Lots<input id="xmWeeklyLots" type="number" min="0" step="0.01" value="0"></label>
-              <label>DPrime Weekly Lots<input id="dprimeWeeklyLots" type="number" min="0" step="0.01" value="0"></label>
-              <label>Exness Weekly Lots<input id="exnessWeeklyLots" type="number" min="0" step="0.01" value="0"></label>
-              <label class="full">Notes<textarea id="reportNotes" rows="4" placeholder="Optional notes for Admin"></textarea></label>
-            </div>
-            <div class="report-auto"><div><span>Auto Course Enrollments</span><b id="autoEnrollments">0</b></div><div><span>VIP Conversions</span><b id="autoVipConversions">0</b></div></div>
-            <button class="gold-btn" type="submit"><i class="fa-solid fa-paper-plane"></i> Submit / Update Report</button>
-            <div id="dailyStatus" class="form-status"></div>
-          </form>
-          <article class="panel-card"><div class="card-head"><h3>This Month’s Reports</h3></div><div id="dailyReportsList" class="stack-list"></div></article>
-        </div>
+        <article class="panel-card compact-links"><div class="card-head"><div><h3>My Tracking Links</h3><small>Your assigned links and current performance.</small></div><button class="tiny-btn" data-view-jump="links">View Links</button></div><div id="overviewLinks" class="overview-link-row"></div></article>
       </section>
 
       <section class="view" data-view-panel="clients">
-        <div class="section-head"><div><span class="eyebrow">ATTRIBUTED CLIENTS</span><h2>My Clients</h2><p>See the original tracked link and course status for every attributed client.</p></div></div>
-        <div class="filter-bar"><input id="clientSearch" type="search" placeholder="Search client…"><select id="clientCourseFilter"><option value="all">All Clients</option><option value="level1">Basic Level 1</option><option value="level2">Level 2</option><option value="vip">VIP</option></select></div>
-        <div class="table-wrap"><table><thead><tr><th>Client</th><th>Source Link</th><th>Signup</th><th>Courses</th><th>VIP</th><th>Action</th></tr></thead><tbody id="clientsBody"></tbody></table></div>
+        <div class="section-head"><div><h2>My Clients</h2><p>Your complete old + current client work list. Use filters to find who needs attention.</p></div><span class="section-badge" id="clientCountBadge">0 clients</span></div>
+        <div class="client-filter-card"><input id="clientSearch" type="search" placeholder="Search name, WhatsApp, email or Client ID..."><select id="clientCourseFilter"><option value="all">All Courses</option><option value="level1">Basic Level 1</option><option value="level2">Level 2</option><option value="vip">VIP</option></select><select id="clientStatusFilter"><option value="all">All Status</option><option value="new">New</option><option value="contacted">Contacted</option><option value="interested">Interested</option><option value="follow_up">Follow-up</option><option value="converted">Converted</option><option value="not_interested">Not Interested</option></select></div>
+        <div id="clientsCards" class="clients-card-list"></div>
+      </section>
+
+      <section class="view" data-view-panel="search">
+        <div class="section-head"><div><h2>Search Client</h2><p>Check the assigned manager before dealing with a client.</p></div><span class="section-badge">OWNERSHIP CHECK</span></div>
+        <article class="panel-card search-client-card"><h3>Find Client</h3><p>Search by Name, WhatsApp, Email or Client ID.</p><div class="search-client-row"><input id="ownershipSearch" type="search" placeholder="Example: 24K-8263, +92..., email or name"><button id="ownershipSearchBtn" class="gold-btn">Search Client</button></div></article>
+        <div class="simple-rule"><b>Simple rule:</b> Your client = deal with them. Another manager’s client = contact that manager. Unassigned = ask Admin. Team members cannot change ownership.</div>
+        <div id="ownershipResult"></div>
+      </section>
+
+      <section class="view" data-view-panel="daily">
+        <div class="section-head"><div><h2>Daily Report</h2><p>Enter only the work you did manually. Course activity is auto-tracked.</p></div><span class="section-badge">MANUAL WORK ONLY</span></div>
+        <div class="daily-layout reference-daily">
+          <form id="dailyReportForm" class="panel-card form-card">
+            <div class="card-head"><div><h3>Today’s Team Report</h3><small>These are the fields you can update yourself.</small></div><span class="section-badge">MANUAL INPUT</span></div>
+            <input id="reportDate" type="date" hidden>
+            <div class="form-grid daily-work-grid">
+              <label>Leads Contacted<input id="leadsContacted" type="number" min="0" value="0"></label>
+              <label>Messages Sent<input id="messagesSent" type="number" min="0" value="0"></label>
+              <label>Calls Made<input id="callsMade" type="number" min="0" value="0"></label>
+              <label>Follow-ups<input id="followUps" type="number" min="0" value="0"></label>
+            </div>
+            <div class="form-section-title"><b>Conversions / Broker Activity</b><small>Manual values</small></div>
+            <div class="form-grid tri-grid">
+              <label>New Broker Accounts<input id="newBrokerAccounts" type="number" min="0" value="0"></label>
+              <label>IB / Partner Shifts<input id="ibPartnerShifts" type="number" min="0" value="0"></label>
+              <label>VIP Conversions <small>(auto shown right)</small><input id="manualVip" type="number" min="0" value="0" disabled></label>
+            </div>
+            <div class="form-section-title"><b>Weekly Broker Lots</b><small>Update current week running total</small></div>
+            <div class="form-grid tri-grid">
+              <label>XM Lots<input id="xmWeeklyLots" type="number" min="0" step="0.01" value="0"></label>
+              <label>DPrime Lots<input id="dprimeWeeklyLots" type="number" min="0" step="0.01" value="0"></label>
+              <label>Exness Lots<input id="exnessWeeklyLots" type="number" min="0" step="0.01" value="0"></label>
+              <label class="full">Today’s Note — Optional<textarea id="reportNotes" rows="4" placeholder="Example: Most inquiries today were related to VIP and broker account opening."></textarea></label>
+            </div>
+            <div class="report-submit-row"><span id="dailyStatus">Not submitted</span><button class="gold-btn" type="submit">Submit Daily Report</button></div>
+          </form>
+          <article class="panel-card auto-activity-card"><div class="card-head"><div><h3>Automatic Course Activity</h3><small>Old tracking + new Ad/Auto enrollments appear here automatically.</small></div><span class="section-badge">AUTO TRACKED</span></div><div id="autoActivity"></div></article>
+        </div>
+        <article class="panel-card daily-history"><div class="card-head"><div><h3>Daily Report History</h3><small>Manual work plus auto-tracked course activity.</small></div></div><div id="dailyReportsList" class="table-wrap"></div></article>
+      </section>
+
+      <section class="view" data-view-panel="chat">
+        <div class="chat-kpis" id="chatKpis"></div>
+        <div class="live-desk-shell">
+          <aside class="live-desk-list"><div class="desk-title"><div><h3>Live Desk</h3><small><i></i> Online</small></div></div><input id="chatSearch" type="search" placeholder="Search name, WhatsApp, email, message..."><div class="chat-filter-row"><button class="active" data-chat-filter="all">All</button><button data-chat-filter="mine">My Chats</button><button data-chat-filter="waiting">Waiting</button><button data-chat-filter="closed">Closed</button></div><div id="chatThreads" class="chat-thread-list"></div></aside>
+          <section class="live-desk-conversation"><div id="chatConversationHead" class="conversation-head"><div><b>Select a conversation</b><small>Live Desk</small></div></div><div id="chatMessages" class="chat-messages"><div class="chat-empty">Choose a conversation from the left.</div></div><div id="chatQuickTools" class="chat-quick-tools"><span>AI TOOLS</span><button type="button" data-quick-reply="Thank you. I am checking this for you now.">Suggest Reply</button><button type="button" data-quick-reply="Please share your Client ID and active WhatsApp number.">Client Details</button><button type="button" data-quick-reply="I will guide you with the next step shortly.">Next Action</button></div><form id="chatReplyForm" class="chat-reply-form"><textarea id="chatReply" placeholder="Type a reply..." required></textarea><button class="gold-btn" type="submit"><i class="fa-solid fa-paper-plane"></i></button></form></section>
+          <aside id="chatProfile" class="live-desk-profile"><div class="chat-empty">Lead profile will appear here.</div></aside>
+        </div>
       </section>
 
       <section class="view" data-view-panel="earnings">
-        <div class="section-head"><div><span class="eyebrow">EARNINGS</span><h2>Commission & Earnings</h2><p>Course, VIP and broker-lot earnings with shared next-level progress.</p></div></div>
-        <div id="earningsCards" class="kpi-grid"></div>
+        <div class="section-head"><div><h2>Earnings</h2><p>Your Course, VIP and Broker Lot earnings. Figures are calculated automatically.</p></div><span class="section-badge">AUTO CALCULATED</span></div>
+        <div class="earnings-note">Earnings start from September 2026. Older client/history data stays visible, but pre-September Team earnings were manually settled. If an old client generates an approved earning now, it belongs to the month in which that earning is approved.</div>
+        <div id="earningsCards" class="team-earnings-top"></div>
         <div id="earningsProgress" class="progress-grid"></div>
+        <div id="brokerGrid" class="broker-grid earnings-brokers"></div>
       </section>
 
       <section class="view" data-view-panel="performance">
-        <div class="section-head performance-head"><div><span class="eyebrow">PERFORMANCE</span><h2>Conversion Performance</h2></div><div class="preset-row"><button data-range="today">Today</button><button data-range="yesterday">Yesterday</button><button data-range="7">Last 7 Days</button><button data-range="lastmonth">Last Month</button><button data-range="custom">Custom</button></div></div>
+        <div class="section-head performance-head"><div><h2>Performance</h2><p>See how assigned leads move from contact to conversion.</p></div><div class="preset-row"><button class="active" data-range="today">Today</button><button data-range="yesterday">Yesterday</button><button data-range="7">Last 7 Days</button><button data-range="lastmonth">Last Month</button><button data-range="custom">Custom</button></div></div>
         <div id="customRange" class="custom-range hidden"><input id="rangeStart" type="date"><input id="rangeEnd" type="date"><button id="applyRange" class="gold-btn">Apply</button></div>
-        <div id="rangeKpis" class="kpi-grid"></div>
-        <article class="panel-card"><div class="card-head"><h3>Conversion Funnel</h3></div><div id="funnel" class="funnel"></div></article>
-        <article class="panel-card"><div class="card-head"><h3>Link Performance</h3></div><div id="rangeLinks" class="table-wrap"></div></article>
+        <div id="rangeKpis" class="performance-kpis"></div>
+        <div class="performance-main-grid"><article class="panel-card"><div class="card-head"><h3>Lead Funnel</h3></div><div id="funnel" class="reference-funnel"></div></article><article class="panel-card"><div class="card-head"><h3>Course / Batch Performance</h3></div><div id="coursePerformance" class="course-performance-grid"></div></article></div>
+        <div class="performance-main-grid"><article class="panel-card"><div class="card-head"><h3>Broker / Sales Activity</h3></div><div id="brokerActivity" class="metric-box-grid"></div></article><article class="panel-card"><div class="card-head"><h3>Needs Attention</h3></div><div id="needsAttention" class="metric-box-grid"></div></article></div>
+        <article class="panel-card"><div class="card-head"><h3>Source Performance</h3></div><div id="rangeLinks" class="table-wrap"></div></article>
       </section>
 
       <section class="view" data-view-panel="history">
-        <div class="section-head"><div><span class="eyebrow">HISTORY</span><h2>Monthly History</h2><p>Review monthly earnings, course sales, VIP and lots performance.</p></div></div>
-        <div id="historyGrid" class="history-grid"></div>
+        <div class="section-head"><div><h2>History</h2><p>Previous months and old tracking records. Current work should be done from My Clients.</p></div><span class="section-badge">READ-ONLY HISTORY</span></div>
+        <div id="historyKpis" class="history-kpis"></div>
+        <article class="panel-card"><div class="card-head"><div><h3>Monthly Performance</h3><small>Historical activity stays visible. Earnings before September 2026 are shown as settled.</small></div></div><div id="historyGrid" class="table-wrap"></div></article>
+        <article class="panel-card legacy-links"><div class="card-head"><h3>Legacy / Assigned Tracking Links</h3><button class="tiny-btn" data-view-jump="links">Open links</button></div><div id="historyLinks"></div></article>
+      </section>
+
+      <section class="view" data-view-panel="links">
+        <div class="section-head"><div><h2>My Assigned Links</h2><p>Read-only tracking performance for your assigned links.</p></div></div><div id="linksGrid" class="links-grid"></div>
       </section>
     </main>
   </div>
@@ -131,12 +172,13 @@
   <nav class="team-mobile-nav" id="teamMobileNav" aria-label="Team mobile navigation">
     <button class="active" data-team-mobile-view="overview"><i class="fa-solid fa-house"></i><span>Home</span></button>
     <button data-team-mobile-view="clients"><i class="fa-solid fa-users"></i><span>Clients</span></button>
+    <button data-team-mobile-view="chat"><i class="fa-regular fa-message"></i><span>Chat</span></button>
     <button data-team-mobile-view="earnings"><i class="fa-solid fa-sack-dollar"></i><span>Earnings</span></button>
-    <button data-team-mobile-view="daily"><i class="fa-solid fa-clipboard-check"></i><span>Reports</span></button>
     <button data-team-mobile-profile><i class="fa-solid fa-user"></i><span>Profile</span></button>
   </nav>
   <div class="team-profile-sheet" id="teamProfileSheet" aria-hidden="true"><div class="team-profile-card"><button type="button" class="team-sheet-close" id="teamProfileClose"><i class="fa-solid fa-xmark"></i></button><img src="/assets/logo-v965.png" alt="24K MR ZERO"><small>TEAM PROFILE</small><h3 id="teamProfileName">Team Member</h3><p>Manage theme, refresh your data or sign out securely.</p><div class="team-profile-actions"><button type="button" id="teamMobileRefresh"><i class="fa-solid fa-rotate"></i> Refresh Data</button><button type="button" id="teamMobileTheme"><i class="fa-solid fa-sun"></i> Change Theme</button><button type="button" class="danger" id="teamMobileLogout"><i class="fa-solid fa-right-from-bracket"></i> Logout</button></div></div></div>
-  <script src="/assets/js/v110-team-command-center.js?v=11.0"></script>
-  <script src="/assets/js/v1216-team-mobile.js?v=12.16"></script>
+  <div id="teamToast" class="team-toast" aria-live="polite"></div>
+  <script src="/assets/js/v110-team-command-center.js?v=12.18"></script>
+  <script src="/assets/js/v1216-team-mobile.js?v=12.18"></script>
 </body>
 </html>

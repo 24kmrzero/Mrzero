@@ -1,0 +1,106 @@
+{
+  "version": "V12.18",
+  "generated_at_utc": "2026-09-22T04:59:36.229266+00:00",
+  "base": "V12.17 FULL CLEAN",
+  "scope": "Incremental Admin + Mentor + Team + Ad Link reference-structure patch",
+  "static_qa": {
+    "js_files": 72,
+    "js_failures": 0,
+    "html_files": 73,
+    "inline_scripts": 73,
+    "inline_failures": 0,
+    "duplicate_id_files": 0,
+    "missing_local_refs": 0
+  },
+  "changed_js_node_check": "PASS",
+  "branding_checks": {
+    "meet_mr_zameer": "PASS",
+    "pipsepaisa_in_changed_24k_surfaces": "PASS"
+  },
+  "live_supabase": {
+    "project_id": "jsmthmmkafgvzzcjjihp",
+    "project_status": "ACTIVE_HEALTHY",
+    "migrations_applied": [
+      "v1218_reference_structure",
+      "v1218_team_contract_alignment",
+      "v1218_ad_link_metrics"
+    ],
+    "v1218_rpc_and_column_existence_checks": "PASS",
+    "ad_funnel_metrics": "PASS \u2014 form_opened + whatsapp_routed",
+    "admin_link_rpcs_anon_blocked": "PASS",
+    "team_v1218_rpcs": "Token-gated via expiring Team session token; anon/auth execution intentional for separate Team login."
+  },
+  "supabase_advisor_snapshot": {
+    "note": "Project-wide snapshot; includes pre-existing items outside this patch. No unrelated database objects were blindly changed.",
+    "security": [
+      {
+        "name": "rls_enabled_no_policy",
+        "level": "INFO",
+        "count": 7
+      },
+      {
+        "name": "extension_in_public",
+        "level": "WARN",
+        "count": 1
+      },
+      {
+        "name": "anon_security_definer_function_executable",
+        "level": "WARN",
+        "count": 89
+      },
+      {
+        "name": "authenticated_security_definer_function_executable",
+        "level": "WARN",
+        "count": 140
+      },
+      {
+        "name": "auth_leaked_password_protection",
+        "level": "WARN",
+        "count": 1
+      }
+    ],
+    "performance": [
+      {
+        "name": "unindexed_foreign_keys",
+        "level": "INFO",
+        "count": 76
+      },
+      {
+        "name": "auth_rls_initplan",
+        "level": "WARN",
+        "count": 36
+      },
+      {
+        "name": "unused_index",
+        "level": "INFO",
+        "count": 19
+      },
+      {
+        "name": "multiple_permissive_policies",
+        "level": "WARN",
+        "count": 73
+      }
+    ]
+  },
+  "file_sha256": {
+    "39_V12_18_REFERENCE_STRUCTURE.sql": "40b589044cec9d688ffda9f9cdf824ed57178dd32a5bc1fab7574fab818a0f28",
+    "admin-dashboard.html": "52d6b29b4d6f8b8e6d096b37e9a96b02df39ec927365da93e233b3e20409835c",
+    "admin/link-manager/index.html": "14b0d7173acda8e6b2d2eb3ae0cc0ef04a189b726ed9351839a2aa46d17c971b",
+    "admin/mentors/index.html": "3032c46738741cf82aea43e2c91d5c8c0a495a0c45ad7396982d9b5191ecc06d",
+    "admin/team-manager/index.html": "c3fe79f98e91aae8674e1b74e30321d4b5319f2395352f48ccd97cc500396452",
+    "assets/css/v1218-ad-form.css": "d671193dbd971e37a1e8e3c2a5526bdefe4935619b37ad404c32df4a391e483c",
+    "assets/css/v1218-admin-reference.css": "657a8fbc683090cfb469c7f1ccaac983b949312dda15330e805f4bd697a758ca",
+    "assets/css/v1218-mentor-reference.css": "192dc716767e505980386f8c53efb13bbaa3b507f69c43325027452a81f896e2",
+    "assets/css/v1218-team-reference.css": "7ddd1b5c4234af569401c77036374f44916c12ffe19543f8112ad7e254f59ae5",
+    "assets/js/v110-team-command-center.js": "8a11ab1fecd83e458e23d144202b5fac311e1bdba882d15c46baa7f31c2637fd",
+    "assets/js/v120-free-course-enrollment.js": "f45aaf12abc259efd17bc3e155d957c6487b4e958070fedc2556a72693d56f8d",
+    "assets/js/v1216-mentor.js": "51b25032eab11481176edb10461138bc9d52c3589b8f666a7121b1500aa7816a",
+    "assets/js/v1218-admin-reference.js": "0c7a27e3b675c8b99366107fbd6c59a6301d34a5e5889adcbf58553214a846fb",
+    "free-course/index.html": "f9bfd18445bb80df94741947afdc4fdc0597b0b932ff25aa678363b876beb714",
+    "mentor/index.html": "4d2cc0c0a1d8c8e2d36a1754c0c440baa582a3e4ff82b77a1df37b668aef21c1",
+    "team/index.html": "71239b90174528172532f3ae48192ca6908ac74ebec72d22b0d93d390ee30a8c",
+    "PATCH_VERSION_V12_18.txt": "79610148fde961829b8a35cd2fb225313c5b1ab90c0ac7c80d422774d8ee786e",
+    "PATCH_MANIFEST_V12_18.txt": "21dae8ff5a7f8017158901a702d041657571548474e5d61f1b1748515006369c",
+    "DEPLOY_V12_18_FINAL.txt": "d50fd93ff1050458113c71275e841f40ad715ad235735f5916e17c0e8c92596c"
+  }
+}
