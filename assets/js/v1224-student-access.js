@@ -26,7 +26,16 @@ function render(){
    compact.innerHTML=`<i class="fa-solid fa-circle"></i> ${on?'Active':payments.some(x=>['received','under_review'].includes(String(x.status).toLowerCase()))||verifications.some(x=>x.status==='pending')?'Pending':'Locked'}`;
  }
  if(box)box.innerHTML=statusHtml();
- if(price&&access)price.innerHTML=`<div class="profile-access-choice-grid"><div class="access-link-box"><small>Local Bank</small><b>${money(access.price_pkr,'PKR')}</b></div><div class="access-link-box"><small>USDT TRC20</small><b>${money(access.price_usdt,'USD').replace('USD','$')}</b></div></div><p class="muted" style="margin:8px 0 0">${Number(access.monthly_days||30)} days access after approval.</p>`;
+ if(price&&access){
+   const pkr=Number(access.price_pkr||0),usd=Number(access.price_usdt||0),paidAvailable=pkr>0||usd>0;
+   if(paidAvailable){
+     price.innerHTML='<div class="profile-access-choice-grid"><div class="access-link-box"><small>Local Bank</small><b>'+ (pkr>0?money(pkr,"PKR"):"Not configured") +'</b></div><div class="access-link-box"><small>USDT TRC20</small><b>'+ (usd>0?'$'+usd.toLocaleString():"Not configured") +'</b></div></div><p class="muted" style="margin:8px 0 0">'+Number(access.monthly_days||30)+' days access after approval.</p>';
+   }else{
+     price.innerHTML='<div class="notice warn">Paid Access pricing is not configured yet. Please use Free Access via Broker or contact support.</div>';
+   }
+   const paidChoice=$('[data-access-step-target="paid"]');if(paidChoice){paidChoice.disabled=!paidAvailable;paidChoice.classList.toggle('is-disabled',!paidAvailable)}
+   const bank=$('#premiumPayLocal'),usdButton=$('#premiumPayUsdt');if(bank)bank.disabled=pkr<=0;if(usdButton)usdButton.disabled=usd<=0;
+ }
  if(ib&&access)ib.innerHTML=access.ib_enabled?'<div class="notice info">Broker verification is available. Access activates after Admin approval.</div>':'<div class="notice warn">Broker verification is currently disabled.</div>';
  renderHistory();
 }
