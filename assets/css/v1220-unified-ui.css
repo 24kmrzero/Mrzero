@@ -919,3 +919,16 @@ html[data-theme="dark"] body.app-page .auth-tabs button{color:#b5c0ca!important}
   .premium-access-modal .app-modal-body{overflow:auto!important}
   .access-choice-grid,.access-method-grid,.access-broker-grid{grid-template-columns:1fr!important}
 }
+
+
+/* V12.24 Student dashboard compact snapshots */
+.member-pulse-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.member-pulse-grid>div{padding:10px;border:1px solid;border-radius:9px;text-align:center}
+.member-pulse-grid small{display:block;font-size:7px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.member-pulse-grid b{font-size:18px}
+.compact-snapshot-button{display:block;width:100%;padding:0;border:0;background:transparent;text-align:left;color:inherit;cursor:pointer}
+html[data-theme="light"] .member-pulse-grid>div{background:#fff8ec;border-color:var(--p-line);color:var(--p-text)}
+html[data-theme="light"] .member-pulse-grid small{color:var(--p-muted)}
+html[data-theme="dark"] .member-pulse-grid>div{background:#171f29;border-color:var(--p-dark-line);color:var(--p-dark-text)}
+html[data-theme="dark"] .member-pulse-grid small{color:var(--p-dark-muted)}
+@media(max-width:520px){.member-pulse-grid{grid-template-columns:1fr}}
