@@ -47,8 +47,8 @@
       sb.from('support_requests').select('*').eq('student_id', state.user.id).order('created_at', { ascending: false }),
       sb.from('terms_acceptances').select('id').eq('user_id', state.user.id).eq('document_type', 'risk_disclaimer').eq('version', A.cfg.RISK_VERSION).limit(1)
     ]);
-    const firstError = requests.find(item => item.error)?.error;
-    if (firstError) throw firstError;
+    const labels=['courses','sessions','session links','enrollments','payments','payment methods','signals','signal updates','charts','articles','announcements','resources','support','risk acceptance'];
+    requests.forEach((item,i)=>{if(item.error)console.warn('[Student optional load]',labels[i],item.error.message||item.error)});
     state.courses=requests[0].data||[]; state.sessions=requests[1].data||[];
     state.sessionLinks=Object.fromEntries((requests[2].data||[]).map(row=>[row.course_session_id,row.meet_url]));
     state.enrollments=requests[3].data||[]; state.payments=requests[4].data||[]; state.paymentMethods=requests[5].data||[];
