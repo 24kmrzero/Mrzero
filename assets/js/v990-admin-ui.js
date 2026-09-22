@@ -434,11 +434,12 @@
   }
 
   function init(){
-    injectStyles();
+    const hasReferenceAdmin=Boolean(document.querySelector('script[src*="v1218-admin-reference.js"]'));
+    if(!hasReferenceAdmin)injectStyles();
     const sidebar=getSidebar();
-    compactSidebar(sidebar);
+    if(!hasReferenceAdmin)compactSidebar(sidebar);
     fixLogo(sidebar);
-    reorderNav(sidebar);
+    if(!hasReferenceAdmin)reorderNav(sidebar);
     setupModals();
     wireModalActions();
     closeModalOnSuccess();
