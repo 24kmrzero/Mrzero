@@ -1,2 +1,15 @@
 body{margin:0;background:#090a0c;color:#f4f4f2;font-family:Inter,system-ui,sans-serif}.ta-wrap{max-width:1100px;margin:0 auto;padding:28px}.ta-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}.ta-top h1{margin:0;font-size:28px}.ta-top p{margin:5px 0 0;color:#92979f}.ta-back{color:#f7c52f;text-decoration:none;font-weight:800}.ta-card{background:#121419;border:1px solid #302e25;border-radius:18px;padding:22px;margin-bottom:16px}.ta-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.ta-field label{display:block;font-size:11px;font-weight:800;color:#a9adb5;margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em}.ta-input{width:100%;height:44px;border-radius:11px;border:1px solid #303238;background:#0b0d10;color:#fff;padding:0 12px}.ta-field.full{grid-column:1/-1}.ta-note{min-height:80px;padding-top:10px}.ta-btn{height:44px;border:0;border-radius:11px;padding:0 17px;background:linear-gradient(135deg,#ffd758,#efb613);color:#18130a;font-weight:900;cursor:pointer}.ta-row{display:flex;gap:10px;align-items:center;justify-content:flex-end;margin-top:16px}.ta-status{font-size:12px;color:#9ca1a9;margin-right:auto}.ta-help{color:#9ca1a9;font-size:12px;line-height:1.6;background:#0d0f12;border:1px solid #27292e;border-radius:12px;padding:13px;margin-top:14px}.ta-help b{color:#f6c431}@media(max-width:700px){.ta-wrap{padding:15px}.ta-grid{grid-template-columns:1fr}.ta-field.full{grid-column:auto}.ta-top{align-items:flex-start;gap:14px}.ta-top h1{font-size:22px}}
 .ta-lots-summary{padding:12px 14px;border-radius:12px;background:rgba(246,196,49,.075);border:1px solid rgba(246,196,49,.18);color:#c7b77f;font-size:12px;line-height:1.5}.ta-lots-summary b{color:#f6c431}
+
+
+/* V12.27 targeted Team Performance theme repair */
+html[data-theme="light"] body.app-page{background:#f6f0e6!important;color:#181c24!important}
+html[data-theme="light"] .ta-card{background:#fffdf8!important;border-color:#e3d2b1!important;color:#181c24!important;box-shadow:0 10px 28px rgba(72,48,16,.05)!important}
+html[data-theme="light"] .ta-field label{color:#596474!important}
+html[data-theme="light"] .ta-input{background:#fff!important;color:#181c24!important;border-color:#dfcfb2!important}
+html[data-theme="light"] .ta-help{background:#fff5df!important;border-color:#e6c98f!important;color:#6b5838!important}
+html[data-theme="light"] .ta-lots-summary{background:#fff5df!important;border-color:#e6c98f!important;color:#715a2b!important}
+html[data-theme="light"] .ta-status{color:#727c89!important}
+html[data-theme="dark"] .ta-card{background:#121419!important;color:#f4f4f2!important}
+html[data-theme="dark"] .ta-input{background:#0b0d10!important;color:#fff!important}
+html[data-theme="dark"] .ta-field label{color:#a9adb5!important}
