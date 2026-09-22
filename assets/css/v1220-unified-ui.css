@@ -1,3 +1,12 @@
+
+html[data-theme="light"]{color-scheme:light!important}
+html[data-theme="dark"]{color-scheme:dark!important}
+@media(min-width:901px){
+  body.app-page:not(.student-page) .app-shell{grid-template-columns:190px minmax(0,1fr)!important}
+  body.student-page .app-shell{grid-template-columns:220px minmax(0,1fr)!important}
+  .team-app{grid-template-columns:190px minmax(0,1fr)!important}
+  .mentor-shell{grid-template-columns:190px minmax(0,1fr)!important}
+}
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
 /* V12.20 — one visual system for Admin, Student, Team, Mentor and Ad Link */
