@@ -1,0 +1,149 @@
+/* V12.19 — PipSePaisa reference theme for 24K MR ZERO */
+:root{
+  --psp-orange:#F39522;
+  --psp-orange-dark:#d97900;
+  --psp-cream:#f7f1e7;
+  --psp-cream-2:#fbf6ed;
+  --psp-card:#fffdf9;
+  --psp-line:#e9d7b8;
+  --psp-text:#111827;
+  --psp-muted:#7b8798;
+  --psp-navy:#071725;
+  --psp-green:#18b779;
+  --psp-red:#ef4d5d;
+  --psp-blue:#3f82f7;
+}
+html,body{background:var(--psp-cream)!important;color:var(--psp-text)!important}
+
+/* ADMIN — dark navy rail + warm light workspace, matching PipSePaisa reference */
+body.app-page,.app-shell,.app-main,.app-content{background:var(--psp-cream)!important;color:var(--psp-text)!important}
+.app-side{background:var(--psp-navy)!important;border-right:1px solid #142838!important;color:#f7fafc!important}
+.app-side-brand{background:var(--psp-navy)!important;border-bottom-color:#173044!important}
+.app-nav a,.app-side-foot a,.app-side-foot button{color:#e9eef4!important}
+.app-nav a:hover{background:#10273a!important;color:#fff!important}
+.app-nav a.on,.app-nav a[data-active="true"]{background:var(--psp-orange)!important;color:#fff!important;box-shadow:0 8px 20px rgba(243,149,34,.24)!important}
+.app-nav-label,.v1218-nav-group{color:#8fa2b4!important}
+.app-topbar{background:#fffdf8!important;border-bottom:1px solid var(--psp-line)!important;color:var(--psp-text)!important;box-shadow:0 2px 10px rgba(59,38,8,.04)!important}
+.app-title strong,.panel-heading h1,.panel-heading h2,.panel-heading h3,.app-card h3{color:var(--psp-text)!important}
+.app-title small,.panel-heading p,.app-card p,.muted{color:var(--psp-muted)!important}
+.app-search,.app-search input,.filter-row input,.filter-row select,.v1218-toolbar input,.v1218-toolbar select{
+  background:#fffaf2!important;color:var(--psp-text)!important;border-color:var(--psp-line)!important
+}
+.panel-heading,.app-card,.v1218-kpi,.v1218-mini,.v1218-ad-card,.admin-table-wrap,.table-scroll,.filter-row,.v1218-toolbar{
+  background:var(--psp-card)!important;border-color:var(--psp-line)!important;box-shadow:0 8px 24px rgba(55,35,6,.05)!important
+}
+.v1218-command{
+  background:linear-gradient(135deg,#fff8e9,#fffdf9)!important;
+  border-color:#efc98e!important;
+  box-shadow:0 8px 22px rgba(58,38,8,.05)!important
+}
+.v1218-command .eyebrow,.eyebrow{color:var(--psp-orange-dark)!important}
+.v1218-command h2{color:var(--psp-text)!important}
+.admin-table{color:var(--psp-text)!important}
+.admin-table th{background:#f4ead9!important;color:#738197!important;border-color:var(--psp-line)!important}
+.admin-table td{background:#fffdf9!important;color:var(--psp-text)!important;border-color:#eee1cc!important}
+.admin-table tr:hover td{background:#fff8ed!important}
+.app-btn.gold,.gold-btn,.mentor-btn.gold{background:var(--psp-orange)!important;border-color:var(--psp-orange)!important;color:#111!important}
+.app-btn.outline,.app-btn.small,.tiny-btn{background:#fffaf2!important;border-color:var(--psp-line)!important;color:var(--psp-text)!important}
+.v1218-badge.gold,.v1218-badge.green,.v1218-badge.red{border-color:transparent!important}
+.v1218-badge.gold{background:#fff0d5!important;color:#b66500!important}
+.v1218-badge.green{background:#def7ec!important;color:#087a51!important}
+.v1218-badge.red{background:#ffe3e6!important;color:#c62e3d!important}
+.v1218-team-pill{background:#fffaf2!important;border-color:var(--psp-line)!important}
+.v1218-team-pill.on{color:#087a51!important}.v1218-team-pill.off{color:#c62e3d!important}
+
+/* TEAM — PipSePaisa light command-center structure */
+body:not(.app-page) .team-app,.team-main{background:var(--psp-cream)!important;color:var(--psp-text)!important}
+.team-side{background:#fffaf1!important;border-right:1px solid var(--psp-line)!important;color:var(--psp-text)!important}
+.team-side .brand b,.team-side .nav-btn,.team-side nav button,.team-flow-note p{color:var(--psp-text)!important}
+.team-side .brand span,.team-flow-note b,.team-nav-label{color:var(--psp-orange-dark)!important}
+.team-side .nav-btn:hover,.team-side .nav-btn.active,.team-side nav button:hover,.team-side nav button.active{
+  background:#fff0da!important;color:#b75f00!important;border-color:#f0c98b!important
+}
+.team-topbar{background:#fffdf8!important;border-bottom:1px solid var(--psp-line)!important;color:var(--psp-text)!important}
+.team-topbar select,.icon-btn,.team-user-chip{background:#fffaf2!important;border-color:var(--psp-line)!important;color:var(--psp-text)!important}
+.team-month-hero,.team-flow-cards article,.overview-kpi,.panel-card,.client-filter-card,.client-work-card,.search-client-card,
+.ownership-card,.earning-card,.progress-card,.broker-card,.kpi-card,.history-kpis>div,.chat-kpi,.live-desk-shell,.team-install-card{
+  background:var(--psp-card)!important;border-color:var(--psp-line)!important;color:var(--psp-text)!important;box-shadow:0 8px 22px rgba(55,35,6,.05)!important
+}
+.team-month-hero{background:linear-gradient(135deg,#fff8e9,#fffdf9)!important}
+.team-month-hero p,.team-page-title p,.team-flow-cards p,.overview-kpi small,.overview-kpi span,.recent-client small,.today-work-item span,
+.client-work-card small,.client-meta-cell span,.search-client-card p,.simple-rule,.earnings-note,.progress-meta,.next-copy{color:var(--psp-muted)!important}
+.today-attention b,.overview-kpi.gold b,.earning-card b,.team-flow-cards article>span,.section-badge,.simple-rule b{color:var(--psp-orange-dark)!important}
+.team-flow-cards article>span,.section-badge{background:#fff0d8!important;border-color:#efc98e!important}
+.client-filter-card input,.client-filter-card select,.search-client-row input,.live-desk-list input,.status-select,.follow-input,
+.form-card input,.form-card select,.form-card textarea,.profile-section input,.profile-section select,.chat-reply-form textarea{
+  background:#fff!important;border-color:var(--psp-line)!important;color:var(--psp-text)!important
+}
+.recent-client,.today-work-item,.overview-link-chip,.reference-funnel-row,.course-performance-grid div,.metric-box-grid div,.auto-activity-grid div{
+  background:#fffaf2!important;border-color:var(--psp-line)!important
+}
+.live-desk-list,.conversation-head,.chat-quick-tools,.chat-reply-form,.live-desk-profile{border-color:var(--psp-line)!important}
+.chat-thread:hover,.chat-thread.active{background:#fff0da!important;border-color:#efc98e!important}
+.chat-thread .chat-avatar,.profile-avatar{background:#17283a!important;color:#ffd37f!important}
+.chat-filter-row button{background:#fffaf2!important;border-color:var(--psp-line)!important;color:var(--psp-muted)!important}
+.chat-filter-row button.active{background:var(--psp-orange)!important;color:#111!important}
+.desk-msg{background:#fffaf2!important;border-color:var(--psp-line)!important;color:var(--psp-text)!important}
+.desk-msg.team,.desk-msg.admin{background:#fff0d8!important}
+.team-login-wrap{background:
+  radial-gradient(circle at 12% 12%,rgba(243,149,34,.12),transparent 27%),
+  radial-gradient(circle at 88% 85%,rgba(17,24,39,.035),transparent 30%),
+  var(--psp-cream)!important}
+.team-login-card{background:var(--psp-card)!important;border:1px solid var(--psp-line)!important;color:var(--psp-text)!important;box-shadow:0 24px 70px rgba(55,35,6,.13)!important}
+.team-login-card h1{color:var(--psp-text)!important}
+.team-login-card p,.team-login-form label,.team-forgot-link{color:var(--psp-muted)!important}
+.team-login-form input,.team-forgot-box input{background:#fff!important;border:1px solid var(--psp-line)!important;color:var(--psp-text)!important}
+.team-login-card .eyebrow{color:var(--psp-orange-dark)!important}
+.login-error{color:var(--psp-red)!important}
+.team-mobile-nav{background:#fffdf8!important;border-top:1px solid var(--psp-line)!important}
+.team-mobile-nav button{color:#7b8798!important}.team-mobile-nav button.active{color:var(--psp-orange-dark)!important}
+
+/* MENTOR — light PipSePaisa shell, dark premium research hero only */
+body.mentor-page,.mentor-main,.mentor-content{background:var(--psp-cream)!important;color:var(--psp-text)!important}
+.mentor-side{background:#fffaf1!important;border-right:1px solid var(--psp-line)!important;color:var(--psp-text)!important}
+.mentor-brand b{color:var(--psp-text)!important}.mentor-brand small{color:var(--psp-orange-dark)!important}
+.mentor-nav-label{color:#8994a4!important}
+.mentor-nav button{color:#263445!important}
+.mentor-nav button:hover,.mentor-nav button.active{background:#fff0da!important;color:#b75f00!important}
+.mentor-top{background:#fffdf8!important;border-bottom:1px solid var(--psp-line)!important;color:var(--psp-text)!important}
+.mentor-user,.mentor-btn{background:#fffaf2!important;border-color:var(--psp-line)!important;color:var(--psp-text)!important}
+.mentor-welcome,.mentor-head,.mentor-card,.mentor-filter-row,.mentor-kpi,.mentor-history-card,.mentor-modal-card,.mentor-login-card{
+  background:var(--psp-card)!important;border-color:var(--psp-line)!important;color:var(--psp-text)!important;box-shadow:0 8px 22px rgba(55,35,6,.05)!important
+}
+.mentor-welcome{background:linear-gradient(135deg,#fff8e9,#fffdf9)!important}
+.mentor-premium-banner{
+  background:linear-gradient(135deg,#0b203e,#15171d)!important;
+  border-color:#2e3139!important;color:#fff!important
+}
+.mentor-premium-banner h2,.mentor-premium-banner p{color:#fff!important}
+.mentor-card p,.mentor-head p,.mentor-welcome p,.mentor-kpi small,.mentor-list-row small{color:var(--psp-muted)!important}
+.mentor-filter-row input,.mentor-filter-row select,.mentor-form input,.mentor-form select,.mentor-form textarea{
+  background:#fff!important;border-color:var(--psp-line)!important;color:var(--psp-text)!important
+}
+.mentor-chip{background:#fffaf2!important;border-color:var(--psp-line)!important;color:var(--psp-muted)!important}
+.mentor-chip.gold{background:#fff0d5!important;border-color:#efc98e!important;color:#b66500!important}
+.mentor-history-card img{background:#eef1f4!important}
+.mentor-date-group>h3,.mentor-list-row,.mentor-modal-head,.mentor-modal-foot{border-color:var(--psp-line)!important}
+.mentor-mobile-nav{background:#fffdf8!important;border-top:1px solid var(--psp-line)!important}
+.mentor-mobile-nav button{color:#7b8798!important}.mentor-mobile-nav button.active{color:var(--psp-orange-dark)!important}
+
+/* PUBLIC AD-LINK ENROLLMENT */
+.enroll-page{background:
+  radial-gradient(circle at 13% 12%,rgba(243,149,34,.12),transparent 25%),
+  radial-gradient(circle at 85% 84%,rgba(17,24,39,.04),transparent 30%),
+  var(--psp-cream)!important}
+.enroll-card{background:var(--psp-card)!important;border-color:var(--psp-line)!important;color:var(--psp-text)!important}
+.enroll-card h1,.enroll-card h1 strong{color:var(--psp-text)!important}
+.batch-pill{color:#b66500!important}
+.intro,.secure-note,.terms-note{color:var(--psp-muted)!important}
+.input-wrap{background:#fff!important;border-color:var(--psp-line)!important}
+.input-wrap input{color:var(--psp-text)!important}
+#enrollSubmit{background:var(--psp-orange)!important;color:#111!important}
+#enrollSubmit:hover{background:#f7a943!important}
+.link-notice{background:#fff0d8!important;border-color:#efc98e!important;color:#8a5c12!important}
+
+@media(max-width:760px){
+  .mentor-side,.team-side{box-shadow:none!important}
+  .app-content,.mentor-content{padding:10px!important}
+  .team-login-card{border-radius:18px!important}
+}
