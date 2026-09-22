@@ -303,7 +303,7 @@ html[data-theme="dark"] .thread-list{background:#0d1218!important;border-color:v
 html[data-theme="dark"] .thread-item{border-color:var(--u-dark-line)!important}
 html[data-theme="dark"] .thread-item.active{background:#182331!important}
 html[data-theme="dark"] .chat-layout,html[data-theme="dark"] .chat-compose{border-color:var(--u-dark-line)!important}
-html[data-theme="dark"] .msg{background:#171d25!important}.msg.me{border-color:#5a4526!important}
+html[data-theme="dark"] .msg{background:#171d25!important}html[data-theme="dark"] .msg.me{border-color:#5a4526!important}
 .ops-head{margin-bottom:12px!important}.ops-head h2{font-size:22px!important}.ops-head p{font-size:10px!important}
 .ops-content .kpis{gap:8px!important}.ops-content .toolbar{gap:7px!important;margin-bottom:9px!important}
 .ops-content .table th,.ops-content .table td{padding:9px 10px!important;font-size:10px!important}
@@ -356,4 +356,46 @@ html[data-theme="dark"] .ta-help,html[data-theme="dark"] .ta-lots-summary{backgr
   .enroll-shell .brand img{width:112px!important;height:50px!important}
   .batch-pill{padding-top:15px!important}
   .enroll-card h1{font-size:19px!important}
+}
+
+/* ---------- V12.20 mobile theme parity ---------- */
+html[data-theme="light"] .v1218-admin-mobile-nav,
+html[data-theme="light"] .student-mobile-nav,
+html[data-theme="light"] .team-mobile-nav,
+html[data-theme="light"] .mentor-mobile-nav{
+  background:#fffdf8!important;border-top:1px solid var(--u-line)!important;box-shadow:0 -7px 22px rgba(55,35,7,.07)!important
+}
+html[data-theme="light"] .v1218-admin-mobile-nav button,
+html[data-theme="light"] .student-mobile-nav button,
+html[data-theme="light"] .team-mobile-nav button,
+html[data-theme="light"] .mentor-mobile-nav button{color:#778392!important;background:transparent!important}
+html[data-theme="light"] .v1218-admin-mobile-nav button.on,
+html[data-theme="light"] .student-mobile-nav button.is-active,
+html[data-theme="light"] .team-mobile-nav button.active,
+html[data-theme="light"] .mentor-mobile-nav button.active{color:#b76500!important}
+
+html[data-theme="dark"] .v1218-admin-mobile-nav,
+html[data-theme="dark"] .student-mobile-nav,
+html[data-theme="dark"] .team-mobile-nav,
+html[data-theme="dark"] .mentor-mobile-nav{
+  background:#10161d!important;border-top:1px solid var(--u-dark-line)!important;box-shadow:none!important
+}
+html[data-theme="dark"] .v1218-admin-mobile-nav button,
+html[data-theme="dark"] .student-mobile-nav button,
+html[data-theme="dark"] .team-mobile-nav button,
+html[data-theme="dark"] .mentor-mobile-nav button{color:#98a3b1!important;background:transparent!important}
+html[data-theme="dark"] .v1218-admin-mobile-nav button.on,
+html[data-theme="dark"] .student-mobile-nav button.is-active,
+html[data-theme="dark"] .team-mobile-nav button.active,
+html[data-theme="dark"] .mentor-mobile-nav button.active{color:#f3bd55!important}
+
+html[data-theme="dark"] .team-profile-card{
+  background:#11161d!important;border-color:var(--u-dark-line)!important;color:var(--u-dark-text)!important
+}
+html[data-theme="dark"] .team-profile-card h3{color:var(--u-dark-text)!important}
+html[data-theme="dark"] .team-profile-card p{color:var(--u-dark-muted)!important}
+html[data-theme="dark"] .team-sheet-close,
+html[data-theme="dark"] .team-profile-shortcuts button,
+html[data-theme="dark"] .team-profile-actions button{
+  background:#171d25!important;border-color:var(--u-dark-line)!important;color:var(--u-dark-text)!important
 }
