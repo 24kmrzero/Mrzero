@@ -4,25 +4,39 @@ const A=window.App;if(!A?.supabase)return;const sb=A.supabase,$=(s,r=document)=>
 const state={links:[],team:[],courses:[],adLink:null};
 async function rpc(n,a={}){const r=await sb.rpc(n,a);if(r.error)throw r.error;return r.data}async function one(q){const r=await q;if(r.error)throw r.error;return r.data}function toast(m,t='info'){A.toast?.(m,t)}function fmt(v){return v?new Date(v).toLocaleString():'—'}function fmtN(v){return Number(v||0).toLocaleString()}function linkUrl(l){const path=l.is_ad_link?'/free-course/':(l.destination_path||'/');const u=new URL(path,location.origin);u.searchParams.set('ref',l.ref_code);if(l.source)u.searchParams.set('source',l.source);if(l.campaign)u.searchParams.set('campaign',l.campaign);return u.toString()}
 function installCss(){if(!document.querySelector('link[href*="v1218-admin-reference.css"]')){const l=document.createElement('link');l.rel='stylesheet';l.href='assets/css/v1218-admin-reference.css?v=12.18';document.head.appendChild(l)}}
-function installNav(){const nav=$('.app-nav');if(!nav)return;nav.innerHTML=`
-<span class="v1218-nav-group">Command Center</span>
-<a href="#dashboard" data-panel="dashboard" data-v1218-nav="dashboard"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
-<a href="/admin/operations/advanced/?view=finance"><i class="fa-solid fa-sack-dollar"></i> Finance & Accounts</a>
-<a href="#students" data-panel="students" data-v1218-nav="students"><i class="fa-solid fa-users"></i> Users</a>
-<a href="#premium-access" data-panel="premium-access" data-v1218-nav="premium-access"><i class="fa-solid fa-square-check"></i> Access Approvals</a>
-<a href="#v1216-center" data-panel="v1216-center" data-v1218-sub="enrollments" data-v1218-nav="enrollments"><i class="fa-solid fa-receipt"></i> Payments & Enrollments</a>
-<a href="#courses" data-panel="courses" data-v1218-nav="courses"><i class="fa-solid fa-graduation-cap"></i> Courses</a>
-<a href="#methods" data-panel="methods" data-v1218-nav="methods"><i class="fa-solid fa-credit-card"></i> Payment Methods</a>
-<a href="#link-manager-ref" data-panel="link-manager-ref" data-v1218-nav="link-manager-ref"><i class="fa-solid fa-link"></i> Link Manager</a>
-<a href="#team-access-ref" data-panel="team-access-ref" data-v1218-nav="team-access-ref"><i class="fa-solid fa-people-group"></i> Team Panel Access</a>
-<a href="#v1216-center" data-panel="v1216-center" data-v1218-sub="mentors" data-v1218-nav="mentors"><i class="fa-solid fa-chalkboard-user"></i> Mentor Management</a>
-<span class="v1218-nav-group">Platform</span>
-<a href="#audit" data-panel="audit" data-v1218-nav="audit"><i class="fa-solid fa-clock-rotate-left"></i> Activity Logs</a>
-<a href="/admin/team-performance/"><i class="fa-solid fa-chart-column"></i> Team Performance</a>
-<a href="#ad-links" data-panel="ad-links" data-v1218-nav="ad-links"><i class="fa-solid fa-bullhorn"></i> Ad Link</a>
-<a href="/admin/operations/advanced/?view=ea"><i class="fa-solid fa-microchip"></i> EA & Indicator</a>
+function installNav(){
+ const nav=$('.app-nav');if(!nav)return;
+ nav.innerHTML=`
+<span class="v1218-nav-group">Overview</span>
+<a href="/admin/" data-panel="dashboard" data-v1218-nav="dashboard"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
 <span class="v1218-nav-group">Content</span>
-<a href="#signals" data-panel="signals"><i class="fa-solid fa-bolt"></i> Signals</a><a href="#charts" data-panel="charts"><i class="fa-solid fa-chart-line"></i> Charts</a><a href="#articles" data-panel="articles"><i class="fa-solid fa-newspaper"></i> Articles</a><a href="#announcements" data-panel="announcements"><i class="fa-solid fa-bullhorn"></i> Announcements</a><a href="#sessions" data-panel="sessions"><i class="fa-solid fa-video"></i> Zoom Sessions</a><a href="#support" data-panel="support"><i class="fa-solid fa-headset"></i> Support</a>`}
+<a href="/admin/signals/" data-panel="signals" data-v1218-nav="signals"><i class="fa-solid fa-bolt"></i> Signals</a>
+<a href="/admin/charts/" data-panel="charts" data-v1218-nav="charts"><i class="fa-solid fa-chart-line"></i> Charts</a>
+<a href="/admin/articles/" data-panel="articles" data-v1218-nav="articles"><i class="fa-solid fa-newspaper"></i> Articles</a>
+<a href="/admin/announcements/" data-panel="announcements" data-v1218-nav="announcements"><i class="fa-solid fa-bullhorn"></i> Announcements</a>
+<span class="v1218-nav-group">Courses</span>
+<a href="/admin/courses/" data-panel="courses" data-v1218-nav="courses"><i class="fa-solid fa-graduation-cap"></i> Courses</a>
+<a href="/admin/zoom-sessions/" data-panel="sessions" data-v1218-nav="sessions"><i class="fa-solid fa-video"></i> Zoom Sessions</a>
+<a href="/admin/mentors/" data-panel="v1216-center" data-v1218-sub="enrollments" data-v1218-nav="enrollments"><i class="fa-solid fa-list-check"></i> Enrollments</a>
+<span class="v1218-nav-group">Management</span>
+<a href="/admin/payments/" data-panel="payments" data-v1218-nav="payments"><i class="fa-solid fa-receipt"></i> Payments <span class="nav-count" id="pendingPaymentCount">0</span></a>
+<a href="/admin/students/" data-panel="students" data-v1218-nav="students"><i class="fa-solid fa-users"></i> Students</a>
+<a href="/admin/payment-methods/" data-panel="methods" data-v1218-nav="methods"><i class="fa-solid fa-credit-card"></i> Payment Methods</a>
+<a href="/admin/support/" data-panel="support" data-v1218-nav="support"><i class="fa-solid fa-headset"></i> Support</a>
+<a href="/admin/premium-access/" data-panel="premium-access" data-v1218-nav="premium-access"><i class="fa-solid fa-crown"></i> Premium Access</a>
+<span class="v1218-nav-group">Team & Growth</span>
+<a href="#link-manager-ref" data-panel="link-manager-ref" data-v1218-nav="link-manager-ref"><i class="fa-solid fa-link"></i> Link Manager</a>
+<a href="#ad-links" data-panel="ad-links" data-v1218-nav="ad-links"><i class="fa-solid fa-bullhorn"></i> Ad Link</a>
+<a href="#team-access-ref" data-panel="team-access-ref" data-v1218-nav="team-access-ref"><i class="fa-solid fa-people-group"></i> Team Panel Access</a>
+<a href="/admin/team-performance/" data-v1218-nav="team-performance"><i class="fa-solid fa-chart-column"></i> Team Performance</a>
+<a href="/admin/mentors/" data-panel="v1216-center" data-v1218-sub="mentors" data-v1218-nav="mentors"><i class="fa-solid fa-chalkboard-user"></i> Mentor Management</a>
+<span class="v1218-nav-group">Operations</span>
+<a href="/admin/operations/advanced/?view=finance" data-v1218-nav="finance"><i class="fa-solid fa-sack-dollar"></i> Finance & Accounts</a>
+<a href="/admin/operations/advanced/?view=ea" data-v1218-nav="ea"><i class="fa-solid fa-microchip"></i> EA & Indicator</a>
+<a href="/admin/operations/advanced/" data-v1218-nav="operations"><i class="fa-solid fa-sliders"></i> Advanced Operations</a>
+<a href="/admin/admin-notifications/" data-panel="admin-notifications" data-v1218-nav="admin-notifications"><i class="fa-solid fa-bell"></i> Admin Notifications <span class="nav-count" id="adminNotificationCount">0</span></a>
+<a href="/admin/activity-logs/" data-panel="audit" data-v1218-nav="audit"><i class="fa-solid fa-clock-rotate-left"></i> Activity Logs</a>`;
+}
 function panel(id,html){const host=$('.app-content');if(!host||$('#p-'+id))return;const s=document.createElement('section');s.className='panel';s.id='p-'+id;s.innerHTML=html;host.appendChild(s)}
 function installPanels(){if(!$('#v18LegacyLinksOpen'))document.body.insertAdjacentHTML('beforeend','<button id="v18LegacyLinksOpen" data-panel="links" hidden></button>');panel('link-manager-ref',`<div class="panel-heading"><div><h2>Link Manager</h2><p>Create tracked links and see clicks, signups, enrollments and lead details.</p></div><button class="app-btn gold" data-v18-open-existing-links>Create Link</button></div><div id="v18LinkKpis" class="v1218-kpis"></div><div class="v1218-toolbar"><input id="v18LinkSearch" type="search" placeholder="Search link, source, campaign or course..."><select id="v18LinkType"><option value="all">All Links</option><option value="normal">Normal Links</option><option value="ad">Ad Links</option></select><button class="app-btn outline" id="v18LinkRefresh">Refresh</button></div><div class="table-scroll"><table class="admin-table"><thead><tr><th>Link</th><th>Source</th><th>Destination</th><th>Clicks</th><th>Unique</th><th>Signups</th><th>Enrolled</th><th>Conversion</th><th>Status</th><th>Actions</th></tr></thead><tbody id="v18LinkBody"></tbody></table></div>`);
 panel('team-access-ref',`<div class="panel-heading"><div><h2>Team Panel Access</h2><p>Manager accounts, WhatsApp, Leads ON/OFF and round-robin workload.</p></div><button class="app-btn gold" data-v18-open-team>Create Team Account</button></div><div id="v18TeamKpis" class="v1218-kpis"></div><div class="table-scroll"><table class="admin-table"><thead><tr><th>Team Member</th><th>Username</th><th>WhatsApp</th><th>Leads</th><th>Assigned Links</th><th>Last Login</th><th>Account</th><th>Actions</th></tr></thead><tbody id="v18TeamBody"></tbody></table></div>`);
