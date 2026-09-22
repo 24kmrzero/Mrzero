@@ -399,3 +399,47 @@ html[data-theme="dark"] .team-profile-shortcuts button,
 html[data-theme="dark"] .team-profile-actions button{
   background:#171d25!important;border-color:var(--u-dark-line)!important;color:var(--u-dark-text)!important
 }
+
+/* ---------- V12.21 standalone form and modal parity ---------- */
+html[data-theme="light"] body.app-page .modal-card{
+  background:var(--u-card)!important;border-color:var(--u-line)!important;color:var(--u-text)!important;box-shadow:0 24px 70px rgba(55,35,7,.13)!important
+}
+html[data-theme="light"] body.app-page .modal-head{border-color:var(--u-line)!important}
+html[data-theme="light"] body.app-page .modal-head h3{color:var(--u-text)!important}
+html[data-theme="light"] body.app-page .modal-card .field label{color:#334155!important}
+html[data-theme="light"] body.app-page .modal-card input,
+html[data-theme="light"] body.app-page .modal-card select,
+html[data-theme="light"] body.app-page .modal-card textarea{
+  background:#fff!important;border-color:var(--u-line)!important;color:var(--u-text)!important
+}
+html[data-theme="light"] body.app-page .modal-card .close{background:#fff1dc!important;color:#a95e00!important}
+html[data-theme="light"] body.app-page .modal-card .btn{background:#fffaf2!important;border-color:var(--u-line)!important;color:var(--u-text)!important}
+html[data-theme="light"] body.app-page .modal-card .btn.gold{background:var(--u-orange)!important;border-color:var(--u-orange)!important;color:#111!important}
+
+html[data-theme="dark"] body.app-page .modal-card{
+  background:var(--u-dark-2)!important;border-color:var(--u-dark-line)!important;color:var(--u-dark-text)!important;box-shadow:none!important
+}
+html[data-theme="dark"] body.app-page .modal-head{border-color:var(--u-dark-line)!important}
+html[data-theme="dark"] body.app-page .modal-head h3{color:var(--u-dark-text)!important}
+html[data-theme="dark"] body.app-page .modal-card .field label{color:#d5dce5!important}
+html[data-theme="dark"] body.app-page .modal-card input,
+html[data-theme="dark"] body.app-page .modal-card select,
+html[data-theme="dark"] body.app-page .modal-card textarea{
+  background:#0d1218!important;border-color:var(--u-dark-line)!important;color:var(--u-dark-text)!important
+}
+html[data-theme="dark"] body.app-page .modal-card .close{background:#1b222c!important;color:#f3bd55!important}
+
+html[data-theme="light"] .ta-field label{color:#526071!important;font-size:10px!important}
+html[data-theme="light"] .ta-status{color:var(--u-muted)!important}
+html[data-theme="light"] .ta-help b,html[data-theme="light"] .ta-lots-summary b{color:#b76500!important}
+html[data-theme="light"] .ta-btn{background:var(--u-orange)!important;color:#111!important;box-shadow:none!important}
+html[data-theme="dark"] .ta-field label{color:#aeb8c5!important}
+html[data-theme="dark"] .ta-status{color:var(--u-dark-muted)!important}
+html[data-theme="dark"] .ta-btn{background:var(--u-orange)!important;color:#111!important;box-shadow:none!important}
+
+@media(max-width:760px){
+  .ops-content .kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .ops-content .grid2,.ops-content .grid3,.ops-content .form-grid{grid-template-columns:1fr!important}
+  .ops-content .field.full{grid-column:auto!important}
+  .ops-content .table{min-width:760px!important}
+}
