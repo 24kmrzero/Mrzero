@@ -10,7 +10,9 @@
   if (/\/login\.html$/i.test(location.pathname)) {
     var p = new URLSearchParams(location.search);
     var target = p.get('tab') === 'signup' ? '/sign-up/' : '/sign-in/';
-    if (p.get('reason')) target += '?reason=' + encodeURIComponent(p.get('reason'));
+    p.delete('tab');
+    var query = p.toString();
+    if (query) target += '?' + query;
     location.replace(target);
   }
 })();
