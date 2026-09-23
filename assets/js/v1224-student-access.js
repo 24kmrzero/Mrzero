@@ -1,5 +1,6 @@
 (function(){
 'use strict';
+window.__24K_ACCESS_V1224_READY__=true;
 const A=window.App;if(!A?.supabase)return;
 const sb=A.supabase,$=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
 let access=null,payments=[],verifications=[],methods=[],selectedBroker='',accountMode='new',user=null;
