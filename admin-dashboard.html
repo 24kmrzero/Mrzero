@@ -126,37 +126,77 @@
 
       <section class="panel" id="p-charts">
         <div class="panel-heading"><div><h2>Charts Management</h2><p>Upload chart images with a clear market summary.</p></div><button class="app-btn gold" data-toggle-form="chartFormBox"><i class="fa-solid fa-plus"></i> Add Chart</button></div>
-        <div class="app-card admin-form-box" id="chartFormBox">
-          <form id="chartForm">
-            <input type="hidden" name="id">
-            <input type="hidden" name="existing_image_url">
-            <div class="form-grid">
-              <div class="form-field full"><label>Trading Instrument</label><div class="instrument-picker" id="chartInstrumentPicker"><input id="chartInstrumentSearch" type="search" autocomplete="off" placeholder="Search GOLD, SILVER, BTC, EURUSD..."><input type="hidden" name="symbol"><button type="button" class="instrument-toggle" aria-label="Open chart instrument list"><i class="fa-solid fa-chevron-down"></i></button><div class="instrument-menu" id="chartInstrumentMenu"></div></div><small class="muted">GOLD, SILVER and BTC appear first, followed by USD pairs and cross pairs.</small></div>
-              <div class="form-field"><label>Title</label><input name="title" required placeholder="Gold H4 Market Analysis"></div>
-              <div class="form-field"><label>Timeframe</label><select name="timeframe" required><option>M5</option><option selected>M15</option><option>M30</option><option>H1</option><option>H4</option><option>D1</option><option>W1</option></select></div>
-              <div class="form-field"><label>Category</label><input name="category" readonly placeholder="Selected automatically"></div>
-              <div class="form-field"><label>Chart Image</label><input type="file" name="image" accept="image/png,image/jpeg,image/webp"><small class="muted">PNG, JPG or WEBP · maximum 8 MB. Image is required for a new chart.</small></div>
-              <div class="form-field full"><div class="chart-upload-preview empty" id="chartImagePreview"><i class="fa-solid fa-image"></i><span>Selected chart image preview will appear here.</span></div></div>
-              <div class="form-field full"><label>Analysis Summary</label><textarea name="summary" required maxlength="500" placeholder="Short market summary shown on the chart card"></textarea></div>
-              <div class="form-field full"><label>Full Analysis / Details</label><textarea name="details" style="min-height:180px" placeholder="Complete analysis, levels, confirmation and invalidation details"></textarea></div>
-              <label class="check-row"><input type="checkbox" name="is_published" checked> Publish to students</label>
-            </div>
-            <div class="notice info"><i class="fa-solid fa-shield-halved"></i> Save, edit and delete actions now show a clear result. Replacing or deleting a chart also cleans up its old image from storage.</div>
-            <div class="inline-actions"><button type="button" class="app-btn outline" data-cancel-form="chartFormBox">Cancel</button><button class="app-btn gold" type="submit"><i class="fa-solid fa-cloud-arrow-up"></i> Save Chart</button></div>
-          </form>
+        <div class="app-modal content-create-modal" id="chartFormBox" aria-hidden="true">
+          <div class="app-modal-card large content-create-card">
+            <div class="app-modal-head"><div><h3 id="chartFormTitle">Add Chart</h3><small class="muted">Upload chart analysis for students.</small></div><button type="button" class="modal-close" data-cancel-form="chartFormBox" aria-label="Close Add Chart"><i class="fa-solid fa-xmark"></i></button></div>
+            <form id="chartForm">
+              <div class="app-modal-body">
+                <input type="hidden" name="id">
+                <input type="hidden" name="existing_image_url">
+                <div class="form-grid">
+                  <div class="form-field full"><label>Trading Instrument</label><div class="instrument-picker" id="chartInstrumentPicker"><input id="chartInstrumentSearch" type="search" autocomplete="off" placeholder="Search GOLD, SILVER, BTC, EURUSD..."><input type="hidden" name="symbol"><button type="button" class="instrument-toggle" aria-label="Open chart instrument list"><i class="fa-solid fa-chevron-down"></i></button><div class="instrument-menu" id="chartInstrumentMenu"></div></div><small class="muted">GOLD, SILVER and BTC appear first, followed by USD pairs and cross pairs.</small></div>
+                  <div class="form-field"><label>Title</label><input name="title" required placeholder="Gold H4 Market Analysis"></div>
+                  <div class="form-field"><label>Timeframe</label><select name="timeframe" required><option>M5</option><option selected>M15</option><option>M30</option><option>H1</option><option>H4</option><option>D1</option><option>W1</option></select></div>
+                  <div class="form-field"><label>Category</label><input name="category" readonly placeholder="Selected automatically"></div>
+                  <div class="form-field"><label>Chart Image</label><input type="file" name="image" accept="image/png,image/jpeg,image/webp"><small class="muted">PNG, JPG or WEBP · maximum 8 MB. Image is required for a new chart.</small></div>
+                  <div class="form-field full"><div class="chart-upload-preview empty" id="chartImagePreview"><i class="fa-solid fa-image"></i><span>Selected chart image preview will appear here.</span></div></div>
+                  <div class="form-field full"><label>Analysis Summary</label><textarea name="summary" required maxlength="500" placeholder="Short market summary shown on the chart card"></textarea></div>
+                  <div class="form-field full"><label>Full Analysis / Details</label><textarea name="details" style="min-height:180px" placeholder="Complete analysis, levels, confirmation and invalidation details"></textarea></div>
+                  <label class="check-row"><input type="checkbox" name="is_published" checked> Publish to students</label>
+                </div>
+                <div class="notice info"><i class="fa-solid fa-shield-halved"></i> Save, edit and delete actions show a clear result. Replacing or deleting a chart also cleans up its old image from storage.</div>
+              </div>
+              <div class="app-modal-foot"><button type="button" class="app-btn outline" data-cancel-form="chartFormBox">Cancel</button><button class="app-btn gold" type="submit"><i class="fa-solid fa-cloud-arrow-up"></i> Save Chart</button></div>
+            </form>
+          </div>
         </div>
         <div class="content-grid" id="adminChartsGrid"></div>
       </section>
 
       <section class="panel" id="p-articles">
         <div class="panel-heading"><div><h2>Articles Management</h2><p>Create learning articles for students.</p></div><button class="app-btn gold" data-toggle-form="articleFormBox"><i class="fa-solid fa-plus"></i> Add Article</button></div>
-        <div class="app-card admin-form-box" id="articleFormBox"><form id="articleForm"><input type="hidden" name="id"><input type="hidden" name="existing_cover_url"><div class="form-grid"><div class="form-field"><label>Article Title</label><input name="title" required></div><div class="form-field"><label>Article Slug</label><input name="slug" placeholder="market-structure-guide"></div><div class="form-field"><label>Category</label><input name="category" placeholder="Education, Fundamentals..."></div><div class="form-field full"><label>Short Excerpt</label><textarea name="excerpt" required></textarea></div><div class="form-field full"><label>Full Article</label><textarea name="content" required style="min-height:220px"></textarea></div><div class="form-field"><label>Cover Image (optional)</label><input type="file" name="cover" accept="image/png,image/jpeg,image/webp"></div><label class="check-row"><input type="checkbox" name="is_published" checked> Publish to students</label></div><div class="inline-actions"><button type="button" class="app-btn outline" data-cancel-form="articleFormBox">Cancel</button><button class="app-btn gold" type="submit">Save Article</button></div></form></div>
+        <div class="app-modal content-create-modal" id="articleFormBox" aria-hidden="true">
+          <div class="app-modal-card large content-create-card">
+            <div class="app-modal-head"><div><h3 id="articleFormTitle">Add Article</h3><small class="muted">Create and publish educational content.</small></div><button type="button" class="modal-close" data-cancel-form="articleFormBox" aria-label="Close Add Article"><i class="fa-solid fa-xmark"></i></button></div>
+            <form id="articleForm">
+              <div class="app-modal-body">
+                <input type="hidden" name="id"><input type="hidden" name="existing_cover_url">
+                <div class="form-grid">
+                  <div class="form-field"><label>Article Title</label><input name="title" required></div>
+                  <div class="form-field"><label>Article Slug</label><input name="slug" placeholder="market-structure-guide"></div>
+                  <div class="form-field"><label>Category</label><input name="category" placeholder="Education, Fundamentals..."></div>
+                  <div class="form-field full"><label>Short Excerpt</label><textarea name="excerpt" required></textarea></div>
+                  <div class="form-field full"><label>Full Article</label><textarea name="content" required style="min-height:220px"></textarea></div>
+                  <div class="form-field"><label>Cover Image <span class="muted">(optional)</span></label><input type="file" name="cover" accept="image/png,image/jpeg,image/webp"></div>
+                  <label class="check-row"><input type="checkbox" name="is_published" checked> Publish to students</label>
+                </div>
+              </div>
+              <div class="app-modal-foot"><button type="button" class="app-btn outline" data-cancel-form="articleFormBox">Cancel</button><button class="app-btn gold" type="submit">Save Article</button></div>
+            </form>
+          </div>
+        </div>
         <div class="content-grid" id="adminArticlesGrid"></div>
       </section>
 
       <section class="panel" id="p-announcements">
         <div class="panel-heading"><div><h2>Student Announcements</h2><p>Publish course, payment and platform updates.</p></div><button class="app-btn gold" data-toggle-form="announcementFormBox"><i class="fa-solid fa-plus"></i> New Announcement</button></div>
-        <div class="app-card admin-form-box" id="announcementFormBox"><form id="announcementForm"><input type="hidden" name="id"><div class="form-grid"><div class="form-field"><label>Title</label><input name="title" required></div><div class="form-field"><label>Priority</label><select name="priority"><option value="normal">Normal</option><option value="important">Important</option></select></div><div class="form-field full"><label>Message</label><textarea name="message" required></textarea></div><label class="check-row"><input type="checkbox" name="is_published" checked> Publish now</label></div><div class="inline-actions"><button type="button" class="app-btn outline" data-cancel-form="announcementFormBox">Cancel</button><button class="app-btn gold" type="submit">Save Announcement</button></div></form></div>
+        <div class="app-modal content-create-modal" id="announcementFormBox" aria-hidden="true">
+          <div class="app-modal-card content-create-card">
+            <div class="app-modal-head"><div><h3 id="announcementFormTitle">New Announcement</h3><small class="muted">Publish a clear update for students.</small></div><button type="button" class="modal-close" data-cancel-form="announcementFormBox" aria-label="Close Announcement"><i class="fa-solid fa-xmark"></i></button></div>
+            <form id="announcementForm">
+              <div class="app-modal-body">
+                <input type="hidden" name="id">
+                <div class="form-grid">
+                  <div class="form-field"><label>Title</label><input name="title" required></div>
+                  <div class="form-field"><label>Priority</label><select name="priority"><option value="normal">Normal</option><option value="important">Important</option></select></div>
+                  <div class="form-field full"><label>Message</label><textarea name="message" required></textarea></div>
+                  <label class="check-row"><input type="checkbox" name="is_published" checked> Publish now</label>
+                </div>
+              </div>
+              <div class="app-modal-foot"><button type="button" class="app-btn outline" data-cancel-form="announcementFormBox">Cancel</button><button class="app-btn gold" type="submit">Save Announcement</button></div>
+            </form>
+          </div>
+        </div>
         <div id="adminAnnouncements"></div>
       </section>
 
