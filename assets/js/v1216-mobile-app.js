@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const premium=()=>document.getElementById('managePremiumAccess')?.click()||window.__24K_OPEN_PREMIUM_ACCESS__?.();
+  const premium=()=>{const button=document.getElementById('managePremiumAccess');if(button){button.click();return true}return Boolean(window.__24K_OPEN_PREMIUM_ACCESS__?.())};
   document.addEventListener('click',e=>{
     const b=e.target.closest('[data-mobile-premium]');
     if(b){e.preventDefault();premium();document.querySelectorAll('.student-mobile-nav button').forEach(x=>x.classList.toggle('is-active',x===b));}
