@@ -36,7 +36,7 @@ function render(){
      price.innerHTML='<div class="notice warn">Paid Access pricing is not configured yet. Please use Free Access via Broker or contact support.</div>';
    }
    const paidChoice=$('[data-access-step-target="paid"]');if(paidChoice){paidChoice.disabled=!paidAvailable;paidChoice.classList.toggle('is-disabled',!paidAvailable)}
-   const bank=$('#premiumPayLocal'),usdButton=$('#premiumPayUsdt');if(bank)bank.disabled=pkr<=0;if(usdButton)usdButton.disabled=usd<=0;
+   const bank=$('#premiumPayLocal'),usdButton=$('#premiumPayUsdt');const bankReady=methodConfigured('bank'),usdtReady=methodConfigured('usdt');if(bank){bank.disabled=pkr<=0||!bankReady;bank.title=bank.disabled?(pkr<=0?'Local Bank pricing is not configured.':'Local Bank account details are incomplete.'):'Pay with Local Bank';}if(usdButton){usdButton.disabled=usd<=0||!usdtReady;usdButton.title=usdButton.disabled?(usd<=0?'USDT pricing is not configured.':'USDT wallet details are incomplete.'):'Pay with USDT TRC20';}
  }
  if(ib&&access)ib.innerHTML=access.ib_enabled?'<div class="notice info">Broker verification is available. Access activates after Admin approval.</div>':'<div class="notice warn">Broker verification is currently disabled.</div>';
  renderHistory();
@@ -64,6 +64,14 @@ window.__24K_OPEN_PREMIUM_ACCESS__=openAccess;
 function methodMatch(type){
  const rx=type==='bank'?/bank|local/i:/usdt|trc20|crypto/i;return methods.find(x=>rx.test(`${x.name} ${x.instructions}`))||null
 }
+function methodConfigured(type){
+ const m=methodMatch(type);if(!m)return false;
+ const account=String(m.account_number||'').trim();
+ if(!account||/^(—|-|n\/a|na)$/i.test(account))return false;
+ if(type==='usdt'&&/^(usdt\s*)?(trc\s*20|trc20)$/i.test(account))return false;
+ if(String(m.name||'').trim().toLowerCase()===account.toLowerCase())return false;
+ return true;
+}
 function renderMethodInfo(type){
  const m=methodMatch(type);
  if(type==='bank'){
@@ -76,19 +84,23 @@ function renderMethodInfo(type){
 async function upload(bucket,file,folder){
  if(!file?.size)throw new Error('Please select the required proof file.');
  if(file.size>5*1024*1024)throw new Error('Proof file must be 5 MB or smaller.');
+ const allowed=['image/png','image/jpeg','image/webp','application/pdf'];
+ if(file.type&&!allowed.includes(file.type))throw new Error('Use PNG, JPG, WEBP or PDF proof files only.');
  const path=`${user.id}/${folder}/${A.uid()}-${A.fileSafeName(file.name)}`;
  const r=await sb.storage.from(bucket).upload(path,file,{upsert:false,contentType:file.type||undefined});if(r.error)throw r.error;return path;
 }
 async function submitPremium(e,type){
- e.preventDefault();const f=e.currentTarget,b=f.querySelector('button[type=submit]'),fd=new FormData(f),file=fd.get('receipt');
+ e.preventDefault();const f=e.currentTarget,b=f.querySelector('button[type=submit]'),fd=new FormData(f),file=fd.get('receipt');let path='';
+ if(!methodConfigured(type))return A.toast?.(type==='bank'?'Local Bank account details are not configured yet.':'USDT wallet details are not configured yet.','warning');
+ const reference=String(fd.get('transaction_reference')||'').trim();if(reference.length<3)return A.toast?.('Enter a valid transaction reference.','error');
  A.setLoading(b,true,'Submitting...');
  try{
    if(!user)user=await A.getCurrentUser();
-   const path=await upload('payment-receipts',file,`premium-${type}`);
+   path=await upload('payment-receipts',file,`premium-${type}`);
    const name=type==='bank'?'submit_premium_bank_payment':'submit_premium_usdt_payment';
-   const r=await sb.rpc(name,{p_reference:String(fd.get('transaction_reference')||'').trim(),p_receipt_path:path,p_note:String(fd.get('student_note')||'').trim()||null});
-   if(r.error)throw r.error;f.reset();A.closeModal(type==='bank'?'premiumBankModal':'premiumUsdtModal');A.toast?.('Premium payment submitted for Admin review.','success');await load();
- }catch(e2){err(e2,'Could not submit Premium payment.')}finally{A.setLoading(b,false)}
+   const r=await sb.rpc(name,{p_reference:reference,p_receipt_path:path,p_note:String(fd.get('student_note')||'').trim()||null});
+   if(r.error)throw r.error;path='';f.reset();A.closeModal(type==='bank'?'premiumBankModal':'premiumUsdtModal');A.toast?.('Premium payment submitted for Admin review.','success');await load();
+ }catch(e2){if(path)await sb.storage.from('payment-receipts').remove([path]).catch(()=>{});err(e2,'Could not submit Premium payment.')}finally{A.setLoading(b,false)}
 }
 function brokerGuide(){
  const guide=$('#allAccessModeGuide'),details=$('#allAccessBrokerDetails'),linkWrap=$('#allAccessBrokerLinkWrap'),link=$('#allAccessBrokerLink');
@@ -116,24 +128,28 @@ function brokerGuide(){
  if(link&&cfg){link.href=cfg;link.textContent=cfg}
 }
 async function submitIb(e){
- e.preventDefault();const f=e.currentTarget,b=f.querySelector('button[type=submit]'),fd=new FormData(f);
+ e.preventDefault();const f=e.currentTarget,b=f.querySelector('button[type=submit]'),fd=new FormData(f),uploaded=[];
+ const broker=String(fd.get('broker')||'').trim(),accountId=String(fd.get('trading_account_id')||'').trim(),amount=Number(fd.get('deposit_amount')||0);
+ if(!['Exness','XM','DPrime'].includes(broker))return A.toast?.('Choose Exness, XM or DPrime.','error');
+ if(accountId.length<3)return A.toast?.('Enter a valid Trading Account ID.','error');
+ if(!Number.isFinite(amount)||amount<=0)return A.toast?.('Enter a valid deposit amount.','error');
  A.setLoading(b,true,'Uploading proofs...');
  try{
    if(!user)user=await A.getCurrentUser();
    const deposit=fd.get('deposit_proof'),confirm=fd.get('confirmation_proof');
-   const depPath=await upload('ib-proofs',deposit,'deposit');
-   let confPath=null;if(confirm?.size)confPath=await upload('ib-proofs',confirm,'confirmation');
+   const depPath=await upload('ib-proofs',deposit,'deposit');uploaded.push(depPath);
+   let confPath=null;if(confirm?.size){confPath=await upload('ib-proofs',confirm,'confirmation');uploaded.push(confPath)}
    const r=await sb.rpc('submit_ib_verification_v969',{
-     p_broker:String(fd.get('broker')||'').trim(),
-     p_account_id:String(fd.get('trading_account_id')||'').trim(),
+     p_broker:broker,
+     p_account_id:accountId,
      p_account_type:String(fd.get('account_type')||'new').trim(),
-     p_deposit_amount:Number(fd.get('deposit_amount')||0),
+     p_deposit_amount:amount,
      p_deposit_proof_path:depPath,
      p_confirmation_proof_path:confPath,
      p_note:String(fd.get('note')||'').trim()||null
    });
-   if(r.error)throw r.error;f.reset();A.closeModal('ibVerificationModal');A.toast?.('Broker verification submitted for Admin review.','success');await load();
- }catch(e2){err(e2,'Could not submit Broker verification.')}finally{A.setLoading(b,false)}
+   if(r.error)throw r.error;uploaded.length=0;f.reset();A.closeModal('ibVerificationModal');A.toast?.('Broker verification submitted for Admin review.','success');await load();
+ }catch(e2){if(uploaded.length)await sb.storage.from('ib-proofs').remove(uploaded).catch(()=>{});err(e2,'Could not submit Broker verification.')}finally{A.setLoading(b,false)}
 }
 document.addEventListener('click',e=>{
  const manage=e.target.closest('#managePremiumAccess,#premiumAccessRow');if(manage){e.preventDefault();openAccess();return}
