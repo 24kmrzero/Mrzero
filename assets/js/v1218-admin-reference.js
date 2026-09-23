@@ -5,25 +5,27 @@ const state={links:[],team:[],courses:[],adLink:null};
 async function rpc(n,a={}){const r=await sb.rpc(n,a);if(r.error)throw r.error;return r.data}async function one(q){const r=await q;if(r.error)throw r.error;return r.data}function toast(m,t='info'){A.toast?.(m,t)}function fmt(v){return v?new Date(v).toLocaleString():'—'}function fmtN(v){return Number(v||0).toLocaleString()}function linkUrl(l){const path=l.is_ad_link?'/free-course/':(l.destination_path||'/');const u=new URL(path,location.origin);u.searchParams.set('ref',l.ref_code);if(l.source)u.searchParams.set('source',l.source);if(l.campaign)u.searchParams.set('campaign',l.campaign);return u.toString()}
 function installCss(){if(!document.querySelector('link[href*="v1218-admin-reference.css"]')){const l=document.createElement('link');l.rel='stylesheet';l.href='assets/css/v1218-admin-reference.css?v=12.18';document.head.appendChild(l)}}
 function installNav(){const nav=$('.app-nav');if(!nav)return;nav.innerHTML=`
-<span class="v1218-nav-group">Command Center</span>
+<span class="v1218-nav-group">Overview</span>
 <a href="#dashboard" data-panel="dashboard" data-v1218-nav="dashboard"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
-<a href="/admin/operations/advanced/?view=finance"><i class="fa-solid fa-sack-dollar"></i> Finance & Accounts</a>
-<a href="#students" data-panel="students" data-v1218-nav="students"><i class="fa-solid fa-users"></i> Users</a>
-<a href="#premium-access" data-panel="premium-access" data-v1218-nav="premium-access"><i class="fa-solid fa-square-check"></i> Access Approvals</a>
-<a href="#v1216-center" data-panel="v1216-center" data-v1218-sub="enrollments" data-v1218-nav="enrollments"><i class="fa-solid fa-receipt"></i> Payments & Enrollments</a>
-<a href="#courses" data-panel="courses" data-v1218-nav="courses"><i class="fa-solid fa-graduation-cap"></i> Courses</a>
-<a href="#methods" data-panel="methods" data-v1218-nav="methods"><i class="fa-solid fa-credit-card"></i> Payment Methods</a>
-<a href="#link-manager-ref" data-panel="link-manager-ref" data-v1218-nav="link-manager-ref"><i class="fa-solid fa-link"></i> Link Manager</a>
-<a href="#team-access-ref" data-panel="team-access-ref" data-v1218-nav="team-access-ref"><i class="fa-solid fa-people-group"></i> Team Panel Access</a>
-<a href="#v1216-center" data-panel="v1216-center" data-v1218-sub="mentors" data-v1218-nav="mentors"><i class="fa-solid fa-chalkboard-user"></i> Mentor Management</a>
-<span class="v1218-nav-group">Platform</span>
-<a href="#audit" data-panel="audit" data-v1218-nav="audit"><i class="fa-solid fa-clock-rotate-left"></i> Activity Logs</a>
-<a href="/admin/team-performance/"><i class="fa-solid fa-chart-column"></i> Team Performance</a>
-<a href="#ad-links" data-panel="ad-links" data-v1218-nav="ad-links"><i class="fa-solid fa-bullhorn"></i> Ad Link</a>
-<a href="/admin/operations/advanced/?view=ea"><i class="fa-solid fa-microchip"></i> EA & Indicator</a>
 <span class="v1218-nav-group">Content</span>
-<a href="#signals" data-panel="signals"><i class="fa-solid fa-bolt"></i> Signals</a><a href="#charts" data-panel="charts"><i class="fa-solid fa-chart-line"></i> Charts</a><a href="#articles" data-panel="articles"><i class="fa-solid fa-newspaper"></i> Articles</a><a href="#announcements" data-panel="announcements"><i class="fa-solid fa-bullhorn"></i> Announcements</a><a href="#sessions" data-panel="sessions"><i class="fa-solid fa-video"></i> Zoom Sessions</a><a href="#support" data-panel="support"><i class="fa-solid fa-headset"></i> Support</a>`}
-function panel(id,html){const host=$('.app-content');if(!host||$('#p-'+id))return;const s=document.createElement('section');s.className='panel';s.id='p-'+id;s.innerHTML=html;host.appendChild(s)}
+<a href="#signals" data-panel="signals"><i class="fa-solid fa-bolt"></i> Signals</a>
+<a href="#charts" data-panel="charts"><i class="fa-solid fa-chart-line"></i> Charts</a>
+<a href="#articles" data-panel="articles"><i class="fa-solid fa-newspaper"></i> Articles</a>
+<a href="#announcements" data-panel="announcements"><i class="fa-solid fa-bullhorn"></i> Announcements</a>
+<span class="v1218-nav-group">Courses</span>
+<a href="#courses" data-panel="courses" data-v1218-nav="courses"><i class="fa-solid fa-graduation-cap"></i> Courses</a>
+<a href="#sessions" data-panel="sessions"><i class="fa-solid fa-video"></i> Zoom Sessions</a>
+<span class="v1218-nav-group">Management</span>
+<a href="#v1216-center" data-panel="v1216-center" data-v1218-sub="enrollments" data-v1218-nav="enrollments"><i class="fa-solid fa-receipt"></i> Payments</a>
+<a href="#students" data-panel="students" data-v1218-nav="students"><i class="fa-solid fa-users"></i> Students</a>
+<a href="#methods" data-panel="methods" data-v1218-nav="methods"><i class="fa-solid fa-credit-card"></i> Payment Methods</a>
+<a href="#support" data-panel="support"><i class="fa-solid fa-headset"></i> Support</a>
+<span class="v1218-nav-group">Operations</span>
+<a href="#premium-access" data-panel="premium-access" data-v1218-nav="premium-access"><i class="fa-solid fa-crown"></i> Premium Access</a>
+<a href="#link-manager-ref" data-panel="link-manager-ref" data-v1218-nav="link-manager-ref"><i class="fa-solid fa-link"></i> Link Manager</a>
+<a href="#admin-notifications" data-panel="admin-notifications"><i class="fa-solid fa-bell"></i> Admin Notifications</a>
+<a href="#audit" data-panel="audit" data-v1218-nav="audit"><i class="fa-solid fa-clock-rotate-left"></i> Activity Logs</a>
+`}function panel(id,html){const host=$('.app-content');if(!host||$('#p-'+id))return;const s=document.createElement('section');s.className='panel';s.id='p-'+id;s.innerHTML=html;host.appendChild(s)}
 function installPanels(){if(!$('#v18LegacyLinksOpen'))document.body.insertAdjacentHTML('beforeend','<button id="v18LegacyLinksOpen" data-panel="links" hidden></button>');panel('link-manager-ref',`<div class="panel-heading"><div><h2>Link Manager</h2><p>Create tracked links and see clicks, signups, enrollments and lead details.</p></div><button class="app-btn gold" data-v18-open-existing-links>Create Link</button></div><div id="v18LinkKpis" class="v1218-kpis"></div><div class="v1218-toolbar"><input id="v18LinkSearch" type="search" placeholder="Search link, source, campaign or course..."><select id="v18LinkType"><option value="all">All Links</option><option value="normal">Normal Links</option><option value="ad">Ad Links</option></select><button class="app-btn outline" id="v18LinkRefresh">Refresh</button></div><div class="table-scroll"><table class="admin-table"><thead><tr><th>Link</th><th>Source</th><th>Destination</th><th>Clicks</th><th>Unique</th><th>Signups</th><th>Enrolled</th><th>Conversion</th><th>Status</th><th>Actions</th></tr></thead><tbody id="v18LinkBody"></tbody></table></div>`);
 panel('team-access-ref',`<div class="panel-heading"><div><h2>Team Panel Access</h2><p>Manager accounts, WhatsApp, Leads ON/OFF and round-robin workload.</p></div><button class="app-btn gold" data-v18-open-team>Create Team Account</button></div><div id="v18TeamKpis" class="v1218-kpis"></div><div class="table-scroll"><table class="admin-table"><thead><tr><th>Team Member</th><th>Username</th><th>WhatsApp</th><th>Leads</th><th>Assigned Links</th><th>Last Login</th><th>Account</th><th>Actions</th></tr></thead><tbody id="v18TeamBody"></tbody></table></div>`);
 panel('ad-links',`<div class="panel-heading"><div><h2>Ad Link</h2><p>Ad-link analytics, course enrollment routing and fresh lead tracking.</p></div><button class="app-btn gold" data-v18-open-ad>Create Ad Link</button></div><div id="v18AdKpis" class="v1218-kpis"></div><div id="v18AdCourseGrid" class="v1218-ad-course-grid"></div><div class="v1218-team-strip" id="v18AdTeamStrip"></div><div class="panel-heading compact-heading"><div><h3>Ad Lead Details</h3><p>Every submitted user with lead time, manager and exact assignment time.</p></div></div><div class="v1218-toolbar"><select id="v18AdLinkSelect"></select><button class="app-btn outline" id="v18AdLeadRefresh">Refresh Leads</button></div><div class="table-scroll"><table class="admin-table"><thead><tr><th>Lead Date & Time</th><th>Name</th><th>Email</th><th>WhatsApp</th><th>Client ID</th><th>Course</th><th>Assigned Team</th><th>Assigned Date & Time</th><th>Source</th><th>Email</th><th>Routed</th></tr></thead><tbody id="v18AdLeadRows"></tbody></table></div>`)}
