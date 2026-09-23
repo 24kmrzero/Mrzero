@@ -70,6 +70,8 @@
         if (!res.error) link = res.data;
       }
       if (!link?.course_id || !link?.course_title) throw new Error('Course details not found.');
+      if (link.course_enrollment_open === false || ['cancelled','completed'].includes(String(link.course_status||'').toLowerCase())) throw new Error('Enrollment for this course is currently closed.');
+      if (link.batch_id && link.batch_enrollment_open === false) throw new Error('Enrollment for the current batch is currently closed.');
       const title = String(link.course_title).trim();
       const ct = document.getElementById('enrollCourseTitle');
       if (ct) ct.textContent = title;
@@ -84,15 +86,16 @@
       if (notice) notice.hidden = true;
       await recordFormOpened(link);
       return true;
-    } catch (_) {
-      if (attempt < 2) {
+    } catch (error) {
+      const closed=/currently closed/i.test(String(error?.message||''));
+      if (!closed && attempt < 2) {
         setTimeout(() => hydrateLinkDetails(attempt + 1), 350 * (attempt + 1));
       } else {
         linkReady = false;
         if (button) button.disabled = true;
         if (notice) {
           notice.hidden = false;
-          notice.textContent = 'Could not load this course link. Please reopen the official enrollment link.';
+          notice.textContent = closed ? String(error.message) : 'Could not load this course link. Please reopen the official enrollment link.';
         }
       }
       return false;
