@@ -4,6 +4,7 @@ window.__24K_ACCESS_V1224_READY__=true;
 const A=window.App;if(!A?.supabase)return;
 const sb=A.supabase,$=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
 let access=null,payments=[],verifications=[],methods=[],selectedBroker='',accountMode='new',user=null;
+const brokerLinks={Exness:'https://one.exnessonelink.com/a/be2kjlypr9',XM:'https://affs.click/tr9cq',DPrime:'https://my.dooprime.com/links/go/72929'};
 const esc=v=>A.escapeHtml?A.escapeHtml(v??''):String(v??'');
 const money=(v,c)=>A.formatMoney?A.formatMoney(Number(v||0),c):`${c} ${Number(v||0).toFixed(2)}`;
 function err(e,f='Something went wrong.'){console.error('[V12.24 Student Access]',e);A.toast?.(A.friendlyError?.(e,f)||e?.message||f,'error')}
@@ -100,7 +101,7 @@ function brokerGuide(){
      : `Existing ${selectedBroker} account: choose Partner / IB Shift and follow the official transfer instructions provided by 24K Support.`)
   : `New Account: create a new ${selectedBroker} account using the official 24K partner link, make the required deposit, then submit your account ID and deposit proof.`;
  if(guide)guide.innerHTML=`<b>${esc(selectedBroker)} — ${shift?'Partner / IB Shift':'New Account'}</b><br>${esc(text)}`;
- const cfg=window.APP_CONFIG?.BROKER_PARTNER_LINKS?.[selectedBroker]||'';
+ const cfg=window.APP_CONFIG?.BROKER_PARTNER_LINKS?.[selectedBroker]||brokerLinks[selectedBroker]||'';
  if(linkWrap)linkWrap.classList.toggle('access-hidden',!cfg);
  if(link&&cfg){link.href=cfg;link.textContent=cfg}
 }
@@ -133,7 +134,7 @@ document.addEventListener('click',e=>{
  if(e.target.closest('#premiumPayUsdt')){renderMethodInfo('usdt');A.openModal('premiumUsdtModal');return}
  if(e.target.closest('#openIbVerification')){
    if(!selectedBroker)return A.toast?.('Choose Exness, XM or DPrime first.','warning');
-   const f=$('#ibVerificationForm');if(f){f.elements.broker.value=selectedBroker;f.elements.account_type.value=accountMode;$('#ibPartnerLinkWrap')?.classList.toggle('hidden',accountMode!=='existing');$('#ibBrokerInstructions').innerHTML=$('#allAccessModeGuide')?.innerHTML||''}
+   const f=$('#ibVerificationForm');if(f){f.elements.broker.value=selectedBroker;f.elements.account_type.value=accountMode;const cfg=window.APP_CONFIG?.BROKER_PARTNER_LINKS?.[selectedBroker]||brokerLinks[selectedBroker]||'';const selectedLink=$('#ibSelectedPartnerLink');if(selectedLink&&cfg)selectedLink.href=cfg;$('#ibPartnerLinkWrap')?.classList.toggle('hidden',accountMode!=='existing'||!cfg);$('#ibBrokerInstructions').innerHTML=$('#allAccessModeGuide')?.innerHTML||''}
    A.closeModal('premiumAccessModal');A.openModal('ibVerificationModal');return
  }
  if(e.target.closest('#ibCopyPartnerLink,#copyAllAccessBrokerLink')){
