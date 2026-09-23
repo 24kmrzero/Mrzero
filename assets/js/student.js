@@ -178,56 +178,71 @@
   initDashboardClock();
   document.getElementById('studentAvatar').textContent = initials;
 
-  await loadAll();
-  renderAll();
-  bindEvents();
-  studentNavigation.open(studentNavigation.keyFromLocation(), true, false);
-  subscribeRealtime();
-  document.getElementById('pageLoader').classList.add('hidden');
-  document.getElementById('studentApp').classList.remove('hidden');
-  handlePaymentReturn();
+  try {
+    await loadAll();
+    renderAll();
+    bindEvents();
+    studentNavigation.open(studentNavigation.keyFromLocation(), true, false);
+    subscribeRealtime();
+    handlePaymentReturn();
+  } catch (error) {
+    console.error('[Student init]', error);
+    A.toast(A.friendlyError?.(error,'Could not load your student account completely. Please refresh or contact support.') || 'Could not load your student account completely.','error');
+  } finally {
+    document.getElementById('pageLoader')?.classList.add('hidden');
+    document.getElementById('studentApp')?.classList.remove('hidden');
+  }
 
   async function loadAll() {
     const sb = A.supabase;
     const { data: freshProfile, error: profileError } = await sb.from('profiles').select('*').eq('id', state.user.id).maybeSingle();
-    if (profileError) throw profileError;
+    if (profileError) console.warn('[Student] Profile refresh skipped:', profileError.message || profileError);
     if (freshProfile) state.profile = freshProfile;
-    const requests = await Promise.all([
-      sb.from('courses').select('*').eq('is_published', true).order('created_at', { ascending: false }),
-      sb.from('course_sessions').select('*').order('starts_at', { ascending: true }),
-      sb.from('course_session_links').select('course_session_id,meet_url'),
-      sb.from('enrollments').select('*').eq('student_id', state.user.id),
-      sb.from('payments').select('*,courses(title,currency)').eq('student_id', state.user.id).order('created_at', { ascending: false }),
-      sb.from('payment_methods').select('*').eq('is_active', true).order('sort_order'),
-      sb.from('signals').select('*').eq('is_published', true).order('published_at', { ascending: false }),
-      sb.from('signal_updates').select('*').order('created_at', { ascending: false }),
-      sb.from('charts').select('*').eq('is_published', true).order('published_at', { ascending: false }),
-      sb.from('articles').select('*').eq('is_published', true).order('published_at', { ascending: false }),
-      sb.from('announcements').select('*').eq('is_published', true).order('published_at', { ascending: false }),
-      sb.from('course_resources').select('*').order('created_at', { ascending: false }),
-      sb.from('terms_acceptances').select('id').eq('user_id', state.user.id).eq('document_type', 'risk_disclaimer').eq('version', A.cfg.RISK_VERSION).limit(1)
-    ]);
-    const firstError = requests.find(item => item.error)?.error;
-    if (firstError) throw firstError;
-    state.courses=requests[0].data||[]; state.sessions=requests[1].data||[];
-    state.sessionLinks=Object.fromEntries((requests[2].data||[]).map(row=>[row.course_session_id,row.meet_url]));
-    state.enrollments=requests[3].data||[]; state.payments=requests[4].data||[]; state.paymentMethods=requests[5].data||[];
-    state.signals=requests[6].data||[]; state.signalUpdates=requests[7].data||[]; state.charts=requests[8].data||[];
-    state.articles=requests[9].data||[]; state.announcements=requests[10].data||[]; state.resources=requests[11].data||[]; state.support=[];
-    state.riskAccepted=Boolean(requests[12].data?.length);
-    const [premiumAccess,premiumPayments,ibRows] = await Promise.all([
-      sb.rpc('get_my_premium_access'),
-      sb.from('premium_payments').select('*').order('created_at',{ascending:false}),
-      sb.from('ib_verifications').select('*').order('created_at',{ascending:false})
-    ]);
-    if (premiumAccess.error) throw premiumAccess.error;
-    if (premiumPayments.error) throw premiumPayments.error;
-    if (ibRows.error) throw ibRows.error;
-    state.premium = premiumAccess.data || null;
-    state.premiumPayments = premiumPayments.data || [];
-    state.ibVerifications = ibRows.data || [];
-  }
 
+    const requests = [
+      ['courses', sb.from('courses').select('*').eq('is_published', true).order('created_at', { ascending: false }), true],
+      ['sessions', sb.from('course_sessions').select('*').order('starts_at', { ascending: true }), false],
+      ['enrollments', sb.from('enrollments').select('*').eq('student_id', state.user.id), true],
+      ['payments', sb.from('payments').select('*,courses(title,currency)').eq('student_id', state.user.id).order('created_at', { ascending: false }), true],
+      ['paymentMethods', sb.from('payment_methods').select('*').eq('is_active', true).order('sort_order'), false],
+      ['signals', sb.from('signals').select('*').eq('is_published', true).order('published_at', { ascending: false }), false],
+      ['signalUpdates', sb.from('signal_updates').select('*').order('created_at', { ascending: false }), false],
+      ['charts', sb.from('charts').select('*').eq('is_published', true).order('published_at', { ascending: false }), false],
+      ['articles', sb.from('articles').select('*').eq('is_published', true).order('published_at', { ascending: false }), false],
+      ['announcements', sb.from('announcements').select('*').eq('is_published', true).order('published_at', { ascending: false }), false],
+      ['resources', sb.from('course_resources').select('*').order('created_at', { ascending: false }), false],
+      ['risk', sb.from('terms_acceptances').select('id').eq('user_id', state.user.id).eq('document_type', 'risk_disclaimer').eq('version', A.cfg.RISK_VERSION).limit(1), false]
+    ];
+
+    const results = await Promise.all(requests.map(async ([key, query, critical]) => [key, critical, await query]));
+    for (const [key, critical, response] of results) {
+      if (response.error) {
+        if (critical) throw response.error;
+        console.warn(`[Student] Optional data skipped: ${key}`, response.error.message || response.error);
+        if (key === 'risk') state.riskAccepted = false;
+        else if (key in state) state[key] = [];
+        continue;
+      }
+      if (key === 'risk') state.riskAccepted = Boolean(response.data?.length);
+      else if (key in state) state[key] = response.data || [];
+    }
+
+    // Zoom links are intentionally not loaded into the Student UI. Class links are shared in WhatsApp.
+    state.sessionLinks = {};
+    state.support = [];
+
+    const [premiumAccess, premiumPayments, ibRows] = await Promise.all([
+      sb.rpc('get_my_premium_access'),
+      sb.from('premium_payments').select('*').eq('student_id', state.user.id).order('created_at',{ascending:false}),
+      sb.from('ib_verifications').select('*').eq('student_id', state.user.id).order('created_at',{ascending:false})
+    ]);
+    if (premiumAccess.error) console.warn('[Student] Premium access state unavailable:', premiumAccess.error.message || premiumAccess.error);
+    if (premiumPayments.error) console.warn('[Student] Premium payment history unavailable:', premiumPayments.error.message || premiumPayments.error);
+    if (ibRows.error) console.warn('[Student] IB verification history unavailable:', ibRows.error.message || ibRows.error);
+    state.premium = premiumAccess.error ? null : (premiumAccess.data || null);
+    state.premiumPayments = premiumPayments.error ? [] : (premiumPayments.data || []);
+    state.ibVerifications = ibRows.error ? [] : (ibRows.data || []);
+  }
   function renderAll() {
     renderKpis(); renderDashboard(); renderSignals(); renderCharts(); renderArticles(); renderCourses();
     renderPayments(); renderAnnouncements(); renderProfile(); renderEmailVerification(); renderPremium(); renderSupport();
