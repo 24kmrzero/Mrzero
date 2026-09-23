@@ -22,15 +22,15 @@
     <a class="auth-change-email" href="/sign-up/"><i class="fa-solid fa-pen"></i> Use a different email</a>
   </div></section>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js"></script><script src="assets/js/core.js?v=12.14"></script><script src="assets/js/tracking.js?v=12.14"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js?v=12.44"></script><script src="assets/js/core.js?v=12.44"></script><script src="assets/js/tracking.js?v=12.44"></script>
 <script>
 (async()=>{
  const A=window.App, email=sessionStorage.getItem('24k_pending_signup_email')||localStorage.getItem('24k_pending_signup_email')||'';
  document.getElementById('verificationEmail').textContent=email||'your registered email';
  document.getElementById('resendVerification').addEventListener('click',async e=>{
    const b=e.currentTarget;if(!email)return A.toast('Enter your email again from the Sign Up page.','error');A.setLoading(b,true,'Sending...');
-   try{const {error}=await A.supabase.auth.resend({type:'signup',email,options:{emailRedirectTo:`${location.origin}/sign-in/`}});if(error)throw error;A.toast('Verification email sent again.','success');}
-   catch(err){A.toast(err.message||'Could not resend email.','error');}finally{A.setLoading(b,false);}
+   try{const response=await A.supabase.functions.invoke('auth-email',{body:{action:'resend_verification',email}});if(response.error)throw response.error;if(response.data?.error)throw new Error(response.data.error);A.toast(response.data?.message||'Verification email sent again.','success');}
+   catch(err){A.toast(A.friendlyError?A.friendlyError(err,'Could not resend email.'):(err.message||'Could not resend email.'),'error');}finally{A.setLoading(b,false);}
  });
 })();
 </script>
