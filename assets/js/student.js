@@ -752,8 +752,8 @@
     if(historyCount) historyCount.textContent=`${state.premiumPayments.length} payment${state.premiumPayments.length===1?'':'s'}`;
     const body=document.getElementById('premiumPaymentsBody');
     if(body) body.innerHTML=state.premiumPayments.length?state.premiumPayments.map(row=>`<tr><td>${A.formatDateTime(row.created_at)}</td><td>${A.escapeHtml(row.payment_method_name)}</td><td>${A.escapeHtml(row.currency==='PKR'?`PKR ${Number(row.amount||0).toLocaleString()}`:`${Number(row.amount||0).toLocaleString()} USDT`)}</td><td><span class="status-pill ${A.statusClass(row.status)}">${A.statusLabel(row.status)}</span></td><td>${row.access_expires_at?A.formatDateTime(row.access_expires_at):'—'}</td><td>${A.escapeHtml(row.admin_note||row.provider_rejection_reason||'—')}</td></tr>`).join(''):`<tr><td colspan="6">${empty('No premium payment history yet.','fa-crown')}</td></tr>`;
-    const localBankEnabled = state.paymentMethods.some(m => /^local bank transfer$/i.test(String(m.name||'').trim()));
-    const usdtEnabled = state.paymentMethods.some(m => /usdt|trc\s*20|trc20/i.test(`${m.name||''} ${m.instructions||''}`));
+    const localBankEnabled = coursePaymentMethodConfigured('bank');
+    const usdtEnabled = coursePaymentMethodConfigured('usdt');
     const premiumLocal=document.getElementById('premiumPayLocal'); if(premiumLocal){premiumLocal.disabled=p.package_mode==='free'||!localBankEnabled;premiumLocal.classList.toggle('method-disabled',!localBankEnabled);premiumLocal.title=localBankEnabled?'':'Local Bank Transfer is currently disabled by Admin.';}
     const premiumUsdt=document.getElementById('premiumPayUsdt'); if(premiumUsdt){premiumUsdt.disabled=p.package_mode==='free'||!usdtEnabled;premiumUsdt.classList.toggle('method-disabled',!usdtEnabled);premiumUsdt.title=usdtEnabled?'':'USDT TRC20 is currently disabled by Admin.';}
     const ibSubmit=document.querySelector('#ibVerificationForm button[type="submit"]');if(ibSubmit)ibSubmit.disabled=(p.ib_enabled===false);
@@ -1075,6 +1075,18 @@
   function showSignalNotification(update){if(!update?.notify_users)return;A.toast(`${update.notification_title||'Signal Update'} — ${update.notification_message||''}`,'success');if('Notification' in window&&Notification.permission==='granted'&&document.visibilityState!=='visible'){new Notification(update.notification_title||'24K Signal Update',{body:update.notification_message||'',icon:'assets/logo.png?v=9.68'});}}
 
 
+  function coursePaymentMethodConfigured(type){
+    const method=type==='bank'
+      ? state.paymentMethods.find(m=>/^local bank transfer$/i.test(String(m.name||'').trim()))
+      : state.paymentMethods.find(m=>/usdt|trc\s*20|trc20/i.test(`${m.name||''} ${m.instructions||''}`));
+    if(!method)return false;
+    const account=String(method.account_number||'').trim();
+    if(!account||/^(—|-|n\/a|na)$/i.test(account))return false;
+    if(type==='usdt'&&/^(usdt\s*)?(trc\s*20|trc20)$/i.test(account))return false;
+    if(String(method.name||'').trim().toLowerCase()===account.toLowerCase())return false;
+    return true;
+  }
+
   let paymentChoiceContext = { courseId: null, triggerButton: null };
 
   async function openPaymentModal(courseId, triggerButton=null) {
@@ -1103,7 +1115,7 @@
     const currency = String(course.currency || '').toUpperCase();
 
     if (choice === 'local-bank') {
-      const enabled=state.paymentMethods.some(m=>/^local bank transfer$/i.test(String(m.name||'').trim()));
+      const enabled=coursePaymentMethodConfigured('bank');
       if(!enabled) return A.toast('Local Bank Transfer is currently disabled by Admin.','warning');
       if (currency !== 'PKR') return A.toast('Local Bank Transfer is available for courses priced in PKR. This course is currently priced in USDT.', 'warning');
       A.closeModal('paymentMethodChoiceModal');
@@ -1111,7 +1123,7 @@
     }
 
     if (choice === 'usdt') {
-      const enabled=state.paymentMethods.some(m=>/usdt|trc\s*20|trc20/i.test(`${m.name||''} ${m.instructions||''}`));
+      const enabled=coursePaymentMethodConfigured('usdt');
       if(!enabled) return A.toast('USDT TRC20 is currently disabled by Admin.','warning');
       if (!['USDT','USD'].includes(currency)) return A.toast('USDT TRC20 is available for USD / USDT priced courses. This course uses a different currency.', 'warning');
       A.closeModal('paymentMethodChoiceModal');
@@ -1126,7 +1138,7 @@
     if (pending && ['received','under_review'].includes(pending.status)) return A.toast('Your payment is already being processed.', 'warning');
 
     const usdtMethods = state.paymentMethods.filter(m => /usdt|trc\s*20|trc20/i.test(`${m.name||''} ${m.instructions||''}`));
-    if (!usdtMethods.length) return A.toast('USDT TRC20 payment method is not configured yet. Please contact Admin.', 'warning');
+    if (!usdtMethods.length || !coursePaymentMethodConfigured('usdt')) return A.toast('USDT TRC20 wallet details are not configured yet. Please contact Admin.', 'warning');
     const form = document.getElementById('paymentForm');
     form.reset(); form.elements.course_id.value = course.id; form.dataset.supersedesPaymentId = pending?.status==='resubmission_required'?pending.id:''; const payable=course.discount_price!=null?Number(course.discount_price):Number(course.price); form.elements.amount.value = payable;
     document.getElementById('paymentCourseSummary').innerHTML = `<b>${A.escapeHtml(course.title)}</b><br>Instructor: Mr. Zameer · Amount: ${String(course.currency||'').toUpperCase()==='USD'?`USD ${Number(payable).toLocaleString('en-US',{maximumFractionDigits:2})} (Pay ${Number(payable).toLocaleString('en-US',{maximumFractionDigits:2})} USDT)`:`USDT ${Number(payable).toLocaleString('en-US',{maximumFractionDigits:2})}`}<br><small>Pay using TRC20 network and submit the TXID + receipt for Admin approval.</small>`;
@@ -1144,7 +1156,7 @@
     if (pending && ['received','under_review'].includes(pending.status)) return A.toast('Your payment is already being processed.', 'warning');
 
     const method = state.paymentMethods.find(m => /^local bank transfer$/i.test(String(m.name||'').trim()));
-    if (!method) return A.toast('Local Bank Transfer is not configured yet. Please contact Admin.', 'warning');
+    if (!method || !coursePaymentMethodConfigured('bank')) return A.toast('Local Bank account details are not configured yet. Please contact Admin.', 'warning');
 
     const form = document.getElementById('bankPaymentForm');
     if (!form) return A.toast('Bank payment form is unavailable.', 'error');
