@@ -16,6 +16,7 @@
 
   const resetMode = new URLSearchParams(location.search).get('mode') || '';
   let accountRole = sessionStorage.getItem('24k_recovery_kind') || '';
+  const loginPath = role => role === 'admin' ? '/admin-login/' : role === 'mentor' ? '/mentor-login.html' : '/sign-in/';
 
   function decode(value) {
     try { return decodeURIComponent(String(value || '').replace(/\+/g, ' ')); }
@@ -40,7 +41,7 @@
     status.querySelector('span').textContent = message;
     title.textContent = 'Reset link expired or invalid';
     lead.textContent = 'For security, password recovery links can only be used for a limited time and only once.';
-    requestNewLink.href = accountRole === 'student' ? '/sign-in/' : '/admin-login/';
+    requestNewLink.href = loginPath(accountRole || 'student');
   }
 
   function showReady(role) {
@@ -49,10 +50,16 @@
     spinner?.classList.add('reset-hidden');
     actions?.classList.add('reset-hidden');
     form?.classList.remove('reset-hidden');
-    title.textContent = accountRole === 'admin' ? 'Set a new Admin password' : (resetMode === 'invite' ? 'Set your account password' : 'Set a new password');
+    title.textContent = accountRole === 'admin'
+      ? 'Set a new Admin password'
+      : accountRole === 'mentor'
+        ? 'Set a new Mentor password'
+        : (resetMode === 'invite' ? 'Set your account password' : 'Set a new password');
     lead.textContent = accountRole === 'admin'
       ? 'Enter a new password for your authorized Admin account.'
-      : (resetMode === 'invite' ? 'Your 24K MR ZERO account is ready. Choose a secure password to finish setup.' : 'Enter a new password for your student account.');
+      : accountRole === 'mentor'
+        ? 'Enter a new password for your Mentor account.'
+        : (resetMode === 'invite' ? 'Your 24K MR ZERO account is ready. Choose a secure password to finish setup.' : 'Enter a new password for your student account.');
   }
 
   if (!A.configured || !sb) {
@@ -118,6 +125,7 @@
       const profile = await A.getProfile(session.user.id);
       if (['admin','super_admin'].includes(profile?.role)) role = 'admin';
       else if (profile?.role === 'student') role = 'student';
+      else if (profile?.role === 'mentor') role = 'mentor';
     } catch (error) {
       console.warn('Could not resolve recovery account role:', error?.message || error);
     }
@@ -163,7 +171,8 @@
       await sb.auth.signOut().catch(() => {});
 
       setTimeout(() => {
-        location.replace(accountRole === 'admin' ? '/admin-login/?reason=password-reset' : '/sign-in/?reason=password-reset');
+        const base = loginPath(accountRole || 'student');
+        location.replace(`${base}${base.includes('?')?'&':'?'}reason=password-reset`);
       }, 1200);
     } catch (error) {
       status.className = 'reset-status error show';
