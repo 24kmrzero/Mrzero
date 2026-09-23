@@ -7,7 +7,7 @@ body.app-page,body.admin-page,.app-shell{background:var(--v18-bg)}.app-side{back
 
 /* V12.27 targeted Admin theme repair — scoped, no global panel overrides */
 body.app-page{color:var(--v18-text)}
-.app-nav a{font-size:13px!important;min-height:44px!important}
+.app-nav a{font-size:12px!important;min-height:40px!important;padding:9px 10px!important}
 .v1218-command h2,.v1218-command h3,.v1218-kpi b,.v1218-mini b,.v1218-ad-card h3,
 .app-card h3,.app-card-head h3,.panel-heading h1,.panel-heading h2,.panel-heading h3{color:var(--v18-text)!important}
 .v1218-command p,.app-card p,.app-card-head p{color:var(--v18-muted)!important}
@@ -96,3 +96,12 @@ html[data-theme="dark"] .v1218-ad-card h3{color:#f4f2ec!important}
 html[data-theme="dark"] .v1218-command p,
 html[data-theme="dark"] .app-card p,
 html[data-theme="dark"] .app-card-head p{color:#9aa3b1!important}
+
+/* V12.28 compact Admin typography + spacing repair */
+.app-side{font-size:12px!important}
+.app-nav-label{font-size:8px!important;margin:10px 10px 4px!important;letter-spacing:.12em!important}
+.app-side-foot a,.app-side-foot button{font-size:12px!important;min-height:40px!important}
+.app-title strong{font-size:13px!important}.app-title small{font-size:9px!important}
+.panel-heading h1,.panel-heading h2{font-size:20px!important;line-height:1.2!important}
+.panel-heading p{font-size:11px!important;line-height:1.5!important}
+@media(max-width:760px){.app-nav a{font-size:12px!important;min-height:40px!important}.panel-heading h1,.panel-heading h2{font-size:19px!important}.app-content{padding:11px!important}}
