@@ -16,14 +16,14 @@ function installNav(){const nav=$('.app-nav');if(!nav)return;nav.innerHTML=`
 <a href="/admin/courses/" data-panel="courses" data-v1218-nav="courses"><i class="fa-solid fa-graduation-cap"></i> Courses</a>
 <a href="/admin/zoom-sessions/" data-panel="sessions"><i class="fa-solid fa-video"></i> Zoom Sessions</a>
 <span class="v1218-nav-group">Management</span>
-<a href="/admin/payments/" data-panel="payments" data-v1218-nav="payments"><i class="fa-solid fa-receipt"></i> Payments</a>
+<a href="/admin/payments/" data-panel="payments" data-v1218-nav="payments"><i class="fa-solid fa-receipt"></i> Payments <span class="nav-count" id="pendingPaymentCount">0</span></a>
 <a href="/admin/students/" data-panel="students" data-v1218-nav="students"><i class="fa-solid fa-users"></i> Students</a>
 <a href="/admin/payment-methods/" data-panel="methods" data-v1218-nav="methods"><i class="fa-solid fa-credit-card"></i> Payment Methods</a>
 <a href="/admin/support/" data-panel="support"><i class="fa-solid fa-headset"></i> Support</a>
 <span class="v1218-nav-group">Operations</span>
 <a href="/admin/premium-access/" data-panel="premium-access" data-v1218-nav="premium-access"><i class="fa-solid fa-crown"></i> Premium Access</a>
 <a href="/admin/link-manager/" data-panel="link-manager-ref" data-v1218-nav="link-manager-ref"><i class="fa-solid fa-link"></i> Link Manager</a>
-<a href="/admin/admin-notifications/" data-panel="admin-notifications"><i class="fa-solid fa-bell"></i> Admin Notifications</a>
+<a href="/admin/admin-notifications/" data-panel="admin-notifications"><i class="fa-solid fa-bell"></i> Admin Notifications <span class="nav-count" id="adminNotificationCount">0</span></a>
 <a href="/admin/activity-logs/" data-panel="audit" data-v1218-nav="audit"><i class="fa-solid fa-clock-rotate-left"></i> Activity Logs</a>
 `}function panel(id,html){const host=$('.app-content');if(!host||$('#p-'+id))return;const s=document.createElement('section');s.className='panel';s.id='p-'+id;s.innerHTML=html;host.appendChild(s)}
 function installPanels(){if(!$('#v18LegacyLinksOpen'))document.body.insertAdjacentHTML('beforeend','<button id="v18LegacyLinksOpen" data-panel="links" hidden></button>');panel('link-manager-ref',`<div class="panel-heading"><div><h2>Link Manager</h2><p>Create tracked links and see clicks, signups, enrollments and lead details.</p></div><button class="app-btn gold" data-v18-open-existing-links>Create Link</button></div><div id="v18LinkKpis" class="v1218-kpis"></div><div class="v1218-toolbar"><input id="v18LinkSearch" type="search" placeholder="Search link, source, campaign or course..."><select id="v18LinkType"><option value="all">All Links</option><option value="normal">Normal Links</option><option value="ad">Ad Links</option></select><button class="app-btn outline" id="v18LinkRefresh">Refresh</button></div><div class="table-scroll"><table class="admin-table"><thead><tr><th>Link</th><th>Source</th><th>Destination</th><th>Clicks</th><th>Unique</th><th>Leads</th><th>Enrolled</th><th>Conversion</th><th>Status</th><th>Actions</th></tr></thead><tbody id="v18LinkBody"></tbody></table></div>`);
