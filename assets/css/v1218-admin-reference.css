@@ -163,3 +163,20 @@ html[data-theme="light"] .admin-quick-menu button:hover{
   color:#9b5c00!important;
 }
 .v1218-command-snapshot{margin-top:14px}
+
+/* V12.28 Premium Access compact density */
+#p-premium-access .panel-heading{padding:12px!important;margin-bottom:9px!important}
+#p-premium-access .v14-kpis{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important;margin-bottom:10px!important}
+#p-premium-access .v14-kpi{padding:10px 11px!important;border-radius:11px!important}
+#p-premium-access .v14-kpi b{font-size:18px!important;line-height:1.15!important}
+#p-premium-access .v14-kpi span{font-size:9px!important;margin-top:2px!important}
+#p-premium-access .v14-tabs{margin:0 0 10px!important}
+#p-premium-access .v14-tabs button{padding:8px 11px!important;min-height:34px!important}
+#p-premium-access .filter-row{margin-bottom:9px!important;padding:8px!important}
+#p-premium-access .admin-table td,#p-premium-access .admin-table th{padding:8px!important}
+#p-premium-access .v14-prem-list{gap:7px!important}
+#p-premium-access .v14-request{padding:10px!important}
+@media(max-width:760px){
+ #p-premium-access .v14-kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ #p-premium-access .panel-heading{padding:11px!important}
+}
