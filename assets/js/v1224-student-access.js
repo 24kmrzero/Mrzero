@@ -95,11 +95,21 @@ function brokerGuide(){
  if(details)details.classList.toggle('access-hidden',!selectedBroker);
  if(!selectedBroker){if(guide)guide.textContent='Choose a broker to continue.';return}
  const shift=accountMode==='existing';
- const text=shift
-  ? (selectedBroker==='Exness'
-     ? 'Existing Account / IB Shift: Open Exness Live Chat → ask for “Change Partner” → choose Education as the reason → use the official 24K partner link provided by Support → complete the partner-change request.'
-     : `Existing ${selectedBroker} account: choose Partner / IB Shift and follow the official transfer instructions provided by 24K Support.`)
-  : `New Account: create a new ${selectedBroker} account using the official 24K partner link, make the required deposit, then submit your account ID and deposit proof.`;
+ const guides={
+  Exness:{
+   new:'New Account: open the official 24K Exness partner link → create your trading account → fund the account → submit your Trading Account ID, deposit amount and deposit proof.',
+   existing:'Existing Account / IB Shift: login to Exness → open Live Chat → type “Change Partner” → open the official partner-change link sent by Exness Support → choose reason “Education” → submit the official 24K partner link → for “Where did you find us?” write “website” → save the confirmation email or screenshot.'
+  },
+  XM:{
+   new:'New Account: open the official 24K XM partner link → login to your XM profile → choose Create New Account → create a new trading account under the partner link → fund or transfer to that account → submit the new Trading Account ID and proof.',
+   existing:'Existing XM profile: open the official 24K XM partner link → login to your existing XM profile → choose Create New Account → create a new trading account under the partner link → fund or transfer to that account → submit the Trading Account ID and confirmation proof.'
+  },
+  DPrime:{
+   new:'New Account: open the official 24K DPrime partner link → create your account → fund it → submit your Trading Account ID, deposit amount and deposit proof.',
+   existing:'Existing Account / IB Shift: email en.support@dooprime.com → Subject: Shift Account → ask DPrime to shift your trading account under the official 24K partner link shown below → wait for confirmation → save the confirmation email or screenshot.'
+  }
+ };
+ const text=(guides[selectedBroker]?.[shift?'existing':'new'])||`${shift?'Existing Account / IB Shift':'New Account'}: follow the official 24K partner instructions and submit the required proof.`;
  if(guide)guide.innerHTML=`<b>${esc(selectedBroker)} — ${shift?'Partner / IB Shift':'New Account'}</b><br>${esc(text)}`;
  const cfg=window.APP_CONFIG?.BROKER_PARTNER_LINKS?.[selectedBroker]||brokerLinks[selectedBroker]||'';
  if(linkWrap)linkWrap.classList.toggle('access-hidden',!cfg);
