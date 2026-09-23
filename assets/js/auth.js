@@ -92,6 +92,10 @@
           window.location.replace(studentCourses());
           return;
         }
+        if (data?.status === 'enrollment_closed' || data?.status === 'not_found') {
+          tracking?.clearCourseIntent();
+          toast(data?.status === 'enrollment_closed' ? 'Enrollment for this course is currently closed.' : 'This course is no longer available.', 'info');
+        }
       } catch (error) { console.warn('Course intent completion failed:', error?.message || error); }
     }
 
