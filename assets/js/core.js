@@ -288,7 +288,7 @@
       dashboard: '/admin/', content: '/admin/content/', signals: '/admin/signals/', charts: '/admin/charts/', articles: '/admin/articles/',
       announcements: '/admin/announcements/', courses: '/admin/courses/', sessions: '/admin/zoom-sessions/',
       calendar: '/admin/calendar/', leads: '/admin/enquiries/', links: '/admin/team-manager/',
-      'premium-access': '/admin/premium-access/', operations: '/admin/operations/', 'admin-notifications': '/admin/admin-notifications/',
+      'premium-access': '/admin/premium-access/', 'link-manager-ref': '/admin/link-manager/', operations: '/admin/operations/', 'admin-notifications': '/admin/admin-notifications/',
       audit: '/admin/activity-logs/', delivery: '/admin/delivery/', settings: '/admin/settings/',
       payments: '/admin/payments/', students: '/admin/students/', support: '/admin/support/', methods: '/admin/payment-methods/'
     };
