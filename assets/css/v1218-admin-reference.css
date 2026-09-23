@@ -105,3 +105,61 @@ html[data-theme="dark"] .app-card-head p{color:#9aa3b1!important}
 .panel-heading h1,.panel-heading h2{font-size:20px!important;line-height:1.2!important}
 .panel-heading p{font-size:11px!important;line-height:1.5!important}
 @media(max-width:760px){.app-nav a{font-size:12px!important;min-height:40px!important}.panel-heading h1,.panel-heading h2{font-size:19px!important}.app-content{padding:11px!important}}
+
+/* V12.29 Light-mode compatibility for legacy Admin modules */
+html[data-theme="light"] .v14-tabs,
+html[data-theme="light"] .v14-kpi,
+html[data-theme="light"] .v14-person,
+html[data-theme="light"] .v14-choice,
+html[data-theme="light"] .v14-advanced,
+html[data-theme="light"] .v14-request,
+html[data-theme="light"] .admin-quick-menu,
+html[data-theme="light"] .v1216-tabs,
+html[data-theme="light"] .v1216-course,
+html[data-theme="light"] .v1216-manager,
+html[data-theme="light"] .v1216-mentor-card,
+html[data-theme="light"] .v1216-modal-card,
+html[data-theme="light"] .v1216-perms label{
+  background:var(--v18-card)!important;
+  border-color:var(--v18-line)!important;
+  color:var(--v18-text)!important;
+}
+html[data-theme="light"] .v14-tabs button,
+html[data-theme="light"] .v1216-tabs button,
+html[data-theme="light"] .admin-quick-menu button{
+  background:transparent!important;
+  color:#5e6672!important;
+}
+html[data-theme="light"] .v14-tabs button.on,
+html[data-theme="light"] .v1216-tabs button.on{
+  background:#f2b632!important;
+  color:#17110a!important;
+  border-color:#f2b632!important;
+}
+html[data-theme="light"] .v14-toolbar input,
+html[data-theme="light"] .v14-toolbar select,
+html[data-theme="light"] .v1216-status-select,
+html[data-theme="light"] .v1216-team-select,
+html[data-theme="light"] .v1216-form input{
+  background:#fff!important;
+  border-color:var(--v18-line)!important;
+  color:var(--v18-text)!important;
+}
+html[data-theme="light"] .v14-person-main small,
+html[data-theme="light"] .v14-choice small,
+html[data-theme="light"] .v14-settings-note,
+html[data-theme="light"] .v14-request-main small,
+html[data-theme="light"] .v1216-course p,
+html[data-theme="light"] .v1216-mentor-card small{
+  color:var(--v18-muted)!important;
+}
+html[data-theme="light"] .v1216-modal-head,
+html[data-theme="light"] .v1216-modal-foot{
+  background:var(--v18-card)!important;
+  border-color:var(--v18-line)!important;
+}
+html[data-theme="light"] .admin-quick-menu button:hover{
+  background:#fff1d8!important;
+  color:#9b5c00!important;
+}
+.v1218-command-snapshot{margin-top:14px}
