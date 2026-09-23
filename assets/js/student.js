@@ -60,14 +60,17 @@
     window.__24K_ACCESS_CRITICAL_BOUND__ = true;
     document.addEventListener('click', event => {
       const button = event.target?.closest?.('#managePremiumAccess');
-      if (!button) return;
+      if (!button || window.__24K_ACCESS_V1224_READY__) return;
       event.preventDefault();
       forceOpenPremiumAccessModal();
     }, true);
     const form = document.getElementById('ibVerificationForm');
     if (form && !form.dataset.v1020Bound) {
       form.dataset.v1020Bound = '1';
-      form.addEventListener('submit', submitIbVerification);
+      form.addEventListener('submit', event => {
+        if (window.__24K_ACCESS_V1224_READY__) return;
+        submitIbVerification(event);
+      });
     }
   }
   installCriticalAccessBindings();
@@ -977,9 +980,9 @@
     document.querySelectorAll('[data-signal-view]').forEach(button=>button.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();signalWorkspaceView=button.dataset.signalView==='history'?'history':'active';renderSignals();}));
     document.querySelectorAll('[data-history-market]').forEach(button=>button.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();historyMarketFilter=button.dataset.historyMarket||'all';renderSignals();}));
     document.querySelectorAll('[data-history-date]').forEach(button=>button.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();historyDateFilter=button.dataset.historyDate||'month';renderSignals();}));
-    document.getElementById('ibBrokerSelect')?.addEventListener('change',renderIbBrokerInstructions);
-    document.getElementById('ibAccountAction')?.addEventListener('change',renderIbBrokerInstructions);
-    document.getElementById('ibCopyPartnerLink')?.addEventListener('click',copyIbPartnerLink);
+    document.getElementById('ibBrokerSelect')?.addEventListener('change',event=>{if(!window.__24K_ACCESS_V1224_READY__)renderIbBrokerInstructions(event);});
+    document.getElementById('ibAccountAction')?.addEventListener('change',event=>{if(!window.__24K_ACCESS_V1224_READY__)renderIbBrokerInstructions(event);});
+    document.getElementById('ibCopyPartnerLink')?.addEventListener('click',event=>{if(!window.__24K_ACCESS_V1224_READY__)copyIbPartnerLink(event);});
     ['chartSearch','chartTimeframeFilter'].forEach(id => document.getElementById(id)?.addEventListener('input', renderCharts));
     document.getElementById('articleSearch')?.addEventListener('input', renderArticles);
     document.getElementById('closeSessions').addEventListener('click', resetCourseView);
@@ -1035,8 +1038,8 @@
     document.getElementById('paymentForm').addEventListener('submit', submitPayment);
     document.getElementById('bankPaymentForm')?.addEventListener('submit', submitBankPayment);
     document.getElementById('profileForm').addEventListener('submit', saveProfile);
-    document.getElementById('premiumUsdtForm')?.addEventListener('submit',submitPremiumUsdt);
-    document.getElementById('premiumBankForm')?.addEventListener('submit',submitPremiumBank);
+    document.getElementById('premiumUsdtForm')?.addEventListener('submit',event=>{if(!window.__24K_ACCESS_V1224_READY__)submitPremiumUsdt(event);});
+    document.getElementById('premiumBankForm')?.addEventListener('submit',event=>{if(!window.__24K_ACCESS_V1224_READY__)submitPremiumBank(event);});
     document.getElementById('riskForm').addEventListener('submit', acceptRisk);
     document.getElementById('globalSearch').addEventListener('keydown', event => {
       if (event.key !== 'Enter') return;
