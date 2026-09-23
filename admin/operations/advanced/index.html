@@ -1,22 +1,27 @@
 <!doctype html><html lang="en" data-auth-scope="admin" data-theme="light"><head><meta charset="utf-8"><script>(function(){try{var t=localStorage.getItem('24k-excellence-theme');document.documentElement.dataset.theme=t==='dark'?'dark':'light'}catch(e){document.documentElement.dataset.theme='light'}})();</script><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><meta name="theme-color" content="#0A0A0A"><title>Advanced Operations | 24K Excellence</title><link rel="icon" href="/assets/logo.png?v=9.69"><link rel="stylesheet" href="/app.css?v=9.69"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"><link rel="stylesheet" href="/assets/platform-v962.css?v=9.69"><link rel="stylesheet" href="/assets/v969-fixes.css?v=9.70"><link rel="stylesheet" href="/assets/css/v120-admin-operations.css?v=12.28"><link rel="stylesheet" href="/assets/v1214-admin-unified.css?v=12.14"><style>
 #opsLoader{position:fixed;inset:0;z-index:9999}.app-content .ops-nav{display:flex;gap:7px;overflow:auto;padding:0 0 12px;margin:0 0 14px;border-bottom:1px solid #262626}.app-content .ops-nav button{min-width:max-content}.app-content .ops-content{padding:0}.app-content .ops-top{padding:0 0 14px;background:transparent;border:0}.app-content .ops-main{min-width:0}.app-content .ops-view{display:none}.app-content .ops-view.active{display:block}@media(max-width:760px){.app-content .ops-nav{padding-bottom:8px}}
 </style></head><body class="app-page"><div id="opsLoader" class="ops-loading"><div><i class="fa-solid fa-spinner fa-spin"></i><p>Loading Advanced Operations...</p></div></div><div id="opsApp" class="app-shell" hidden><aside class="app-side" id="side"><div class="app-side-brand"><a class="app-logo-home" href="/admin/" aria-label="Open Admin Dashboard"><img src="/assets/logo.png?v=9.69" alt="24K MR ZERO"></a></div><div class="app-side-scroll"><nav class="app-nav">
-<a href="/admin/"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
-<a href="/admin/operations/advanced/?view=finance" data-ops-nav="finance"><i class="fa-solid fa-sack-dollar"></i> Finance & Accounts</a>
-<a href="/admin/students/"><i class="fa-solid fa-users"></i> Users</a>
-<a href="/admin/premium-access/"><i class="fa-solid fa-square-check"></i> Access Approvals</a>
-<a href="/admin-dashboard.html#enrollments"><i class="fa-solid fa-receipt"></i> Payments & Enrollments</a>
-<a href="/admin/courses/"><i class="fa-solid fa-graduation-cap"></i> Courses</a>
-<a href="/admin/payment-methods/"><i class="fa-solid fa-credit-card"></i> Payment Methods</a>
-<a href="/admin/link-manager/"><i class="fa-solid fa-link"></i> Link Manager</a>
-<a href="/admin/team-manager/"><i class="fa-solid fa-people-group"></i> Team Panel Access</a>
-<a href="/admin/mentors/"><i class="fa-solid fa-chalkboard-user"></i> Mentor Management</a>
-<a href="/admin/operations/advanced/?view=ea" data-ops-nav="ea"><i class="fa-solid fa-microchip"></i> EA & Indicator</a>
-<a href="/admin/team-performance/"><i class="fa-solid fa-chart-column"></i> Team Performance</a>
-<a href="/admin/admin-notifications/"><i class="fa-solid fa-bell"></i> Admin Notifications</a>
-<a href="/admin/activity-logs/"><i class="fa-solid fa-clock-rotate-left"></i> Activity Logs</a>
-<a href="/admin/operations/advanced/" data-ops-nav="overview"><i class="fa-solid fa-sliders"></i> Advanced Operations</a>
-</nav></div><div class="app-side-foot"><a href="/"><i class="fa-solid fa-house"></i> Website Home</a><button id="logoutButton"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button></div></aside><main class="app-main"><header class="app-topbar"><button class="app-burger" id="burger"><i class="fa-solid fa-bars"></i></button><div class="app-title"><strong>Admin Command Center</strong><small>24K MR ZERO operations</small></div><div class="app-search"><i class="fa-solid fa-magnifying-glass"></i><input type="search" placeholder="Advanced Operations"></div><a class="app-btn small outline" href="/admin/operations/"><i class="fa-solid fa-arrow-left"></i> Operations</a><button class="app-theme-toggle" type="button" data-theme-toggle><i class="fa-solid fa-sun"></i></button><div class="app-avatar">AD</div></header><div class="app-content"><nav class="ops-nav" id="opsNav">
+      <p class="app-nav-label">OVERVIEW</p>
+      <a href="/admin/"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+      <p class="app-nav-label">CONTENT</p>
+      <a href="/admin/signals/"><i class="fa-solid fa-bolt"></i> Signals</a>
+      <a href="/admin/charts/"><i class="fa-solid fa-chart-line"></i> Charts</a>
+      <a href="/admin/articles/"><i class="fa-solid fa-newspaper"></i> Articles</a>
+      <a href="/admin/announcements/"><i class="fa-solid fa-bullhorn"></i> Announcements</a>
+      <p class="app-nav-label">COURSES</p>
+      <a href="/admin/courses/"><i class="fa-solid fa-graduation-cap"></i> Courses</a>
+      <a href="/admin/zoom-sessions/"><i class="fa-solid fa-video"></i> Zoom Sessions</a>
+      <p class="app-nav-label">MANAGEMENT</p>
+      <a href="/admin/payments/"><i class="fa-solid fa-receipt"></i> Payments</a>
+      <a href="/admin/students/"><i class="fa-solid fa-users"></i> Students</a>
+      <a href="/admin/payment-methods/"><i class="fa-solid fa-building-columns"></i> Payment Methods</a>
+      <a href="/admin/support/"><i class="fa-solid fa-headset"></i> Support</a>
+      <p class="app-nav-label">OPERATIONS</p>
+      <a href="/admin/premium-access/"><i class="fa-solid fa-crown"></i> Premium Access</a>
+      <a href="/admin/link-manager/"><i class="fa-solid fa-link"></i> Link Manager</a>
+      <a href="/admin/admin-notifications/"><i class="fa-solid fa-bell"></i> Admin Notifications</a>
+      <a href="/admin/activity-logs/"><i class="fa-solid fa-clock-rotate-left"></i> Activity Logs</a>
+    </nav></div><div class="app-side-foot"><a href="/"><i class="fa-solid fa-house"></i> Website Home</a><button id="logoutButton"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button></div></aside><main class="app-main"><header class="app-topbar"><button class="app-burger" id="burger"><i class="fa-solid fa-bars"></i></button><div class="app-title"><strong>Admin Command Center</strong><small>24K MR ZERO operations</small></div><div class="app-search"><i class="fa-solid fa-magnifying-glass"></i><input type="search" placeholder="Advanced Operations"></div><a class="app-btn small outline" href="/admin/operations/"><i class="fa-solid fa-arrow-left"></i> Operations</a><button class="app-theme-toggle" type="button" data-theme-toggle><i class="fa-solid fa-sun"></i></button><div class="app-avatar">AD</div></header><div class="app-content"><nav class="ops-nav" id="opsNav">
         <button data-view="overview" class="active"><i class="fa-solid fa-gauge-high"></i><span>Overview</span></button>
         
         <button data-view="enrollments"><i class="fa-solid fa-user-graduate"></i><span>Enrollments</span></button>
