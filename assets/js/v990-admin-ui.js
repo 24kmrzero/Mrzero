@@ -435,7 +435,7 @@
 
   function init(){
     const hasReferenceAdmin=Boolean(document.querySelector('script[src*="v1218-admin-reference.js"]'));
-    if(!hasReferenceAdmin)injectStyles();
+    injectStyles();
     const sidebar=getSidebar();
     if(!hasReferenceAdmin)compactSidebar(sidebar);
     fixLogo(sidebar);
