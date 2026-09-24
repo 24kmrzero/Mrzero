@@ -70,10 +70,6 @@
         p_details: {}
       });
     } catch (error) { console.warn('Activity log skipped:', error?.message || error); }
-    // Deliver any queued transactional emails that belong to this student (welcome, approvals, reminders, etc.).
-    try { await supabase.functions.invoke('process-email-queue', { body: { limit: 10, retry_failed: true } }); }
-    catch (error) { console.warn('Queued email delivery skipped:', error?.message || error); }
-
     const intent = tracking?.context().courseIntent || profile?.pending_course_slug || null;
     if (intent) {
       try {
