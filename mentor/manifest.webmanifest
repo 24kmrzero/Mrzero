@@ -1,0 +1,30 @@
+{
+  "name": "24K MR ZERO — Mentor Panel",
+  "short_name": "24K Mentor",
+  "description": "24K MR ZERO Mentor content and signals panel",
+  "id": "/mentor/",
+  "start_url": "/mentor/",
+  "scope": "/mentor/",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "background_color": "#080b11",
+  "theme_color": "#080b11",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/assets/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
