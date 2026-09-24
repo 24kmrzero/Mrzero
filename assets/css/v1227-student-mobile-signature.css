@@ -1,0 +1,375 @@
+/* 24K MR ZERO — Signature Student Mobile UI v12.27
+   One coherent mobile design system for the entire Student Panel.
+   Exchange-grade information density + 24K premium brand restraint. */
+@media (max-width:760px){
+  body.student-page{
+    --s-bg:#F7F8FA;
+    --s-surface:#FFFFFF;
+    --s-surface-2:#F3F4F6;
+    --s-surface-3:#ECEEF2;
+    --s-text:#0B0E11;
+    --s-text-2:#1E2329;
+    --s-muted:#707A8A;
+    --s-faint:#9AA4B2;
+    --s-gold:#F0B90B;
+    --s-gold-2:#F5C93B;
+    --s-gold-soft:rgba(240,185,11,.10);
+    --s-green:#0ECB81;
+    --s-red:#F6465D;
+    --s-line:#E7E9ED;
+    --s-radius:12px;
+    --s-shadow:0 8px 22px rgba(20,24,31,.055);
+    --s-shadow-float:0 12px 30px rgba(20,24,31,.10);
+    background:
+      radial-gradient(420px 190px at 100% -35px,rgba(240,185,11,.035),transparent 72%),
+      var(--s-bg)!important;
+    color:var(--s-text)!important;
+    -webkit-font-smoothing:antialiased;
+  }
+  html[data-theme="dark"] body.student-page{
+    --s-bg:#0B0E11;
+    --s-surface:#181A20;
+    --s-surface-2:#1E2329;
+    --s-surface-3:#2B3139;
+    --s-text:#F5F5F5;
+    --s-text-2:#EAECEF;
+    --s-muted:#848E9C;
+    --s-faint:#5E6673;
+    --s-gold:#F0B90B;
+    --s-gold-2:#FCD535;
+    --s-gold-soft:rgba(240,185,11,.09);
+    --s-green:#0ECB81;
+    --s-red:#F6465D;
+    --s-line:#2B3139;
+    --s-shadow:0 8px 22px rgba(0,0,0,.18);
+    --s-shadow-float:0 16px 36px rgba(0,0,0,.34);
+    background:
+      radial-gradient(420px 190px at 100% -35px,rgba(240,185,11,.025),transparent 72%),
+      var(--s-bg)!important;
+  }
+
+  /* shell */
+  .student-page .app-content{padding:8px 10px 92px!important;background:transparent!important}
+  .student-page .panel{padding:0!important;animation:sPanelIn .18s ease both}
+  @keyframes sPanelIn{from{opacity:.55;transform:translateY(3px)}to{opacity:1;transform:none}}
+  .student-page *{scrollbar-width:none}
+  .student-page *::-webkit-scrollbar{display:none}
+
+  /* top app bar */
+  .student-page .app-topbar{
+    position:sticky!important;top:0!important;z-index:1200!important;
+    height:56px!important;min-height:56px!important;padding:0 10px!important;gap:8px!important;
+    background:rgba(255,255,255,.96)!important;border-bottom:1px solid var(--s-line)!important;
+    box-shadow:none!important;backdrop-filter:blur(20px) saturate(150%)!important;
+  }
+  html[data-theme="dark"] .student-page .app-topbar{background:rgba(11,14,17,.96)!important}
+  .student-page .app-burger,.student-page .app-theme-toggle,.student-page .app-notify{
+    width:36px!important;height:36px!important;flex:0 0 36px!important;
+    border:1px solid var(--s-line)!important;border-radius:10px!important;
+    background:var(--s-surface)!important;color:var(--s-text)!important;box-shadow:none!important;
+  }
+  .student-page .app-title{display:flex!important;flex-direction:column!important;justify-content:center!important;min-width:0!important;flex:1!important}
+  .student-page .app-title:before{
+    content:"24K MR ZERO";display:block;margin-bottom:2px;color:var(--s-gold);
+    font-size:6.5px;font-weight:950;letter-spacing:.16em;line-height:1;
+  }
+  .student-page .app-title strong{
+    display:block!important;font-size:17px!important;font-weight:900!important;line-height:1!important;
+    letter-spacing:-.035em!important;color:var(--s-text)!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;
+  }
+  .student-page .app-title small,.student-page .top-market-clock,.student-page .market-session-chips,.student-page .app-search,.student-page .app-avatar{display:none!important}
+  .student-page .app-notify{display:grid!important;place-items:center!important}
+  .student-page .app-notify span{
+    min-width:14px!important;height:14px!important;padding:0 3px!important;top:-4px!important;right:-4px!important;
+    border:2px solid var(--s-surface)!important;background:var(--s-red)!important;color:#fff!important;font-size:7px!important;
+  }
+
+  /* page titles */
+  .student-page .panel-heading{margin:4px 2px 10px!important;gap:10px!important}
+  .student-page .panel-heading h1,.student-page .panel-heading h2{
+    margin:0!important;font-size:21px!important;font-weight:900!important;line-height:1.08!important;
+    letter-spacing:-.045em!important;color:var(--s-text)!important;
+  }
+  .student-page .panel-heading p{
+    margin:4px 0 0!important;max-width:330px!important;font-size:9.5px!important;line-height:1.4!important;color:var(--s-muted)!important;
+  }
+
+  /* buttons */
+  .student-page .app-btn{
+    min-height:38px!important;padding:0 12px!important;border-radius:9px!important;
+    font-size:10px!important;font-weight:850!important;box-shadow:none!important;
+  }
+  .student-page .app-btn.gold{border-color:var(--s-gold)!important;background:var(--s-gold)!important;color:#181A20!important}
+  .student-page .app-btn.outline{border:1px solid var(--s-line)!important;background:var(--s-surface)!important;color:var(--s-text)!important}
+  .student-page .app-btn.green{border:0!important;background:rgba(14,203,129,.12)!important;color:#078A58!important}
+  html[data-theme="dark"] .student-page .app-btn.green{color:#19D890!important}
+  .student-page button,.student-page a{-webkit-tap-highlight-color:transparent}
+  .student-page button:active,.student-page .app-btn:active,.student-mobile-nav button:active{transform:scale(.985)!important}
+
+  /* dashboard hero */
+  .student-page .compact-welcome-banner{
+    min-height:0!important;margin:0 0 8px!important;padding:13px!important;gap:8px!important;
+    grid-template-columns:1fr!important;border:1px solid var(--s-line)!important;border-radius:15px!important;
+    background:var(--s-surface)!important;box-shadow:none!important;overflow:hidden!important;
+  }
+  .student-page .compact-welcome-banner::before{display:none!important}
+  .student-page .compact-welcome-banner::after{
+    content:"24K";right:8px!important;bottom:-13px!important;font-size:62px!important;
+    line-height:1!important;font-weight:950!important;color:rgba(240,185,11,.035)!important;letter-spacing:-.08em!important;
+  }
+  .student-page .compact-welcome-copy{padding-left:9px!important;border-left:3px solid var(--s-gold)!important}
+  .student-page .compact-kicker{font-size:7.5px!important;color:var(--s-gold)!important;letter-spacing:.11em!important}
+  .student-page .compact-welcome-copy h1{
+    margin:2px 0!important;font-size:24px!important;line-height:1!important;letter-spacing:-.05em!important;color:var(--s-text)!important
+  }
+  .student-page .compact-welcome-copy p{
+    margin:0!important;font-size:9.5px!important;color:var(--s-muted)!important;
+    white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important
+  }
+  .student-page .compact-welcome-meta{
+    margin-top:7px!important;display:grid!important;grid-template-columns:1fr 1fr 58px!important;gap:5px!important
+  }
+  .student-page .compact-welcome-meta>span{
+    min-height:28px!important;padding:0 6px!important;justify-content:center!important;
+    border:0!important;border-radius:8px!important;background:var(--s-surface-2)!important;
+    color:var(--s-muted)!important;font-size:7.5px!important
+  }
+  .student-page .compact-welcome-meta b{font-size:7.5px!important;color:var(--s-text-2)!important}
+  .student-page .compact-welcome-meta .live-chip{color:var(--s-green)!important;background:rgba(14,203,129,.08)!important}
+  .student-page .market-desk-capsule{display:none!important}
+  .student-page .compact-account-badge{
+    min-height:40px!important;padding:6px 8px!important;grid-template-columns:28px minmax(0,1fr) auto!important;
+    border:0!important;border-radius:10px!important;background:var(--s-surface-2)!important
+  }
+  .student-page .compact-account-badge .account-check{
+    width:28px!important;height:28px!important;border-radius:8px!important;background:var(--s-gold-soft)!important;color:var(--s-gold)!important
+  }
+  .student-page .compact-account-badge b{font-size:9.5px!important;color:var(--s-text-2)!important}
+  .student-page .compact-account-badge small{font-size:7.5px!important;color:var(--s-muted)!important}
+  .student-page .compact-account-badge button{
+    padding:5px 7px!important;border:0!important;border-radius:7px!important;background:var(--s-gold-soft)!important;color:#8A6500!important;font-size:8px!important
+  }
+  html[data-theme="dark"] .student-page .compact-account-badge button{color:var(--s-gold)!important}
+
+  /* dashboard KPI */
+  .student-page .compact-kpi-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important;margin:0 0 8px!important
+  }
+  .student-page .compact-kpi-grid .app-kpi,
+  .student-page .compact-kpi-grid .app-kpi:first-child{
+    min-height:78px!important;padding:10px!important;
+    display:grid!important;grid-template-columns:32px 1fr!important;grid-template-rows:auto 1fr!important;gap:3px 8px!important;
+    border:1px solid var(--s-line)!important;border-radius:12px!important;background:var(--s-surface)!important;box-shadow:none!important
+  }
+  .student-page .compact-kpi-grid .app-kpi:first-child{
+    border-color:rgba(240,185,11,.28)!important;background:linear-gradient(180deg,var(--s-gold-soft),transparent),var(--s-surface)!important
+  }
+  .student-page .compact-kpi-grid .kpi-icon{
+    width:32px!important;height:32px!important;grid-row:1/3!important;border:0!important;border-radius:9px!important;
+    background:var(--s-surface-2)!important;color:var(--s-gold)!important;font-size:13px!important
+  }
+  .student-page .compact-kpi-grid .app-kpi:first-child .kpi-icon{background:var(--s-gold)!important;color:#181A20!important}
+  .student-page .compact-kpi-grid .app-kpi small{font-size:6.8px!important;color:var(--s-muted)!important}
+  .student-page .compact-kpi-grid .app-kpi b{font-size:20px!important;line-height:1!important;color:var(--s-text)!important}
+  .student-page .compact-kpi-grid .app-kpi em{font-size:7.8px!important;line-height:1.2!important;color:var(--s-muted)!important}
+  .student-page .compact-kpi-grid .kpi-spark,.student-page .compact-kpi-grid .dashboard-nav-arrow{display:none!important}
+
+  /* dashboard modules */
+  .student-page .dashboard-compact-grid,.student-page .dashboard-compact-grid.primary-grid,.student-page .dashboard-compact-grid.secondary-grid{
+    grid-template-columns:1fr!important;gap:7px!important;margin:0 0 7px!important
+  }
+  .student-page .compact-dashboard-card{
+    margin:0!important;padding:11px!important;border:1px solid var(--s-line)!important;border-radius:13px!important;
+    background:var(--s-surface)!important;box-shadow:none!important
+  }
+  .student-page .compact-card-head{min-height:0!important;margin-bottom:8px!important;align-items:center!important}
+  .student-page .compact-card-head span{font-size:7px!important;color:var(--s-gold)!important;letter-spacing:.10em!important}
+  .student-page .compact-card-head h3{margin-top:2px!important;font-size:16px!important;color:var(--s-text)!important}
+  .student-page .text-link-btn{font-size:8.5px!important;color:var(--s-gold)!important}
+
+  /* dashboard signal / class / analysis / desk */
+  .student-page .premium-signal-snapshot,.student-page .dashboard-signal-snapshot{
+    border:1px solid var(--s-line)!important;border-radius:11px!important;background:var(--s-surface-2)!important;box-shadow:none!important
+  }
+  .student-page .dash-signal-command{min-height:44px!important;padding:7px 8px!important;border-bottom:1px solid var(--s-line)!important}
+  .student-page .dash-market-icon{width:30px!important;height:30px!important;border:0!important;border-radius:8px!important;background:var(--s-gold-soft)!important;color:var(--s-gold)!important}
+  .student-page .dash-signal-identity b{font-size:13px!important;color:var(--s-text)!important}
+  .student-page .dash-signal-identity small,.student-page .dash-signal-result small{font-size:6px!important;color:var(--s-muted)!important}
+  .student-page .dash-signal-result b{font-size:10px!important}
+  .student-page .dash-signal-note{margin:6px!important;padding:6px 7px!important;border:0!important;border-radius:8px!important;background:var(--s-surface)!important;color:var(--s-muted)!important;font-size:8px!important}
+  .student-page .dash-signal-levels{margin:0 6px 6px!important;grid-template-columns:1.2fr 1fr 1fr!important;gap:5px!important}
+  .student-page .dash-signal-levels span{min-height:42px!important;padding:7px!important;border:0!important;border-radius:8px!important;background:var(--s-surface)!important}
+  .student-page .dash-signal-levels span:first-child{grid-column:1/-1!important}
+  .student-page .dash-signal-levels small{font-size:6px!important;color:var(--s-muted)!important}
+  .student-page .dash-signal-levels b{font-size:11px!important;color:var(--s-text)!important}
+  .student-page .dash-signal-foot{min-height:29px!important;padding:6px 8px!important;border-top:1px solid var(--s-line)!important}
+  .student-page .dash-signal-foot small,.student-page .dash-signal-foot>span{font-size:7px!important}
+
+  .student-page .live-learning-card .dashboard-empty-compact,.student-page .dashboard-empty-compact,.student-page .premium-empty-state{
+    min-height:78px!important;padding:10px!important;border-radius:10px!important;background:var(--s-surface-2)!important
+  }
+  .student-page .dashboard-empty-compact>span{width:30px!important;height:30px!important;border:0!important;border-radius:8px!important;background:var(--s-gold-soft)!important;color:var(--s-gold)!important;font-size:12px!important}
+  .student-page .dashboard-empty-compact b{font-size:10.5px!important;color:var(--s-text)!important}
+  .student-page .dashboard-empty-compact small{font-size:8px!important;color:var(--s-muted)!important}
+
+  .student-page .analysis-mini-row{min-height:58px!important;padding:7px!important;grid-template-columns:60px minmax(0,1fr) 22px!important;gap:8px!important;border:0!important;border-radius:10px!important;background:var(--s-surface-2)!important}
+  .student-page .analysis-thumb{width:60px!important;height:40px!important;border-radius:8px!important}
+  .student-page .analysis-mini-copy b{font-size:10.5px!important;color:var(--s-text)!important}
+  .student-page .analysis-mini-copy small{font-size:8px!important;color:var(--s-muted)!important}
+  .student-page .analysis-mini-copy em{font-size:7px!important;color:var(--s-muted)!important}
+
+  .student-page .member-desk-shell{gap:6px!important}
+  .student-page .member-desk-access{min-height:54px!important;padding:8px!important;border:1px solid rgba(240,185,11,.22)!important;border-radius:10px!important;background:linear-gradient(180deg,var(--s-gold-soft),transparent),var(--s-surface)!important}
+  .student-page .desk-crown{width:32px!important;height:32px!important;border-radius:9px!important;background:var(--s-gold)!important;color:#181A20!important}
+  .student-page .member-desk-access small{font-size:6.5px!important;color:var(--s-muted)!important}
+  .student-page .member-desk-access b{font-size:10.5px!important;color:var(--s-text)!important}
+  .student-page .member-desk-access em{font-size:7.5px!important;color:var(--s-muted)!important}
+  .student-page .member-desk-metrics{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:5px!important}
+  .student-page .member-desk-metrics button{min-height:64px!important;padding:8px!important;border:1px solid var(--s-line)!important;border-radius:10px!important;background:var(--s-surface-2)!important;box-shadow:none!important}
+  .student-page .desk-metric-icon{width:27px!important;height:27px!important;border-radius:8px!important;background:var(--s-gold-soft)!important;color:var(--s-gold)!important}
+  .student-page .member-desk-metrics small{font-size:6.5px!important;color:var(--s-muted)!important}
+  .student-page .member-desk-metrics b{font-size:9px!important;color:var(--s-text)!important}
+  .student-page .member-desk-metrics em{font-size:7px!important;color:var(--s-muted)!important}
+  .student-page .member-desk-footer{font-size:7.5px!important;color:var(--s-muted)!important}
+
+  /* signals page */
+  .student-page #p-signals .signal-summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important;margin:0 0 8px!important}
+  .student-page #p-signals .signal-summary-card{min-height:76px!important;padding:10px!important;border:1px solid var(--s-line)!important;border-radius:12px!important;background:var(--s-surface)!important;box-shadow:none!important}
+  .student-page #p-signals .signal-summary-icon{width:32px!important;height:32px!important;flex:0 0 32px!important;border-radius:9px!important}
+  .student-page #p-signals .signal-summary-card b{font-size:19px!important;color:var(--s-text)!important}
+  .student-page #p-signals .signal-summary-card strong{font-size:8.5px!important;color:var(--s-text-2)!important}
+  .student-page #p-signals .signal-summary-card small{font-size:7.5px!important;color:var(--s-muted)!important}
+
+  .student-page .compact-history-card{overflow:visible!important;border:0!important;background:transparent!important;box-shadow:none!important}
+  .student-page .signal-workspace-switch{display:grid!important;grid-template-columns:1fr 1fr!important;gap:4px!important;padding:4px!important;margin:0 0 7px!important;border:1px solid var(--s-line)!important;border-radius:10px!important;background:var(--s-surface)!important}
+  .student-page .signal-workspace-switch button{min-width:0!important;min-height:36px!important;padding:0 10px!important;border:0!important;border-radius:7px!important;background:transparent!important;color:var(--s-muted)!important;font-size:10px!important}
+  .student-page .signal-workspace-switch button.active{background:var(--s-gold-soft)!important;color:var(--s-gold)!important;box-shadow:none!important}
+
+  .student-page .signal-history-filters{display:grid!important;gap:8px!important;padding:10px!important;margin:0 0 7px!important;border:1px solid var(--s-line)!important;border-radius:10px!important;background:var(--s-surface)!important}
+  .student-page .history-filter-group{gap:5px!important}
+  .student-page .history-filter-group>small{font-size:7px!important;color:var(--s-muted)!important}
+  .student-page .history-pill-row{display:flex!important;gap:5px!important;overflow-x:auto!important}
+  .student-page .history-pill-row button{flex:0 0 auto!important;min-height:32px!important;padding:0 10px!important;border:1px solid var(--s-line)!important;border-radius:8px!important;background:var(--s-surface-2)!important;color:var(--s-muted)!important;font-size:8.5px!important}
+  .student-page .history-pill-row button.active{border-color:rgba(240,185,11,.28)!important;background:var(--s-gold-soft)!important;color:var(--s-gold)!important}
+
+  .student-page .signal-table-scroll{overflow:visible!important;background:transparent!important}
+  .student-page .premium-signal-table{display:block!important;min-width:0!important;width:100%!important;border:0!important;background:transparent!important}
+  .student-page .premium-signal-table thead{display:none!important}
+  .student-page .premium-signal-table tbody{display:grid!important;gap:7px!important}
+  .student-page .premium-signal-table tr{
+    position:relative!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:7px 6px!important;padding:10px!important;border:1px solid var(--s-line)!important;border-radius:12px!important;background:var(--s-surface)!important
+  }
+  .student-page .premium-signal-table td{display:block!important;min-width:0!important;padding:0!important;border:0!important;background:transparent!important;color:var(--s-text-2)!important;font-size:10px!important}
+  .student-page .premium-signal-table td::before{display:block!important;margin-bottom:3px!important;color:var(--s-faint)!important;font-size:6.5px!important;font-weight:850!important;letter-spacing:.06em!important;text-transform:uppercase!important}
+  .student-page .premium-signal-table td:nth-child(1)::before{content:"Time"}
+  .student-page .premium-signal-table td:nth-child(2)::before{content:"Date"}
+  .student-page .premium-signal-table td:nth-child(3)::before{content:"Instrument"}
+  .student-page .premium-signal-table td:nth-child(4)::before{content:"Type"}
+  .student-page .premium-signal-table td:nth-child(5)::before{content:"Entry"}
+  .student-page .premium-signal-table td:nth-child(6)::before{content:"SL"}
+  .student-page .premium-signal-table td:nth-child(7)::before{content:"TP1"}
+  .student-page .premium-signal-table td:nth-child(8)::before{content:"TP2"}
+  .student-page .premium-signal-table td:nth-child(9)::before{content:"TP3"}
+  .student-page .premium-signal-table td:nth-child(10)::before{content:"Pips"}
+  .student-page .premium-signal-table td:nth-child(11)::before{display:none!important}
+  .student-page .premium-signal-table td:nth-child(3){grid-column:1/3!important}
+  .student-page .premium-signal-table td:nth-child(11){position:absolute!important;right:10px!important;top:10px!important}
+  .student-page .instrument-cell{gap:7px!important}.student-page .instrument-badge{width:30px!important;height:30px!important;border-radius:8px!important}
+  .student-page .instrument-cell b{font-size:11px!important}.student-page .instrument-cell small{font-size:7px!important;color:var(--s-muted)!important}
+  .student-page .table-direction,.student-page .signal-table-status{font-size:8px!important;border-radius:7px!important;padding:5px 7px!important}
+  .student-page .signal-table-footer{padding:8px 2px!important;font-size:8px!important;color:var(--s-muted)!important}
+  .student-page .signal-table-empty{min-height:140px!important;border:1px solid var(--s-line)!important;border-radius:12px!important;background:var(--s-surface)!important}
+
+  /* charts + articles */
+  .student-page #p-charts .filter-row,.student-page #p-articles .filter-row{display:grid!important;grid-template-columns:1fr!important;gap:6px!important;margin:0 0 8px!important}
+  .student-page .filter-row input,.student-page .filter-row select{
+    width:100%!important;min-height:42px!important;padding:0 12px!important;border:1px solid var(--s-line)!important;border-radius:10px!important;background:var(--s-surface)!important;color:var(--s-text)!important;font-size:11px!important;box-shadow:none!important
+  }
+  .student-page .content-grid{display:grid!important;grid-template-columns:1fr!important;gap:8px!important}
+  .student-page .compact-media-card,.student-page .content-card{max-width:none!important;width:100%!important;overflow:hidden!important;border:1px solid var(--s-line)!important;border-radius:13px!important;background:var(--s-surface)!important;box-shadow:none!important}
+  .student-page .media-thumb-16x9,.student-page .content-cover{aspect-ratio:16/8.2!important;min-height:0!important;border-radius:0!important;background:var(--s-surface-2)!important}
+  .student-page .content-body{padding:11px!important}.student-page .content-meta-strong,.student-page .course-meta{gap:5px!important;margin-bottom:7px!important}
+  .student-page .content-meta-strong span,.student-page .course-meta span{min-height:24px!important;padding:0 7px!important;border:0!important;border-radius:7px!important;background:var(--s-surface-2)!important;color:var(--s-muted)!important;font-size:7.5px!important}
+  .student-page .content-body h3{margin:0 0 5px!important;font-size:16px!important;line-height:1.18!important;color:var(--s-text)!important}
+  .student-page .content-body p{margin:0 0 9px!important;font-size:9.5px!important;line-height:1.45!important;color:var(--s-muted)!important;-webkit-line-clamp:2!important}
+  .student-page .card-actions{display:flex!important;gap:6px!important;flex-wrap:wrap!important}
+
+  /* courses */
+  .student-page .course-filter-tabs{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:4px!important;padding:4px!important;margin:0 0 8px!important;border:1px solid var(--s-line)!important;border-radius:10px!important;background:var(--s-surface)!important}
+  .student-page .course-filter-tabs button{min-height:34px!important;border:0!important;border-radius:7px!important;background:transparent!important;color:var(--s-muted)!important;font-size:9px!important;font-weight:800!important}
+  .student-page .course-filter-tabs button.active{background:var(--s-gold-soft)!important;color:var(--s-gold)!important}
+  .student-page .course-list-grid,.student-page .session-grid{display:grid!important;grid-template-columns:1fr!important;gap:8px!important}
+  .student-page .course-card,.student-page .session-card{overflow:hidden!important;border:1px solid var(--s-line)!important;border-radius:13px!important;background:var(--s-surface)!important;box-shadow:none!important}
+  .student-page .course-cover{aspect-ratio:16/7.8!important;background:var(--s-surface-2)!important}
+  .student-page .course-body{padding:11px!important}.student-page .course-body h3{margin:0 0 5px!important;font-size:16px!important;line-height:1.15!important;color:var(--s-text)!important}
+  .student-page .course-body>p{margin:0 0 8px!important;font-size:9.5px!important;line-height:1.4!important;color:var(--s-muted)!important}
+  .student-page .course-next-class{padding:9px!important;margin:8px 0!important;border:0!important;border-radius:9px!important;background:var(--s-surface-2)!important}
+  .student-page .course-next-class small{font-size:7px!important;color:var(--s-gold)!important}.student-page .course-next-class b{font-size:10px!important;color:var(--s-text)!important}.student-page .course-next-class span{font-size:8px!important;color:var(--s-muted)!important}
+  .student-page .notice{padding:9px!important;border-radius:9px!important;font-size:8.5px!important;line-height:1.35!important}
+  .student-page .course-actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:6px!important}.student-page .course-actions .app-btn:only-child{grid-column:1/-1!important}
+  .student-page #sessionsArea{margin-top:8px!important}.student-page #sessionsArea .panel-heading{align-items:flex-start!important;flex-direction:column!important}
+  .student-page .session-top{padding:9px 10px!important;border-bottom:1px solid var(--s-line)!important;background:var(--s-surface-2)!important}
+  .student-page .session-body{padding:10px!important}.student-page .session-body h3{font-size:14px!important;color:var(--s-text)!important}.student-page .session-body p{font-size:9px!important;color:var(--s-muted)!important}
+  .student-page .session-date{display:grid!important;grid-template-columns:1fr!important;gap:5px!important;font-size:8px!important}.student-page .session-date span,.student-page .session-community-note{padding:7px 8px!important;border:0!important;border-radius:8px!important;background:var(--s-surface-2)!important}
+
+  /* announcements */
+  .student-page #announcementsList{display:grid!important;gap:7px!important}
+  .student-page .announcement{position:relative!important;padding:11px 12px 11px 15px!important;border:1px solid var(--s-line)!important;border-radius:12px!important;background:var(--s-surface)!important;box-shadow:none!important}
+  .student-page .announcement::before{content:""!important;position:absolute!important;left:0!important;top:10px!important;bottom:10px!important;width:3px!important;border-radius:0 3px 3px 0!important;background:#68717D!important}
+  .student-page .announcement.important::before{background:var(--s-gold)!important}
+  .student-page .announcement h4{margin:0 0 5px!important;font-size:13px!important;color:var(--s-text)!important}.student-page .announcement p{margin:0 0 7px!important;font-size:9px!important;line-height:1.45!important;color:var(--s-muted)!important}.student-page .announcement small{font-size:7.5px!important;color:var(--s-muted)!important}
+
+  /* profile */
+  .student-page .profile-compact-shell{display:grid!important;grid-template-columns:1fr!important;gap:8px!important}
+  .student-page .account-access-card,.student-page .personal-info-card{padding:0!important;overflow:hidden!important;border:1px solid var(--s-line)!important;border-radius:13px!important;background:var(--s-surface)!important;box-shadow:none!important}
+  .student-page .account-access-row{display:grid!important;grid-template-columns:34px minmax(0,1fr)!important;gap:9px!important;align-items:center!important;min-height:66px!important;padding:10px!important;border-bottom:1px solid var(--s-line)!important}
+  .student-page .account-access-row:last-child{border-bottom:0!important}
+  .student-page .account-row-icon{width:34px!important;height:34px!important;border-radius:9px!important;background:var(--s-surface-2)!important;color:var(--s-gold)!important;font-size:13px!important}
+  .student-page .account-row-copy h3{margin:0!important;font-size:11px!important;color:var(--s-text)!important}.student-page .account-row-copy p{margin:3px 0 0!important;font-size:8px!important;line-height:1.3!important;color:var(--s-muted)!important}
+  .student-page .account-row-side{grid-column:1/-1!important;display:flex!important;justify-content:flex-end!important;align-items:center!important;gap:6px!important;margin-top:2px!important;padding-left:0!important}
+  .student-page .compact-access-state{font-size:7.5px!important}
+  .student-page .personal-info-card>.app-card-head{padding:11px 11px 0!important}.student-page .personal-info-card form{padding:11px!important}
+  .student-page .app-card-head h3{font-size:13px!important;color:var(--s-text)!important}.student-page .app-card-head p{font-size:8px!important;color:var(--s-muted)!important}
+  .student-page .form-grid{display:grid!important;grid-template-columns:1fr!important;gap:8px!important}.student-page .form-field.full{grid-column:auto!important}
+  .student-page .form-field label{margin-bottom:5px!important;font-size:8px!important;color:var(--s-muted)!important}
+  .student-page .form-field input,.student-page .form-field select,.student-page .form-field textarea{min-height:42px!important;width:100%!important;border:1px solid var(--s-line)!important;border-radius:9px!important;background:var(--s-surface-2)!important;color:var(--s-text)!important;font-size:11px!important;box-shadow:none!important}
+  .student-page .form-field textarea{min-height:90px!important}.student-page .inline-actions{margin-top:9px!important}.student-page .inline-actions .app-btn{width:100%!important}
+  .student-page .premium-history-details{overflow:hidden!important;border:1px solid var(--s-line)!important;border-radius:12px!important;background:var(--s-surface)!important}
+  .student-page .premium-history-details summary{min-height:52px!important;padding:10px 11px!important;font-size:10px!important;color:var(--s-text)!important}.student-page .premium-history-details summary small{display:block!important;margin-top:2px!important;font-size:7px!important;color:var(--s-muted)!important}
+
+  /* sidebar */
+  .student-page .app-sidebar{width:min(86vw,330px)!important;border-right:1px solid var(--s-line)!important;background:var(--s-surface)!important;box-shadow:20px 0 50px rgba(0,0,0,.18)!important}
+  .student-page .app-side-head,.student-page .app-side-foot{border-color:var(--s-line)!important}
+  .student-page .app-side-nav a,.student-page .app-side-nav button{min-height:44px!important;border-radius:9px!important;font-size:12px!important;color:var(--s-muted)!important}
+  .student-page .app-side-nav .active,.student-page .app-side-nav [aria-current="page"]{background:var(--s-gold-soft)!important;color:var(--s-gold)!important}
+
+  /* modals -> bottom sheets */
+  .student-page .app-modal{align-items:flex-end!important;padding:0!important;background:rgba(0,0,0,.52)!important}
+  .student-page .app-modal-card,.student-page .app-modal-card.large{width:100%!important;max-width:none!important;max-height:88dvh!important;margin:0!important;border:1px solid var(--s-line)!important;border-bottom:0!important;border-radius:18px 18px 0 0!important;background:var(--s-surface)!important;box-shadow:0 -18px 50px rgba(0,0,0,.22)!important}
+  .student-page .app-modal-head{position:sticky!important;top:0!important;z-index:2!important;min-height:58px!important;padding:12px!important;border-bottom:1px solid var(--s-line)!important;background:var(--s-surface)!important}
+  .student-page .app-modal-head h3{font-size:16px!important;color:var(--s-text)!important}.student-page .app-modal-head small{font-size:8px!important;color:var(--s-muted)!important}
+  .student-page .modal-close{width:34px!important;height:34px!important;border:1px solid var(--s-line)!important;border-radius:9px!important;background:var(--s-surface-2)!important;color:var(--s-text)!important}
+  .student-page .app-modal-body{padding:12px!important}.student-page .app-modal-foot{position:sticky!important;bottom:0!important;padding:10px 12px calc(10px + env(safe-area-inset-bottom))!important;border-top:1px solid var(--s-line)!important;background:var(--s-surface)!important}
+  .student-page .access-step-title{margin:5px 0!important;font-size:15px!important;color:var(--s-text)!important}.student-page .access-step-copy{margin:0 0 10px!important;font-size:9px!important;color:var(--s-muted)!important}
+  .student-page .access-choice-grid,.student-page .access-method-grid,.student-page .access-broker-grid{display:grid!important;grid-template-columns:1fr!important;gap:7px!important}
+  .student-page .access-choice-card,.student-page .access-method-card,.student-page .access-broker-card{min-height:64px!important;padding:10px!important;border:1px solid var(--s-line)!important;border-radius:11px!important;background:var(--s-surface-2)!important;color:var(--s-text)!important;box-shadow:none!important}
+  .student-page .access-choice-card.is-active,.student-page .access-method-card.is-active,.student-page .access-broker-card.is-active{border-color:rgba(240,185,11,.35)!important;background:var(--s-gold-soft)!important}
+  .student-page .access-link-box,.student-page .ib-instruction-box{margin-top:8px!important;padding:9px!important;border:1px solid var(--s-line)!important;border-radius:9px!important;background:var(--s-surface-2)!important;color:var(--s-muted)!important;font-size:8.5px!important}
+
+  /* bottom nav */
+  .student-mobile-nav{
+    z-index:1800!important;height:60px!important;padding:5px!important;
+    bottom:calc(6px + env(safe-area-inset-bottom))!important;border:1px solid var(--s-line)!important;border-radius:16px!important;
+    background:rgba(255,255,255,.97)!important;box-shadow:var(--s-shadow-float)!important;backdrop-filter:blur(20px) saturate(150%)!important
+  }
+  html[data-theme="dark"] .student-mobile-nav{background:rgba(24,26,32,.97)!important}
+  .student-mobile-nav button{height:48px!important;border-radius:10px!important;gap:2px!important;font-size:8.5px!important;font-weight:750!important;color:var(--s-muted)!important}
+  .student-mobile-nav button i{font-size:14px!important}
+  .student-mobile-nav button.is-active{background:var(--s-gold-soft)!important;color:var(--s-gold)!important;box-shadow:none!important}
+}
+
+@media(max-width:390px){
+  .student-page .compact-welcome-copy h1{font-size:22px!important}
+  .student-page .compact-welcome-meta{grid-template-columns:1fr 1fr 52px!important}
+}
