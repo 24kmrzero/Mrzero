@@ -1,0 +1,254 @@
+/* 24K MR ZERO — Ultra Premium Student Mobile UI v12.26
+   Full student panel. Cleaner exchange-grade hierarchy, tighter rhythm, refined interaction. */
+@media (max-width:760px){
+  body.student-page{
+    --pro-bg:#F7F8FA;
+    --pro-surface:#FFFFFF;
+    --pro-surface-2:#F3F4F6;
+    --pro-surface-3:#ECEEF2;
+    --pro-ink:#0B0E11;
+    --pro-text:#1E2329;
+    --pro-muted:#707A8A;
+    --pro-faint:#9AA4B2;
+    --pro-gold:#F0B90B;
+    --pro-gold-soft:rgba(240,185,11,.10);
+    --pro-green:#0ECB81;
+    --pro-red:#F6465D;
+    --pro-line:#E6E8EC;
+    --pro-radius:14px;
+    background:
+      radial-gradient(420px 190px at 100% -30px,rgba(240,185,11,.035),transparent 70%),
+      var(--pro-bg)!important;
+    color:var(--pro-ink)!important;
+  }
+  html[data-theme="dark"] body.student-page{
+    --pro-bg:#0B0E11;
+    --pro-surface:#181A20;
+    --pro-surface-2:#1E2329;
+    --pro-surface-3:#2B3139;
+    --pro-ink:#F5F5F5;
+    --pro-text:#EAECEF;
+    --pro-muted:#848E9C;
+    --pro-faint:#5E6673;
+    --pro-gold:#F0B90B;
+    --pro-gold-soft:rgba(240,185,11,.09);
+    --pro-green:#0ECB81;
+    --pro-red:#F6465D;
+    --pro-line:#2B3139;
+    background:
+      radial-gradient(420px 190px at 100% -30px,rgba(240,185,11,.025),transparent 70%),
+      var(--pro-bg)!important;
+  }
+
+  /* global rhythm */
+  .student-page .app-content{padding:8px 10px 90px!important}
+  .student-page .panel{animation:proPanelIn .18s ease both}
+  @keyframes proPanelIn{from{opacity:.3;transform:translateY(4px)}to{opacity:1;transform:none}}
+  .student-page *{scrollbar-width:none}
+  .student-page *::-webkit-scrollbar{display:none}
+
+  /* top app bar */
+  .student-page .app-topbar{
+    height:56px!important;min-height:56px!important;
+    padding:0 10px!important;gap:8px!important;
+    background:color-mix(in srgb,var(--pro-surface) 94%,transparent)!important;
+    border-bottom:1px solid var(--pro-line)!important;
+    box-shadow:none!important;
+    backdrop-filter:blur(20px) saturate(150%)!important;
+  }
+  .student-page .app-title:before{
+    content:"24K MR ZERO"!important;
+    font-size:6.5px!important;
+    letter-spacing:.16em!important;
+    color:var(--pro-gold)!important;
+  }
+  .student-page .app-title strong{
+    font-size:17px!important;font-weight:900!important;
+    color:var(--pro-ink)!important;
+  }
+  .student-page .app-burger,.student-page .app-theme-toggle{
+    width:36px!important;height:36px!important;flex:0 0 36px!important;
+    border:1px solid var(--pro-line)!important;border-radius:10px!important;
+    background:var(--pro-surface)!important;color:var(--pro-ink)!important;
+    box-shadow:none!important;
+  }
+
+  /* universal headings */
+  .student-page .panel-heading{margin:4px 2px 10px!important}
+  .student-page .panel-heading h1,.student-page .panel-heading h2{
+    font-size:21px!important;font-weight:900!important;letter-spacing:-.04em!important;color:var(--pro-ink)!important
+  }
+  .student-page .panel-heading p{
+    margin-top:4px!important;font-size:9.5px!important;line-height:1.4!important;color:var(--pro-muted)!important
+  }
+
+  /* dashboard */
+  .student-page .compact-welcome-banner{
+    margin:0 0 8px!important;padding:13px!important;gap:8px!important;
+    border:1px solid var(--pro-line)!important;border-radius:16px!important;
+    background:var(--pro-surface)!important;box-shadow:none!important;
+  }
+  .student-page .compact-welcome-banner::before{display:none!important}
+  .student-page .compact-welcome-banner::after{
+    content:"24K"!important;right:8px!important;bottom:-13px!important;
+    font-size:62px!important;color:rgba(240,185,11,.03)!important;
+  }
+  .student-page .compact-welcome-copy{border-left:3px solid var(--pro-gold)!important;padding-left:9px!important}
+  .student-page .compact-kicker{font-size:7.5px!important;color:var(--pro-gold)!important}
+  .student-page .compact-welcome-copy h1{
+    margin:2px 0!important;font-size:24px!important;letter-spacing:-.045em!important;color:var(--pro-ink)!important
+  }
+  .student-page .compact-welcome-copy p{
+    font-size:9.5px!important;color:var(--pro-muted)!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important
+  }
+  .student-page .compact-welcome-meta{
+    margin-top:7px!important;display:grid!important;grid-template-columns:1fr 1fr 58px!important;gap:5px!important
+  }
+  .student-page .compact-welcome-meta>span{
+    min-height:28px!important;padding:0 6px!important;
+    border:0!important;border-radius:8px!important;
+    background:var(--pro-surface-2)!important;color:var(--pro-muted)!important;font-size:7.5px!important
+  }
+  .student-page .compact-welcome-meta b{font-size:7.5px!important;color:var(--pro-text)!important}
+  .student-page .compact-welcome-meta .live-chip{color:var(--pro-green)!important;background:rgba(14,203,129,.08)!important}
+
+  .student-page .compact-account-badge{
+    min-height:40px!important;padding:6px 8px!important;
+    border:0!important;border-radius:10px!important;background:var(--pro-surface-2)!important
+  }
+  .student-page .compact-account-badge .account-check{
+    width:28px!important;height:28px!important;border-radius:8px!important;background:var(--pro-gold-soft)!important;color:var(--pro-gold)!important
+  }
+  .student-page .compact-account-badge b{font-size:9.5px!important;color:var(--pro-text)!important}
+  .student-page .compact-account-badge small{font-size:7.5px!important;color:var(--pro-muted)!important}
+
+  .student-page .compact-kpi-grid{gap:6px!important;margin:0 0 8px!important}
+  .student-page .compact-kpi-grid .app-kpi,
+  .student-page .compact-kpi-grid .app-kpi:first-child{
+    min-height:78px!important;padding:10px!important;
+    border:1px solid var(--pro-line)!important;border-radius:12px!important;
+    background:var(--pro-surface)!important;box-shadow:none!important;
+  }
+  .student-page .compact-kpi-grid .app-kpi:first-child{
+    border-color:rgba(240,185,11,.28)!important;background:linear-gradient(180deg,var(--pro-gold-soft),transparent),var(--pro-surface)!important
+  }
+  .student-page .compact-kpi-grid .kpi-icon{
+    width:32px!important;height:32px!important;border:0!important;border-radius:9px!important;
+    background:var(--pro-surface-2)!important;color:var(--pro-gold)!important
+  }
+  .student-page .compact-kpi-grid .app-kpi:first-child .kpi-icon{background:var(--pro-gold)!important;color:#181A20!important}
+  .student-page .compact-kpi-grid .app-kpi small{font-size:6.8px!important;color:var(--pro-muted)!important}
+  .student-page .compact-kpi-grid .app-kpi b{font-size:20px!important;color:var(--pro-ink)!important}
+  .student-page .compact-kpi-grid .app-kpi em{font-size:7.8px!important;color:var(--pro-muted)!important}
+
+  .student-page .compact-dashboard-card{
+    padding:11px!important;border:1px solid var(--pro-line)!important;border-radius:13px!important;
+    background:var(--pro-surface)!important;box-shadow:none!important;
+  }
+  .student-page .compact-card-head span{font-size:7px!important;color:var(--pro-gold)!important}
+  .student-page .compact-card-head h3{font-size:16px!important;color:var(--pro-ink)!important}
+  .student-page .text-link-btn{font-size:8.5px!important;color:var(--pro-gold)!important}
+
+  /* signals */
+  .student-page #p-signals .signal-summary-grid{gap:6px!important;margin-bottom:8px!important}
+  .student-page #p-signals .signal-summary-card{
+    min-height:76px!important;padding:10px!important;border:1px solid var(--pro-line)!important;border-radius:12px!important;
+    background:var(--pro-surface)!important;box-shadow:none!important;
+  }
+  .student-page #p-signals .signal-summary-card b{font-size:19px!important;color:var(--pro-ink)!important}
+  .student-page #p-signals .signal-summary-card strong{font-size:8.5px!important;color:var(--pro-text)!important}
+  .student-page #p-signals .signal-summary-card small{font-size:7.5px!important;color:var(--pro-muted)!important}
+
+  .student-page .signal-workspace-switch{
+    padding:4px!important;margin-bottom:7px!important;border:1px solid var(--pro-line)!important;border-radius:10px!important;background:var(--pro-surface)!important
+  }
+  .student-page .signal-workspace-switch button{
+    min-height:36px!important;border:0!important;border-radius:7px!important;background:transparent!important;color:var(--pro-muted)!important;font-size:10px!important
+  }
+  .student-page .signal-workspace-switch button.active{background:var(--pro-gold-soft)!important;color:var(--pro-gold)!important}
+
+  .student-page .premium-signal-table tr{
+    padding:10px!important;border:1px solid var(--pro-line)!important;border-radius:12px!important;background:var(--pro-surface)!important
+  }
+  .student-page .premium-signal-table td{color:var(--pro-text)!important}
+  .student-page .premium-signal-table td::before{color:var(--pro-faint)!important}
+  .student-page .instrument-cell small{color:var(--pro-muted)!important}
+
+  /* charts/articles */
+  .student-page .filter-row input,.student-page .filter-row select{
+    min-height:42px!important;border:1px solid var(--pro-line)!important;border-radius:10px!important;background:var(--pro-surface)!important;color:var(--pro-ink)!important
+  }
+  .student-page .content-card,.student-page .compact-media-card{
+    border:1px solid var(--pro-line)!important;border-radius:13px!important;background:var(--pro-surface)!important;box-shadow:none!important
+  }
+  .student-page .media-thumb-16x9,.student-page .content-cover{background:var(--pro-surface-2)!important}
+  .student-page .content-meta-strong span,.student-page .course-meta span{
+    border:0!important;background:var(--pro-surface-2)!important;color:var(--pro-muted)!important
+  }
+  .student-page .content-body h3{color:var(--pro-ink)!important}
+  .student-page .content-body p{color:var(--pro-muted)!important}
+
+  /* courses */
+  .student-page .course-filter-tabs{
+    border:1px solid var(--pro-line)!important;border-radius:10px!important;background:var(--pro-surface)!important
+  }
+  .student-page .course-filter-tabs button{color:var(--pro-muted)!important}
+  .student-page .course-filter-tabs button.active{background:var(--pro-gold-soft)!important;color:var(--pro-gold)!important}
+  .student-page .course-card,.student-page .session-card{
+    border:1px solid var(--pro-line)!important;border-radius:13px!important;background:var(--pro-surface)!important;box-shadow:none!important
+  }
+  .student-page .course-next-class,.student-page .session-date span,.student-page .session-community-note{
+    border:0!important;background:var(--pro-surface-2)!important
+  }
+
+  /* profile/account */
+  .student-page .account-access-card,.student-page .personal-info-card{
+    border:1px solid var(--pro-line)!important;border-radius:13px!important;background:var(--pro-surface)!important;box-shadow:none!important
+  }
+  .student-page .account-access-row{border-color:var(--pro-line)!important}
+  .student-page .account-row-icon{background:var(--pro-surface-2)!important;color:var(--pro-gold)!important}
+  .student-page .account-row-copy h3{color:var(--pro-ink)!important}
+  .student-page .account-row-copy p{color:var(--pro-muted)!important}
+  .student-page .form-field input,.student-page .form-field select,.student-page .form-field textarea{
+    border:1px solid var(--pro-line)!important;background:var(--pro-surface-2)!important;color:var(--pro-ink)!important
+  }
+
+  /* announcements */
+  .student-page .announcement{
+    border:1px solid var(--pro-line)!important;border-radius:12px!important;background:var(--pro-surface)!important;box-shadow:none!important
+  }
+  .student-page .announcement h4{color:var(--pro-ink)!important}
+  .student-page .announcement p,.student-page .announcement small{color:var(--pro-muted)!important}
+
+  /* modal bottom sheets */
+  .student-page .app-modal-card,.student-page .app-modal-card.large{
+    border:1px solid var(--pro-line)!important;border-bottom:0!important;background:var(--pro-surface)!important;
+    box-shadow:0 -14px 34px rgba(0,0,0,.18)!important
+  }
+  .student-page .app-modal-head,.student-page .app-modal-foot{background:var(--pro-surface)!important;border-color:var(--pro-line)!important}
+  .student-page .app-modal-head h3{color:var(--pro-ink)!important}
+  .student-page .app-modal-head small{color:var(--pro-muted)!important}
+  .student-page .access-choice-card,.student-page .access-method-card,.student-page .access-broker-card,
+  .student-page .access-link-box,.student-page .ib-instruction-box{
+    border:1px solid var(--pro-line)!important;background:var(--pro-surface-2)!important;color:var(--pro-text)!important
+  }
+
+  /* buttons */
+  .student-page .app-btn{border-radius:9px!important;box-shadow:none!important}
+  .student-page .app-btn.gold{background:var(--pro-gold)!important;border-color:var(--pro-gold)!important;color:#181A20!important}
+  .student-page .app-btn.outline{background:var(--pro-surface)!important;border-color:var(--pro-line)!important;color:var(--pro-ink)!important}
+  .student-page button:active,.student-mobile-nav button:active{transform:scale(.985)!important}
+
+  /* bottom dock */
+  .student-mobile-nav{
+    height:60px!important;padding:5px!important;
+    bottom:calc(6px + env(safe-area-inset-bottom))!important;
+    border:1px solid var(--pro-line)!important;border-radius:16px!important;
+    background:color-mix(in srgb,var(--pro-surface) 96%,transparent)!important;
+    box-shadow:0 8px 20px rgba(0,0,0,.08)!important;
+    backdrop-filter:blur(20px) saturate(150%)!important;
+  }
+  html[data-theme="dark"] .student-mobile-nav{box-shadow:0 12px 26px rgba(0,0,0,.28)!important}
+  .student-mobile-nav button{color:var(--pro-muted)!important}
+  .student-mobile-nav button.is-active{background:var(--pro-gold-soft)!important;color:var(--pro-gold)!important}
+}
