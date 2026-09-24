@@ -240,7 +240,7 @@
       const copy = form.querySelector('#resetRequestCopy');
       const hint = form.querySelector('#resetRequestHint');
       if (title) title.textContent = 'Reset link sent';
-      if (copy) copy.innerHTML = `We’ve sent a password-reset link to <b>${masked}</b>.</p>`;
+      if (copy) copy.innerHTML = `We’ve sent a password-reset link to <b>${masked}</b>.`;
       if (hint) hint.textContent = 'Please check your Inbox and Spam folder. For security, use the latest reset email only.';
     }).catch(error => {
       console.error('Password reset email failed:', error);
