@@ -70,3 +70,16 @@
     background:linear-gradient(180deg,rgba(255,204,43,.24),rgba(201,154,5,.08))!important;
   }
 }
+
+/* ===== V12.18 MOBILE NAV CENTERING FIX ===== */
+@media(max-width:760px){
+  .student-mobile-nav{
+    left:50%!important;
+    right:auto!important;
+    width:calc(100vw - 20px)!important;
+    max-width:none!important;
+    transform:translateX(-50%)!important;
+    box-sizing:border-box!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  }
+}
