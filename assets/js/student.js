@@ -14,6 +14,8 @@
   let signalWorkspaceView = 'active';
   let historyMarketFilter = 'all';
   let historyDateFilter = 'month';
+  let historyCustomStart = '';
+  let historyCustomEnd = '';
 
   // V10.21: Premium Access state must be initialized before the first renderAll().
   // Previously these const declarations lived below the initial await/load/render path,
@@ -336,6 +338,13 @@
       const y = new Date(now.getTime() - 86400000);
       return dateKey(source) === dateKey(y);
     }
+    if (filter === 'custom') {
+      if (!historyCustomStart || !historyCustomEnd) return true;
+      const start = new Date(historyCustomStart + 'T00:00:00');
+      const end = new Date(historyCustomEnd + 'T23:59:59.999');
+      if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return true;
+      return source >= start && source <= end;
+    }
     const age = now.getTime() - source.getTime();
     if (filter === 'week') return age >= 0 && age <= 7 * 86400000;
     if (filter === 'month') return age >= 0 && age <= 30 * 86400000;
@@ -401,6 +410,8 @@
     if (filters) filters.hidden = signalWorkspaceView !== 'history';
     document.querySelectorAll('[data-history-market]').forEach(btn => btn.classList.toggle('active', btn.dataset.historyMarket === historyMarketFilter));
     document.querySelectorAll('[data-history-date]').forEach(btn => btn.classList.toggle('active', btn.dataset.historyDate === historyDateFilter));
+    const customRange = document.getElementById('signalHistoryCustomRange');
+    if (customRange) customRange.classList.toggle('hidden', historyDateFilter !== 'custom');
   }
 
   function renderSignals() {
@@ -995,6 +1006,14 @@
     document.querySelectorAll('[data-signal-view]').forEach(button=>button.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();signalWorkspaceView=button.dataset.signalView==='history'?'history':'active';renderSignals();}));
     document.querySelectorAll('[data-history-market]').forEach(button=>button.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();historyMarketFilter=button.dataset.historyMarket||'all';renderSignals();}));
     document.querySelectorAll('[data-history-date]').forEach(button=>button.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();historyDateFilter=button.dataset.historyDate||'month';renderSignals();}));
+    document.getElementById('applySignalHistoryCustom')?.addEventListener('click',event=>{
+      event.preventDefault();
+      const start=document.getElementById('signalHistoryStart')?.value||'';
+      const end=document.getElementById('signalHistoryEnd')?.value||'';
+      if(!start||!end)return A.toast('Select both From and To dates.','warning');
+      if(new Date(start)>new Date(end))return A.toast('From date cannot be after To date.','warning');
+      historyCustomStart=start;historyCustomEnd=end;historyDateFilter='custom';renderSignals();
+    });
     document.getElementById('ibBrokerSelect')?.addEventListener('change',event=>{if(!window.__24K_ACCESS_V1224_READY__)renderIbBrokerInstructions(event);});
     document.getElementById('ibAccountAction')?.addEventListener('change',event=>{if(!window.__24K_ACCESS_V1224_READY__)renderIbBrokerInstructions(event);});
     document.getElementById('ibCopyPartnerLink')?.addEventListener('click',event=>{if(!window.__24K_ACCESS_V1224_READY__)copyIbPartnerLink(event);});
