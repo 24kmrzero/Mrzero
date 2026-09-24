@@ -1,0 +1,27 @@
+{
+  "name": "24K MR ZERO — Team Panel",
+  "short_name": "24K Team",
+  "description": "24K MR ZERO Team Performance & Earnings Panel",
+  "id": "/team/",
+  "start_url": "/team/",
+  "scope": "/team/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "background_color": "#080b11",
+  "theme_color": "#080b11",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/assets/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
