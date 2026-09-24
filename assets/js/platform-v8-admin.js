@@ -299,7 +299,7 @@
       ['notifications', A.supabase.from('admin_notifications').select('*').order('created_at', { ascending: false }).limit(300)],
       ['activities', A.supabase.from('user_activity_logs').select('*').order('created_at', { ascending: false }).limit(500)],
       ['auditLogs', A.supabase.from('admin_audit_logs').select('*').order('created_at', { ascending: false }).limit(500)],
-      ['overview', A.supabase.from('admin_operations_overview').select('*').maybeSingle()]
+      ['overview', A.supabase.rpc('admin_v12_overview')]
     ];
     const results = await Promise.all(queries.map(async ([key, query]) => [key, await query]));
     const failures = results.filter(([, result]) => result.error);
