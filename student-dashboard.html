@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0A0A0A">
+<link rel="manifest" href="/student/manifest.webmanifest?v=12.69">
+<link rel="apple-touch-icon" href="/assets/logo.png">
 <script>(function(){try{if(localStorage.getItem('24k-student-theme-v1220')!=='1'){localStorage.setItem('24k-excellence-theme','light');localStorage.setItem('24k-student-theme-v1220','1')}var t=localStorage.getItem('24k-excellence-theme');document.documentElement.dataset.theme=t==='dark'?'dark':'light'}catch(e){document.documentElement.dataset.theme='light'}})();</script>
 <title>Student Panel | 24K Excellence</title>
 <link rel="icon" href="assets/logo.png?v=9.69">
@@ -218,6 +220,11 @@
               <div class="account-row-copy"><h3>WhatsApp Support</h3><p>Need help with your account, payment, course or access?</p></div>
               <div class="account-row-side"><a id="supportWhatsApp" class="app-btn green" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Contact Support</a></div>
             </div>
+            <div class="account-access-row">
+              <span class="account-row-icon"><i class="fa-solid fa-download"></i></span>
+              <div class="account-row-copy"><h3>Install 24K Student App</h3><p>Add the Student Panel to this device for an app-like experience.</p></div>
+              <div class="account-row-side"><button type="button" class="app-btn gold" id="studentInstallButton"><i class="fa-solid fa-download"></i> Install App</button></div>
+            </div>
           </div>
 
           <div class="app-card personal-info-card"><div class="app-card-head"><div><h3>Personal Information</h3><p>Keep your contact details up to date.</p></div></div><form id="profileForm"><div class="form-grid"><div class="form-field"><label>Full Name</label><input name="full_name" required></div><div class="form-field"><label>Email Address</label><input name="email" type="email" disabled></div><div class="form-field"><label>WhatsApp Number</label><input name="whatsapp" required></div><div class="form-field"><label>Country</label><input name="country"></div><div class="form-field full"><label>Trading Experience</label><select name="experience"><option value="beginner">Beginner</option><option value="intermediate">Intermediate</option><option value="advanced">Advanced</option></select></div></div><div class="inline-actions"><button class="app-btn gold" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button></div></form></div>
@@ -335,7 +342,7 @@
 <script src="assets/js/student.js?v=12.67"></script>
 <script src="assets/js/student-ui.js?v=12.24"></script>
 <script src="assets/js/v120-student-ea.js?v=12.00"></script><script src="assets/js/v120-feature-flags.js?v=12.00"></script>
-<script src="assets/js/v1216-mobile-app.js?v=12.35"></script>
+<script src="assets/js/v1216-mobile-app.js?v=12.69"></script>
 <script src="assets/js/v1224-student-access.js?v=12.57"></script>
 </body>
 </html>
