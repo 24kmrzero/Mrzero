@@ -29,7 +29,7 @@ function syncSignalFilterOptions(){const pairs=[...new Set((state.signals||[]).m
 function readSignalFilters(){state.signalFilters.q=String($('#mentorSignalSearch')?.value||'').trim().toLowerCase();state.signalFilters.pair=$('#mentorSignalPairFilter')?.value||'all';state.signalFilters.type=$('#mentorSignalTypeFilter')?.value||'all';state.signalFilters.status=$('#mentorSignalStatusFilter')?.value||'all';state.signalFilters.from=$('#mentorSignalFrom')?.value||'';state.signalFilters.to=$('#mentorSignalTo')?.value||''}
 function applySignalFilters(items){const f=state.signalFilters;return items.filter(s=>{const hay=`${s.symbol||''} ${signalTypeLabel(s)} ${s.status||''} ${s.notes||''}`.toLowerCase();if(f.q&&!hay.includes(f.q))return false;if(f.pair!=='all'&&String(s.symbol||'').toUpperCase()!==f.pair)return false;if(f.type!=='all'&&signalTypeLabel(s)!==f.type)return false;if(f.status!=='all'&&String(s.status||'')!==f.status)return false;const d=signalDateOnly(s.created_at||s.published_at);if(f.from&&d&&d<f.from)return false;if(f.to&&d&&d>f.to)return false;return true})}
 function signalActionButtons(s){
-  if(signalIsClosed(s))return `<button class="mentor-btn small" data-edit-signal="${s.id}"><i class="fa-solid fa-pen"></i> Edit</button>`;
+  if(signalIsClosed(s))return '';
   const hit=Number(s.tp_hit||0),parts=[];
   if(s.take_profit_1!=null&&hit<1)parts.push(`<button class="mentor-btn small" data-signal-action="tp1_hit" data-id="${s.id}">TP1</button>`);
   if(s.take_profit_2!=null&&hit<2)parts.push(`<button class="mentor-btn small" data-signal-action="tp2_hit" data-id="${s.id}">TP2</button>`);
