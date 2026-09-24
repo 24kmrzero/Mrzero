@@ -22,7 +22,7 @@
 .method-toggle-btn.is-off{background:rgba(239,68,68,.09)!important;border-color:rgba(239,68,68,.35)!important;color:#ff7c7c!important}
 .method-toggle-btn i{font-size:9px!important}
 </style>
-<link rel="stylesheet" href="assets/css/v1218-admin-reference.css?v=12.46">
+<link rel="stylesheet" href="assets/css/v1218-admin-reference.css?v=12.74">
 </head>
 <body class="app-page">
 <div id="pageLoader" class="loading-screen"><div><img src="assets/logo.png?v=9.69" alt="24K Digital Gold"><i class="fa-solid fa-spinner fa-spin"></i><p>Loading admin controls...</p></div></div>
@@ -73,8 +73,8 @@
       </section>
 
       <section class="panel" id="p-signals">
-        <div class="panel-heading"><div><h2>Signals Management</h2><p>Create official signals, update TP/SL outcomes and keep a complete performance history.</p></div><button class="app-btn gold" data-toggle-form="signalFormBox"><i class="fa-solid fa-plus"></i> New Signal</button></div>
-        <div class="performance-grid signal-admin-performance" id="adminSignalStats"></div>
+        <div class="panel-heading admin-official-signal-head"><div><h2><i class="fa-solid fa-chart-column"></i> Official Signals</h2><p>Create, manage and review signals from one clean 24K workspace.</p></div><div class="admin-signal-head-actions"><button type="button" class="app-btn gold active" data-admin-signal-view="active"><i class="fa-solid fa-bolt"></i> Active <span id="adminActiveSignalCount">0</span></button><button type="button" class="app-btn outline" data-admin-signal-view="history"><i class="fa-regular fa-rectangle-list"></i> History <span id="adminHistorySignalCount">0</span></button><button type="button" class="app-btn outline" data-admin-signal-view="report"><i class="fa-regular fa-square-poll-vertical"></i> Report</button><button class="app-btn gold" data-toggle-form="signalFormBox"><i class="fa-solid fa-plus"></i> Create Signal</button></div></div>
+        <div class="performance-grid signal-admin-performance hidden" id="adminSignalStats"></div>
 
         <div class="app-modal signal-create-modal" id="signalFormBox" aria-hidden="true">
           <div class="app-modal-card signal-create-card">
@@ -115,17 +115,13 @@
           </div>
         </div>
 
-        <div class="admin-signal-tabs" role="tablist" aria-label="Signal view">
-          <button type="button" class="admin-signal-tab active" data-admin-signal-view="active" aria-selected="true"><i class="fa-solid fa-bolt"></i> Active Signals <span id="adminActiveSignalCount">0</span></button>
-          <button type="button" class="admin-signal-tab" data-admin-signal-view="history" aria-selected="false"><i class="fa-solid fa-clock-rotate-left"></i> History <span id="adminHistorySignalCount">0</span></button>
-          <input type="hidden" id="adminSignalView" value="active">
-        </div>
+        <input type="hidden" id="adminSignalView" value="active">
         <div class="filter-row"><input id="adminSignalSearch" type="search" placeholder="Search pair or note..."></div>
         <div class="table-scroll"><table class="admin-table signal-admin-table admin-signal-user-style"><thead><tr><th>Time</th><th>Date</th><th>Instrument</th><th>Type</th><th>Entry</th><th>SL</th><th>TP1</th><th>TP2</th><th>TP3</th><th>Current Pips</th><th>Status</th><th>Actions</th></tr></thead><tbody id="signalsBody"></tbody></table></div>
       </section>
 
       <section class="panel" id="p-charts">
-        <div class="panel-heading"><div><h2>Charts Management</h2><p>Upload chart images with a clear market summary.</p></div><button class="app-btn gold" data-toggle-form="chartFormBox"><i class="fa-solid fa-plus"></i> Add Chart</button></div>
+        <div class="admin-research-hero"><div><span class="admin-research-eyebrow">24K MR ZERO · VIP RESEARCH DESK</span><h2>Professional Chart Analysis</h2><p>Publish, review and manage high-quality market analysis from one focused research workspace.</p><small>PREMIUM RESEARCH WORKSPACE</small></div><button class="app-btn gold" data-toggle-form="chartFormBox"><i class="fa-solid fa-plus"></i> New Chart Analysis</button></div>
         <div class="app-modal content-create-modal" id="chartFormBox" aria-hidden="true">
           <div class="app-modal-card large content-create-card">
             <div class="app-modal-head"><div><h3 id="chartFormTitle">Add Chart</h3><small class="muted">Upload chart analysis for students.</small></div><button type="button" class="modal-close" data-cancel-form="chartFormBox" aria-label="Close Add Chart"><i class="fa-solid fa-xmark"></i></button></div>
@@ -150,11 +146,11 @@
             </form>
           </div>
         </div>
-        <div class="content-grid" id="adminChartsGrid"></div>
+        <div class="admin-research-filter admin-chart-filter"><input id="adminChartSearch" type="search" placeholder="Search chart analysis..."><select id="adminChartPair"><option value="all">All Pairs</option></select><select id="adminChartSort"><option value="new">Newest First</option><option value="old">Oldest First</option></select></div><div class="admin-research-history" id="adminChartsGrid"></div>
       </section>
 
       <section class="panel" id="p-articles">
-        <div class="panel-heading"><div><h2>Articles Management</h2><p>Create learning articles for students.</p></div><button class="app-btn gold" data-toggle-form="articleFormBox"><i class="fa-solid fa-plus"></i> Add Article</button></div>
+        <div class="admin-research-hero"><div><span class="admin-research-eyebrow">24K MR ZERO · VIP RESEARCH DESK</span><h2>Professional Articles &amp; Insights</h2><p>Create structured educational research, strategy notes and market insights in a premium editorial workspace.</p><small>PREMIUM EDITORIAL WORKSPACE</small></div><button class="app-btn gold" data-toggle-form="articleFormBox"><i class="fa-solid fa-plus"></i> New Article</button></div>
         <div class="app-modal content-create-modal" id="articleFormBox" aria-hidden="true">
           <div class="app-modal-card large content-create-card">
             <div class="app-modal-head"><div><h3 id="articleFormTitle">Add Article</h3><small class="muted">Create and publish educational content.</small></div><button type="button" class="modal-close" data-cancel-form="articleFormBox" aria-label="Close Add Article"><i class="fa-solid fa-xmark"></i></button></div>
@@ -175,7 +171,7 @@
             </form>
           </div>
         </div>
-        <div class="content-grid" id="adminArticlesGrid"></div>
+        <div class="admin-research-filter admin-article-filter"><input id="adminArticleSearch" type="search" placeholder="Search articles..."><select id="adminArticleCategory"><option value="all">All Categories</option></select><select id="adminArticleStatus"><option value="all">All Status</option><option value="published">Published</option><option value="draft">Draft</option></select><select id="adminArticleSort"><option value="new">Newest First</option><option value="old">Oldest First</option></select></div><div class="admin-research-history" id="adminArticlesGrid"></div>
       </section>
 
       <section class="panel" id="p-announcements">
@@ -280,7 +276,7 @@
   </main>
 </div>
 
-<div class="app-modal" id="signalStatusModal"><div class="app-modal-card"><div class="app-modal-head"><div><h3>Update Signal</h3><small id="signalStatusSubtitle" class="muted"></small></div><button class="modal-close" data-close-modal="signalStatusModal"><i class="fa-solid fa-xmark"></i></button></div><form id="signalStatusForm"><input type="hidden" name="signal_id"><div class="app-modal-body"><div class="form-grid"><div class="form-field full"><label>Admin Action</label><select name="action" id="signalActionSelect" required></select></div><div class="form-field full hidden" id="signalClosePriceField"><label>Close Price <span class="required-mark">*</span></label><input type="number" step="any" name="close_price" placeholder="Enter final close price"></div><div class="form-field full"><label>Calculated Result <span id="signalResultUnitLabel">Pips</span></label><input type="number" step="any" name="result_pips" readonly placeholder="Calculated automatically"></div><div class="form-field full"><label>Update Note <span class="muted">(optional)</span></label><textarea name="note" placeholder="Short result or management note"></textarea></div></div><div class="signal-result-preview" id="signalResultPreview">Select an action. Gold, Forex and BTC Pips calculate automatically.</div><label class="check-row" style="margin-top:15px"><input type="checkbox" name="notify_users" checked> Send realtime notification to students</label></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="signalStatusModal">Cancel</button><button class="app-btn gold" type="submit">Save Update</button></div></form></div></div>
+<div class="app-modal" id="signalStatusModal"><div class="app-modal-card admin-manage-signal-card"><div class="app-modal-head"><div><h3>Manage Signal</h3><small id="signalStatusSubtitle" class="muted">Manual signal management — update activation, TP, breakeven, SL, pips or close.</small></div><button class="modal-close" data-close-modal="signalStatusModal"><i class="fa-solid fa-xmark"></i></button></div><form id="signalStatusForm"><input type="hidden" name="signal_id"><div class="app-modal-body"><div id="signalManageSummary" class="admin-manage-summary"></div><select name="action" id="signalActionSelect" class="signal-action-hidden" required></select><div id="signalManageActions" class="admin-manage-actions"></div><div class="admin-running-pips"><label>RUNNING / RESULT PIPS</label><div><input type="number" step="any" name="result_pips" placeholder="e.g. 35 or -20"><button type="submit" class="app-btn gold">Save Update</button></div><small id="signalResultPreview">Choose an action above, then save the official update.</small></div><input type="hidden" id="signalResultUnitLabel" value="Pips"><div class="form-field admin-manage-note"><label>Update Note <span class="muted">(optional)</span></label><textarea name="note" placeholder="Short result or management note"></textarea></div><label class="check-row" style="margin-top:12px"><input type="checkbox" name="notify_users" checked> Send realtime notification to students</label></div><div class="app-modal-foot admin-manage-foot"><button type="button" class="app-btn outline" data-manage-edit-signal><i class="fa-solid fa-pen"></i> Edit Signal</button><button type="button" class="app-btn outline" data-close-modal="signalStatusModal">Close</button></div></form></div></div>
 
 <div class="app-modal" id="signalHistoryModal"><div class="app-modal-card large"><div class="app-modal-head"><div><h3 id="signalHistoryTitle">Signal History</h3><small class="muted">Complete official update timeline</small></div><button class="modal-close" data-close-modal="signalHistoryModal"><i class="fa-solid fa-xmark"></i></button></div><div class="app-modal-body" id="signalHistoryContent"></div></div></div>
 
@@ -288,7 +284,7 @@
 
 <div class="app-modal" id="receiptPreviewModal"><div class="app-modal-card receipt-preview-card"><div class="app-modal-head"><div><h3>Payment Receipt</h3><small id="receiptPreviewSubtitle" class="muted">Secure temporary preview</small></div><button class="modal-close" data-close-modal="receiptPreviewModal"><i class="fa-solid fa-xmark"></i></button></div><div class="app-modal-body"><div id="receiptPreviewContent" class="receipt-preview-content"></div></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="receiptPreviewModal">Close</button><a id="receiptOpenExternal" class="app-btn gold" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Full Size</a></div></div></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js?v=11.11"></script><script src="assets/js/core.js?v=12.28"></script><script src="assets/js/admin.js?v=12.73"></script><script src="assets/js/platform-v8-admin.js?v=12.69"></script><script src="assets/js/platform-v962-admin.js?v=11.13"></script><script src="assets/js/dashboard-analytics-recovery.js?v=11.11"></script><script src="assets/js/v972-admin-course-actions.js?v=12.32"></script><script src="assets/js/v990-admin-ui.js?v=12.69"></script><script src="assets/js/v120-feature-flags.js?v=12.00"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js?v=11.11"></script><script src="assets/js/core.js?v=12.28"></script><script src="assets/js/admin.js?v=12.74"></script><script src="assets/js/platform-v8-admin.js?v=12.69"></script><script src="assets/js/platform-v962-admin.js?v=11.13"></script><script src="assets/js/dashboard-analytics-recovery.js?v=11.11"></script><script src="assets/js/v972-admin-course-actions.js?v=12.32"></script><script src="assets/js/v990-admin-ui.js?v=12.69"></script><script src="assets/js/v120-feature-flags.js?v=12.00"></script>
 
 <script src="assets/js/v1214-admin-unified.js?v=12.46"></script>
 <script src="assets/js/v1216-admin-final.js?v=12.63"></script>
