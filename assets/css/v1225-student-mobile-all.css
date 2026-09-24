@@ -1,0 +1,694 @@
+/* 24K MR ZERO — Full Student Panel Mobile App System v12.25
+   Applies exchange-grade premium UI to ALL student panels, not dashboard only. */
+@media (max-width:760px){
+  /* ===== GLOBAL PANEL SYSTEM ===== */
+  .student-page .panel{padding:0!important}
+  .student-page .panel-heading{
+    margin:4px 2px 10px!important;
+    display:flex!important;
+    align-items:flex-end!important;
+    justify-content:space-between!important;
+    gap:10px!important;
+  }
+  .student-page .panel-heading h1,
+  .student-page .panel-heading h2{
+    margin:0!important;
+    font-size:20px!important;
+    line-height:1.08!important;
+    letter-spacing:-.035em!important;
+    font-weight:900!important;
+    color:var(--ex-ink)!important;
+  }
+  .student-page .panel-heading p{
+    margin:4px 0 0!important;
+    max-width:310px!important;
+    font-size:9.5px!important;
+    line-height:1.35!important;
+    color:var(--ex-muted)!important;
+  }
+  .student-page .app-btn{
+    min-height:38px!important;
+    padding:0 12px!important;
+    border-radius:9px!important;
+    font-size:10px!important;
+    font-weight:800!important;
+    box-shadow:none!important;
+  }
+  .student-page .app-btn.gold{
+    border-color:var(--ex-yellow)!important;
+    background:var(--ex-yellow)!important;
+    color:#181A20!important;
+  }
+  .student-page .app-btn.outline{
+    border:1px solid var(--ex-line)!important;
+    background:var(--ex-surface)!important;
+    color:var(--ex-ink)!important;
+  }
+  .student-page .app-btn.green{
+    border:0!important;
+    background:rgba(14,203,129,.12)!important;
+    color:#078A58!important;
+  }
+  html[data-theme="dark"] .student-page .app-btn.green{color:#21D891!important}
+
+  /* ===== DRAWER / SIDE MENU ===== */
+  .student-page .app-sidebar{
+    width:min(86vw,330px)!important;
+    border-right:1px solid var(--ex-line)!important;
+    background:var(--ex-surface)!important;
+    box-shadow:20px 0 50px rgba(0,0,0,.18)!important;
+  }
+  .student-page .app-side-head,
+  .student-page .app-side-foot{
+    border-color:var(--ex-line)!important;
+  }
+  .student-page .app-side-nav a,
+  .student-page .app-side-nav button{
+    min-height:44px!important;
+    border-radius:9px!important;
+    font-size:12px!important;
+    color:var(--ex-muted)!important;
+  }
+  .student-page .app-side-nav .active,
+  .student-page .app-side-nav [aria-current="page"]{
+    background:rgba(240,185,11,.10)!important;
+    color:var(--ex-yellow)!important;
+  }
+
+  /* ===== SIGNALS — CARD FEED, NOT DESKTOP TABLE ===== */
+  .student-page #p-signals .signal-summary-grid{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:6px!important;
+    margin:0 0 8px!important;
+  }
+  .student-page #p-signals .signal-summary-card{
+    min-height:76px!important;
+    padding:10px!important;
+    border-radius:12px!important;
+    border:1px solid var(--ex-line)!important;
+    background:var(--ex-surface)!important;
+    box-shadow:none!important;
+  }
+  .student-page #p-signals .signal-summary-icon{
+    width:32px!important;height:32px!important;flex:0 0 32px!important;
+    border-radius:9px!important;
+  }
+  .student-page #p-signals .signal-summary-card b{font-size:19px!important;color:var(--ex-ink)!important}
+  .student-page #p-signals .signal-summary-card strong{font-size:8.5px!important;color:var(--ex-ink)!important}
+  .student-page #p-signals .signal-summary-card small{font-size:7.5px!important;color:var(--ex-muted)!important}
+
+  .student-page .compact-history-card{
+    overflow:visible!important;
+    border:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+  }
+  .student-page .signal-workspace-switch{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:5px!important;
+    padding:5px!important;
+    margin:0 0 7px!important;
+    border:1px solid var(--ex-line)!important;
+    border-radius:11px!important;
+    background:var(--ex-surface)!important;
+  }
+  .student-page .signal-workspace-switch button{
+    min-width:0!important;
+    min-height:36px!important;
+    padding:0 10px!important;
+    border:0!important;
+    border-radius:8px!important;
+    background:transparent!important;
+    color:var(--ex-muted)!important;
+    font-size:10px!important;
+    font-weight:800!important;
+  }
+  .student-page .signal-workspace-switch button.active{
+    background:rgba(240,185,11,.12)!important;
+    color:#8A6500!important;
+    box-shadow:none!important;
+  }
+  html[data-theme="dark"] .student-page .signal-workspace-switch button.active{color:var(--ex-yellow)!important}
+
+  .student-page .signal-history-filters{
+    display:grid!important;
+    gap:8px!important;
+    padding:10px!important;
+    margin:0 0 7px!important;
+    border:1px solid var(--ex-line)!important;
+    border-radius:11px!important;
+    background:var(--ex-surface)!important;
+  }
+  .student-page .history-filter-group{gap:5px!important}
+  .student-page .history-filter-group>small{
+    font-size:7px!important;
+    letter-spacing:.08em!important;
+    color:var(--ex-muted)!important;
+  }
+  .student-page .history-pill-row{
+    display:flex!important;
+    gap:5px!important;
+    overflow-x:auto!important;
+    scrollbar-width:none!important;
+    padding-bottom:1px!important;
+  }
+  .student-page .history-pill-row::-webkit-scrollbar{display:none}
+  .student-page .history-pill-row button{
+    flex:0 0 auto!important;
+    min-height:32px!important;
+    padding:0 10px!important;
+    border-radius:8px!important;
+    border:1px solid var(--ex-line)!important;
+    background:var(--ex-surface-2)!important;
+    color:var(--ex-muted)!important;
+    font-size:8.5px!important;
+  }
+  .student-page .history-pill-row button.active{
+    border-color:rgba(240,185,11,.28)!important;
+    background:rgba(240,185,11,.10)!important;
+    color:#8A6500!important;
+  }
+  html[data-theme="dark"] .student-page .history-pill-row button.active{color:var(--ex-yellow)!important}
+  .student-page .signal-history-custom{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:6px!important;
+  }
+  .student-page .signal-history-custom label{font-size:8px!important}
+  .student-page .signal-history-custom input{
+    width:100%!important;min-width:0!important;height:36px!important;
+    border-radius:8px!important;border:1px solid var(--ex-line)!important;
+    background:var(--ex-surface-2)!important;color:var(--ex-ink)!important;
+  }
+  .student-page #applySignalHistoryCustom{grid-column:1/-1!important;width:100%!important}
+
+  .student-page .signal-table-scroll{
+    overflow:visible!important;
+    background:transparent!important;
+  }
+  .student-page .premium-signal-table{
+    display:block!important;
+    min-width:0!important;
+    width:100%!important;
+    border:0!important;
+    background:transparent!important;
+  }
+  .student-page .premium-signal-table thead{display:none!important}
+  .student-page .premium-signal-table tbody{
+    display:grid!important;
+    gap:7px!important;
+  }
+  .student-page .premium-signal-table tr{
+    position:relative!important;
+    display:grid!important;
+    grid-template-columns:1fr 1fr 1fr!important;
+    gap:7px 6px!important;
+    padding:11px!important;
+    border:1px solid var(--ex-line)!important;
+    border-radius:12px!important;
+    background:var(--ex-surface)!important;
+    box-shadow:none!important;
+  }
+  .student-page .premium-signal-table td{
+    display:block!important;
+    min-width:0!important;
+    padding:0!important;
+    border:0!important;
+    background:transparent!important;
+    color:var(--ex-ink)!important;
+    font-size:10px!important;
+  }
+  .student-page .premium-signal-table td::before{
+    display:block!important;
+    margin-bottom:3px!important;
+    color:var(--ex-muted)!important;
+    font-size:6.5px!important;
+    font-weight:800!important;
+    letter-spacing:.06em!important;
+    text-transform:uppercase!important;
+  }
+  .student-page .premium-signal-table td:nth-child(1)::before{content:"Time"}
+  .student-page .premium-signal-table td:nth-child(2)::before{content:"Date"}
+  .student-page .premium-signal-table td:nth-child(3)::before{content:"Instrument"}
+  .student-page .premium-signal-table td:nth-child(4)::before{content:"Type"}
+  .student-page .premium-signal-table td:nth-child(5)::before{content:"Entry"}
+  .student-page .premium-signal-table td:nth-child(6)::before{content:"SL"}
+  .student-page .premium-signal-table td:nth-child(7)::before{content:"TP1"}
+  .student-page .premium-signal-table td:nth-child(8)::before{content:"TP2"}
+  .student-page .premium-signal-table td:nth-child(9)::before{content:"TP3"}
+  .student-page .premium-signal-table td:nth-child(10)::before{content:"Pips"}
+  .student-page .premium-signal-table td:nth-child(11)::before{content:"Status"}
+  .student-page .premium-signal-table td:nth-child(3){grid-column:1/3!important}
+  .student-page .premium-signal-table td:nth-child(11){position:absolute!important;right:10px!important;top:10px!important}
+  .student-page .premium-signal-table td:nth-child(11)::before{display:none!important}
+  .student-page .instrument-cell{gap:7px!important}
+  .student-page .instrument-badge{width:30px!important;height:30px!important;border-radius:8px!important}
+  .student-page .instrument-cell b{font-size:11px!important}
+  .student-page .instrument-cell small{font-size:7px!important;color:var(--ex-muted)!important}
+  .student-page .table-direction,
+  .student-page .signal-table-status{
+    font-size:8px!important;border-radius:7px!important;padding:5px 7px!important
+  }
+  .student-page .table-pips{font-size:10px!important}
+  .student-page .signal-table-footer{
+    padding:8px 2px!important;
+    font-size:8px!important;
+    color:var(--ex-muted)!important;
+  }
+  .student-page .signal-table-empty{
+    min-height:150px!important;
+    border:1px solid var(--ex-line)!important;
+    border-radius:12px!important;
+    background:var(--ex-surface)!important;
+  }
+
+  /* ===== CHARTS + ARTICLES ===== */
+  .student-page #p-charts .filter-row,
+  .student-page #p-articles .filter-row{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:6px!important;
+    margin:0 0 8px!important;
+  }
+  .student-page .filter-row input,
+  .student-page .filter-row select{
+    width:100%!important;
+    min-height:42px!important;
+    padding:0 12px!important;
+    border-radius:10px!important;
+    border:1px solid var(--ex-line)!important;
+    background:var(--ex-surface)!important;
+    color:var(--ex-ink)!important;
+    font-size:11px!important;
+    box-shadow:none!important;
+  }
+  .student-page .content-grid{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:8px!important;
+  }
+  .student-page .compact-media-card,
+  .student-page .content-card{
+    max-width:none!important;
+    width:100%!important;
+    overflow:hidden!important;
+    border-radius:13px!important;
+    border:1px solid var(--ex-line)!important;
+    background:var(--ex-surface)!important;
+    box-shadow:none!important;
+  }
+  .student-page .media-thumb-16x9,
+  .student-page .content-cover{
+    aspect-ratio:16/8.2!important;
+    min-height:0!important;
+    border-radius:0!important;
+    background:var(--ex-surface-2)!important;
+  }
+  .student-page .content-body{padding:11px!important}
+  .student-page .content-meta-strong,
+  .student-page .course-meta{
+    gap:5px!important;
+    margin-bottom:7px!important;
+  }
+  .student-page .content-meta-strong span,
+  .student-page .course-meta span{
+    min-height:24px!important;
+    padding:0 7px!important;
+    border-radius:7px!important;
+    border:0!important;
+    background:var(--ex-surface-2)!important;
+    color:var(--ex-muted)!important;
+    font-size:7.5px!important;
+  }
+  .student-page .content-body h3{
+    margin:0 0 5px!important;
+    font-size:16px!important;
+    line-height:1.18!important;
+    color:var(--ex-ink)!important;
+  }
+  .student-page .content-body p{
+    margin:0 0 9px!important;
+    font-size:9.5px!important;
+    line-height:1.45!important;
+    color:var(--ex-muted)!important;
+    -webkit-line-clamp:2!important;
+  }
+  .student-page .card-actions{
+    display:flex!important;
+    gap:6px!important;
+    flex-wrap:wrap!important;
+  }
+
+  /* ===== COURSES / LIVE CLASSES ===== */
+  .student-page .course-filter-tabs{
+    display:grid!important;
+    grid-template-columns:repeat(3,1fr)!important;
+    gap:4px!important;
+    padding:4px!important;
+    margin:0 0 8px!important;
+    border-radius:10px!important;
+    border:1px solid var(--ex-line)!important;
+    background:var(--ex-surface)!important;
+  }
+  .student-page .course-filter-tabs button{
+    min-height:34px!important;
+    border:0!important;
+    border-radius:7px!important;
+    background:transparent!important;
+    color:var(--ex-muted)!important;
+    font-size:9px!important;
+    font-weight:800!important;
+  }
+  .student-page .course-filter-tabs button.active{
+    background:rgba(240,185,11,.12)!important;color:#8A6500!important;
+  }
+  html[data-theme="dark"] .student-page .course-filter-tabs button.active{color:var(--ex-yellow)!important}
+  .student-page .course-list-grid,
+  .student-page .session-grid{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:8px!important;
+  }
+  .student-page .course-card,
+  .student-page .session-card{
+    overflow:hidden!important;
+    border-radius:13px!important;
+    border:1px solid var(--ex-line)!important;
+    background:var(--ex-surface)!important;
+    box-shadow:none!important;
+  }
+  .student-page .course-cover{aspect-ratio:16/7.8!important;background:var(--ex-surface-2)!important}
+  .student-page .course-body{padding:11px!important}
+  .student-page .course-body h3{
+    margin:0 0 5px!important;font-size:16px!important;line-height:1.15!important;color:var(--ex-ink)!important
+  }
+  .student-page .course-body>p{
+    margin:0 0 8px!important;font-size:9.5px!important;line-height:1.4!important;color:var(--ex-muted)!important
+  }
+  .student-page .course-next-class{
+    padding:9px!important;
+    margin:8px 0!important;
+    border-radius:9px!important;
+    border:0!important;
+    background:var(--ex-surface-2)!important;
+  }
+  .student-page .course-next-class small{font-size:7px!important;color:var(--ex-yellow)!important}
+  .student-page .course-next-class b{font-size:10px!important;color:var(--ex-ink)!important}
+  .student-page .course-next-class span{font-size:8px!important;color:var(--ex-muted)!important}
+  .student-page .notice{
+    padding:9px!important;
+    border-radius:9px!important;
+    font-size:8.5px!important;
+    line-height:1.35!important;
+  }
+  .student-page .course-actions{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:6px!important;
+  }
+  .student-page .course-actions .app-btn:only-child{grid-column:1/-1!important}
+  .student-page #sessionsArea{margin-top:8px!important}
+  .student-page #sessionsArea .panel-heading{
+    align-items:flex-start!important;
+    flex-direction:column!important;
+  }
+  .student-page #closeSessions{width:auto!important}
+  .student-page .session-top{
+    padding:9px 10px!important;
+    border-bottom:1px solid var(--ex-line)!important;
+    background:var(--ex-surface-2)!important;
+  }
+  .student-page .session-number{font-size:8px!important}
+  .student-page .session-body{padding:10px!important}
+  .student-page .session-body h3{font-size:14px!important;color:var(--ex-ink)!important}
+  .student-page .session-body p{font-size:9px!important;color:var(--ex-muted)!important}
+  .student-page .session-date{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:5px!important;
+    font-size:8px!important;
+  }
+  .student-page .session-date span,
+  .student-page .session-community-note{
+    padding:7px 8px!important;
+    border-radius:8px!important;
+    background:var(--ex-surface-2)!important;
+    border:0!important;
+  }
+  .student-page .resource-row{
+    display:grid!important;
+    grid-template-columns:1fr auto!important;
+    gap:8px!important;
+    align-items:center!important;
+    padding:9px 0!important;
+    border-bottom:1px solid var(--ex-line)!important;
+  }
+
+  /* ===== ANNOUNCEMENTS ===== */
+  .student-page #announcementsList{
+    display:grid!important;
+    gap:7px!important;
+  }
+  .student-page .announcement{
+    position:relative!important;
+    padding:11px 12px 11px 15px!important;
+    border-radius:12px!important;
+    border:1px solid var(--ex-line)!important;
+    background:var(--ex-surface)!important;
+    box-shadow:none!important;
+  }
+  .student-page .announcement::before{
+    content:""!important;
+    position:absolute!important;
+    left:0!important;top:10px!important;bottom:10px!important;
+    width:3px!important;
+    border-radius:0 3px 3px 0!important;
+    background:#68717D!important;
+  }
+  .student-page .announcement.important::before{background:var(--ex-yellow)!important}
+  .student-page .announcement h4{
+    margin:0 0 5px!important;
+    font-size:13px!important;
+    color:var(--ex-ink)!important;
+  }
+  .student-page .announcement p{
+    margin:0 0 7px!important;
+    font-size:9px!important;
+    line-height:1.45!important;
+    color:var(--ex-muted)!important;
+  }
+  .student-page .announcement small{font-size:7.5px!important;color:var(--ex-muted)!important}
+
+  /* ===== PROFILE / ACCOUNT ===== */
+  .student-page .profile-compact-shell{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:8px!important;
+  }
+  .student-page .account-access-card,
+  .student-page .personal-info-card{
+    padding:0!important;
+    overflow:hidden!important;
+    border-radius:13px!important;
+    border:1px solid var(--ex-line)!important;
+    background:var(--ex-surface)!important;
+    box-shadow:none!important;
+  }
+  .student-page .account-access-row{
+    display:grid!important;
+    grid-template-columns:34px minmax(0,1fr)!important;
+    gap:9px!important;
+    align-items:center!important;
+    min-height:66px!important;
+    padding:10px!important;
+    border-bottom:1px solid var(--ex-line)!important;
+  }
+  .student-page .account-access-row:last-child{border-bottom:0!important}
+  .student-page .account-row-icon{
+    width:34px!important;height:34px!important;
+    border-radius:9px!important;
+    background:var(--ex-surface-2)!important;
+    color:var(--ex-yellow)!important;
+    font-size:13px!important;
+  }
+  .student-page .account-row-copy h3{
+    margin:0!important;font-size:11px!important;color:var(--ex-ink)!important
+  }
+  .student-page .account-row-copy p{
+    margin:3px 0 0!important;font-size:8px!important;line-height:1.3!important;color:var(--ex-muted)!important
+  }
+  .student-page .account-row-side{
+    grid-column:1/-1!important;
+    display:flex!important;
+    justify-content:flex-end!important;
+    align-items:center!important;
+    gap:6px!important;
+    margin-top:2px!important;
+  }
+  .student-page .compact-access-state{font-size:7.5px!important}
+  .student-page .personal-info-card>.app-card-head{
+    padding:11px 11px 0!important;
+  }
+  .student-page .personal-info-card form{padding:11px!important}
+  .student-page .app-card-head h3{font-size:13px!important;color:var(--ex-ink)!important}
+  .student-page .app-card-head p{font-size:8px!important;color:var(--ex-muted)!important}
+  .student-page .form-grid{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:8px!important;
+  }
+  .student-page .form-field.full{grid-column:auto!important}
+  .student-page .form-field label{
+    margin-bottom:5px!important;
+    font-size:8px!important;
+    color:var(--ex-muted)!important;
+  }
+  .student-page .form-field input,
+  .student-page .form-field select,
+  .student-page .form-field textarea{
+    min-height:42px!important;
+    width:100%!important;
+    border-radius:9px!important;
+    border:1px solid var(--ex-line)!important;
+    background:var(--ex-surface-2)!important;
+    color:var(--ex-ink)!important;
+    font-size:11px!important;
+    box-shadow:none!important;
+  }
+  .student-page .form-field textarea{min-height:90px!important}
+  .student-page .inline-actions{margin-top:9px!important}
+  .student-page .inline-actions .app-btn{width:100%!important}
+
+  .student-page .premium-history-details{
+    overflow:hidden!important;
+    border:1px solid var(--ex-line)!important;
+    border-radius:12px!important;
+    background:var(--ex-surface)!important;
+  }
+  .student-page .premium-history-details summary{
+    min-height:52px!important;
+    padding:10px 11px!important;
+    font-size:10px!important;
+    color:var(--ex-ink)!important;
+  }
+  .student-page .premium-history-details summary small{
+    display:block!important;
+    margin-top:2px!important;
+    font-size:7px!important;
+    color:var(--ex-muted)!important;
+  }
+  .student-page .premium-history-body{padding:0 10px 10px!important}
+  .student-page .premium-history-details .table-scroll{
+    overflow-x:auto!important;
+    border-radius:9px!important;
+    border:1px solid var(--ex-line)!important;
+  }
+  .student-page .payment-table{min-width:720px!important}
+  .student-page .payment-table th{font-size:7px!important;color:var(--ex-muted)!important}
+  .student-page .payment-table td{font-size:8.5px!important;color:var(--ex-ink)!important}
+
+  /* ===== PREMIUM / PAYMENT / RISK MODALS AS MOBILE BOTTOM SHEETS ===== */
+  .student-page .app-modal{
+    align-items:flex-end!important;
+    padding:0!important;
+    background:rgba(0,0,0,.52)!important;
+  }
+  .student-page .app-modal-card,
+  .student-page .app-modal-card.large{
+    width:100%!important;
+    max-width:none!important;
+    max-height:88dvh!important;
+    margin:0!important;
+    border-radius:18px 18px 0 0!important;
+    border:1px solid var(--ex-line)!important;
+    border-bottom:0!important;
+    background:var(--ex-surface)!important;
+    box-shadow:0 -18px 50px rgba(0,0,0,.22)!important;
+  }
+  .student-page .app-modal-head{
+    position:sticky!important;
+    top:0!important;
+    z-index:2!important;
+    min-height:58px!important;
+    padding:12px!important;
+    border-bottom:1px solid var(--ex-line)!important;
+    background:var(--ex-surface)!important;
+  }
+  .student-page .app-modal-head h3{
+    margin:0!important;font-size:16px!important;color:var(--ex-ink)!important
+  }
+  .student-page .app-modal-head small{font-size:8px!important;color:var(--ex-muted)!important}
+  .student-page .modal-close{
+    width:34px!important;height:34px!important;border-radius:9px!important;
+    border:1px solid var(--ex-line)!important;background:var(--ex-surface-2)!important;color:var(--ex-ink)!important;
+  }
+  .student-page .app-modal-body{padding:12px!important}
+  .student-page .app-modal-foot{
+    position:sticky!important;
+    bottom:0!important;
+    padding:10px 12px calc(10px + env(safe-area-inset-bottom))!important;
+    border-top:1px solid var(--ex-line)!important;
+    background:var(--ex-surface)!important;
+  }
+  .student-page .access-step-title{
+    margin:5px 0!important;font-size:15px!important;color:var(--ex-ink)!important
+  }
+  .student-page .access-step-copy{
+    margin:0 0 10px!important;font-size:9px!important;color:var(--ex-muted)!important
+  }
+  .student-page .access-choice-grid,
+  .student-page .access-method-grid,
+  .student-page .access-broker-grid{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:7px!important;
+  }
+  .student-page .access-choice-card,
+  .student-page .access-method-card,
+  .student-page .access-broker-card{
+    min-height:64px!important;
+    padding:10px!important;
+    border-radius:11px!important;
+    border:1px solid var(--ex-line)!important;
+    background:var(--ex-surface-2)!important;
+    color:var(--ex-ink)!important;
+    box-shadow:none!important;
+  }
+  .student-page .access-choice-card h4,
+  .student-page .access-method-card h4{
+    font-size:11px!important;color:var(--ex-ink)!important
+  }
+  .student-page .access-choice-card p,
+  .student-page .access-method-card p{
+    font-size:8px!important;color:var(--ex-muted)!important
+  }
+  .student-page .access-broker-card.is-active,
+  .student-page .access-choice-card.is-active,
+  .student-page .access-method-card.is-active{
+    border-color:rgba(240,185,11,.35)!important;
+    background:rgba(240,185,11,.08)!important;
+  }
+  .student-page .access-link-box,
+  .student-page .ib-instruction-box{
+    margin-top:8px!important;
+    padding:9px!important;
+    border-radius:9px!important;
+    border:1px solid var(--ex-line)!important;
+    background:var(--ex-surface-2)!important;
+    color:var(--ex-muted)!important;
+    font-size:8.5px!important;
+  }
+  .student-page .access-link-actions{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:6px!important;
+    margin-top:6px!important;
+  }
+  .student-page .access-link-actions .app-btn{width:100%!important}
+  .student-page .access-progress{margin:6px 0 10px!important}
+
+  /* keep bottom navigation consistent on every panel */
+  .student-mobile-nav{z-index:1800!important}
+}
