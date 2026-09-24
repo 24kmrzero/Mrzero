@@ -1,0 +1,30 @@
+{
+  "name": "24K MR ZERO — Student Panel",
+  "short_name": "24K Student",
+  "description": "24K MR ZERO Student learning and market access panel",
+  "id": "/student/",
+  "start_url": "/student/",
+  "scope": "/student/",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "background_color": "#080b11",
+  "theme_color": "#080b11",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/assets/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
