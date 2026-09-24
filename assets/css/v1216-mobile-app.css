@@ -83,3 +83,8 @@
     grid-template-columns:repeat(5,minmax(0,1fr))!important;
   }
 }
+
+/* ===== V12.19 LOADER / NAV VISIBILITY FIX ===== */
+#pageLoader:not(.hidden) ~ .student-mobile-nav{display:none!important}
+body:not(.student-ready) .student-mobile-nav{visibility:hidden!important;opacity:0!important;pointer-events:none!important}
+body.student-ready .student-mobile-nav{visibility:visible!important;opacity:1!important;transition:opacity .18s ease}
