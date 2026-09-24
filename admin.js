@@ -169,6 +169,10 @@
     const prices={tp1_hit:Number(signal.take_profit_1),tp2_hit:Number(signal.take_profit_2),tp3_hit:Number(signal.take_profit_3),tp4_hit:Number(signal.take_profit_4),sl_hit:Number(signal.stop_loss),breakeven_hit:entry};
     const price=prices[action];
     if(!Number.isFinite(entry)||!Number.isFinite(price))return null;
+    const pip=instrumentMeta(signal.symbol).pip,distance=Math.abs(price-entry)/pip;
+    if(['tp1_hit','tp2_hit','tp3_hit','tp4_hit'].includes(action))return Math.round(distance*10)/10;
+    if(action==='sl_hit')return Math.round(-distance*10)/10;
+    if(action==='breakeven_hit')return 0;
     return calculateResult(signal,price);
   }
   function renderStatusPreview(){const f=document.getElementById('signalStatusForm'),s=state.signals.find(x=>x.id===f.elements.signal_id.value);if(!s)return;const action=f.elements.action.value;const input=f.elements.result_pips;const automatic=goldAutoPips(s,action);const noResult=['move_to_be','cancelled'].includes(action);const autoGold=automatic!==null&&!['manually_closed'].includes(action);if(autoGold){input.value=automatic;input.readOnly=true;input.placeholder='Calculated automatically';}else{input.readOnly=false;if(!action||noResult)input.value='';input.placeholder='Enter result in Pips, e.g. 30 or -25';}const result=n(input.value);const required=!noResult;const label={tp1_hit:'TP1 current result',tp2_hit:'TP2 current result',tp3_hit:s.take_profit_4?'TP3 current result':'TP3 final result — signal will close',tp4_hit:'TP4 final result — signal will close',sl_hit:'Final Stop Loss result',breakeven_hit:'Final Breakeven result',manually_closed:'Final manual-close result',move_to_be:'Trade remains active; no result required',cancelled:'Signal will close as Cancelled; no result required'}[action]||'Select an action';document.getElementById('signalResultPreview').innerHTML=`<i class="fa-solid ${action==='move_to_be'?'fa-shield-halved':action==='cancelled'?'fa-ban':'fa-pen-to-square'}"></i> ${label}${required?` · ${autoGold?'Automatic result':'Admin result'}: <b>${result==null?'Required':`${signed(result)} Pips`}</b>`:''}`;input.required=required;}
