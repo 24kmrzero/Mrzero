@@ -1,5 +1,34 @@
 (function(){
 'use strict';
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js',{scope:'/'}).catch(e=>console.warn('[24K Mentor PWA]',e?.message||e)));
+}
+let mentorInstallPrompt=null;
+const mentorStandalone=()=>window.matchMedia?.('(display-mode: standalone)').matches||window.navigator.standalone===true;
+function updateMentorInstall(){
+  const b=document.getElementById('mentorInstallButton');
+  if(!b)return;
+  if(mentorStandalone()){
+    b.innerHTML='<i class="fa-solid fa-circle-check"></i> Installed';
+    b.disabled=true;
+    b.dataset.installed='1';
+  }else{
+    b.disabled=false;
+    b.dataset.installed='0';
+  }
+}
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();
+  mentorInstallPrompt=e;
+  document.getElementById('mentorInstallButton')?.classList.add('ready');
+  updateMentorInstall();
+});
+window.addEventListener('appinstalled',()=>{
+  mentorInstallPrompt=null;
+  updateMentorInstall();
+  try{toast('24K Mentor App installed successfully.','success')}catch(_){}
+});
+window.addEventListener('load',updateMentorInstall);
 const cfg=window.APP_CONFIG||{},sb=(window.supabase&&cfg.SUPABASE_URL&&cfg.SUPABASE_ANON_KEY)?window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true}}):null;
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 const state={user:null,profile:null,perms:{signals:false,charts:false,articles:false,banners:false},signals:[],charts:[],articles:[],banners:[],courses:[],news:[],signalTab:'active',signalFilters:{q:'',pair:'all',type:'all',status:'all',from:'',to:''}};
