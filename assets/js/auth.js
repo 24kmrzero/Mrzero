@@ -189,26 +189,60 @@
     }
   });
 
+  const forgotFormNode = document.getElementById('forgotForm');
+  const forgotFormInitialHtml = forgotFormNode?.innerHTML || '';
+  const maskEmail = email => {
+    const [local, domain] = String(email || '').split('@');
+    if (!local || !domain) return String(email || '');
+    const keep = Math.min(2, Math.max(1, local.length));
+    return `${local.slice(0, keep)}${'•'.repeat(Math.max(4, local.length - keep))}@${domain}`;
+  };
+  const resetForgotView = () => {
+    if (!forgotFormNode || !forgotFormInitialHtml) return;
+    if (forgotFormNode.dataset.sent === '1') {
+      forgotFormNode.innerHTML = forgotFormInitialHtml;
+      forgotFormNode.dataset.sent = '0';
+    }
+  };
+
   document.getElementById('forgotPasswordLink')?.addEventListener('click', event => {
-    event.preventDefault(); openModal('forgotModal');
+    event.preventDefault();
+    resetForgotView();
+    openModal('forgotModal');
   });
   document.getElementById('forgotForm')?.addEventListener('submit', async event => {
     event.preventDefault();
     const form = event.currentTarget;
     const button = form.querySelector('button[type="submit"]');
     const email = String(new FormData(form).get('email') || '').trim().toLowerCase();
+    if (!email) return;
     setLoading(button, true, 'Sending...');
     try {
       sessionStorage.setItem('24k_recovery_kind', 'student');
       const response = await supabase.functions.invoke('auth-email', { body: { action: 'password_reset', email } });
       if (response.error) throw response.error;
       if (response.data?.error) throw new Error(response.data.error);
-      toast('If an account exists for this email, a secure password reset link has been sent. Check Inbox and Spam.', 'success');
-      closeModal('forgotModal'); form.reset();
+      const masked = maskEmail(email);
+      form.dataset.sent = '1';
+      form.innerHTML = `
+        <div class="app-modal-body">
+          <div class="reset-success-card">
+            <span class="reset-success-icon"><i class="fa-solid fa-envelope-circle-check"></i></span>
+            <div>
+              <h4>Reset link sent</h4>
+              <p>We’ve sent a password-reset link to <b>${masked}</b>.</p>
+              <small>Please check your Inbox and Spam folder. For security, use the latest reset email only.</small>
+            </div>
+          </div>
+        </div>
+        <div class="app-modal-foot">
+          <button type="button" class="app-btn gold" data-close-modal="forgotModal">Done</button>
+        </div>`;
     } catch (error) {
       console.error('Password reset email failed:', error);
       toast(friendlyError(error, 'Could not send reset link.'), 'error');
-    } finally { setLoading(button, false); }
+      setLoading(button, false);
+    }
   });
 
 })();
