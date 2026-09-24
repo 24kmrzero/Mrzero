@@ -180,26 +180,34 @@
   initDashboardClock();
   document.getElementById('studentAvatar').textContent = initials;
 
+  const revealStudentApp = () => {
+    document.getElementById('pageLoader')?.classList.add('hidden');
+    document.getElementById('studentApp')?.classList.remove('hidden');
+    document.body.classList.add('student-ready');
+  };
+
   try {
-    await loadAll();
+    // First paint immediately after auth/profile is available.
+    // Heavy dashboard queries continue after the app shell is already usable.
     renderAll();
     bindEvents();
     studentNavigation.open(studentNavigation.keyFromLocation(), true, false);
+    revealStudentApp();
+
+    await loadAll();
+    renderAll();
     subscribeRealtime();
     handlePaymentReturn();
   } catch (error) {
     console.error('[Student init]', error);
     A.toast(A.friendlyError?.(error,'Could not load your student account completely. Please refresh or contact support.') || 'Could not load your student account completely.','error');
   } finally {
-    document.getElementById('pageLoader')?.classList.add('hidden');
-    document.getElementById('studentApp')?.classList.remove('hidden');
+    revealStudentApp();
   }
 
   async function loadAll() {
     const sb = A.supabase;
-    const { data: freshProfile, error: profileError } = await sb.from('profiles').select('*').eq('id', state.user.id).maybeSingle();
-    if (profileError) console.warn('[Student] Profile refresh skipped:', profileError.message || profileError);
-    if (freshProfile) state.profile = freshProfile;
+    const profileRequest = sb.from('profiles').select('*').eq('id', state.user.id).maybeSingle();
 
     const requests = [
       ['courses', sb.from('courses').select('*').eq('is_published', true).order('created_at', { ascending: false }), true],
@@ -216,7 +224,13 @@
       ['risk', sb.from('terms_acceptances').select('id').eq('user_id', state.user.id).eq('document_type', 'risk_disclaimer').eq('version', A.cfg.RISK_VERSION).limit(1), false]
     ];
 
-    const results = await Promise.all(requests.map(async ([key, query, critical]) => [key, critical, await query]));
+    const [profileResponse, results] = await Promise.all([
+      profileRequest,
+      Promise.all(requests.map(async ([key, query, critical]) => [key, critical, await query]))
+    ]);
+    if (profileResponse.error) console.warn('[Student] Profile refresh skipped:', profileResponse.error.message || profileResponse.error);
+    if (profileResponse.data) state.profile = profileResponse.data;
+
     for (const [key, critical, response] of results) {
       if (response.error) {
         if (critical) throw response.error;
