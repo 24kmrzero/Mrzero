@@ -103,11 +103,12 @@
                   <div class="form-field"><label>TP1</label><input type="number" step="any" name="take_profit_1" required></div>
                   <div class="form-field"><label>TP2</label><input type="number" step="any" name="take_profit_2" required></div>
                   <div class="form-field"><label>TP3</label><input type="number" step="any" name="take_profit_3" required></div>
+                  <div class="form-field"><label>TP4 <span class="muted">(optional)</span></label><input type="number" step="any" name="take_profit_4"></div>
                   <div class="form-field"><label>Audience</label><select name="audience_access"><option value="all_students">All Students</option><option value="course_students">Course Students</option><option value="premium_users">Premium Users</option></select></div>
                   <div class="form-field"><label>Ready Note Template</label><select id="signalNoteTemplate"><option value="">Choose a template</option><option>Wait for candle confirmation</option><option>Do not chase the market</option><option>Risk only 1–2%</option><option>Move SL to Breakeven after TP1</option><option>Book partial profit at TP1</option><option>Hold till TP3 if momentum is strong</option></select></div>
                   <div class="form-field full"><label>Admin Note</label><textarea name="notes" rows="3" placeholder="Signal instructions for students"></textarea></div>
                 </div>
-                <div class="signal-calculation-preview compact-popup" id="signalCalculationPreview"><div><small>SL Distance</small><b>—</b></div><div><small>TP1 Potential</small><b>—</b></div><div><small>TP2 Potential</small><b>—</b></div><div><small>TP3 Potential</small><b>—</b></div><div><small>Best R:R</small><b>—</b></div></div>
+                <div class="signal-calculation-preview compact-popup" id="signalCalculationPreview"><div><small>SL Distance</small><b>—</b></div><div><small>TP1 Potential</small><b>—</b></div><div><small>TP2 Potential</small><b>—</b></div><div><small>TP3 Potential</small><b>—</b></div><div><small>TP4 Potential</small><b>—</b></div><div><small>Best R:R</small><b>—</b></div></div>
                 <label class="check-row signal-publish-check"><input type="checkbox" name="is_published" checked> Publish to students immediately</label>
               </div>
               <div class="app-modal-foot"><button type="button" class="app-btn outline" data-cancel-form="signalFormBox">Cancel</button><button class="app-btn gold" type="submit"><i class="fa-solid fa-paper-plane"></i> Publish Signal</button></div>
