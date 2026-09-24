@@ -53,7 +53,7 @@ function renderPerformance(){const all=state.signals||[],now=new Date(),weekAgo=
 function statusChip(v){return `<span class="mentor-chip gold">${esc(String(v||'').replaceAll('_',' ').toUpperCase())}</span>`}
 function signalTypeLabel(s){const d=String(s?.direction||'BUY').toUpperCase(),o=String(s?.order_type||'market').toLowerCase();return o==='market'?d:`${d} ${o.toUpperCase()}`}
 function signalStatusLabel(v){return String(v||'active').replaceAll('_',' ').replace(/\b\w/g,m=>m.toUpperCase())}
-function signalDateOnly(v){const d=new Date(v||0);if(Number.isNaN(d.getTime()))return'';return d.toISOString().slice(0,10)}
+function signalDateOnly(v){const d=new Date(v||0);if(Number.isNaN(d.getTime()))return'';return d.toISOString().slice(0,10)}function mentorDisplaySymbol(v){const s=String(v||'').replace('/','').toUpperCase();return s.length===6?s.slice(0,3)+'/'+s.slice(3):s}function mentorSignalStamp(v){const d=new Date(v||0);if(Number.isNaN(d.getTime()))return{date:'—',time:'—'};return{date:d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}),time:d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true})}}
 function syncSignalFilterOptions(){const pairs=[...new Set((state.signals||[]).map(x=>String(x.symbol||'').toUpperCase()).filter(Boolean))].sort();for(const id of ['mentorSignalPairFilter','mentorMobileSignalPair']){const el=$('#'+id);if(!el)continue;const current=el.value||'all';el.innerHTML='<option value="all">All Pairs</option>'+pairs.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');el.value=pairs.includes(current)?current:'all'}}
 function readSignalFilters(){state.signalFilters.q=String($('#mentorSignalSearch')?.value||'').trim().toLowerCase();state.signalFilters.pair=$('#mentorSignalPairFilter')?.value||'all';state.signalFilters.type=$('#mentorSignalTypeFilter')?.value||'all';state.signalFilters.status=$('#mentorSignalStatusFilter')?.value||'all';state.signalFilters.from=$('#mentorSignalFrom')?.value||'';state.signalFilters.to=$('#mentorSignalTo')?.value||''}
 function applySignalFilters(items){const f=state.signalFilters;return items.filter(s=>{const hay=`${s.symbol||''} ${signalTypeLabel(s)} ${s.status||''} ${s.notes||''}`.toLowerCase();if(f.q&&!hay.includes(f.q))return false;if(f.pair!=='all'&&String(s.symbol||'').toUpperCase()!==f.pair)return false;if(f.type!=='all'&&signalTypeLabel(s)!==f.type)return false;if(f.status!=='all'&&String(s.status||'')!==f.status)return false;const d=signalDateOnly(s.created_at||s.published_at);if(f.from&&d&&d<f.from)return false;if(f.to&&d&&d>f.to)return false;return true})}
@@ -114,8 +114,8 @@ function renderSignals(){
   }
   if(!items.length){box.innerHTML='<div class="mentor-empty">No signals match these filters.</div>';return}
   const desktop=`<div class="mentor-signal-table-wrap"><table class="mentor-signal-table mentor-official-table"><thead><tr><th>Date</th><th>Pair</th><th>Type</th><th>Entry</th><th>SL</th><th>TP1</th><th>TP2</th><th>TP3</th><th>TP4</th><th>Status</th><th>Pips</th><th>Note</th><th>Manage</th></tr></thead><tbody>${items.map(s=>`<tr>
-    <td><b>${esc(signalDateOnly(s.created_at||s.published_at))}</b><small class="mentor-table-time">${esc(dt(s.created_at||s.published_at))}</small></td>
-    <td><b>${esc(s.symbol)}</b></td>
+    <td><b>${esc(mentorSignalStamp(s.created_at||s.published_at).date)}</b><small class="mentor-table-time">${esc(mentorSignalStamp(s.created_at||s.published_at).time)}</small></td>
+    <td><b>${esc(mentorDisplaySymbol(s.symbol))}</b></td>
     <td><span class="mentor-type-badge ${String(s.direction).toLowerCase()}">${esc(signalTypeLabel(s))}</span></td>
     <td>${esc(s.entry_from??'—')}${s.entry_to!=null?`–${esc(s.entry_to)}`:''}</td>
     <td class="signal-sl">${esc(s.stop_loss??'—')}</td>
