@@ -1419,7 +1419,7 @@
     window.__24K_STUDENT_REALTIME_CHANNEL__=channel;
   }
 
-  function signalIsFinal(s){return Boolean(s.closed_at)||['tp3_hit','tp4_hit','sl_hit','breakeven_hit','manually_closed','cancelled'].includes(s.status);}
+  function signalIsFinal(s){const st=String(s?.status||'');return Boolean(s?.closed_at)||['tp4_hit','sl_hit','breakeven_hit','manually_closed','cancelled'].includes(st)||(st==='tp3_hit'&&(s?.take_profit_4===null||s?.take_profit_4===undefined||s?.take_profit_4===''));}
   function resultUnit(){return 'pips';}
   function displaySymbol(symbol){const x=String(symbol||'').replace('/','').toUpperCase();return x.length===6?`${x.slice(0,3)}/${x.slice(3)}`:x;}
   function entryText(s){return `${num(s.entry_from)}${s.entry_to!=null?` – ${num(s.entry_to)}`:''}`;}
