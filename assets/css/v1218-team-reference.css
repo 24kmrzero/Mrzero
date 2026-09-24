@@ -97,3 +97,128 @@ html[data-theme="light"] .client-work-card,html[data-theme="light"] .client-filt
   .team-side{display:none!important}.team-mobile-nav{display:grid!important}
   .team-month-hero{padding:12px!important}.team-month-hero h2{font-size:18px!important}.section-head h2{font-size:19px!important}
 }
+
+
+/* V12.71 — Team overview compact readability polish */
+html[data-theme="light"]{
+  --r18-bg:#f5efe5;
+  --r18-surface:#fffdf8;
+  --r18-surface2:#faf4e9;
+  --r18-line:#d8c49b;
+  --r18-text:#151922;
+  --r18-muted:#505a68;
+  --r18-gold:#d98d0b;
+}
+html[data-theme="light"] body{background:var(--r18-bg)!important;color:var(--r18-text)!important}
+html[data-theme="light"] .team-page-title p,
+html[data-theme="light"] .team-month-hero p,
+html[data-theme="light"] .team-flow-cards p,
+html[data-theme="light"] .overview-kpi span,
+html[data-theme="light"] .overview-kpi small,
+html[data-theme="light"] .card-head small,
+html[data-theme="light"] .today-attention small,
+html[data-theme="light"] .today-attention em,
+html[data-theme="light"] .overview-link-chip small,
+html[data-theme="light"] .team-flow-note p,
+html[data-theme="light"] .recent-client small,
+html[data-theme="light"] .team-user-chip small{color:var(--r18-muted)!important}
+html[data-theme="light"] .team-nav-label{color:#5e6875!important}
+html[data-theme="light"] input::placeholder,
+html[data-theme="light"] textarea::placeholder{color:#737c88!important;opacity:1!important}
+
+.brand{
+  min-height:100px!important;
+  padding:18px!important;
+  margin:0 -12px 10px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border-bottom:1px solid var(--r18-line)!important
+}
+.brand>div{display:none!important}
+.brand img{
+  width:auto!important;
+  max-width:162px!important;
+  max-height:62px!important;
+  object-fit:contain!important;
+  filter:drop-shadow(0 8px 24px rgba(242,182,50,.12))
+}
+
+.team-page-title h1{font-size:16px!important;font-weight:850!important}
+.team-page-title p{font-size:10px!important}
+.team-month-hero{padding:12px 16px!important;min-height:0!important}
+.team-month-hero h2{font-size:18px!important}
+.team-month-hero p{font-size:10.5px!important}
+.today-attention b{font-size:16px!important}
+.today-attention em{font-size:9px!important}
+
+.team-flow-cards{gap:8px!important;margin:9px 0!important}
+.team-flow-cards article{min-height:78px!important;padding:10px 12px!important}
+.team-flow-cards article>span{top:9px!important;left:10px!important;width:19px!important;height:19px!important}
+.team-flow-cards article b{margin:23px 0 4px!important;font-size:12px!important}
+.team-flow-cards article p{font-size:10px!important;line-height:1.4!important}
+
+.team-overview-kpis{gap:8px!important;margin:9px 0!important}
+.team-overview-kpis>*{min-height:82px!important;padding:10px 12px!important}
+.overview-kpi-head{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important}
+.overview-kpi-head span{font-size:9.5px!important}
+.overview-kpi-head i{
+  width:24px;height:24px;border-radius:8px;display:grid;place-items:center;
+  background:rgba(242,182,50,.10);color:var(--r18-gold);font-size:10px
+}
+.overview-kpi b{font-size:24px!important;line-height:1.05!important;margin:7px 0 3px!important}
+.overview-kpi small{font-size:9.5px!important}
+
+.team-overview-split{align-items:start!important;gap:10px!important}
+.team-overview-split>.panel-card{min-height:0!important}
+.panel-card{padding:12px 14px!important}
+.card-head h3{font-size:15px!important}
+.card-head small{font-size:10px!important}
+#recentClients .chat-empty{height:auto!important;min-height:56px!important;padding:12px!important}
+.recent-client-list{margin-top:7px!important}
+.recent-client{padding:9px 10px!important}
+.recent-client b{font-size:11px!important}.recent-client small{font-size:9px!important}
+
+.today-work-list{gap:6px!important;margin-top:7px!important}
+.today-work-item{padding:9px 10px!important;font-size:10px!important;align-items:center!important}
+.today-work-item b{font-size:13px!important}
+.today-work-value{display:flex;align-items:center;justify-content:flex-end;gap:8px}
+.today-work-action{
+  border:1px solid var(--r18-line);background:rgba(242,182,50,.08);color:var(--r18-gold);
+  border-radius:8px;padding:5px 8px;font-size:8.5px;font-weight:850;cursor:pointer;white-space:nowrap
+}
+.today-work-action:hover{background:rgba(242,182,50,.15)}
+.compact-links{margin-top:10px!important;padding-top:11px!important;padding-bottom:10px!important}
+.overview-link-row{margin-top:6px!important}
+.overview-link-chip{padding:7px 9px!important;font-size:9.5px!important}
+
+html:not([data-theme="light"]) .team-month-hero,
+html:not([data-theme="light"]) .team-flow-cards article,
+html:not([data-theme="light"]) .overview-kpi,
+html:not([data-theme="light"]) .panel-card{
+  background:linear-gradient(145deg,#111318,#0e1014)!important
+}
+
+@media(max-width:780px){
+  .team-page-title h1{font-size:15px!important}
+  .team-page-title p{font-size:9px!important}
+  .team-flow-cards{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .team-flow-cards article{min-height:92px!important}
+  .team-overview-kpis>*{min-height:88px!important}
+  .overview-kpi b{font-size:22px!important}
+  .team-overview-split{gap:9px!important}
+  html[data-theme="light"] .team-mobile-nav{
+    background:rgba(255,253,248,.97)!important;border-color:var(--r18-line)!important;
+    box-shadow:0 16px 35px rgba(74,54,12,.14)!important
+  }
+  html[data-theme="light"] .team-mobile-nav button{color:#596371!important}
+  html[data-theme="light"] .team-mobile-nav button.active{color:#8a5600!important;background:#fff0cf!important}
+  html[data-theme="light"] .team-profile-card{background:#fffdf8!important;color:var(--r18-text)!important;border-color:var(--r18-line)!important}
+  html[data-theme="light"] .team-profile-card p{color:var(--r18-muted)!important}
+  html[data-theme="light"] .team-profile-actions button{background:#faf4e9!important;color:var(--r18-text)!important;border-color:var(--r18-line)!important}
+}
+@media(max-width:520px){
+  .team-flow-cards{grid-template-columns:1fr!important}
+  .today-work-value{gap:5px}
+  .today-work-action{padding:5px 6px;font-size:8px}
+}
