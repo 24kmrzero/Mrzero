@@ -148,3 +148,53 @@ html[data-theme="light"] .mentor-toast{
 }
 html[data-theme="dark"] .mentor-signal-table-wrap,html[data-theme="dark"] .mentor-signal-mobile-card,html[data-theme="dark"] .mentor-signal-search,html[data-theme="dark"] .mentor-signal-toolbar>select{background:#0c1117!important}
 html[data-theme="dark"] .mentor-signal-table th{background:#0f151c!important}
+
+/* V12.66 — Mobile signal form contrast, pip preview and quick notes */
+.mentor-pip-preview{border:1px solid var(--m-line);border-radius:12px;background:var(--m-panel2);padding:10px 11px;display:grid;gap:7px}
+.mentor-pip-preview>span,.mentor-note-presets>span{font-size:10px;font-weight:900;color:var(--m-text)}
+.mentor-pip-preview>small{font-size:9px;color:var(--m-muted)}
+.mentor-pip-preview>div{display:flex;flex-wrap:wrap;gap:6px}
+.mentor-pip-preview b{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--m-line);border-radius:8px;padding:6px 8px;background:var(--m-panel);font-size:9px}
+.mentor-pip-preview b.good em{color:#16b36f}.mentor-pip-preview b.bad em{color:#ea5b5e}.mentor-pip-preview em{font-style:normal}
+.mentor-note-presets{display:grid;gap:7px}
+.mentor-note-presets>div{display:flex;flex-wrap:wrap;gap:6px}
+.mentor-note-presets button{border:1px solid var(--m-line);background:var(--m-panel2);color:var(--m-text);border-radius:999px;padding:7px 10px;font-size:9px;font-weight:800;cursor:pointer}
+.mentor-note-presets button:hover,.mentor-note-presets button.active{border-color:var(--m-gold);background:rgba(242,182,50,.14);color:var(--m-gold)}
+.mentor-signal-detail-grid em{display:block;font-style:normal;font-size:8px;color:var(--m-muted);margin-top:4px}
+html[data-theme="light"] .mentor-form label{color:#313844!important}
+html[data-theme="light"] .mentor-form label>small{color:#6e7682!important}
+html[data-theme="light"] .mentor-form input,
+html[data-theme="light"] .mentor-form select,
+html[data-theme="light"] .mentor-form textarea{
+  background:#fffdf8!important;color:#161a20!important;border-color:#d6bc8a!important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.45)!important
+}
+html[data-theme="light"] .mentor-form input::placeholder,
+html[data-theme="light"] .mentor-form textarea::placeholder{color:#8a8f97!important;opacity:1!important}
+html[data-theme="dark"] .mentor-form label{color:#f1f3f5!important}
+html[data-theme="dark"] .mentor-form label>small{color:#9aa3af!important}
+html[data-theme="dark"] .mentor-form input,
+html[data-theme="dark"] .mentor-form select,
+html[data-theme="dark"] .mentor-form textarea{background:#0d1219!important;color:#f5f7f8!important;border-color:#343c48!important}
+@media(max-width:760px){
+  #mentorSignalModal{padding:6px!important;align-items:center!important}
+  #mentorSignalModal .mentor-modal-card{max-height:calc(100dvh - 12px)!important;border-radius:16px!important}
+  #mentorSignalModal .mentor-modal-head{padding:10px 12px!important}
+  #mentorSignalModal .mentor-modal-body{padding:10px 12px 14px!important}
+  #mentorSignalModal .mentor-form{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+  #mentorSignalModal .mentor-form>label:nth-of-type(1),
+  #mentorSignalModal .mentor-form>label:nth-of-type(2){grid-column:1/-1!important}
+  #mentorSignalModal .mentor-form label{font-size:10px!important;line-height:1.15!important;color:var(--m-text)!important}
+  #mentorSignalModal .mentor-form input,
+  #mentorSignalModal .mentor-form select{min-height:40px!important;height:40px!important;padding:7px 9px!important;font-size:12px!important}
+  #mentorSignalModal .mentor-form textarea{min-height:76px!important;padding:9px!important;font-size:12px!important}
+  #mentorSignalModal .mentor-modal-foot{padding:8px 12px calc(8px + env(safe-area-inset-bottom))!important}
+  #mentorSignalModal .mentor-modal-foot .mentor-btn{min-height:40px!important}
+  .mentor-pip-preview,.mentor-note-presets,.mentor-form .full{grid-column:1/-1!important}
+  .mentor-note-presets button{font-size:8px!important;padding:6px 8px!important}
+  .mentor-pip-preview{padding:9px!important}
+}
+@media(max-width:360px){
+  #mentorSignalModal .mentor-form{grid-template-columns:1fr!important}
+  #mentorSignalModal .mentor-form>label{grid-column:1/-1!important}
+}
