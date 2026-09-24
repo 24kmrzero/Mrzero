@@ -38,7 +38,39 @@ function renderAll(){const a=payload.account||{},p=payload.performance||{};const
 function clientDate(c){return c.assigned_at||c.signup_date||null}
 function sameDay(v,d=today()){return v&&String(v).slice(0,10)===d}
 function clientStatus(c){return String(c.client_status||'new').toLowerCase()}
-function renderOverview(){const clients=payload.clients||[],p=payload.performance||{},reports=payload.daily_reports||[],links=payload.links||[];const td=today(),newToday=clients.filter(c=>sameDay(clientDate(c),td)).length,follow=clients.filter(c=>['new','follow_up','interested'].includes(clientStatus(c))||c.next_follow_up&&String(c.next_follow_up).slice(0,10)<=td).length,converted=clients.filter(c=>clientStatus(c)==='converted').length,report=reports.find(r=>r.date===td);$('#todayAttention').textContent=follow;$('#overviewMiniText').textContent=`${clients.length} total clients · ${converted} converted · ${money(p.total_earnings)} earnings`;const k=[['My Total Clients',clients.length,'All assigned clients'],['New Leads Today',newToday,'Received today'],['Need Follow-up',follow,'Needs your attention'],['Converted This Month',converted,'Completed conversions'],['Total Earnings',money(p.total_earnings),'Since Sep 2026']];$('#overviewKpis').innerHTML=k.map((x,i)=>`<article class="overview-kpi ${i===4?'gold':''}"><span>${x[0]}</span><b>${x[1]}</b><small>${x[2]}</small></article>`).join('');const recent=clients.slice().sort((a,b)=>new Date(clientDate(b)||0)-new Date(clientDate(a)||0)).slice(0,5);$('#recentClients').innerHTML=recent.length?recent.map((c,i)=>`<div class="recent-client"><div><b>${i+1}. ${esc(c.full_name||'Student')}</b><small>${esc(c.client_id||'')} · ${esc((c.enrollments||[])[0]?.course_title||'No course')}</small></div><div><div class="client-source-tag">${sameDay(clientDate(c),td)?'Ad / Auto':'Old'}</div>${c.whatsapp?`<a class="wa-mini" target="_blank" rel="noopener" href="${waLink(c.whatsapp,`Hello ${c.full_name||''}`)}">WhatsApp</a>`:''}</div></div>`).join(''):'<div class="chat-empty">No assigned clients yet.</div>';const work=[['New leads today',newToday],['Need follow-up',follow],['Leads contacted',report?.leads_contacted||0],['Converted today',clients.filter(c=>sameDay(clientDate(c),td)&&clientStatus(c)==='converted').length],['Daily report',report?'Submitted':'Pending']];$('#todayWork').innerHTML=work.map(x=>`<div class="today-work-item"><span>${x[0]}</span><b>${x[1]}</b></div>`).join('');$('#overviewLinks').innerHTML=links.length?links.slice(0,6).map(l=>`<div class="overview-link-chip"><b>${esc(l.name||'Tracked Link')}</b><small>${esc(l.source||'Direct')} · ${esc(l.ref_code||'')}</small></div>`).join(''):'<span class="muted">No assigned links.</span>'}
+function renderOverview(){
+  const clients=payload.clients||[],p=payload.performance||{},reports=payload.daily_reports||[],links=payload.links||[];
+  const td=today(),newToday=clients.filter(c=>sameDay(clientDate(c),td)).length,
+    follow=clients.filter(c=>['new','follow_up','interested'].includes(clientStatus(c))||c.next_follow_up&&String(c.next_follow_up).slice(0,10)<=td).length,
+    converted=clients.filter(c=>clientStatus(c)==='converted').length,
+    report=reports.find(r=>r.date===td),
+    convertedToday=clients.filter(c=>sameDay(clientDate(c),td)&&clientStatus(c)==='converted').length;
+  $('#todayAttention').textContent=follow;
+  $('#overviewMiniText').textContent=`${clients.length} total clients · ${converted} converted · ${money(p.total_earnings)} earnings`;
+
+  const k=[
+    ['My Total Clients',clients.length,'All assigned clients','fa-user-group'],
+    ['New Leads Today',newToday,'Received today','fa-user-plus'],
+    ['Need Follow-up',follow,'Needs your attention','fa-bell'],
+    ['Converted This Month',converted,'Completed conversions','fa-circle-check'],
+    ['Total Earnings',money(p.total_earnings),'Since Sep 2026','fa-sack-dollar']
+  ];
+  $('#overviewKpis').innerHTML=k.map((x,i)=>`<article class="overview-kpi ${i===4?'gold':''}"><div class="overview-kpi-head"><span>${x[0]}</span><i class="fa-solid ${x[3]}"></i></div><b>${x[1]}</b><small>${x[2]}</small></article>`).join('');
+
+  const recent=clients.slice().sort((a,b)=>new Date(clientDate(b)||0)-new Date(clientDate(a)||0)).slice(0,5);
+  $('#recentClients').innerHTML=recent.length?recent.map((c,i)=>`<div class="recent-client"><div><b>${i+1}. ${esc(c.full_name||'Student')}</b><small>${esc(c.client_id||'')} · ${esc((c.enrollments||[])[0]?.course_title||'No course')}</small></div><div><div class="client-source-tag">${sameDay(clientDate(c),td)?'Ad / Auto':'Old'}</div>${c.whatsapp?`<a class="wa-mini" target="_blank" rel="noopener" href="${waLink(c.whatsapp,`Hello ${c.full_name||''}`)}">WhatsApp</a>`:''}</div></div>`).join(''):'<div class="chat-empty">No assigned clients yet.</div>';
+
+  const work=[
+    ['New leads today',newToday,'clients','Open'],
+    ['Need follow-up',follow,'clients','Follow up'],
+    ['Leads contacted',report?.leads_contacted||0,'daily','Update'],
+    ['Converted today',convertedToday,'clients','View'],
+    ['Daily report',report?'Submitted':'Pending','daily',report?'View':'Submit']
+  ];
+  $('#todayWork').innerHTML=work.map(x=>`<div class="today-work-item"><span>${x[0]}</span><div class="today-work-value"><b>${x[1]}</b><button type="button" class="today-work-action" data-view-jump="${x[2]}">${x[3]}</button></div></div>`).join('');
+
+  $('#overviewLinks').innerHTML=links.length?links.slice(0,6).map(l=>`<div class="overview-link-chip"><b>${esc(l.name||'Tracked Link')}</b><small>${esc(l.source||'Direct')} · ${esc(l.ref_code||'')}</small></div>`).join(''):'<span class="muted">No assigned links.</span>';
+}
 function clientMatches(c){const q=($('#clientSearch')?.value||'').toLowerCase(),f=$('#clientCourseFilter')?.value||'all',s=$('#clientStatusFilter')?.value||'all';const text=`${c.full_name||''} ${c.email||''} ${c.whatsapp||''} ${c.client_id||''}`.toLowerCase();if(q&&!text.includes(q))return false;const courses=(c.enrollments||[]).map(e=>String(e.course_title||'').toLowerCase()).join(' ');if(f==='level1'&&!/basic|level 1/.test(courses))return false;if(f==='level2'&&!/level 2|advanced/.test(courses))return false;if(f==='vip'&&String(c.vip_status||'')!=='approved')return false;if(s!=='all'&&clientStatus(c)!==s)return false;return true}
 function statusOptions(v){return['new','contacted','interested','follow_up','converted','inactive'].map(x=>`<option value="${x}" ${x===v?'selected':''}>${x==='inactive'?'not interested':x.replaceAll('_',' ')}</option>`).join('')}
 function localInput(v){if(!v)return'';const d=new Date(v);if(Number.isNaN(d.getTime()))return'';const z=new Date(d.getTime()-d.getTimezoneOffset()*60000);return z.toISOString().slice(0,16)}
