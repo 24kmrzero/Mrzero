@@ -210,39 +210,47 @@
     resetForgotView();
     openModal('forgotModal');
   });
-  document.getElementById('forgotForm')?.addEventListener('submit', async event => {
+  document.getElementById('forgotForm')?.addEventListener('submit', event => {
     event.preventDefault();
     const form = event.currentTarget;
-    const button = form.querySelector('button[type="submit"]');
     const email = String(new FormData(form).get('email') || '').trim().toLowerCase();
-    if (!email) return;
-    setLoading(button, true, 'Sending...');
-    try {
-      sessionStorage.setItem('24k_recovery_kind', 'student');
-      const response = await supabase.functions.invoke('auth-email', { body: { action: 'password_reset', email } });
-      if (response.error) throw response.error;
-      if (response.data?.error) throw new Error(response.data.error);
-      const masked = maskEmail(email);
-      form.dataset.sent = '1';
-      form.innerHTML = `
-        <div class="app-modal-body">
-          <div class="reset-success-card">
-            <span class="reset-success-icon"><i class="fa-solid fa-envelope-circle-check"></i></span>
-            <div>
-              <h4>Reset link sent</h4>
-              <p>We’ve sent a password-reset link to <b>${masked}</b>.</p>
-              <small>Please check your Inbox and Spam folder. For security, use the latest reset email only.</small>
-            </div>
+    if (!/^\S+@\S+\.\S+$/.test(email)) return toast('Enter a valid email address.', 'warning');
+    const masked = maskEmail(email);
+    sessionStorage.setItem('24k_recovery_kind', 'student');
+    form.dataset.sent = '1';
+    form.innerHTML = `
+      <div class="app-modal-body">
+        <div class="reset-success-card" id="resetRequestCard">
+          <span class="reset-success-icon"><i class="fa-solid fa-envelope-circle-check"></i></span>
+          <div>
+            <h4 id="resetRequestTitle">Reset request received</h4>
+            <p id="resetRequestCopy">We’re sending a password-reset link to <b>${masked}</b>.</p>
+            <small id="resetRequestHint">Please check your Inbox and Spam folder. This normally arrives within a few moments.</small>
           </div>
         </div>
-        <div class="app-modal-foot">
-          <button type="button" class="app-btn gold" data-close-modal="forgotModal">Done</button>
-        </div>`;
-    } catch (error) {
+      </div>
+      <div class="app-modal-foot">
+        <button type="button" class="app-btn gold" data-close-modal="forgotModal">Done</button>
+      </div>`;
+
+    supabase.functions.invoke('auth-email', { body: { action: 'password_reset', email } }).then(response => {
+      if (response.error) throw response.error;
+      if (response.data?.error) throw new Error(response.data.error);
+      const title = form.querySelector('#resetRequestTitle');
+      const copy = form.querySelector('#resetRequestCopy');
+      const hint = form.querySelector('#resetRequestHint');
+      if (title) title.textContent = 'Reset link sent';
+      if (copy) copy.innerHTML = `We’ve sent a password-reset link to <b>${masked}</b>.</p>`;
+      if (hint) hint.textContent = 'Please check your Inbox and Spam folder. For security, use the latest reset email only.';
+    }).catch(error => {
       console.error('Password reset email failed:', error);
-      toast(friendlyError(error, 'Could not send reset link.'), 'error');
-      setLoading(button, false);
-    }
+      const title = form.querySelector('#resetRequestTitle');
+      const copy = form.querySelector('#resetRequestCopy');
+      const hint = form.querySelector('#resetRequestHint');
+      if (title) title.textContent = 'Could not send reset link';
+      if (copy) copy.textContent = friendlyError(error, 'Please try again.');
+      if (hint) hint.textContent = 'Close this window and try again.';
+    });
   });
 
 })();
