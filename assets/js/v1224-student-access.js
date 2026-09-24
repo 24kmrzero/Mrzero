@@ -13,7 +13,7 @@ function statusHtml(){
  if(!access)return '<b>Checking your access…</b>';
  if(access.has_access){
    const until=access.expires_at?new Date(access.expires_at).toLocaleDateString():'No expiry';
-   return `<b>Premium access is active.</b><br><small>Source: ${esc(access.source||'active')} · ${esc(until)}${access.days_left!=null?` · ${access.days_left} day(s) left`:''}</small>`;
+   return `<b>Premium access is active.</b><br><small>Source: ${esc(access.source||'active')} · ${esc(until)}${access.days_left!=null?` · ${access.days_left} day(s) left`:''}. You can still choose Paid Access or Free Access via Broker below.</small>`;
  }
  const pending=payments.find(x=>['received','under_review'].includes(String(x.status).toLowerCase()));
  const ib=verifications.find(x=>String(x.status).toLowerCase()==='pending');
@@ -59,7 +59,7 @@ async function load(){
    render();
  }catch(e){err(e,'Could not load Premium Access.')}
 }
-function openAccess(){step('home');A.openModal('premiumAccessModal');load()}
+async function openAccess(){try{await load()}catch(_){ }step('home');A.openModal('premiumAccessModal')}
 window.__24K_OPEN_PREMIUM_ACCESS__=openAccess;
 function methodMatch(type){
  const rx=type==='bank'?/bank|local/i:/usdt|trc20|crypto/i;return methods.find(x=>rx.test(`${x.name} ${x.instructions}`))||null
