@@ -279,3 +279,157 @@ html[data-theme="light"] .mentor-signal-toolbar>select{background:#fffdf8!import
 html[data-theme="light"] input::placeholder,
 html[data-theme="light"] textarea::placeholder{color:#747d89!important;opacity:1!important}
 html[data-theme="light"] .mentor-chip:not(.gold){color:#4c5664!important}
+
+
+/* V12.77 — 24K MR ZERO Performance Command Center */
+.mrzero-performance{display:grid;gap:14px}
+.mrzero-performance-hero{
+  position:relative;overflow:hidden;min-height:210px;border:1px solid #4a3a18;border-radius:24px;
+  padding:28px 30px;display:flex;align-items:center;justify-content:space-between;gap:28px;
+  background:
+    radial-gradient(circle at 82% 24%,rgba(242,182,50,.18),transparent 26%),
+    radial-gradient(circle at 95% 115%,rgba(242,182,50,.09),transparent 32%),
+    linear-gradient(125deg,#090b0f 0%,#10131a 52%,#17130c 100%);
+  box-shadow:0 22px 55px rgba(0,0,0,.22)
+}
+.mrzero-performance-hero:before{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.25;
+  background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:26px 26px
+}
+.mrzero-performance-hero:after{
+  content:"24K";position:absolute;right:28px;bottom:-34px;font-size:148px;line-height:1;
+  font-weight:950;letter-spacing:-.08em;color:rgba(242,182,50,.045);pointer-events:none
+}
+.mrzero-performance-copy,.mrzero-performance-live{position:relative;z-index:2}
+.mrzero-performance-kicker{display:inline-flex;align-items:center;gap:7px;font-size:9px;font-weight:900;letter-spacing:.16em;color:var(--m-gold)}
+.mrzero-performance-copy h2{margin:12px 0 8px;color:#fff;font-size:34px;line-height:1.02;letter-spacing:-.035em}
+.mrzero-performance-copy h2 em{font-style:normal;color:var(--m-gold)}
+.mrzero-performance-copy p{margin:0;color:#aeb4bf;font-size:12px}
+.mrzero-performance-live{
+  width:260px;min-height:128px;border:1px solid rgba(242,182,50,.26);border-radius:18px;padding:18px;
+  background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018));backdrop-filter:blur(8px)
+}
+.mrzero-performance-live span{display:flex;align-items:center;gap:7px;color:#d5c08b;font-size:8px;font-weight:900;letter-spacing:.15em}
+.mrzero-performance-live span i{width:7px;height:7px;border-radius:50%;background:#23ce8b;box-shadow:0 0 0 5px rgba(35,206,139,.10)}
+.mrzero-performance-live b{display:block;margin-top:22px;color:#fff;font-size:31px;line-height:1;font-weight:950}
+.mrzero-performance-live small{display:block;margin-top:7px;color:#969eaa;font-size:9px}
+
+.mrzero-performance-kpis{
+  display:grid;grid-template-columns:1.45fr repeat(4,minmax(0,1fr));gap:10px!important;margin:0!important
+}
+.mrzero-metric{
+  position:relative;overflow:hidden;min-height:105px;border:1px solid var(--m-line);border-radius:16px;
+  background:var(--m-panel);padding:15px 16px
+}
+.mrzero-metric.primary{
+  background:linear-gradient(135deg,#111419,#19150d)!important;border-color:#5a461d!important
+}
+.mrzero-metric:after{content:"";position:absolute;right:-18px;bottom:-34px;width:85px;height:85px;border-radius:50%;border:1px solid rgba(242,182,50,.08)}
+.mrzero-metric-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.mrzero-metric-head span{font-size:8px;font-weight:900;letter-spacing:.11em;color:var(--m-muted)}
+.mrzero-metric-head i{font-size:11px;color:var(--m-gold)}
+.mrzero-metric b{display:block;margin-top:14px;font-size:24px;line-height:1;font-weight:950;letter-spacing:-.025em}
+.mrzero-metric.primary b{font-size:34px;color:#fff}
+.mrzero-metric small{display:block;margin-top:8px;color:var(--m-muted);font-size:8px}
+.mrzero-metric.good b{color:var(--m-green)}.mrzero-metric.bad b{color:var(--m-red)}.mrzero-metric.gold b{color:var(--m-gold)}
+
+.mrzero-command-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(320px,.7fr);gap:12px}
+.mrzero-command-panel{
+  position:relative;overflow:hidden;border:1px solid var(--m-line);border-radius:18px;
+  background:var(--m-panel);padding:17px 18px;box-shadow:0 13px 32px rgba(0,0,0,.08)
+}
+.mrzero-panel-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px}
+.mrzero-panel-head>div{display:flex;align-items:center;gap:10px}
+.mrzero-panel-head h3{margin:0;font-size:14px}
+.mrzero-panel-head>small{font-size:8.5px;color:var(--m-muted);text-transform:uppercase;letter-spacing:.08em}
+.mrzero-panel-index{
+  width:26px;height:26px;border:1px solid rgba(242,182,50,.34);border-radius:8px;display:grid;place-items:center;
+  background:rgba(242,182,50,.07);color:var(--m-gold);font-size:8px;font-weight:950
+}
+
+.mrzero-signal-bars{
+  height:190px;display:flex;align-items:end;gap:7px;padding:16px 3px 24px;
+  border-top:1px solid rgba(128,128,128,.08);position:relative
+}
+.mrzero-signal-bars:before,.mrzero-signal-bars:after{
+  content:"";position:absolute;left:0;right:0;border-top:1px dashed rgba(128,128,128,.10)
+}
+.mrzero-signal-bars:before{top:38%}.mrzero-signal-bars:after{top:68%}
+.mrzero-signal-bars span{
+  position:relative;z-index:1;flex:1;min-width:7px;max-width:26px;margin:auto;
+  background:linear-gradient(180deg,#f6c85f,#bd8010);border-radius:6px 6px 2px 2px;
+  box-shadow:0 -6px 18px rgba(242,182,50,.12)
+}
+.mrzero-signal-bars span small{
+  position:absolute;left:50%;bottom:-19px;transform:translateX(-50%);
+  color:var(--m-muted);font-size:7px;font-weight:800
+}
+
+.mrzero-win-rate{min-height:190px;display:grid;grid-template-columns:150px 1fr;align-items:center;gap:8px}
+.mrzero-score-ring{
+  width:134px;height:134px;border-radius:50%;display:grid;place-items:center;position:relative;
+  background:conic-gradient(var(--m-gold) calc(var(--pct)*1%),var(--m-panel2) 0)
+}
+.mrzero-score-ring:before{content:"";position:absolute;inset:13px;border-radius:50%;background:var(--m-panel);border:1px solid var(--m-line)}
+.mrzero-score-ring>div{position:relative;z-index:2;text-align:center}.mrzero-score-ring b{display:block;font-size:31px}.mrzero-score-ring small{font-size:8px;color:var(--m-muted)}
+.mrzero-win-stats{display:grid;gap:8px}.mrzero-win-stat{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--m-line);padding:8px 0}
+.mrzero-win-stat:last-child{border-bottom:0}.mrzero-win-stat span{font-size:9px;color:var(--m-muted)}.mrzero-win-stat b{font-size:13px}
+
+.mrzero-progress-panel{
+  display:grid;grid-template-columns:250px 1fr 150px;align-items:center;gap:20px;
+  border:1px solid #4c3b18;border-radius:17px;padding:14px 17px;
+  background:linear-gradient(100deg,#111318,#17140d)
+}
+.mrzero-progress-copy{display:flex;align-items:center;gap:10px}.mrzero-progress-copy>div{display:grid}.mrzero-progress-copy small{font-size:7.5px;color:#9aa1ac;letter-spacing:.1em}.mrzero-progress-copy b{margin-top:3px;color:#fff;font-size:17px}
+.mrzero-progress-track{height:10px;border-radius:99px;background:#25272c;overflow:hidden;border:1px solid rgba(255,255,255,.04)}
+.mrzero-progress-track i{display:block;height:100%;width:0;background:linear-gradient(90deg,#a56b0b,#f2b632,#ffe09a);border-radius:99px;box-shadow:0 0 18px rgba(242,182,50,.28)}
+.mrzero-progress-side{text-align:right}.mrzero-progress-side b{display:block;color:var(--m-gold);font-size:20px}.mrzero-progress-side small{color:#8d95a0;font-size:7.5px}
+
+.mrzero-lower-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:12px}
+.mrzero-market-focus{display:grid;gap:9px}
+.mrzero-market-row{display:grid;grid-template-columns:74px 1fr auto;align-items:center;gap:10px}
+.mrzero-market-row b{font-size:10px}.mrzero-market-row small{font-size:8px;color:var(--m-muted)}
+.mrzero-market-track{height:7px;background:var(--m-panel2);border-radius:99px;overflow:hidden}
+.mrzero-market-track i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#9e690f,#f2b632)}
+
+.mrzero-activity-feed{display:grid;gap:0}
+.mrzero-activity-item{display:grid;grid-template-columns:32px 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--m-line)}
+.mrzero-activity-item:last-child{border-bottom:0}
+.mrzero-activity-icon{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:rgba(242,182,50,.08);color:var(--m-gold);font-size:10px}
+.mrzero-activity-copy{display:grid}.mrzero-activity-copy b{font-size:10px}.mrzero-activity-copy small{font-size:8px;color:var(--m-muted);margin-top:2px}
+.mrzero-activity-status{font-size:7.5px;font-weight:900;text-transform:uppercase;letter-spacing:.05em;border:1px solid var(--m-line);border-radius:999px;padding:5px 7px;color:var(--m-muted)}
+
+html[data-theme="light"] .mrzero-performance-hero{border-color:#cfa24f;box-shadow:0 18px 42px rgba(73,49,10,.14)}
+html[data-theme="light"] .mrzero-metric.primary{background:linear-gradient(135deg,#111419,#1a160e)!important}
+html[data-theme="light"] .mrzero-progress-panel{border-color:#c79a42}
+html[data-theme="light"] .mrzero-command-panel{box-shadow:0 11px 28px rgba(71,48,11,.06)}
+html[data-theme="light"] .mrzero-panel-head h3,
+html[data-theme="light"] .mrzero-metric:not(.primary) b,
+html[data-theme="light"] .mrzero-win-stat b,
+html[data-theme="light"] .mrzero-market-row b,
+html[data-theme="light"] .mrzero-activity-copy b{color:#141922!important}
+
+@media(max-width:1180px){
+  .mrzero-performance-kpis{grid-template-columns:repeat(3,1fr)}
+  .mrzero-metric.primary{grid-column:span 2}
+  .mrzero-command-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:760px){
+  .mrzero-performance{gap:10px}
+  .mrzero-performance-hero{min-height:0;padding:19px;border-radius:18px;align-items:flex-start;flex-direction:column}
+  .mrzero-performance-copy h2{font-size:27px}.mrzero-performance-live{width:auto;align-self:stretch;min-height:0}
+  .mrzero-performance-live b{margin-top:14px;font-size:27px}
+  .mrzero-performance-kpis{grid-template-columns:1fr 1fr}
+  .mrzero-metric.primary{grid-column:1/-1}.mrzero-metric{min-height:95px}.mrzero-metric.primary b{font-size:30px}
+  .mrzero-command-grid,.mrzero-lower-grid{grid-template-columns:1fr}
+  .mrzero-signal-bars{height:155px}
+  .mrzero-win-rate{grid-template-columns:130px 1fr}.mrzero-score-ring{width:116px;height:116px}
+  .mrzero-progress-panel{grid-template-columns:1fr;gap:10px}.mrzero-progress-side{text-align:left}
+}
+@media(max-width:480px){
+  .mrzero-performance-kpis{grid-template-columns:1fr 1fr}
+  .mrzero-metric{padding:13px}.mrzero-metric b{font-size:20px}
+  .mrzero-win-rate{grid-template-columns:1fr}.mrzero-score-ring{margin:auto}
+  .mrzero-panel-head{align-items:flex-start}
+}
