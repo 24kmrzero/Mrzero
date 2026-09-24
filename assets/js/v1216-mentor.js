@@ -72,7 +72,53 @@ function signalPips(s){
   if(derived!==null&&Number.isFinite(Number(derived)))return Number(derived);
   const x=Number(s.result_pips);return Number.isFinite(x)?x:0
 }
-function renderPerformance(){const all=state.signals||[],now=new Date(),weekAgo=new Date(now-7*864e5),monthStart=new Date(now.getFullYear(),now.getMonth(),1),net=all.reduce((a,s)=>a+signalPips(s),0),green=all.reduce((a,s)=>a+Math.max(0,signalPips(s)),0),red=all.reduce((a,s)=>a+Math.min(0,signalPips(s)),0),week=all.filter(s=>new Date(s.closed_at||s.last_status_at||s.created_at)>=weekAgo).reduce((a,s)=>a+signalPips(s),0),month=all.filter(s=>new Date(s.closed_at||s.last_status_at||s.created_at)>=monthStart).reduce((a,s)=>a+signalPips(s),0);const kpis=[['TOTAL NET PIPS',net,net>=0?'green':'red'],['TOTAL GREEN PIPS',green,'green'],['TOTAL RED PIPS',red,'red'],['TOTAL PIPS',net,net>=0?'green':'red'],['THIS WEEK',week,week>=0?'green':'red'],['THIS MONTH',month,month>=0?'green':'red']];$('#mentorPerformanceKpis').innerHTML=kpis.map(([l,v,c])=>`<article class="mentor-kpi ${c}"><small>${l}</small><b>${v>=0?'+':''}${money(v)}</b></article>`).join('');const pct=Math.max(0,Math.min(100,month/5000*100));$('#mentorGoalPct').textContent=`${pct.toFixed(0)}%`;$('#mentorMonthPips').textContent=`${month>=0?'+':''}${money(month)} earned`;$('#mentorGoalBar').style.width=`${pct}%`;const days=[...Array(14)].map((_,i)=>{const d=new Date(now);d.setHours(0,0,0,0);d.setDate(d.getDate()-(13-i));const e=new Date(d);e.setDate(e.getDate()+1);return{d,count:all.filter(s=>{const x=new Date(s.created_at);return x>=d&&x<e}).length}}),mx=Math.max(1,...days.map(x=>x.count));$('#mentorSignalBars').innerHTML=days.map(x=>`<span style="height:${Math.max(4,x.count/mx*95)}%" title="${x.count} signals"><small>${x.d.getDate()}</small></span>`).join('');const done=all.filter(signalIsClosed),wins=done.filter(s=>signalPips(s)>0).length,wr=done.length?wins/done.length*100:0;$('#mentorWinRate').innerHTML=`<div class="mentor-ring" style="--pct:${wr.toFixed(1)}"><strong>${wr.toFixed(0)}%</strong></div><small>${wins} win · ${Math.max(0,done.length-wins)} non-win · ${done.length} total</small>`;const pairs={};all.forEach(s=>pairs[s.symbol]=(pairs[s.symbol]||0)+1);const ps=Object.entries(pairs).sort((a,b)=>b[1]-a[1]).slice(0,7),pmax=Math.max(1,...ps.map(x=>x[1]));$('#mentorTopPairs').innerHTML=ps.length?ps.map(([p,c])=>`<div class="mentor-list-row"><b>${esc(p)}</b><i style="max-width:${Math.max(5,c/pmax*100)}%"></i><small>${c} signals</small></div>`).join(''):'<div class="mentor-empty">No signal activity yet.</div>';$('#mentorRecentActivity').innerHTML=all.slice(0,8).map(s=>`<div class="mentor-list-row"><b>${esc(s.symbol)}</b><span class="mentor-chip ${s.direction==='BUY'?'gold':''}">${esc(s.direction)}</span><small style="margin-left:auto">${esc(String(s.status||'active').replaceAll('_',' '))}</small></div>`).join('')||'<div class="mentor-empty">No recent activity.</div>'}
+function renderPerformance(){
+  const all=state.signals||[],now=new Date(),weekAgo=new Date(now-7*864e5),monthStart=new Date(now.getFullYear(),now.getMonth(),1);
+  const net=all.reduce((a,s)=>a+signalPips(s),0),
+    green=all.reduce((a,s)=>a+Math.max(0,signalPips(s)),0),
+    red=all.reduce((a,s)=>a+Math.min(0,signalPips(s)),0),
+    week=all.filter(s=>new Date(s.closed_at||s.last_status_at||s.created_at)>=weekAgo).reduce((a,s)=>a+signalPips(s),0),
+    month=all.filter(s=>new Date(s.closed_at||s.last_status_at||s.created_at)>=monthStart).reduce((a,s)=>a+signalPips(s),0);
+  const hero=$('#mentorHeroNetPips');if(hero)hero.textContent=`${net>=0?'+':''}${money(net)} pips`;
+
+  const metrics=[
+    {label:'NET PERFORMANCE',value:net,icon:'fa-chart-line',tone:'primary',hint:'All recorded signal results'},
+    {label:'WINNING PIPS',value:green,icon:'fa-arrow-trend-up',tone:'good',hint:'Positive outcomes'},
+    {label:'LOSING PIPS',value:red,icon:'fa-arrow-trend-down',tone:'bad',hint:'Stop-loss / negative outcomes'},
+    {label:'THIS WEEK',value:week,icon:'fa-calendar-week',tone:week>=0?'good':'bad',hint:'Rolling 7-day result'},
+    {label:'THIS MONTH',value:month,icon:'fa-calendar-days',tone:month>=0?'gold':'bad',hint:'Current month result'}
+  ];
+  $('#mentorPerformanceKpis').innerHTML=metrics.map(m=>`<article class="mrzero-metric ${m.tone}"><div class="mrzero-metric-head"><span>${m.label}</span><i class="fa-solid ${m.icon}"></i></div><b>${m.value>=0?'+':''}${money(m.value)}</b><small>${m.hint}</small></article>`).join('');
+
+  const pct=Math.max(0,Math.min(100,Math.abs(month)/5000*100));
+  $('#mentorGoalPct').textContent=`${pct.toFixed(0)}%`;
+  $('#mentorMonthPips').textContent=`${month>=0?'+':''}${money(month)} pips`;
+  $('#mentorGoalBar').style.width=`${pct}%`;
+
+  const days=[...Array(14)].map((_,i)=>{
+    const d=new Date(now);d.setHours(0,0,0,0);d.setDate(d.getDate()-(13-i));
+    const end=new Date(d);end.setDate(end.getDate()+1);
+    return{d,count:all.filter(s=>{const x=new Date(s.created_at);return x>=d&&x<end}).length}
+  }),mx=Math.max(1,...days.map(x=>x.count));
+  $('#mentorSignalBars').innerHTML=days.map(x=>`<span style="height:${Math.max(5,x.count/mx*100)}%" title="${x.count} signal${x.count===1?'':'s'}"><small>${x.d.getDate()}</small></span>`).join('');
+
+  const resolved=all.filter(s=>signalIsClosed(s)&&s.status!=='cancelled'&&s.result_pips!==null),
+    wins=resolved.filter(s=>signalPips(s)>0).length,
+    losses=resolved.filter(s=>signalPips(s)<0).length,
+    be=resolved.filter(s=>signalPips(s)===0).length,
+    wr=resolved.length?wins/resolved.length*100:0;
+  $('#mentorWinRate').innerHTML=`<div class="mrzero-score-ring" style="--pct:${wr.toFixed(1)}"><div><b>${wr.toFixed(0)}%</b><small>WIN RATE</small></div></div><div class="mrzero-win-stats"><div class="mrzero-win-stat"><span>Wins</span><b>${wins}</b></div><div class="mrzero-win-stat"><span>Losses</span><b>${losses}</b></div><div class="mrzero-win-stat"><span>Breakeven</span><b>${be}</b></div><div class="mrzero-win-stat"><span>Resolved</span><b>${resolved.length}</b></div></div>`;
+
+  const pairs={};all.forEach(s=>{const k=mentorDisplaySymbol(s.symbol);pairs[k]=(pairs[k]||0)+1});
+  const ps=Object.entries(pairs).sort((a,b)=>b[1]-a[1]).slice(0,6),pmax=Math.max(1,...ps.map(x=>x[1]));
+  $('#mentorTopPairs').innerHTML=ps.length?ps.map(([pair,count])=>`<div class="mrzero-market-row"><b>${esc(pair)}</b><div class="mrzero-market-track"><i style="width:${Math.max(8,count/pmax*100)}%"></i></div><small>${count} signal${count===1?'':'s'}</small></div>`).join(''):'<div class="mentor-empty">No market activity yet.</div>';
+
+  const recent=[...all].sort((a,b)=>new Date(b.last_status_at||b.updated_at||b.created_at)-new Date(a.last_status_at||a.updated_at||a.created_at)).slice(0,7);
+  $('#mentorRecentActivity').innerHTML=recent.length?recent.map(s=>{
+    const status=signalStatusLabel(s.status),p=signalPips(s),stamp=mentorSignalStamp(s.last_status_at||s.updated_at||s.created_at);
+    return `<div class="mrzero-activity-item"><div class="mrzero-activity-icon"><i class="fa-solid ${signalIsClosed(s)?'fa-circle-check':'fa-bolt'}"></i></div><div class="mrzero-activity-copy"><b>${esc(mentorDisplaySymbol(s.symbol))} · ${esc(signalTypeLabel(s))}</b><small>${esc(stamp.date)} · ${esc(stamp.time)}${s.result_pips==null?'':` · ${pipText(p)}`}</small></div><span class="mrzero-activity-status">${esc(status)}</span></div>`
+  }).join(''):'<div class="mentor-empty">No recent activity.</div>'
+}
 function statusChip(v){return `<span class="mentor-chip gold">${esc(String(v||'').replaceAll('_',' ').toUpperCase())}</span>`}
 function signalTypeLabel(s){const d=String(s?.direction||'BUY').toUpperCase(),o=String(s?.order_type||'market').toLowerCase();return o==='market'?d:`${d} ${o.toUpperCase()}`}
 function signalStatusLabel(v){return String(v||'active').replaceAll('_',' ').replace(/\b\w/g,m=>m.toUpperCase())}
