@@ -3,8 +3,8 @@
   "short_name": "24K Student",
   "description": "24K MR ZERO Student learning and market access panel",
   "id": "/student/",
-  "start_url": "/student/",
-  "scope": "/student/",
+  "start_url": "/student-dashboard.html",
+  "scope": "/",
   "display": "standalone",
   "display_override": [
     "standalone",
