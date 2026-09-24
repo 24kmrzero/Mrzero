@@ -139,20 +139,19 @@
       ['Announcements',['announcements']]
     ]],
     ['Courses',[
-      ['Courses',['courses']],
-      ['Zoom Sessions',['sessions','zoom sessions','zoom-sessions']]
+      ['Courses',['courses']]
     ]],
     ['Management',[
       ['Payments',['payments']],
       ['Students',['students']],
+      ['Team Accounts',['team-access-ref','team-manager','team accounts']],
+      ['Mentor Accounts',['v1216-center','mentor accounts','mentors']],
       ['Payment Methods',['methods','payment methods','payment-methods']],
       ['Support',['support']]
     ]],
     ['Operations',[
       ['Premium Access',['premium-access','premium access']],
-      ['Team Manager',['team-manager','team manager']],
-      ['Performance Editor',['team-performance','team performance','performance editor']],
-      ['Link Manager',['links','link-manager','link manager']],
+      ['Link Manager',['link-manager-ref','links','link-manager','link manager']],
       ['Admin Notifications',['admin-notifications','admin notifications']],
       ['Activity Logs',['audit','activity-logs','activity logs']]
     ]]
