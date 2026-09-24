@@ -59,7 +59,7 @@ async function load(){
    render();
  }catch(e){err(e,'Could not load Premium Access.')}
 }
-async function openAccess(){try{await load()}catch(_){ }step('home');A.openModal('premiumAccessModal')}
+function openAccess(){step('home');A.openModal('premiumAccessModal');load().finally(()=>step('home'))}
 window.__24K_OPEN_PREMIUM_ACCESS__=openAccess;
 function methodMatch(type){
  const rx=type==='bank'?/bank|local/i:/usdt|trc20|crypto/i;return methods.find(x=>rx.test(`${x.name} ${x.instructions}`))||null
