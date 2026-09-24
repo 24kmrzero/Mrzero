@@ -14,3 +14,86 @@ body{background:var(--r18-bg)!important;color:var(--r18-text)!important}.team-ma
 @media(max-width:900px){.team-topbar{flex-direction:column;align-items:stretch}.top-actions{overflow:auto}.team-user-chip{margin-left:auto}.team-month-hero{flex-direction:column;align-items:flex-start}.today-attention{text-align:left}.team-overview-split,.performance-main-grid{grid-template-columns:1fr}.client-work-card{grid-template-columns:1fr 1fr}.client-work-card .main{grid-column:1/-1}.client-actions{grid-column:1/-1;justify-content:flex-start}.client-filter-card{grid-template-columns:1fr}.team-earnings-top{grid-template-columns:repeat(2,1fr)}.live-desk-shell{grid-template-columns:1fr;height:auto}.live-desk-list{border-right:0;border-bottom:1px solid var(--r18-line);max-height:330px}.live-desk-conversation{height:520px}.tri-grid{grid-template-columns:1fr!important}}
 @media(max-width:780px){.team-flow-note,.team-install-card,.team-nav-label{display:none}.team-side nav{grid-template-columns:repeat(8,1fr)!important}.team-main{padding-bottom:94px!important}.team-flow-cards{grid-template-columns:1fr}.team-overview-kpis{grid-template-columns:1fr 1fr}.chat-kpis{grid-template-columns:1fr 1fr}.history-kpis{grid-template-columns:1fr 1fr}.course-performance-grid,.metric-box-grid{grid-template-columns:1fr 1fr}.client-work-card{grid-template-columns:1fr}.client-meta-cell,.client-actions{grid-column:1}.team-earnings-top{grid-template-columns:1fr 1fr}.search-client-row{grid-template-columns:1fr}.live-desk-shell{border-radius:12px}.top-actions select{min-width:125px}.team-user-chip{display:none}}
 @media(max-width:520px){.team-overview-kpis,.team-earnings-top,.history-kpis,.performance-kpis,.course-performance-grid,.metric-box-grid{grid-template-columns:1fr 1fr}.team-flow-cards{gap:8px}.team-month-hero{padding:17px}.section-head{gap:8px}.section-head h2{font-size:20px}.chat-kpis{grid-template-columns:1fr 1fr}.team-side nav{grid-template-columns:repeat(8,1fr)!important}.client-work-card{padding:11px}.live-desk-conversation{height:480px}}
+
+/* V12.56 — Team Panel visual parity with final Admin reference */
+:root{
+  --r18-bg:#08090b;--r18-surface:#111318;--r18-surface2:#171a21;--r18-line:#2a2e37;
+  --r18-gold:#f2b632;--r18-gold2:#ffc84d;--r18-text:#f3f1ea;--r18-muted:#929baa;
+}
+html[data-theme="light"]{
+  --r18-bg:#f6f0e6;--r18-surface:#fffdf8;--r18-surface2:#fbf6ec;
+  --r18-line:#e4d3b3;--r18-text:#181c24;--r18-muted:#758091;--r18-gold:#e39a18;--r18-gold2:#ffc84d;
+}
+body{font-family:Inter,system-ui,sans-serif!important;background:var(--r18-bg)!important;color:var(--r18-text)!important}
+.team-app{grid-template-columns:276px minmax(0,1fr)!important;background:var(--r18-bg)!important}
+.team-side{
+  padding:0 12px 18px!important;background:#080b11!important;border-right:1px solid var(--r18-line)!important;
+  box-shadow:none!important
+}
+.brand{
+  min-height:100px!important;padding:14px 8px!important;margin:0 -12px 10px!important;
+  border-bottom:1px solid var(--r18-line)!important;justify-content:center!important
+}
+.brand img{width:74px!important;max-height:62px!important;object-fit:contain}.brand b{font-size:12px!important}.brand span{font-size:8px!important}
+.team-nav-label{font-size:8px!important;letter-spacing:.15em!important;padding:13px 9px 5px!important;color:#687180!important}
+.team-side nav{gap:3px!important}
+.nav-btn{
+  min-height:40px!important;padding:9px 10px!important;border-radius:9px!important;font-size:12px!important;
+  font-weight:700!important;color:#c2c8d1!important
+}
+.nav-btn i{width:18px!important;color:#8f98a7!important}
+.nav-btn:hover,.nav-btn.active{
+  background:linear-gradient(90deg,rgba(242,182,50,.22),rgba(242,182,50,.05))!important;
+  border-color:transparent!important;color:var(--r18-gold)!important;transform:none!important
+}
+.nav-btn.active i,.nav-btn:hover i{color:var(--r18-gold)!important}
+.team-install-card,.team-flow-note{border-radius:12px!important;border-color:var(--r18-line)!important;background:rgba(242,182,50,.04)!important}
+.team-install-card b{font-size:10px!important}.team-install-card small,.team-flow-note p{font-size:8px!important}.team-flow-note b{font-size:8px!important}
+.team-main{padding:0 0 60px!important;max-width:none!important;background:var(--r18-bg)!important}
+.team-topbar{
+  position:sticky!important;top:0!important;z-index:45!important;height:66px!important;margin:0!important;padding:0 18px!important;
+  background:rgba(10,11,14,.94)!important;border-bottom:1px solid var(--r18-line)!important;backdrop-filter:blur(10px)!important
+}
+.team-page-title h1{font-size:13px!important;line-height:1.2!important;margin:0 0 2px!important;font-weight:800!important}
+.team-page-title p{font-size:9px!important;line-height:1.3!important;margin:0!important;color:var(--r18-muted)!important}
+.top-actions{gap:8px!important;align-items:center!important}.top-actions select{height:40px!important;min-width:150px!important;padding:0 10px!important;font-size:11px!important}
+.icon-btn{width:40px!important;height:40px!important;border-radius:10px!important;border-color:var(--r18-line)!important;background:var(--r18-surface)!important}
+.team-user-chip{min-height:40px!important;border-radius:10px!important;padding:4px 8px!important;border-color:var(--r18-line)!important;background:var(--r18-surface)!important}
+.team-user-chip>span{width:30px!important;height:30px!important;font-size:10px!important}.team-user-chip b{font-size:10px!important}.team-user-chip small{font-size:8px!important}
+.view{margin:18px!important}
+.team-month-hero,.panel-card,.team-flow-cards article,.team-overview-kpis>*,.performance-kpis>*,.history-kpis>*,.team-earnings-top>*,.progress-card,.link-card,.client-work-card,.client-filter-card,.search-client-card,.daily-card,.broker-card,.metric-box,.course-performance-card,.live-desk-shell{
+  background:var(--r18-surface)!important;border:1px solid var(--r18-line)!important;border-radius:14px!important;box-shadow:none!important
+}
+.team-month-hero{padding:16px!important}.team-month-hero h2{font-size:20px!important;line-height:1.2!important;margin:4px 0!important}.team-month-hero p{font-size:11px!important;line-height:1.5!important}
+.today-attention b{font-size:16px!important}.today-attention small,.today-attention em{font-size:8px!important}
+.team-flow-cards{gap:9px!important;margin:10px 0!important}.team-flow-cards article{min-height:92px!important;padding:12px!important}.team-flow-cards article b{font-size:11px!important}.team-flow-cards article p{font-size:9px!important;line-height:1.45!important}
+.team-overview-kpis{gap:9px!important}.team-overview-kpis>*{min-height:76px!important;padding:10px 11px!important}.team-overview-kpis span{font-size:9px!important}.team-overview-kpis b{font-size:19px!important}
+.section-head{margin-bottom:10px!important}.section-head h2{font-size:20px!important;line-height:1.2!important;margin:0 0 3px!important}.section-head p{font-size:11px!important;line-height:1.5!important}
+.card-head{margin-bottom:9px!important}.card-head h3{font-size:14px!important;line-height:1.2!important}.card-head small{font-size:9px!important;line-height:1.4!important}
+.panel-card{padding:12px 14px!important}.tiny-btn,.gold-btn,.preset-row button{min-height:32px!important;padding:6px 10px!important;border-radius:9px!important;font-size:9px!important}
+.filter-bar,.client-filter-card{gap:8px!important;padding:10px!important}.filter-bar input,.filter-bar select,.client-filter-card input,.client-filter-card select,.search-client-row input,.search-client-row select,.custom-range input,.form-grid input,.form-grid select,.form-grid textarea{
+  background:var(--r18-surface2)!important;border:1px solid var(--r18-line)!important;color:var(--r18-text)!important;border-radius:9px!important;font-size:11px!important
+}
+.table-wrap{border-color:var(--r18-line)!important;border-radius:14px!important;background:var(--r18-surface)!important}
+table{font-size:11px!important}th{font-size:9px!important;letter-spacing:.04em!important;color:var(--r18-muted)!important;background:var(--r18-surface2)!important}td,th{padding:10px 9px!important;border-color:var(--r18-line)!important}
+.status,.section-badge{font-size:9px!important}
+.links-grid{gap:10px!important}.link-card{padding:14px!important}.link-head b{font-size:13px!important}.tracked-url input{font-size:10px!important}
+.mini-metrics div,.metric-box,.course-performance-card{background:var(--r18-surface2)!important;border:1px solid var(--r18-line)!important}.mini-metrics b{font-size:16px!important}.mini-metrics span{font-size:8px!important}
+.progress-grid{gap:10px!important}.progress-card{padding:13px!important}.progress-card h3{font-size:13px!important}.rate-big{font-size:18px!important}.progress-meta,.next-copy{font-size:9px!important}
+html[data-theme="light"] .team-side{background:linear-gradient(180deg,#fff9ee,#f7efe2)!important}
+html[data-theme="light"] .nav-btn{color:#4d5562!important}html[data-theme="light"] .nav-btn i{color:#777f8a!important}
+html[data-theme="light"] .nav-btn:hover{background:#fff1d8!important;color:#9b5c00!important}
+html[data-theme="light"] .nav-btn.active{background:linear-gradient(135deg,#ffc84d,#f2ab18)!important;color:#141414!important}
+html[data-theme="light"] .nav-btn.active i{color:#141414!important}
+html[data-theme="light"] .team-topbar{background:rgba(255,253,248,.97)!important}
+html[data-theme="light"] .team-month-hero,html[data-theme="light"] .panel-card,html[data-theme="light"] .team-flow-cards article,
+html[data-theme="light"] .team-overview-kpis>*,html[data-theme="light"] .performance-kpis>*,html[data-theme="light"] .history-kpis>*,
+html[data-theme="light"] .team-earnings-top>*,html[data-theme="light"] .progress-card,html[data-theme="light"] .link-card,
+html[data-theme="light"] .client-work-card,html[data-theme="light"] .client-filter-card{box-shadow:none!important}
+@media(max-width:780px){
+  .team-app{grid-template-columns:1fr!important}.team-main{padding-bottom:78px!important}.view{margin:11px!important}
+  .team-topbar{height:auto!important;min-height:60px!important;padding:8px 11px!important;flex-direction:row!important;align-items:center!important}
+  .team-page-title h1{font-size:13px!important}.team-page-title p{font-size:8px!important}.top-actions select{min-width:120px!important}
+  .team-side{display:none!important}.team-mobile-nav{display:grid!important}
+  .team-month-hero{padding:12px!important}.team-month-hero h2{font-size:18px!important}.section-head h2{font-size:19px!important}
+}
