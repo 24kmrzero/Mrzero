@@ -158,7 +158,6 @@
           metadata: {
             full_name: String(values.full_name || '').trim(),
             whatsapp: String(values.whatsapp || '').trim(),
-            country: String(values.country || '').trim(),
             accepted_terms: true,
             terms_version: cfg.TERMS_VERSION,
             risk_version: cfg.RISK_VERSION,
