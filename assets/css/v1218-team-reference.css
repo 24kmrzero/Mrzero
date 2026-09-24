@@ -222,3 +222,10 @@ html:not([data-theme="light"]) .panel-card{
   .today-work-value{gap:5px}
   .today-work-action{padding:5px 6px;font-size:8px}
 }
+
+
+/* V12.74 — keep Recent Assigned Clients at the approved overview height */
+@media(min-width:901px){
+  .team-overview-split>.panel-card:first-child{min-height:285px!important;height:285px!important;overflow:auto!important}
+  .team-overview-split>.panel-card:nth-child(2){min-height:285px!important}
+}
