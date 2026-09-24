@@ -230,3 +230,52 @@ html[data-theme="light"] .mentor-premium-banner h2{color:#161a20!important}
  .mentor-article-filter-row{grid-template-columns:1fr 1fr!important}.mentor-article-filter-row input{grid-column:1/-1!important}
  .mentor-history-card .mentor-actions{grid-template-columns:1fr 1fr auto!important}
 }
+
+
+/* V12.76 — Mentor logo, light-theme readability and signal contrast */
+.mentor-brand{
+  min-height:78px!important;
+  padding:8px 6px 18px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important
+}
+.mentor-brand>div{display:none!important}
+.mentor-brand img{
+  width:auto!important;
+  height:auto!important;
+  max-width:132px!important;
+  max-height:58px!important;
+  object-fit:contain!important;
+  filter:drop-shadow(0 8px 22px rgba(242,182,50,.12))
+}
+
+html[data-theme="light"]{
+  --m-bg:#f5f1e8;
+  --m-panel:#fffaf0;
+  --m-panel2:#f7f0e2;
+  --m-line:#d8c397;
+  --m-text:#111722;
+  --m-muted:#566170;
+}
+html[data-theme="light"] .mentor-top small,
+html[data-theme="light"] .mentor-head p,
+html[data-theme="light"] .mentor-premium-banner p,
+html[data-theme="light"] .mentor-card p,
+html[data-theme="light"] .mentor-kpi small,
+html[data-theme="light"] .mentor-table-time,
+html[data-theme="light"] .mentor-user small,
+html[data-theme="light"] .mentor-history-card p,
+html[data-theme="light"] .mentor-research-meta small,
+html[data-theme="light"] .mentor-signal-detail-grid small,
+html[data-theme="light"] .mentor-running-pips span,
+html[data-theme="light"] .mentor-pip-preview small{color:#566170!important}
+html[data-theme="light"] .mentor-nav-label{color:#626b77!important}
+html[data-theme="light"] .mentor-nav button{color:#3d4653!important}
+html[data-theme="light"] .mentor-signal-table th{color:#5d6673!important;background:#f1e7d7!important}
+html[data-theme="light"] .mentor-signal-table td{color:#151a22!important}
+html[data-theme="light"] .mentor-signal-search,
+html[data-theme="light"] .mentor-signal-toolbar>select{background:#fffdf8!important;border-color:#d8c397!important;color:#151a22!important}
+html[data-theme="light"] input::placeholder,
+html[data-theme="light"] textarea::placeholder{color:#747d89!important;opacity:1!important}
+html[data-theme="light"] .mentor-chip:not(.gold){color:#4c5664!important}
