@@ -135,6 +135,21 @@
       });
       document.getElementById('side')?.classList.remove('open');
 
+      const titleMap = {
+        dashboard:'Dashboard',
+        courses:'Courses',
+        signals:'Signals',
+        charts:'Market Charts',
+        articles:'Articles',
+        announcements:'Updates',
+        ea:'EA & Indicators',
+        profile:'Profile & Access'
+      };
+      document.body.dataset.studentPanel = key;
+      const topTitle = document.querySelector('.app-title strong');
+      if (topTitle) topTitle.textContent = titleMap[key] || 'Student';
+      document.title = `${titleMap[key] || 'Student'} | 24K Excellence`;
+
       if (updateUrl && history.replaceState) {
         const target = routeMap[key] || '/student/';
         const method = push && location.pathname !== target ? 'pushState' : 'replaceState';
