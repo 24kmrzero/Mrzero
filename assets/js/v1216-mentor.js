@@ -90,10 +90,16 @@ function renderPerformance(){
   ];
   $('#mentorPerformanceKpis').innerHTML=metrics.map(m=>`<article class="mrzero-metric ${m.tone}"><div class="mrzero-metric-head"><span>${m.label}</span><i class="fa-solid ${m.icon}"></i></div><b>${m.value>=0?'+':''}${money(m.value)}</b><small>${m.hint}</small></article>`).join('');
 
-  const pct=Math.max(0,Math.min(100,Math.abs(month)/5000*100));
-  $('#mentorGoalPct').textContent=`${pct.toFixed(0)}%`;
-  $('#mentorMonthPips').textContent=`${month>=0?'+':''}${money(month)} pips`;
-  $('#mentorGoalBar').style.width=`${pct}%`;
+  const quality=all.filter(s=>signalIsClosed(s)&&s.status!=='cancelled'&&s.result_pips!==null).map(signalPips),
+    avg=quality.length?quality.reduce((a,b)=>a+b,0)/quality.length:0,
+    best=quality.length?Math.max(...quality):0,
+    worst=quality.length?Math.min(...quality):0,
+    activeCount=all.filter(s=>!signalIsClosed(s)).length;
+  const avgEl=$('#mentorAvgPips'),bestEl=$('#mentorBestPips'),worstEl=$('#mentorWorstPips'),activeEl=$('#mentorActivePerformance');
+  if(avgEl)avgEl.textContent=`${avg>=0?'+':''}${money(avg)} pips`;
+  if(bestEl)bestEl.textContent=`${best>=0?'+':''}${money(best)} pips`;
+  if(worstEl)worstEl.textContent=`${worst>=0?'+':''}${money(worst)} pips`;
+  if(activeEl)activeEl.textContent=activeCount;
 
   const days=[...Array(14)].map((_,i)=>{
     const d=new Date(now);d.setHours(0,0,0,0);d.setDate(d.getDate()-(13-i));
