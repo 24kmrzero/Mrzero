@@ -506,3 +506,562 @@ html[data-theme="dark"] [data-mentor-panel="performance"] .mrzero-performance-li
     gap:7px!important;
   }
 }
+
+
+/* =========================================================
+   V13.16 — Performance Dashboard 2.0
+   A visibly different, denser institutional trading layout.
+   ========================================================= */
+
+html[data-theme="light"] body.mentor-page{
+  background:#f4f5f7!important;
+}
+html[data-theme="dark"] body.mentor-page{
+  background:#090b0f!important;
+}
+
+[data-mentor-panel="performance"]{
+  margin:0!important;
+}
+[data-mentor-panel="performance"] .mrzero-performance{
+  gap:10px!important;
+}
+
+/* Remove the old cream-page feeling completely */
+html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-performance{
+  background:transparent!important;
+}
+
+/* ---------- HERO / EXECUTIVE SUMMARY ---------- */
+[data-mentor-panel="performance"] .mrzero-performance-hero{
+  min-height:164px!important;
+  padding:22px 24px!important;
+  border-radius:18px!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 250px!important;
+  align-items:stretch!important;
+  gap:18px!important;
+  overflow:hidden!important;
+}
+[data-mentor-panel="performance"] .mrzero-performance-hero:after{
+  content:"24K"!important;
+  right:2px!important;
+  bottom:-40px!important;
+  font-size:132px!important;
+  color:rgba(240,185,11,.035)!important;
+}
+[data-mentor-panel="performance"] .mrzero-performance-copy{
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  min-width:0!important;
+}
+[data-mentor-panel="performance"] .mrzero-performance-kicker{
+  width:max-content!important;
+  max-width:100%!important;
+  padding:5px 8px!important;
+  border-radius:8px!important;
+  font-size:7.8px!important;
+  letter-spacing:.13em!important;
+}
+[data-mentor-panel="performance"] .mrzero-performance-copy h2{
+  margin:11px 0 6px!important;
+  font-size:30px!important;
+  line-height:1!important;
+  max-width:none!important;
+}
+[data-mentor-panel="performance"] .mrzero-performance-copy h2 em{
+  display:inline!important;
+}
+[data-mentor-panel="performance"] .mrzero-performance-copy p{
+  font-size:10.5px!important;
+  line-height:1.45!important;
+}
+[data-mentor-panel="performance"] .mrzero-performance-live{
+  width:auto!important;
+  min-height:0!important;
+  height:100%!important;
+  box-sizing:border-box!important;
+  padding:15px 16px!important;
+  border-radius:14px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+[data-mentor-panel="performance"] .mrzero-performance-live b{
+  margin-top:14px!important;
+  font-size:29px!important;
+}
+[data-mentor-panel="performance"] .mrzero-performance-live small{
+  font-size:8px!important;
+}
+[data-mentor-panel="performance"] .mrzero-last-updated{
+  margin-top:8px!important;
+  padding-top:7px!important;
+}
+
+/* Light hero gets a crisp white "desk" with a precise gold rail */
+html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-performance-hero{
+  position:relative!important;
+  border:1px solid #e2e5e9!important;
+  background:
+    linear-gradient(90deg,#f0b90b 0 3px,transparent 3px),
+    radial-gradient(350px 170px at 90% 0%,rgba(240,185,11,.07),transparent 70%),
+    #ffffff!important;
+  box-shadow:0 8px 28px rgba(18,24,32,.055)!important;
+}
+html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-performance-live{
+  border:1px solid #e9dfb8!important;
+  background:
+    linear-gradient(145deg,rgba(240,185,11,.045),transparent 52%),
+    #fbfbfc!important;
+  box-shadow:none!important;
+}
+
+/* Dark hero = matte exchange terminal, not glossy */
+html[data-theme="dark"] [data-mentor-panel="performance"] .mrzero-performance-hero{
+  border-color:#252b35!important;
+  background:
+    linear-gradient(90deg,#f0b90b 0 3px,transparent 3px),
+    radial-gradient(360px 170px at 90% 0%,rgba(240,185,11,.07),transparent 70%),
+    #101319!important;
+  box-shadow:0 12px 34px rgba(0,0,0,.24)!important;
+}
+html[data-theme="dark"] [data-mentor-panel="performance"] .mrzero-performance-live{
+  background:#0c1015!important;
+  border-color:#272d36!important;
+}
+
+/* ---------- KPI TICKER RAIL ---------- */
+[data-mentor-panel="performance"] .mrzero-performance-kpis{
+  display:grid!important;
+  grid-template-columns:1.25fr repeat(4,1fr)!important;
+  gap:8px!important;
+  padding:0!important;
+  margin:0!important;
+}
+[data-mentor-panel="performance"] .mrzero-metric{
+  min-height:86px!important;
+  padding:11px 12px!important;
+  border-radius:13px!important;
+  box-shadow:none!important;
+}
+[data-mentor-panel="performance"] .mrzero-metric:hover{
+  transform:none!important;
+}
+[data-mentor-panel="performance"] .mrzero-metric:after{
+  width:60px!important;
+  height:60px!important;
+  right:-31px!important;
+  bottom:-32px!important;
+}
+[data-mentor-panel="performance"] .mrzero-metric-head span{
+  font-size:7.2px!important;
+}
+[data-mentor-panel="performance"] .mrzero-metric-head i{
+  width:24px!important;
+  height:24px!important;
+  font-size:9px!important;
+}
+[data-mentor-panel="performance"] .mrzero-metric b{
+  margin-top:8px!important;
+  font-size:19px!important;
+}
+[data-mentor-panel="performance"] .mrzero-metric.primary b{
+  font-size:26px!important;
+}
+[data-mentor-panel="performance"] .mrzero-metric small{
+  margin-top:5px!important;
+  font-size:7.5px!important;
+}
+html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-metric{
+  border-color:#e4e7eb!important;
+  background:#ffffff!important;
+}
+html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-metric.primary{
+  background:
+    linear-gradient(135deg,rgba(240,185,11,.045),transparent 55%),
+    #ffffff!important;
+  border-color:#dfd5aa!important;
+}
+
+/* ---------- ANALYTICS DESK ---------- */
+[data-mentor-panel="performance"] .mrzero-command-grid{
+  grid-template-columns:minmax(0,1.35fr) minmax(300px,.75fr)!important;
+  gap:8px!important;
+}
+[data-mentor-panel="performance"] .mrzero-command-panel,
+[data-mentor-panel="performance"] .mrzero-quality-panel{
+  border-radius:14px!important;
+  padding:14px!important;
+  box-shadow:none!important;
+}
+html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-command-panel,
+html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-quality-panel{
+  border-color:#e4e7eb!important;
+  background:#ffffff!important;
+}
+html[data-theme="dark"] [data-mentor-panel="performance"] .mrzero-command-panel,
+html[data-theme="dark"] [data-mentor-panel="performance"] .mrzero-quality-panel{
+  background:#101319!important;
+  border-color:#242a33!important;
+}
+[data-mentor-panel="performance"] .mrzero-panel-head{
+  margin-bottom:10px!important;
+}
+[data-mentor-panel="performance"] .mrzero-panel-index{
+  width:25px!important;
+  height:25px!important;
+  font-size:7px!important;
+}
+[data-mentor-panel="performance"] .mrzero-panel-head h3{
+  font-size:12.5px!important;
+}
+[data-mentor-panel="performance"] .mrzero-panel-head>small{
+  font-size:7px!important;
+}
+
+/* chart feels like a real terminal panel */
+[data-mentor-panel="performance"] .mrzero-signal-bars{
+  height:148px!important;
+  padding:12px 2px 20px!important;
+  gap:5px!important;
+}
+[data-mentor-panel="performance"] .mrzero-signal-bars:before,
+[data-mentor-panel="performance"] .mrzero-signal-bars:after{
+  border-top-style:solid!important;
+  opacity:.65!important;
+}
+[data-mentor-panel="performance"] .mrzero-signal-bars span{
+  max-width:22px!important;
+  border-radius:4px 4px 1px 1px!important;
+  box-shadow:none!important;
+}
+
+/* score turns into a compact dashboard module */
+[data-mentor-panel="performance"] .mrzero-win-rate{
+  min-height:148px!important;
+  grid-template-columns:112px minmax(0,1fr)!important;
+  gap:9px!important;
+}
+[data-mentor-panel="performance"] .mrzero-score-ring{
+  width:104px!important;
+  height:104px!important;
+}
+[data-mentor-panel="performance"] .mrzero-score-ring b{
+  font-size:26px!important;
+}
+[data-mentor-panel="performance"] .mrzero-win-stats{
+  gap:5px!important;
+}
+[data-mentor-panel="performance"] .mrzero-win-stat{
+  min-height:40px!important;
+  padding:6px 8px!important;
+  border-radius:8px!important;
+}
+[data-mentor-panel="performance"] .mrzero-win-stat span{
+  font-size:7.5px!important;
+}
+[data-mentor-panel="performance"] .mrzero-win-stat b{
+  font-size:13px!important;
+}
+
+/* ---------- QUALITY = ONE-LINE EXECUTIVE STRIP ---------- */
+[data-mentor-panel="performance"] .mrzero-quality-panel{
+  display:grid!important;
+  grid-template-columns:210px minmax(0,1fr)!important;
+  gap:12px!important;
+  align-items:center!important;
+}
+[data-mentor-panel="performance"] .mrzero-quality-title h3{
+  font-size:13px!important;
+}
+[data-mentor-panel="performance"] .mrzero-quality-stats{
+  gap:0!important;
+}
+[data-mentor-panel="performance"] .mrzero-quality-stats>div{
+  min-height:46px!important;
+  padding:5px 11px!important;
+}
+[data-mentor-panel="performance"] .mrzero-quality-stats small{
+  font-size:7px!important;
+}
+[data-mentor-panel="performance"] .mrzero-quality-stats b{
+  font-size:14px!important;
+}
+
+/* ---------- LOWER DESK ---------- */
+[data-mentor-panel="performance"] .mrzero-lower-grid{
+  grid-template-columns:.8fr 1.2fr!important;
+  gap:8px!important;
+}
+[data-mentor-panel="performance"] .mrzero-market-focus{
+  gap:8px!important;
+}
+[data-mentor-panel="performance"] .mrzero-market-row{
+  grid-template-columns:70px minmax(0,1fr) 64px!important;
+  gap:8px!important;
+}
+[data-mentor-panel="performance"] .mrzero-market-row b{
+  font-size:9.5px!important;
+}
+[data-mentor-panel="performance"] .mrzero-market-row small{
+  font-size:7px!important;
+}
+[data-mentor-panel="performance"] .mrzero-activity-item{
+  padding:8px 0!important;
+}
+[data-mentor-panel="performance"] .mrzero-activity-icon{
+  width:29px!important;
+  height:29px!important;
+}
+[data-mentor-panel="performance"] .mrzero-activity-copy b{
+  font-size:9.5px!important;
+}
+[data-mentor-panel="performance"] .mrzero-activity-copy small,
+[data-mentor-panel="performance"] .mrzero-pips-badge,
+[data-mentor-panel="performance"] .mrzero-activity-status{
+  font-size:6.8px!important;
+}
+
+/* ---------- HEADER / NAV: cleaner, flatter fintech ---------- */
+html[data-theme="light"] .mentor-top{
+  background:rgba(255,255,255,.96)!important;
+  border-bottom-color:#e4e7eb!important;
+  box-shadow:0 1px 0 rgba(18,24,32,.02)!important;
+}
+html[data-theme="dark"] .mentor-top{
+  background:rgba(9,11,15,.96)!important;
+}
+.mentor-top .mentor-btn.small{
+  border-radius:10px!important;
+  box-shadow:none!important;
+}
+html[data-theme="light"] .mentor-top .mentor-btn.small{
+  background:#fff!important;
+  border-color:#e1e5e9!important;
+}
+
+/* ---------------- MOBILE APP REBUILD ---------------- */
+@media(max-width:760px){
+  body.mentor-page{
+    padding-bottom:92px!important;
+  }
+  .mentor-content{
+    padding:8px 10px 106px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-performance{
+    gap:8px!important;
+  }
+
+  /* Hero becomes a compact account-summary style card */
+  [data-mentor-panel="performance"] .mrzero-performance-hero{
+    min-height:0!important;
+    padding:14px!important;
+    border-radius:15px!important;
+    grid-template-columns:1fr!important;
+    gap:10px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-performance-hero:after{
+    font-size:100px!important;
+    bottom:-32px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-performance-kicker{
+    padding:4px 7px!important;
+    border-radius:7px!important;
+    font-size:6.9px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-performance-copy h2{
+    margin:9px 0 4px!important;
+    font-size:22px!important;
+    line-height:1.02!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-performance-copy p{
+    font-size:9.5px!important;
+    line-height:1.4!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-performance-live{
+    min-height:78px!important;
+    padding:10px 12px!important;
+    border-radius:11px!important;
+    display:grid!important;
+    grid-template-columns:1fr auto!important;
+    grid-template-areas:
+      "label value"
+      "sub update"!important;
+    align-items:center!important;
+    column-gap:10px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-performance-live span{
+    grid-area:label!important;
+    font-size:6.8px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-performance-live b{
+    grid-area:value!important;
+    margin:0!important;
+    font-size:24px!important;
+    text-align:right!important;
+    white-space:nowrap!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-performance-live>small:not(.mrzero-last-updated){
+    grid-area:sub!important;
+    margin:0!important;
+    font-size:7.3px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-last-updated{
+    grid-area:update!important;
+    margin:0!important;
+    padding:0!important;
+    border:0!important;
+    text-align:right!important;
+    font-size:7px!important;
+  }
+
+  /* Horizontal metric ticker: major visual departure from old 2x2 blocks */
+  [data-mentor-panel="performance"] .mrzero-performance-kpis{
+    display:flex!important;
+    gap:7px!important;
+    overflow-x:auto!important;
+    overscroll-behavior-x:contain!important;
+    scroll-snap-type:x proximity!important;
+    padding:0 1px 3px!important;
+    scrollbar-width:none!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-performance-kpis::-webkit-scrollbar{
+    display:none!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-metric{
+    flex:0 0 148px!important;
+    min-height:80px!important;
+    padding:10px 11px!important;
+    border-radius:12px!important;
+    scroll-snap-align:start!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-metric.primary{
+    flex-basis:176px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-metric b{
+    margin-top:7px!important;
+    font-size:18px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-metric.primary b{
+    font-size:23px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-metric small{
+    font-size:7px!important;
+  }
+
+  [data-mentor-panel="performance"] .mrzero-command-grid,
+  [data-mentor-panel="performance"] .mrzero-lower-grid{
+    grid-template-columns:1fr!important;
+    gap:8px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-command-panel,
+  [data-mentor-panel="performance"] .mrzero-quality-panel{
+    padding:12px!important;
+    border-radius:13px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-panel-head{
+    margin-bottom:8px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-signal-bars{
+    height:126px!important;
+  }
+
+  [data-mentor-panel="performance"] .mrzero-win-rate{
+    min-height:112px!important;
+    grid-template-columns:94px minmax(0,1fr)!important;
+    gap:8px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-score-ring{
+    width:88px!important;
+    height:88px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-score-ring b{
+    font-size:23px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-win-stats{
+    grid-template-columns:1fr 1fr!important;
+    gap:5px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-win-stat{
+    min-height:38px!important;
+  }
+
+  [data-mentor-panel="performance"] .mrzero-quality-panel{
+    grid-template-columns:1fr!important;
+    gap:9px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-quality-title{
+    gap:8px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-quality-stats{
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-quality-stats>div{
+    min-height:48px!important;
+    padding:4px 7px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-quality-stats b{
+    font-size:12.5px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-quality-stats small{
+    font-size:6.2px!important;
+  }
+
+  /* Bottom navigation = floating exchange dock */
+  .mentor-mobile-nav{
+    left:10px!important;
+    right:10px!important;
+    bottom:9px!important;
+    min-height:62px!important;
+    border-radius:18px!important;
+    padding:5px 6px calc(5px + env(safe-area-inset-bottom))!important;
+    overflow:hidden!important;
+  }
+  .mentor-mobile-nav:before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:20px;
+    right:20px;
+    height:1px;
+    background:linear-gradient(90deg,transparent,rgba(240,185,11,.42),transparent);
+    pointer-events:none;
+  }
+  .mentor-mobile-nav button{
+    min-height:47px!important;
+    border-radius:11px!important;
+  }
+  .mentor-mobile-nav button.active{
+    position:relative!important;
+    background:transparent!important;
+  }
+  .mentor-mobile-nav button.active:after{
+    content:"";
+    position:absolute;
+    bottom:2px;
+    width:18px;
+    height:2px;
+    border-radius:99px;
+    background:#f0b90b;
+  }
+  html[data-theme="light"] .mentor-mobile-nav{
+    background:rgba(255,255,255,.97)!important;
+    border:1px solid #dfe3e8!important;
+    box-shadow:0 10px 28px rgba(18,24,32,.12)!important;
+  }
+  html[data-theme="dark"] .mentor-mobile-nav{
+    background:rgba(14,17,22,.97)!important;
+    border-color:#262c35!important;
+  }
+}
+
+@media(max-width:430px){
+  [data-mentor-panel="performance"] .mrzero-quality-stats{
+    grid-template-columns:1fr 1fr!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-quality-stats>div{
+    min-height:44px!important;
+  }
+}
