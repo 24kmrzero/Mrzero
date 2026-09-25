@@ -303,7 +303,7 @@
   function renderAll() {
     renderKpis(); renderDashboard(); renderSignals(); renderCharts(); renderArticles(); renderCourses();
     renderPayments(); renderAnnouncements(); renderProfile(); renderEmailVerification(); renderPremium(); renderPremiumTab(); renderSupport();
-    const paymentCount=document.getElementById('paymentCount'); if(paymentCount) paymentCount.textContent = state.payments.filter(p => ['initiated', 'received', 'under_review', 'resubmission_required'].includes(p.status)).length;
+    const paymentCount=document.getElementById('paymentCount'); if(paymentCount){const total=state.payments.length;paymentCount.textContent=total?`${total} payment${total===1?'':'s'}`:'No payments';}
     document.getElementById('announcementCount').textContent = state.announcements.length;
     window.dispatchEvent(new CustomEvent('24k:student-base-updated',{detail:state}));
   }
