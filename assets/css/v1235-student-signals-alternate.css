@@ -1,0 +1,131 @@
+/* 24K MR ZERO — Premium alternating signal rows v12.35 */
+@media(max-width:760px){
+  /* Alternate signal surfaces: white / soft cream */
+  .student-page .mobile-signal-list>.mobile-signal-four:nth-child(odd){
+    background:linear-gradient(145deg,#FFFFFF,#FCFCFB)!important;
+    border-color:rgba(18,22,28,.075)!important;
+  }
+  .student-page .mobile-signal-list>.mobile-signal-four:nth-child(even){
+    background:
+      radial-gradient(170px 90px at 0 0,rgba(240,185,11,.055),transparent 76%),
+      linear-gradient(145deg,#FFFDF7,#FBF5E7)!important;
+    border-color:rgba(190,142,20,.16)!important;
+  }
+  html[data-theme="dark"] .student-page .mobile-signal-list>.mobile-signal-four:nth-child(odd){
+    background:linear-gradient(145deg,#191C22,#15171C)!important;
+    border-color:rgba(255,255,255,.055)!important;
+  }
+  html[data-theme="dark"] .student-page .mobile-signal-list>.mobile-signal-four:nth-child(even){
+    background:
+      radial-gradient(170px 90px at 0 0,rgba(240,185,11,.055),transparent 76%),
+      linear-gradient(145deg,#1B1C20,#17191E)!important;
+    border-color:rgba(240,185,11,.10)!important;
+  }
+
+  /* Date | Pair | Entry | Direction */
+  .student-page .mobile-signal-four>summary{
+    grid-template-columns:1.10fr 1.10fr 1.06fr .86fr 20px!important;
+    gap:6px!important;
+    padding:9px!important;
+    min-height:78px!important;
+  }
+
+  /* Small premium mini-boxes for the four glance fields */
+  .student-page .mobile-signal-four>summary>.msa-main-date,
+  .student-page .mobile-signal-four>summary>.msa-main-pair,
+  .student-page .mobile-signal-four>summary>.msa-main-entry,
+  .student-page .mobile-signal-four>summary>.msa-direction{
+    min-width:0!important;
+    min-height:54px!important;
+    padding:7px 7px!important;
+    display:grid!important;
+    align-content:center!important;
+    border-radius:10px!important;
+    border:1px solid rgba(18,22,28,.055)!important;
+    background:rgba(247,248,250,.86)!important;
+    box-sizing:border-box!important;
+  }
+  .student-page .mobile-signal-list>.mobile-signal-four:nth-child(even)>summary>.msa-main-date,
+  .student-page .mobile-signal-list>.mobile-signal-four:nth-child(even)>summary>.msa-main-pair,
+  .student-page .mobile-signal-list>.mobile-signal-four:nth-child(even)>summary>.msa-main-entry,
+  .student-page .mobile-signal-list>.mobile-signal-four:nth-child(even)>summary>.msa-direction{
+    background:rgba(255,255,255,.64)!important;
+    border-color:rgba(184,135,18,.085)!important;
+  }
+  html[data-theme="dark"] .student-page .mobile-signal-four>summary>.msa-main-date,
+  html[data-theme="dark"] .student-page .mobile-signal-four>summary>.msa-main-pair,
+  html[data-theme="dark"] .student-page .mobile-signal-four>summary>.msa-main-entry,
+  html[data-theme="dark"] .student-page .mobile-signal-four>summary>.msa-direction{
+    background:rgba(255,255,255,.025)!important;
+    border-color:rgba(255,255,255,.045)!important;
+  }
+
+  /* Pair gets a soft gold tint so instrument is easy to scan */
+  .student-page .mobile-signal-four>summary>.msa-main-pair{
+    background:rgba(240,185,11,.065)!important;
+    border-color:rgba(240,185,11,.105)!important;
+  }
+  html[data-theme="dark"] .student-page .mobile-signal-four>summary>.msa-main-pair{
+    background:rgba(240,185,11,.055)!important;
+    border-color:rgba(240,185,11,.09)!important;
+  }
+
+  .student-page .msa-main-date b,
+  .student-page .msa-main-pair b,
+  .student-page .msa-main-entry b{
+    font-size:10.5px!important;
+    line-height:1.05!important;
+    font-weight:900!important;
+  }
+  .student-page .msa-main-date em,
+  .student-page .msa-main-pair em{
+    margin-top:2px!important;
+    font-size:6.4px!important;
+  }
+
+  .student-page .mobile-signal-four .msa-direction{
+    justify-items:stretch!important;
+  }
+  .student-page .mobile-signal-four .msa-direction .table-direction{
+    width:100%!important;
+    min-width:0!important;
+    min-height:27px!important;
+    padding:0 4px!important;
+    border-radius:8px!important;
+    justify-self:stretch!important;
+  }
+
+  /* Keep chevron visually separate and subtle */
+  .student-page .mobile-signal-four .msa-chevron{
+    align-self:center!important;
+    justify-self:center!important;
+  }
+
+  /* Expanded SL / TP row remains compact but matches parent tint */
+  .student-page .mobile-signal-list>.mobile-signal-four:nth-child(even) .msa-details.msa-five-levels{
+    background:rgba(255,252,244,.92)!important;
+  }
+  html[data-theme="dark"] .student-page .mobile-signal-list>.mobile-signal-four:nth-child(even) .msa-details.msa-five-levels{
+    background:#17191E!important;
+  }
+}
+
+@media(max-width:390px){
+  .student-page .mobile-signal-four>summary{
+    grid-template-columns:1.05fr 1.06fr 1.03fr .82fr 18px!important;
+    gap:5px!important;
+    padding:8px!important;
+  }
+  .student-page .mobile-signal-four>summary>.msa-main-date,
+  .student-page .mobile-signal-four>summary>.msa-main-pair,
+  .student-page .mobile-signal-four>summary>.msa-main-entry,
+  .student-page .mobile-signal-four>summary>.msa-direction{
+    min-height:52px!important;
+    padding:6px!important;
+  }
+  .student-page .msa-main-date b,
+  .student-page .msa-main-pair b,
+  .student-page .msa-main-entry b{
+    font-size:9.8px!important;
+  }
+}
