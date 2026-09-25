@@ -5,7 +5,7 @@
   window.__24K_TEMP_OPEN_ACCESS__ = TEMP_OPEN_ACCESS;
   const state = {
     user: null, profile: null, courses: [], sessions: [], sessionLinks: {}, enrollments: [], payments: [],
-    paymentMethods: [], signals: [], signalUpdates: [], charts: [], articles: [], announcements: [], resources: [], support: [], riskAccepted: false, premium: null, premiumLoaded: false, premiumPayments: [], ibVerifications: [],
+    paymentMethods: [], signals: [], signalUpdates: [], charts: [], articles: [], announcements: [], resources: [], support: [], riskAccepted: true, premium: null, premiumLoaded: false, premiumPayments: [], ibVerifications: [],
     selectedCourse: null, courseFilter: 'all'
   };
   window.StudentBase = { state, reload: async () => { await loadAll(); renderAll(); return state; } };
@@ -90,7 +90,6 @@
       charts: '/student/charts/',
       articles: '/student/articles/',
       announcements: '/student/updates/',
-      ea: '/student/ea-indicator/',
       premium: '/student/premium/',
       profile: '/student/profile/'
     };
@@ -101,7 +100,6 @@
       if (raw === 'signal') return 'signals';
       if (raw === 'chart') return 'charts';
       if (raw === 'article') return 'articles';
-      if (raw === 'ea' || raw === 'ea-indicator' || raw === 'indicator') return 'ea';
       if (raw === 'account') return 'profile';
       return routeMap[raw] ? raw : '';
     };
@@ -112,7 +110,6 @@
       '/student/charts': 'charts', '/student/charts/': 'charts',
       '/student/articles': 'articles', '/student/articles/': 'articles',
       '/student/updates': 'announcements', '/student/updates/': 'announcements',
-      '/student/ea-indicator': 'ea', '/student/ea-indicator/': 'ea',
       '/student/premium': 'premium', '/student/premium/': 'premium',
       '/student/profile': 'profile', '/student/profile/': 'profile'
     };
@@ -149,7 +146,6 @@
         charts:'Market Charts',
         articles:'Articles',
         announcements:'Updates',
-        ea:'EA & Indicators',
         premium:'Premium Access',
         profile:'Profile & Access'
       };
@@ -284,11 +280,11 @@
       if (response.error) {
         if (critical) throw response.error;
         console.warn(`[Student] Optional data skipped: ${key}`, response.error.message || response.error);
-        if (key === 'risk') state.riskAccepted = false;
+        if (key === 'risk') state.riskAccepted = true;
         else if (key in state) state[key] = [];
         continue;
       }
-      if (key === 'risk') state.riskAccepted = Boolean(response.data?.length);
+      if (key === 'risk') state.riskAccepted = true;
       else if (key in state) state[key] = response.data || [];
     }
 
@@ -1433,7 +1429,6 @@
     document.addEventListener('panel:open', event => {
       const key=event.detail.key;
       if (['signals','charts','articles'].includes(key) && state.premiumLoaded && !state.premium?.has_access) { setTimeout(()=>openPanel('premium'),0); A.toast('Premium access is required for Signals, Charts and Articles.','warning'); return; }
-      if (key === 'signals' && !state.riskAccepted) A.openModal('riskModal');
       if (key === 'courses') resetCourseView();
       if (key === 'premium') renderPremiumTab();
     });
@@ -1585,7 +1580,6 @@
     document.getElementById('profileForm').addEventListener('submit', saveProfile);
     document.getElementById('premiumUsdtForm')?.addEventListener('submit',event=>{if(!window.__24K_ACCESS_V1224_READY__)submitPremiumUsdt(event);});
     document.getElementById('premiumBankForm')?.addEventListener('submit',event=>{if(!window.__24K_ACCESS_V1224_READY__)submitPremiumBank(event);});
-    document.getElementById('riskForm').addEventListener('submit', acceptRisk);
     document.getElementById('globalSearch').addEventListener('keydown', event => {
       if (event.key !== 'Enter') return;
       const q = event.currentTarget.value.trim().toLowerCase();
