@@ -9,7 +9,30 @@
   window.addEventListener('appinstalled',()=>{installPrompt=null;updateInstallButton();window.App?.toast?.('24K Student App installed successfully.','success')});
   document.addEventListener('click',async e=>{const b=e.target.closest('#studentInstallButton');if(!b)return;e.preventDefault();if(isStandalone())return window.App?.toast?.('Student App is already installed.','success');if(installPrompt){installPrompt.prompt();const choice=await installPrompt.userChoice;if(choice?.outcome==='accepted')window.App?.toast?.('Installing 24K Student App…','success');installPrompt=null;updateInstallButton();return}const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);window.App?.toast?.(ios?'Use Share → Add to Home Screen to install the app.':'Use your browser menu → Install app / Add to Home screen.','info')});
   window.addEventListener('load',updateInstallButton);
-  const premium=()=>{const button=document.getElementById('managePremiumAccess');if(button){button.click();return true}return Boolean(window.__24K_OPEN_PREMIUM_ACCESS__?.())};
+  const premium=()=>{
+    try{
+      if(typeof window.__24K_OPEN_PREMIUM_ACCESS__==='function'){
+        window.__24K_OPEN_PREMIUM_ACCESS__();
+        return true;
+      }
+      const modal=document.getElementById('premiumAccessModal');
+      if(modal){
+        modal.querySelectorAll('[data-access-step]').forEach(step=>{
+          const active=step.dataset.accessStep==='home';
+          step.classList.toggle('access-hidden',!active);
+          step.classList.toggle('is-active',active);
+          step.hidden=false;
+          step.setAttribute('aria-hidden',active?'false':'true');
+        });
+        window.App?.openModal?.('premiumAccessModal');
+        return true;
+      }
+      const button=document.getElementById('managePremiumAccess');
+      if(button){button.click();return true}
+    }catch(error){console.error('[Premium mobile open]',error)}
+    window.App?.toast?.('Premium Access could not open. Please refresh once and try again.','error');
+    return false;
+  };
   document.addEventListener('click',e=>{
     const b=e.target.closest('[data-mobile-premium]');
     if(b){e.preventDefault();premium();document.querySelectorAll('.student-mobile-nav button').forEach(x=>x.classList.toggle('is-active',x===b));}
