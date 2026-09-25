@@ -275,14 +275,26 @@
     state.sessionLinks = {};
     state.support = [];
 
-    const [premiumAccess, premiumPayments, ibRows] = await Promise.all([
+    const [premiumAccess, premiumPayments, ibRows, brokerSettings] = await Promise.all([
       sb.rpc('get_my_premium_access'),
       sb.from('premium_payments').select('*').eq('student_id', state.user.id).order('created_at',{ascending:false}),
-      sb.from('ib_verifications').select('*').eq('student_id', state.user.id).order('created_at',{ascending:false})
+      sb.from('ib_verifications').select('*').eq('student_id', state.user.id).order('created_at',{ascending:false}),
+      sb.rpc('get_premium_broker_settings')
     ]);
     if (premiumAccess.error) console.warn('[Student] Premium access state unavailable:', premiumAccess.error.message || premiumAccess.error);
     if (premiumPayments.error) console.warn('[Student] Premium payment history unavailable:', premiumPayments.error.message || premiumPayments.error);
     if (ibRows.error) console.warn('[Student] IB verification history unavailable:', ibRows.error.message || ibRows.error);
+    if (brokerSettings.error) console.warn('[Student] Broker settings unavailable:', brokerSettings.error.message || brokerSettings.error);
+    if (!brokerSettings.error && Array.isArray(brokerSettings.data)) {
+      for (const row of brokerSettings.data) {
+        if (!row?.broker) continue;
+        brokerAccessMeta[row.broker] = {
+          url: String(row.partner_url || ''),
+          newGuide: String(row.new_guide || ''),
+          existingGuide: String(row.existing_guide || '')
+        };
+      }
+    }
     state.premium = premiumAccess.error ? null : (premiumAccess.data || null);
     state.premiumLoaded = !premiumAccess.error;
     state.premiumPayments = premiumPayments.error ? [] : (premiumPayments.data || []);
