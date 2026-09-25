@@ -22,6 +22,7 @@
   // so renderPremium() -> renderAccessSelection() hit the temporal dead zone and crashed
   // with: Cannot access 'brokerAccessMeta' before initialization.
   const accessFlowState = { step:'home', broker:'', mode:'' };
+  const premiumPageState = { step:'home', broker:'', mode:'new' };
   const brokerAccessMeta = {
     Exness: {
       url: 'https://one.exnessonelink.com/a/be2kjlypr9',
@@ -90,6 +91,7 @@
       articles: '/student/articles/',
       announcements: '/student/updates/',
       ea: '/student/ea-indicator/',
+      premium: '/student/premium/',
       profile: '/student/profile/'
     };
     const normalize = value => {
@@ -111,6 +113,7 @@
       '/student/articles': 'articles', '/student/articles/': 'articles',
       '/student/updates': 'announcements', '/student/updates/': 'announcements',
       '/student/ea-indicator': 'ea', '/student/ea-indicator/': 'ea',
+      '/student/premium': 'premium', '/student/premium/': 'premium',
       '/student/profile': 'profile', '/student/profile/': 'profile'
     };
     const keyFromLocation = () => {
@@ -147,6 +150,7 @@
         articles:'Articles',
         announcements:'Updates',
         ea:'EA & Indicators',
+        premium:'Premium Access',
         profile:'Profile & Access'
       };
       document.body.dataset.studentPanel = key;
@@ -217,8 +221,7 @@
     renderAll();
     const resolvedPanel = studentNavigation.keyFromLocation();
     if (['signals','charts','articles'].includes(resolvedPanel) && state.premiumLoaded && !state.premium?.has_access) {
-      studentNavigation.open('profile', true, false);
-      openAllAccessModal();
+      studentNavigation.open('premium', true, false);
       A.toast('Premium access is required for Signals, Charts and Articles.','warning');
     }
     subscribeRealtime();
@@ -287,7 +290,7 @@
   }
   function renderAll() {
     renderKpis(); renderDashboard(); renderSignals(); renderCharts(); renderArticles(); renderCourses();
-    renderPayments(); renderAnnouncements(); renderProfile(); renderEmailVerification(); renderPremium(); renderSupport();
+    renderPayments(); renderAnnouncements(); renderProfile(); renderEmailVerification(); renderPremium(); renderPremiumTab(); renderSupport();
     const paymentCount=document.getElementById('paymentCount'); if(paymentCount) paymentCount.textContent = state.payments.filter(p => ['initiated', 'received', 'under_review', 'resubmission_required'].includes(p.status)).length;
     document.getElementById('announcementCount').textContent = state.announcements.length;
     window.dispatchEvent(new CustomEvent('24k:student-base-updated',{detail:state}));
@@ -340,7 +343,7 @@
       const premiumLabel=premiumOpen?(premiumSource==='trial'?'Free Trial Active':premiumSource==='ib'?'IB Access Active':premiumSource==='free'?'Premium Free':'Premium Active'):'Premium Locked';
       const premiumNote=premiumOpen?(state.premium?.days_left!=null?`${state.premium.days_left} day${Number(state.premium.days_left)===1?'':'s'} remaining`:'Signals, charts and articles are available.'):'Renew by payment or approved IB verification.';
       learning.innerHTML = `<div class="member-desk-shell">
-        <div class="member-desk-access ${premiumOpen?'':'is-locked'}" data-goto="profile" role="button" tabindex="0">
+        <div class="member-desk-access ${premiumOpen?'':'is-locked'}" data-goto="premium" role="button" tabindex="0">
           <span class="desk-crown"><i class="fa-solid ${premiumOpen?'fa-crown':'fa-lock'}"></i></span>
           <div><small>PREMIUM MARKET ACCESS</small><b>${A.escapeHtml(premiumLabel)}</b><em>${A.escapeHtml(premiumNote)}</em></div>
           <span class="desk-active ${premiumOpen?'':'locked'}"><i></i> ${premiumOpen?'ACTIVE':'LOCKED'}</span>
@@ -984,6 +987,76 @@
     renderAccessSelection();
   }
 
+  function renderPremiumTab(){
+    const status=document.getElementById('premiumPageStatus');
+    const flow=document.getElementById('premiumPageFlow');
+    if(!status||!flow)return;
+    const p=state.premium||{};
+    const has=Boolean(p.has_access);
+    const source=String(p.source||'locked').toLowerCase();
+    const days=p.days_left!=null?Math.max(0,Number(p.days_left)):null;
+    const expiry=p.expires_at ? new Date(p.expires_at).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}) : 'No expiry';
+    const statusTitle=has ? (source==='trial'?'Free Trial Active':source==='ib'?'Broker Access Active':'Premium Active') : 'Premium Access Locked';
+    const statusText=has ? (days!=null ? `${days} day${days===1?'':'s'} remaining · Access until ${expiry}` : `Access until ${expiry}`) : 'Choose Paid Access or Free Access via Broker below.';
+    status.className=`premium-page-status ${has?'is-active':'is-locked'}`;
+    status.innerHTML=`<span class="pps-icon"><i class="fa-solid ${has?'fa-crown':'fa-lock'}"></i></span><div><small>ACCESS STATUS</small><b>${A.escapeHtml(statusTitle)}</b><p>${A.escapeHtml(statusText)}</p></div><span class="pps-state ${has?'active':'locked'}"><i></i>${has?'ACTIVE':'LOCKED'}</span>`;
+
+    const pricePkr=Number(p.price_pkr||0);
+    const priceUsdt=Number(p.price_usdt||0);
+    const monthlyDays=Number(p.monthly_days||30);
+    const paidReady=pricePkr>0||priceUsdt>0;
+    const brokerEnabled=p.ib_enabled!==false;
+    const latestIb=state.ibVerifications?.[0]||null;
+
+    if(premiumPageState.step==='paid'){
+      flow.innerHTML=`<div class="premium-page-section-head"><button type="button" class="premium-page-back" data-premium-page-step="home"><i class="fa-solid fa-arrow-left"></i> Back</button><div><small>PAID ACCESS</small><h3>Choose Payment Method</h3><p>Activate ${monthlyDays} days of Premium Market Access after Admin verifies your payment.</p></div></div>
+      <div class="premium-plan-card">
+        <div><small>24K PREMIUM</small><h4>${monthlyDays}-Day Market Access</h4><p>Signals, Charts and Articles included.</p></div>
+        <div class="premium-plan-prices">
+          <span><small>LOCAL BANK</small><b>${pricePkr>0?A.formatMoney(pricePkr,'PKR'):'Not configured'}</b></span>
+          <span><small>USDT TRC20</small><b>${priceUsdt>0?`${priceUsdt.toLocaleString()} USDT`:'Not configured'}</b></span>
+        </div>
+      </div>
+      ${paidReady?`<div class="premium-payment-grid">
+        <button type="button" class="premium-action-card" data-premium-page-pay="bank" ${pricePkr>0?'':'disabled'}><span><i class="fa-solid fa-building-columns"></i></span><div><b>Local Bank Transfer</b><small>Pay in PKR and upload receipt.</small></div><i class="fa-solid fa-chevron-right"></i></button>
+        <button type="button" class="premium-action-card" data-premium-page-pay="usdt" ${priceUsdt>0?'':'disabled'}><span><i class="fa-solid fa-coins"></i></span><div><b>USDT TRC20</b><small>Pay with crypto and submit TXID + receipt.</small></div><i class="fa-solid fa-chevron-right"></i></button>
+      </div>`:`<div class="premium-page-empty"><span><i class="fa-solid fa-clock"></i></span><div><b>Paid pricing is not configured yet</b><p>Admin can set the Premium package price. Free Access via Broker remains available.</p></div><button type="button" class="app-btn gold" data-premium-page-step="broker">Use Broker Access</button></div>`}`;
+      return;
+    }
+
+    if(premiumPageState.step==='broker'){
+      const meta=brokerAccessMeta[premiumPageState.broker]||null;
+      const guide=meta ? (premiumPageState.mode==='existing'?meta.existingGuide:meta.newGuide) : '';
+      flow.innerHTML=`<div class="premium-page-section-head"><button type="button" class="premium-page-back" data-premium-page-step="home"><i class="fa-solid fa-arrow-left"></i> Back</button><div><small>FREE ACCESS VIA BROKER</small><h3>Verify Your Broker Account</h3><p>Choose a broker, follow the correct account flow and submit proof for Admin approval.</p></div></div>
+      ${latestIb?`<div class="premium-broker-status ${latestIb.status==='approved'?'ok':latestIb.status==='declined'?'bad':'pending'}"><i class="fa-solid fa-shield"></i><div><small>LATEST VERIFICATION</small><b>${A.escapeHtml(A.statusLabel(latestIb.status))}</b><span>${A.escapeHtml(latestIb.broker||'Broker')} · ${A.escapeHtml(latestIb.trading_account_id||'')}</span></div></div>`:''}
+      <div class="premium-broker-grid">
+        ${['Exness','XM','DPrime'].map(name=>`<button type="button" class="${premiumPageState.broker===name?'is-active':''}" data-premium-page-broker="${name}"><i class="fa-solid ${name==='Exness'?'fa-chart-line':name==='XM'?'fa-chart-simple':'fa-arrow-trend-up'}"></i><b>${name}</b></button>`).join('')}
+      </div>
+      ${meta?`<div class="premium-account-mode-grid">
+        <button type="button" class="${premiumPageState.mode==='new'?'is-active':''}" data-premium-page-mode="new"><span><i class="fa-solid fa-user-plus"></i></span><div><b>Create New Account</b><small>Open a new broker account through our official partner link.</small></div></button>
+        <button type="button" class="${premiumPageState.mode==='existing'?'is-active':''}" data-premium-page-mode="existing"><span><i class="fa-solid fa-right-left"></i></span><div><b>Shift Existing Account</b><small>Link or change your existing broker account.</small></div></button>
+      </div>
+      <div class="premium-broker-guide"><small>${A.escapeHtml(premiumPageState.broker)} · ${premiumPageState.mode==='existing'?'EXISTING ACCOUNT':'NEW ACCOUNT'}</small><p>${A.escapeHtml(guide)}</p></div>
+      <div class="premium-partner-link"><div><small>OFFICIAL PARTNER LINK</small><b>${A.escapeHtml(meta.url)}</b></div><a class="app-btn gold" href="${attr(meta.url)}" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Link</a><button type="button" class="app-btn outline" data-premium-page-copy="${attr(meta.url)}"><i class="fa-regular fa-copy"></i> Copy</button></div>
+      <button type="button" class="app-btn gold premium-verify-btn" data-premium-page-verify ${brokerEnabled?'':'disabled'}><i class="fa-solid fa-shield-check"></i> Continue to Verification</button>`:`<div class="premium-page-hint"><i class="fa-solid fa-hand-pointer"></i><span>Choose Exness, XM or DPrime to continue.</span></div>`}`;
+      return;
+    }
+
+    flow.innerHTML=`<div class="premium-page-section-head home"><div><small>GET / EXTEND ACCESS</small><h3>Choose Your Access Path</h3><p>Your Premium tab stays here as a full page. Choose a path only when you want to activate or extend access.</p></div></div>
+    <div class="premium-path-grid">
+      <button type="button" class="premium-path-card paid" data-premium-page-step="paid">
+        <span class="ppc-icon"><i class="fa-solid fa-credit-card"></i></span>
+        <div><small>OPTION 01</small><h4>Paid Access</h4><p>${paidReady?`${monthlyDays}-day Premium package. Pay via available payment method.`:'Pricing setup is pending from Admin.'}</p></div>
+        <span class="ppc-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+      </button>
+      <button type="button" class="premium-path-card broker" data-premium-page-step="broker">
+        <span class="ppc-icon"><i class="fa-solid fa-link"></i></span>
+        <div><small>OPTION 02</small><h4>Free Access via Broker</h4><p>${brokerEnabled?'Verify Exness, XM or DPrime account for Admin approval.':'Broker verification is currently disabled.'}</p></div>
+        <span class="ppc-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+      </button>
+    </div>`;
+  }
+
   async function startPremiumLocalBank(button){
     const method=state.paymentMethods.find(m=>/^local bank transfer$/i.test(String(m.name||'').trim()));
     if(!method) return A.toast('Local Bank Transfer is currently disabled by Admin.','warning');
@@ -1211,9 +1284,10 @@
   function bindEvents() {
     document.addEventListener('panel:open', event => {
       const key=event.detail.key;
-      if (['signals','charts','articles'].includes(key) && state.premiumLoaded && !state.premium?.has_access) { setTimeout(()=>{openPanel('profile');openAllAccessModal();},0); A.toast('Premium access is required for Signals, Charts and Articles.','warning'); return; }
+      if (['signals','charts','articles'].includes(key) && state.premiumLoaded && !state.premium?.has_access) { setTimeout(()=>openPanel('premium'),0); A.toast('Premium access is required for Signals, Charts and Articles.','warning'); return; }
       if (key === 'signals' && !state.riskAccepted) A.openModal('riskModal');
       if (key === 'courses') resetCourseView();
+      if (key === 'premium') renderPremiumTab();
     });
     document.querySelectorAll('[data-signal-view]').forEach(button=>button.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();signalWorkspaceView=button.dataset.signalView==='history'?'history':'active';renderSignals();}));
     document.querySelectorAll('[data-history-market]').forEach(button=>button.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();historyMarketFilter=button.dataset.historyMarket||'all';renderSignals();}));
@@ -1246,6 +1320,21 @@
       const closingId=modalCloser?.dataset.closeModal || backdropModal?.id || '';
       if(courseFlowModalIds.has(closingId) && history.state?.__24kCourseModal){
         setTimeout(()=>{ try{ history.back(); }catch{} },0);
+      }
+      const premiumStep=event.target.closest('[data-premium-page-step]');
+      if(premiumStep){premiumPageState.step=premiumStep.dataset.premiumPageStep||'home';renderPremiumTab();return;}
+      const premiumBroker=event.target.closest('[data-premium-page-broker]');
+      if(premiumBroker){premiumPageState.broker=premiumBroker.dataset.premiumPageBroker||'';premiumPageState.mode='new';renderPremiumTab();return;}
+      const premiumMode=event.target.closest('[data-premium-page-mode]');
+      if(premiumMode){premiumPageState.mode=premiumMode.dataset.premiumPageMode||'new';renderPremiumTab();return;}
+      const premiumCopy=event.target.closest('[data-premium-page-copy]');
+      if(premiumCopy){try{await navigator.clipboard.writeText(premiumCopy.dataset.premiumPageCopy||'');A.toast('Partner link copied.','success');}catch{A.toast('Could not copy link.','error');}return;}
+      const premiumVerify=event.target.closest('[data-premium-page-verify]');
+      if(premiumVerify){accessFlowState.broker=premiumPageState.broker;accessFlowState.mode=premiumPageState.mode;prefillIbVerificationForm();A.openModal('ibVerificationModal');return;}
+      const premiumPagePay=event.target.closest('[data-premium-page-pay]');
+      if(premiumPagePay){
+        if(premiumPagePay.dataset.premiumPagePay==='bank'){await startPremiumLocalBank(premiumPagePay);return;}
+        const box=document.getElementById('premiumUsdtSummary');if(box)box.innerHTML=`<b>${Number(state.premium?.price_usdt||0).toLocaleString()} USDT</b> · ${Number(state.premium?.monthly_days||30)} days Premium Market Access`;A.openModal('premiumUsdtModal');return;
       }
       const signalStatusButton = event.target.closest('[data-signal-status]');
       if (signalStatusButton) { signalStatusView = signalStatusButton.dataset.signalStatus || 'all'; renderSignals(); }
