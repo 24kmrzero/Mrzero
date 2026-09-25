@@ -1250,6 +1250,14 @@
       if (buy) { A.closeModal('courseDetailsModal'); await openPaymentModal(buy.dataset.buyCourse, buy); }
       const paymentChoice = event.target.closest('[data-payment-choice]');
       if (paymentChoice) { selectCoursePaymentMethod(paymentChoice.dataset.paymentChoice); return; }
+      const copyUsdtWallet=event.target.closest('[data-copy-usdt-wallet]');
+      if(copyUsdtWallet){
+        const wallet=String(copyUsdtWallet.dataset.copyUsdtWallet||'').trim();
+        if(!wallet)return;
+        try{await navigator.clipboard.writeText(wallet);A.toast('USDT TRC20 wallet address copied.','success');}
+        catch{A.toast('Could not copy automatically. Press and hold the address to copy.','warning');}
+        return;
+      }
       const paymentContinue = event.target.closest('#coursePaymentContinue');
       if (paymentContinue) {
         const choice=paymentContinue.dataset.choice || paymentChoiceSelection;
@@ -1315,6 +1323,11 @@
   function showSignalNotification(update){if(!update?.notify_users)return;A.toast(`${update.notification_title||'Signal Update'} — ${update.notification_message||''}`,'success');if('Notification' in window&&Notification.permission==='granted'&&document.visibilityState!=='visible'){new Notification(update.notification_title||'24K Signal Update',{body:update.notification_message||'',icon:'assets/logo.png?v=9.68'});}}
 
 
+  function validTrc20Address(value){
+    const v=String(value||'').trim();
+    return /^T[1-9A-HJ-NP-Za-km-z]{33}$/.test(v);
+  }
+
   function coursePaymentMethodConfigured(type){
     const method=type==='bank'
       ? state.paymentMethods.find(m=>/^local bank transfer$/i.test(String(m.name||'').trim()))
@@ -1322,7 +1335,7 @@
     if(!method)return false;
     const account=String(method.account_number||'').trim();
     if(!account||/^(—|-|n\/a|na)$/i.test(account))return false;
-    if(type==='usdt'&&/^(usdt\s*)?(trc\s*20|trc20)$/i.test(account))return false;
+    if(type==='usdt'&&!validTrc20Address(account))return false;
     if(String(method.name||'').trim().toLowerCase()===account.toLowerCase())return false;
     return true;
   }
@@ -1398,7 +1411,7 @@
     const usdtDestinationReady = coursePaymentMethodConfigured('usdt');
     const form = document.getElementById('paymentForm');
     form.reset(); form.elements.course_id.value = course.id; form.dataset.supersedesPaymentId = pending?.status==='resubmission_required'?pending.id:''; const payable=course.discount_price!=null?Number(course.discount_price):Number(course.price); form.elements.amount.value = payable;
-    document.getElementById('paymentCourseSummary').innerHTML = `<b>${A.escapeHtml(course.title)}</b><br>Instructor: Mr. Zameer · Amount: ${String(course.currency||'').toUpperCase()==='USD'?`USD ${Number(payable).toLocaleString('en-US',{maximumFractionDigits:2})} (Pay ${Number(payable).toLocaleString('en-US',{maximumFractionDigits:2})} USDT)`:`USDT ${Number(payable).toLocaleString('en-US',{maximumFractionDigits:2})}`}<br><small>${usdtDestinationReady?'Pay using TRC20 network and submit the TXID + receipt for Admin approval.':'Payment form is available, but the Admin still needs to add the final TRC20 wallet address. Do not transfer funds until the wallet is confirmed.'}</small>`;
+    document.getElementById('paymentCourseSummary').innerHTML = `<b>${A.escapeHtml(course.title)}</b><br>Amount: <b>${Number(payable).toLocaleString('en-US',{maximumFractionDigits:2})} USDT</b><br><small>${usdtDestinationReady?'Copy the TRC20 wallet below, make payment, then submit TXID + receipt.':'The payment form is ready, but the real TRC20 wallet address must be added by Admin before funds are sent.'}</small>`
     document.getElementById('paymentMethodSelect').innerHTML = usdtMethods.map(m => `<option value="${m.id}">${A.escapeHtml(m.name)}</option>`).join('');
     renderPaymentMethodInfo();
     document.getElementById('paymentMethodSelect').onchange = renderPaymentMethodInfo;
@@ -1455,12 +1468,27 @@
 
   function renderPaymentMethodInfo() {
     const method = state.paymentMethods.find(m => m.id === document.getElementById('paymentMethodSelect').value);
-    const ready=coursePaymentMethodConfigured('usdt');
-    document.getElementById('paymentMethodsBox').innerHTML = !method ? '' : ready
-      ? `<div class="notice warn"><b>${A.escapeHtml(method.name)}</b><br>Account title: ${A.escapeHtml(method.account_title || '—')}<br>USDT TRC20 wallet: ${A.escapeHtml(method.account_number || '—')}<br>${A.escapeHtml(method.instructions || '')}</div>`
-      : `<div class="notice warn"><b>TRC20 wallet pending from Admin.</b><br>The form can be reviewed now, but do not transfer funds until the final wallet address is displayed here.</div>`;
+    const box=document.getElementById('paymentMethodsBox');
+    if(!box){return;}
+    if(!method){box.innerHTML='';return;}
+    const wallet=String(method.account_number||'').trim();
+    const ready=validTrc20Address(wallet);
+    box.innerHTML = ready
+      ? `<div class="usdt-wallet-card">
+          <div class="usdt-wallet-top">
+            <span class="usdt-wallet-icon"><i class="fa-solid fa-coins"></i></span>
+            <div><small>NETWORK</small><b>USDT · TRC20</b></div>
+            <span class="usdt-network-badge">TRON</span>
+          </div>
+          <div class="usdt-wallet-address">
+            <small>PAYMENT WALLET ADDRESS</small>
+            <code>${A.escapeHtml(wallet)}</code>
+            <button type="button" data-copy-usdt-wallet="${attr(wallet)}"><i class="fa-regular fa-copy"></i> Copy Address</button>
+          </div>
+          <div class="usdt-wallet-note"><i class="fa-solid fa-circle-info"></i><span>Send only <b>USDT on TRC20 network</b> to this address. After payment, paste the TXID below and upload your receipt.</span></div>
+        </div>`
+      : `<div class="notice warn usdt-wallet-missing"><b>TRC20 wallet address is not configured yet.</b><br>Admin must add the real wallet address before any client sends funds.</div>`;
   }
-
 
   async function submitBankPayment(event) {
     event.preventDefault();
@@ -1502,6 +1530,7 @@
     const fd = new FormData(form);
     const course = state.courses.find(c => c.id === fd.get('course_id'));
     const method = state.paymentMethods.find(m => m.id === fd.get('payment_method_id'));
+    if(!method || !validTrc20Address(method.account_number)) return A.toast('USDT TRC20 wallet is not configured yet. Payment cannot be submitted until Admin adds the real wallet address.','warning');
     const file = fd.get('receipt');
     if (!file || !file.size) return A.toast('Please select a payment receipt.', 'error');
     if (file.size > 5 * 1024 * 1024) return A.toast('Receipt must be 5 MB or smaller.', 'error');
