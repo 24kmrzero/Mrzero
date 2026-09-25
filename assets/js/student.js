@@ -467,7 +467,7 @@
           ['fa-clock-rotate-left', rows.length, 'History Signals', 'Filtered completed records', 'gold'],
           ['fa-bullseye', tpHits, 'TP Hits', 'Filtered target hits', 'target'],
           ['fa-ban', slHits, 'SL Hits', 'Filtered stopped trades', 'bad'],
-          ['fa-chart-line', `${signed(totalPips)} Pips`, 'Total Performance', 'Filtered result', 'gold'],
+          ['fa-chart-line', `${signed(totalPips)} Pips`, 'Performance', 'History result', 'gold'],
           ['fa-trophy', `${winRate}%`, 'Win Rate', 'Filtered resolved signals', 'violet']
         ];
     const root = document.getElementById('signalPerformance');
