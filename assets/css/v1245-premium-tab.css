@@ -262,3 +262,147 @@ html[data-theme="dark"] .premium-broker-guide h4{color:#f3f3f3}
     margin-bottom:10px!important;
   }
 }
+
+/* v12.48 Compact paid access + broker verification modal safe area */
+.premium-paid-summary{
+  display:grid;
+  grid-template-columns:46px minmax(0,1fr) auto;
+  gap:11px;
+  align-items:center;
+  padding:13px;
+  border:1px solid rgba(201,154,5,.18);
+  border-radius:14px;
+  background:linear-gradient(145deg,rgba(252,213,53,.08),rgba(252,213,53,.02));
+  margin-bottom:9px;
+}
+.pps-plan-icon{
+  width:46px;height:46px;border-radius:13px;
+  display:grid;place-items:center;
+  background:linear-gradient(145deg,#FCD535,#D39A00);
+  color:#181A20;font-size:17px;
+}
+.premium-paid-summary small{display:block;color:#A77700;font-size:7px;font-weight:900;letter-spacing:.09em}
+.premium-paid-summary h4{margin:2px 0 3px;font-size:15px}
+.premium-paid-summary p{margin:0;color:var(--muted,#7b7f87);font-size:9px}
+.pps-duration{
+  padding:6px 9px;border-radius:999px;
+  background:rgba(14,203,129,.09);color:#078A58;
+  font-size:7px;font-weight:900;
+}
+.premium-price-pending{
+  display:grid;
+  grid-template-columns:30px minmax(0,1fr);
+  gap:8px;
+  align-items:center;
+  padding:9px 10px;
+  margin-bottom:8px;
+  border:1px solid rgba(240,185,11,.16);
+  border-radius:10px;
+  background:rgba(240,185,11,.055);
+}
+.premium-price-pending>i{
+  width:30px;height:30px;border-radius:9px;
+  display:grid;place-items:center;
+  background:rgba(240,185,11,.11);color:#A77700;
+}
+.premium-price-pending b{display:block;font-size:9px}
+.premium-price-pending p{margin:2px 0 0;color:var(--muted,#7b7f87);font-size:7px;line-height:1.35}
+.premium-action-card small{
+  display:block!important;
+  margin:0 0 2px!important;
+  color:#A77700!important;
+  font-size:6px!important;
+  font-weight:900!important;
+  letter-spacing:.07em!important;
+}
+.premium-action-card p{
+  margin:2px 0 0!important;
+  color:var(--muted,#7b7f87)!important;
+  font-size:7px!important;
+}
+.premium-use-broker{width:100%;margin-top:8px}
+
+@media(max-width:760px){
+  .premium-paid-summary{
+    grid-template-columns:34px minmax(0,1fr) auto!important;
+    gap:8px!important;padding:9px!important;border-radius:10px!important;
+  }
+  .pps-plan-icon{width:34px!important;height:34px!important;border-radius:9px!important;font-size:12px!important}
+  .premium-paid-summary small{font-size:5.2px!important}
+  .premium-paid-summary h4{font-size:10px!important}
+  .premium-paid-summary p{font-size:6.4px!important}
+  .pps-duration{padding:4px 6px!important;font-size:5.5px!important}
+  .premium-price-pending{grid-template-columns:26px 1fr!important;padding:8px!important;gap:7px!important}
+  .premium-price-pending>i{width:26px!important;height:26px!important;font-size:8px!important}
+  .premium-price-pending b{font-size:8px!important}
+  .premium-price-pending p{font-size:6.3px!important}
+
+  /* Broker verification is a real scrollable sheet.
+     Footer never covers Note/Proof fields and bottom app nav stays hidden. */
+  body.modal-open .student-mobile-nav{
+    display:none!important;
+    visibility:hidden!important;
+    opacity:0!important;
+    pointer-events:none!important;
+  }
+  #ibVerificationModal.open{
+    align-items:flex-end!important;
+    padding:0!important;
+    z-index:3300!important;
+  }
+  #ibVerificationModal .app-modal-card{
+    width:100%!important;
+    max-width:none!important;
+    height:min(94dvh,calc(100dvh - 8px))!important;
+    max-height:min(94dvh,calc(100dvh - 8px))!important;
+    display:grid!important;
+    grid-template-rows:auto minmax(0,1fr)!important;
+    border-radius:22px 22px 0 0!important;
+    overflow:hidden!important;
+  }
+  #ibVerificationModal #ibVerificationForm{
+    min-height:0!important;
+    overflow:hidden!important;
+    display:grid!important;
+    grid-template-rows:minmax(0,1fr) auto!important;
+  }
+  #ibVerificationModal .app-modal-body{
+    min-height:0!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    padding-bottom:28px!important;
+    overscroll-behavior:contain!important;
+    -webkit-overflow-scrolling:touch!important;
+  }
+  #ibVerificationModal .app-modal-foot{
+    position:relative!important;
+    bottom:auto!important;
+    z-index:5!important;
+    padding:11px 14px max(18px,calc(11px + env(safe-area-inset-bottom)))!important;
+    background:var(--s-surface,#fff)!important;
+    border-top:1px solid var(--s-line,#E7E9ED)!important;
+    box-shadow:0 -10px 24px rgba(18,22,28,.06)!important;
+  }
+  #ibVerificationModal .form-grid{
+    padding-bottom:4px!important;
+  }
+  #ibVerificationModal textarea{
+    margin-bottom:8px!important;
+  }
+  #ibBrokerInstructions{
+    padding:10px!important;
+    border-radius:10px!important;
+  }
+  #ibBrokerInstructions>small{
+    display:block!important;
+    margin-bottom:4px!important;
+    color:#A77700!important;
+    font-size:5.5px!important;
+    font-weight:900!important;
+    letter-spacing:.08em!important;
+  }
+  #ibBrokerInstructions>h4{
+    margin:0 0 7px!important;
+    font-size:9px!important;
+  }
+}
