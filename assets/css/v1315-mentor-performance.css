@@ -1,0 +1,508 @@
+/* 24K MR ZERO — Mentor Performance premium polish v13.15
+   Goal: cleaner institutional fintech hierarchy, denser mobile layout,
+   stronger light/dark separation, and less decorative glow. */
+
+[data-mentor-panel="performance"]{
+  --perf-gold:#f0b90b;
+  --perf-gold-deep:#9f7200;
+  --perf-green:#0fa66b;
+  --perf-red:#e33f55;
+}
+[data-mentor-panel="performance"] .mrzero-performance,
+[data-mentor-panel="performance"] .mrzero-metric,
+[data-mentor-panel="performance"] .mrzero-performance-live,
+[data-mentor-panel="performance"] .mrzero-command-panel,
+[data-mentor-panel="performance"] .mrzero-quality-panel{
+  font-variant-numeric:tabular-nums;
+}
+
+/* Executive page rhythm */
+[data-mentor-panel="performance"] .mrzero-performance{
+  gap:12px!important;
+}
+[data-mentor-panel="performance"] .mrzero-performance-hero,
+[data-mentor-panel="performance"] .mrzero-metric,
+[data-mentor-panel="performance"] .mrzero-command-panel,
+[data-mentor-panel="performance"] .mrzero-quality-panel{
+  overflow:hidden;
+  isolation:isolate;
+}
+
+/* Hero — premium without looking like a banner ad */
+[data-mentor-panel="performance"] .mrzero-performance-hero{
+  min-height:190px!important;
+  padding:25px 26px!important;
+  border-radius:22px!important;
+  border:1px solid rgba(240,185,11,.20)!important;
+  background:
+    radial-gradient(400px 210px at 88% 4%,rgba(240,185,11,.12),transparent 68%),
+    linear-gradient(135deg,#0b0e11 0%,#11151b 66%,#151308 100%)!important;
+  box-shadow:0 18px 42px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.035)!important;
+}
+[data-mentor-panel="performance"] .mrzero-performance-hero:before{
+  opacity:.18!important;
+}
+[data-mentor-panel="performance"] .mrzero-performance-hero:after{
+  content:"24K"!important;
+  right:11px!important;
+  bottom:-47px!important;
+  font-size:154px!important;
+  font-weight:950;
+  letter-spacing:-.08em;
+  color:rgba(240,185,11,.045)!important;
+}
+[data-mentor-panel="performance"] .mrzero-performance-kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:6px 9px;
+  border:1px solid rgba(240,185,11,.14);
+  border-radius:999px;
+  background:rgba(240,185,11,.055);
+  font-size:8.5px!important;
+  letter-spacing:.14em!important;
+}
+[data-mentor-panel="performance"] .mrzero-performance-copy h2{
+  max-width:620px;
+  margin:14px 0 8px!important;
+  font-size:34px!important;
+  line-height:1.01!important;
+  letter-spacing:-.048em!important;
+}
+[data-mentor-panel="performance"] .mrzero-performance-copy h2 em{
+  color:#f0b90b!important;
+  font-style:normal!important;
+}
+[data-mentor-panel="performance"] .mrzero-performance-copy p{
+  max-width:560px;
+  font-size:11.5px!important;
+  line-height:1.55!important;
+}
+[data-mentor-panel="performance"] .mrzero-performance-live{
+  width:258px!important;
+  min-height:122px!important;
+  padding:15px 16px!important;
+  border-radius:16px!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.015))!important;
+  border:1px solid rgba(240,185,11,.18)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035)!important;
+}
+[data-mentor-panel="performance"] .mrzero-performance-live span{
+  letter-spacing:.14em!important;
+}
+[data-mentor-panel="performance"] .mrzero-performance-live b{
+  margin-top:15px!important;
+  font-size:30px!important;
+  letter-spacing:-.035em!important;
+}
+[data-mentor-panel="performance"] .mrzero-last-updated{
+  margin-top:8px!important;
+  padding-top:7px!important;
+}
+
+/* KPI vault */
+[data-mentor-panel="performance"] .mrzero-performance-kpis{
+  gap:9px!important;
+}
+[data-mentor-panel="performance"] .mrzero-metric{
+  min-height:98px!important;
+  padding:13px 14px!important;
+  border-radius:15px!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.09)!important;
+}
+[data-mentor-panel="performance"] .mrzero-metric:before{
+  left:14px!important;
+  right:14px!important;
+  top:0!important;
+  width:auto!important;
+  height:2px!important;
+  border-radius:0 0 999px 999px!important;
+  background:linear-gradient(90deg,transparent,rgba(240,185,11,.52),transparent)!important;
+}
+[data-mentor-panel="performance"] .mrzero-metric:after{
+  content:"";
+  position:absolute;
+  width:74px;
+  height:74px;
+  right:-32px;
+  bottom:-34px;
+  border:1px solid rgba(240,185,11,.07);
+  border-radius:50%;
+  pointer-events:none;
+}
+[data-mentor-panel="performance"] .mrzero-metric-head span{
+  font-size:8px!important;
+  letter-spacing:.10em!important;
+}
+[data-mentor-panel="performance"] .mrzero-metric-head i{
+  width:27px!important;
+  height:27px!important;
+  border-radius:9px!important;
+}
+[data-mentor-panel="performance"] .mrzero-metric b{
+  margin-top:10px!important;
+  font-size:22px!important;
+  line-height:1!important;
+  letter-spacing:-.03em!important;
+}
+[data-mentor-panel="performance"] .mrzero-metric.primary b{
+  font-size:30px!important;
+}
+[data-mentor-panel="performance"] .mrzero-metric small{
+  margin-top:6px!important;
+  font-size:8.5px!important;
+}
+
+/* Analytics surfaces */
+[data-mentor-panel="performance"] .mrzero-command-grid,
+[data-mentor-panel="performance"] .mrzero-lower-grid{
+  gap:9px!important;
+}
+[data-mentor-panel="performance"] .mrzero-command-panel,
+[data-mentor-panel="performance"] .mrzero-quality-panel{
+  border-radius:16px!important;
+  box-shadow:0 8px 24px rgba(0,0,0,.09)!important;
+}
+[data-mentor-panel="performance"] .mrzero-command-panel{
+  padding:15px 16px!important;
+}
+[data-mentor-panel="performance"] .mrzero-panel-head{
+  margin-bottom:12px!important;
+}
+[data-mentor-panel="performance"] .mrzero-panel-head>div{
+  gap:9px!important;
+}
+[data-mentor-panel="performance"] .mrzero-panel-index{
+  width:28px!important;
+  height:28px!important;
+  border-radius:9px!important;
+}
+[data-mentor-panel="performance"] .mrzero-panel-head h3{
+  font-size:13.5px!important;
+  letter-spacing:-.02em!important;
+}
+[data-mentor-panel="performance"] .mrzero-panel-head>small{
+  font-size:7.5px!important;
+  letter-spacing:.12em!important;
+}
+
+/* Momentum chart */
+[data-mentor-panel="performance"] .mrzero-signal-bars{
+  height:164px!important;
+  gap:6px!important;
+  padding:13px 2px 22px!important;
+}
+[data-mentor-panel="performance"] .mrzero-signal-bars span{
+  max-width:24px!important;
+  min-width:5px;
+  border-radius:6px 6px 2px 2px!important;
+  background:linear-gradient(180deg,#ffd95c 0%,#f0b90b 55%,#b77900 100%)!important;
+}
+[data-mentor-panel="performance"] .mrzero-signal-bars span.is-latest{
+  box-shadow:0 0 0 1px rgba(240,185,11,.20),0 -5px 14px rgba(240,185,11,.10)!important;
+}
+
+/* Execution score — compact institutional composition */
+[data-mentor-panel="performance"] .mrzero-win-rate{
+  min-height:164px!important;
+  grid-template-columns:132px 1fr!important;
+  gap:12px!important;
+}
+[data-mentor-panel="performance"] .mrzero-score-ring{
+  width:122px!important;
+  height:122px!important;
+}
+[data-mentor-panel="performance"] .mrzero-score-ring:before{
+  inset:9px!important;
+}
+[data-mentor-panel="performance"] .mrzero-score-ring b{
+  font-size:30px!important;
+}
+[data-mentor-panel="performance"] .mrzero-score-ring small{
+  font-size:7.5px!important;
+  letter-spacing:.07em!important;
+}
+[data-mentor-panel="performance"] .mrzero-win-stats{
+  gap:6px!important;
+}
+[data-mentor-panel="performance"] .mrzero-win-stat{
+  min-height:48px!important;
+  padding:8px 9px!important;
+  border-radius:10px!important;
+}
+[data-mentor-panel="performance"] .mrzero-win-stat span{
+  font-size:8px!important;
+}
+[data-mentor-panel="performance"] .mrzero-win-stat b{
+  font-size:15px!important;
+}
+
+/* Quality snapshot */
+[data-mentor-panel="performance"] .mrzero-quality-panel{
+  padding:14px 16px!important;
+}
+[data-mentor-panel="performance"] .mrzero-quality-title{
+  gap:10px!important;
+}
+[data-mentor-panel="performance"] .mrzero-quality-title small{
+  font-size:7.5px!important;
+  letter-spacing:.12em!important;
+}
+[data-mentor-panel="performance"] .mrzero-quality-title h3{
+  font-size:14px!important;
+  letter-spacing:-.02em!important;
+}
+[data-mentor-panel="performance"] .mrzero-quality-stats>div{
+  min-height:54px!important;
+  padding:6px 12px!important;
+}
+[data-mentor-panel="performance"] .mrzero-quality-stats small{
+  font-size:7.5px!important;
+  letter-spacing:.08em!important;
+}
+[data-mentor-panel="performance"] .mrzero-quality-stats b{
+  font-size:15px!important;
+  letter-spacing:-.02em!important;
+}
+
+/* Market focus */
+[data-mentor-panel="performance"] .mrzero-market-focus{
+  gap:10px!important;
+}
+[data-mentor-panel="performance"] .mrzero-market-row{
+  grid-template-columns:76px minmax(0,1fr) 68px!important;
+  gap:10px!important;
+}
+[data-mentor-panel="performance"] .mrzero-market-row b{
+  font-size:10px!important;
+}
+[data-mentor-panel="performance"] .mrzero-market-row small{
+  font-size:7.5px!important;
+}
+[data-mentor-panel="performance"] .mrzero-market-track{
+  height:7px!important;
+  border-radius:999px!important;
+  overflow:hidden;
+}
+[data-mentor-panel="performance"] .mrzero-market-track i{
+  border-radius:inherit!important;
+}
+
+/* Feed becomes a cleaner activity timeline */
+[data-mentor-panel="performance"] .mrzero-activity-item{
+  grid-template-columns:34px minmax(0,1fr) auto!important;
+  gap:9px!important;
+  padding:10px 0!important;
+}
+[data-mentor-panel="performance"] .mrzero-activity-icon{
+  width:32px!important;
+  height:32px!important;
+  border-radius:10px!important;
+}
+[data-mentor-panel="performance"] .mrzero-activity-copy b{
+  font-size:10.5px!important;
+}
+[data-mentor-panel="performance"] .mrzero-activity-copy small{
+  font-size:7.5px!important;
+}
+[data-mentor-panel="performance"] .mrzero-pips-badge,
+[data-mentor-panel="performance"] .mrzero-activity-status{
+  min-height:20px!important;
+  font-size:7px!important;
+  border-radius:999px!important;
+}
+
+/* Light: truly light, cool-white, controlled gold */
+html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-performance-hero{
+  border-color:#e8e2d3!important;
+  background:
+    radial-gradient(390px 205px at 90% 0%,rgba(240,185,11,.085),transparent 68%),
+    linear-gradient(135deg,#ffffff 0%,#ffffff 70%,#fbfaf6 100%)!important;
+  box-shadow:0 12px 30px rgba(18,24,32,.055),inset 0 1px 0 #fff!important;
+}
+html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-performance-kicker{
+  color:#8a6500!important;
+  border-color:#eee1ad!important;
+  background:#fffaf0!important;
+}
+html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-performance-live{
+  background:linear-gradient(145deg,#ffffff,#fbfaf6)!important;
+  border-color:#eadfae!important;
+  box-shadow:0 7px 18px rgba(18,24,32,.035),inset 0 1px 0 #fff!important;
+}
+html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-metric,
+html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-command-panel,
+html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-quality-panel{
+  border-color:#e6e8eb!important;
+  background:
+    radial-gradient(170px 90px at 100% 0%,rgba(240,185,11,.025),transparent 72%),
+    #ffffff!important;
+  box-shadow:0 7px 22px rgba(18,24,32,.045)!important;
+}
+html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-metric.primary{
+  border-color:#e6dcaf!important;
+  background:
+    linear-gradient(90deg,rgba(240,185,11,.022),transparent 44%),
+    #ffffff!important;
+}
+html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-win-stat{
+  border-color:#eceef0!important;
+  background:#fafbfc!important;
+}
+html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-market-track{
+  background:#eef0f2!important;
+}
+html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-activity-item{
+  border-bottom-color:#eef0f2!important;
+}
+
+/* Dark: matte black, subtle gold, no washed-out cards */
+html[data-theme="dark"] [data-mentor-panel="performance"] .mrzero-performance-hero,
+html[data-theme="dark"] [data-mentor-panel="performance"] .mrzero-metric,
+html[data-theme="dark"] [data-mentor-panel="performance"] .mrzero-command-panel,
+html[data-theme="dark"] [data-mentor-panel="performance"] .mrzero-quality-panel{
+  border-color:#252b35!important;
+}
+html[data-theme="dark"] [data-mentor-panel="performance"] .mrzero-metric,
+html[data-theme="dark"] [data-mentor-panel="performance"] .mrzero-command-panel,
+html[data-theme="dark"] [data-mentor-panel="performance"] .mrzero-quality-panel{
+  background:
+    radial-gradient(170px 90px at 100% 0%,rgba(240,185,11,.028),transparent 72%),
+    #11151b!important;
+}
+html[data-theme="dark"] [data-mentor-panel="performance"] .mrzero-performance-live{
+  background:#10141a!important;
+  border-color:#2d3138!important;
+}
+
+/* Mobile: less scrolling, stronger app density, safe bottom clearance */
+@media(max-width:760px){
+  body.mentor-page .mentor-content{
+    padding:9px 10px 112px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-performance{
+    gap:9px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-performance-hero{
+    padding:16px!important;
+    border-radius:17px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-performance-kicker{
+    padding:5px 8px!important;
+    font-size:7.3px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-performance-copy h2{
+    margin:11px 0 6px!important;
+    font-size:25px!important;
+    line-height:1.02!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-performance-copy p{
+    font-size:10.5px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-performance-live{
+    min-height:96px!important;
+    padding:12px 13px!important;
+    border-radius:13px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-performance-live b{
+    margin-top:11px!important;
+    font-size:27px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-performance-live small{
+    font-size:8px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-performance-kpis{
+    gap:7px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-metric{
+    min-height:88px!important;
+    padding:11px 12px!important;
+    border-radius:13px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-metric.primary{
+    min-height:92px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-metric.primary b{
+    font-size:28px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-metric b{
+    font-size:19px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-command-panel,
+  [data-mentor-panel="performance"] .mrzero-quality-panel{
+    padding:13px!important;
+    border-radius:14px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-signal-bars{
+    height:142px!important;
+  }
+  /* Keep score and stats beside each other on normal phones */
+  [data-mentor-panel="performance"] .mrzero-win-rate{
+    min-height:138px!important;
+    grid-template-columns:108px minmax(0,1fr)!important;
+    gap:9px!important;
+    align-items:center!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-score-ring{
+    width:104px!important;
+    height:104px!important;
+    margin:0!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-score-ring b{
+    font-size:27px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-win-stat{
+    min-height:44px!important;
+    padding:7px 8px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-quality-stats{
+    gap:0!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-quality-stats>div{
+    min-height:58px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-activity-item{
+    grid-template-columns:32px minmax(0,1fr)!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-activity-status{
+    grid-column:2!important;
+    justify-self:start!important;
+    margin-top:-2px!important;
+  }
+  .mentor-mobile-nav{
+    left:10px!important;
+    right:10px!important;
+    bottom:10px!important;
+    border-radius:19px!important;
+    box-shadow:0 14px 34px rgba(0,0,0,.22)!important;
+  }
+  .mentor-mobile-nav button{
+    min-height:50px!important;
+    border-radius:13px!important;
+  }
+  .mentor-mobile-nav button.active{
+    background:rgba(240,185,11,.10)!important;
+  }
+  html[data-theme="light"] .mentor-mobile-nav{
+    border-color:#e1e4e8!important;
+    background:rgba(255,255,255,.965)!important;
+    box-shadow:0 14px 34px rgba(18,24,32,.12)!important;
+  }
+}
+
+@media(max-width:390px){
+  [data-mentor-panel="performance"] .mrzero-win-rate{
+    grid-template-columns:96px minmax(0,1fr)!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-score-ring{
+    width:92px!important;
+    height:92px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-score-ring b{
+    font-size:24px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-market-row{
+    grid-template-columns:64px minmax(0,1fr) 56px!important;
+    gap:7px!important;
+  }
+}
