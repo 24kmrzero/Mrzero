@@ -155,3 +155,110 @@ html[data-theme="dark"] .premium-broker-guide h4{color:#f3f3f3}
     line-height:1.4!important;
   }
 }
+
+/* v12.47 Remove excess Premium scroll + unify Premium payment flow */
+@media(max-width:760px){
+  body.student-page[data-student-panel="premium"]{
+    padding-bottom:0!important;
+  }
+  body.student-page[data-student-panel="premium"] .app-content{
+    padding-bottom:0!important;
+  }
+  body.student-page[data-student-panel="premium"] #p-premium{
+    min-height:0!important;
+    padding-bottom:calc(92px + env(safe-area-inset-bottom))!important;
+    margin-bottom:0!important;
+  }
+  body.student-page[data-student-panel="premium"] .premium-page-shell{
+    min-height:0!important;
+    margin-bottom:0!important;
+  }
+  body.student-page[data-student-panel="premium"] .premium-page-flow{
+    margin-bottom:0!important;
+  }
+
+  #premiumBankModal .app-modal-card,
+  #premiumUsdtModal .app-modal-card,
+  #premiumPaymentSuccessModal .app-modal-card{
+    display:grid!important;
+    grid-template-rows:auto minmax(0,1fr) auto!important;
+    width:100%!important;
+    max-width:none!important;
+    height:min(94dvh,calc(100dvh - 8px))!important;
+    max-height:min(94dvh,calc(100dvh - 8px))!important;
+    overflow:hidden!important;
+  }
+  #premiumBankModal .app-modal-body,
+  #premiumUsdtModal .app-modal-body,
+  #premiumPaymentSuccessModal .app-modal-body{
+    min-height:0!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    padding-bottom:22px!important;
+    -webkit-overflow-scrolling:touch!important;
+  }
+  #premiumBankModal .app-modal-foot,
+  #premiumUsdtModal .app-modal-foot,
+  #premiumPaymentSuccessModal .app-modal-foot{
+    position:relative!important;
+    bottom:auto!important;
+    padding:12px 14px max(18px,calc(12px + env(safe-area-inset-bottom)))!important;
+    background:var(--s-surface,#fff)!important;
+    border-top:1px solid var(--s-line,#E7E9ED)!important;
+  }
+  .premium-payment-steps{
+    margin-bottom:10px!important;
+  }
+  .premium-payment-destination{
+    margin:0 0 10px!important;
+    padding:10px!important;
+    border:1px solid var(--s-line,#E7E9ED)!important;
+    border-radius:11px!important;
+    background:var(--s-surface-2,#F3F4F6)!important;
+  }
+  .premium-payment-destination .ppd-top{
+    display:grid!important;
+    grid-template-columns:34px minmax(0,1fr)!important;
+    gap:8px!important;
+    align-items:center!important;
+  }
+  .premium-payment-destination .ppd-top>span{
+    width:34px!important;height:34px!important;
+    display:grid!important;place-items:center!important;
+    border-radius:9px!important;
+    background:rgba(240,185,11,.10)!important;
+    color:#B17F00!important;
+  }
+  .premium-payment-destination small{
+    display:block!important;
+    font-size:5.6px!important;
+    font-weight:900!important;
+    letter-spacing:.08em!important;
+    color:var(--s-faint,#9AA4B2)!important;
+  }
+  .premium-payment-destination b{
+    font-size:8.5px!important;
+    color:var(--s-text,#0B0E11)!important;
+  }
+  .premium-payment-destination .ppd-details{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:6px!important;
+    margin-top:8px!important;
+  }
+  .premium-payment-destination .ppd-details>span{
+    padding:8px!important;
+    border-radius:8px!important;
+    background:var(--s-surface,#fff)!important;
+    border:1px solid var(--s-line,#E7E9ED)!important;
+  }
+  .premium-payment-destination p{
+    margin:8px 0 0!important;
+    font-size:6.8px!important;
+    line-height:1.35!important;
+    color:var(--s-muted,#707A8A)!important;
+  }
+  .premium-usdt-wallet{
+    margin-bottom:10px!important;
+  }
+}
