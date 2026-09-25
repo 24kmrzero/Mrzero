@@ -40,6 +40,20 @@
     return true;
   };
   document.addEventListener('click',e=>{
+    const stepTarget=e.target.closest('#premiumAccessModal [data-access-step-target]');
+    if(stepTarget){
+      e.preventDefault();
+      const target=stepTarget.dataset.accessStepTarget || 'home';
+      document.querySelectorAll('#premiumAccessModal [data-access-step]').forEach(section=>{
+        const active=section.dataset.accessStep===target;
+        section.hidden=false;
+        section.classList.toggle('access-hidden',!active);
+        section.classList.toggle('is-active',active);
+        section.setAttribute('aria-hidden',active?'false':'true');
+        section.style.setProperty('display',active?'block':'none','important');
+      });
+      return;
+    }
     const b=e.target.closest('[data-mobile-premium]');
     if(b){e.preventDefault();premium();document.querySelectorAll('.student-mobile-nav button').forEach(x=>x.classList.toggle('is-active',x===b));}
   });
