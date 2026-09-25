@@ -876,3 +876,53 @@ html[data-theme="dark"] #p-profile .profile-saved-badge{
     padding-bottom:calc(68px + env(safe-area-inset-bottom))!important;
   }
 }
+
+
+/* v12.97 — editable trading experience only */
+#p-profile .profile-readonly-form .editable-experience::after{
+  content:"\f303"!important;
+  color:#A97800!important;
+}
+#p-profile .profile-readonly-form .editable-experience input{
+  border-color:rgba(211,158,0,.24)!important;
+  background:linear-gradient(135deg,rgba(240,185,11,.07),transparent 62%),var(--ex-surface,#fff)!important;
+  color:var(--ex-ink,#111318)!important;
+  -webkit-text-fill-color:var(--ex-ink,#111318)!important;
+  font-weight:750!important;
+  padding-right:36px!important;
+  box-shadow:0 0 0 1px rgba(240,185,11,.02),inset 0 1px 0 rgba(255,255,255,.75)!important;
+}
+#p-profile .profile-readonly-form .editable-experience input:focus{
+  outline:none!important;
+  border-color:#D6A400!important;
+  box-shadow:0 0 0 3px rgba(240,185,11,.10)!important;
+}
+#p-profile .profile-experience-action{
+  display:flex;
+  justify-content:flex-end;
+  margin-top:10px;
+}
+#p-profile .profile-experience-action .app-btn{
+  min-width:170px;
+}
+html[data-theme="dark"] #p-profile .profile-readonly-form .editable-experience input{
+  background:linear-gradient(135deg,rgba(240,185,11,.07),transparent 62%),#15171B!important;
+  color:#F3F4F6!important;
+  -webkit-text-fill-color:#F3F4F6!important;
+  border-color:rgba(240,185,11,.18)!important;
+}
+@media(max-width:760px){
+  #p-profile .profile-info-head p{
+    max-width:220px;
+    line-height:1.35!important;
+  }
+  #p-profile .profile-experience-action{
+    margin-top:8px!important;
+  }
+  #p-profile .profile-experience-action .app-btn{
+    width:100%!important;
+    min-width:0!important;
+    min-height:38px!important;
+    font-size:8px!important;
+  }
+}
