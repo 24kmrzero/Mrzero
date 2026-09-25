@@ -267,8 +267,37 @@
       </section>
 
       <section class="panel" id="p-profile">
-        <div class="panel-heading"><div><h2>Profile & Access</h2><p>Account, premium access and support in one place.</p></div></div>
+        <div class="panel-heading profile-panel-heading"><div><h2>Profile & Access</h2><p>Account, premium access and support in one place.</p></div></div>
         <div class="profile-compact-shell">
+          <div class="profile-premium-hero">
+            <div class="profile-hero-identity">
+              <div class="profile-hero-avatar"><span id="profileHeroInitials">24K</span><i class="fa-solid fa-crown"></i></div>
+              <div class="profile-hero-copy">
+                <small>WELCOME BACK</small>
+                <h2 id="profileHeroName">Member</h2>
+                <p id="profileHeroEmail">—</p>
+                <div class="profile-hero-meta">
+                  <span><i class="fa-regular fa-id-badge"></i> <b id="profileHeroClientId">24K Member</b></span>
+                  <span><i class="fa-regular fa-calendar"></i> <b id="profileHeroJoined">Member</b></span>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="profile-hero-access" data-goto="premium">
+              <span class="profile-access-icon"><i class="fa-solid fa-crown"></i></span>
+              <div>
+                <small>PREMIUM MARKET ACCESS</small>
+                <b id="profileHeroAccessTitle">Checking access…</b>
+                <p id="profileHeroAccessNote">Loading your access status.</p>
+              </div>
+              <span class="profile-access-arrow"><i class="fa-solid fa-chevron-right"></i></span>
+            </button>
+            <div class="profile-hero-access-meta">
+              <span><small>STATUS</small><b id="profileHeroAccessState">Checking</b></span>
+              <span><small>REMAINING</small><b id="profileHeroDays">—</b></span>
+              <span><small>ACCESS UNTIL</small><b id="profileHeroExpiry">—</b></span>
+            </div>
+          </div>
+
           <div class="app-card account-access-card">
             <div class="account-access-row" id="emailVerificationCard"></div>
             <div class="account-access-row premium-access-trigger-row" id="premiumAccessRowPage" data-goto="premium">
@@ -288,7 +317,7 @@
             </div>
           </div>
 
-          <div class="app-card personal-info-card"><div class="app-card-head"><div><h3>Personal Information</h3><p>Keep your contact details up to date.</p></div></div><form id="profileForm"><div class="form-grid"><div class="form-field"><label>Full Name</label><input name="full_name" required></div><div class="form-field"><label>Email Address</label><input name="email" type="email" disabled></div><div class="form-field"><label>WhatsApp Number</label><input name="whatsapp" required></div><div class="form-field"><label>Country</label><input name="country"></div><div class="form-field full"><label>Trading Experience</label><select name="experience"><option value="beginner">Beginner</option><option value="intermediate">Intermediate</option><option value="advanced">Advanced</option></select></div></div><div class="inline-actions"><button class="app-btn gold" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button></div></form></div>
+          <div class="app-card personal-info-card"><div class="app-card-head profile-info-head"><span class="profile-section-icon"><i class="fa-solid fa-user"></i></span><div><h3>Personal Information</h3><p>Keep your contact details up to date.</p></div><button type="button" class="profile-edit-btn" data-profile-edit><i class="fa-solid fa-pen"></i> Edit</button></div><form id="profileForm"><div class="form-grid"><div class="form-field"><label>Full Name</label><input name="full_name" required></div><div class="form-field"><label>Email Address</label><input name="email" type="email" disabled></div><div class="form-field"><label>WhatsApp Number</label><input name="whatsapp" required></div><div class="form-field"><label>Country</label><input name="country"></div><div class="form-field full"><label>Trading Experience</label><select name="experience"><option value="beginner">Beginner</option><option value="intermediate">Intermediate</option><option value="advanced">Advanced</option></select></div></div><div class="inline-actions"><button class="app-btn gold" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button></div></form></div>
 
           <details class="premium-history-details" id="coursePaymentHistoryDetails"><summary><span><i class="fa-solid fa-receipt"></i> Course Payment History <small><span id="paymentCount">0</span> active/review</small></span><i class="fa-solid fa-chevron-down"></i></summary><div class="premium-history-body"><div class="table-scroll"><table class="payment-table"><thead><tr><th>Invoice</th><th>Course</th><th>Amount</th><th>Method</th><th>Reference</th><th>Submitted</th><th>Status</th><th>Admin Note</th><th>Receipt</th></tr></thead><tbody id="paymentsBody"></tbody></table></div></div></details>
 
