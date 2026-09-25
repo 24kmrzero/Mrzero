@@ -986,6 +986,27 @@
         ? `<i class="fa-solid fa-circle"></i> ${source==='trial'?'Free Trial':source==='ib'?'IB Access':'Premium Active'}${p.days_left!=null?` · ${p.days_left}d left`:''}`
         : `<i class="fa-solid fa-lock"></i> Locked`;
     }
+
+    const heroAccessTitle=document.getElementById('profileHeroAccessTitle');
+    const heroAccessNote=document.getElementById('profileHeroAccessNote');
+    const heroAccessState=document.getElementById('profileHeroAccessState');
+    const heroDays=document.getElementById('profileHeroDays');
+    const heroExpiry=document.getElementById('profileHeroExpiry');
+    if(heroAccessTitle||heroAccessNote||heroAccessState||heroDays||heroExpiry){
+      const has=Boolean(p.has_access);
+      const source=String(p.source||'locked');
+      const label=has?(source==='trial'?'Free Trial Active':source==='ib'?'Broker Access Active':source==='free'?'Premium Access Free':'Premium Access Active'):'Premium Access Locked';
+      const days=p.days_left!=null?Math.max(0,Number(p.days_left)):null;
+      const expiryDate=p.expires_at?new Date(p.expires_at):null;
+      const expiryText=expiryDate&&!Number.isNaN(expiryDate.getTime())
+        ? new Intl.DateTimeFormat('en-GB',{day:'2-digit',month:'short',year:'numeric'}).format(expiryDate)
+        : (has?'No expiry':'—');
+      if(heroAccessTitle)heroAccessTitle.textContent=label;
+      if(heroAccessNote)heroAccessNote.textContent=has?'Signals, Charts and Articles are unlocked.':'Choose paid access or broker verification to unlock Premium.';
+      if(heroAccessState){heroAccessState.textContent=has?'ACTIVE':'LOCKED';heroAccessState.classList.toggle('is-active',has);}
+      if(heroDays)heroDays.textContent=days!=null?`${days} DAYS`:(has?'ACTIVE':'—');
+      if(heroExpiry)heroExpiry.textContent=expiryText;
+    }
     const historyCount=document.getElementById('premiumHistoryCount');
     if(historyCount) historyCount.textContent=`${state.premiumPayments.length} payment${state.premiumPayments.length===1?'':'s'}`;
     const body=document.getElementById('premiumPaymentsBody');
@@ -1229,7 +1250,22 @@
 
   function renderProfile() {
     const form = document.getElementById('profileForm');
-    ['full_name','email','whatsapp','country','experience'].forEach(key => { if (form.elements[key]) form.elements[key].value = state.profile[key] || ''; });
+    ['full_name','email','whatsapp','country','experience'].forEach(key => { if (form?.elements[key]) form.elements[key].value = state.profile?.[key] || ''; });
+
+    const fullName=String(state.profile?.full_name||'Member').trim()||'Member';
+    const email=String(state.profile?.email||state.user?.email||'').trim();
+    const initials=fullName.split(/\s+/).slice(0,2).map(part=>part[0]||'').join('').toUpperCase()||'24K';
+    const clientId=String(state.profile?.client_id||'24K Member').trim()||'24K Member';
+    const joined=state.profile?.created_at ? new Date(state.profile.created_at) : null;
+    const joinedText=joined&&!Number.isNaN(joined.getTime())
+      ? new Intl.DateTimeFormat('en-GB',{day:'2-digit',month:'short',year:'numeric'}).format(joined)
+      : '24K Member';
+
+    const heroInitials=document.getElementById('profileHeroInitials'); if(heroInitials)heroInitials.textContent=initials;
+    const heroName=document.getElementById('profileHeroName'); if(heroName)heroName.textContent=fullName;
+    const heroEmail=document.getElementById('profileHeroEmail'); if(heroEmail)heroEmail.textContent=email||'No email';
+    const heroClient=document.getElementById('profileHeroClientId'); if(heroClient)heroClient.textContent=clientId;
+    const heroJoined=document.getElementById('profileHeroJoined'); if(heroJoined)heroJoined.textContent=`Joined ${joinedText}`;
   }
 
   function renderEmailVerification() {
@@ -1406,6 +1442,14 @@
     }
 
     document.body.addEventListener('click', async event => {
+      const profileEdit=event.target.closest('[data-profile-edit]');
+      if(profileEdit){
+        event.preventDefault();
+        const field=document.querySelector('#profileForm [name="full_name"]');
+        field?.scrollIntoView?.({behavior:'smooth',block:'center'});
+        setTimeout(()=>{field?.focus?.();field?.select?.();},250);
+        return;
+      }
       const modalCloser=event.target.closest('[data-close-modal]');
       const backdropModal=event.target.classList?.contains('app-modal') ? event.target : null;
       const closingId=modalCloser?.dataset.closeModal || backdropModal?.id || '';
