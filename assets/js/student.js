@@ -1249,7 +1249,14 @@
       const buy = event.target.closest('[data-buy-course]');
       if (buy) { A.closeModal('courseDetailsModal'); await openPaymentModal(buy.dataset.buyCourse, buy); }
       const paymentChoice = event.target.closest('[data-payment-choice]');
-      if (paymentChoice) await choosePaymentMethod(paymentChoice.dataset.paymentChoice);
+      if (paymentChoice) { selectCoursePaymentMethod(paymentChoice.dataset.paymentChoice); return; }
+      const paymentContinue = event.target.closest('#coursePaymentContinue');
+      if (paymentContinue) {
+        const choice=paymentContinue.dataset.choice || paymentChoiceSelection;
+        if(!choice) return A.toast('Choose a payment method first.','warning');
+        await choosePaymentMethod(choice);
+        return;
+      }
       const free = event.target.closest('[data-free-enroll]');
       if (free) await enrollFree(free.dataset.freeEnroll, free);
       const article = event.target.closest('[data-read-article]');
@@ -1321,6 +1328,7 @@
   }
 
   let paymentChoiceContext = { courseId: null, triggerButton: null };
+  let paymentChoiceSelection = '';
 
   async function openPaymentModal(courseId, triggerButton=null) {
     const course = state.courses.find(c => c.id === courseId);
@@ -1329,6 +1337,10 @@
     if (pending && ['received','under_review'].includes(pending.status)) return A.toast('Your payment is already being processed.', 'warning');
 
     paymentChoiceContext = { courseId, triggerButton };
+    paymentChoiceSelection = '';
+    document.querySelectorAll('[data-payment-choice]').forEach(el=>el.classList.remove('is-selected'));
+    const continueButton=document.getElementById('coursePaymentContinue');
+    if(continueButton){continueButton.disabled=true;continueButton.dataset.choice='';}
     const payable = course.discount_price != null ? Number(course.discount_price) : Number(course.price);
     const currency = String(course.currency || '').toUpperCase();
     const localBankConfigured = state.paymentMethods.some(m => /^local bank transfer$/i.test(String(m.name||'').trim()));
@@ -1343,6 +1355,15 @@
     A.openModal('paymentMethodChoiceModal');
   }
 
+  function selectCoursePaymentMethod(choice) {
+    const button=document.querySelector(`[data-payment-choice="${choice}"]`);
+    if(!button || button.disabled) return;
+    paymentChoiceSelection=choice;
+    document.querySelectorAll('[data-payment-choice]').forEach(el=>el.classList.toggle('is-selected',el===button));
+    const continueButton=document.getElementById('coursePaymentContinue');
+    if(continueButton){continueButton.disabled=false;continueButton.dataset.choice=choice;}
+  }
+
   async function choosePaymentMethod(choice) {
     const { courseId, triggerButton } = paymentChoiceContext;
     const course = state.courses.find(c => c.id === courseId);
@@ -1350,17 +1371,17 @@
     const currency = String(course.currency || '').toUpperCase();
 
     if (choice === 'local-bank') {
-      const enabled=coursePaymentMethodConfigured('bank');
-      if(!enabled) return A.toast('Local Bank Transfer is currently disabled by Admin.','warning');
-      if (currency !== 'PKR') return A.toast('Local Bank Transfer is available for courses priced in PKR. This course is currently priced in USDT.', 'warning');
+      const exists=state.paymentMethods.some(m=>/^local bank transfer$/i.test(String(m.name||'').trim()));
+      if(!exists) return A.toast('Local Bank Transfer is currently disabled by Admin.','warning');
+      if (currency !== 'PKR') return A.toast('Local Bank Transfer is available for PKR-priced courses only.', 'warning');
       A.closeModal('paymentMethodChoiceModal');
       return openLocalBankPaymentModal(courseId);
     }
 
     if (choice === 'usdt') {
-      const enabled=coursePaymentMethodConfigured('usdt');
-      if(!enabled) return A.toast('USDT TRC20 is currently disabled by Admin.','warning');
-      if (!['USDT','USD'].includes(currency)) return A.toast('USDT TRC20 is available for USD / USDT priced courses. This course uses a different currency.', 'warning');
+      const exists=state.paymentMethods.some(m=>/usdt|trc\s*20|trc20/i.test(`${m.name||''} ${m.instructions||''}`));
+      if(!exists) return A.toast('USDT TRC20 is currently disabled by Admin.','warning');
+      if (!['USDT','USD'].includes(currency)) return A.toast('USDT TRC20 is available for USD / USDT-priced courses only.', 'warning');
       A.closeModal('paymentMethodChoiceModal');
       return openUsdtPaymentModal(courseId);
     }
@@ -1373,10 +1394,11 @@
     if (pending && ['received','under_review'].includes(pending.status)) return A.toast('Your payment is already being processed.', 'warning');
 
     const usdtMethods = state.paymentMethods.filter(m => /usdt|trc\s*20|trc20/i.test(`${m.name||''} ${m.instructions||''}`));
-    if (!usdtMethods.length || !coursePaymentMethodConfigured('usdt')) return A.toast('USDT TRC20 wallet details are not configured yet. Please contact Admin.', 'warning');
+    if (!usdtMethods.length) return A.toast('USDT TRC20 is currently disabled by Admin.', 'warning');
+    const usdtDestinationReady = coursePaymentMethodConfigured('usdt');
     const form = document.getElementById('paymentForm');
     form.reset(); form.elements.course_id.value = course.id; form.dataset.supersedesPaymentId = pending?.status==='resubmission_required'?pending.id:''; const payable=course.discount_price!=null?Number(course.discount_price):Number(course.price); form.elements.amount.value = payable;
-    document.getElementById('paymentCourseSummary').innerHTML = `<b>${A.escapeHtml(course.title)}</b><br>Instructor: Mr. Zameer · Amount: ${String(course.currency||'').toUpperCase()==='USD'?`USD ${Number(payable).toLocaleString('en-US',{maximumFractionDigits:2})} (Pay ${Number(payable).toLocaleString('en-US',{maximumFractionDigits:2})} USDT)`:`USDT ${Number(payable).toLocaleString('en-US',{maximumFractionDigits:2})}`}<br><small>Pay using TRC20 network and submit the TXID + receipt for Admin approval.</small>`;
+    document.getElementById('paymentCourseSummary').innerHTML = `<b>${A.escapeHtml(course.title)}</b><br>Instructor: Mr. Zameer · Amount: ${String(course.currency||'').toUpperCase()==='USD'?`USD ${Number(payable).toLocaleString('en-US',{maximumFractionDigits:2})} (Pay ${Number(payable).toLocaleString('en-US',{maximumFractionDigits:2})} USDT)`:`USDT ${Number(payable).toLocaleString('en-US',{maximumFractionDigits:2})}`}<br><small>${usdtDestinationReady?'Pay using TRC20 network and submit the TXID + receipt for Admin approval.':'Payment form is available, but the Admin still needs to add the final TRC20 wallet address. Do not transfer funds until the wallet is confirmed.'}</small>`;
     document.getElementById('paymentMethodSelect').innerHTML = usdtMethods.map(m => `<option value="${m.id}">${A.escapeHtml(m.name)}</option>`).join('');
     renderPaymentMethodInfo();
     document.getElementById('paymentMethodSelect').onchange = renderPaymentMethodInfo;
@@ -1391,7 +1413,8 @@
     if (pending && ['received','under_review'].includes(pending.status)) return A.toast('Your payment is already being processed.', 'warning');
 
     const method = state.paymentMethods.find(m => /^local bank transfer$/i.test(String(m.name||'').trim()));
-    if (!method || !coursePaymentMethodConfigured('bank')) return A.toast('Local Bank account details are not configured yet. Please contact Admin.', 'warning');
+    if (!method) return A.toast('Local Bank Transfer is currently disabled by Admin.', 'warning');
+    const bankDestinationReady = coursePaymentMethodConfigured('bank');
 
     const form = document.getElementById('bankPaymentForm');
     if (!form) return A.toast('Bank payment form is unavailable.', 'error');
@@ -1400,7 +1423,9 @@
     form.dataset.supersedesPaymentId = pending?.status==='resubmission_required' ? pending.id : '';
     const payable=course.discount_price!=null?Number(course.discount_price):Number(course.price);
     document.getElementById('bankPaymentCourseSummary').innerHTML = `<b>${A.escapeHtml(course.title)}</b><br>Amount: PKR ${Number(payable).toLocaleString('en-US',{maximumFractionDigits:2})}<br><small>Transfer manually and submit your reference + receipt for Admin approval.</small>`;
-    document.getElementById('bankPaymentMethodInfo').innerHTML = `<div class="notice warn"><b>${A.escapeHtml(method.name)}</b><br>Account title: ${A.escapeHtml(method.account_title||'—')}<br>Account / IBAN: ${A.escapeHtml(method.account_number||'—')}<br>${A.escapeHtml(method.instructions||'')}</div>`;
+    document.getElementById('bankPaymentMethodInfo').innerHTML = bankDestinationReady
+      ? `<div class="notice warn"><b>${A.escapeHtml(method.name)}</b><br>Account title: ${A.escapeHtml(method.account_title||'—')}<br>Account / IBAN: ${A.escapeHtml(method.account_number||'—')}<br>${A.escapeHtml(method.instructions||'')}</div>`
+      : `<div class="notice warn"><b>Bank details pending from Admin.</b><br>Payment submission form is available, but do not transfer funds until the final bank account is shown here.</div>`;
     A.openModal('bankPaymentModal');
   }
 
@@ -1430,7 +1455,10 @@
 
   function renderPaymentMethodInfo() {
     const method = state.paymentMethods.find(m => m.id === document.getElementById('paymentMethodSelect').value);
-    document.getElementById('paymentMethodsBox').innerHTML = method ? `<div class="notice warn"><b>${A.escapeHtml(method.name)}</b><br>Account title: ${A.escapeHtml(method.account_title || '—')}<br>USDT TRC20 wallet: ${A.escapeHtml(method.account_number || '—')}<br>${A.escapeHtml(method.instructions || '')}</div>` : '';
+    const ready=coursePaymentMethodConfigured('usdt');
+    document.getElementById('paymentMethodsBox').innerHTML = !method ? '' : ready
+      ? `<div class="notice warn"><b>${A.escapeHtml(method.name)}</b><br>Account title: ${A.escapeHtml(method.account_title || '—')}<br>USDT TRC20 wallet: ${A.escapeHtml(method.account_number || '—')}<br>${A.escapeHtml(method.instructions || '')}</div>`
+      : `<div class="notice warn"><b>TRC20 wallet pending from Admin.</b><br>The form can be reviewed now, but do not transfer funds until the final wallet address is displayed here.</div>`;
   }
 
 
