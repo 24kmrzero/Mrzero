@@ -1,0 +1,203 @@
+/* 24K MR ZERO — Mobile Signal Accordion v12.28 */
+.mobile-signal-list{display:none}
+.desktop-signal-table-wrap{display:block}
+
+@media(max-width:760px){
+  .student-page .mobile-signal-list{
+    display:grid!important;
+    gap:7px!important;
+  }
+  .student-page .desktop-signal-table-wrap{display:none!important}
+
+  .student-page .mobile-signal-accordion{
+    overflow:hidden;
+    border:1px solid var(--s-line,#E7E9ED);
+    border-radius:13px;
+    background:var(--s-surface,#fff);
+    box-shadow:none;
+  }
+  .student-page .mobile-signal-accordion[open]{
+    border-color:rgba(240,185,11,.28);
+    box-shadow:0 8px 22px rgba(20,24,31,.055);
+  }
+  html[data-theme="dark"] .student-page .mobile-signal-accordion[open]{
+    box-shadow:0 10px 24px rgba(0,0,0,.20);
+  }
+
+  .student-page .mobile-signal-accordion>summary{
+    list-style:none;
+    min-height:76px;
+    padding:10px 11px;
+    display:grid;
+    grid-template-columns:64px minmax(0,1fr) 72px 18px;
+    align-items:center;
+    gap:8px;
+    cursor:pointer;
+    user-select:none;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .student-page .mobile-signal-accordion>summary::-webkit-details-marker{display:none}
+  .student-page .mobile-signal-accordion>summary::marker{display:none}
+
+  .student-page .msa-time,
+  .student-page .msa-direction{
+    min-width:0;
+    display:grid;
+    gap:4px;
+  }
+  .student-page .msa-time small,
+  .student-page .msa-pair small,
+  .student-page .msa-direction>small,
+  .student-page .msa-level-grid small{
+    color:var(--s-faint,#9AA4B2);
+    font-size:6.5px;
+    line-height:1;
+    font-weight:900;
+    letter-spacing:.08em;
+  }
+  .student-page .msa-time b{
+    color:var(--s-text,#0B0E11);
+    font-size:12px;
+    line-height:1.05;
+    white-space:nowrap;
+  }
+
+  .student-page .msa-pair{
+    min-width:0;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .student-page .msa-pair .instrument-badge{
+    width:34px!important;
+    height:34px!important;
+    flex:0 0 34px!important;
+    border-radius:9px!important;
+  }
+  .student-page .msa-pair>span:last-child{
+    min-width:0;
+    display:grid;
+    gap:2px;
+  }
+  .student-page .msa-pair b{
+    color:var(--s-text,#0B0E11);
+    font-size:13px;
+    line-height:1;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .student-page .msa-pair em{
+    color:var(--s-muted,#707A8A);
+    font-size:7.5px;
+    line-height:1.1;
+    font-style:normal;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+
+  .student-page .msa-direction{
+    justify-items:start;
+  }
+  .student-page .msa-direction .table-direction{
+    min-width:54px;
+    min-height:27px;
+    padding:0 8px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    border-radius:8px!important;
+    font-size:9px!important;
+    font-weight:900!important;
+  }
+
+  .student-page .msa-chevron{
+    width:18px;
+    height:18px;
+    display:grid;
+    place-items:center;
+    color:var(--s-muted,#707A8A);
+    font-size:8px;
+    transition:transform .18s ease,color .18s ease;
+  }
+  .student-page .mobile-signal-accordion[open] .msa-chevron{
+    transform:rotate(180deg);
+    color:var(--s-gold,#F0B90B);
+  }
+
+  .student-page .msa-details{
+    padding:0 10px 10px;
+    border-top:1px solid var(--s-line,#E7E9ED);
+    background:
+      linear-gradient(180deg,rgba(240,185,11,.025),transparent 54%),
+      var(--s-surface,#fff);
+  }
+  .student-page .msa-detail-head{
+    min-height:42px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+  }
+  .student-page .msa-date{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    color:var(--s-muted,#707A8A);
+    font-size:8px;
+    font-weight:700;
+  }
+
+  .student-page .msa-level-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:6px;
+  }
+  .student-page .msa-level-grid>span{
+    min-height:52px;
+    padding:9px;
+    display:grid;
+    align-content:center;
+    gap:5px;
+    border:0;
+    border-radius:9px;
+    background:var(--s-surface-2,#F3F4F6);
+  }
+  .student-page .msa-level-grid b{
+    color:var(--s-text,#0B0E11);
+    font-size:12px;
+    line-height:1.05;
+    font-weight:800;
+    overflow-wrap:anywhere;
+  }
+  .student-page .msa-level-grid .msa-pips{
+    background:rgba(14,203,129,.065);
+  }
+  .student-page .msa-level-grid .msa-pips .table-pips{
+    font-size:12px!important;
+  }
+
+  .student-page .signal-table-footer{
+    padding:8px 2px 2px!important;
+    text-align:center!important;
+    font-size:8px!important;
+    color:var(--s-muted,#707A8A)!important;
+  }
+}
+
+@media(max-width:390px){
+  .student-page .mobile-signal-accordion>summary{
+    grid-template-columns:59px minmax(0,1fr) 66px 16px;
+    gap:6px;
+    padding:9px;
+  }
+  .student-page .msa-pair .instrument-badge{
+    width:31px!important;
+    height:31px!important;
+    flex-basis:31px!important;
+  }
+  .student-page .msa-pair b{font-size:12px}
+  .student-page .msa-time b{font-size:11px}
+  .student-page .msa-direction .table-direction{min-width:50px}
+}
