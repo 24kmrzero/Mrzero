@@ -796,3 +796,29 @@ html[data-theme="dark"] #p-profile .profile-saved-badge{
     border-color:rgba(255,255,255,.065)!important;
   }
 }
+
+
+/* v12.94 — remove stacked mobile profile bottom whitespace */
+@media(max-width:760px){
+  body.student-page[data-student-panel="profile"]{
+    padding-bottom:0!important;
+  }
+  body.student-page[data-student-panel="profile"] .app-content{
+    padding-bottom:0!important;
+  }
+  body.student-page[data-student-panel="profile"] #p-profile{
+    min-height:auto!important;
+    height:auto!important;
+    padding-bottom:calc(76px + env(safe-area-inset-bottom))!important;
+    margin-bottom:0!important;
+  }
+  body.student-page[data-student-panel="profile"] #p-profile .profile-compact-shell{
+    min-height:0!important;
+    height:auto!important;
+    margin-bottom:0!important;
+    padding-bottom:0!important;
+  }
+  body.student-page[data-student-panel="profile"] #p-profile .premium-history-details:last-child{
+    margin-bottom:0!important;
+  }
+}
