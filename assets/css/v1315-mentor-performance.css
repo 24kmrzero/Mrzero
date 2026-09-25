@@ -1065,3 +1065,456 @@ html[data-theme="light"] .mentor-top .mentor-btn.small{
     min-height:44px!important;
   }
 }
+
+
+/* =========================================================
+   V13.17 — Premium trading-terminal polish
+   Cleaner light/dark system, compact hierarchy, P/L momentum,
+   3-row activity feed, refined nav, interactions and refresh state.
+   ========================================================= */
+
+/* Global mentor header density */
+@media(max-width:760px){
+  .mentor-top{
+    height:54px!important;
+    padding:0 11px!important;
+  }
+  .mentor-top-left{
+    gap:9px!important;
+  }
+  .mentor-menu-toggle{
+    width:35px!important;
+    height:35px!important;
+    border-radius:10px!important;
+  }
+  .mentor-top h1{
+    font-size:16px!important;
+    line-height:1.05!important;
+  }
+  .mentor-top small{
+    font-size:8.5px!important;
+  }
+  .mentor-top-actions{
+    gap:6px!important;
+  }
+  .mentor-top .mentor-btn.small{
+    width:35px!important;
+    min-width:35px!important;
+    min-height:35px!important;
+    height:35px!important;
+    padding:0!important;
+    display:grid!important;
+    place-items:center!important;
+  }
+}
+
+/* Performance surfaces share one visual language */
+[data-mentor-panel="performance"] .mrzero-performance-hero,
+[data-mentor-panel="performance"] .mrzero-metric,
+[data-mentor-panel="performance"] .mrzero-command-panel,
+[data-mentor-panel="performance"] .mrzero-quality-panel{
+  transition:
+    transform .16s ease,
+    border-color .16s ease,
+    box-shadow .16s ease,
+    background-color .16s ease!important;
+}
+@media(hover:hover){
+  [data-mentor-panel="performance"] .mrzero-metric:hover,
+  [data-mentor-panel="performance"] .mrzero-command-panel:hover,
+  [data-mentor-panel="performance"] .mrzero-quality-panel:hover{
+    transform:translateY(-1px)!important;
+    border-color:rgba(240,185,11,.24)!important;
+  }
+}
+[data-mentor-panel="performance"] .mrzero-metric:active,
+[data-mentor-panel="performance"] .mrzero-command-panel:active,
+[data-mentor-panel="performance"] .mrzero-quality-panel:active{
+  transform:scale(.995)!important;
+}
+
+/* Cool-white light theme, controlled gold */
+html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-performance-hero,
+html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-metric,
+html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-command-panel,
+html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-quality-panel{
+  box-shadow:
+    0 8px 22px rgba(20,27,38,.045),
+    inset 0 1px 0 rgba(255,255,255,.9)!important;
+}
+html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-command-panel,
+html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-quality-panel{
+  background:#fff!important;
+}
+html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-panel-index{
+  background:#fffaf0!important;
+  border-color:#eadca8!important;
+  color:#9b7100!important;
+}
+
+/* Dark = matte, not glossy */
+html[data-theme="dark"] [data-mentor-panel="performance"] .mrzero-performance-hero,
+html[data-theme="dark"] [data-mentor-panel="performance"] .mrzero-metric,
+html[data-theme="dark"] [data-mentor-panel="performance"] .mrzero-command-panel,
+html[data-theme="dark"] [data-mentor-panel="performance"] .mrzero-quality-panel{
+  box-shadow:
+    0 10px 26px rgba(0,0,0,.20),
+    inset 0 1px 0 rgba(255,255,255,.018)!important;
+}
+
+/* Hero: executive summary first */
+[data-mentor-panel="performance"] .mrzero-performance-copy h2{
+  letter-spacing:-.04em!important;
+  font-weight:850!important;
+}
+[data-mentor-panel="performance"] .mrzero-performance-copy h2 em{
+  font-weight:850!important;
+}
+[data-mentor-panel="performance"] .mrzero-performance-live span i{
+  animation:mentorLivePulse 2.1s ease-in-out infinite;
+}
+@keyframes mentorLivePulse{
+  0%,100%{box-shadow:0 0 0 4px rgba(35,206,139,.09)}
+  50%{box-shadow:0 0 0 7px rgba(35,206,139,.035)}
+}
+
+/* KPI rail: more ticker-like */
+[data-mentor-panel="performance"] .mrzero-metric{
+  position:relative!important;
+}
+[data-mentor-panel="performance"] .mrzero-metric.primary:before{
+  opacity:1!important;
+}
+[data-mentor-panel="performance"] .mrzero-metric.good:before{
+  background:linear-gradient(90deg,transparent,rgba(15,166,107,.38),transparent)!important;
+}
+[data-mentor-panel="performance"] .mrzero-metric.bad:before{
+  background:linear-gradient(90deg,transparent,rgba(227,63,85,.34),transparent)!important;
+}
+[data-mentor-panel="performance"] .mrzero-metric.gold:before{
+  background:linear-gradient(90deg,transparent,rgba(240,185,11,.48),transparent)!important;
+}
+@media(max-width:760px){
+  [data-mentor-panel="performance"] .mrzero-performance-kpis{
+    scroll-padding-left:1px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-metric{
+    flex-basis:142px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-metric.primary{
+    flex-basis:168px!important;
+  }
+}
+
+/* ===== Signal Momentum: real daily P/L chart ===== */
+[data-mentor-panel="performance"] .mrzero-signal-bars{
+  position:relative!important;
+  display:grid!important;
+  grid-template-columns:repeat(14,minmax(0,1fr))!important;
+  align-items:stretch!important;
+  gap:4px!important;
+  min-width:0!important;
+  overflow:visible!important;
+  background:
+    linear-gradient(to bottom,
+      transparent 0,
+      transparent calc(25% - .5px),
+      rgba(127,137,151,.09) 25%,
+      transparent calc(25% + .5px),
+      transparent calc(50% - .5px),
+      rgba(127,137,151,.16) 50%,
+      transparent calc(50% + .5px),
+      transparent calc(75% - .5px),
+      rgba(127,137,151,.09) 75%,
+      transparent calc(75% + .5px)
+    )!important;
+  border-top:0!important;
+}
+[data-mentor-panel="performance"] .mrzero-signal-bars:before,
+[data-mentor-panel="performance"] .mrzero-signal-bars:after{
+  display:none!important;
+}
+[data-mentor-panel="performance"] .mrzero-momentum-col{
+  position:relative!important;
+  min-width:0!important;
+  height:100%!important;
+}
+[data-mentor-panel="performance"] .mrzero-momentum-col i{
+  position:absolute!important;
+  left:50%!important;
+  width:min(15px,72%)!important;
+  min-height:3px!important;
+  transform:translateX(-50%) scaleY(0);
+  transform-origin:bottom!important;
+  border-radius:5px 5px 2px 2px!important;
+  animation:mentorBarGrow .48s cubic-bezier(.2,.8,.2,1) forwards;
+  animation-delay:calc(var(--i,0) * 18ms);
+}
+[data-mentor-panel="performance"] .mrzero-momentum-col.positive i{
+  bottom:50%!important;
+  background:linear-gradient(180deg,#33d69a,#0fa66b)!important;
+  box-shadow:0 -4px 12px rgba(15,166,107,.12)!important;
+}
+[data-mentor-panel="performance"] .mrzero-momentum-col.negative i{
+  top:50%!important;
+  transform-origin:top!important;
+  background:linear-gradient(180deg,#ef6a7c,#d9364f)!important;
+  box-shadow:0 4px 12px rgba(227,63,85,.10)!important;
+  border-radius:2px 2px 5px 5px!important;
+}
+[data-mentor-panel="performance"] .mrzero-momentum-col.zero i{
+  top:calc(50% - 1.5px)!important;
+  height:3px!important;
+  background:#c5cbd3!important;
+  box-shadow:none!important;
+  border-radius:99px!important;
+}
+[data-mentor-panel="performance"] .mrzero-momentum-col small{
+  position:absolute!important;
+  left:50%!important;
+  bottom:-18px!important;
+  transform:translateX(-50%)!important;
+  color:var(--m-muted)!important;
+  font-size:6.8px!important;
+  font-weight:750!important;
+}
+[data-mentor-panel="performance"] .mrzero-momentum-col.is-latest small{
+  color:#a77800!important;
+  font-weight:900!important;
+}
+[data-mentor-panel="performance"] .mrzero-momentum-col.is-latest:after{
+  content:"";
+  position:absolute;
+  left:50%;
+  bottom:-5px;
+  width:4px;
+  height:4px;
+  transform:translateX(-50%);
+  border-radius:50%;
+  background:#f0b90b;
+}
+@keyframes mentorBarGrow{
+  to{transform:translateX(-50%) scaleY(1)}
+}
+
+/* Execution score: compact, data-first */
+[data-mentor-panel="performance"] .mrzero-score-ring{
+  background:conic-gradient(#f0b90b calc(var(--pct)*1%),var(--m-panel2) 0)!important;
+}
+html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-score-ring{
+  background:conic-gradient(#f0b90b calc(var(--pct)*1%),#edf0f3 0)!important;
+}
+[data-mentor-panel="performance"] .mrzero-win-stat{
+  position:relative!important;
+}
+[data-mentor-panel="performance"] .mrzero-win-stat:nth-child(1):before,
+[data-mentor-panel="performance"] .mrzero-win-stat:nth-child(2):before,
+[data-mentor-panel="performance"] .mrzero-win-stat:nth-child(3):before,
+[data-mentor-panel="performance"] .mrzero-win-stat:nth-child(4):before{
+  content:"";
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  flex:0 0 auto;
+  margin-right:6px;
+}
+[data-mentor-panel="performance"] .mrzero-win-stat{
+  display:grid!important;
+  grid-template-columns:auto 1fr auto!important;
+  align-items:center!important;
+}
+[data-mentor-panel="performance"] .mrzero-win-stat:nth-child(1):before{background:#16c784}
+[data-mentor-panel="performance"] .mrzero-win-stat:nth-child(2):before{background:#f6465d}
+[data-mentor-panel="performance"] .mrzero-win-stat:nth-child(3):before{background:#8b95a5}
+[data-mentor-panel="performance"] .mrzero-win-stat:nth-child(4):before{background:#f0b90b}
+
+/* Quality + Market Focus use the same section language */
+[data-mentor-panel="performance"] .mrzero-quality-panel,
+[data-mentor-panel="performance"] .mrzero-command-panel{
+  border-width:1px!important;
+}
+[data-mentor-panel="performance"] .mrzero-quality-title,
+[data-mentor-panel="performance"] .mrzero-panel-head{
+  min-height:28px!important;
+}
+[data-mentor-panel="performance"] .mrzero-quality-stats>div{
+  border-left-color:rgba(127,137,151,.13)!important;
+}
+html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-quality-stats>div{
+  border-left-color:#eceef1!important;
+}
+[data-mentor-panel="performance"] .mrzero-market-track{
+  overflow:hidden!important;
+}
+[data-mentor-panel="performance"] .mrzero-market-track i{
+  transition:width .45s cubic-bezier(.2,.8,.2,1)!important;
+}
+
+/* ===== Execution feed: only 3 items, timeline treatment ===== */
+[data-mentor-panel="performance"] .mrzero-activity-feed{
+  position:relative!important;
+}
+[data-mentor-panel="performance"] .mrzero-activity-item{
+  position:relative!important;
+  border-bottom:0!important;
+}
+[data-mentor-panel="performance"] .mrzero-activity-item:not(:nth-last-child(2)):before{
+  content:"";
+  position:absolute;
+  left:15px;
+  top:38px;
+  bottom:-4px;
+  width:1px;
+  background:var(--m-line);
+  opacity:.8;
+}
+[data-mentor-panel="performance"] .mrzero-activity-icon{
+  position:relative!important;
+  z-index:1!important;
+}
+[data-mentor-panel="performance"] .mrzero-activity-status{
+  white-space:nowrap!important;
+}
+[data-mentor-panel="performance"] .mrzero-feed-all{
+  width:100%;
+  min-height:36px;
+  margin-top:5px;
+  padding:0 4px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  border:0;
+  border-top:1px solid var(--m-line);
+  background:transparent;
+  color:var(--m-text);
+  font:inherit;
+  font-size:8.5px;
+  font-weight:850;
+  letter-spacing:.02em;
+  cursor:pointer;
+}
+[data-mentor-panel="performance"] .mrzero-feed-all i{
+  color:#c18d00;
+  transition:transform .16s ease;
+}
+[data-mentor-panel="performance"] .mrzero-feed-all:hover i{
+  transform:translateX(2px);
+}
+html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-feed-all{
+  border-top-color:#eceef1;
+}
+
+/* More breathing room after the final dashboard card before dock */
+@media(max-width:760px){
+  [data-mentor-panel="performance"] .mrzero-lower-grid{
+    margin-bottom:10px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-activity-item{
+    grid-template-columns:30px minmax(0,1fr) auto!important;
+    gap:8px!important;
+    padding:8px 0!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-activity-item:not(:nth-last-child(2)):before{
+    left:14px!important;
+    top:34px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-activity-icon{
+    width:29px!important;
+    height:29px!important;
+    border-radius:9px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-activity-status{
+    grid-column:auto!important;
+    margin:0!important;
+    align-self:center!important;
+  }
+}
+
+/* Refined floating bottom dock */
+.mentor-mobile-nav{
+  isolation:isolate;
+}
+@media(max-width:760px){
+  .mentor-mobile-nav{
+    min-height:60px!important;
+    border-radius:17px!important;
+  }
+  .mentor-mobile-nav button{
+    min-height:45px!important;
+    padding:4px 2px!important;
+  }
+  .mentor-mobile-nav button i{
+    font-size:16px!important;
+    transition:transform .16s ease,color .16s ease!important;
+  }
+  .mentor-mobile-nav button span{
+    font-size:8.5px!important;
+    font-weight:800!important;
+  }
+  .mentor-mobile-nav button.active{
+    box-shadow:none!important;
+  }
+  .mentor-mobile-nav button.active i{
+    transform:translateY(-1px)!important;
+  }
+  html[data-theme="light"] .mentor-mobile-nav button.active{
+    color:#8f6800!important;
+    background:transparent!important;
+  }
+  html[data-theme="dark"] .mentor-mobile-nav button.active{
+    color:#f0b90b!important;
+    background:transparent!important;
+  }
+}
+
+/* Dashboard refresh skeleton — shown only during manual refresh */
+body.mentor-refreshing [data-mentor-panel="performance"] .mrzero-performance-live b,
+body.mentor-refreshing [data-mentor-panel="performance"] .mrzero-metric b,
+body.mentor-refreshing [data-mentor-panel="performance"] .mrzero-quality-stats b,
+body.mentor-refreshing [data-mentor-panel="performance"] .mrzero-activity-copy b{
+  color:transparent!important;
+  border-radius:6px!important;
+  background:
+    linear-gradient(90deg,
+      rgba(127,137,151,.08) 20%,
+      rgba(127,137,151,.16) 40%,
+      rgba(127,137,151,.08) 60%
+    )!important;
+  background-size:220% 100%!important;
+  animation:mentorSkeleton 1.05s ease infinite!important;
+}
+body.mentor-refreshing [data-mentor-panel="performance"] .mrzero-metric b{
+  width:72%!important;
+}
+@keyframes mentorSkeleton{
+  from{background-position:100% 0}
+  to{background-position:-100% 0}
+}
+
+/* Motion/accessibility */
+@media(prefers-reduced-motion:reduce){
+  [data-mentor-panel="performance"] .mrzero-momentum-col i,
+  [data-mentor-panel="performance"] .mrzero-performance-live span i{
+    animation:none!important;
+    transform:translateX(-50%) scaleY(1)!important;
+  }
+}
+
+/* Small phones */
+@media(max-width:390px){
+  [data-mentor-panel="performance"] .mrzero-performance-copy h2{
+    font-size:20px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-performance-live b{
+    font-size:21px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-activity-item{
+    grid-template-columns:28px minmax(0,1fr)!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-activity-status{
+    grid-column:2!important;
+    justify-self:start!important;
+    margin-top:-2px!important;
+  }
+}
