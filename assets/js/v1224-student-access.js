@@ -83,7 +83,8 @@ function methodConfigured(type){
  const m=methodMatch(type);if(!m)return false;
  const account=String(m.account_number||'').trim();
  if(!account||/^(—|-|n\/a|na)$/i.test(account))return false;
- if(type==='usdt'&&(/^TEST/i.test(account)||/^(usdt\s*)?(trc\s*20|trc20)$/i.test(account)))return false;
+ if(/^TEST/i.test(account)||/^TEST/i.test(String(m.account_title||'')))return false;
+ if(type==='usdt'&&/^(usdt\s*)?(trc\s*20|trc20)$/i.test(account))return false;
  if(String(m.name||'').trim().toLowerCase()===account.toLowerCase())return false;
  return true;
 }
