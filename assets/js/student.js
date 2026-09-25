@@ -1016,18 +1016,26 @@
     const latestIb=state.ibVerifications?.[0]||null;
 
     if(premiumPageState.step==='paid'){
-      flow.innerHTML=`<div class="premium-page-section-head"><button type="button" class="premium-page-back" data-premium-page-step="home"><i class="fa-solid fa-arrow-left"></i> Back</button><div><small>PAID ACCESS</small><h3>Choose Payment Method</h3><p>Activate ${monthlyDays} days of Premium Market Access after Admin verifies your payment.</p></div></div>
-      <div class="premium-plan-card">
+      flow.innerHTML=`<div class="premium-page-section-head"><button type="button" class="premium-page-back" data-premium-page-step="home"><i class="fa-solid fa-arrow-left"></i> Back</button><div><small>PAID ACCESS</small><h3>Choose Payment Method</h3><p>After Admin approves the payment, Premium Market Access activates or extends for ${monthlyDays} days.</p></div></div>
+      <div class="premium-paid-summary">
+        <span class="pps-plan-icon"><i class="fa-solid fa-crown"></i></span>
         <div><small>24K PREMIUM</small><h4>${monthlyDays}-Day Market Access</h4><p>Signals, Charts and Articles included.</p></div>
-        <div class="premium-plan-prices">
-          <span><small>LOCAL BANK</small><b>${pricePkr>0?A.formatMoney(pricePkr,'PKR'):'Not configured'}</b></span>
-          <span><small>USDT TRC20</small><b>${priceUsdt>0?`${priceUsdt.toLocaleString()} USDT`:'Not configured'}</b></span>
-        </div>
+        <span class="pps-duration">${monthlyDays} DAYS</span>
       </div>
-      ${paidReady?`<div class="premium-payment-grid">
-        <button type="button" class="premium-action-card" data-premium-page-pay="bank" ${pricePkr>0?'':'disabled'}><span><i class="fa-solid fa-building-columns"></i></span><div><b>Local Bank Transfer</b><small>Pay in PKR and upload receipt.</small></div><i class="fa-solid fa-chevron-right"></i></button>
-        <button type="button" class="premium-action-card" data-premium-page-pay="usdt" ${priceUsdt>0?'':'disabled'}><span><i class="fa-solid fa-coins"></i></span><div><b>USDT TRC20</b><small>Pay with crypto and submit TXID + receipt.</small></div><i class="fa-solid fa-chevron-right"></i></button>
-      </div>`:`<div class="premium-page-empty"><span><i class="fa-solid fa-clock"></i></span><div><b>Paid pricing is not configured yet</b><p>Admin can set the Premium package price. Free Access via Broker remains available.</p></div><button type="button" class="app-btn gold" data-premium-page-step="broker">Use Broker Access</button></div>`}`;
+      ${!paidReady?`<div class="premium-price-pending"><i class="fa-solid fa-circle-info"></i><div><b>Premium price is not set yet</b><p>Payment methods are ready, but Admin must set the PKR / USDT package price before a payment can be submitted.</p></div></div>`:''}
+      <div class="premium-payment-grid">
+        <button type="button" class="premium-action-card" data-premium-page-pay="bank" ${pricePkr>0?'':'disabled'}>
+          <span><i class="fa-solid fa-building-columns"></i></span>
+          <div><small>LOCAL BANK</small><b>Bank Transfer</b><p>${pricePkr>0?A.formatMoney(pricePkr,'PKR'):'Price pending'}</p></div>
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+        <button type="button" class="premium-action-card" data-premium-page-pay="usdt" ${priceUsdt>0?'':'disabled'}>
+          <span><i class="fa-solid fa-coins"></i></span>
+          <div><small>USDT TRC20</small><b>Crypto Payment</b><p>${priceUsdt>0?`${priceUsdt.toLocaleString()} USDT`:'Price pending'}</p></div>
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </div>
+      ${!paidReady?`<button type="button" class="app-btn outline premium-use-broker" data-premium-page-step="broker"><i class="fa-solid fa-link"></i> Use Free Broker Access Instead</button>`:''}`;
       return;
     }
 
@@ -1277,14 +1285,34 @@
 
   function prefillIbVerificationForm(){
     const form=document.getElementById('ibVerificationForm'); if(!form) return;
-    if(form.elements.broker && accessFlowState.broker) form.elements.broker.value=accessFlowState.broker;
-    if(form.elements.account_type) form.elements.account_type.value=accessFlowState.mode==='existing' ? 'Existing account / partner change' : accessFlowState.mode==='new' ? 'New partner account' : '';
-    if(form.elements.note){
-      const meta=brokerAccessMeta[accessFlowState.broker];
-      const modeText=accessFlowState.mode==='existing' ? 'Existing account / partner change' : accessFlowState.mode==='new' ? 'New account from partner link' : '';
-      const guide=meta ? (accessFlowState.mode==='existing' ? meta.existingGuide : accessFlowState.mode==='new' ? meta.newGuide : '') : '';
-      form.elements.note.value=[accessFlowState.broker?`Broker: ${accessFlowState.broker}`:'', modeText, guide].filter(Boolean).join(' — ');
+    const broker=accessFlowState.broker||premiumPageState.broker||'';
+    const mode=(accessFlowState.mode||premiumPageState.mode||'new')==='existing'?'existing':'new';
+    const meta=brokerAccessMeta[broker]||null;
+    if(form.elements.broker) form.elements.broker.value=broker;
+    if(form.elements.account_type) form.elements.account_type.value=mode;
+
+    const guideText=meta ? (mode==='existing'?meta.existingGuide:meta.newGuide) : '';
+    const instructions=document.getElementById('ibBrokerInstructions');
+    if(instructions){
+      instructions.innerHTML=meta
+        ? `<small>${A.escapeHtml(broker)} · ${mode==='existing'?'EXISTING ACCOUNT':'NEW ACCOUNT'}</small><h4>Instructions</h4><ol class="premium-broker-instructions">${brokerGuidePointsHtml(guideText)}</ol>`
+        : '<b>Choose a broker.</b> Select Exness, XM or DPrime to see the correct instructions.';
     }
+
+    const linkWrap=document.getElementById('ibPartnerLinkWrap');
+    const selectedLink=document.getElementById('ibSelectedPartnerLink');
+    if(linkWrap) linkWrap.classList.toggle('hidden',!meta?.url);
+    if(selectedLink&&meta?.url){selectedLink.href=meta.url;selectedLink.innerHTML=`<i class="fa-solid fa-arrow-up-right-from-square"></i> Open ${A.escapeHtml(broker)} Link`;}
+
+    if(form.elements.note){
+      const modeText=mode==='existing' ? 'Existing account / partner change' : 'New account from partner link';
+      form.elements.note.value=[broker?`Broker: ${broker}`:'',modeText].filter(Boolean).join(' — ');
+    }
+
+    try{
+      form.elements.broker?.dispatchEvent(new Event('change',{bubbles:true}));
+      form.elements.account_type?.dispatchEvent(new Event('change',{bubbles:true}));
+    }catch{}
   }
 
 
