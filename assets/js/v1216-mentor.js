@@ -56,9 +56,68 @@ function showView(k){
   if(window.innerWidth<=760)window.scrollTo({top:0,behavior:'smooth'});
 }
 function openModal(kind){const id=`#mentor${kind[0].toUpperCase()+kind.slice(1)}Modal`,modal=$(id);if(!modal)return;modal.classList.add('open');const body=modal.querySelector('.mentor-modal-body'),card=modal.querySelector('.mentor-modal-card');if(body)body.scrollTop=0;if(card)card.scrollTop=0;requestAnimationFrame(()=>{if(body)body.scrollTop=0;if(card)card.scrollTop=0})}function closeModals(){document.querySelectorAll('.mentor-modal').forEach(x=>x.classList.remove('open'))}function resetMentorEditor(kind){if(kind==='signal'){const f=$('#mentorSignalForm');f?.reset();if(f?.elements.id)f.elements.id.value='';$$('[data-note-preset]').forEach(x=>x.classList.remove('active'));const t=$('#mentorSignalModalTitle');if(t)t.textContent='New Signal';renderMentorPipPreview()}else if(kind==='chart'){const f=$('#mentorChartForm');f?.reset();if(f?.elements.id)f.elements.id.value='';if(f?.elements.existing_image)f.elements.existing_image.value='';const t=$('#mentorChartModalTitle');if(t)t.textContent='New Chart'}else if(kind==='article'){const f=$('#mentorArticleForm');f?.reset();if(f?.elements.id)f.elements.id.value='';if(f?.elements.existing_cover)f.elements.existing_cover.value='';if(f?.elements.is_published)f.elements.is_published.checked=true;const t=$('#mentorArticleModalTitle');if(t)t.textContent='New Article'}else if(kind==='banner'){const f=$('#mentorBannerForm');f?.reset();if(f?.elements.id)f.elements.id.value='';if(f?.elements.existing_image)f.elements.existing_image.value='';if(f?.elements.is_published)f.elements.is_published.checked=true;const t=$('#mentorBannerModalTitle');if(t)t.textContent='New Banner'}}
-async function requireMentor(){if(!sb)throw new Error('Supabase configuration is missing.');const {data:{user},error}=await sb.auth.getUser();if(error||!user){location.href='/mentor-login.html';return false}state.user=user;const p=await sb.from('profiles').select('id,full_name,email,role,status').eq('id',user.id).maybeSingle();if(p.error||!p.data||p.data.role!=='mentor'||String(p.data.status||'active')!=='active'){await sb.auth.signOut();location.href='/mentor-login.html';return false}state.profile=p.data;const pm=await sb.from('mentor_permissions').select('feature_key,enabled').eq('mentor_id',user.id);if(pm.error)throw pm.error;for(const k of Object.keys(state.perms))state.perms[k]=Boolean((pm.data||[]).find(x=>x.feature_key===k)?.enabled);return true}
+async function requireMentor(){
+  if(!sb)throw new Error('Supabase configuration is missing.');
+  let user=null;
+  const local=await sb.auth.getSession();
+  if(local.error)throw local.error;
+  user=local.data?.session?.user||null;
+  if(!user){
+    const remote=await sb.auth.getUser();
+    if(remote.error||!remote.data?.user){location.href='/mentor-login.html';return false}
+    user=remote.data.user;
+  }
+  state.user=user;
+
+  const profileQuery=sb.from('profiles').select('id,full_name,email,role,status').eq('id',user.id).maybeSingle();
+  const permissionQuery=sb.from('mentor_permissions').select('feature_key,enabled').eq('mentor_id',user.id);
+  const signalQuery=sb.from('signals').select('*').eq('created_by',user.id).order('created_at',{ascending:false}).limit(500);
+  const [p,pm,signals]=await Promise.all([profileQuery,permissionQuery,signalQuery]);
+
+  if(p.error||!p.data||p.data.role!=='mentor'||String(p.data.status||'active')!=='active'){
+    await sb.auth.signOut();location.href='/mentor-login.html';return false
+  }
+  state.profile=p.data;
+  if(pm.error)throw pm.error;
+  for(const k of Object.keys(state.perms))state.perms[k]=Boolean((pm.data||[]).find(x=>x.feature_key===k)?.enabled);
+  if(state.perms.signals){
+    if(signals.error)throw signals.error;
+    state.signals=signals.data||[];
+  }else state.signals=[];
+  return true
+}
 async function safeLoad(table,query){try{const r=await query;if(r.error)throw r.error;return r.data||[]}catch(e){console.warn('mentor optional load',table,e);return[]}}
-async function load(){if(!await requireMentor())return;const jobs=[];for(const key of ['signals','charts','articles','banners']){if(state.perms[key])jobs.push(sb.from(key==='banners'?'mentor_banners':key).select('*').eq('created_by',state.user.id).order('created_at',{ascending:false}).limit(500).then(r=>{if(r.error)throw r.error;state[key]=r.data||[]}));else state[key]=[]}jobs.push(safeLoad('courses',sb.from('courses').select('id,title,slug,short_description,description,instructor_name,price,discount_price,currency,status,thumbnail_url,is_published,enrollment_open,start_date').eq('is_published',true).order('display_order',{ascending:true}).limit(100)).then(d=>state.courses=d));jobs.push(safeLoad('announcements',sb.from('announcements').select('id,title,message,priority,published_at,created_at').eq('is_published',true).order('published_at',{ascending:false}).limit(50)).then(d=>state.news=d));await Promise.all(jobs);render();$('#mentorLoading')?.classList.add('hidden');$('#mentorApp')?.classList.remove('hidden')}
+function revealMentorApp(){
+  $('#mentorLoading')?.classList.add('hidden');
+  $('#mentorApp')?.classList.remove('hidden');
+  document.body.classList.remove('mentor-booting');
+}
+async function loadSecondaryMentorData(){
+  const tasks=[];
+  for(const key of ['charts','articles','banners']){
+    if(!state.perms[key]){state[key]=[];continue}
+    const table=key==='banners'?'mentor_banners':key;
+    tasks.push(
+      safeLoad(table,sb.from(table).select('*').eq('created_by',state.user.id).order('created_at',{ascending:false}).limit(500))
+        .then(data=>{state[key]=data;if(key==='charts')renderCharts();else if(key==='articles')renderArticles();else renderBanners()})
+    );
+  }
+  tasks.push(
+    safeLoad('courses',sb.from('courses').select('id,title,slug,short_description,description,instructor_name,price,discount_price,currency,status,thumbnail_url,is_published,enrollment_open,start_date').eq('is_published',true).order('display_order',{ascending:true}).limit(100))
+      .then(data=>{state.courses=data;renderCourses()})
+  );
+  tasks.push(
+    safeLoad('announcements',sb.from('announcements').select('id,title,message,priority,published_at,created_at').eq('is_published',true).order('published_at',{ascending:false}).limit(50))
+      .then(data=>{state.news=data;renderNews()})
+  );
+  await Promise.allSettled(tasks);
+}
+async function load(){
+  if(!await requireMentor())return;
+  render();
+  revealMentorApp();
+  void loadSecondaryMentorData();
+}
 function render(){const name=state.profile?.full_name||'Mentor';$('#mentorName').textContent=name;const enabled=Object.entries(state.perms).filter(x=>x[1]).map(x=>x[0][0].toUpperCase()+x[0].slice(1));$('#mentorAccessSummary').textContent=enabled.length?enabled.join(' · '):'Read-only content';$$('[data-perm]').forEach(x=>x.classList.toggle('hidden',!state.perms[x.dataset.perm]));renderPerformance();renderSignals();renderCharts();renderArticles();renderBanners();renderCourses();renderNews();renderSettings()}
 function mentorOutcomePips(signal,price,outcome='manual'){
   const p=Number(price),a=Number(signal?.entry_from),b=signal?.entry_to==null||signal?.entry_to===''?a:Number(signal.entry_to);
