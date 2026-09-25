@@ -124,7 +124,7 @@ async function submitPremium(e,type){
    if(r.error)throw r.error;path='';f.reset();A.closeModal(type==='bank'?'premiumBankModal':'premiumUsdtModal');
    const successBody=$('#premiumPaymentSuccessBody');
    if(successBody)successBody.innerHTML=`<span class="payment-success-icon"><i class="fa-solid fa-check"></i></span><small>PAYMENT SUBMITTED</small><h3>30-Day Premium Access</h3><p>Your ${type==='bank'?'bank transfer':'USDT TRC20 payment'} proof has been received.</p><div class="payment-success-state"><i class="fa-solid fa-clock"></i><div><b>Under Admin Review</b><span>After approval, Premium Market Access will be activated/extended for ${Number(access?.monthly_days||30)} days.</span></div></div>`;
-   A.openModal('premiumPaymentSuccessModal');
+   (window.__24K_OPEN_HISTORY_MODAL__?window.__24K_OPEN_HISTORY_MODAL__('premiumPaymentSuccessModal'):A.openModal('premiumPaymentSuccessModal'));
    A.toast?.('Premium payment submitted for Admin review.','success');await load();
  }catch(e2){if(path)await sb.storage.from('payment-receipts').remove([path]).catch(()=>{});err(e2,'Could not submit Premium payment.')}finally{A.setLoading(b,false)}
 }
@@ -184,12 +184,12 @@ document.addEventListener('click',e=>{
  const st=e.target.closest('[data-access-step-target]');if(st){e.preventDefault();step(st.dataset.accessStepTarget);return}
  const broker=e.target.closest('[data-broker-select]');if(broker){selectedBroker=broker.dataset.brokerSelect;$$('[data-broker-select]').forEach(x=>x.classList.toggle('active',x===broker));brokerGuide();return}
  const mode=e.target.closest('[data-access-account-mode]');if(mode){accountMode=mode.dataset.accessAccountMode||'new';$$('[data-access-account-mode]').forEach(x=>x.classList.toggle('active',x===mode));brokerGuide();return}
- if(e.target.closest('#premiumPayLocal')){renderMethodInfo('bank');A.openModal('premiumBankModal');return}
- if(e.target.closest('#premiumPayUsdt')){renderMethodInfo('usdt');A.openModal('premiumUsdtModal');return}
+ if(e.target.closest('#premiumPayLocal')){renderMethodInfo('bank');(window.__24K_OPEN_HISTORY_MODAL__?window.__24K_OPEN_HISTORY_MODAL__('premiumBankModal'):A.openModal('premiumBankModal'));return}
+ if(e.target.closest('#premiumPayUsdt')){renderMethodInfo('usdt');(window.__24K_OPEN_HISTORY_MODAL__?window.__24K_OPEN_HISTORY_MODAL__('premiumUsdtModal'):A.openModal('premiumUsdtModal'));return}
  if(e.target.closest('#openIbVerification')){
    if(!selectedBroker)return A.toast?.('Choose Exness, XM or DPrime first.','warning');
    const f=$('#ibVerificationForm');if(f){f.elements.broker.value=selectedBroker;f.elements.account_type.value=accountMode;const cfg=window.APP_CONFIG?.BROKER_PARTNER_LINKS?.[selectedBroker]||brokerLinks[selectedBroker]||'';const selectedLink=$('#ibSelectedPartnerLink');if(selectedLink&&cfg)selectedLink.href=cfg;$('#ibPartnerLinkWrap')?.classList.toggle('hidden',accountMode!=='existing'||!cfg);$('#ibBrokerInstructions').innerHTML=$('#allAccessModeGuide')?.innerHTML||''}
-   A.closeModal('premiumAccessModal');A.openModal('ibVerificationModal');return
+   A.closeModal('premiumAccessModal');(window.__24K_OPEN_HISTORY_MODAL__?window.__24K_OPEN_HISTORY_MODAL__('ibVerificationModal'):A.openModal('ibVerificationModal'));return
  }
  if(e.target.closest('#ibCopyPartnerLink,#copyAllAccessBrokerLink')){
    const href=$('#allAccessBrokerLink')?.href||$('#ibSelectedPartnerLink')?.href||'';if(href)navigator.clipboard.writeText(href).then(()=>A.toast?.('Partner link copied.','success'));else A.toast?.('Partner link is not configured yet.','warning');
