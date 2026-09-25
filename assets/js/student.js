@@ -1026,8 +1026,35 @@
     const paidReady=pricePkr>0||priceUsdt>0;
     const brokerEnabled=p.ib_enabled!==false;
     const latestIb=state.ibVerifications?.[0]||null;
+    const pendingPayment=(state.premiumPayments||[]).find(row=>['received','under_review'].includes(String(row?.status||'').toLowerCase()))||null;
+    const pendingPaymentAmount=pendingPayment
+      ? (String(pendingPayment.currency||'').toUpperCase()==='PKR'
+          ? A.formatMoney(Number(pendingPayment.amount||0),'PKR')
+          : `${Number(pendingPayment.amount||0).toLocaleString()} USDT`)
+      : '';
+    const pendingPaymentDate=pendingPayment?.created_at ? A.formatDateTime(pendingPayment.created_at) : '';
+    const pendingPaymentTest=Boolean(pendingPayment&&/^\[TEST MODE\]/i.test(String(pendingPayment.student_note||'')));
 
     if(premiumPageState.step==='paid'){
+      if(pendingPayment){
+        flow.innerHTML=`<div class="premium-page-section-head"><button type="button" class="premium-page-back" data-premium-page-step="home"><i class="fa-solid fa-arrow-left"></i> Back</button><div><small>PAID ACCESS</small><h3>Payment Submitted</h3><p>Your payment has been received and is waiting for Admin verification.</p></div></div>
+        <div class="premium-pending-payment-card">
+          <div class="pppc-top">
+            <span class="pppc-icon"><i class="fa-solid fa-clock"></i></span>
+            <div><small>PAYMENT STATUS</small><h4>Pending Verification</h4><p>Admin will verify your payment proof before Premium access is activated or extended.</p></div>
+            <span class="pppc-badge">PENDING</span>
+          </div>
+          <div class="pppc-meta">
+            <span><small>METHOD</small><b>${A.escapeHtml(pendingPayment.payment_method_name||'Payment')}</b></span>
+            <span><small>AMOUNT</small><b>${A.escapeHtml(pendingPaymentAmount)}</b></span>
+            <span><small>SUBMITTED</small><b>${A.escapeHtml(pendingPaymentDate||'Just now')}</b></span>
+            <span><small>ACCESS AFTER APPROVAL</small><b>${monthlyDays} Days</b></span>
+          </div>
+          ${pendingPaymentTest?`<div class="pppc-test"><i class="fa-solid fa-flask"></i><span>TEST MODE submission — for website flow testing only.</span></div>`:''}
+          <div class="pppc-note"><i class="fa-solid fa-circle-check"></i><span>Your submission is saved. You do not need to submit another payment while this one is under review.</span></div>
+        </div>`;
+        return;
+      }
       flow.innerHTML=`<div class="premium-page-section-head"><button type="button" class="premium-page-back" data-premium-page-step="home"><i class="fa-solid fa-arrow-left"></i> Back</button><div><small>PAID ACCESS</small><h3>Choose Payment Method</h3><p>After Admin approves the payment, Premium Market Access activates or extends for ${monthlyDays} days.</p></div></div>
       <div class="premium-paid-summary">
         <span class="pps-plan-icon"><i class="fa-solid fa-crown"></i></span>
@@ -1071,9 +1098,9 @@
 
     flow.innerHTML=`<div class="premium-page-section-head home"><div><small>GET / EXTEND ACCESS</small><h3>Choose Your Access Path</h3><p>Your Premium tab stays here as a full page. Choose a path only when you want to activate or extend access.</p></div></div>
     <div class="premium-path-grid">
-      <button type="button" class="premium-path-card paid" data-premium-page-step="paid">
-        <span class="ppc-icon"><i class="fa-solid fa-credit-card"></i></span>
-        <div><small>OPTION 01</small><h4>Paid Access</h4><p>${paidReady?`${monthlyDays}-day Premium package. Pay via available payment method.`:'Pricing setup is pending from Admin.'}</p></div>
+      <button type="button" class="premium-path-card paid ${pendingPayment?'has-pending':''}" data-premium-page-step="paid">
+        <span class="ppc-icon"><i class="fa-solid ${pendingPayment?'fa-clock':'fa-credit-card'}"></i></span>
+        <div><small>${pendingPayment?'PAYMENT SUBMITTED':'OPTION 01'}</small><h4>${pendingPayment?'Pending Verification':'Paid Access'}</h4><p>${pendingPayment?`${A.escapeHtml(pendingPayment.payment_method_name||'Payment')} · ${A.escapeHtml(pendingPaymentAmount)} · waiting for Admin approval.`:paidReady?`${monthlyDays}-day Premium package. Pay via available payment method.`:'Pricing setup is pending from Admin.'}</p></div>
         <span class="ppc-arrow"><i class="fa-solid fa-arrow-right"></i></span>
       </button>
       <button type="button" class="premium-path-card broker" data-premium-page-step="broker">
