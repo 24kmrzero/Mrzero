@@ -1,0 +1,136 @@
+/* 24K MR ZERO — Mobile signal 4-key summary + 5-level dropdown v12.31 */
+@media(max-width:760px){
+  .student-page .mobile-signal-four>summary{
+    min-height:66px!important;
+    padding:8px 9px!important;
+    display:grid!important;
+    grid-template-columns:1.05fr 1.15fr .95fr .9fr 14px!important;
+    gap:6px!important;
+    align-items:center!important;
+  }
+
+  .student-page .msa-main-date,
+  .student-page .msa-main-entry,
+  .student-page .msa-main-pair,
+  .student-page .msa-direction{
+    min-width:0!important;
+    display:grid!important;
+    gap:4px!important;
+    align-content:center!important;
+  }
+
+  .student-page .msa-main-date small,
+  .student-page .msa-main-entry small,
+  .student-page .msa-main-pair small,
+  .student-page .msa-direction>small,
+  .student-page .msa-five-levels small{
+    font-size:5.8px!important;
+    line-height:1!important;
+    font-weight:900!important;
+    letter-spacing:.07em!important;
+    color:var(--s-faint,#9AA4B2)!important;
+  }
+
+  .student-page .msa-main-date b,
+  .student-page .msa-main-entry b,
+  .student-page .msa-main-pair b{
+    min-width:0!important;
+    font-size:10.5px!important;
+    line-height:1.08!important;
+    font-weight:850!important;
+    color:var(--s-text,#0B0E11)!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+
+  .student-page .msa-main-pair em{
+    font-style:normal!important;
+    font-size:6.5px!important;
+    line-height:1!important;
+    color:var(--s-muted,#707A8A)!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+
+  .student-page .mobile-signal-four .msa-direction{
+    justify-items:start!important;
+  }
+  .student-page .mobile-signal-four .msa-direction .table-direction{
+    min-width:48px!important;
+    min-height:25px!important;
+    padding:0 6px!important;
+    border-radius:7px!important;
+    font-size:8px!important;
+    font-weight:900!important;
+  }
+
+  .student-page .mobile-signal-four .msa-chevron{
+    width:14px!important;
+    height:14px!important;
+    font-size:7px!important;
+  }
+
+  /* Expanded view stays one small row: SL + TP1 + TP2 + TP3 + TP4 */
+  .student-page .mobile-signal-four .msa-details.msa-five-levels{
+    padding:7px 8px 8px!important;
+    display:grid!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    gap:4px!important;
+    overflow:visible!important;
+    white-space:normal!important;
+    border-top:1px solid var(--s-line,#E7E9ED)!important;
+    background:var(--s-surface,#fff)!important;
+    mask-image:none!important;
+  }
+
+  .student-page .mobile-signal-four .msa-five-levels>span{
+    min-width:0!important;
+    min-height:44px!important;
+    padding:6px 4px!important;
+    display:grid!important;
+    align-content:center!important;
+    justify-items:center!important;
+    gap:4px!important;
+    border:0!important;
+    border-radius:8px!important;
+    background:var(--s-surface-2,#F3F4F6)!important;
+    box-sizing:border-box!important;
+  }
+
+  .student-page .mobile-signal-four .msa-five-levels b{
+    max-width:100%!important;
+    font-size:9px!important;
+    line-height:1!important;
+    font-weight:850!important;
+    color:var(--s-text,#0B0E11)!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+}
+
+@media(max-width:390px){
+  .student-page .mobile-signal-four>summary{
+    grid-template-columns:1.05fr 1.12fr .92fr .86fr 13px!important;
+    gap:5px!important;
+    padding:8px!important;
+  }
+  .student-page .msa-main-date b,
+  .student-page .msa-main-entry b,
+  .student-page .msa-main-pair b{
+    font-size:9.7px!important;
+  }
+  .student-page .mobile-signal-four .msa-direction .table-direction{
+    min-width:44px!important;
+    font-size:7.5px!important;
+  }
+  .student-page .mobile-signal-four .msa-five-levels>span{
+    min-height:42px!important;
+    padding:5px 3px!important;
+  }
+  .student-page .mobile-signal-four .msa-five-levels b{
+    font-size:8.4px!important;
+  }
+}
