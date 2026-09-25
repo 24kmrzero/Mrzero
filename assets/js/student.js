@@ -1095,7 +1095,7 @@
       </div>`;
     }
     document.getElementById('premiumBankForm')?.reset();
-    A.openModal('premiumBankModal');
+    openCourseFlowModal('premiumBankModal');
   }
 
   async function submitPremiumBank(event){
@@ -1382,7 +1382,7 @@
       const premiumCopy=event.target.closest('[data-premium-page-copy]');
       if(premiumCopy){try{await navigator.clipboard.writeText(premiumCopy.dataset.premiumPageCopy||'');A.toast('Partner link copied.','success');}catch{A.toast('Could not copy link.','error');}return;}
       const premiumVerify=event.target.closest('[data-premium-page-verify]');
-      if(premiumVerify){accessFlowState.broker=premiumPageState.broker;accessFlowState.mode=premiumPageState.mode;prefillIbVerificationForm();A.openModal('ibVerificationModal');return;}
+      if(premiumVerify){accessFlowState.broker=premiumPageState.broker;accessFlowState.mode=premiumPageState.mode;prefillIbVerificationForm();openCourseFlowModal('ibVerificationModal');return;}
       const premiumPagePay=event.target.closest('[data-premium-page-pay]');
       if(premiumPagePay){
         if(premiumPagePay.dataset.premiumPagePay==='bank'){await startPremiumLocalBank(premiumPagePay);return;}
@@ -1410,7 +1410,7 @@
           </div>`;
         }
         document.getElementById('premiumUsdtForm')?.reset();
-        A.openModal('premiumUsdtModal');return;
+        openCourseFlowModal('premiumUsdtModal');return;
       }
       const signalStatusButton = event.target.closest('[data-signal-status]');
       if (signalStatusButton) { signalStatusView = signalStatusButton.dataset.signalStatus || 'all'; renderSignals(); }
@@ -1460,8 +1460,8 @@
       const accessModeButton=event.target.closest('[data-access-account-mode]'); if(accessModeButton){accessFlowState.mode=accessModeButton.dataset.accessAccountMode||''; renderAccessSelection(); return;}
       const copyBrokerLink=event.target.closest('#copyAllAccessBrokerLink'); if(copyBrokerLink){await copySelectedBrokerLink(); return;}
       const premiumLocal=event.target.closest('#premiumPayLocal'); if(premiumLocal) await startPremiumLocalBank(premiumLocal);
-      const premiumUsdt=event.target.closest('#premiumPayUsdt'); if(premiumUsdt){const box=document.getElementById('premiumUsdtSummary');if(box)box.innerHTML=`<b>${Number(state.premium?.price_usdt||0).toLocaleString()} USDT</b> · ${Number(state.premium?.monthly_days||30)} days Premium Market Access`;A.openModal('premiumUsdtModal');}
-      const ibOpen=event.target.closest('#openIbVerification'); if(ibOpen){prefillIbVerificationForm();A.openModal('ibVerificationModal');}
+      const premiumUsdt=event.target.closest('#premiumPayUsdt'); if(premiumUsdt){const box=document.getElementById('premiumUsdtSummary');if(box)box.innerHTML=`<b>${Number(state.premium?.price_usdt||0).toLocaleString()} USDT</b> · ${Number(state.premium?.monthly_days||30)} days Premium Market Access`;openCourseFlowModal('premiumUsdtModal');}
+      const ibOpen=event.target.closest('#openIbVerification'); if(ibOpen){prefillIbVerificationForm();openCourseFlowModal('ibVerificationModal');}
       const verifyEmail = event.target.closest('[data-request-email-verification]');
       if (verifyEmail) await requestEmailVerification(verifyEmail);
       const refreshDashboard = event.target.closest('[data-refresh-dashboard]');
@@ -1507,7 +1507,7 @@
     return /^T[1-9A-HJ-NP-Za-km-z]{33}$/.test(v);
   }
 
-  const courseFlowModalIds = new Set(['courseDetailsModal','paymentMethodChoiceModal','paymentModal','bankPaymentModal','coursePaymentSuccessModal']);
+  const courseFlowModalIds = new Set(['courseDetailsModal','paymentMethodChoiceModal','paymentModal','bankPaymentModal','coursePaymentSuccessModal','premiumBankModal','premiumUsdtModal','premiumPaymentSuccessModal','ibVerificationModal']);
 
   function openCourseFlowModal(id){
     if(!courseFlowModalIds.has(id)) return A.openModal(id);
@@ -1517,7 +1517,9 @@
       }
     }catch{}
     A.openModal(id);
+    return true;
   }
+  window.__24K_OPEN_HISTORY_MODAL__=openCourseFlowModal;
 
   function closeOpenCourseFlowModal(){
     const open=[...document.querySelectorAll('.app-modal.open')].reverse().find(m=>courseFlowModalIds.has(m.id));
