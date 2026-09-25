@@ -121,13 +121,37 @@ async function loadSecondaryMentorData(){
   );
   await Promise.allSettled(tasks);
 }
+function safeMentorRender(name,fn){
+  try{fn()}
+  catch(e){
+    console.error('[24K Mentor render]',name,e);
+    if(name==='signals'){
+      const box=$('#mentorSignals');
+      if(box)box.innerHTML='<div class="mentor-signal-empty"><span><i class="fa-solid fa-rotate"></i></span><b>Signals are refreshing</b><small>Please tap refresh once.</small></div>'
+    }
+  }
+}
 async function load(){
   if(!await requireMentor())return;
-  render();
   revealMentorApp();
+  render();
   void loadSecondaryMentorData();
 }
-function render(){const name=state.profile?.full_name||'Mentor';$('#mentorName').textContent=name;const enabled=Object.entries(state.perms).filter(x=>x[1]).map(x=>x[0][0].toUpperCase()+x[0].slice(1));$('#mentorAccessSummary').textContent=enabled.length?enabled.join(' · '):'Read-only content';$$('[data-perm]').forEach(x=>x.classList.toggle('hidden',!state.perms[x.dataset.perm]));renderPerformance();renderSignals();renderCharts();renderArticles();renderBanners();renderCourses();renderNews();renderSettings()}
+function render(){
+  const name=state.profile?.full_name||'Mentor';
+  const mentorName=$('#mentorName');if(mentorName)mentorName.textContent=name;
+  const enabled=Object.entries(state.perms).filter(x=>x[1]).map(x=>x[0][0].toUpperCase()+x[0].slice(1));
+  const access=$('#mentorAccessSummary');if(access)access.textContent=enabled.length?enabled.join(' · '):'Read-only content';
+  $('[data-perm]').forEach(x=>x.classList.toggle('hidden',!state.perms[x.dataset.perm]));
+  safeMentorRender('performance',renderPerformance);
+  safeMentorRender('signals',renderSignals);
+  safeMentorRender('charts',renderCharts);
+  safeMentorRender('articles',renderArticles);
+  safeMentorRender('banners',renderBanners);
+  safeMentorRender('courses',renderCourses);
+  safeMentorRender('news',renderNews);
+  safeMentorRender('settings',renderSettings)
+}
 function mentorOutcomePips(signal,price,outcome='manual'){
   const p=Number(price),a=Number(signal?.entry_from),b=signal?.entry_to==null||signal?.entry_to===''?a:Number(signal.entry_to);
   if(!Number.isFinite(p)||!Number.isFinite(a)||!Number.isFinite(b))return null;
