@@ -850,3 +850,229 @@ html[data-theme="dark"] .mentor-mobile-nav{background:rgba(9,12,18,.96)!importan
   .mrzero-activity-item{grid-template-columns:36px 1fr!important}
   .mrzero-activity-status{grid-column:2;justify-self:start;margin-top:-3px}
 }
+
+
+/* V13.10 Performance high-contrast luxury redesign */
+/* Make the Performance page visibly different and more luxury-focused. */
+html[data-theme="light"] [data-mentor-panel="performance"]{
+  margin:-2px -2px 0!important;
+  padding:0!important;
+}
+html[data-theme="light"] .mrzero-performance{
+  position:relative;
+  padding:14px!important;
+  border-radius:24px!important;
+  background:
+    radial-gradient(520px 300px at 84% 0%,rgba(246,197,31,.10),transparent 68%),
+    linear-gradient(180deg,#f8f3e8 0%,#f1eadc 100%)!important;
+}
+
+/* HERO: stronger luxury, less flat */
+.mrzero-performance-hero{
+  border:1px solid rgba(225,177,66,.65)!important;
+  background:
+    radial-gradient(440px 260px at 86% 6%,rgba(255,205,70,.26),transparent 67%),
+    radial-gradient(300px 220px at 10% 95%,rgba(255,183,30,.08),transparent 68%),
+    linear-gradient(128deg,#05070a 0%,#0b0e14 52%,#1a1408 100%)!important;
+  box-shadow:
+    0 28px 70px rgba(20,14,4,.28),
+    inset 0 1px 0 rgba(255,255,255,.05),
+    inset 0 -1px 0 rgba(246,197,31,.08)!important;
+}
+.mrzero-performance-hero:after{
+  content:"24K"!important;
+  right:8px!important;
+  bottom:-58px!important;
+  font-size:190px!important;
+  color:rgba(255,198,45,.06)!important;
+}
+.mrzero-performance-live{
+  background:
+    radial-gradient(180px 110px at 70% 20%,rgba(246,197,31,.12),transparent 70%),
+    linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.015))!important;
+  border-color:rgba(255,205,83,.38)!important;
+}
+
+/* KPI AREA: no more flat cream cards */
+html[data-theme="light"] .mrzero-performance-kpis{
+  gap:12px!important;
+}
+html[data-theme="light"] .mrzero-metric{
+  border-color:rgba(205,159,62,.40)!important;
+  background:
+    radial-gradient(150px 90px at 95% 0%,rgba(246,197,31,.11),transparent 70%),
+    linear-gradient(145deg,#111317 0%,#0c0e12 68%,#171207 100%)!important;
+  box-shadow:0 18px 42px rgba(23,16,5,.16),inset 0 1px 0 rgba(255,255,255,.035)!important;
+}
+html[data-theme="light"] .mrzero-metric:after{
+  border-color:rgba(246,197,31,.10)!important;
+}
+html[data-theme="light"] .mrzero-metric-head span,
+html[data-theme="light"] .mrzero-metric small{
+  color:#8f98a6!important;
+}
+html[data-theme="light"] .mrzero-metric-head i{
+  color:#f6c51f!important;
+  background:rgba(246,197,31,.08)!important;
+  border-color:rgba(246,197,31,.13)!important;
+}
+html[data-theme="light"] .mrzero-metric:not(.primary) b{
+  color:#f7f7f6!important;
+}
+html[data-theme="light"] .mrzero-metric.good b{color:#43d89b!important}
+html[data-theme="light"] .mrzero-metric.bad b{color:#ff7777!important}
+html[data-theme="light"] .mrzero-metric.gold b{color:#f6c51f!important}
+
+/* Analytics cards become a premium dark desk instead of white boxes */
+html[data-theme="light"] .mrzero-command-panel{
+  border-color:rgba(194,149,56,.42)!important;
+  background:
+    radial-gradient(230px 120px at 100% 0%,rgba(246,197,31,.085),transparent 72%),
+    linear-gradient(145deg,#111318 0%,#0d0f13 70%,#151108 100%)!important;
+  box-shadow:0 20px 50px rgba(22,15,4,.15),inset 0 1px 0 rgba(255,255,255,.03)!important;
+}
+html[data-theme="light"] .mrzero-panel-head h3,
+html[data-theme="light"] .mrzero-win-stat b,
+html[data-theme="light"] .mrzero-market-row b,
+html[data-theme="light"] .mrzero-activity-copy b{
+  color:#f6f6f4!important;
+}
+html[data-theme="light"] .mrzero-panel-head>small,
+html[data-theme="light"] .mrzero-win-stat span,
+html[data-theme="light"] .mrzero-market-row small,
+html[data-theme="light"] .mrzero-activity-copy small{
+  color:#8f98a6!important;
+}
+html[data-theme="light"] .mrzero-panel-index{
+  color:#f6c51f!important;
+  background:linear-gradient(145deg,rgba(246,197,31,.14),rgba(246,197,31,.035))!important;
+  border-color:rgba(246,197,31,.32)!important;
+}
+html[data-theme="light"] .mrzero-signal-bars{
+  border-top-color:rgba(255,255,255,.055)!important;
+}
+html[data-theme="light"] .mrzero-signal-bars:before,
+html[data-theme="light"] .mrzero-signal-bars:after{
+  border-top-color:rgba(255,255,255,.055)!important;
+}
+html[data-theme="light"] .mrzero-signal-bars span small{
+  color:#9aa2af!important;
+}
+html[data-theme="light"] .mrzero-score-ring{
+  background:conic-gradient(#f6c51f calc(var(--pct)*1%),#4e3a14 calc(var(--pct)*1%),#1a1d22 0)!important;
+  box-shadow:0 16px 45px rgba(246,197,31,.13),inset 0 0 0 1px rgba(246,197,31,.09)!important;
+}
+html[data-theme="light"] .mrzero-score-ring:before{
+  background:#111318!important;
+  border-color:rgba(246,197,31,.18)!important;
+}
+html[data-theme="light"] .mrzero-score-ring b{color:#fff!important}
+html[data-theme="light"] .mrzero-score-ring small{color:#9ca3ad!important}
+html[data-theme="light"] .mrzero-win-stat{
+  border-color:rgba(246,197,31,.13)!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.025),rgba(246,197,31,.025))!important;
+}
+
+/* Quality panel stronger visual anchor */
+.mrzero-quality-panel{
+  position:relative!important;
+  overflow:hidden!important;
+  border-color:rgba(222,174,70,.58)!important;
+  background:
+    radial-gradient(320px 180px at 88% 5%,rgba(246,197,31,.14),transparent 72%),
+    linear-gradient(120deg,#080a0e,#111319 60%,#191307)!important;
+}
+.mrzero-quality-panel:after{
+  content:"EXECUTION";
+  position:absolute;right:-10px;bottom:-22px;
+  font-size:58px;font-weight:950;letter-spacing:-.05em;
+  color:rgba(246,197,31,.035);pointer-events:none;
+}
+.mrzero-quality-title,.mrzero-quality-stats{position:relative;z-index:1}
+
+/* Market focus + feed details */
+html[data-theme="light"] .mrzero-market-track{
+  background:#1b1e24!important;
+  border-color:rgba(255,255,255,.04)!important;
+}
+html[data-theme="light"] .mrzero-activity-item{
+  border-bottom-color:rgba(255,255,255,.06)!important;
+}
+html[data-theme="light"] .mrzero-activity-icon{
+  background:linear-gradient(145deg,rgba(246,197,31,.13),rgba(246,197,31,.035))!important;
+  border-color:rgba(246,197,31,.16)!important;
+}
+html[data-theme="light"] .mrzero-activity-status{
+  background:rgba(255,255,255,.025)!important;
+}
+
+/* Header controls feel more premium */
+html[data-theme="light"] .mentor-top{
+  background:rgba(248,244,235,.92)!important;
+  border-bottom-color:#d6c29a!important;
+  backdrop-filter:blur(18px)!important;
+}
+html[data-theme="light"] .mentor-top .mentor-btn.small{
+  background:linear-gradient(145deg,#fffaf0,#f0e6d3)!important;
+  border-color:#cfb985!important;
+  color:#121722!important;
+  box-shadow:0 8px 20px rgba(79,54,14,.06)!important;
+}
+
+/* Bottom nav: cleaner premium dock */
+@media(max-width:760px){
+  html[data-theme="light"] .mentor-mobile-nav{
+    left:10px!important;right:10px!important;bottom:10px!important;
+    border:1px solid rgba(207,185,133,.75)!important;
+    border-radius:20px!important;
+    background:rgba(255,251,242,.94)!important;
+    box-shadow:0 18px 42px rgba(71,48,11,.16)!important;
+    padding:6px 8px calc(6px + env(safe-area-inset-bottom))!important;
+  }
+  html[data-theme="light"] .mentor-mobile-nav button{
+    border-radius:14px!important;
+  }
+  html[data-theme="light"] .mentor-mobile-nav button.active{
+    background:linear-gradient(145deg,#ffe9a8,#f6c51f)!important;
+    color:#15110a!important;
+    box-shadow:0 10px 24px rgba(219,166,27,.22)!important;
+  }
+  html[data-theme="light"] .mrzero-performance{
+    padding:10px!important;
+    border-radius:18px!important;
+    background:
+      radial-gradient(340px 180px at 90% 0%,rgba(246,197,31,.09),transparent 70%),
+      linear-gradient(180deg,#f7f1e5,#efe7d9)!important;
+  }
+  .mrzero-performance-hero{
+    padding:22px 20px 20px!important;
+    border-radius:22px!important;
+  }
+  .mrzero-performance-copy h2{
+    font-size:31px!important;
+  }
+  .mrzero-performance-live{
+    border-radius:18px!important;
+  }
+  html[data-theme="light"] .mrzero-metric{
+    min-height:110px!important;
+  }
+  html[data-theme="light"] .mrzero-command-panel{
+    border-radius:19px!important;
+  }
+  .mrzero-quality-panel{
+    border-radius:19px!important;
+  }
+}
+
+/* Dark mode gets same stronger premium hierarchy */
+html[data-theme="dark"] .mrzero-performance{
+  padding:14px!important;border-radius:24px!important;
+  background:
+    radial-gradient(520px 300px at 84% 0%,rgba(246,197,31,.065),transparent 68%),
+    linear-gradient(180deg,#090b0f,#07090c)!important;
+}
+html[data-theme="dark"] .mrzero-metric,
+html[data-theme="dark"] .mrzero-command-panel{
+  border-color:rgba(246,197,31,.17)!important;
+}
