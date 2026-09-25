@@ -1,0 +1,98 @@
+/* 24K MR ZERO — keep all payment / verification actions visible on mobile */
+@media(max-width:760px){
+  body.modal-open .student-mobile-nav{
+    display:none!important;
+    visibility:hidden!important;
+    opacity:0!important;
+    pointer-events:none!important;
+  }
+
+  #paymentModal.open,
+  #bankPaymentModal.open,
+  #premiumUsdtModal.open,
+  #premiumBankModal.open,
+  #ibVerificationModal.open{
+    align-items:flex-end!important;
+    padding:0!important;
+  }
+
+  #paymentModal .app-modal-card,
+  #bankPaymentModal .app-modal-card,
+  #premiumUsdtModal .app-modal-card,
+  #premiumBankModal .app-modal-card,
+  #ibVerificationModal .app-modal-card{
+    display:grid!important;
+    grid-template-rows:auto minmax(0,1fr)!important;
+    width:100%!important;
+    max-width:none!important;
+    height:min(94dvh,calc(100dvh - 8px))!important;
+    max-height:min(94dvh,calc(100dvh - 8px))!important;
+    overflow:hidden!important;
+    border-radius:22px 22px 0 0!important;
+  }
+
+  #paymentModal form,
+  #bankPaymentModal form,
+  #premiumUsdtModal form,
+  #premiumBankModal form,
+  #ibVerificationModal form{
+    min-height:0!important;
+    height:100%!important;
+    overflow:hidden!important;
+    display:grid!important;
+    grid-template-rows:minmax(0,1fr) auto!important;
+  }
+
+  #paymentModal .app-modal-body,
+  #bankPaymentModal .app-modal-body,
+  #premiumUsdtModal .app-modal-body,
+  #premiumBankModal .app-modal-body,
+  #ibVerificationModal .app-modal-body{
+    min-height:0!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    padding-bottom:24px!important;
+    overscroll-behavior:contain!important;
+    -webkit-overflow-scrolling:touch!important;
+  }
+
+  #paymentModal .app-modal-foot,
+  #bankPaymentModal .app-modal-foot,
+  #premiumUsdtModal .app-modal-foot,
+  #premiumBankModal .app-modal-foot,
+  #ibVerificationModal .app-modal-foot{
+    position:relative!important;
+    inset:auto!important;
+    z-index:30!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,.75fr) minmax(0,1.35fr)!important;
+    gap:8px!important;
+    align-items:center!important;
+    min-height:68px!important;
+    padding:10px 14px max(18px,calc(10px + env(safe-area-inset-bottom)))!important;
+    background:var(--s-surface,#fff)!important;
+    border-top:1px solid var(--s-line,#E7E9ED)!important;
+    box-shadow:0 -12px 30px rgba(18,22,28,.08)!important;
+  }
+
+  #paymentModal .app-modal-foot .app-btn,
+  #bankPaymentModal .app-modal-foot .app-btn,
+  #premiumUsdtModal .app-modal-foot .app-btn,
+  #premiumBankModal .app-modal-foot .app-btn,
+  #ibVerificationModal .app-modal-foot .app-btn{
+    width:100%!important;
+    min-width:0!important;
+    min-height:46px!important;
+    margin:0!important;
+    justify-content:center!important;
+  }
+
+  html[data-theme="dark"] #paymentModal .app-modal-foot,
+  html[data-theme="dark"] #bankPaymentModal .app-modal-foot,
+  html[data-theme="dark"] #premiumUsdtModal .app-modal-foot,
+  html[data-theme="dark"] #premiumBankModal .app-modal-foot,
+  html[data-theme="dark"] #ibVerificationModal .app-modal-foot{
+    background:#111317!important;
+    border-top-color:rgba(255,255,255,.06)!important;
+  }
+}
