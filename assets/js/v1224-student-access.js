@@ -83,7 +83,7 @@ function methodConfigured(type){
  const m=methodMatch(type);if(!m)return false;
  const account=String(m.account_number||'').trim();
  if(!account||/^(—|-|n\/a|na)$/i.test(account))return false;
- if(/^TEST/i.test(account)||/^TEST/i.test(String(m.account_title||'')))return false;
+ // TEST destinations stay usable for end-to-end QA until Admin replaces them.
  if(type==='usdt'&&/^(usdt\s*)?(trc\s*20|trc20)$/i.test(account))return false;
  if(String(m.name||'').trim().toLowerCase()===account.toLowerCase())return false;
  return true;
@@ -115,12 +115,16 @@ async function submitPremium(e,type){
  e.preventDefault();const f=e.currentTarget,b=f.querySelector('button[type=submit]'),fd=new FormData(f),file=fd.get('receipt');let path='';
  if(!methodConfigured(type))return A.toast?.(type==='bank'?'Local Bank account details are not configured yet.':'USDT wallet details are not configured yet.','warning');
  const reference=String(fd.get('transaction_reference')||'').trim();if(reference.length<3)return A.toast?.('Enter a valid transaction reference.','error');
+ const method=methodMatch(type);
+ const isTest=/^TEST/i.test(String(method?.account_number||''))||/^TEST/i.test(String(method?.account_title||''));
+ const rawNote=String(fd.get('student_note')||'').trim();
+ const submitNote=isTest?`[TEST MODE]${rawNote?' '+rawNote:''}`:(rawNote||null);
  A.setLoading(b,true,'Submitting...');
  try{
    if(!user)user=await A.getCurrentUser();
    path=await upload('payment-receipts',file,`premium-${type}`);
    const name=type==='bank'?'submit_premium_bank_payment':'submit_premium_usdt_payment';
-   const r=await sb.rpc(name,{p_reference:reference,p_receipt_path:path,p_note:String(fd.get('student_note')||'').trim()||null});
+   const r=await sb.rpc(name,{p_reference:reference,p_receipt_path:path,p_note:submitNote});
    if(r.error)throw r.error;path='';f.reset();A.closeModal(type==='bank'?'premiumBankModal':'premiumUsdtModal');
    const successBody=$('#premiumPaymentSuccessBody');
    if(successBody)successBody.innerHTML=`<span class="payment-success-icon"><i class="fa-solid fa-check"></i></span><small>PAYMENT SUBMITTED</small><h3>30-Day Premium Access</h3><p>Your ${type==='bank'?'bank transfer':'USDT TRC20 payment'} proof has been received.</p><div class="payment-success-state"><i class="fa-solid fa-clock"></i><div><b>Under Admin Review</b><span>After approval, Premium Market Access will be activated/extended for ${Number(access?.monthly_days||30)} days.</span></div></div>`;
