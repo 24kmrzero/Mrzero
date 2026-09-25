@@ -222,8 +222,16 @@
       </section>
 
       <section class="panel" id="p-courses">
-        <div class="panel-heading"><div><h2>Live Courses</h2><p>Online classes with Mr. Zameer. Free and paid courses are managed separately from Premium Market Access.</p></div></div>
-        <div class="course-filter-tabs" role="tablist" aria-label="Course type"><button type="button" class="active" data-course-filter="all">All</button><button type="button" data-course-filter="free">Free</button><button type="button" data-course-filter="paid">Paid</button></div>
+        <div class="course-page-hero">
+          <span class="course-hero-icon"><i class="fa-solid fa-graduation-cap"></i></span>
+          <div class="course-hero-copy"><small>24K LIVE ACADEMY</small><h2>Live Courses</h2><p>Online classes with Mr. Zameer. Free and paid courses are managed separately from Premium Market Access.</p></div>
+          <div class="course-hero-stats"><span><b id="courseHeroTotal">0</b><small>Courses</small></span><span><b id="courseHeroAccess">0</b><small>My Access</small></span></div>
+        </div>
+        <div class="course-filter-tabs premium-course-filters" role="tablist" aria-label="Course type">
+          <button type="button" class="active" data-course-filter="all">All <span data-course-count>0</span></button>
+          <button type="button" data-course-filter="free">Free <span data-course-count>0</span></button>
+          <button type="button" data-course-filter="paid">Paid <span data-course-count>0</span></button>
+        </div>
         <div class="course-list-grid" id="coursesGrid"></div>
         <div id="sessionsArea" class="hidden" style="margin-top:26px"><div class="panel-heading"><div><h2 id="sessionCourseTitle">Course Sessions</h2><p>Published Zoom session schedules. The Zoom join link is shared in the WhatsApp Community.</p></div><button class="app-btn outline" id="closeSessions"><i class="fa-solid fa-arrow-left"></i> Back to Courses</button></div><div class="session-grid" id="sessionsGrid"></div><div id="resourcesArea" class="app-card hidden" style="margin-top:20px"><div class="app-card-head"><div><h3>Course Resources</h3><p>Optional files uploaded by the admin</p></div></div><div id="resourcesList"></div></div></div>
       </section>
@@ -368,7 +376,7 @@
 
 <script src="assets/js/core.js?v=12.14"></script>
 <script src="assets/js/tracking.js?v=12.14"></script>
-<script src="assets/js/student.js?v=12.76"></script>
+<script src="assets/js/student.js?v=12.77"></script>
 <script src="assets/js/student-ui.js?v=12.24"></script>
 <script src="assets/js/v120-student-ea.js?v=12.00"></script><script src="assets/js/v120-feature-flags.js?v=12.00"></script>
 <script src="assets/js/v1216-mobile-app.js?v=12.69"></script>
