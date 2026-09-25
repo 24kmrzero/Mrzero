@@ -2162,3 +2162,220 @@ html[data-theme="light"] .mentor-signal-quick-filters .mentor-signal-quick-more{
     font-size:6.8px!important;
   }
 }
+
+
+/* V13.31 — Every Signal filter is a direct front control; no generic Filters button */
+.mentor-signal-quick-wrap{
+  margin-top:7px;
+}
+.mentor-signal-quick-filters{
+  display:grid!important;
+  grid-template-columns:repeat(8,minmax(0,1fr))!important;
+  gap:4px!important;
+}
+.mentor-signal-quick-filters>button,
+.mentor-signal-quick-select{
+  min-width:0!important;
+  min-height:32px!important;
+  margin:0!important;
+  border:1px solid transparent!important;
+  border-radius:8px!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+.mentor-signal-quick-select{
+  position:relative;
+  display:block;
+  overflow:hidden;
+}
+.mentor-signal-quick-select:after{
+  content:"";
+  position:absolute;
+  right:7px;
+  top:50%;
+  width:5px;
+  height:5px;
+  border-right:1px solid currentColor;
+  border-bottom:1px solid currentColor;
+  transform:translateY(-65%) rotate(45deg);
+  color:var(--m-muted);
+  pointer-events:none;
+}
+.mentor-signal-quick-select select{
+  width:100%;
+  height:100%;
+  min-height:32px;
+  padding:0 17px 0 5px;
+  border:0!important;
+  outline:0!important;
+  appearance:none;
+  -webkit-appearance:none;
+  background:transparent!important;
+  color:var(--m-muted)!important;
+  font:inherit;
+  font-size:8px!important;
+  font-weight:850!important;
+  text-align:center;
+  text-align-last:center;
+  cursor:pointer;
+}
+.mentor-signal-quick-select.is-active{
+  border-color:rgba(240,185,11,.22)!important;
+  background:rgba(240,185,11,.10)!important;
+}
+.mentor-signal-quick-select.is-active select{
+  color:#bd8b00!important;
+}
+.mentor-signal-quick-select.is-active:after{
+  color:#bd8b00!important;
+}
+html[data-theme="light"] .mentor-signal-quick-select select{
+  color:#6f7986!important;
+}
+html[data-theme="light"] .mentor-signal-quick-select.is-active select{
+  color:#9c7300!important;
+}
+
+/* Search stays separate and clean */
+[data-mentor-panel="signals"] .mentor-signal-toolbar{
+  grid-template-columns:minmax(0,1fr)!important;
+  margin:7px 0!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+}
+[data-mentor-panel="signals"] .mentor-signal-search{
+  height:39px!important;
+  border-radius:11px!important;
+}
+
+/* Compact custom date drawer directly under the front controls */
+.mentor-signal-custom-date{
+  margin-top:5px;
+  min-height:42px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto;
+  align-items:end;
+  gap:6px;
+  padding:7px;
+  border:1px solid var(--m-line);
+  border-radius:10px;
+  background:var(--m-panel);
+}
+.mentor-signal-custom-date[hidden]{
+  display:none!important;
+}
+.mentor-signal-custom-date label{
+  min-width:0;
+  display:grid;
+  gap:3px;
+}
+.mentor-signal-custom-date label>span{
+  color:var(--m-muted);
+  font-size:5.8px;
+  font-weight:900;
+  letter-spacing:.08em;
+}
+.mentor-signal-custom-date input{
+  width:100%;
+  min-width:0;
+  height:31px;
+  padding:0 7px;
+  border:1px solid var(--m-line);
+  border-radius:8px;
+  outline:0;
+  background:var(--m-panel2);
+  color:var(--m-text);
+  font:inherit;
+  font-size:8px;
+  font-weight:750;
+}
+.mentor-signal-date-sep{
+  align-self:center;
+  padding-top:13px;
+  color:var(--m-muted);
+}
+.mentor-signal-custom-date button{
+  height:31px;
+  padding:0 10px;
+  border:1px solid rgba(240,185,11,.24);
+  border-radius:8px;
+  background:rgba(240,185,11,.10);
+  color:#a97b00;
+  font:inherit;
+  font-size:7px;
+  font-weight:900;
+}
+html[data-theme="light"] .mentor-signal-custom-date{
+  border-color:#e4e7eb;
+  background:#fff;
+}
+html[data-theme="light"] .mentor-signal-custom-date input{
+  border-color:#e4e7eb;
+  background:#fafbfc;
+  color:#252a31;
+}
+
+/* There is intentionally no generic Filters quick button anymore */
+.mentor-signal-quick-more,
+[data-mentor-panel="signals"] .mentor-signal-filter-mobile{
+  display:none!important;
+}
+
+@media(max-width:760px){
+  .mentor-signal-quick-wrap{
+    margin-top:6px;
+  }
+  .mentor-signal-quick-filters{
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    gap:3px!important;
+    padding:4px!important;
+  }
+  .mentor-signal-quick-filters>button,
+  .mentor-signal-quick-select{
+    min-height:31px!important;
+    border-radius:7px!important;
+  }
+  .mentor-signal-quick-select select,
+  .mentor-signal-quick-filters>button{
+    min-height:31px!important;
+    font-size:6.8px!important;
+  }
+  .mentor-signal-quick-select select{
+    padding-left:3px!important;
+    padding-right:13px!important;
+  }
+  .mentor-signal-quick-select:after{
+    right:5px;
+    width:4px;
+    height:4px;
+  }
+  .mentor-signal-custom-date{
+    grid-template-columns:1fr 1fr auto!important;
+    gap:5px!important;
+    padding:6px!important;
+  }
+  .mentor-signal-date-sep{
+    display:none!important;
+  }
+  .mentor-signal-custom-date button{
+    min-width:70px;
+  }
+}
+
+@media(max-width:370px){
+  .mentor-signal-quick-filters{
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  }
+  .mentor-signal-quick-filters>button,
+  .mentor-signal-quick-select select{
+    font-size:6.2px!important;
+  }
+  .mentor-signal-custom-date{
+    grid-template-columns:1fr 1fr!important;
+  }
+  .mentor-signal-custom-date button{
+    grid-column:1/-1;
+    width:100%;
+  }
+}
