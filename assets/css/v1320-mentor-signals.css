@@ -1108,3 +1108,14 @@ html[data-theme="light"] .mentor-signal-quick-more{
     grid-template-columns:23px minmax(64px,1fr) auto minmax(45px,.7fr) 8px!important;
   }
 }
+
+
+/* V13.23.1 — one visible filter control row on mobile */
+@media(max-width:760px){
+  [data-mentor-panel="signals"] .mentor-signal-toolbar{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  [data-mentor-panel="signals"] .mentor-signal-filter-mobile{
+    display:none!important;
+  }
+}
