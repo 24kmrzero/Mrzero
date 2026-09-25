@@ -49,8 +49,8 @@ async function upload(file,folder){if(!file)return null;if(!['image/png','image/
 function titleFor(k){return({performance:['Performance','Live overview and results'],signals:['Signals','Smart signal creation and management'],charts:['Charts','VIP chart research & analysis'],articles:['Articles','Professional research & insights'],banners:['Banners','Website campaign banners'],courses:['Courses','Current course catalogue'],news:['News','Latest platform updates'],settings:['Settings','Mentor account & permissions']})[k]||['Mentor Panel','']}
 function showView(k){
   if(['signals','charts','articles','banners'].includes(k)&&!state.perms[k])return toast('Admin has not enabled this section.');
-  $('[data-mentor-panel]').forEach(x=>x.classList.toggle('active',x.dataset.mentorPanel===k));
-  $('[data-mentor-view]').forEach(x=>x.classList.toggle('active',x.dataset.mentorView===k));
+  $$('[data-mentor-panel]').forEach(x=>x.classList.toggle('active',x.dataset.mentorPanel===k));
+  $$('[data-mentor-view]').forEach(x=>x.classList.toggle('active',x.dataset.mentorView===k));
   const [t,s]=titleFor(k);if($('#mentorPageTitle'))$('#mentorPageTitle').textContent=t;if($('#mentorPageSubtitle'))$('#mentorPageSubtitle').textContent=s;
   history.replaceState(null,'',`#${k}`);
   if(window.innerWidth<=760)window.scrollTo({top:0,behavior:'smooth'});
