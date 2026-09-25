@@ -1,0 +1,25 @@
+/* 24K MR ZERO — Safe visible TRC20 test placeholder v12.43 */
+@media(max-width:760px){
+  .student-page .usdt-test-wallet{
+    border-color:rgba(246,70,93,.22)!important;
+    background:
+      radial-gradient(180px 90px at 100% 0,rgba(246,70,93,.07),transparent 75%),
+      linear-gradient(145deg,#FFF,#FFF8F8)!important;
+  }
+  html[data-theme="dark"] .student-page .usdt-test-wallet{
+    background:
+      radial-gradient(180px 90px at 100% 0,rgba(246,70,93,.06),transparent 75%),
+      linear-gradient(145deg,#1B1B20,#15171B)!important;
+  }
+  .student-page .usdt-network-badge.test{
+    background:rgba(246,70,93,.10)!important;
+    color:#D94C61!important;
+  }
+  .student-page .usdt-test-wallet .usdt-wallet-note.danger{
+    color:#A44755!important;
+  }
+  .student-page .usdt-test-wallet .usdt-wallet-note.danger>i{
+    background:rgba(246,70,93,.10)!important;
+    color:#D94C61!important;
+  }
+}
