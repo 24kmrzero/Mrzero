@@ -1900,16 +1900,17 @@
 
   async function saveProfile(event) {
     event.preventDefault(); const form = event.currentTarget; const button = form.querySelector('button[type="submit"]'); const values = Object.fromEntries(new FormData(form));
+    const experience = String(values.experience || '').trim();
+    if (!experience) return A.toast('Please enter your trading experience.', 'warning');
     A.setLoading(button, true, 'Saving...');
     try {
-      const changes = { full_name: String(values.full_name).trim(), whatsapp: String(values.whatsapp).trim(), country: String(values.country || '').trim(), experience: String(values.experience || '') };
+      const changes = { experience };
       const { error } = await A.supabase.from('profiles').update(changes).eq('id', state.user.id); if (error) throw error;
-      await auditEvent('profile_updated','profile',state.user.id,'success',{fields:['full_name','whatsapp','country','experience']});
+      await auditEvent('profile_updated','profile',state.user.id,'success',{fields:['experience']});
       Object.assign(state.profile, changes);
-      const dashName=document.getElementById('dashboardWelcomeName'); if(dashName) dashName.textContent=`${state.profile.full_name || 'Member'} 👋`;
       window.dispatchEvent(new CustomEvent('24k:student-base-updated',{detail:state}));
-      A.toast('Profile updated successfully.', 'success');
-    } catch (error) { A.toast(A.friendlyError(error, 'Could not update profile.'), 'error'); }
+      A.toast('Trading experience saved.', 'success');
+    } catch (error) { A.toast(A.friendlyError(error, 'Could not save trading experience.'), 'error'); }
     finally { A.setLoading(button, false); }
   }
 
