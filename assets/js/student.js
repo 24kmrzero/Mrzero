@@ -492,8 +492,8 @@
     return `<details class="mobile-signal-accordion mobile-signal-four">
       <summary>
         <span class="msa-main-date"><small>DATE</small><b>${A.escapeHtml(date)}</b><em>${A.escapeHtml(time)} PKT</em></span>
-        <span class="msa-main-entry"><small>ENTRY</small><b>${entryText(signal)}</b></span>
         <span class="msa-main-pair"><small>PAIR</small><b>${A.escapeHtml(displaySymbol(symbol))}</b><em>${A.escapeHtml(meta.name)}</em></span>
+        <span class="msa-main-entry"><small>ENTRY</small><b>${entryText(signal)}</b></span>
         <span class="msa-direction"><small>DIRECTION</small><span class="table-direction ${String(signal.direction||'').toLowerCase()}">${A.escapeHtml(direction)}</span></span>
         <span class="msa-chevron"><i class="fa-solid fa-chevron-down"></i></span>
       </summary>
