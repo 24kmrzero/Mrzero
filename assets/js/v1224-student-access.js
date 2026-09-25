@@ -18,16 +18,23 @@ function step(name){
   });
 }
 function statusHtml(){
- if(!access)return '<b>Checking your access…</b>';
+ if(!access)return '<div class="premium-status-card loading"><span class="psc-icon"><i class="fa-solid fa-spinner fa-spin"></i></span><div><small>PREMIUM MARKET ACCESS</small><b>Checking your access…</b><p>Please wait a moment.</p></div></div>';
  if(access.has_access){
-   const until=access.expires_at?new Date(access.expires_at).toLocaleDateString():'No expiry';
-   return `<b>Premium access is active.</b><br><small>Source: ${esc(access.source||'active')} · ${esc(until)}${access.days_left!=null?` · ${access.days_left} day(s) left`:''}. You can still choose Paid Access or Free Access via Broker below.</small>`;
+   const until=access.expires_at?new Date(access.expires_at).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}):'No expiry';
+   const source=esc(access.source||'active');
+   const left=access.days_left!=null?Math.max(0,Number(access.days_left)):'—';
+   return `<div class="premium-status-card active">
+     <span class="psc-icon"><i class="fa-solid fa-crown"></i></span>
+     <div class="psc-copy"><small>PREMIUM MARKET ACCESS</small><b>${source==='trial'?'Free Trial Active':'Access Active'}</b><p>Your premium market tools are currently unlocked.</p></div>
+     <span class="psc-live"><i class="fa-solid fa-circle"></i> ACTIVE</span>
+     <div class="psc-meta"><span><small>ACCESS UNTIL</small><b>${esc(until)}</b></span><span><small>DAYS LEFT</small><b>${esc(String(left))}</b></span><span><small>SOURCE</small><b>${source.toUpperCase()}</b></span></div>
+   </div>`;
  }
  const pending=payments.find(x=>['received','under_review'].includes(String(x.status).toLowerCase()));
  const ib=verifications.find(x=>String(x.status).toLowerCase()==='pending');
- if(pending)return '<b>Premium payment is under review.</b><br><small>You do not need to submit another payment.</small>';
- if(ib)return '<b>Broker verification is under review.</b><br><small>Admin will update your access after verification.</small>';
- return '<b>Premium access is not active.</b><br><small>Choose Paid Access or Free Access via Broker below.</small>';
+ if(pending)return '<div class="premium-status-card pending"><span class="psc-icon"><i class="fa-solid fa-clock"></i></span><div class="psc-copy"><small>PREMIUM MARKET ACCESS</small><b>Payment Under Review</b><p>No need to submit another payment.</p></div><span class="psc-live pending">PENDING</span></div>';
+ if(ib)return '<div class="premium-status-card pending"><span class="psc-icon"><i class="fa-solid fa-shield"></i></span><div class="psc-copy"><small>PREMIUM MARKET ACCESS</small><b>Broker Verification Pending</b><p>Admin will update your access after verification.</p></div><span class="psc-live pending">PENDING</span></div>';
+ return '<div class="premium-status-card locked"><span class="psc-icon"><i class="fa-solid fa-lock"></i></span><div class="psc-copy"><small>PREMIUM MARKET ACCESS</small><b>Access Locked</b><p>Choose a path below to activate Premium Market Access.</p></div><span class="psc-live locked">LOCKED</span></div>';
 }
 function render(){
  const compact=$('#premiumCompactStatus'),box=$('#allAccessCurrentStatus'),price=$('#premiumPriceBox'),ib=$('#premiumIbStatus');
@@ -43,7 +50,7 @@ function render(){
    }else{
      price.innerHTML='<div class="notice warn">Paid Access pricing is not configured yet. Please use Free Access via Broker or contact support.</div>';
    }
-   const paidChoice=$('[data-access-step-target="paid"]');if(paidChoice){paidChoice.disabled=!paidAvailable;paidChoice.classList.toggle('is-disabled',!paidAvailable)}
+   const paidChoice=$('[data-access-step-target="paid"]');if(paidChoice){paidChoice.disabled=false;paidChoice.classList.toggle('is-disabled',!paidAvailable);paidChoice.dataset.pricingReady=paidAvailable?'1':'0'}
    const bank=$('#premiumPayLocal'),usdButton=$('#premiumPayUsdt');const bankReady=methodConfigured('bank'),usdtReady=methodConfigured('usdt');if(bank){bank.disabled=pkr<=0||!bankReady;bank.title=bank.disabled?(pkr<=0?'Local Bank pricing is not configured.':'Local Bank account details are incomplete.'):'Pay with Local Bank';}if(usdButton){usdButton.disabled=usd<=0||!usdtReady;usdButton.title=usdButton.disabled?(usd<=0?'USDT pricing is not configured.':'USDT wallet details are incomplete.'):'Pay with USDT TRC20';}
  }
  if(ib&&access)ib.innerHTML=access.ib_enabled?'<div class="notice info">Broker verification is available. Access activates after Admin approval.</div>':'<div class="notice warn">Broker verification is currently disabled.</div>';
