@@ -181,11 +181,14 @@ function shiftPerformanceMonth(delta){
   const next=Math.min(keys.length-1,Math.max(0,index+delta));
   if(keys[next]!==current)setPerformanceMonth(keys[next])
 }
-function mentorResolvedForPerformance(s){
+function mentorHasRecordedPerformance(s){
   const st=String(s?.status||'').toLowerCase();
-  if(st==='cancelled'||!signalIsClosed(s))return false;
+  if(st==='cancelled')return false;
   if(s?.result_pips!==null&&s?.result_pips!==undefined&&s?.result_pips!=='')return true;
   return /^tp[1-4]_hit$/.test(st)||st==='sl_hit'||st==='breakeven_hit'||(st==='manually_closed'&&s?.close_price!=null)
+}
+function mentorResolvedForPerformance(s){
+  return signalIsClosed(s)&&mentorHasRecordedPerformance(s)
 }
 function renderPerformance(){
   const all=state.signals||[],now=new Date(),currentKey=performanceMonthKey(now);
@@ -237,23 +240,24 @@ function renderPerformance(){
   const marketLabel=$('#mentorMarketFocusLabel');if(marketLabel)marketLabel.textContent=monthLabel;
   const feedLabel=$('#mentorExecutionFeedLabel');if(feedLabel)feedLabel.textContent=`${monthLabel} activity`;
 
-  const resolved=monthAll.filter(mentorResolvedForPerformance),
-    net=resolved.reduce((a,s)=>a+signalPips(s),0),
-    green=resolved.reduce((a,s)=>a+Math.max(0,signalPips(s)),0),
-    red=resolved.reduce((a,s)=>a+Math.min(0,signalPips(s)),0),
+  const recorded=monthAll.filter(mentorHasRecordedPerformance),
+    resolved=monthAll.filter(mentorResolvedForPerformance),
+    net=recorded.reduce((a,s)=>a+signalPips(s),0),
+    green=recorded.reduce((a,s)=>a+Math.max(0,signalPips(s)),0),
+    red=recorded.reduce((a,s)=>a+Math.min(0,signalPips(s)),0),
     wins=resolved.filter(s=>signalPips(s)>0).length,
     losses=resolved.filter(s=>signalPips(s)<0).length,
     be=resolved.filter(s=>signalPips(s)===0).length,
     wr=resolved.length?wins/resolved.length*100:0,
-    previousResolved=previousAll.filter(mentorResolvedForPerformance),
-    previousNet=previousResolved.reduce((a,s)=>a+signalPips(s),0),
+    previousRecorded=previousAll.filter(mentorHasRecordedPerformance),
+    previousNet=previousRecorded.reduce((a,s)=>a+signalPips(s),0),
     monthDelta=net-previousNet;
 
   const hero=$('#mentorHeroNetPips');if(hero)hero.textContent=`${net>=0?'+':''}${money(net)} pips`;
   const note=$('#mentorPerformancePeriodNote');if(note)note.textContent=`${monthLabel} net performance`;
   const compare=$('#mentorMonthComparison');
   if(compare){
-    compare.textContent=previousResolved.length?`${monthDelta>=0?'+':''}${money(monthDelta)} pips vs ${previousLabel}`:`No resolved signals in ${previousLabel}`;
+    compare.textContent=previousRecorded.length?`${monthDelta>=0?'+':''}${money(monthDelta)} pips vs ${previousLabel}`:`No recorded performance in ${previousLabel}`;
     compare.className=monthDelta>0?'good':monthDelta<0?'bad':'neutral'
   }
   const updated=$('#mentorPerformanceUpdated');if(updated)updated.textContent=`Updated ${now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true})}`;
@@ -286,7 +290,7 @@ function renderPerformance(){
   const daysInMonth=new Date(start.getFullYear(),start.getMonth()+1,0).getDate();
   const days=[...Array(daysInMonth)].map((_,i)=>{
     const d=new Date(start.getFullYear(),start.getMonth(),i+1),dayEnd=new Date(start.getFullYear(),start.getMonth(),i+2);
-    const daySignals=resolved.filter(s=>{const x=mentorSignalPerformanceDate(s);return x>=d&&x<dayEnd});
+    const daySignals=recorded.filter(s=>{const x=mentorSignalPerformanceDate(s);return x>=d&&x<dayEnd});
     const pips=daySignals.reduce((sum,s)=>sum+signalPips(s),0);
     return{d,count:daySignals.length,pips}
   }),maxAbs=Math.max(1,...days.map(x=>Math.abs(x.pips)));
@@ -318,7 +322,7 @@ function renderPerformance(){
     const status=signalStatusLabel(s.status),p=signalPips(s),stamp=mentorSignalStamp(s.last_status_at||s.closed_at||s.updated_at||s.created_at);
     const statusKey=String(s.status||'').toLowerCase(),statusTone=/tp\d*_hit|closed|manually_closed/.test(statusKey)?'good':statusKey==='sl_hit'?'bad':/cancelled|breakeven/.test(statusKey)?'neutral':'gold';
     const pipTone=p>0?'good':p<0?'bad':'neutral';
-    return `<div class="mrzero-activity-item"><div class="mrzero-activity-icon"><i class="fa-solid ${signalIsClosed(s)?'fa-circle-check':'fa-bolt'}"></i></div><div class="mrzero-activity-copy"><b>${esc(mentorDisplaySymbol(s.symbol))} · ${esc(signalTypeLabel(s))}</b><div class="mrzero-activity-meta"><small>${esc(stamp.date)} · ${esc(stamp.time)}</small>${mentorResolvedForPerformance(s)?`<span class="mrzero-pips-badge ${pipTone}">${pipText(p)}</span>`:''}</div></div><span class="mrzero-activity-status ${statusTone}">${esc(status)}</span></div>`
+    return `<div class="mrzero-activity-item"><div class="mrzero-activity-icon"><i class="fa-solid ${signalIsClosed(s)?'fa-circle-check':'fa-bolt'}"></i></div><div class="mrzero-activity-copy"><b>${esc(mentorDisplaySymbol(s.symbol))} · ${esc(signalTypeLabel(s))}</b><div class="mrzero-activity-meta"><small>${esc(stamp.date)} · ${esc(stamp.time)}</small>${mentorHasRecordedPerformance(s)?`<span class="mrzero-pips-badge ${pipTone}">${pipText(p)}</span>`:''}</div></div><span class="mrzero-activity-status ${statusTone}">${esc(status)}</span></div>`
   }).join()+`<button type="button" class="mrzero-feed-all" data-mentor-view="signals"><span>View full ${esc(monthLabel)} activity</span><i class="fa-solid fa-arrow-right"></i></button>`:`<div class="mentor-empty">No signal activity in ${esc(monthLabel)}.</div>`
 }
 function statusChip(v){return `<span class="mentor-chip gold">${esc(String(v||'').replaceAll('_',' ').toUpperCase())}</span>`}
