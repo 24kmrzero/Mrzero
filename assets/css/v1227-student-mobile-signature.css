@@ -373,3 +373,37 @@
   .student-page .compact-welcome-copy h1{font-size:22px!important}
   .student-page .compact-welcome-meta{grid-template-columns:1fr 1fr 52px!important}
 }
+
+
+/* v12.99 — sidebar owns mobile viewport while open */
+@media(max-width:900px){
+  body.student-side-open{
+    overflow:hidden!important;
+    touch-action:none;
+  }
+  body.student-side-open .student-mobile-nav{
+    display:none!important;
+    visibility:hidden!important;
+    opacity:0!important;
+    pointer-events:none!important;
+  }
+  body.student-side-open .student-page .app-side,
+  .student-page .app-side.open{
+    z-index:2600!important;
+    bottom:0!important;
+    height:100dvh!important;
+    max-height:100dvh!important;
+  }
+  body.student-side-open .student-page .app-main::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:2400;
+    background:rgba(5,8,14,.48);
+    backdrop-filter:blur(2px);
+    pointer-events:none;
+  }
+  body.student-side-open .student-page .app-side-scroll{
+    padding-bottom:calc(18px + env(safe-area-inset-bottom))!important;
+  }
+}
