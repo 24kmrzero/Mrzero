@@ -313,7 +313,9 @@
     if (alert) alert.innerHTML = '';
 
     const latest = state.signals.find(s => !signalIsFinal(s)) || state.signals[0];
-    document.getElementById('latestSignal').innerHTML = latest ? dashboardSignalSnapshot(latest) : `<div class="dashboard-empty-compact"><span><i class="fa-solid fa-bolt"></i></span><b>No active market signal right now.</b><small>Fresh setups will appear here automatically.</small><button type="button" class="text-link-btn" data-refresh-dashboard>Refresh <i class="fa-solid fa-rotate"></i></button></div>`;
+    document.getElementById('latestSignal').innerHTML = latest
+      ? `<div class="dashboard-latest-signal-mobile mobile-signal-list">${dashboardSignalMobile(latest)}</div><div class="dashboard-latest-signal-desktop">${dashboardSignalSnapshot(latest)}</div>`
+      : `<div class="dashboard-empty-compact"><span><i class="fa-solid fa-bolt"></i></span><b>No active market signal right now.</b><small>Fresh setups will appear here automatically.</small><button type="button" class="text-link-btn" data-refresh-dashboard>Refresh <i class="fa-solid fa-rotate"></i></button></div>`;
 
     const next = state.sessions.filter(s => new Date(s.starts_at) >= new Date() && s.status !== 'cancelled').sort((a,b) => new Date(a.starts_at) - new Date(b.starts_at))[0];
     document.getElementById('nextSession').innerHTML = next ? dashboardClassSnapshot(next) : `<div class="dashboard-empty-compact class-empty"><span><i class="fa-solid fa-calendar-check"></i></span><b>No upcoming class scheduled</b><small>Your next live class will appear here when published.</small><button type="button" class="text-link-btn" data-goto="courses">Open Courses <i class="fa-solid fa-arrow-right"></i></button></div>`;
@@ -550,6 +552,31 @@
       BTCUSD:{icon:'₿',name:'Bitcoin / USD',tone:'orange'}
     };
     return map[symbol] || {icon:'<i class="fa-solid fa-chart-line"></i>',name:displaySymbol(symbol),tone:'gold'};
+  }
+
+  function dashboardSignalMobile(signal) {
+    const sourceDate = new Date(signal.published_at || signal.created_at || Date.now());
+    const date = Number.isNaN(sourceDate.getTime()) ? '—' : new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Karachi',day:'2-digit',month:'short',year:'numeric'}).format(sourceDate);
+    const time = Number.isNaN(sourceDate.getTime()) ? '—' : new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Karachi',hour:'2-digit',minute:'2-digit',hour12:true}).format(sourceDate);
+    const symbol = String(signal.symbol || '').replace('/','').toUpperCase();
+    const meta = instrumentMeta(symbol);
+    const direction = String(signal.direction || '—').toUpperCase();
+    return `<details class="mobile-signal-accordion mobile-signal-four dashboard-signal-compact">
+      <summary>
+        <span class="msa-main-date"><small>DATE</small><b>${A.escapeHtml(date)}</b><em>${A.escapeHtml(time)} PKT</em></span>
+        <span class="msa-main-pair"><small>PAIR</small><b>${A.escapeHtml(displaySymbol(symbol))}</b><em>${A.escapeHtml(meta.name)}</em></span>
+        <span class="msa-main-entry"><small>ENTRY</small><b>${entryText(signal)}</b></span>
+        <span class="msa-direction"><small>DIRECTION</small><span class="table-direction ${String(signal.direction||'').toLowerCase()}">${A.escapeHtml(direction)}</span></span>
+        <span class="msa-chevron"><i class="fa-solid fa-chevron-down"></i></span>
+      </summary>
+      <div class="msa-details msa-five-levels">
+        <span><small>SL</small><b>${num(signal.stop_loss)}</b></span>
+        <span><small>TP1</small><b>${num(signal.take_profit_1)}</b></span>
+        <span><small>TP2</small><b>${num(signal.take_profit_2)}</b></span>
+        <span><small>TP3</small><b>${num(signal.take_profit_3)}</b></span>
+        <span><small>TP4</small><b>${num(signal.take_profit_4)}</b></span>
+      </div>
+    </details>`;
   }
 
   function dashboardSignalSnapshot(signal) {
