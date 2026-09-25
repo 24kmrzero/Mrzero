@@ -1518,3 +1518,298 @@ body.mentor-refreshing [data-mentor-panel="performance"] .mrzero-metric b{
     margin-top:-2px!important;
   }
 }
+
+
+/* =========================================================
+   V13.18 — Month-aware premium Performance desk
+   ========================================================= */
+
+/* Month selector / period command bar */
+[data-mentor-panel="performance"] .mrzero-period-toolbar{
+  min-height:54px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:8px 10px 8px 14px;
+  border:1px solid var(--m-line);
+  border-radius:14px;
+  background:var(--m-panel);
+  box-shadow:0 6px 18px rgba(0,0,0,.06);
+}
+[data-mentor-panel="performance"] .mrzero-period-copy{
+  display:grid;
+  gap:3px;
+  min-width:0;
+}
+[data-mentor-panel="performance"] .mrzero-period-copy span{
+  color:var(--m-muted);
+  font-size:7px;
+  font-weight:900;
+  letter-spacing:.14em;
+}
+[data-mentor-panel="performance"] .mrzero-period-copy b{
+  color:var(--m-text);
+  font-size:12px;
+  line-height:1.1;
+  white-space:nowrap;
+}
+[data-mentor-panel="performance"] .mrzero-period-controls{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+[data-mentor-panel="performance"] .mrzero-period-arrow,
+[data-mentor-panel="performance"] .mrzero-period-current,
+[data-mentor-panel="performance"] .mrzero-period-select{
+  height:36px;
+  border:1px solid var(--m-line);
+  border-radius:10px;
+  background:var(--m-panel2);
+  color:var(--m-text);
+}
+[data-mentor-panel="performance"] .mrzero-period-arrow{
+  width:36px;
+  display:grid;
+  place-items:center;
+  padding:0;
+  cursor:pointer;
+}
+[data-mentor-panel="performance"] .mrzero-period-arrow:disabled{
+  opacity:.36;
+  cursor:not-allowed;
+}
+[data-mentor-panel="performance"] .mrzero-period-select{
+  min-width:172px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:0 10px;
+}
+[data-mentor-panel="performance"] .mrzero-period-select i{
+  color:#c18d00;
+  font-size:11px;
+}
+[data-mentor-panel="performance"] .mrzero-period-select select{
+  width:100%;
+  height:100%;
+  border:0;
+  outline:0;
+  appearance:none;
+  background:transparent;
+  color:var(--m-text);
+  font:inherit;
+  font-size:11px;
+  font-weight:850;
+  cursor:pointer;
+}
+[data-mentor-panel="performance"] .mrzero-period-current{
+  padding:0 12px;
+  font-size:9px;
+  font-weight:850;
+  cursor:pointer;
+}
+[data-mentor-panel="performance"] .mrzero-period-current.active{
+  border-color:rgba(240,185,11,.34);
+  background:rgba(240,185,11,.10);
+  color:#c18d00;
+}
+html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-period-toolbar{
+  border-color:#e2e5e9;
+  background:#fff;
+  box-shadow:0 7px 20px rgba(18,24,32,.045);
+}
+html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-period-arrow,
+html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-period-current,
+html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-period-select{
+  border-color:#e4e7eb;
+  background:#fafbfc;
+}
+
+/* Monthly hero details */
+[data-mentor-panel="performance"] .mrzero-performance-live-foot{
+  margin-top:9px;
+  padding-top:8px;
+  border-top:1px solid rgba(240,185,11,.12);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+[data-mentor-panel="performance"] .mrzero-performance-live-foot small{
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  font-size:7.4px!important;
+  color:var(--m-muted)!important;
+}
+[data-mentor-panel="performance"] .mrzero-performance-live-foot small.good{color:#0fa66b!important}
+[data-mentor-panel="performance"] .mrzero-performance-live-foot small.bad{color:#e33f55!important}
+[data-mentor-panel="performance"] .mrzero-performance-live-foot small.neutral{color:var(--m-muted)!important}
+
+/* Monthly momentum supports 28–31 days and scrolls cleanly on mobile */
+[data-mentor-panel="performance"] .mrzero-signal-bars{
+  grid-template-columns:repeat(var(--days,31),minmax(13px,1fr))!important;
+  min-width:max(100%,calc(var(--days,31) * 17px))!important;
+}
+[data-mentor-panel="performance"] .mrzero-momentum-panel{
+  overflow:hidden!important;
+}
+@media(max-width:760px){
+  [data-mentor-panel="performance"] .mrzero-momentum-panel .mrzero-signal-bars{
+    width:100%;
+    min-width:calc(var(--days,31) * 18px)!important;
+    overflow:visible!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-momentum-panel{
+    overflow-x:auto!important;
+    scrollbar-width:none;
+    overscroll-behavior-x:contain;
+  }
+  [data-mentor-panel="performance"] .mrzero-momentum-panel::-webkit-scrollbar{display:none}
+}
+
+/* Market Focus ranking */
+[data-mentor-panel="performance"] .mrzero-market-row b{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  min-width:0;
+}
+[data-mentor-panel="performance"] .mrzero-market-rank{
+  width:20px;
+  height:20px;
+  flex:0 0 auto;
+  display:grid;
+  place-items:center;
+  border-radius:7px;
+  background:rgba(240,185,11,.075);
+  color:#b58200;
+  font-size:6.5px;
+  font-weight:950;
+}
+html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-market-rank{
+  background:#fff8e4;
+}
+
+/* Selected month empty states */
+[data-mentor-panel="performance"] .mentor-empty{
+  min-height:72px;
+  display:grid;
+  place-items:center;
+  padding:14px;
+  border:1px dashed var(--m-line);
+  border-radius:11px;
+  font-size:9px;
+  color:var(--m-muted);
+}
+
+/* On mobile the period command bar is compact and app-like */
+@media(max-width:760px){
+  [data-mentor-panel="performance"] .mrzero-period-toolbar{
+    min-height:48px;
+    padding:7px 8px 7px 10px;
+    border-radius:12px;
+    gap:8px;
+  }
+  [data-mentor-panel="performance"] .mrzero-period-copy{
+    display:none;
+  }
+  [data-mentor-panel="performance"] .mrzero-period-controls{
+    width:100%;
+    gap:5px;
+  }
+  [data-mentor-panel="performance"] .mrzero-period-arrow{
+    width:34px;
+    height:34px;
+    flex:0 0 auto;
+  }
+  [data-mentor-panel="performance"] .mrzero-period-select{
+    min-width:0;
+    height:34px;
+    flex:1 1 auto;
+    padding:0 9px;
+  }
+  [data-mentor-panel="performance"] .mrzero-period-select select{
+    font-size:10px;
+    text-align:center;
+  }
+  [data-mentor-panel="performance"] .mrzero-period-current{
+    height:34px;
+    padding:0 9px;
+    flex:0 0 auto;
+    font-size:8px;
+  }
+
+  /* Month hero is shorter and cleaner */
+  [data-mentor-panel="performance"] .mrzero-performance-hero{
+    padding:13px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-performance-copy h2{
+    font-size:20px!important;
+    margin:8px 0 4px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-performance-copy p{
+    font-size:9px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-performance-live{
+    min-height:82px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:stretch!important;
+    justify-content:center!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-performance-live>span{
+    font-size:6.6px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-performance-live>b{
+    margin-top:8px!important;
+    font-size:23px!important;
+    text-align:left!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-performance-live>small{
+    margin-top:4px!important;
+    font-size:7px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-performance-live-foot{
+    margin-top:7px;
+    padding-top:6px;
+  }
+  [data-mentor-panel="performance"] .mrzero-performance-live-foot small{
+    font-size:6.5px!important;
+  }
+
+  /* five monthly KPIs remain a smooth swipe rail */
+  [data-mentor-panel="performance"] .mrzero-performance-kpis{
+    display:flex!important;
+    overflow-x:auto!important;
+    gap:6px!important;
+    scroll-snap-type:x mandatory!important;
+    scrollbar-width:none!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-performance-kpis::-webkit-scrollbar{display:none!important}
+  [data-mentor-panel="performance"] .mrzero-metric{
+    flex:0 0 138px!important;
+    scroll-snap-align:start!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-metric.primary{
+    flex-basis:166px!important;
+  }
+
+  /* Monthly chart card keeps its header fixed while bars can extend horizontally */
+  [data-mentor-panel="performance"] .mrzero-momentum-panel{
+    padding-bottom:14px!important;
+  }
+}
+
+/* Very small screens */
+@media(max-width:370px){
+  [data-mentor-panel="performance"] .mrzero-period-current{
+    display:none;
+  }
+  [data-mentor-panel="performance"] .mrzero-performance-live-foot{
+    align-items:flex-start;
+    flex-direction:column;
+    gap:3px;
+  }
+}
