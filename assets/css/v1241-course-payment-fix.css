@@ -80,3 +80,49 @@
 @media(min-width:761px){
   body.modal-open .student-mobile-nav{display:none!important}
 }
+
+
+/* v12.98 — keep course detail content above fixed action footer */
+@media(max-width:760px){
+  .student-page #courseDetailsModal .course-details-modal-card{
+    display:grid!important;
+    grid-template-rows:auto minmax(0,1fr) auto!important;
+    overflow:hidden!important;
+    max-height:96dvh!important;
+  }
+
+  .student-page #courseDetailsModal .app-modal-head{
+    position:relative!important;
+    top:auto!important;
+    flex:0 0 auto!important;
+  }
+
+  .student-page #courseDetailsModal #courseDetailsBody{
+    min-height:0!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    overscroll-behavior:contain!important;
+    padding:12px 12px 16px!important;
+    scroll-padding-bottom:16px!important;
+  }
+
+  .student-page #courseDetailsModal .course-details-foot{
+    position:relative!important;
+    bottom:auto!important;
+    z-index:10!important;
+    flex:0 0 auto!important;
+    margin:0!important;
+    padding:10px 12px calc(10px + env(safe-area-inset-bottom))!important;
+    background:var(--ex-surface,#fff)!important;
+    border-top:1px solid var(--ex-line,#E7E9ED)!important;
+    box-shadow:0 -10px 24px rgba(18,22,28,.08)!important;
+  }
+
+  html[data-theme="dark"] .student-page #courseDetailsModal .course-details-foot{
+    background:var(--ex-surface,#181A20)!important;
+  }
+
+  .student-page #courseDetailsModal .course-detail-note{
+    margin-bottom:0!important;
+  }
+}
