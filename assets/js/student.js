@@ -765,21 +765,76 @@
 
   function courseCoverHtml(course) {
     const cleanUrl = String(course.thumbnail_url || '').trim();
-    return `<div class="course-cover media-thumb-16x9 ${cleanUrl ? 'has-image' : ''}"><i class="fa-solid fa-graduation-cap course-cover-fallback" aria-hidden="true"></i>${cleanUrl ? `<img src="${attr(cleanUrl)}" alt="${attr(course.title)}" loading="lazy" decoding="async" onerror="this.remove();this.parentElement.classList.remove('has-image')">` : ''}<span class="status-pill ${A.statusClass(course.status)}">${A.statusLabel(course.status)}</span></div>`;
+    const price = Number(course.discount_price != null ? course.discount_price : course.price || 0);
+    const isFree = course.course_type === 'free' || price === 0;
+    return `<div class="course-cover media-thumb-16x9 ${cleanUrl ? 'has-image' : ''}">
+      <div class="course-cover-brand"><small>24K MR ZERO</small><b>${isFree ? 'LIVE LEARNING' : 'PREMIUM COURSE'}</b></div>
+      <i class="fa-solid fa-graduation-cap course-cover-fallback" aria-hidden="true"></i>
+      ${cleanUrl ? `<img src="${attr(cleanUrl)}" alt="${attr(course.title)}" loading="lazy" decoding="async" onerror="this.remove();this.parentElement.classList.remove('has-image')">` : ''}
+      <span class="course-type-badge ${isFree ? 'free' : 'paid'}"><i class="fa-solid ${isFree ? 'fa-unlock' : 'fa-crown'}"></i> ${isFree ? 'FREE COURSE' : 'PAID COURSE'}</span>
+      <span class="status-pill course-status ${A.statusClass(course.status)}">${A.statusLabel(course.status)}</span>
+    </div>`;
   }
 
   function renderCourses() {
-    document.querySelectorAll('[data-course-filter]').forEach(btn=>btn.classList.toggle('active',btn.dataset.courseFilter===state.courseFilter));
-    const rows=state.courses.filter(course=>{const price=Number(course.discount_price!=null?course.discount_price:course.price||0);const isFree=course.course_type==='free'||price===0;return state.courseFilter==='all'||(state.courseFilter==='free'&&isFree)||(state.courseFilter==='paid'&&!isFree);});
+    const allCourses = state.courses || [];
+    const freeCount = allCourses.filter(course => {
+      const price = Number(course.discount_price != null ? course.discount_price : course.price || 0);
+      return course.course_type === 'free' || price === 0;
+    }).length;
+    const paidCount = Math.max(0, allCourses.length - freeCount);
+    const accessCount = allCourses.filter(course => hasCourseAccess(course.id)).length;
+
+    const totalEl=document.getElementById('courseHeroTotal'); if(totalEl) totalEl.textContent=String(allCourses.length);
+    const accessEl=document.getElementById('courseHeroAccess'); if(accessEl) accessEl.textContent=String(accessCount);
+    document.querySelectorAll('[data-course-filter]').forEach(btn=>{
+      btn.classList.toggle('active',btn.dataset.courseFilter===state.courseFilter);
+      const count=btn.querySelector('[data-course-count]');
+      if(count) count.textContent=String(btn.dataset.courseFilter==='all'?allCourses.length:btn.dataset.courseFilter==='free'?freeCount:paidCount);
+    });
+
+    const rows=allCourses.filter(course=>{
+      const price=Number(course.discount_price!=null?course.discount_price:course.price||0);
+      const isFree=course.course_type==='free'||price===0;
+      return state.courseFilter==='all'||(state.courseFilter==='free'&&isFree)||(state.courseFilter==='paid'&&!isFree);
+    });
+
     document.getElementById('coursesGrid').innerHTML = rows.length ? rows.map(course => {
       const access = hasCourseAccess(course.id);
       const payment = latestPayment(course.id);
       const nextSession = upcomingCourseSession(course.id);
-      const actualPrice=course.discount_price!=null?Number(course.discount_price):Number(course.price);
-      const paymentText = payment ? A.statusLabel(payment.status) : (course.course_type==='free'||actualPrice===0 ? 'Free enrollment' : 'Payment required');
+      const actualPrice=course.discount_price!=null?Number(course.discount_price):Number(course.price||0);
+      const isFree=course.course_type==='free'||actualPrice===0;
+      const sessionCount=state.sessions.filter(s=>s.course_id===course.id).length;
+      const paymentText = payment ? A.statusLabel(payment.status) : (isFree ? 'Free enrollment' : 'Payment required');
       const paymentButtonText = payment?.status==='initiated' ? 'Continue Payment' : payment && ['received','under_review'].includes(payment.status) ? 'Payment Submitted' : payment?.status==='resubmission_required' ? 'Submit New Receipt' : ['failed','declined'].includes(payment?.status) ? 'Try Payment Again' : 'Pay Now';
       const paymentTone = ['declined','failed'].includes(payment?.status) ? 'bad' : 'warn';
-      return `<article class="course-card">${courseCoverHtml(course)}<div class="course-body"><h3>${A.escapeHtml(course.title)}</h3><p>${A.escapeHtml(course.short_description || course.description || '')}</p><div class="course-meta"><span><i class="fa-solid fa-user-tie"></i> ${A.escapeHtml(course.instructor_name || A.cfg.INSTRUCTOR_NAME)}</span><span><i class="fa-solid fa-money-bill"></i> ${course.discount_price!=null?`<s>${A.formatMoney(course.price,course.currency)}</s> ${A.formatMoney(course.discount_price,course.currency)}`:A.formatMoney(course.price, course.currency)}</span>${nextSession?`<span><i class="fa-solid fa-calendar"></i> ${A.formatDateTime(nextSession.starts_at)}</span>`:`<span><i class="fa-solid fa-calendar"></i> No upcoming class</span>`}</div>${nextSession?`<div class="course-next-class"><small>Next Live Class</small><b>${A.escapeHtml(nextSession.title)}</b><span>${A.escapeHtml(nextSession.topic||'')}</span></div>`:''}<div class="notice ${access ? 'ok' : paymentTone}">${access ? '<b>Access approved.</b> Online class access is unlocked.' : `<b>${paymentText}.</b> Class date is visible, but online class access remains locked until Admin approves your payment.`}</div><div class="course-actions"><button class="app-btn ${access ? 'gold' : 'outline'}" data-open-course="${course.id}"><i class="fa-solid fa-calendar-days"></i> View Live Class</button>${access ? '' : (course.course_type==='free'||actualPrice===0) ? `<button class="app-btn gold" data-free-enroll="${course.id}">Enroll Free</button>` : `<button class="app-btn gold" data-buy-course="${course.id}"><i class="fa-solid fa-building-columns"></i> ${paymentButtonText}</button>`}</div></div></article>`;
+      const accessState = access ? 'ENROLLED' : payment && ['received','under_review'].includes(payment.status) ? 'PENDING' : isFree ? 'FREE' : 'LOCKED';
+      const accessIcon = access ? 'fa-circle-check' : payment && ['received','under_review'].includes(payment.status) ? 'fa-clock' : isFree ? 'fa-unlock' : 'fa-lock';
+      const nextClassHtml = nextSession
+        ? `<div class="course-next-class premium-next-class"><span class="next-class-icon"><i class="fa-solid fa-video"></i></span><div><small>NEXT LIVE CLASS</small><b>${A.escapeHtml(A.formatDateTime(nextSession.starts_at))}</b><em>${A.escapeHtml(nextSession.title || 'Live Session')}</em></div><i class="fa-solid fa-arrow-right next-class-arrow"></i></div>`
+        : `<div class="course-next-class premium-next-class is-empty"><span class="next-class-icon"><i class="fa-regular fa-calendar"></i></span><div><small>NEXT LIVE CLASS</small><b>Schedule will be announced soon</b><em>We’ll show the next class here when published.</em></div></div>`;
+      const noticeText = access
+        ? '<b>Course access active</b><span>Live class schedule and course resources are unlocked.</span>'
+        : `<b>${A.escapeHtml(paymentText)}</b><span>${isFree ? 'Enroll to unlock your live class schedule.' : 'Class dates remain visible. Online access unlocks after Admin approves your payment.'}</span>`;
+      return `<article class="course-card premium-course-card ${isFree?'course-is-free':'course-is-paid'} ${access?'has-course-access':''}">
+        ${courseCoverHtml(course)}
+        <div class="course-body">
+          <div class="course-title-row"><div><small>${isFree?'FREE LIVE PROGRAM':'PREMIUM LIVE PROGRAM'}</small><h3>${A.escapeHtml(course.title)}</h3></div><span class="course-access-state ${accessState.toLowerCase()}"><i class="fa-solid ${accessIcon}"></i> ${accessState}</span></div>
+          <p class="course-description">${A.escapeHtml(course.short_description || course.description || '')}</p>
+          <div class="course-meta premium-course-meta">
+            <span><i class="fa-solid fa-user-tie"></i><small>MENTOR</small><b>${A.escapeHtml(course.instructor_name || A.cfg.INSTRUCTOR_NAME)}</b></span>
+            <span><i class="fa-solid fa-tag"></i><small>PRICE</small><b>${course.discount_price!=null?`<s>${A.formatMoney(course.price,course.currency)}</s> ${A.formatMoney(course.discount_price,course.currency)}`:isFree?'Free':A.formatMoney(course.price, course.currency)}</b></span>
+            <span><i class="fa-solid fa-layer-group"></i><small>CLASSES</small><b>${sessionCount || '—'} Published</b></span>
+          </div>
+          ${nextClassHtml}
+          <div class="notice course-access-notice ${access ? 'ok' : paymentTone}"><span class="notice-icon"><i class="fa-solid ${accessIcon}"></i></span><div>${noticeText}</div><span class="notice-state">${accessState}</span></div>
+          <div class="course-actions">
+            <button class="app-btn course-secondary ${access ? 'gold' : 'outline'}" data-open-course="${course.id}"><i class="fa-solid fa-calendar-days"></i> View Live Class</button>
+            ${access ? '' : isFree ? `<button class="app-btn gold course-primary" data-free-enroll="${course.id}"><i class="fa-solid fa-user-plus"></i> Enroll Free</button>` : `<button class="app-btn gold course-primary" data-buy-course="${course.id}"><i class="fa-solid fa-wallet"></i> ${paymentButtonText}</button>`}
+          </div>
+        </div>
+      </article>`;
     }).join('') : empty('No course is currently published.', 'fa-graduation-cap');
   }
 
