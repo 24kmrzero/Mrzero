@@ -93,6 +93,41 @@
 @media(max-width:640px){.signal-history-custom{width:100%;align-items:stretch}.signal-history-custom label{flex:1 1 130px}.signal-history-custom input{width:100%;min-width:0}}
 </style>
 <link rel="stylesheet" href="assets/css/v1251-profile-premium.css?v=12.97">
+<style id="v1300-sidebar-nav-guard">
+@media(max-width:900px){
+  #studentApp:has(#side.open) + .student-mobile-nav{
+    display:none!important;
+    visibility:hidden!important;
+    opacity:0!important;
+    pointer-events:none!important;
+  }
+  #studentApp:has(#side.open) #side{
+    z-index:2147482000!important;
+    top:0!important;
+    bottom:0!important;
+    height:100dvh!important;
+    max-height:100dvh!important;
+    display:flex!important;
+    flex-direction:column!important;
+    overflow:hidden!important;
+  }
+  #studentApp:has(#side.open) #side .app-side-scroll{
+    flex:1 1 auto!important;
+    min-height:0!important;
+    overflow-y:auto!important;
+    overscroll-behavior:contain!important;
+    padding-bottom:16px!important;
+  }
+  #studentApp:has(#side.open) #side .app-side-foot{
+    flex:0 0 auto!important;
+    position:relative!important;
+    bottom:auto!important;
+    padding-bottom:calc(10px + env(safe-area-inset-bottom))!important;
+    background:#090D15!important;
+    z-index:2!important;
+  }
+}
+</style>
 </head>
 <body class="app-page student-page">
 <div id="pageLoader" class="loading-screen"><div><img src="assets/logo.png?v=9.69" alt="24K Digital Gold"><i class="fa-solid fa-spinner fa-spin"></i><p>Loading your student account...</p></div></div>
@@ -472,5 +507,33 @@
 <script src="assets/js/v120-student-ea.js?v=12.00"></script><script src="assets/js/v120-feature-flags.js?v=12.00"></script>
 <script src="assets/js/v1216-mobile-app.js?v=12.72"></script>
 <script src="assets/js/v1224-student-access.js?v=12.65"></script>
+<script>
+(function(){
+  if(window.__24K_SIDEBAR_NAV_GUARD_V1300__) return;
+  window.__24K_SIDEBAR_NAV_GUARD_V1300__=true;
+  var side=document.getElementById('side');
+  var nav=document.querySelector('.student-mobile-nav');
+  var body=document.body;
+  if(!side||!nav) return;
+  function sync(){
+    var open=side.classList.contains('open');
+    body.classList.toggle('student-side-open',open);
+    if(open){
+      nav.style.setProperty('display','none','important');
+      nav.style.setProperty('visibility','hidden','important');
+      nav.style.setProperty('pointer-events','none','important');
+      body.style.setProperty('overflow','hidden');
+    }else{
+      nav.style.removeProperty('display');
+      nav.style.removeProperty('visibility');
+      nav.style.removeProperty('pointer-events');
+      body.style.removeProperty('overflow');
+    }
+  }
+  new MutationObserver(sync).observe(side,{attributes:true,attributeFilter:['class']});
+  document.addEventListener('click',function(){requestAnimationFrame(sync);},true);
+  sync();
+})();
+</script>
 </body>
 </html>
