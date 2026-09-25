@@ -325,7 +325,11 @@ function renderPerformance(){
     return `<div class="mrzero-activity-item"><div class="mrzero-activity-icon"><i class="fa-solid ${signalIsClosed(s)?'fa-circle-check':'fa-bolt'}"></i></div><div class="mrzero-activity-copy"><b>${esc(mentorDisplaySymbol(s.symbol))} · ${esc(signalTypeLabel(s))}</b><div class="mrzero-activity-meta"><small>${esc(stamp.date)} · ${esc(stamp.time)}</small>${mentorHasRecordedPerformance(s)?`<span class="mrzero-pips-badge ${pipTone}">${pipText(p)}</span>`:''}</div></div><span class="mrzero-activity-status ${statusTone}">${esc(status)}</span></div>`
   }).join()+`<button type="button" class="mrzero-feed-all" data-mentor-view="signals"><span>View full ${esc(monthLabel)} activity</span><i class="fa-solid fa-arrow-right"></i></button>`:`<div class="mentor-empty">No signal activity in ${esc(monthLabel)}.</div>`
 }
-function statusChip(v){return `<span class="mentor-chip gold">${esc(String(v||'').replaceAll('_',' ').toUpperCase())}</span>`}
+function statusChip(v){
+  const key=String(v||'active').toLowerCase(),label=signalStatusLabel(key);
+  const tone=/^tp[1-4]_hit$|manually_closed|closed/.test(key)?'good':key==='sl_hit'?'bad':key==='breakeven_hit'?'neutral':key==='cancelled'?'muted':key==='pending'?'pending':'live';
+  return `<span class="mentor-status-badge ${tone}"><i></i>${esc(label)}</span>`
+}
 function signalTypeLabel(s){const d=String(s?.direction||'BUY').toUpperCase(),o=String(s?.order_type||'market').toLowerCase();return o==='market'?d:`${d} ${o.toUpperCase()}`}
 function signalStatusLabel(v){return String(v||'active').replaceAll('_',' ').replace(/\b\w/g,m=>m.toUpperCase())}
 function signalDateOnly(v){const d=new Date(v||0);if(Number.isNaN(d.getTime()))return'';return d.toISOString().slice(0,10)}function mentorDisplaySymbol(v){const s=String(v||'').replace('/','').toUpperCase();return s.length===6?s.slice(0,3)+'/'+s.slice(3):s}function mentorSignalStamp(v){const d=new Date(v||0);if(Number.isNaN(d.getTime()))return{date:'—',time:'—'};return{date:d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}),time:d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true})}}
@@ -379,30 +383,88 @@ function renderSignals(){
   syncSignalFilterOptions();readSignalFilters();
   const all=state.signals||[],active=all.filter(s=>!signalIsClosed(s)),hist=all.filter(signalIsClosed);
   const ac=$('#mentorActiveSignalCount'),hc=$('#mentorHistorySignalCount');
-  if(ac)ac.textContent=`(${active.length})`;if(hc)hc.textContent=`(${hist.length})`;
-  let items=state.signalTab==='history'?hist:active;items=applySignalFilters(items);
-  $('#mentorSignalReport')?.classList.toggle('hidden',state.signalTab!=='report');box.classList.toggle('hidden',state.signalTab==='report');
+  if(ac)ac.textContent=String(active.length);if(hc)hc.textContent=String(hist.length);
+
+  const scored=hist.filter(s=>String(s.status||'')!=='cancelled'&&mentorHasRecordedPerformance(s)),
+    wins=scored.filter(s=>signalPips(s)>0).length,
+    losses=scored.filter(s=>signalPips(s)<0).length,
+    winRate=scored.length?wins/scored.length*100:0,
+    net=all.filter(mentorHasRecordedPerformance).reduce((a,s)=>a+signalPips(s),0);
+  const statActive=$('#mentorSignalStatActive'),statClosed=$('#mentorSignalStatClosed'),statWin=$('#mentorSignalStatWinRate'),statNet=$('#mentorSignalStatNet');
+  if(statActive)statActive.textContent=String(active.length);
+  if(statClosed)statClosed.textContent=String(hist.length);
+  if(statWin)statWin.textContent=`${winRate.toFixed(0)}%`;
+  if(statNet){statNet.textContent=`${net>=0?'+':''}${money(net)}`;statNet.className=net>0?'good':net<0?'bad':''}
+
+  let items=state.signalTab==='history'?hist:active;
+  items=applySignalFilters(items);
+  const meta=$('#mentorSignalViewMeta');
+  if(meta)meta.textContent=state.signalTab==='history'?`${items.length} history record${items.length===1?'':'s'} shown`:state.signalTab==='report'?'Performance summary':`${items.length} active / pending signal${items.length===1?'':'s'} shown`;
+
+  $('#mentorSignalReport')?.classList.toggle('hidden',state.signalTab!=='report');
+  box.classList.toggle('hidden',state.signalTab==='report');
+
   if(state.signalTab==='report'){
-    const done=hist,win=done.filter(s=>signalPips(s)>0).length,net=done.reduce((a,s)=>a+signalPips(s),0);
-    $('#mentorSignalReport').innerHTML=[['Total Signals',all.length],['Closed / History',done.length],['Winning',win],['Net Pips',`${net>=0?'+':''}${money(net)}`]].map(([a,b])=>`<article class="mentor-kpi"><small>${a}</small><b>${b}</b></article>`).join('');
+    const be=scored.filter(s=>signalPips(s)===0).length;
+    const avg=scored.length?scored.reduce((a,s)=>a+signalPips(s),0)/scored.length:0;
+    const report=[
+      {label:'TOTAL SIGNALS',value:all.length,icon:'fa-layer-group',tone:'gold',hint:'All published records'},
+      {label:'RESOLVED',value:scored.length,icon:'fa-circle-check',tone:'neutral',hint:`${wins} wins - ${losses} losses - ${be} BE`},
+      {label:'WIN RATE',value:`${winRate.toFixed(0)}%`,icon:'fa-bullseye',tone:'good',hint:'Resolved outcomes'},
+      {label:'NET PIPS',value:`${net>=0?'+':''}${money(net)}`,icon:'fa-chart-line',tone:net>=0?'good':'bad',hint:`Avg ${avg>=0?'+':''}${money(avg)} pips`}
+    ];
+    $('#mentorSignalReport').innerHTML=report.map(r=>`<article class="mentor-signal-report-card ${r.tone}"><span><i class="fa-solid ${r.icon}"></i></span><div><small>${r.label}</small><b>${r.value}</b><em>${esc(r.hint)}</em></div></article>`).join('');
     return
   }
-  if(!items.length){box.innerHTML='<div class="mentor-empty">No signals match these filters.</div>';return}
-  const desktop=`<div class="mentor-signal-table-wrap"><table class="mentor-signal-table mentor-official-table"><thead><tr><th>Date</th><th>Pair</th><th>Type</th><th>Entry</th><th>SL</th><th>TP1</th><th>TP2</th><th>TP3</th><th>TP4</th><th>Status</th><th>Pips</th><th>Note</th><th>Manage</th></tr></thead><tbody>${items.map(s=>`<tr>
-    <td><b>${esc(mentorSignalStamp(s.created_at||s.published_at).date)}</b><small class="mentor-table-time">${esc(mentorSignalStamp(s.created_at||s.published_at).time)}</small></td>
-    <td><b>${esc(mentorDisplaySymbol(s.symbol))}</b></td>
-    <td><span class="mentor-type-badge ${String(s.direction).toLowerCase()}">${esc(signalTypeLabel(s))}</span></td>
-    <td>${esc(s.entry_from??'—')}${s.entry_to!=null?`–${esc(s.entry_to)}`:''}</td>
-    <td class="signal-sl">${esc(s.stop_loss??'—')}</td>
-    <td class="signal-tp">${esc(s.take_profit_1??'—')}</td><td class="signal-tp">${esc(s.take_profit_2??'—')}</td><td class="signal-tp">${esc(s.take_profit_3??'—')}</td><td class="signal-tp">${esc(s.take_profit_4??'—')}</td>
-    <td>${statusChip(s.status)}</td>
-    <td><b class="${signalPips(s)>0?'green':signalPips(s)<0?'red':''}">${s.result_pips==null?'—':pipText(signalPips(s))}</b></td>
-    <td><button type="button" class="mentor-note-btn" data-note-signal="${s.id}" title="${esc(s.notes||'No note')}">Note⌄</button></td>
-    <td><div class="mentor-manage-buttons"><button type="button" data-copy-signal="${s.id}">Copy</button><button type="button" class="gold" data-view-signal="${s.id}">${signalIsClosed(s)?'View':'Manage'}</button></div></td>
-  </tr>`).join('')}</tbody></table></div>`;
-  const mobile=`<div class="mentor-signal-mobile-list">${items.map(s=>`<button type="button" class="mentor-signal-mobile-card" data-view-signal="${s.id}"><div class="mentor-mobile-signal-top"><div class="mentor-signal-icon mini"><i class="fa-solid fa-chart-line"></i></div><div class="mentor-mobile-signal-name"><b>${esc(s.symbol)}</b><small>${esc(dt(s.created_at))}</small></div><span class="mentor-type-badge ${String(s.direction).toLowerCase()}">${esc(signalTypeLabel(s))}</span>${statusChip(s.status)}<i class="fa-solid fa-chevron-right mentor-mobile-chevron"></i></div><div class="mentor-mobile-signal-values"><span><small>Entry</small><b>${esc(s.entry_from??'—')}</b></span><span><small>SL</small><b class="red">${esc(s.stop_loss??'—')}</b></span><span><small>TP1</small><b class="green">${esc(s.take_profit_1??'—')}</b></span><span><small>TP2</small><b class="green">${esc(s.take_profit_2??'—')}</b></span><span><small>TP3</small><b class="green">${esc(s.take_profit_3??'—')}</b></span></div></button>`).join('')}</div>`;
+
+  if(!items.length){
+    box.innerHTML=`<div class="mentor-signal-empty"><span><i class="fa-solid fa-wave-square"></i></span><b>No signals found</b><small>No records match the current filters.</small>${state.signalTab==='active'?'<button class="mentor-btn gold" data-open-mentor-modal="signal"><i class="fa-solid fa-plus"></i> Create Signal</button>':''}</div>`;
+    return
+  }
+
+  const desktop=`<div class="mentor-signal-table-wrap"><table class="mentor-signal-table mentor-official-table"><thead><tr><th>Date</th><th>Pair</th><th>Type</th><th>Entry</th><th>SL</th><th>TP1</th><th>TP2</th><th>TP3</th><th>TP4</th><th>Status</th><th>Pips</th><th>Note</th><th>Manage</th></tr></thead><tbody>${items.map(s=>{
+    const p=signalPips(s),hasPips=mentorHasRecordedPerformance(s),dir=String(s.direction||'BUY').toLowerCase(),stamp=mentorSignalStamp(s.created_at||s.published_at);
+    return `<tr class="mentor-signal-row ${dir}">
+      <td><b>${esc(stamp.date)}</b><small class="mentor-table-time">${esc(stamp.time)}</small></td>
+      <td><b class="mentor-signal-pair">${esc(mentorDisplaySymbol(s.symbol))}</b></td>
+      <td><span class="mentor-type-badge ${dir}">${esc(signalTypeLabel(s))}</span></td>
+      <td><b class="mentor-entry-value">${esc(s.entry_from??'-')}${s.entry_to!=null?`-${esc(s.entry_to)}`:''}</b></td>
+      <td class="signal-sl">${esc(s.stop_loss??'-')}</td>
+      <td class="signal-tp">${esc(s.take_profit_1??'-')}</td><td class="signal-tp">${esc(s.take_profit_2??'-')}</td><td class="signal-tp">${esc(s.take_profit_3??'-')}</td><td class="signal-tp">${esc(s.take_profit_4??'-')}</td>
+      <td>${statusChip(s.status)}</td>
+      <td><span class="mentor-pips-chip ${p>0?'good':p<0?'bad':'neutral'}">${hasPips?pipText(p):'-'}</span></td>
+      <td><button type="button" class="mentor-note-btn" data-note-signal="${s.id}" title="${esc(s.notes||'No note')}"><i class="fa-regular fa-note-sticky"></i><span>Note</span></button></td>
+      <td><div class="mentor-manage-buttons"><button type="button" data-copy-signal="${s.id}" title="Copy signal"><i class="fa-regular fa-copy"></i></button><button type="button" class="gold" data-view-signal="${s.id}">${signalIsClosed(s)?'View':'Manage'}</button></div></td>
+    </tr>`
+  }).join('')}</tbody></table></div>`;
+
+  const mobile=`<div class="mentor-signal-mobile-list">${items.map(s=>{
+    const p=signalPips(s),hasPips=mentorHasRecordedPerformance(s),dir=String(s.direction||'BUY').toLowerCase(),stamp=mentorSignalStamp(s.created_at||s.published_at);
+    return `<button type="button" class="mentor-signal-mobile-card ${dir}" data-view-signal="${s.id}">
+      <div class="mentor-mobile-signal-top">
+        <div class="mentor-signal-icon mini ${dir}"><i class="fa-solid ${dir==='sell'?'fa-arrow-trend-down':'fa-arrow-trend-up'}"></i></div>
+        <div class="mentor-mobile-signal-name"><b>${esc(mentorDisplaySymbol(s.symbol))}</b><small>${esc(stamp.date)} - ${esc(stamp.time)}</small></div>
+        <div class="mentor-mobile-signal-right"><span class="mentor-type-badge ${dir}">${esc(signalTypeLabel(s))}</span>${statusChip(s.status)}</div>
+      </div>
+      <div class="mentor-mobile-signal-result">
+        <span><small>RESULT</small><b class="${p>0?'green':p<0?'red':''}">${hasPips?pipText(p):(signalIsClosed(s)?'-':'LIVE')}</b></span>
+        <i class="fa-solid fa-chevron-right"></i>
+      </div>
+      <div class="mentor-mobile-signal-values">
+        <span><small>ENTRY</small><b>${esc(s.entry_from??'-')}</b></span>
+        <span><small>SL</small><b class="red">${esc(s.stop_loss??'-')}</b></span>
+        <span><small>TP1</small><b class="green">${esc(s.take_profit_1??'-')}</b></span>
+        <span><small>TP2</small><b class="green">${esc(s.take_profit_2??'-')}</b></span>
+        <span><small>TP3</small><b class="green">${esc(s.take_profit_3??'-')}</b></span>
+        <span><small>TP4</small><b class="green">${esc(s.take_profit_4??'-')}</b></span>
+      </div>
+      <div class="mentor-mobile-signal-foot"><span>${s.notes?'<i class="fa-regular fa-note-sticky"></i> Note added':'<i class="fa-solid fa-shield-halved"></i> 24K signal'}</span><b>${signalIsClosed(s)?'View details':'Manage signal'} <i class="fa-solid fa-arrow-right"></i></b></div>
+    </button>`
+  }).join('')}</div>`;
+
   box.innerHTML=desktop+mobile
 }
+
 function renderCharts(){const box=$('#mentorCharts');if(!box)return;let items=[...state.charts],q=String($('#mentorChartSearch')?.value||'').toLowerCase(),pair=$('#mentorChartPair')?.value||'all';if(q)items=items.filter(x=>`${x.title} ${x.symbol} ${x.summary}`.toLowerCase().includes(q));if(pair!=='all')items=items.filter(x=>x.symbol===pair);items.sort((a,b)=>(new Date(a.created_at)-new Date(b.created_at))*($('#mentorChartSort')?.value==='old'?1:-1));const pairs=[...new Set(state.charts.map(x=>x.symbol).filter(Boolean))].sort(),sel=$('#mentorChartPair');if(sel&&sel.options.length<=1)sel.insertAdjacentHTML('beforeend',pairs.map(x=>`<option>${esc(x)}</option>`).join(''));box.innerHTML=renderHistoryGroups(items,'chart')}
 function renderArticles(){
   const box=$('#mentorArticles');if(!box)return;
