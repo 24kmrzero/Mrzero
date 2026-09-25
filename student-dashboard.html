@@ -242,7 +242,23 @@
         <div id="sessionsArea" class="hidden" style="margin-top:26px"><div class="panel-heading"><div><h2 id="sessionCourseTitle">Course Sessions</h2><p>Published Zoom session schedules. The Zoom join link is shared in the WhatsApp Community.</p></div><button class="app-btn outline" id="closeSessions"><i class="fa-solid fa-arrow-left"></i> Back to Courses</button></div><div class="session-grid" id="sessionsGrid"></div><div id="resourcesArea" class="app-card hidden" style="margin-top:20px"><div class="app-card-head"><div><h3>Course Resources</h3><p>Optional files uploaded by the admin</p></div></div><div id="resourcesList"></div></div></div>
       </section>
 
-      <section class="panel" id="p-premium" hidden aria-hidden="true"></section>
+      <section class="panel" id="p-premium">
+        <div class="premium-page-shell">
+          <div class="premium-page-hero">
+            <div class="premium-page-hero-copy">
+              <span class="premium-page-crown"><i class="fa-solid fa-crown"></i></span>
+              <div><small>24K MR ZERO</small><h2>Premium Market Access</h2><p>Signals, charts and market intelligence — in one dedicated access hub.</p></div>
+            </div>
+            <div id="premiumPageStatus" class="premium-page-status"><span class="pps-icon"><i class="fa-solid fa-spinner fa-spin"></i></span><div><small>ACCESS STATUS</small><b>Checking...</b><p>Loading your premium access.</p></div></div>
+            <div class="premium-page-benefits">
+              <span><i class="fa-solid fa-bolt"></i><b>Signals</b><small>Live setups</small></span>
+              <span><i class="fa-solid fa-chart-line"></i><b>Charts</b><small>Market analysis</small></span>
+              <span><i class="fa-solid fa-newspaper"></i><b>Articles</b><small>Market intelligence</small></span>
+            </div>
+          </div>
+          <div id="premiumPageFlow" class="premium-page-flow"></div>
+        </div>
+      </section>
 
       <section class="panel" id="p-announcements">
         <div class="panel-heading"><div><h2>Announcements</h2><p>Course schedules, payment updates and platform notices.</p></div></div><div id="announcementsList"></div>
@@ -253,10 +269,10 @@
         <div class="profile-compact-shell">
           <div class="app-card account-access-card">
             <div class="account-access-row" id="emailVerificationCard"></div>
-            <div class="account-access-row premium-access-trigger-row" id="premiumAccessRow">
+            <div class="account-access-row premium-access-trigger-row" id="premiumAccessRowPage" data-goto="premium">
               <span class="account-row-icon"><i class="fa-solid fa-crown"></i></span>
               <div class="account-row-copy"><h3>Premium Market Access</h3><p>Signals + Charts + Articles</p></div>
-              <div class="account-row-side"><span id="premiumCompactStatus" class="compact-access-state locked"><i class="fa-solid fa-circle"></i> Checking...</span><button type="button" class="app-btn gold" id="managePremiumAccess"><i class="fa-solid fa-unlock-keyhole"></i> Manage Access</button></div>
+              <div class="account-row-side"><span id="premiumCompactStatus" class="compact-access-state locked"><i class="fa-solid fa-circle"></i> Checking...</span><button type="button" class="app-btn gold" id="managePremiumAccessPage" data-goto="premium"><i class="fa-solid fa-unlock-keyhole"></i> Manage Access</button></div>
             </div>
             <div class="account-access-row">
               <span class="account-row-icon whatsapp"><i class="fa-brands fa-whatsapp"></i></span>
@@ -287,7 +303,7 @@
   <button type="button" class="is-active" data-goto="dashboard"><i class="fa-solid fa-house"></i><span>Home</span></button>
   <button type="button" data-goto="courses"><i class="fa-solid fa-graduation-cap"></i><span>Courses</span></button>
   <button type="button" data-goto="signals"><i class="fa-solid fa-bolt"></i><span>Signals</span></button>
-  <button type="button" data-mobile-premium><i class="fa-solid fa-crown"></i><span>Premium</span></button>
+  <button type="button" data-goto="premium"><i class="fa-solid fa-crown"></i><span>Premium</span></button>
   <button type="button" data-goto="profile"><i class="fa-solid fa-user"></i><span>Profile</span></button>
 </nav>
 
