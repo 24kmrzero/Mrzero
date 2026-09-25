@@ -894,13 +894,13 @@
     <div class="course-detail-note"><i class="fa-brands fa-whatsapp"></i><div><b>Live Class Access</b><span>${access ? 'Your course access is active. Zoom details are shared through the WhatsApp Community.' : 'Dates are visible now. Zoom access unlocks after enrollment/payment approval.'}</span></div></div>`;
     const foot=document.getElementById('courseDetailsFoot');
     if(foot) foot.innerHTML=`<button type="button" class="app-btn outline" data-close-modal="courseDetailsModal">Close</button>${cta}`;
-    A.openModal('courseDetailsModal');
+    openCourseFlowModal('courseDetailsModal');
   }
 
   function openPaymentSuccess(course, methodLabel='Payment') {
     const body=document.getElementById('coursePaymentSuccessBody');
     if(body) body.innerHTML=`<span class="payment-success-icon"><i class="fa-solid fa-check"></i></span><small>PAYMENT SUBMITTED</small><h3>${A.escapeHtml(course?.title || 'Course Payment')}</h3><p>Your ${A.escapeHtml(methodLabel)} proof has been received successfully.</p><div class="payment-success-state"><i class="fa-solid fa-clock"></i><div><b>Under Admin Review</b><span>Course access will unlock after approval.</span></div></div>`;
-    A.openModal('coursePaymentSuccessModal');
+    openCourseFlowModal('coursePaymentSuccessModal');
   }
 
   function resetCourseView() {
@@ -1233,7 +1233,20 @@
     document.getElementById('articleSearch')?.addEventListener('input', renderArticles);
     document.getElementById('closeSessions').addEventListener('click', resetCourseView);
 
+    if (!window.__24K_COURSE_MODAL_BACK__) {
+      window.__24K_COURSE_MODAL_BACK__ = true;
+      window.addEventListener('popstate', () => {
+        closeOpenCourseFlowModal();
+      });
+    }
+
     document.body.addEventListener('click', async event => {
+      const modalCloser=event.target.closest('[data-close-modal]');
+      const backdropModal=event.target.classList?.contains('app-modal') ? event.target : null;
+      const closingId=modalCloser?.dataset.closeModal || backdropModal?.id || '';
+      if(courseFlowModalIds.has(closingId) && history.state?.__24kCourseModal){
+        setTimeout(()=>{ try{ history.back(); }catch{} },0);
+      }
       const signalStatusButton = event.target.closest('[data-signal-status]');
       if (signalStatusButton) { signalStatusView = signalStatusButton.dataset.signalStatus || 'all'; renderSignals(); }
       const signalWorkspaceButton = event.target.closest('[data-signal-view]');
@@ -1328,6 +1341,25 @@
     return /^T[1-9A-HJ-NP-Za-km-z]{33}$/.test(v);
   }
 
+  const courseFlowModalIds = new Set(['courseDetailsModal','paymentMethodChoiceModal','paymentModal','bankPaymentModal','coursePaymentSuccessModal']);
+
+  function openCourseFlowModal(id){
+    if(!courseFlowModalIds.has(id)) return A.openModal(id);
+    try{
+      if(!history.state?.__24kCourseModal){
+        history.pushState({...history.state,__24kCourseModal:true},'',location.href);
+      }
+    }catch{}
+    A.openModal(id);
+  }
+
+  function closeOpenCourseFlowModal(){
+    const open=[...document.querySelectorAll('.app-modal.open')].reverse().find(m=>courseFlowModalIds.has(m.id));
+    if(!open)return false;
+    A.closeModal(open.id);
+    return true;
+  }
+
   function coursePaymentMethodConfigured(type){
     const method=type==='bank'
       ? state.paymentMethods.find(m=>/^local bank transfer$/i.test(String(m.name||'').trim()))
@@ -1365,7 +1397,7 @@
     const summary = document.getElementById('paymentChoiceCourseSummary');
     if (summary) summary.innerHTML = `<b>${A.escapeHtml(course.title)}</b><br>Amount: ${A.formatMoney(payable, currency || 'PKR')}<br><small>${localBankEnabled||usdtEnabled?'Choose an available payment method below.':'No compatible payment method is available for this course currency.'}</small>`;
     if(!localBankEnabled&&!usdtEnabled) A.toast('Payment methods are temporarily unavailable. Please contact Admin.','warning');
-    A.openModal('paymentMethodChoiceModal');
+    openCourseFlowModal('paymentMethodChoiceModal');
   }
 
   function selectCoursePaymentMethod(choice) {
@@ -1417,7 +1449,7 @@
     document.getElementById('paymentMethodSelect').innerHTML = usdtMethods.map(m => `<option value="${m.id}">${A.escapeHtml(m.name)}</option>`).join('');
     renderPaymentMethodInfo();
     document.getElementById('paymentMethodSelect').onchange = renderPaymentMethodInfo;
-    A.openModal('paymentModal');
+    openCourseFlowModal('paymentModal');
   }
 
 
@@ -1441,7 +1473,7 @@
     document.getElementById('bankPaymentMethodInfo').innerHTML = bankDestinationReady
       ? `<div class="notice warn"><b>${A.escapeHtml(method.name)}</b><br>Account title: ${A.escapeHtml(method.account_title||'—')}<br>Account / IBAN: ${A.escapeHtml(method.account_number||'—')}<br>${A.escapeHtml(method.instructions||'')}</div>`
       : `<div class="notice warn"><b>Bank details pending from Admin.</b><br>Payment submission form is available, but do not transfer funds until the final bank account is shown here.</div>`;
-    A.openModal('bankPaymentModal');
+    openCourseFlowModal('bankPaymentModal');
   }
 
   async function flushMyEmailQueue() {
