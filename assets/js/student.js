@@ -830,12 +830,77 @@
           ${nextClassHtml}
           <div class="notice course-access-notice ${access ? 'ok' : paymentTone}"><span class="notice-icon"><i class="fa-solid ${accessIcon}"></i></span><div>${noticeText}</div><span class="notice-state">${accessState}</span></div>
           <div class="course-actions">
-            <button class="app-btn course-secondary ${access ? 'gold' : 'outline'}" data-open-course="${course.id}"><i class="fa-solid fa-calendar-days"></i> View Live Class</button>
+            <button class="app-btn course-secondary ${access ? 'gold' : 'outline'}" data-course-details="${course.id}"><i class="fa-solid fa-calendar-days"></i> View Class Details</button>
             ${access ? '' : isFree ? `<button class="app-btn gold course-primary" data-free-enroll="${course.id}"><i class="fa-solid fa-user-plus"></i> Enroll Free</button>` : `<button class="app-btn gold course-primary" data-buy-course="${course.id}"><i class="fa-solid fa-wallet"></i> ${paymentButtonText}</button>`}
           </div>
         </div>
       </article>`;
     }).join('') : empty('No course is currently published.', 'fa-graduation-cap');
+  }
+
+  function courseSessionDateParts(value) {
+    const date = value ? new Date(value) : null;
+    if (!date || Number.isNaN(date.getTime())) return { day:'—', date:'—', time:'—' };
+    return {
+      day: new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Karachi',weekday:'short'}).format(date),
+      date: new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Karachi',day:'2-digit',month:'short',year:'numeric'}).format(date),
+      time: new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Karachi',hour:'2-digit',minute:'2-digit',hour12:true}).format(date) + ' PKT'
+    };
+  }
+
+  function openCourseDetailsModal(courseId) {
+    const course = state.courses.find(c => c.id === courseId);
+    if (!course) return A.toast('Course not found.','error');
+    const access = hasCourseAccess(course.id);
+    const payment = latestPayment(course.id);
+    const price = Number(course.discount_price != null ? course.discount_price : course.price || 0);
+    const isFree = course.course_type === 'free' || price === 0;
+    const sessions = state.sessions.filter(s => s.course_id === course.id).sort((a,b) => Number(a.session_number||0)-Number(b.session_number||0));
+    const start = sessions[0] ? courseSessionDateParts(sessions[0].starts_at) : null;
+    const end = sessions.length ? courseSessionDateParts(sessions[sessions.length-1].starts_at) : null;
+    const statusLabel = access ? 'ENROLLED' : payment && ['received','under_review'].includes(payment.status) ? 'PAYMENT PENDING' : isFree ? 'FREE COURSE' : 'PAYMENT REQUIRED';
+    const statusTone = access ? 'ok' : payment && ['received','under_review'].includes(payment.status) ? 'pending' : isFree ? 'free' : 'locked';
+    const rows = sessions.length ? sessions.map(session => {
+      const dt = courseSessionDateParts(session.starts_at);
+      return `<div class="course-detail-session">
+        <span class="cds-number">${String(session.session_number||'—').padStart(2,'0')}</span>
+        <div class="cds-copy"><small>${A.escapeHtml(dt.day)} · ${A.escapeHtml(dt.date)}</small><b>${A.escapeHtml(session.title)}</b><p>${A.escapeHtml(session.topic || '')}</p></div>
+        <div class="cds-time"><b>${A.escapeHtml(dt.time)}</b><small>${Number(session.duration_minutes||90)} min</small></div>
+        <span class="cds-lock"><i class="fa-solid ${access ? 'fa-circle-check' : 'fa-lock'}"></i></span>
+      </div>`;
+    }).join('') : `<div class="course-detail-empty"><i class="fa-regular fa-calendar"></i><b>Schedule not published yet</b><span>Class dates will appear here after Admin publishes them.</span></div>`;
+    const cta = access
+      ? `<button type="button" class="app-btn gold" data-close-modal="courseDetailsModal"><i class="fa-solid fa-circle-check"></i> Access Active</button>`
+      : isFree
+        ? `<button type="button" class="app-btn gold" data-free-enroll="${course.id}"><i class="fa-solid fa-user-plus"></i> Enroll Free</button>`
+        : payment && ['received','under_review'].includes(payment.status)
+          ? `<button type="button" class="app-btn gold" disabled><i class="fa-solid fa-clock"></i> Payment Under Review</button>`
+          : `<button type="button" class="app-btn gold" data-buy-course="${course.id}"><i class="fa-solid fa-wallet"></i> Continue to Payment</button>`;
+    const title=document.getElementById('courseDetailsTitle'); if(title) title.textContent=course.title;
+    const body=document.getElementById('courseDetailsBody');
+    if(body) body.innerHTML=`<div class="course-detail-hero">
+      <span class="course-detail-icon"><i class="fa-solid fa-graduation-cap"></i></span>
+      <div><small>24K LIVE COURSE</small><h3>${A.escapeHtml(course.title)}</h3><p>${A.escapeHtml(course.short_description || course.description || 'Live classes with Mr. Zameer.')}</p></div>
+      <span class="course-detail-state ${statusTone}">${A.escapeHtml(statusLabel)}</span>
+    </div>
+    <div class="course-detail-stats">
+      <span><small>MENTOR</small><b>${A.escapeHtml(course.instructor_name || A.cfg.INSTRUCTOR_NAME)}</b></span>
+      <span><small>PRICE</small><b>${isFree ? 'Free' : A.formatMoney(price,course.currency)}</b></span>
+      <span><small>CLASSES</small><b>${sessions.length || '—'}</b></span>
+      <span><small>DATE RANGE</small><b>${start && end ? `${A.escapeHtml(start.date)} — ${A.escapeHtml(end.date)}` : 'To be announced'}</b></span>
+    </div>
+    <div class="course-detail-section-head"><div><small>CLASS SCHEDULE</small><h4>Live Class Details</h4></div><span>${sessions.length} class${sessions.length===1?'':'es'}</span></div>
+    <div class="course-detail-sessions">${rows}</div>
+    <div class="course-detail-note"><i class="fa-brands fa-whatsapp"></i><div><b>Live Class Access</b><span>${access ? 'Your course access is active. Zoom details are shared through the WhatsApp Community.' : 'Dates are visible now. Zoom access unlocks after enrollment/payment approval.'}</span></div></div>`;
+    const foot=document.getElementById('courseDetailsFoot');
+    if(foot) foot.innerHTML=`<button type="button" class="app-btn outline" data-close-modal="courseDetailsModal">Close</button>${cta}`;
+    A.openModal('courseDetailsModal');
+  }
+
+  function openPaymentSuccess(course, methodLabel='Payment') {
+    const body=document.getElementById('coursePaymentSuccessBody');
+    if(body) body.innerHTML=`<span class="payment-success-icon"><i class="fa-solid fa-check"></i></span><small>PAYMENT SUBMITTED</small><h3>${A.escapeHtml(course?.title || 'Course Payment')}</h3><p>Your ${A.escapeHtml(methodLabel)} proof has been received successfully.</p><div class="payment-success-state"><i class="fa-solid fa-clock"></i><div><b>Under Admin Review</b><span>Course access will unlock after approval.</span></div></div>`;
+    A.openModal('coursePaymentSuccessModal');
   }
 
   function resetCourseView() {
@@ -1177,10 +1242,12 @@
       if(courseFilterButton){state.courseFilter=courseFilterButton.dataset.courseFilter||'all';renderCourses();}
       const historyMarketButton = event.target.closest('[data-history-market]'); if(historyMarketButton)return;
       const historyDateButton = event.target.closest('[data-history-date]'); if(historyDateButton)return;
+      const courseDetails = event.target.closest('[data-course-details]');
+      if (courseDetails) { openCourseDetailsModal(courseDetails.dataset.courseDetails); return; }
       const courseOpen = event.target.closest('[data-open-course]');
       if (courseOpen) { openPanel('courses'); showCourseSessions(courseOpen.dataset.openCourse); }
       const buy = event.target.closest('[data-buy-course]');
-      if (buy) await openPaymentModal(buy.dataset.buyCourse, buy);
+      if (buy) { A.closeModal('courseDetailsModal'); await openPaymentModal(buy.dataset.buyCourse, buy); }
       const paymentChoice = event.target.closest('[data-payment-choice]');
       if (paymentChoice) await choosePaymentMethod(paymentChoice.dataset.paymentChoice);
       const free = event.target.closest('[data-free-enroll]');
@@ -1391,8 +1458,9 @@
       await auditEvent('course_payment_submitted','course',course.id,'success',{method:'local_bank'});
       await flushMyEmailQueue();await loadAll();renderAll();
       A.closeModal('bankPaymentModal');form.reset();
-      A.toast('Bank receipt received. Admin approval is required before course access unlocks.','success');
       openPanel('courses');
+      openPaymentSuccess(course,'bank transfer');
+      A.toast('Bank receipt received. Admin approval is required before course access unlocks.','success');
     }catch(error){A.toast(A.friendlyError(error,'Bank payment submission failed.'),'error');}
     finally{A.setLoading(button,false);}
   }
@@ -1420,8 +1488,9 @@
         await flushMyEmailQueue();
         await loadAll();
       renderAll(); A.closeModal('paymentModal'); form.reset();
-      A.toast('Receipt received. Admin approval is required before course access unlocks.', 'success');
       openPanel('courses');
+      openPaymentSuccess(course,'USDT TRC20 payment');
+      A.toast('Receipt received. Admin approval is required before course access unlocks.', 'success');
     } catch (error) { A.toast(A.friendlyError(error, 'Payment submission failed.'), 'error'); }
     finally { A.setLoading(button, false); }
   }
@@ -1435,6 +1504,7 @@
         await flushMyEmailQueue();
         await loadAll();
       renderAll();
+      A.closeModal('courseDetailsModal');
       showCourseSessions(courseId);
       A.toast('Free course enrolled successfully. Online class access is now unlocked.', 'success');
     } catch (error) { A.toast(A.friendlyError(error, 'Could not enroll.'), 'error'); }
