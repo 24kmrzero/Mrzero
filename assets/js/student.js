@@ -5,7 +5,7 @@
   window.__24K_TEMP_OPEN_ACCESS__ = TEMP_OPEN_ACCESS;
   const state = {
     user: null, profile: null, courses: [], sessions: [], sessionLinks: {}, enrollments: [], payments: [],
-    paymentMethods: [], signals: [], signalUpdates: [], charts: [], articles: [], announcements: [], resources: [], support: [], riskAccepted: false, premium: null, premiumPayments: [], ibVerifications: [],
+    paymentMethods: [], signals: [], signalUpdates: [], charts: [], articles: [], announcements: [], resources: [], support: [], riskAccepted: false, premium: null, premiumLoaded: false, premiumPayments: [], ibVerifications: [],
     selectedCourse: null, courseFilter: 'all'
   };
   window.StudentBase = { state, reload: async () => { await loadAll(); renderAll(); return state; } };
@@ -211,6 +211,12 @@
 
     await loadAll();
     renderAll();
+    const resolvedPanel = studentNavigation.keyFromLocation();
+    if (['signals','charts','articles'].includes(resolvedPanel) && state.premiumLoaded && !state.premium?.has_access) {
+      studentNavigation.open('profile', true, false);
+      openAllAccessModal();
+      A.toast('Premium access is required for Signals, Charts and Articles.','warning');
+    }
     subscribeRealtime();
     handlePaymentReturn();
   } catch (error) {
@@ -271,6 +277,7 @@
     if (premiumPayments.error) console.warn('[Student] Premium payment history unavailable:', premiumPayments.error.message || premiumPayments.error);
     if (ibRows.error) console.warn('[Student] IB verification history unavailable:', ibRows.error.message || ibRows.error);
     state.premium = premiumAccess.error ? null : (premiumAccess.data || null);
+    state.premiumLoaded = !premiumAccess.error;
     state.premiumPayments = premiumPayments.error ? [] : (premiumPayments.data || []);
     state.ibVerifications = ibRows.error ? [] : (ibRows.data || []);
   }
@@ -1053,7 +1060,7 @@
   function bindEvents() {
     document.addEventListener('panel:open', event => {
       const key=event.detail.key;
-      if (['signals','charts','articles'].includes(key) && !state.premium?.has_access) { setTimeout(()=>{openPanel('profile');openAllAccessModal();},0); A.toast('Premium access is required for Signals, Charts and Articles.','warning'); return; }
+      if (['signals','charts','articles'].includes(key) && state.premiumLoaded && !state.premium?.has_access) { setTimeout(()=>{openPanel('profile');openAllAccessModal();},0); A.toast('Premium access is required for Signals, Charts and Articles.','warning'); return; }
       if (key === 'signals' && !state.riskAccepted) A.openModal('riskModal');
       if (key === 'courses') resetCourseView();
     });
