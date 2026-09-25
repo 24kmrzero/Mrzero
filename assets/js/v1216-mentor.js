@@ -31,7 +31,7 @@ window.addEventListener('appinstalled',()=>{
 window.addEventListener('load',updateMentorInstall);
 const cfg=window.APP_CONFIG||{},sb=(window.supabase&&cfg.SUPABASE_URL&&cfg.SUPABASE_ANON_KEY)?window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true}}):null;
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-const state={user:null,profile:null,perms:{signals:false,charts:false,articles:false,banners:false},signals:[],charts:[],articles:[],banners:[],courses:[],news:[],signalTab:'active',signalFilters:{q:'',pair:'all',type:'all',status:'all',from:'',to:''}};
+const state={user:null,profile:null,perms:{signals:false,charts:false,articles:false,banners:false},signals:[],charts:[],articles:[],banners:[],courses:[],news:[],signalTab:'active',signalFilters:{q:'',pair:'all',type:'all',status:'all',from:'',to:''},performanceMonth:null,performanceMonthKeys:[]};
 const CLOSED=new Set(['sl_hit','breakeven_hit','manually_closed','closed','cancelled','tp4_hit']);
 function signalIsClosed(s){const st=String(s?.status||'');return Boolean(s?.closed_at)||CLOSED.has(st)||(st==='tp3_hit'&&(s?.take_profit_4===null||s?.take_profit_4===undefined||s?.take_profit_4===''))}
 function applyMentorTheme(v){
@@ -152,75 +152,174 @@ function signalPips(s){
   if(derived!==null&&Number.isFinite(Number(derived)))return Number(derived);
   const x=Number(s.result_pips);return Number.isFinite(x)?x:0
 }
+function mentorSignalPerformanceDate(s){
+  const raw=s?.closed_at||s?.last_status_at||s?.updated_at||s?.created_at;
+  const d=new Date(raw||0);
+  return Number.isNaN(d.getTime())?new Date(0):d
+}
+function performanceMonthKey(d){
+  const x=d instanceof Date?d:new Date(d);
+  return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}`
+}
+function performanceMonthDate(key){
+  const [y,m]=String(key||'').split('-').map(Number);
+  return new Date(y||new Date().getFullYear(),Math.max(0,(m||1)-1),1)
+}
+function performanceMonthLabel(key){
+  return performanceMonthDate(key).toLocaleDateString(undefined,{month:'long',year:'numeric'})
+}
+function setPerformanceMonth(key){
+  if(!key)return;
+  state.performanceMonth=key;
+  renderPerformance()
+}
+function shiftPerformanceMonth(delta){
+  const keys=state.performanceMonthKeys||[];
+  if(!keys.length)return;
+  const current=state.performanceMonth||keys[keys.length-1];
+  const index=Math.max(0,keys.indexOf(current));
+  const next=Math.min(keys.length-1,Math.max(0,index+delta));
+  if(keys[next]!==current)setPerformanceMonth(keys[next])
+}
+function mentorResolvedForPerformance(s){
+  const st=String(s?.status||'').toLowerCase();
+  if(st==='cancelled'||!signalIsClosed(s))return false;
+  if(s?.result_pips!==null&&s?.result_pips!==undefined&&s?.result_pips!=='')return true;
+  return /^tp[1-4]_hit$/.test(st)||st==='sl_hit'||st==='breakeven_hit'||(st==='manually_closed'&&s?.close_price!=null)
+}
 function renderPerformance(){
-  const all=state.signals||[],now=new Date(),weekAgo=new Date(now-7*864e5),monthStart=new Date(now.getFullYear(),now.getMonth(),1);
-  const net=all.reduce((a,s)=>a+signalPips(s),0),
-    green=all.reduce((a,s)=>a+Math.max(0,signalPips(s)),0),
-    red=all.reduce((a,s)=>a+Math.min(0,signalPips(s)),0),
-    week=all.filter(s=>new Date(s.closed_at||s.last_status_at||s.created_at)>=weekAgo).reduce((a,s)=>a+signalPips(s),0),
-    month=all.filter(s=>new Date(s.closed_at||s.last_status_at||s.created_at)>=monthStart).reduce((a,s)=>a+signalPips(s),0);
+  const all=state.signals||[],now=new Date(),currentKey=performanceMonthKey(now);
+
+  // Build a continuous month range from the earliest Mentor signal through the current month.
+  const validDates=all.map(mentorSignalPerformanceDate).filter(d=>d.getTime()>0&&d<=now);
+  let earliest=validDates.length?new Date(Math.min(...validDates.map(d=>d.getTime()))):new Date(now.getFullYear(),now.getMonth(),1);
+  earliest=new Date(earliest.getFullYear(),earliest.getMonth(),1);
+  const currentStart=new Date(now.getFullYear(),now.getMonth(),1);
+  const keys=[];
+  let cursor=new Date(earliest);
+  let guard=0;
+  while(cursor<=currentStart&&guard<120){
+    keys.push(performanceMonthKey(cursor));
+    cursor=new Date(cursor.getFullYear(),cursor.getMonth()+1,1);
+    guard++
+  }
+  if(!keys.includes(currentKey))keys.push(currentKey);
+  state.performanceMonthKeys=keys;
+  if(!state.performanceMonth||!keys.includes(state.performanceMonth))state.performanceMonth=currentKey;
+  const selectedKey=state.performanceMonth;
+  const start=performanceMonthDate(selectedKey),end=new Date(start.getFullYear(),start.getMonth()+1,1);
+  const previousStart=new Date(start.getFullYear(),start.getMonth()-1,1),previousEnd=start;
+  const monthLabel=performanceMonthLabel(selectedKey);
+  const previousLabel=previousStart.toLocaleDateString(undefined,{month:'short'});
+  const monthAll=all.filter(s=>{const d=mentorSignalPerformanceDate(s);return d>=start&&d<end});
+  const previousAll=all.filter(s=>{const d=mentorSignalPerformanceDate(s);return d>=previousStart&&d<previousEnd});
+
+  // Month selector + navigation state.
+  const select=$('#mentorMonthSelect');
+  if(select){
+    const options=[...keys].reverse().map(k=>`<option value="${k}" ${k===selectedKey?'selected':''}>${esc(performanceMonthLabel(k))}</option>`).join('');
+    if(select.innerHTML!==options)select.innerHTML=options;
+    select.value=selectedKey;
+  }
+  const index=keys.indexOf(selectedKey),prevBtn=$('#mentorMonthPrev'),nextBtn=$('#mentorMonthNext'),thisBtn=$('#mentorThisMonth');
+  if(prevBtn)prevBtn.disabled=index<=0;
+  if(nextBtn)nextBtn.disabled=index>=keys.length-1;
+  if(thisBtn)thisBtn.classList.toggle('active',selectedKey===currentKey);
+  const range=$('#mentorPeriodRange');
+  if(range){
+    const lastDay=new Date(end.getTime()-1);
+    range.textContent=`${start.toLocaleDateString(undefined,{day:'2-digit',month:'short'})} — ${lastDay.toLocaleDateString(undefined,{day:'2-digit',month:'short',year:'numeric'})}`
+  }
+  const periodTitle=$('#mentorPerformancePeriodTitle');if(periodTitle)periodTitle.textContent=monthLabel;
+  const periodSubtitle=$('#mentorPerformancePeriodSubtitle');if(periodSubtitle)periodSubtitle.textContent='Selected month execution, results and market activity.';
+  const momentumLabel=$('#mentorMomentumLabel');if(momentumLabel)momentumLabel.textContent=`${monthLabel} · Daily P/L`;
+  const executionLabel=$('#mentorExecutionLabel');if(executionLabel)executionLabel.textContent=`${monthLabel} · Closed signals`;
+  const marketLabel=$('#mentorMarketFocusLabel');if(marketLabel)marketLabel.textContent=monthLabel;
+  const feedLabel=$('#mentorExecutionFeedLabel');if(feedLabel)feedLabel.textContent=`${monthLabel} activity`;
+
+  const resolved=monthAll.filter(mentorResolvedForPerformance),
+    net=resolved.reduce((a,s)=>a+signalPips(s),0),
+    green=resolved.reduce((a,s)=>a+Math.max(0,signalPips(s)),0),
+    red=resolved.reduce((a,s)=>a+Math.min(0,signalPips(s)),0),
+    wins=resolved.filter(s=>signalPips(s)>0).length,
+    losses=resolved.filter(s=>signalPips(s)<0).length,
+    be=resolved.filter(s=>signalPips(s)===0).length,
+    wr=resolved.length?wins/resolved.length*100:0,
+    previousResolved=previousAll.filter(mentorResolvedForPerformance),
+    previousNet=previousResolved.reduce((a,s)=>a+signalPips(s),0),
+    monthDelta=net-previousNet;
+
   const hero=$('#mentorHeroNetPips');if(hero)hero.textContent=`${net>=0?'+':''}${money(net)} pips`;
+  const note=$('#mentorPerformancePeriodNote');if(note)note.textContent=`${monthLabel} net performance`;
+  const compare=$('#mentorMonthComparison');
+  if(compare){
+    compare.textContent=previousResolved.length?`${monthDelta>=0?'+':''}${money(monthDelta)} pips vs ${previousLabel}`:`No resolved signals in ${previousLabel}`;
+    compare.className=monthDelta>0?'good':monthDelta<0?'bad':'neutral'
+  }
   const updated=$('#mentorPerformanceUpdated');if(updated)updated.textContent=`Updated ${now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true})}`;
 
   const metrics=[
-    {label:'NET PERFORMANCE',value:net,icon:'fa-chart-line',tone:'primary',hint:'All recorded signal results'},
-    {label:'WINNING PIPS',value:green,icon:'fa-arrow-trend-up',tone:'good',hint:'Positive outcomes'},
-    {label:'LOSING PIPS',value:red,icon:'fa-arrow-trend-down',tone:'bad',hint:'Stop-loss / negative outcomes'},
-    {label:'THIS WEEK',value:week,icon:'fa-calendar-week',tone:week>=0?'good':'bad',hint:'Rolling 7-day result'},
-    {label:'THIS MONTH',value:month,icon:'fa-calendar-days',tone:month>=0?'gold':'bad',hint:'Current month result'}
+    {label:'MONTHLY NET PIPS',display:`${net>=0?'+':''}${money(net)}`,icon:'fa-chart-line',tone:'primary',hint:monthLabel},
+    {label:'WINNING PIPS',display:`+${money(green)}`,icon:'fa-arrow-trend-up',tone:'good',hint:'Positive closed results'},
+    {label:'LOSING PIPS',display:money(red),icon:'fa-arrow-trend-down',tone:'bad',hint:'Negative closed results'},
+    {label:'WIN RATE',display:`${wr.toFixed(0)}%`,icon:'fa-bullseye',tone:wr>=50?'good':'gold',hint:`${wins} wins · ${losses} losses`},
+    {label:'CLOSED SIGNALS',display:String(resolved.length),icon:'fa-circle-check',tone:'gold',hint:`${be} breakeven`}
   ];
-  $('#mentorPerformanceKpis').innerHTML=metrics.map(m=>`<article class="mrzero-metric ${m.tone}"><div class="mrzero-metric-head"><span>${m.label}</span><i class="fa-solid ${m.icon}"></i></div><b>${m.value>=0?'+':''}${money(m.value)}</b><small>${m.hint}</small></article>`).join('');
+  const kpis=$('#mentorPerformanceKpis');
+  if(kpis){
+    kpis.innerHTML=metrics.map(m=>`<article class="mrzero-metric ${m.tone}"><div class="mrzero-metric-head"><span>${m.label}</span><i class="fa-solid ${m.icon}"></i></div><b>${m.display}</b><small>${esc(m.hint)}</small></article>`).join('');
+    kpis.scrollLeft=0;
+  }
 
-  const quality=all.filter(s=>signalIsClosed(s)&&s.status!=='cancelled'&&s.result_pips!==null).map(signalPips),
+  const quality=resolved.map(signalPips),
     avg=quality.length?quality.reduce((a,b)=>a+b,0)/quality.length:0,
     best=quality.length?Math.max(...quality):0,
     worst=quality.length?Math.min(...quality):0,
-    activeCount=all.filter(s=>!signalIsClosed(s)).length;
+    activeCount=monthAll.filter(s=>!signalIsClosed(s)).length;
   const avgEl=$('#mentorAvgPips'),bestEl=$('#mentorBestPips'),worstEl=$('#mentorWorstPips'),activeEl=$('#mentorActivePerformance');
   if(avgEl)avgEl.textContent=`${avg>=0?'+':''}${money(avg)} pips`;
   if(bestEl)bestEl.textContent=`${best>=0?'+':''}${money(best)} pips`;
   if(worstEl)worstEl.textContent=`${worst>=0?'+':''}${money(worst)} pips`;
   if(activeEl)activeEl.textContent=activeCount;
 
-  const days=[...Array(14)].map((_,i)=>{
-    const d=new Date(now);d.setHours(0,0,0,0);d.setDate(d.getDate()-(13-i));
-    const end=new Date(d);end.setDate(end.getDate()+1);
-    const daySignals=all.filter(s=>{
-      const x=new Date(s.last_status_at||s.closed_at||s.updated_at||s.created_at);
-      return x>=d&&x<end
-    });
-    const pips=daySignals.reduce((sum,s)=>sum+(String(s.status||'')==='cancelled'?0:signalPips(s)),0);
+  // Full selected-month daily P/L momentum.
+  const daysInMonth=new Date(start.getFullYear(),start.getMonth()+1,0).getDate();
+  const days=[...Array(daysInMonth)].map((_,i)=>{
+    const d=new Date(start.getFullYear(),start.getMonth(),i+1),dayEnd=new Date(start.getFullYear(),start.getMonth(),i+2);
+    const daySignals=resolved.filter(s=>{const x=mentorSignalPerformanceDate(s);return x>=d&&x<dayEnd});
+    const pips=daySignals.reduce((sum,s)=>sum+signalPips(s),0);
     return{d,count:daySignals.length,pips}
   }),maxAbs=Math.max(1,...days.map(x=>Math.abs(x.pips)));
   const momentum=$('#mentorSignalBars');
   if(momentum){
+    momentum.style.setProperty('--days',String(daysInMonth));
     momentum.innerHTML=days.map((x,index)=>{
       const tone=x.pips>0?'positive':x.pips<0?'negative':'zero';
       const height=Math.max(3,Math.abs(x.pips)/maxAbs*43);
       const signed=`${x.pips>=0?'+':''}${money(x.pips)} pips`;
-      return `<div class="mrzero-momentum-col ${tone} ${index===days.length-1?'is-latest':''}" title="${esc(signed)} · ${x.count} signal${x.count===1?'':'s'}"><i style="height:${height}%"></i><small>${x.d.getDate()}</small></div>`
+      const latest=selectedKey===currentKey&&x.d.getDate()===now.getDate();
+      return `<div class="mrzero-momentum-col ${tone} ${latest?'is-latest':''}" style="--i:${index}" title="${esc(signed)} · ${x.count} closed signal${x.count===1?'':'s'}"><i style="height:${height}%"></i><small>${x.d.getDate()}</small></div>`
     }).join('');
+    momentum.scrollLeft=0;
   }
 
-  const resolved=all.filter(s=>signalIsClosed(s)&&s.status!=='cancelled'&&s.result_pips!==null),
-    wins=resolved.filter(s=>signalPips(s)>0).length,
-    losses=resolved.filter(s=>signalPips(s)<0).length,
-    be=resolved.filter(s=>signalPips(s)===0).length,
-    wr=resolved.length?wins/resolved.length*100:0;
   $('#mentorWinRate').innerHTML=`<div class="mrzero-score-ring" style="--pct:${wr.toFixed(1)}"><div><b>${wr.toFixed(0)}%</b><small>WIN RATE</small></div></div><div class="mrzero-win-stats"><div class="mrzero-win-stat"><span>Wins</span><b>${wins}</b></div><div class="mrzero-win-stat"><span>Losses</span><b>${losses}</b></div><div class="mrzero-win-stat"><span>Breakeven</span><b>${be}</b></div><div class="mrzero-win-stat"><span>Resolved</span><b>${resolved.length}</b></div></div>`;
 
-  const pairs={};all.forEach(s=>{const k=mentorDisplaySymbol(s.symbol);pairs[k]=(pairs[k]||0)+1});
-  const ps=Object.entries(pairs).sort((a,b)=>b[1]-a[1]).slice(0,6),pmax=Math.max(1,...ps.map(x=>x[1]));
+  const pairs={};monthAll.forEach(s=>{const k=mentorDisplaySymbol(s.symbol);pairs[k]=(pairs[k]||0)+1});
+  const ps=Object.entries(pairs).sort((a,b)=>b[1]-a[1]).slice(0,3),pmax=Math.max(1,...ps.map(x=>x[1]));
   const totalPairSignals=ps.reduce((sum,[,count])=>sum+count,0)||1;
-  $('#mentorTopPairs').innerHTML=ps.length?ps.map(([pair,count])=>{const pct=Math.round(count/totalPairSignals*100);return `<div class="mrzero-market-row"><b>${esc(pair)}</b><div class="mrzero-market-track"><i style="width:${Math.max(8,count/pmax*100)}%"></i></div><small>${pct}% · ${count} signal${count===1?'':'s'}</small></div>`}).join(''):'<div class="mentor-empty">No market activity yet.</div>';
+  $('#mentorTopPairs').innerHTML=ps.length?ps.map(([pair,count],rank)=>{
+    const pct=Math.round(count/totalPairSignals*100);
+    return `<div class="mrzero-market-row"><b><span class="mrzero-market-rank">0${rank+1}</span>${esc(pair)}</b><div class="mrzero-market-track"><i style="width:${Math.max(8,count/pmax*100)}%"></i></div><small>${pct}% · ${count} signal${count===1?'':'s'}</small></div>`
+  }).join(''):`<div class="mentor-empty">No market activity in ${esc(monthLabel)}.</div>`;
 
-  const recent=[...all].sort((a,b)=>new Date(b.last_status_at||b.updated_at||b.created_at)-new Date(a.last_status_at||a.updated_at||a.created_at)).slice(0,3);
+  const recent=[...monthAll].sort((a,b)=>mentorSignalPerformanceDate(b)-mentorSignalPerformanceDate(a)).slice(0,3);
   $('#mentorRecentActivity').innerHTML=recent.length?recent.map(s=>{
-    const status=signalStatusLabel(s.status),p=signalPips(s),stamp=mentorSignalStamp(s.last_status_at||s.updated_at||s.created_at);
+    const status=signalStatusLabel(s.status),p=signalPips(s),stamp=mentorSignalStamp(s.last_status_at||s.closed_at||s.updated_at||s.created_at);
     const statusKey=String(s.status||'').toLowerCase(),statusTone=/tp\d*_hit|closed|manually_closed/.test(statusKey)?'good':statusKey==='sl_hit'?'bad':/cancelled|breakeven/.test(statusKey)?'neutral':'gold';
     const pipTone=p>0?'good':p<0?'bad':'neutral';
-    return `<div class="mrzero-activity-item"><div class="mrzero-activity-icon"><i class="fa-solid ${signalIsClosed(s)?'fa-circle-check':'fa-bolt'}"></i></div><div class="mrzero-activity-copy"><b>${esc(mentorDisplaySymbol(s.symbol))} · ${esc(signalTypeLabel(s))}</b><div class="mrzero-activity-meta"><small>${esc(stamp.date)} · ${esc(stamp.time)}</small>${s.result_pips==null?'':`<span class="mrzero-pips-badge ${pipTone}">${pipText(p)}</span>`}</div></div><span class="mrzero-activity-status ${statusTone}">${esc(status)}</span></div>`
-  }).join('')+`<button type="button" class="mrzero-feed-all" data-mentor-view="signals"><span>View all signal activity</span><i class="fa-solid fa-arrow-right"></i></button>`:'<div class="mentor-empty">No recent activity.</div>'
+    return `<div class="mrzero-activity-item"><div class="mrzero-activity-icon"><i class="fa-solid ${signalIsClosed(s)?'fa-circle-check':'fa-bolt'}"></i></div><div class="mrzero-activity-copy"><b>${esc(mentorDisplaySymbol(s.symbol))} · ${esc(signalTypeLabel(s))}</b><div class="mrzero-activity-meta"><small>${esc(stamp.date)} · ${esc(stamp.time)}</small>${mentorResolvedForPerformance(s)?`<span class="mrzero-pips-badge ${pipTone}">${pipText(p)}</span>`:''}</div></div><span class="mrzero-activity-status ${statusTone}">${esc(status)}</span></div>`
+  }).join()+`<button type="button" class="mrzero-feed-all" data-mentor-view="signals"><span>View full ${esc(monthLabel)} activity</span><i class="fa-solid fa-arrow-right"></i></button>`:`<div class="mentor-empty">No signal activity in ${esc(monthLabel)}.</div>`
 }
 function statusChip(v){return `<span class="mentor-chip gold">${esc(String(v||'').replaceAll('_',' ').toUpperCase())}</span>`}
 function signalTypeLabel(s){const d=String(s?.direction||'BUY').toUpperCase(),o=String(s?.order_type||'market').toLowerCase();return o==='market'?d:`${d} ${o.toUpperCase()}`}
@@ -348,7 +447,7 @@ async function logout(){await sb?.auth.signOut();location.href='/mentor-login.ht
 document.addEventListener('click',e=>{const install=e.target.closest('#mentorInstallButton');if(install){e.preventDefault();(async()=>{if(mentorStandalone())return toast('Mentor App is already installed.','success');if(mentorInstallPrompt){mentorInstallPrompt.prompt();const choice=await mentorInstallPrompt.userChoice;if(choice?.outcome==='accepted')toast('Installing 24K Mentor App…','success');mentorInstallPrompt=null;updateMentorInstall();return}const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);toast(ios?'Use Share → Add to Home Screen to install the app.':'Use your browser menu → Install app / Add to Home screen.','info')})().catch(()=>{});return}const preset=e.target.closest('[data-note-preset]');if(preset){const f=$('#mentorSignalForm'),ta=f?.elements.notes;if(!ta)return;$$('[data-note-preset]').forEach(x=>x.classList.toggle('active',x===preset));if(preset.dataset.notePreset==='custom'){ta.value='';ta.focus()}else{ta.value=preset.dataset.notePreset}return}const copySignal=e.target.closest('[data-copy-signal]');if(copySignal){const s=(state.signals||[]).find(x=>String(x.id)===String(copySignal.dataset.copySignal));if(s){const text=[`${s.symbol} — ${signalTypeLabel(s)}`,`Entry: ${s.entry_from}${s.entry_to!=null?' - '+s.entry_to:''}`,`SL: ${s.stop_loss}`,`TP1: ${s.take_profit_1??'—'}`,`TP2: ${s.take_profit_2??'—'}`,`TP3: ${s.take_profit_3??'—'}`,`TP4: ${s.take_profit_4??'—'}`,s.notes?`Note: ${s.notes}`:''].filter(Boolean).join('\n');navigator.clipboard?.writeText(text).then(()=>toast('Signal copied.')).catch(()=>toast('Could not copy signal.'))}return}const noteSignal=e.target.closest('[data-note-signal]');if(noteSignal){const s=(state.signals||[]).find(x=>String(x.id)===String(noteSignal.dataset.noteSignal));toast(s?.notes||'No note added.');return}const viewSignal=e.target.closest('[data-view-signal]');if(viewSignal){renderSignalDetail(viewSignal.dataset.viewSignal);return}const openFilters=e.target.closest('[data-open-signal-filters]');if(openFilters){const ids=[['mentorMobileSignalPair','mentorSignalPairFilter'],['mentorMobileSignalType','mentorSignalTypeFilter'],['mentorMobileSignalStatus','mentorSignalStatusFilter'],['mentorMobileSignalFrom','mentorSignalFrom'],['mentorMobileSignalTo','mentorSignalTo']];ids.forEach(([a,b])=>{const A=$('#'+a),B=$('#'+b);if(A&&B)A.value=B.value});openModal('signalFilter');return}const applyFilters=e.target.closest('[data-apply-signal-filters]');if(applyFilters){const ids=[['mentorSignalPairFilter','mentorMobileSignalPair'],['mentorSignalTypeFilter','mentorMobileSignalType'],['mentorSignalStatusFilter','mentorMobileSignalStatus'],['mentorSignalFrom','mentorMobileSignalFrom'],['mentorSignalTo','mentorMobileSignalTo']];ids.forEach(([a,b])=>{const A=$('#'+a),B=$('#'+b);if(A&&B)A.value=B.value});closeModals();renderSignals();return}const resetFilters=e.target.closest('[data-reset-signal-filters]');if(resetFilters){for(const id of ['mentorSignalSearch','mentorSignalFrom','mentorSignalTo','mentorMobileSignalFrom','mentorMobileSignalTo']){const el=$('#'+id);if(el)el.value=''}for(const id of ['mentorSignalPairFilter','mentorSignalTypeFilter','mentorSignalStatusFilter','mentorMobileSignalPair','mentorMobileSignalType','mentorMobileSignalStatus']){const el=$('#'+id);if(el)el.value='all'}state.signalFilters={q:'',pair:'all',type:'all',status:'all',from:'',to:''};renderSignals();return}const v=e.target.closest('[data-mentor-view]');if(v){e.preventDefault();closeModals();showView(v.dataset.mentorView);return}const o=e.target.closest('[data-open-mentor-modal]');if(o){resetMentorEditor(o.dataset.openMentorModal);openModal(o.dataset.openMentorModal);return}if(e.target.closest('[data-close-mentor-modal]'))return closeModals();const sa=e.target.closest('[data-signal-action]');if(sa)signalAction(sa.dataset.id,sa.dataset.signalAction).catch(x=>toast(x.message));const es=e.target.closest('[data-edit-signal]');if(es)editSignal(es.dataset.editSignal);const st=e.target.closest('[data-signal-tab]');if(st){state.signalTab=st.dataset.signalTab;$$('[data-signal-tab]').forEach(x=>x.classList.toggle('active',x===st));renderSignals()}const ec=e.target.closest('[data-edit-chart]');if(ec)editChart(ec.dataset.editChart);const dc=e.target.closest('[data-delete-chart]');if(dc)del('charts',dc.dataset.deleteChart,'chart').catch(x=>toast(x.message));const ea=e.target.closest('[data-edit-article]');if(ea)editArticle(ea.dataset.editArticle);const da=e.target.closest('[data-delete-article]');if(da)del('articles',da.dataset.deleteArticle,'article').catch(x=>toast(x.message));const eb=e.target.closest('[data-edit-banner]');if(eb)editBanner(eb.dataset.editBanner);const db=e.target.closest('[data-delete-banner]');if(db)del('mentor_banners',db.dataset.deleteBanner,'banner').catch(x=>toast(x.message));const va=e.target.closest('[data-view-article]');if(va){const a=state.articles.find(x=>x.id===va.dataset.viewArticle);if(a)alert(`${a.title}\n\n${a.content||a.excerpt||''}`)}if(e.target.closest('[data-mentor-mobile-profile]'))openModal('profile')});
 $('#mentorSignalForm')?.addEventListener('submit',saveSignal);$('#mentorSignalForm')?.addEventListener('input',renderMentorPipPreview);$('#mentorSignalForm')?.addEventListener('change',renderMentorPipPreview);$('#mentorChartForm')?.addEventListener('submit',saveChart);$('#mentorArticleForm')?.addEventListener('submit',saveArticle);$('#mentorBannerForm')?.addEventListener('submit',saveBanner);$('#mentorLogout')?.addEventListener('click',logout);$('#mentorProfileLogout')?.addEventListener('click',logout);function mentorRefresh(btn){if(btn?.classList.contains('is-loading'))return;btn?.classList.add('is-loading');document.body.classList.add('mentor-refreshing');load().then(()=>toast('Updated')).catch(e=>toast(e.message)).finally(()=>{btn?.classList.remove('is-loading');document.body.classList.remove('mentor-refreshing')})}
 $('#mentorMenuToggle')?.addEventListener('click',openMentorMenu);$('#mentorMenuClose')?.addEventListener('click',closeMentorMenu);$('#mentorSidebarOverlay')?.addEventListener('click',closeMentorMenu);
-$('#mentorRefresh')?.addEventListener('click',e=>mentorRefresh(e.currentTarget));$('#mentorTopRefresh')?.addEventListener('click',e=>mentorRefresh(e.currentTarget));$('#mentorTheme')?.addEventListener('click',()=>applyMentorTheme(document.documentElement.dataset.theme==='light'?'dark':'light'));['#mentorSignalSearch','#mentorSignalPairFilter','#mentorSignalTypeFilter','#mentorSignalStatusFilter','#mentorSignalFrom','#mentorSignalTo'].forEach(s=>$(s)?.addEventListener('input',renderSignals));['#mentorChartSearch','#mentorChartPair','#mentorChartSort'].forEach(s=>$(s)?.addEventListener('input',renderCharts));['#mentorArticleSearch','#mentorArticleCategory','#mentorArticleStatus','#mentorArticleSort'].forEach(s=>$(s)?.addEventListener('input',renderArticles));$$('.mentor-modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeModals()}));
+$('#mentorRefresh')?.addEventListener('click',e=>mentorRefresh(e.currentTarget));$('#mentorTopRefresh')?.addEventListener('click',e=>mentorRefresh(e.currentTarget));$('#mentorMonthSelect')?.addEventListener('change',e=>setPerformanceMonth(e.currentTarget.value));$('#mentorMonthPrev')?.addEventListener('click',()=>shiftPerformanceMonth(-1));$('#mentorMonthNext')?.addEventListener('click',()=>shiftPerformanceMonth(1));$('#mentorThisMonth')?.addEventListener('click',()=>setPerformanceMonth(performanceMonthKey(new Date())));$('#mentorTheme')?.addEventListener('click',()=>applyMentorTheme(document.documentElement.dataset.theme==='light'?'dark':'light'));['#mentorSignalSearch','#mentorSignalPairFilter','#mentorSignalTypeFilter','#mentorSignalStatusFilter','#mentorSignalFrom','#mentorSignalTo'].forEach(s=>$(s)?.addEventListener('input',renderSignals));['#mentorChartSearch','#mentorChartPair','#mentorChartSort'].forEach(s=>$(s)?.addEventListener('input',renderCharts));['#mentorArticleSearch','#mentorArticleCategory','#mentorArticleStatus','#mentorArticleSort'].forEach(s=>$(s)?.addEventListener('input',renderArticles));$$('.mentor-modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeModals()}));
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMentorMenu()});
 window.addEventListener('resize',()=>{if(window.innerWidth>760)closeMentorMenu()});
 if(localStorage.getItem('mentor-theme-v1220')!=='1'){localStorage.setItem('mentor-theme','light');localStorage.setItem('mentor-theme-v1220','1')}
