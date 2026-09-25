@@ -1,0 +1,110 @@
+/* 24K MR ZERO — Signal inline detail strip v12.30
+   Expanded mobile signal stays compact: all details live on one horizontal row. */
+@media(max-width:760px){
+  .student-page .mobile-signal-accordion[open]{
+    border-color:rgba(240,185,11,.24)!important;
+  }
+
+  .student-page .msa-details{
+    display:flex!important;
+    align-items:stretch!important;
+    gap:5px!important;
+    padding:7px 8px 8px!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    white-space:nowrap!important;
+    border-top:1px solid var(--s-line,#E7E9ED)!important;
+    background:var(--s-surface,#fff)!important;
+    scroll-snap-type:x proximity;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  /* Flatten both internal wrappers so every value becomes one row item */
+  .student-page .msa-detail-head,
+  .student-page .msa-level-grid{
+    display:contents!important;
+  }
+
+  .student-page .msa-detail-head .signal-table-status,
+  .student-page .msa-date,
+  .student-page .msa-level-grid>span{
+    flex:0 0 auto!important;
+    min-width:70px!important;
+    min-height:46px!important;
+    padding:7px 9px!important;
+    display:grid!important;
+    align-content:center!important;
+    justify-items:start!important;
+    gap:4px!important;
+    border:0!important;
+    border-radius:9px!important;
+    background:var(--s-surface-2,#F3F4F6)!important;
+    scroll-snap-align:start;
+    box-sizing:border-box!important;
+  }
+
+  .student-page .msa-detail-head .signal-table-status{
+    min-width:76px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    font-size:8px!important;
+    font-weight:900!important;
+    padding:0 9px!important;
+  }
+
+  .student-page .msa-date{
+    min-width:94px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-start!important;
+    gap:5px!important;
+    color:var(--s-muted,#707A8A)!important;
+    font-size:7.5px!important;
+    font-weight:800!important;
+  }
+
+  .student-page .msa-level-grid>span{
+    min-width:72px!important;
+  }
+
+  .student-page .msa-level-grid small{
+    font-size:5.7px!important;
+    line-height:1!important;
+    font-weight:900!important;
+    letter-spacing:.07em!important;
+    color:var(--s-faint,#9AA4B2)!important;
+  }
+
+  .student-page .msa-level-grid b{
+    font-size:10px!important;
+    line-height:1!important;
+    font-weight:850!important;
+    color:var(--s-text,#0B0E11)!important;
+  }
+
+  .student-page .msa-level-grid .msa-pips{
+    min-width:90px!important;
+    background:rgba(14,203,129,.07)!important;
+  }
+
+  .student-page .msa-level-grid .msa-pips .table-pips{
+    font-size:10px!important;
+  }
+
+  /* subtle edge cue that row can be swiped */
+  .student-page .mobile-signal-accordion[open] .msa-details{
+    mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 18px),transparent 100%);
+  }
+}
+
+@media(max-width:390px){
+  .student-page .msa-detail-head .signal-table-status,
+  .student-page .msa-date,
+  .student-page .msa-level-grid>span{
+    min-height:44px!important;
+    padding:6px 8px!important;
+  }
+  .student-page .msa-level-grid>span{min-width:66px!important}
+  .student-page .msa-date{min-width:88px!important}
+}
