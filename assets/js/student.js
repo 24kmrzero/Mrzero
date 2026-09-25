@@ -1006,7 +1006,7 @@
     const statusTitle=has ? (source==='trial'?'Free Trial Active':source==='ib'?'Broker Access Active':'Premium Active') : 'Premium Access Locked';
     const statusText=has ? (days!=null ? `${days} day${days===1?'':'s'} remaining · Access until ${expiry}` : `Access until ${expiry}`) : 'Choose Paid Access or Free Access via Broker below.';
     status.className=`premium-page-status ${has?'is-active':'is-locked'}`;
-    status.innerHTML=`<span class="pps-icon"><i class="fa-solid ${has?'fa-crown':'fa-lock'}"></i></span><div><small>ACCESS STATUS</small><b>${A.escapeHtml(statusTitle)}</b><p>${A.escapeHtml(statusText)}</p></div><span class="pps-state ${has?'active':'locked'}"><i></i>${has?'ACTIVE':'LOCKED'}</span>`;
+    status.innerHTML=`<span class="pps-icon"><i class="fa-solid ${has?'fa-crown':'fa-lock'}"></i></span><div><small>ACCESS STATUS</small><b>${A.escapeHtml(statusTitle)}</b><p>${has&&days!=null?`<span class="pps-days">${A.escapeHtml(String(days))} DAYS LEFT</span> <span class="pps-until">Access until ${A.escapeHtml(expiry)}</span>`:A.escapeHtml(statusText)}</p></div><span class="pps-state ${has?'active':'locked'}"><i></i>${has?'ACTIVE':'LOCKED'}</span>`;
 
     const pricePkr=Number(p.price_pkr||0);
     const priceUsdt=Number(p.price_usdt||0);
@@ -1078,7 +1078,22 @@
     const box=document.getElementById('premiumBankSummary');
     if(box) box.innerHTML=`<b>PKR ${Number(state.premium?.price_pkr||0).toLocaleString()}</b> · ${Number(state.premium?.monthly_days||30)} days Premium Market Access<br><small>Transfer manually, then submit your bank reference and receipt for Admin approval.</small>`;
     const info=document.getElementById('premiumBankMethodInfo');
-    if(info) info.innerHTML=`<div class="notice warn"><b>${A.escapeHtml(method.name)}</b><br>Account title: ${A.escapeHtml(method.account_title||'—')}<br>Account / IBAN: ${A.escapeHtml(method.account_number||'—')}<br>${A.escapeHtml(method.instructions||'')}</div>`;
+    if(info){
+      const account=String(method.account_number||'').trim();
+      const isTest=/^TEST/i.test(account)||/^TEST/i.test(String(method.account_title||''));
+      info.innerHTML=`<div class="premium-bank-card ${isTest?'is-test':''}">
+        <div class="premium-bank-top">
+          <span class="premium-bank-icon"><i class="fa-solid fa-building-columns"></i></span>
+          <div><small>PAYMENT METHOD</small><b>Local Bank Transfer</b></div>
+          <span class="premium-bank-badge">${isTest?'TEST MODE':'BANK'}</span>
+        </div>
+        <div class="premium-bank-details">
+          <span><small>ACCOUNT TITLE</small><b>${A.escapeHtml(method.account_title||'—')}</b></span>
+          <span><small>ACCOUNT / IBAN</small><code>${A.escapeHtml(account||'—')}</code></span>
+        </div>
+        <div class="premium-bank-note"><i class="fa-solid fa-circle-info"></i><span>${A.escapeHtml(method.instructions||'Transfer the exact amount, then submit your reference and receipt below.')}</span></div>
+      </div>`;
+    }
     document.getElementById('premiumBankForm')?.reset();
     A.openModal('premiumBankModal');
   }
@@ -1090,6 +1105,8 @@
     if(file.size>5*1024*1024)return A.toast('Receipt must be 5 MB or smaller.','error');
     const reference=String(f.elements.transaction_reference.value||'').trim();
     if(reference.length<3)return A.toast('Enter a valid bank transaction reference.','error');
+    const bankMethod=state.paymentMethods.find(m=>/^local bank transfer$/i.test(String(m.name||'').trim()));
+    if(/^TEST/i.test(String(bankMethod?.account_number||''))||/^TEST/i.test(String(bankMethod?.account_title||''))) return A.toast('Bank details are in TEST MODE. Add the real bank account from Admin before accepting payments.','warning');
     A.setLoading(button,true,'Submitting...');
     let path='';
     try{
@@ -1105,7 +1122,7 @@
     finally{A.setLoading(button,false);}
   }
 
-  async function submitPremiumUsdt(event){event.preventDefault();const f=event.currentTarget,file=f.elements.receipt.files?.[0],button=f.querySelector('button[type=submit]');if(!file)return A.toast('Choose a payment receipt.','error');if(file.size>5*1024*1024)return A.toast('Receipt must be 5 MB or smaller.','error');A.setLoading(button,true,'Submitting...');let path='';try{path=`${state.user.id}/premium/${Date.now()}-${A.fileSafeName(file.name)}`;const upload=await A.supabase.storage.from('payment-receipts').upload(path,file,{contentType:file.type,upsert:false});if(upload.error)throw upload.error;const {error}=await A.supabase.rpc('submit_premium_usdt_payment',{p_reference:f.elements.transaction_reference.value.trim(),p_receipt_path:path,p_note:f.elements.student_note.value.trim()||null});if(error){await A.supabase.storage.from('payment-receipts').remove([path]);throw error;}await auditEvent('premium_payment_submitted','premium_package',null,'success',{method:'usdt'});A.closeModal('premiumUsdtModal');f.reset();await loadAll();renderAll();await flushMyEmailQueue();A.toast('Premium payment submitted for review.','success');}catch(error){A.toast(A.friendlyError(error,'Could not submit premium payment.'),'error');}finally{A.setLoading(button,false);}}
+  async function submitPremiumUsdt(event){event.preventDefault();const f=event.currentTarget,file=f.elements.receipt.files?.[0],button=f.querySelector('button[type=submit]');const usdtMethod=state.paymentMethods.find(m=>/usdt|trc\s*20|trc20/i.test(`${m.name||''} ${m.instructions||''}`));if(/^TEST/i.test(String(usdtMethod?.account_number||''))||/^TEST/i.test(String(usdtMethod?.account_title||'')))return A.toast('USDT wallet is in TEST MODE. Add the real TRC20 address from Admin before accepting payments.','warning');if(!file)return A.toast('Choose a payment receipt.','error');if(file.size>5*1024*1024)return A.toast('Receipt must be 5 MB or smaller.','error');A.setLoading(button,true,'Submitting...');let path='';try{path=`${state.user.id}/premium/${Date.now()}-${A.fileSafeName(file.name)}`;const upload=await A.supabase.storage.from('payment-receipts').upload(path,file,{contentType:file.type,upsert:false});if(upload.error)throw upload.error;const {error}=await A.supabase.rpc('submit_premium_usdt_payment',{p_reference:f.elements.transaction_reference.value.trim(),p_receipt_path:path,p_note:f.elements.student_note.value.trim()||null});if(error){await A.supabase.storage.from('payment-receipts').remove([path]);throw error;}await auditEvent('premium_payment_submitted','premium_package',null,'success',{method:'usdt'});A.closeModal('premiumUsdtModal');f.reset();await loadAll();renderAll();await flushMyEmailQueue();A.toast('Premium payment submitted for review.','success');}catch(error){A.toast(A.friendlyError(error,'Could not submit premium payment.'),'error');}finally{A.setLoading(button,false);}}
   async function submitIbVerification(event){
     event.preventDefault();
     const f=event.currentTarget,button=f.querySelector('button[type=submit]');
@@ -1369,7 +1386,31 @@
       const premiumPagePay=event.target.closest('[data-premium-page-pay]');
       if(premiumPagePay){
         if(premiumPagePay.dataset.premiumPagePay==='bank'){await startPremiumLocalBank(premiumPagePay);return;}
-        const box=document.getElementById('premiumUsdtSummary');if(box)box.innerHTML=`<b>${Number(state.premium?.price_usdt||0).toLocaleString()} USDT</b> · ${Number(state.premium?.monthly_days||30)} days Premium Market Access`;A.openModal('premiumUsdtModal');return;
+        const amount=Number(state.premium?.price_usdt||0);
+        const daysCount=Number(state.premium?.monthly_days||30);
+        const box=document.getElementById('premiumUsdtSummary');
+        if(box)box.innerHTML=`<b>30-Day Premium Market Access</b><br>Amount: <b>${amount.toLocaleString()} USDT</b><br><small>Copy the TRC20 address below, make payment, then submit TXID + receipt.</small>`;
+        const method=state.paymentMethods.find(m=>/usdt|trc\s*20|trc20/i.test(`${m.name||''} ${m.instructions||''}`));
+        const wallet=String(method?.account_number||'').trim();
+        const isTest=/^TEST/i.test(wallet)||/^TEST/i.test(String(method?.account_title||''));
+        const info=document.getElementById('premiumUsdtMethodInfo');
+        if(info){
+          info.innerHTML=`<div class="usdt-wallet-card premium-usdt-wallet ${isTest?'usdt-test-wallet':''}">
+            <div class="usdt-wallet-top">
+              <span class="usdt-wallet-icon"><i class="fa-solid fa-coins"></i></span>
+              <div><small>NETWORK</small><b>USDT · TRC20</b></div>
+              <span class="usdt-network-badge ${isTest?'test':''}">${isTest?'TEST':'TRON'}</span>
+            </div>
+            <div class="usdt-wallet-address">
+              <small>${isTest?'TEST PAYMENT ADDRESS':'PAYMENT WALLET ADDRESS'}</small>
+              <code>${A.escapeHtml(wallet||'Not configured')}</code>
+              <button type="button" data-copy-usdt-wallet="${attr(wallet)}"><i class="fa-regular fa-copy"></i> Copy Address</button>
+            </div>
+            <div class="usdt-wallet-note ${isTest?'danger':''}"><i class="fa-solid ${isTest?'fa-triangle-exclamation':'fa-circle-info'}"></i><span>${isTest?'<b>TEST MODE:</b> Do not send real funds. Replace this address from Admin before going live.':'Send only <b>USDT on TRC20 network</b>. After payment, paste the TXID below and upload your receipt.'}</span></div>
+          </div>`;
+        }
+        document.getElementById('premiumUsdtForm')?.reset();
+        A.openModal('premiumUsdtModal');return;
       }
       const signalStatusButton = event.target.closest('[data-signal-status]');
       if (signalStatusButton) { signalStatusView = signalStatusButton.dataset.signalStatus || 'all'; renderSignals(); }
