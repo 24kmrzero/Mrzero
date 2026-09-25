@@ -1331,12 +1331,14 @@
     paymentChoiceContext = { courseId, triggerButton };
     const payable = course.discount_price != null ? Number(course.discount_price) : Number(course.price);
     const currency = String(course.currency || '').toUpperCase();
-    const localBankEnabled = state.paymentMethods.some(m => /^local bank transfer$/i.test(String(m.name||'').trim()));
-    const usdtEnabled = state.paymentMethods.some(m => /usdt|trc\s*20|trc20/i.test(`${m.name||''} ${m.instructions||''}`));
+    const localBankConfigured = state.paymentMethods.some(m => /^local bank transfer$/i.test(String(m.name||'').trim()));
+    const usdtConfigured = state.paymentMethods.some(m => /usdt|trc\s*20|trc20/i.test(`${m.name||''} ${m.instructions||''}`));
+    const localBankEnabled = localBankConfigured && currency === 'PKR';
+    const usdtEnabled = usdtConfigured && ['USDT','USD'].includes(currency);
     const localChoice=document.querySelector('[data-payment-choice="local-bank"]'); if(localChoice){localChoice.disabled=!localBankEnabled;localChoice.classList.toggle('method-disabled',!localBankEnabled);localChoice.style.opacity=localBankEnabled?'':'0.45';}
     const usdtChoice=document.querySelector('[data-payment-choice="usdt"]'); if(usdtChoice){usdtChoice.disabled=!usdtEnabled;usdtChoice.classList.toggle('method-disabled',!usdtEnabled);usdtChoice.style.opacity=usdtEnabled?'':'0.45';}
     const summary = document.getElementById('paymentChoiceCourseSummary');
-    if (summary) summary.innerHTML = `<b>${A.escapeHtml(course.title)}</b><br>Amount: ${A.formatMoney(payable, currency || 'PKR')}<br><small>${localBankEnabled||usdtEnabled?'Choose an available payment method below.':'Payment methods are temporarily disabled by Admin.'}</small>`;
+    if (summary) summary.innerHTML = `<b>${A.escapeHtml(course.title)}</b><br>Amount: ${A.formatMoney(payable, currency || 'PKR')}<br><small>${localBankEnabled||usdtEnabled?'Choose an available payment method below.':'No compatible payment method is available for this course currency.'}</small>`;
     if(!localBankEnabled&&!usdtEnabled) A.toast('Payment methods are temporarily unavailable. Please contact Admin.','warning');
     A.openModal('paymentMethodChoiceModal');
   }
