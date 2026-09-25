@@ -2113,3 +2113,52 @@ html[data-theme="light"] .mentor-running-pips.premium-result.bad .mentor-result-
     margin-top:3px!important;
   }
 }
+
+
+/* V13.30 — All quick filter buttons use the same visual treatment */
+.mentor-signal-quick-filters{
+  grid-template-columns:repeat(6,minmax(0,1fr))!important;
+}
+.mentor-signal-quick-filters button,
+.mentor-signal-quick-filters .mentor-signal-quick-more{
+  min-width:0!important;
+  min-height:31px!important;
+  margin:0!important;
+  padding:0 4px!important;
+  border:1px solid transparent!important;
+  border-radius:8px!important;
+  background:transparent!important;
+  color:var(--m-muted)!important;
+  font-size:8px!important;
+  font-weight:850!important;
+  box-shadow:none!important;
+}
+.mentor-signal-quick-filters button.active{
+  border-color:rgba(240,185,11,.22)!important;
+  background:rgba(240,185,11,.10)!important;
+  color:#bd8b00!important;
+}
+.mentor-signal-quick-filters .mentor-signal-quick-more:hover,
+.mentor-signal-quick-filters .mentor-signal-quick-more:active{
+  border-color:rgba(240,185,11,.22)!important;
+  background:rgba(240,185,11,.07)!important;
+  color:#9f7600!important;
+}
+html[data-theme="light"] .mentor-signal-quick-filters .mentor-signal-quick-more{
+  border-color:transparent!important;
+  background:transparent!important;
+  color:#6f7986!important;
+}
+
+@media(max-width:760px){
+  .mentor-signal-quick-filters{
+    grid-template-columns:repeat(6,minmax(0,1fr))!important;
+  }
+  .mentor-signal-quick-filters button,
+  .mentor-signal-quick-filters .mentor-signal-quick-more{
+    min-height:31px!important;
+    padding:0 2px!important;
+    border-radius:7px!important;
+    font-size:6.8px!important;
+  }
+}
