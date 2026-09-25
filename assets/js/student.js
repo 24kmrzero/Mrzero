@@ -1254,7 +1254,7 @@
       if(copyUsdtWallet){
         const wallet=String(copyUsdtWallet.dataset.copyUsdtWallet||'').trim();
         if(!wallet)return;
-        try{await navigator.clipboard.writeText(wallet);A.toast('USDT TRC20 wallet address copied.','success');}
+        try{await navigator.clipboard.writeText(wallet);A.toast(/^TEST/i.test(wallet)?'Test TRC20 address copied. Do not send real funds.':'USDT TRC20 wallet address copied.','success');}
         catch{A.toast('Could not copy automatically. Press and hold the address to copy.','warning');}
         return;
       }
@@ -1411,7 +1411,9 @@
     const usdtDestinationReady = coursePaymentMethodConfigured('usdt');
     const form = document.getElementById('paymentForm');
     form.reset(); form.elements.course_id.value = course.id; form.dataset.supersedesPaymentId = pending?.status==='resubmission_required'?pending.id:''; const payable=course.discount_price!=null?Number(course.discount_price):Number(course.price); form.elements.amount.value = payable;
-    document.getElementById('paymentCourseSummary').innerHTML = `<b>${A.escapeHtml(course.title)}</b><br>Amount: <b>${Number(payable).toLocaleString('en-US',{maximumFractionDigits:2})} USDT</b><br><small>${usdtDestinationReady?'Copy the TRC20 wallet below, make payment, then submit TXID + receipt.':'The payment form is ready, but the real TRC20 wallet address must be added by Admin before funds are sent.'}</small>`
+    const walletPreview=String(usdtMethods[0]?.account_number||'').trim();
+    const walletTest=/^TEST/i.test(walletPreview);
+    document.getElementById('paymentCourseSummary').innerHTML = `<b>${A.escapeHtml(course.title)}</b><br>Amount: <b>${Number(payable).toLocaleString('en-US',{maximumFractionDigits:2})} USDT</b><br><small>${usdtDestinationReady?'Copy the TRC20 wallet below, make payment, then submit TXID + receipt.':walletTest?'Test address is shown below for UI testing only. Do not send real funds.':'The payment form is ready, but the real TRC20 wallet address must be added by Admin before funds are sent.'}</small>`
     document.getElementById('paymentMethodSelect').innerHTML = usdtMethods.map(m => `<option value="${m.id}">${A.escapeHtml(m.name)}</option>`).join('');
     renderPaymentMethodInfo();
     document.getElementById('paymentMethodSelect').onchange = renderPaymentMethodInfo;
@@ -1473,6 +1475,7 @@
     if(!method){box.innerHTML='';return;}
     const wallet=String(method.account_number||'').trim();
     const ready=validTrc20Address(wallet);
+    const isTest=/^TEST/i.test(wallet);
     box.innerHTML = ready
       ? `<div class="usdt-wallet-card">
           <div class="usdt-wallet-top">
@@ -1487,7 +1490,21 @@
           </div>
           <div class="usdt-wallet-note"><i class="fa-solid fa-circle-info"></i><span>Send only <b>USDT on TRC20 network</b> to this address. After payment, paste the TXID below and upload your receipt.</span></div>
         </div>`
-      : `<div class="notice warn usdt-wallet-missing"><b>TRC20 wallet address is not configured yet.</b><br>Admin must add the real wallet address before any client sends funds.</div>`;
+      : isTest
+        ? `<div class="usdt-wallet-card usdt-test-wallet">
+            <div class="usdt-wallet-top">
+              <span class="usdt-wallet-icon"><i class="fa-solid fa-flask"></i></span>
+              <div><small>TEST MODE</small><b>USDT · TRC20</b></div>
+              <span class="usdt-network-badge test">TEST</span>
+            </div>
+            <div class="usdt-wallet-address">
+              <small>TEST PAYMENT ADDRESS</small>
+              <code>${A.escapeHtml(wallet)}</code>
+              <button type="button" data-copy-usdt-wallet="${attr(wallet)}"><i class="fa-regular fa-copy"></i> Copy Test Address</button>
+            </div>
+            <div class="usdt-wallet-note danger"><i class="fa-solid fa-triangle-exclamation"></i><span><b>Do not send real funds.</b> This is only a temporary test address. Replace it from Admin before going live.</span></div>
+          </div>`
+        : `<div class="notice warn usdt-wallet-missing"><b>TRC20 wallet address is not configured yet.</b><br>Admin must add the real wallet address before any client sends funds.</div>`;
   }
 
   async function submitBankPayment(event) {
