@@ -1,0 +1,109 @@
+/* 24K MR ZERO — Flat premium mobile signal row v12.36
+   Removes the boxed 4-cell look. Keeps white/cream alternating rows. */
+@media(max-width:760px){
+  .student-page .mobile-signal-four>summary{
+    min-height:72px!important;
+    padding:10px 10px 10px 12px!important;
+    grid-template-columns:1.08fr 1.08fr 1.04fr .86fr 18px!important;
+    gap:0!important;
+    align-items:center!important;
+  }
+
+  /* Remove individual mini boxes */
+  .student-page .mobile-signal-four>summary>.msa-main-date,
+  .student-page .mobile-signal-four>summary>.msa-main-pair,
+  .student-page .mobile-signal-four>summary>.msa-main-entry,
+  .student-page .mobile-signal-four>summary>.msa-direction{
+    min-width:0!important;
+    min-height:48px!important;
+    padding:6px 10px!important;
+    display:grid!important;
+    align-content:center!important;
+    border:0!important;
+    border-radius:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+  }
+
+  /* Soft separators instead of boxes */
+  .student-page .mobile-signal-four>summary>.msa-main-pair,
+  .student-page .mobile-signal-four>summary>.msa-main-entry,
+  .student-page .mobile-signal-four>summary>.msa-direction{
+    border-left:1px solid rgba(18,22,28,.07)!important;
+  }
+  html[data-theme="dark"] .student-page .mobile-signal-four>summary>.msa-main-pair,
+  html[data-theme="dark"] .student-page .mobile-signal-four>summary>.msa-main-entry,
+  html[data-theme="dark"] .student-page .mobile-signal-four>summary>.msa-direction{
+    border-left-color:rgba(255,255,255,.055)!important;
+  }
+
+  /* Pair gets emphasis through typography only */
+  .student-page .msa-main-pair b{
+    color:#9A7000!important;
+    font-size:11.2px!important;
+    font-weight:950!important;
+  }
+  html[data-theme="dark"] .student-page .msa-main-pair b{
+    color:#F0B90B!important;
+  }
+
+  .student-page .msa-main-date b,
+  .student-page .msa-main-entry b{
+    font-size:10.7px!important;
+    font-weight:900!important;
+  }
+
+  .student-page .msa-main-date em,
+  .student-page .msa-main-pair em{
+    font-size:6.4px!important;
+    color:#7D8590!important;
+  }
+
+  /* Direction remains the only chip */
+  .student-page .mobile-signal-four .msa-direction{
+    justify-items:center!important;
+  }
+  .student-page .mobile-signal-four .msa-direction .table-direction{
+    width:auto!important;
+    min-width:50px!important;
+    min-height:28px!important;
+    padding:0 10px!important;
+    border-radius:9px!important;
+  }
+
+  /* Keep alternating white / cream parent row */
+  .student-page .mobile-signal-list>.mobile-signal-four:nth-child(odd){
+    background:#FFFFFF!important;
+  }
+  .student-page .mobile-signal-list>.mobile-signal-four:nth-child(even){
+    background:linear-gradient(145deg,#FFFDF8,#FBF4E7)!important;
+  }
+  html[data-theme="dark"] .student-page .mobile-signal-list>.mobile-signal-four:nth-child(odd){
+    background:#181A20!important;
+  }
+  html[data-theme="dark"] .student-page .mobile-signal-list>.mobile-signal-four:nth-child(even){
+    background:linear-gradient(145deg,#1C1D20,#17191D)!important;
+  }
+
+  /* Cleaner row edge */
+  .student-page .mobile-signal-four{
+    border-radius:13px!important;
+    box-shadow:0 7px 18px rgba(18,22,28,.04)!important;
+  }
+  html[data-theme="dark"] .student-page .mobile-signal-four{
+    box-shadow:0 8px 20px rgba(0,0,0,.18)!important;
+  }
+}
+
+@media(max-width:390px){
+  .student-page .mobile-signal-four>summary{
+    grid-template-columns:1.03fr 1.04fr 1fr .82fr 16px!important;
+    padding:9px 8px 9px 10px!important;
+  }
+  .student-page .mobile-signal-four>summary>.msa-main-date,
+  .student-page .mobile-signal-four>summary>.msa-main-pair,
+  .student-page .mobile-signal-four>summary>.msa-main-entry,
+  .student-page .mobile-signal-four>summary>.msa-direction{
+    padding:6px 7px!important;
+  }
+}
