@@ -987,6 +987,13 @@
     renderAccessSelection();
   }
 
+  function brokerGuidePointsHtml(text){
+    const raw=String(text||'').trim();
+    if(!raw)return '<li>Follow the broker instructions shown here.</li>';
+    const parts=raw.split(/\s*→\s*/).map(x=>x.trim()).filter(Boolean);
+    return parts.map((item,index)=>`<li><span>${String(index+1).padStart(2,'0')}</span><p>${A.escapeHtml(item)}</p></li>`).join('');
+  }
+
   function renderPremiumTab(){
     const status=document.getElementById('premiumPageStatus');
     const flow=document.getElementById('premiumPageFlow');
@@ -1036,7 +1043,7 @@
         <button type="button" class="${premiumPageState.mode==='new'?'is-active':''}" data-premium-page-mode="new"><span><i class="fa-solid fa-user-plus"></i></span><div><b>Create New Account</b><small>Open a new broker account through our official partner link.</small></div></button>
         <button type="button" class="${premiumPageState.mode==='existing'?'is-active':''}" data-premium-page-mode="existing"><span><i class="fa-solid fa-right-left"></i></span><div><b>Shift Existing Account</b><small>Link or change your existing broker account.</small></div></button>
       </div>
-      <div class="premium-broker-guide"><small>${A.escapeHtml(premiumPageState.broker)} · ${premiumPageState.mode==='existing'?'EXISTING ACCOUNT':'NEW ACCOUNT'}</small><p>${A.escapeHtml(guide)}</p></div>
+      <div class="premium-broker-guide"><small>${A.escapeHtml(premiumPageState.broker)} · ${premiumPageState.mode==='existing'?'EXISTING ACCOUNT':'NEW ACCOUNT'}</small><h4>Instructions</h4><ol class="premium-broker-instructions">${brokerGuidePointsHtml(guide)}</ol></div>
       <div class="premium-partner-link"><div><small>OFFICIAL PARTNER LINK</small><b>${A.escapeHtml(meta.url)}</b></div><a class="app-btn gold" href="${attr(meta.url)}" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Link</a><button type="button" class="app-btn outline" data-premium-page-copy="${attr(meta.url)}"><i class="fa-regular fa-copy"></i> Copy</button></div>
       <button type="button" class="app-btn gold premium-verify-btn" data-premium-page-verify ${brokerEnabled?'':'disabled'}><i class="fa-solid fa-shield-check"></i> Continue to Verification</button>`:`<div class="premium-page-hint"><i class="fa-solid fa-hand-pointer"></i><span>Choose Exness, XM or DPrime to continue.</span></div>`}`;
       return;
