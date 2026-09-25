@@ -83,17 +83,23 @@ function methodConfigured(type){
  const m=methodMatch(type);if(!m)return false;
  const account=String(m.account_number||'').trim();
  if(!account||/^(—|-|n\/a|na)$/i.test(account))return false;
- if(type==='usdt'&&/^(usdt\s*)?(trc\s*20|trc20)$/i.test(account))return false;
+ if(type==='usdt'&&(/^TEST/i.test(account)||/^(usdt\s*)?(trc\s*20|trc20)$/i.test(account)))return false;
  if(String(m.name||'').trim().toLowerCase()===account.toLowerCase())return false;
  return true;
 }
 function renderMethodInfo(type){
  const m=methodMatch(type);
  if(type==='bank'){
-   const el=$('#premiumBankMethodInfo');if(el)el.innerHTML=m?`<div class="notice info"><b>${esc(m.name)}</b><br>Account title: ${esc(m.account_title||'—')}<br>Account / Number: ${esc(m.account_number||'—')}<br>${esc(m.instructions||'')}</div>`:'<div class="notice warn">Local Bank details are not configured. Contact support before paying.</div>';
-   const s=$('#premiumBankSummary');if(s&&access)s.innerHTML=`Premium Market Access · <b>${money(access.price_pkr,'PKR')}</b> · ${Number(access.monthly_days||30)} days`;
+   const el=$('#premiumBankMethodInfo');if(el)el.innerHTML=m?`<div class="premium-payment-destination"><div class="ppd-top"><span><i class="fa-solid fa-building-columns"></i></span><div><small>PAYMENT METHOD</small><b>${esc(m.name)}</b></div></div><div class="ppd-details"><span><small>ACCOUNT TITLE</small><b>${esc(m.account_title||'—')}</b></span><span><small>ACCOUNT / IBAN</small><b>${esc(m.account_number||'—')}</b></span></div><p>${esc(m.instructions||'Transfer the exact amount and submit the payment reference + receipt below.')}</p></div>`:'<div class="notice warn">Local Bank details are not configured. Contact support before paying.</div>';
+   const s=$('#premiumBankSummary');if(s&&access)s.innerHTML=`<b>30-Day Premium Market Access</b><br>Amount: <b>${money(access.price_pkr,'PKR')}</b><br><small>Access activates/extends for ${Number(access.monthly_days||30)} days after Admin approves your payment.</small>`;
  }else{
-   const s=$('#premiumUsdtSummary');if(s&&access)s.innerHTML=`Premium Market Access · <b>$${Number(access.price_usdt||0).toLocaleString()}</b> USDT · ${Number(access.monthly_days||30)} days`;
+   const s=$('#premiumUsdtSummary');if(s&&access)s.innerHTML=`<b>30-Day Premium Market Access</b><br>Amount: <b>${Number(access.price_usdt||0).toLocaleString()} USDT</b><br><small>Copy the TRC20 wallet below, pay, then submit TXID + receipt. Access activates after Admin approval.</small>`;
+   const el=$('#premiumUsdtMethodInfo');
+   if(el){
+     const wallet=String(m?.account_number||'').trim();
+     const live=Boolean(m)&&methodConfigured('usdt');
+     el.innerHTML=live?`<div class="usdt-wallet-card premium-usdt-wallet"><div class="usdt-wallet-top"><span class="usdt-wallet-icon"><i class="fa-solid fa-coins"></i></span><div><small>NETWORK</small><b>USDT · TRC20</b></div><span class="usdt-network-badge">TRON</span></div><div class="usdt-wallet-address"><small>PAYMENT WALLET ADDRESS</small><code>${esc(wallet)}</code><button type="button" data-copy-premium-wallet="${esc(wallet)}"><i class="fa-regular fa-copy"></i> Copy Address</button></div><div class="usdt-wallet-note"><i class="fa-solid fa-circle-info"></i><span>Send only <b>USDT on TRC20 network</b>. After payment, paste the TXID below and upload your receipt.</span></div></div>`:`<div class="notice warn"><b>USDT TRC20 wallet is not configured yet.</b><br>Admin must add the real wallet address before real funds are sent.</div>`;
+   }
  }
 }
 async function upload(bucket,file,folder){
@@ -114,7 +120,11 @@ async function submitPremium(e,type){
    path=await upload('payment-receipts',file,`premium-${type}`);
    const name=type==='bank'?'submit_premium_bank_payment':'submit_premium_usdt_payment';
    const r=await sb.rpc(name,{p_reference:reference,p_receipt_path:path,p_note:String(fd.get('student_note')||'').trim()||null});
-   if(r.error)throw r.error;path='';f.reset();A.closeModal(type==='bank'?'premiumBankModal':'premiumUsdtModal');A.toast?.('Premium payment submitted for Admin review.','success');await load();
+   if(r.error)throw r.error;path='';f.reset();A.closeModal(type==='bank'?'premiumBankModal':'premiumUsdtModal');
+   const successBody=$('#premiumPaymentSuccessBody');
+   if(successBody)successBody.innerHTML=`<span class="payment-success-icon"><i class="fa-solid fa-check"></i></span><small>PAYMENT SUBMITTED</small><h3>30-Day Premium Access</h3><p>Your ${type==='bank'?'bank transfer':'USDT TRC20 payment'} proof has been received.</p><div class="payment-success-state"><i class="fa-solid fa-clock"></i><div><b>Under Admin Review</b><span>After approval, Premium Market Access will be activated/extended for ${Number(access?.monthly_days||30)} days.</span></div></div>`;
+   A.openModal('premiumPaymentSuccessModal');
+   A.toast?.('Premium payment submitted for Admin review.','success');await load();
  }catch(e2){if(path)await sb.storage.from('payment-receipts').remove([path]).catch(()=>{});err(e2,'Could not submit Premium payment.')}finally{A.setLoading(b,false)}
 }
 function brokerGuide(){
@@ -167,6 +177,8 @@ async function submitIb(e){
  }catch(e2){if(uploaded.length)await sb.storage.from('ib-proofs').remove(uploaded).catch(()=>{});err(e2,'Could not submit Broker verification.')}finally{A.setLoading(b,false)}
 }
 document.addEventListener('click',e=>{
+ const copyWallet=e.target.closest('[data-copy-premium-wallet]');
+ if(copyWallet){e.preventDefault();const wallet=String(copyWallet.dataset.copyPremiumWallet||'').trim();if(wallet)navigator.clipboard.writeText(wallet).then(()=>A.toast?.('USDT TRC20 wallet copied.','success')).catch(()=>A.toast?.('Could not copy wallet automatically.','warning'));return}
  const manage=e.target.closest('#managePremiumAccess,#premiumAccessRow');if(manage){e.preventDefault();openAccess();return}
  const st=e.target.closest('[data-access-step-target]');if(st){e.preventDefault();step(st.dataset.accessStepTarget);return}
  const broker=e.target.closest('[data-broker-select]');if(broker){selectedBroker=broker.dataset.brokerSelect;$$('[data-broker-select]').forEach(x=>x.classList.toggle('active',x===broker));brokerGuide();return}
