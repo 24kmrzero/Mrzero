@@ -407,3 +407,29 @@
     padding-bottom:calc(18px + env(safe-area-inset-bottom))!important;
   }
 }
+
+
+/* v13.01 — six-item mobile navigator */
+@media(max-width:760px){
+  .student-mobile-nav{
+    grid-template-columns:repeat(6,minmax(0,1fr))!important;
+    padding:5px 4px!important;
+    gap:1px!important;
+  }
+  .student-mobile-nav button{
+    min-width:0!important;
+    width:100%!important;
+    padding:0 1px!important;
+    font-size:7.6px!important;
+    gap:2px!important;
+  }
+  .student-mobile-nav button i{
+    font-size:13px!important;
+  }
+  .student-mobile-nav button span{
+    max-width:100%!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+  }
+}
