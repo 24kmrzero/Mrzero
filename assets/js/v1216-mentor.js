@@ -1,6 +1,6 @@
 (function(){
 'use strict';
-/* mentor build 13.27 */
+/* mentor build 13.28 */
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js',{scope:'/'}).catch(e=>console.warn('[24K Mentor PWA]',e?.message||e)));
 }
@@ -400,32 +400,89 @@ function signalActionButtons(s){
 }
 function renderSignalDetail(id){
   const s=(state.signals||[]).find(x=>String(x.id)===String(id)),box=$('#mentorSignalDetailContent');if(!s||!box)return;
-  const current=s.result_pips==null?'—':pipText(Number(s.result_pips));
-  const level=(label,value,tone='')=>`<div><small>${label}</small><b class="${tone}">${esc(value??'—')}</b></div>`;
-  const actions=signalIsClosed(s)?`<button class="mentor-manage-action edit" data-edit-signal="${s.id}"><i class="fa-solid fa-pen"></i> Edit</button>`:`
-    ${s.take_profit_1!=null&&Number(s.tp_hit||0)<1?`<button class="mentor-manage-action tp" data-signal-action="tp1_hit" data-id="${s.id}">TP1 Hit</button>`:''}
-    ${s.take_profit_2!=null&&Number(s.tp_hit||0)<2?`<button class="mentor-manage-action tp" data-signal-action="tp2_hit" data-id="${s.id}">TP2 Hit</button>`:''}
-    ${s.take_profit_3!=null&&Number(s.tp_hit||0)<3?`<button class="mentor-manage-action tp" data-signal-action="tp3_hit" data-id="${s.id}">TP3 Hit</button>`:''}
-    ${s.take_profit_4!=null&&Number(s.tp_hit||0)<4?`<button class="mentor-manage-action tp" data-signal-action="tp4_hit" data-id="${s.id}">TP4 Hit</button>`:''}
-    ${!s.be_moved?`<button class="mentor-manage-action be" data-signal-action="move_to_be" data-id="${s.id}">SL → BE</button>`:''}
-    <button class="mentor-manage-action be-hit" data-signal-action="breakeven_hit" data-id="${s.id}">BE Hit</button>
-    <button class="mentor-manage-action sl" data-signal-action="sl_hit" data-id="${s.id}">SL Hit</button>
-    <button class="mentor-manage-action close" data-signal-action="manually_closed" data-id="${s.id}">Close</button>
-    <button class="mentor-manage-action edit" data-edit-signal="${s.id}">Edit</button>
-    <button class="mentor-manage-action cancel" data-signal-action="cancelled" data-id="${s.id}">Cancel</button>`;
-  box.innerHTML=`<section class="mentor-manage-signal">
-    <div class="mentor-manage-summary">
-      <div><small>Pair / Type</small><b>${esc(s.symbol)} · ${esc(signalTypeLabel(s))}</b></div>
-      <div><small>Status</small><b>${esc(signalStatusLabel(s.status))}</b></div>
-      <div><small>Pips</small><b>${current}</b></div>
+  const p=signalPips(s),hasPips=mentorHasRecordedPerformance(s),current=hasPips?pipText(p):'—';
+  const pTone=p>0?'good':p<0?'bad':'neutral';
+  const dir=String(s.direction||'BUY').toLowerCase(),isClosed=signalIsClosed(s);
+  const created=mentorSignalStamp(s.created_at||s.published_at),updated=mentorSignalStamp(s.last_status_at||s.closed_at||s.updated_at||s.created_at);
+  const level=(label,value,tone='',icon='')=>`<div class="mentor-manage-level ${tone}"><span>${icon?`<i class="fa-solid ${icon}"></i>`:''}<small>${label}</small></span><b>${esc(value??'—')}</b></div>`;
+
+  const tpActions=[
+    s.take_profit_1!=null&&Number(s.tp_hit||0)<1?`<button class="mentor-manage-action tp" data-signal-action="tp1_hit" data-id="${s.id}"><i class="fa-solid fa-check"></i><span>TP1 Hit</span></button>`:'',
+    s.take_profit_2!=null&&Number(s.tp_hit||0)<2?`<button class="mentor-manage-action tp" data-signal-action="tp2_hit" data-id="${s.id}"><i class="fa-solid fa-check"></i><span>TP2 Hit</span></button>`:'',
+    s.take_profit_3!=null&&Number(s.tp_hit||0)<3?`<button class="mentor-manage-action tp" data-signal-action="tp3_hit" data-id="${s.id}"><i class="fa-solid fa-check"></i><span>TP3 Hit</span></button>`:'',
+    s.take_profit_4!=null&&Number(s.tp_hit||0)<4?`<button class="mentor-manage-action tp" data-signal-action="tp4_hit" data-id="${s.id}"><i class="fa-solid fa-check"></i><span>TP4 Hit</span></button>`:''
+  ].filter(Boolean).join('');
+
+  const protectionActions=!isClosed?[
+    !s.be_moved?`<button class="mentor-manage-action be" data-signal-action="move_to_be" data-id="${s.id}"><i class="fa-solid fa-shield-halved"></i><span>SL → BE</span></button>`:'',
+    `<button class="mentor-manage-action be-hit" data-signal-action="breakeven_hit" data-id="${s.id}"><i class="fa-solid fa-scale-balanced"></i><span>BE Hit</span></button>`,
+    `<button class="mentor-manage-action edit" data-edit-signal="${s.id}"><i class="fa-solid fa-pen"></i><span>Edit</span></button>`
+  ].filter(Boolean).join(''):`<button class="mentor-manage-action edit wide" data-edit-signal="${s.id}"><i class="fa-solid fa-pen"></i><span>Edit Signal</span></button>`;
+
+  const closeActions=!isClosed?[
+    `<button class="mentor-manage-action close" data-signal-action="manually_closed" data-id="${s.id}"><i class="fa-solid fa-flag-checkered"></i><span>Close</span></button>`,
+    `<button class="mentor-manage-action sl" data-signal-action="sl_hit" data-id="${s.id}"><i class="fa-solid fa-shield"></i><span>SL Hit</span></button>`,
+    `<button class="mentor-manage-action cancel" data-signal-action="cancelled" data-id="${s.id}"><i class="fa-solid fa-ban"></i><span>Cancel</span></button>`
+  ].join(''):'';
+
+  box.innerHTML=`<section class="mentor-manage-signal premium">
+    <div class="mentor-manage-hero ${dir}">
+      <div class="mentor-manage-hero-main">
+        <span class="mentor-manage-pair-icon ${dir}"><i class="fa-solid ${dir==='sell'?'fa-arrow-trend-down':'fa-arrow-trend-up'}"></i></span>
+        <div>
+          <small>TRADE SIGNAL</small>
+          <h3>${esc(mentorDisplaySymbol(s.symbol))}</h3>
+          <div class="mentor-manage-badges"><span class="mentor-type-badge ${dir}">${esc(signalTypeLabel(s))}</span>${statusChip(s.status)}</div>
+        </div>
+      </div>
+      <div class="mentor-manage-hero-result ${pTone}">
+        <small>${isClosed?'OFFICIAL RESULT':'RUNNING / RECORDED'}</small>
+        <b>${current}</b>
+        <span>${isClosed?'Final signal outcome':'Current recorded performance'}</span>
+      </div>
+      <div class="mentor-manage-timeline">
+        <span><i class="fa-regular fa-clock"></i><small>Created</small><b>${esc(created.date)} · ${esc(created.time)}</b></span>
+        <span><i class="fa-solid fa-rotate"></i><small>Last update</small><b>${esc(updated.date)} · ${esc(updated.time)}</b></span>
+      </div>
     </div>
-    <div class="mentor-manage-levels">
-      ${level('Entry',s.entry_from)}${level('SL',s.stop_loss,'red')}${level('TP1',s.take_profit_1,'green')}
-      ${level('TP2',s.take_profit_2,'green')}${level('TP3',s.take_profit_3,'green')}${level('TP4',s.take_profit_4,'green')}
+
+    <div class="mentor-manage-section">
+      <div class="mentor-manage-section-head"><div><span class="num">01</span><div><small>TRADE LEVELS</small><b>Entry & Targets</b></div></div><span>Execution map</span></div>
+      <div class="mentor-manage-levels premium-levels">
+        ${level('Entry',s.entry_from,'entry','fa-location-crosshairs')}
+        ${level('Stop Loss',s.stop_loss,'sl','fa-shield-halved')}
+        ${level('TP1',s.take_profit_1,'tp','fa-bullseye')}
+        ${level('TP2',s.take_profit_2,'tp','fa-bullseye')}
+        ${level('TP3',s.take_profit_3,'tp','fa-bullseye')}
+        ${level('TP4',s.take_profit_4,'tp','fa-bullseye')}
+      </div>
     </div>
-    <div class="mentor-manage-actions">${actions}</div>
-    ${s.notes?`<div class="mentor-signal-note"><small>NOTE</small><p>${esc(s.notes)}</p></div>`:''}
-    <div class="mentor-running-pips"><small>RUNNING / RESULT PIPS</small><b>${current}</b><span>Use the management buttons above to record the official result.</span></div>
+
+    ${!isClosed&&tpActions?`<div class="mentor-manage-action-group">
+      <div class="mentor-manage-section-head compact"><div><span class="num">02</span><div><small>PROFIT MANAGEMENT</small><b>Take Profit Actions</b></div></div></div>
+      <div class="mentor-manage-actions tp-group">${tpActions}</div>
+    </div>`:''}
+
+    <div class="mentor-manage-action-group">
+      <div class="mentor-manage-section-head compact"><div><span class="num">${!isClosed&&tpActions?'03':'02'}</span><div><small>RISK CONTROL</small><b>${isClosed?'Signal Controls':'Protection & Adjustment'}</b></div></div></div>
+      <div class="mentor-manage-actions protection-group">${protectionActions}</div>
+    </div>
+
+    ${closeActions?`<div class="mentor-manage-action-group danger-zone">
+      <div class="mentor-manage-section-head compact"><div><span class="num">04</span><div><small>FINAL OUTCOME</small><b>Close Signal</b></div></div><span>Use carefully</span></div>
+      <div class="mentor-manage-actions close-group">${closeActions}</div>
+    </div>`:''}
+
+    <div class="mentor-manage-note-result">
+      <div class="mentor-signal-note premium-note">
+        <div class="mentor-note-head"><span><i class="fa-regular fa-note-sticky"></i></span><div><small>SIGNAL NOTE</small><b>Trade Guidance</b></div></div>
+        <p>${s.notes?esc(s.notes):'No note added for this signal.'}</p>
+      </div>
+      <div class="mentor-running-pips premium-result ${pTone}">
+        <div class="mentor-result-head"><span><i class="fa-solid fa-chart-line"></i></span><div><small>RUNNING / RESULT PIPS</small><b>${current}</b></div></div>
+        <p>${isClosed?'Official result recorded for this signal.':'Use the management actions above to record the official result.'}</p>
+      </div>
+    </div>
   </section>`;
   openModal('signalDetail')
 }
