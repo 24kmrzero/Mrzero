@@ -1338,6 +1338,7 @@
 
   function validTrc20Address(value){
     const v=String(value||'').trim();
+    if(/^TEST/i.test(v)) return false;
     return /^T[1-9A-HJ-NP-Za-km-z]{33}$/.test(v);
   }
 
