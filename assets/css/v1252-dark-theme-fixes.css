@@ -1,0 +1,234 @@
+/* 24K MR ZERO — Student Dark Theme contrast fixes v12.52 */
+html[data-theme="dark"] body.student-page{
+  --ex-ink:#F5F7FA!important;
+  --ex-muted:#9AA4B2!important;
+  --ex-faint:#6F7886!important;
+  --ex-surface:#181A20!important;
+  --ex-surface-2:#202229!important;
+  --ex-line:rgba(255,255,255,.075)!important;
+  --s-text:#F5F7FA!important;
+  --s-muted:#9AA4B2!important;
+  --s-faint:#6F7886!important;
+  --s-surface:#181A20!important;
+  --s-surface-2:#202229!important;
+  --s-line:rgba(255,255,255,.075)!important;
+}
+
+/* ---------- PROFILE / ACCESS ---------- */
+html[data-theme="dark"] body.student-page #p-profile{
+  color:#F5F7FA!important;
+}
+html[data-theme="dark"] body.student-page #p-profile .profile-premium-hero,
+html[data-theme="dark"] body.student-page #p-profile .account-access-row,
+html[data-theme="dark"] body.student-page #p-profile .personal-info-card,
+html[data-theme="dark"] body.student-page #p-profile .premium-history-details{
+  background:#181A20!important;
+  border-color:rgba(255,255,255,.07)!important;
+}
+html[data-theme="dark"] body.student-page #p-profile .profile-premium-hero{
+  background:
+    radial-gradient(420px 180px at 92% 0,rgba(252,213,53,.08),transparent 70%),
+    linear-gradient(145deg,#1C1E23,#15171B 66%,#1C190D)!important;
+}
+html[data-theme="dark"] body.student-page #p-profile .profile-hero-copy h2,
+html[data-theme="dark"] body.student-page #p-profile .profile-hero-meta b,
+html[data-theme="dark"] body.student-page #p-profile .profile-hero-access b,
+html[data-theme="dark"] body.student-page #p-profile .profile-hero-access-meta b,
+html[data-theme="dark"] body.student-page #p-profile .account-row-copy h3,
+html[data-theme="dark"] body.student-page #p-profile .profile-info-head h3,
+html[data-theme="dark"] body.student-page #p-profile .app-card-head h3,
+html[data-theme="dark"] body.student-page #p-profile .premium-history-details summary,
+html[data-theme="dark"] body.student-page #p-profile .payment-table td,
+html[data-theme="dark"] body.student-page #p-profile .form-field input,
+html[data-theme="dark"] body.student-page #p-profile .form-field select,
+html[data-theme="dark"] body.student-page #p-profile .form-field textarea{
+  color:#F5F7FA!important;
+}
+html[data-theme="dark"] body.student-page #p-profile .profile-hero-copy>p,
+html[data-theme="dark"] body.student-page #p-profile .profile-hero-access p,
+html[data-theme="dark"] body.student-page #p-profile .account-row-copy p,
+html[data-theme="dark"] body.student-page #p-profile .profile-info-head p,
+html[data-theme="dark"] body.student-page #p-profile .app-card-head p,
+html[data-theme="dark"] body.student-page #p-profile .form-field label,
+html[data-theme="dark"] body.student-page #p-profile .premium-history-details summary small,
+html[data-theme="dark"] body.student-page #p-profile .payment-table th{
+  color:#9AA4B2!important;
+  opacity:1!important;
+}
+html[data-theme="dark"] body.student-page #p-profile .profile-hero-meta>span,
+html[data-theme="dark"] body.student-page #p-profile .profile-hero-access,
+html[data-theme="dark"] body.student-page #p-profile .profile-hero-access-meta>span{
+  background:#202229!important;
+  border-color:rgba(255,255,255,.07)!important;
+}
+html[data-theme="dark"] body.student-page #p-profile .form-field input,
+html[data-theme="dark"] body.student-page #p-profile .form-field select,
+html[data-theme="dark"] body.student-page #p-profile .form-field textarea{
+  background:#111318!important;
+  border-color:rgba(255,255,255,.10)!important;
+  -webkit-text-fill-color:#F5F7FA!important;
+  opacity:1!important;
+}
+html[data-theme="dark"] body.student-page #p-profile .form-field input::placeholder,
+html[data-theme="dark"] body.student-page #p-profile .form-field textarea::placeholder{
+  color:#6F7886!important;
+  -webkit-text-fill-color:#6F7886!important;
+  opacity:1!important;
+}
+html[data-theme="dark"] body.student-page #p-profile .premium-history-details{
+  box-shadow:none!important;
+}
+html[data-theme="dark"] body.student-page #p-profile .premium-history-details summary{
+  background:#181A20!important;
+  border-color:rgba(255,255,255,.07)!important;
+}
+html[data-theme="dark"] body.student-page #p-profile .premium-history-details[open] summary{
+  background:#1D1F25!important;
+}
+html[data-theme="dark"] body.student-page #p-profile .premium-history-body,
+html[data-theme="dark"] body.student-page #p-profile .premium-history-details .table-scroll{
+  background:#15171B!important;
+  border-color:rgba(255,255,255,.07)!important;
+}
+html[data-theme="dark"] body.student-page #p-profile .payment-table tr,
+html[data-theme="dark"] body.student-page #p-profile .payment-table td,
+html[data-theme="dark"] body.student-page #p-profile .payment-table th{
+  background:transparent!important;
+  border-color:rgba(255,255,255,.06)!important;
+}
+
+/* ---------- SIGNALS ---------- */
+html[data-theme="dark"] body.student-page #p-signals .mobile-signal-list>.mobile-signal-four,
+html[data-theme="dark"] body.student-page #p-signals .mobile-signal-list>.mobile-signal-four:nth-child(odd),
+html[data-theme="dark"] body.student-page #p-signals .mobile-signal-list>.mobile-signal-four:nth-child(even){
+  background:#181A20!important;
+  border-color:rgba(255,255,255,.075)!important;
+  color:#F5F7FA!important;
+}
+html[data-theme="dark"] body.student-page #p-signals .mobile-signal-list>.mobile-signal-four:nth-child(even){
+  background:linear-gradient(145deg,#1D1F24,#181A20)!important;
+  border-color:rgba(240,185,11,.12)!important;
+}
+html[data-theme="dark"] body.student-page #p-signals .mobile-signal-four>summary{
+  background:transparent!important;
+  color:#F5F7FA!important;
+}
+html[data-theme="dark"] body.student-page #p-signals .mobile-signal-four>summary>.msa-main-date,
+html[data-theme="dark"] body.student-page #p-signals .mobile-signal-four>summary>.msa-main-pair,
+html[data-theme="dark"] body.student-page #p-signals .mobile-signal-four>summary>.msa-main-entry,
+html[data-theme="dark"] body.student-page #p-signals .mobile-signal-four>summary>.msa-direction{
+  background:transparent!important;
+  color:#F5F7FA!important;
+  box-shadow:none!important;
+}
+html[data-theme="dark"] body.student-page #p-signals .mobile-signal-four>summary>.msa-main-pair,
+html[data-theme="dark"] body.student-page #p-signals .mobile-signal-four>summary>.msa-main-entry,
+html[data-theme="dark"] body.student-page #p-signals .mobile-signal-four>summary>.msa-direction{
+  border-left-color:rgba(255,255,255,.06)!important;
+}
+html[data-theme="dark"] body.student-page #p-signals .msa-main-date b,
+html[data-theme="dark"] body.student-page #p-signals .msa-main-entry b{
+  color:#F5F7FA!important;
+}
+html[data-theme="dark"] body.student-page #p-signals .msa-main-pair b{
+  color:#F0B90B!important;
+}
+html[data-theme="dark"] body.student-page #p-signals .msa-main-date small,
+html[data-theme="dark"] body.student-page #p-signals .msa-main-pair small,
+html[data-theme="dark"] body.student-page #p-signals .msa-main-entry small,
+html[data-theme="dark"] body.student-page #p-signals .msa-direction>small,
+html[data-theme="dark"] body.student-page #p-signals .msa-main-date em,
+html[data-theme="dark"] body.student-page #p-signals .msa-main-pair em{
+  color:#8D96A3!important;
+  opacity:1!important;
+}
+html[data-theme="dark"] body.student-page #p-signals .msa-chevron{
+  background:#20242C!important;
+  color:#8D96A3!important;
+}
+html[data-theme="dark"] body.student-page #p-signals .mobile-signal-accordion[open] .msa-chevron{
+  color:#F0B90B!important;
+}
+html[data-theme="dark"] body.student-page #p-signals .msa-details{
+  background:#15171B!important;
+  border-top-color:rgba(255,255,255,.07)!important;
+}
+html[data-theme="dark"] body.student-page #p-signals .msa-details>span{
+  background:#202229!important;
+  border-color:rgba(255,255,255,.06)!important;
+}
+html[data-theme="dark"] body.student-page #p-signals .msa-details small{color:#8D96A3!important}
+html[data-theme="dark"] body.student-page #p-signals .msa-details b{color:#F5F7FA!important}
+
+/* Signals top cards / workspace */
+html[data-theme="dark"] body.student-page #p-signals .signal-summary-card,
+html[data-theme="dark"] body.student-page #p-signals .signal-workspace-tabs,
+html[data-theme="dark"] body.student-page #p-signals #signalsGrid{
+  background:#181A20!important;
+  border-color:rgba(255,255,255,.075)!important;
+}
+html[data-theme="dark"] body.student-page #p-signals .signal-summary-card strong,
+html[data-theme="dark"] body.student-page #p-signals .signal-summary-card b{
+  color:#F5F7FA!important;
+}
+html[data-theme="dark"] body.student-page #p-signals .signal-summary-card small{
+  color:#9AA4B2!important;
+  opacity:1!important;
+}
+html[data-theme="dark"] body.student-page #p-signals [data-signal-view]{
+  color:#9AA4B2!important;
+}
+html[data-theme="dark"] body.student-page #p-signals [data-signal-view].active{
+  color:#F0B90B!important;
+  background:rgba(240,185,11,.10)!important;
+}
+
+/* ---------- PREMIUM ---------- */
+html[data-theme="dark"] body.student-page #p-premium .premium-page-hero,
+html[data-theme="dark"] body.student-page #p-premium .premium-page-flow{
+  background:#181A20!important;
+  border-color:rgba(255,255,255,.075)!important;
+}
+html[data-theme="dark"] body.student-page #p-premium h2,
+html[data-theme="dark"] body.student-page #p-premium h3,
+html[data-theme="dark"] body.student-page #p-premium h4,
+html[data-theme="dark"] body.student-page #p-premium b{
+  color:#F5F7FA;
+}
+html[data-theme="dark"] body.student-page #p-premium p,
+html[data-theme="dark"] body.student-page #p-premium .premium-page-benefits small,
+html[data-theme="dark"] body.student-page #p-premium .premium-path-card p{
+  color:#9AA4B2!important;
+  opacity:1!important;
+}
+html[data-theme="dark"] body.student-page #p-premium .premium-page-benefits span,
+html[data-theme="dark"] body.student-page #p-premium .premium-path-card,
+html[data-theme="dark"] body.student-page #p-premium .premium-action-card{
+  background:#202229!important;
+  border-color:rgba(255,255,255,.07)!important;
+}
+html[data-theme="dark"] body.student-page #p-premium .premium-path-card.has-pending{
+  background:linear-gradient(145deg,rgba(240,185,11,.12),#202229)!important;
+  border-color:rgba(240,185,11,.24)!important;
+}
+
+/* Bottom nav stays premium dark, no washed-out layer */
+html[data-theme="dark"] body.student-page .student-mobile-nav{
+  background:#111318!important;
+  border-color:rgba(240,185,11,.14)!important;
+  box-shadow:0 -14px 34px rgba(0,0,0,.32)!important;
+}
+html[data-theme="dark"] body.student-page .student-mobile-nav button{
+  color:#8F98A8!important;
+}
+html[data-theme="dark"] body.student-page .student-mobile-nav button.is-active{
+  color:#F0B90B!important;
+  background:rgba(240,185,11,.10)!important;
+}
+
+/* Ensure dark text never leaks from light mode into these pages */
+html[data-theme="dark"] body.student-page #p-profile *,
+html[data-theme="dark"] body.student-page #p-signals *,
+html[data-theme="dark"] body.student-page #p-premium *{
+  text-shadow:none;
+}
