@@ -98,8 +98,13 @@ function renderMethodInfo(type){
    const el=$('#premiumUsdtMethodInfo');
    if(el){
      const wallet=String(m?.account_number||'').trim();
-     const live=Boolean(m)&&methodConfigured('usdt');
-     el.innerHTML=live?`<div class="usdt-wallet-card premium-usdt-wallet"><div class="usdt-wallet-top"><span class="usdt-wallet-icon"><i class="fa-solid fa-coins"></i></span><div><small>NETWORK</small><b>USDT · TRC20</b></div><span class="usdt-network-badge">TRON</span></div><div class="usdt-wallet-address"><small>PAYMENT WALLET ADDRESS</small><code>${esc(wallet)}</code><button type="button" data-copy-premium-wallet="${esc(wallet)}"><i class="fa-regular fa-copy"></i> Copy Address</button></div><div class="usdt-wallet-note"><i class="fa-solid fa-circle-info"></i><span>Send only <b>USDT on TRC20 network</b>. After payment, paste the TXID below and upload your receipt.</span></div></div>`:`<div class="notice warn"><b>USDT TRC20 wallet is not configured yet.</b><br>Admin must add the real wallet address before real funds are sent.</div>`;
+     const isTest=/^TEST/i.test(wallet)||/^TEST/i.test(String(m?.account_title||''));
+     const live=Boolean(m)&&methodConfigured('usdt')&&!isTest;
+     el.innerHTML=isTest
+       ? `<div class="usdt-wallet-card premium-usdt-wallet usdt-test-wallet"><div class="usdt-wallet-top"><span class="usdt-wallet-icon"><i class="fa-solid fa-coins"></i></span><div><small>NETWORK</small><b>USDT · TRC20</b></div><span class="usdt-network-badge test">TEST</span></div><div class="usdt-wallet-address"><small>TEST PAYMENT ADDRESS</small><code>${esc(wallet)}</code><button type="button" data-copy-premium-wallet="${esc(wallet)}"><i class="fa-regular fa-copy"></i> Copy Address</button></div><div class="usdt-wallet-note danger"><i class="fa-solid fa-triangle-exclamation"></i><span><b>TEST MODE:</b> Do not send real funds. This test destination can be submitted only to verify the website flow.</span></div></div>`
+       : live
+         ? `<div class="usdt-wallet-card premium-usdt-wallet"><div class="usdt-wallet-top"><span class="usdt-wallet-icon"><i class="fa-solid fa-coins"></i></span><div><small>NETWORK</small><b>USDT · TRC20</b></div><span class="usdt-network-badge">TRON</span></div><div class="usdt-wallet-address"><small>PAYMENT WALLET ADDRESS</small><code>${esc(wallet)}</code><button type="button" data-copy-premium-wallet="${esc(wallet)}"><i class="fa-regular fa-copy"></i> Copy Address</button></div><div class="usdt-wallet-note"><i class="fa-solid fa-circle-info"></i><span>Send only <b>USDT on TRC20 network</b>. After payment, paste the TXID below and upload your receipt.</span></div></div>`
+         : `<div class="notice warn"><b>USDT TRC20 wallet is not configured yet.</b><br>Admin must add the real wallet address before real funds are sent.</div>`;
    }
  }
 }
