@@ -1,0 +1,264 @@
+/* 24K MR ZERO — Signals Luxe Refinement v12.32 */
+@media(max-width:760px){
+  /* KPI area: quieter surfaces, stronger hierarchy */
+  .student-page #p-signals .signal-summary-grid{
+    gap:7px!important;
+    margin-bottom:9px!important;
+  }
+  .student-page #p-signals .signal-summary-card{
+    border:1px solid rgba(18,22,28,.075)!important;
+    background:
+      linear-gradient(145deg,rgba(255,255,255,.98),rgba(250,250,249,.98))!important;
+    box-shadow:0 7px 20px rgba(18,22,28,.045)!important;
+  }
+  html[data-theme="dark"] .student-page #p-signals .signal-summary-card{
+    border-color:rgba(255,255,255,.055)!important;
+    background:linear-gradient(145deg,#191C22,#15171C)!important;
+    box-shadow:0 8px 22px rgba(0,0,0,.20)!important;
+  }
+  .student-page #p-signals .signal-summary-card:nth-child(5){
+    border-color:rgba(240,185,11,.26)!important;
+    background:
+      radial-gradient(180px 90px at 0 50%,rgba(240,185,11,.095),transparent 75%),
+      linear-gradient(145deg,#fff,#fcfbf7)!important;
+    box-shadow:0 8px 22px rgba(132,99,0,.06)!important;
+  }
+  html[data-theme="dark"] .student-page #p-signals .signal-summary-card:nth-child(5){
+    background:
+      radial-gradient(180px 90px at 0 50%,rgba(240,185,11,.08),transparent 75%),
+      linear-gradient(145deg,#191C22,#15171C)!important;
+  }
+
+  /* Active / History premium segmented bar */
+  .student-page .signal-workspace-switch{
+    padding:5px!important;
+    border:1px solid rgba(18,22,28,.07)!important;
+    border-radius:13px!important;
+    background:rgba(255,255,255,.92)!important;
+    box-shadow:0 7px 18px rgba(18,22,28,.04)!important;
+  }
+  html[data-theme="dark"] .student-page .signal-workspace-switch{
+    border-color:rgba(255,255,255,.055)!important;
+    background:#171A20!important;
+  }
+  .student-page .signal-workspace-switch button{
+    min-height:37px!important;
+    font-size:9.5px!important;
+    font-weight:900!important;
+    letter-spacing:.01em!important;
+  }
+  .student-page .signal-workspace-switch button.active{
+    background:
+      linear-gradient(180deg,rgba(255,216,93,.22),rgba(240,185,11,.11))!important;
+    color:#9B7100!important;
+    box-shadow:inset 0 0 0 1px rgba(240,185,11,.08)!important;
+  }
+  html[data-theme="dark"] .student-page .signal-workspace-switch button.active{
+    background:linear-gradient(180deg,rgba(240,185,11,.15),rgba(240,185,11,.075))!important;
+    color:#F2C42D!important;
+  }
+
+  /* Main signal list */
+  .student-page .mobile-signal-list{
+    gap:7px!important;
+  }
+  .student-page .mobile-signal-four{
+    position:relative!important;
+    overflow:hidden!important;
+    border:1px solid rgba(18,22,28,.075)!important;
+    border-radius:14px!important;
+    background:linear-gradient(145deg,#fff,#fdfdfc)!important;
+    box-shadow:0 8px 22px rgba(18,22,28,.045)!important;
+  }
+  html[data-theme="dark"] .student-page .mobile-signal-four{
+    border-color:rgba(255,255,255,.055)!important;
+    background:linear-gradient(145deg,#191C22,#15171C)!important;
+    box-shadow:0 9px 24px rgba(0,0,0,.20)!important;
+  }
+  .student-page .mobile-signal-four[open]{
+    border-color:rgba(240,185,11,.30)!important;
+    box-shadow:0 10px 26px rgba(108,82,10,.075)!important;
+  }
+  html[data-theme="dark"] .student-page .mobile-signal-four[open]{
+    box-shadow:0 10px 26px rgba(0,0,0,.26)!important;
+  }
+  .student-page .mobile-signal-four[open]::before{
+    content:""!important;
+    position:absolute!important;
+    left:0!important;
+    top:0!important;
+    bottom:0!important;
+    width:3px!important;
+    background:linear-gradient(180deg,#FCD535,#C99100)!important;
+  }
+
+  /* Main row: Date+time | Entry | Pair | Direction */
+  .student-page .mobile-signal-four>summary{
+    min-height:74px!important;
+    padding:10px 10px 10px 12px!important;
+    grid-template-columns:1.12fr 1.12fr .96fr .88fr 20px!important;
+    gap:7px!important;
+  }
+  .student-page .msa-main-date,
+  .student-page .msa-main-entry,
+  .student-page .msa-main-pair,
+  .student-page .msa-direction{
+    gap:4px!important;
+  }
+  .student-page .msa-main-date small,
+  .student-page .msa-main-entry small,
+  .student-page .msa-main-pair small,
+  .student-page .msa-direction>small{
+    font-size:5.8px!important;
+    font-weight:950!important;
+    letter-spacing:.10em!important;
+    color:#9AA4B2!important;
+  }
+  html[data-theme="dark"] .student-page .msa-main-date small,
+  html[data-theme="dark"] .student-page .msa-main-entry small,
+  html[data-theme="dark"] .student-page .msa-main-pair small,
+  html[data-theme="dark"] .student-page .msa-direction>small{
+    color:#697383!important;
+  }
+  .student-page .msa-main-date b,
+  .student-page .msa-main-entry b,
+  .student-page .msa-main-pair b{
+    font-size:11px!important;
+    font-weight:900!important;
+    line-height:1.05!important;
+    letter-spacing:-.02em!important;
+    color:#101318!important;
+  }
+  html[data-theme="dark"] .student-page .msa-main-date b,
+  html[data-theme="dark"] .student-page .msa-main-entry b,
+  html[data-theme="dark"] .student-page .msa-main-pair b{
+    color:#F5F5F5!important;
+  }
+  .student-page .msa-main-date em,
+  .student-page .msa-main-pair em{
+    display:block!important;
+    margin-top:1px!important;
+    font-style:normal!important;
+    font-size:6.8px!important;
+    line-height:1!important;
+    font-weight:700!important;
+    color:#7B8491!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+  html[data-theme="dark"] .student-page .msa-main-date em,
+  html[data-theme="dark"] .student-page .msa-main-pair em{
+    color:#7D8795!important;
+  }
+
+  /* Direction */
+  .student-page .mobile-signal-four .msa-direction .table-direction{
+    min-width:50px!important;
+    min-height:28px!important;
+    border-radius:9px!important;
+    font-size:8.5px!important;
+    font-weight:950!important;
+    letter-spacing:.015em!important;
+  }
+  .student-page .mobile-signal-four .table-direction.buy{
+    color:#078A58!important;
+    background:rgba(14,203,129,.105)!important;
+    border:1px solid rgba(14,203,129,.08)!important;
+  }
+  .student-page .mobile-signal-four .table-direction.sell{
+    color:#E64D64!important;
+    background:rgba(246,70,93,.095)!important;
+    border:1px solid rgba(246,70,93,.07)!important;
+  }
+  html[data-theme="dark"] .student-page .mobile-signal-four .table-direction.buy{color:#22D995!important}
+  html[data-theme="dark"] .student-page .mobile-signal-four .table-direction.sell{color:#FF6B80!important}
+
+  /* Chevron becomes a small premium action control */
+  .student-page .mobile-signal-four .msa-chevron{
+    width:20px!important;height:20px!important;
+    border-radius:7px!important;
+    background:#F5F6F7!important;
+    color:#737C89!important;
+    font-size:7px!important;
+  }
+  html[data-theme="dark"] .student-page .mobile-signal-four .msa-chevron{
+    background:#232830!important;color:#8993A1!important;
+  }
+  .student-page .mobile-signal-four[open] .msa-chevron{
+    background:rgba(240,185,11,.12)!important;
+    color:#C18C00!important;
+  }
+  html[data-theme="dark"] .student-page .mobile-signal-four[open] .msa-chevron{color:#F0B90B!important}
+
+  /* Dropdown: SL, TP1, TP2, TP3, TP4 all in one compact row */
+  .student-page .mobile-signal-four .msa-details.msa-five-levels{
+    padding:7px 9px 9px 11px!important;
+    gap:5px!important;
+    border-top:1px solid rgba(18,22,28,.06)!important;
+    background:
+      linear-gradient(180deg,rgba(240,185,11,.018),transparent 100%),
+      #fff!important;
+  }
+  html[data-theme="dark"] .student-page .mobile-signal-four .msa-details.msa-five-levels{
+    border-color:rgba(255,255,255,.05)!important;
+    background:#15181D!important;
+  }
+  .student-page .mobile-signal-four .msa-five-levels>span{
+    position:relative!important;
+    min-height:46px!important;
+    padding:7px 3px!important;
+    border-radius:9px!important;
+    background:#F5F6F8!important;
+  }
+  html[data-theme="dark"] .student-page .mobile-signal-four .msa-five-levels>span{
+    background:#20242B!important;
+  }
+  .student-page .mobile-signal-four .msa-five-levels>span::before{
+    content:""!important;
+    position:absolute!important;
+    left:7px!important;right:7px!important;top:0!important;
+    height:2px!important;
+    border-radius:0 0 2px 2px!important;
+    background:rgba(240,185,11,.28)!important;
+  }
+  .student-page .mobile-signal-four .msa-five-levels>span:first-child::before{
+    background:rgba(246,70,93,.28)!important;
+  }
+  .student-page .mobile-signal-four .msa-five-levels small{
+    font-size:5.6px!important;
+    color:#9AA4B2!important;
+    letter-spacing:.08em!important;
+  }
+  .student-page .mobile-signal-four .msa-five-levels b{
+    font-size:9.2px!important;
+    font-weight:900!important;
+    letter-spacing:-.015em!important;
+    color:#11151B!important;
+  }
+  html[data-theme="dark"] .student-page .mobile-signal-four .msa-five-levels b{color:#F5F5F5!important}
+
+  .student-page #p-signals .signal-table-footer{
+    padding-top:7px!important;
+    color:#8A929E!important;
+    font-size:7.5px!important;
+  }
+}
+
+@media(max-width:390px){
+  .student-page .mobile-signal-four>summary{
+    min-height:72px!important;
+    padding:9px 8px 9px 10px!important;
+    grid-template-columns:1.08fr 1.08fr .94fr .84fr 18px!important;
+    gap:5px!important;
+  }
+  .student-page .msa-main-date b,
+  .student-page .msa-main-entry b,
+  .student-page .msa-main-pair b{font-size:10px!important}
+  .student-page .msa-main-date em,
+  .student-page .msa-main-pair em{font-size:6.3px!important}
+  .student-page .mobile-signal-four .msa-direction .table-direction{
+    min-width:46px!important;min-height:27px!important;font-size:7.8px!important
+  }
+  .student-page .mobile-signal-four .msa-five-levels b{font-size:8.5px!important}
+}
