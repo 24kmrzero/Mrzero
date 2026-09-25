@@ -8,7 +8,15 @@ const brokerLinks={Exness:'https://one.exnessonelink.com/a/be2kjlypr9',XM:'https
 const esc=v=>A.escapeHtml?A.escapeHtml(v??''):String(v??'');
 const money=(v,c)=>A.formatMoney?A.formatMoney(Number(v||0),c):`${c} ${Number(v||0).toFixed(2)}`;
 function err(e,f='Something went wrong.'){console.error('[V12.24 Student Access]',e);A.toast?.(A.friendlyError?.(e,f)||e?.message||f,'error')}
-function step(name){$$('[data-access-step]').forEach(x=>x.classList.toggle('access-hidden',x.dataset.accessStep!==name))}
+function step(name){
+  $('[data-access-step]').forEach(x=>{
+    const active=x.dataset.accessStep===name;
+    x.classList.toggle('access-hidden',!active);
+    x.classList.toggle('is-active',active);
+    x.hidden=false;
+    x.setAttribute('aria-hidden',active?'false':'true');
+  });
+}
 function statusHtml(){
  if(!access)return '<b>Checking your access…</b>';
  if(access.has_access){
