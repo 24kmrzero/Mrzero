@@ -453,7 +453,7 @@
       grid.innerHTML = `<div class="signal-table-empty"><i class="fa-solid fa-filter-circle-xmark"></i><b>${signalWorkspaceView === 'active' ? 'No active signals right now.' : 'No history matches these filters.'}</b><span>${signalWorkspaceView === 'active' ? 'New active setups will appear here automatically.' : 'Try another market or date range.'}</span></div>`;
       return;
     }
-    grid.innerHTML = `<table class="premium-signal-table compact-history-table"><thead><tr><th>Time</th><th>Date</th><th>Instrument</th><th>Type</th><th>Entry</th><th>SL</th><th>TP1</th><th>TP2</th><th>TP3</th><th>Current Pips</th><th>Status</th></tr></thead><tbody>${rows.map(signalTableRow).join('')}</tbody></table><div class="signal-table-footer">Showing ${rows.length} signal${rows.length === 1 ? '' : 's'}</div>`;
+    grid.innerHTML = `<div class="mobile-signal-list">${rows.map(signalMobileCard).join('')}</div><div class="desktop-signal-table-wrap"><table class="premium-signal-table compact-history-table"><thead><tr><th>Time</th><th>Date</th><th>Instrument</th><th>Type</th><th>Entry</th><th>SL</th><th>TP1</th><th>TP2</th><th>TP3</th><th>Current Pips</th><th>Status</th></tr></thead><tbody>${rows.map(signalTableRow).join('')}</tbody></table></div><div class="signal-table-footer">Showing ${rows.length} signal${rows.length === 1 ? '' : 's'}</div>`;
   }
 
   function syncSignalInstrumentFilter() { return; }
@@ -469,6 +469,41 @@
     if (key === 'closed') return signalIsFinal(signal);
     if (key === 'sl') return status === 'sl_hit';
     return true;
+  }
+
+  function signalMobileCard(signal) {
+    const sourceDate = signalWorkspaceView === 'history' ? signalHistorySourceDate(signal) : new Date(signal.published_at || signal.created_at || Date.now());
+    const time = Number.isNaN(sourceDate.getTime()) ? '—' : new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Karachi',hour:'2-digit',minute:'2-digit',hour12:true}).format(sourceDate);
+    const date = Number.isNaN(sourceDate.getTime()) ? '—' : new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Karachi',day:'2-digit',month:'short',year:'numeric'}).format(sourceDate);
+    const symbol = String(signal.symbol || '').replace('/','').toUpperCase();
+    const meta = instrumentMeta(symbol);
+    const currentPips = latestSignalPips(signal);
+    const pipClass = currentPips == null ? 'neutral' : Number(currentPips) > 0 ? 'positive' : Number(currentPips) < 0 ? 'negative' : 'neutral';
+    const pipText = currentPips == null ? '—' : `${signed(currentPips)} Pips`;
+    const status = signalDisplayStatus(signal);
+    const direction = String(signal.direction || '—').toUpperCase();
+    return `<details class="mobile-signal-accordion">
+      <summary>
+        <span class="msa-time"><small>TIME</small><b>${A.escapeHtml(time)}</b></span>
+        <span class="msa-pair"><span class="instrument-badge ${meta.tone}">${meta.icon}</span><span><small>PAIR</small><b>${A.escapeHtml(displaySymbol(symbol))}</b><em>${A.escapeHtml(meta.name)}</em></span></span>
+        <span class="msa-direction"><small>DIRECTION</small><span class="table-direction ${String(signal.direction||'').toLowerCase()}">${A.escapeHtml(direction)}</span></span>
+        <span class="msa-chevron"><i class="fa-solid fa-chevron-down"></i></span>
+      </summary>
+      <div class="msa-details">
+        <div class="msa-detail-head">
+          <span class="signal-table-status ${status.tone}">${A.escapeHtml(status.label)}</span>
+          <span class="msa-date"><i class="fa-regular fa-calendar"></i> ${A.escapeHtml(date)}</span>
+        </div>
+        <div class="msa-level-grid">
+          <span><small>ENTRY</small><b>${entryText(signal)}</b></span>
+          <span><small>STOP LOSS</small><b>${num(signal.stop_loss)}</b></span>
+          <span><small>TP1</small><b>${num(signal.take_profit_1)}</b></span>
+          <span><small>TP2</small><b>${num(signal.take_profit_2)}</b></span>
+          <span><small>TP3</small><b>${num(signal.take_profit_3)}</b></span>
+          <span class="msa-pips"><small>PIPS</small><b class="table-pips ${pipClass}">${A.escapeHtml(pipText)}</b></span>
+        </div>
+      </div>
+    </details>`;
   }
 
   function signalTableRow(signal) {
