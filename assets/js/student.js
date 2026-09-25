@@ -140,7 +140,7 @@
       document.querySelectorAll('.student-mobile-nav [data-goto]').forEach(el => {
         el.classList.toggle('is-active', normalize(el.dataset.goto) === key);
       });
-      document.getElementById('side')?.classList.remove('open');
+      setSideOpen(false);
 
       const titleMap = {
         dashboard:'Dashboard',
@@ -168,6 +168,15 @@
       return true;
     };
 
+    const side = document.getElementById('side');
+    const burger = document.getElementById('burger');
+    const setSideOpen = value => {
+      const shouldOpen = Boolean(value);
+      side?.classList.toggle('open', shouldOpen);
+      document.body.classList.toggle('student-side-open', shouldOpen);
+      burger?.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
+    };
+
     if (!window.__24K_STUDENT_NAV_V1023__) {
       window.__24K_STUDENT_NAV_V1023__ = true;
       document.addEventListener('click', event => {
@@ -181,7 +190,19 @@
         open(key, true, true);
       }, true);
       window.addEventListener('popstate', () => open(keyFromLocation(), false, false));
-      document.getElementById('burger')?.addEventListener('click', () => document.getElementById('side')?.classList.toggle('open'));
+      burger?.addEventListener('click', event => {
+        event.preventDefault();
+        event.stopPropagation();
+        setSideOpen(!side?.classList.contains('open'));
+      });
+      document.addEventListener('click', event => {
+        if (!document.body.classList.contains('student-side-open')) return;
+        if (event.target?.closest?.('#side,#burger')) return;
+        setSideOpen(false);
+      });
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape' && document.body.classList.contains('student-side-open')) setSideOpen(false);
+      });
     }
     return { open, keyFromLocation };
   }
