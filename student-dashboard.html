@@ -92,7 +92,7 @@
 .signal-history-custom{display:flex;align-items:end;gap:8px;margin-top:8px;flex-wrap:wrap}.signal-history-custom.hidden{display:none!important}.signal-history-custom label{display:grid;gap:4px;font-size:9px;font-weight:800;color:var(--app-muted)}.signal-history-custom input{height:34px;min-width:142px;border:1px solid var(--app-line);border-radius:9px;background:var(--app-card);color:inherit;padding:0 9px}.signal-history-custom .app-btn{height:34px;min-height:34px}
 @media(max-width:640px){.signal-history-custom{width:100%;align-items:stretch}.signal-history-custom label{flex:1 1 130px}.signal-history-custom input{width:100%;min-width:0}}
 </style>
-<link rel="stylesheet" href="assets/css/v1251-profile-premium.css?v=12.96">
+<link rel="stylesheet" href="assets/css/v1251-profile-premium.css?v=12.97">
 </head>
 <body class="app-page student-page">
 <div id="pageLoader" class="loading-screen"><div><img src="assets/logo.png?v=9.69" alt="24K Digital Gold"><i class="fa-solid fa-spinner fa-spin"></i><p>Loading your student account...</p></div></div>
@@ -318,7 +318,7 @@
             </div>
           </div>
 
-          <div class="app-card personal-info-card profile-readonly-card"><div class="app-card-head profile-info-head"><span class="profile-section-icon"><i class="fa-solid fa-user-shield"></i></span><div><h3>Personal Information</h3><p>Saved account details</p></div><span class="profile-saved-badge"><i class="fa-solid fa-lock"></i> Saved</span></div><form id="profileForm" class="profile-readonly-form" aria-label="Saved personal information"><div class="form-grid"><div class="form-field"><label>Full Name</label><input name="full_name" disabled aria-readonly="true"></div><div class="form-field"><label>Email Address</label><input name="email" type="email" disabled aria-readonly="true"></div><div class="form-field"><label>WhatsApp Number</label><input name="whatsapp" disabled aria-readonly="true"></div><div class="form-field"><label>Country</label><input name="country" disabled aria-readonly="true"></div><div class="form-field full"><label>Trading Experience</label><select name="experience" disabled aria-readonly="true"><option value="beginner">Beginner</option><option value="intermediate">Intermediate</option><option value="advanced">Advanced</option></select></div></div></form></div>
+          <div class="app-card personal-info-card profile-readonly-card"><div class="app-card-head profile-info-head"><span class="profile-section-icon"><i class="fa-solid fa-user-shield"></i></span><div><h3>Personal Information</h3><p>Account details are saved. Trading experience can be updated.</p></div><span class="profile-saved-badge"><i class="fa-solid fa-lock"></i> Saved</span></div><form id="profileForm" class="profile-readonly-form" aria-label="Saved personal information"><div class="form-grid"><div class="form-field"><label>Full Name</label><input name="full_name" disabled aria-readonly="true"></div><div class="form-field"><label>Email Address</label><input name="email" type="email" disabled aria-readonly="true"></div><div class="form-field"><label>WhatsApp Number</label><input name="whatsapp" disabled aria-readonly="true"></div><div class="form-field full editable-experience"><label>Trading Experience</label><input name="experience" type="text" maxlength="80" placeholder="e.g. 2 years, Intermediate"></div></div><div class="profile-experience-action"><button class="app-btn gold" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save Experience</button></div></form></div>
 
           <details class="premium-history-details" id="coursePaymentHistoryDetails"><summary><span><i class="fa-solid fa-receipt"></i> Course Payment History <small id="paymentCount">0 payments</small></span><i class="fa-solid fa-chevron-down"></i></summary><div class="premium-history-body"><div class="table-scroll"><table class="payment-table"><thead><tr><th>Invoice</th><th>Course</th><th>Amount</th><th>Method</th><th>Reference</th><th>Submitted</th><th>Status</th><th>Admin Note</th><th>Receipt</th></tr></thead><tbody id="paymentsBody"></tbody></table></div></div></details>
 
@@ -467,7 +467,7 @@
 
 <script src="assets/js/core.js?v=12.14"></script>
 <script src="assets/js/tracking.js?v=12.14"></script>
-<script src="assets/js/student.js?v=12.95"></script>
+<script src="assets/js/student.js?v=12.97"></script>
 <script src="assets/js/student-ui.js?v=12.24"></script>
 <script src="assets/js/v120-student-ea.js?v=12.00"></script><script src="assets/js/v120-feature-flags.js?v=12.00"></script>
 <script src="assets/js/v1216-mobile-app.js?v=12.72"></script>
