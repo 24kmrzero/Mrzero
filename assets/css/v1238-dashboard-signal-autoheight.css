@@ -1,0 +1,35 @@
+/* 24K MR ZERO — Dashboard latest signal auto-height v12.38
+   Collapsed: no dead space. Expanded: parent card grows with SL/TP details. */
+@media(max-width:760px){
+  .student-page .dashboard-compact-grid.primary-grid{
+    align-items:start!important;
+    grid-auto-rows:auto!important;
+  }
+
+  .student-page .dashboard-compact-grid.primary-grid>.signal-snapshot-card,
+  .student-page .signal-snapshot-card,
+  .student-page .app-card.compact-dashboard-card.signal-snapshot-card{
+    min-height:0!important;
+    height:auto!important;
+    align-self:start!important;
+    overflow:visible!important;
+    padding-bottom:11px!important;
+  }
+
+  .student-page .signal-snapshot-card #latestSignal,
+  .student-page .signal-snapshot-card .dashboard-latest-signal-mobile,
+  .student-page .signal-snapshot-card .dashboard-signal-compact{
+    min-height:0!important;
+    height:auto!important;
+  }
+
+  .student-page .signal-snapshot-card .mobile-signal-four{
+    height:auto!important;
+  }
+
+  /* details naturally participate in layout so outer card expands */
+  .student-page .signal-snapshot-card .mobile-signal-four[open] .msa-details{
+    position:static!important;
+    display:grid!important;
+  }
+}
