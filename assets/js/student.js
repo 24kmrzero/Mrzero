@@ -114,6 +114,10 @@
       '/student/profile': 'profile', '/student/profile/': 'profile'
     };
     const keyFromLocation = () => {
+      try {
+        const navEntry = performance.getEntriesByType?.('navigation')?.[0];
+        if (navEntry?.type === 'reload') return 'dashboard';
+      } catch {}
       const hashKey = normalize(location.hash);
       if (/\/student-dashboard\.html$/i.test(location.pathname || '') && hashKey) return hashKey;
       return pathMap[location.pathname] || hashKey || 'dashboard';
