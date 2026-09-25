@@ -1,6 +1,6 @@
 (function(){
 'use strict';
-/* mentor build 13.26 */
+/* mentor build 13.27 */
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js',{scope:'/'}).catch(e=>console.warn('[24K Mentor PWA]',e?.message||e)));
 }
@@ -145,7 +145,7 @@ function render(){
   const mentorName=$('#mentorName');if(mentorName)mentorName.textContent=name;
   const enabled=Object.entries(state.perms).filter(x=>x[1]).map(x=>x[0][0].toUpperCase()+x[0].slice(1));
   const access=$('#mentorAccessSummary');if(access)access.textContent=enabled.length?enabled.join(' · '):'Read-only content';
-  $('[data-perm]').forEach(x=>x.classList.toggle('hidden',!state.perms[x.dataset.perm]));
+  $$('[data-perm]').forEach(x=>x.classList.toggle('hidden',!state.perms[x.dataset.perm]));
   safeMentorRender('performance',renderPerformance);
   safeMentorRender('signals',renderSignals);
   safeMentorRender('charts',renderCharts);
@@ -365,7 +365,7 @@ function readSignalFilters(){state.signalFilters.q=String($('#mentorSignalSearch
 function applySignalFilters(items){const f=state.signalFilters;return items.filter(s=>{const hay=`${s.symbol||''} ${signalTypeLabel(s)} ${s.status||''} ${s.notes||''}`.toLowerCase();if(f.q&&!hay.includes(f.q))return false;if(f.pair!=='all'&&String(s.symbol||'').toUpperCase()!==f.pair)return false;if(f.type!=='all'&&signalTypeLabel(s)!==f.type)return false;if(f.status!=='all'&&String(s.status||'')!==f.status)return false;const d=signalDateOnly(s.created_at||s.published_at);if(f.from&&d&&d<f.from)return false;if(f.to&&d&&d>f.to)return false;return true})}
 function signalFilterDateValue(d){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`}
 function syncSignalPeriodButtons(){
-  $('[data-signal-period]').forEach(x=>x.classList.toggle('active',x.dataset.signalPeriod===state.signalPeriod))
+  $$('[data-signal-period]').forEach(x=>x.classList.toggle('active',x.dataset.signalPeriod===state.signalPeriod))
 }
 function focusFilteredSignalResults(){
   requestAnimationFrame(()=>$('#mentorSignals')?.scrollIntoView({behavior:'smooth',block:'start'}))
