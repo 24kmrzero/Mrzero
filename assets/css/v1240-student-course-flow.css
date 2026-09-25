@@ -1,0 +1,161 @@
+/* 24K MR ZERO — Course details + payment flow v12.40 */
+@media(max-width:760px){
+  .student-page .course-details-modal-card{
+    max-height:90dvh!important;
+  }
+  .student-page #courseDetailsBody{
+    display:grid!important;
+    gap:9px!important;
+  }
+  .student-page .course-detail-hero{
+    display:grid!important;
+    grid-template-columns:42px minmax(0,1fr) auto!important;
+    gap:10px!important;
+    align-items:center!important;
+    padding:11px!important;
+    border:1px solid rgba(240,185,11,.18)!important;
+    border-radius:12px!important;
+    background:linear-gradient(145deg,rgba(240,185,11,.08),rgba(240,185,11,.02)),var(--s-surface,#fff)!important;
+  }
+  .student-page .course-detail-icon{
+    width:42px!important;height:42px!important;
+    display:grid!important;place-items:center!important;
+    border-radius:11px!important;
+    background:linear-gradient(145deg,#FCD535,#C99100)!important;
+    color:#181A20!important;font-size:16px!important;
+  }
+  .student-page .course-detail-hero>div{min-width:0!important}
+  .student-page .course-detail-hero small{
+    display:block!important;margin-bottom:3px!important;
+    color:#B17F00!important;font-size:6px!important;font-weight:950!important;letter-spacing:.1em!important;
+  }
+  .student-page .course-detail-hero h3{
+    margin:0!important;font-size:16px!important;line-height:1.08!important;color:var(--s-text,#0B0E11)!important;
+  }
+  .student-page .course-detail-hero p{
+    margin:4px 0 0!important;font-size:8px!important;line-height:1.35!important;color:var(--s-muted,#707A8A)!important;
+  }
+  .student-page .course-detail-state{
+    min-height:24px!important;padding:0 7px!important;
+    display:inline-flex!important;align-items:center!important;
+    border-radius:999px!important;font-size:6px!important;font-weight:900!important;
+    background:#F3F4F6!important;color:#707A8A!important;
+  }
+  .student-page .course-detail-state.ok,.student-page .course-detail-state.free{background:rgba(14,203,129,.09)!important;color:#078A58!important}
+  .student-page .course-detail-state.pending{background:rgba(240,185,11,.11)!important;color:#956C00!important}
+  .student-page .course-detail-state.locked{background:rgba(246,70,93,.08)!important;color:#D64D62!important}
+
+  .student-page .course-detail-stats{
+    display:grid!important;grid-template-columns:1fr 1fr!important;gap:6px!important;
+  }
+  .student-page .course-detail-stats>span{
+    min-height:48px!important;padding:8px!important;
+    display:grid!important;align-content:center!important;gap:3px!important;
+    border:1px solid var(--s-line,#E7E9ED)!important;border-radius:9px!important;
+    background:var(--s-surface-2,#F3F4F6)!important;
+  }
+  .student-page .course-detail-stats small{font-size:5.8px!important;font-weight:900!important;letter-spacing:.08em!important;color:var(--s-faint,#9AA4B2)!important}
+  .student-page .course-detail-stats b{font-size:9px!important;color:var(--s-text,#0B0E11)!important}
+
+  .student-page .course-detail-section-head{
+    display:flex!important;align-items:flex-end!important;justify-content:space-between!important;gap:8px!important;
+    padding:2px 2px 0!important;
+  }
+  .student-page .course-detail-section-head small{display:block!important;color:#B17F00!important;font-size:5.8px!important;font-weight:950!important;letter-spacing:.09em!important}
+  .student-page .course-detail-section-head h4{margin:2px 0 0!important;font-size:14px!important;color:var(--s-text,#0B0E11)!important}
+  .student-page .course-detail-section-head>span{font-size:7px!important;color:var(--s-muted,#707A8A)!important}
+
+  .student-page .course-detail-sessions{display:grid!important;gap:6px!important}
+  .student-page .course-detail-session{
+    min-height:66px!important;padding:8px!important;
+    display:grid!important;grid-template-columns:30px minmax(0,1fr) auto 18px!important;gap:8px!important;align-items:center!important;
+    border:1px solid var(--s-line,#E7E9ED)!important;border-radius:10px!important;
+    background:var(--s-surface,#fff)!important;
+  }
+  .student-page .course-detail-session:nth-child(even){
+    background:linear-gradient(145deg,#FFFDF8,#FBF4E7)!important;
+  }
+  html[data-theme="dark"] .student-page .course-detail-session:nth-child(even){background:#1C1D20!important}
+  .student-page .cds-number{
+    width:30px!important;height:30px!important;display:grid!important;place-items:center!important;
+    border-radius:8px!important;background:rgba(240,185,11,.10)!important;color:#A87900!important;
+    font-size:8px!important;font-weight:950!important;
+  }
+  .student-page .cds-copy{min-width:0!important}
+  .student-page .cds-copy small{display:block!important;margin-bottom:2px!important;font-size:6.3px!important;font-weight:850!important;color:#A87900!important}
+  .student-page .cds-copy b{display:block!important;font-size:9.2px!important;line-height:1.2!important;color:var(--s-text,#0B0E11)!important}
+  .student-page .cds-copy p{margin:2px 0 0!important;font-size:7px!important;line-height:1.25!important;color:var(--s-muted,#707A8A)!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  .student-page .cds-time{display:grid!important;justify-items:end!important;gap:2px!important}
+  .student-page .cds-time b{font-size:7.5px!important;color:var(--s-text,#0B0E11)!important;white-space:nowrap!important}
+  .student-page .cds-time small{font-size:6px!important;color:var(--s-muted,#707A8A)!important}
+  .student-page .cds-lock{color:#C08B00!important;font-size:9px!important}
+  .student-page .course-detail-note{
+    padding:9px!important;display:grid!important;grid-template-columns:28px minmax(0,1fr)!important;gap:8px!important;align-items:center!important;
+    border-radius:10px!important;background:rgba(14,203,129,.06)!important;border:1px solid rgba(14,203,129,.10)!important;
+  }
+  .student-page .course-detail-note>i{width:28px!important;height:28px!important;display:grid!important;place-items:center!important;border-radius:8px!important;background:rgba(14,203,129,.11)!important;color:#078A58!important}
+  .student-page .course-detail-note b{display:block!important;font-size:8.5px!important;color:var(--s-text,#0B0E11)!important}
+  .student-page .course-detail-note span{display:block!important;margin-top:2px!important;font-size:7.2px!important;line-height:1.3!important;color:var(--s-muted,#707A8A)!important}
+  .student-page .course-details-foot{display:grid!important;grid-template-columns:.75fr 1.25fr!important;gap:6px!important}
+  .student-page .course-details-foot .app-btn{width:100%!important}
+
+  /* payment step rail */
+  .student-page .course-payment-steps{
+    display:grid!important;grid-template-columns:auto 1fr auto 1fr auto!important;gap:6px!important;align-items:center!important;
+    margin:0 0 10px!important;padding:9px!important;
+    border:1px solid var(--s-line,#E7E9ED)!important;border-radius:10px!important;background:var(--s-surface-2,#F3F4F6)!important;
+  }
+  .student-page .course-payment-steps>span{
+    display:grid!important;justify-items:center!important;gap:3px!important;
+    color:var(--s-muted,#707A8A)!important;font-size:6px!important;font-weight:850!important;
+  }
+  .student-page .course-payment-steps>span>b{
+    width:22px!important;height:22px!important;display:grid!important;place-items:center!important;
+    border-radius:50%!important;background:#fff!important;border:1px solid var(--s-line,#E7E9ED)!important;
+    color:var(--s-muted,#707A8A)!important;font-size:7px!important;
+  }
+  html[data-theme="dark"] .student-page .course-payment-steps>span>b{background:#181A20!important}
+  .student-page .course-payment-steps>span.active{color:#A87900!important}
+  .student-page .course-payment-steps>span.active>b{background:#F0B90B!important;border-color:#F0B90B!important;color:#181A20!important}
+  .student-page .course-payment-steps>span.done{color:#078A58!important}
+  .student-page .course-payment-steps>span.done>b{background:rgba(14,203,129,.12)!important;border-color:rgba(14,203,129,.16)!important;color:#078A58!important}
+  .student-page .course-payment-steps>i{
+    height:1px!important;background:var(--s-line,#E7E9ED)!important;
+  }
+
+  /* Payment method cards */
+  .student-page #paymentMethodChoiceModal .app-grid.cols-2{
+    display:grid!important;grid-template-columns:1fr!important;gap:7px!important;
+  }
+  .student-page #paymentMethodChoiceModal [data-payment-choice]{
+    min-height:82px!important;padding:11px!important;
+    display:grid!important;grid-template-columns:36px minmax(0,1fr)!important;grid-template-rows:auto auto!important;
+    column-gap:10px!important;align-items:center!important;
+    border:1px solid var(--s-line,#E7E9ED)!important;border-radius:11px!important;background:var(--s-surface,#fff)!important;
+  }
+  .student-page #paymentMethodChoiceModal [data-payment-choice]>div{
+    grid-row:1/3!important;width:36px!important;height:36px!important;margin:0!important;display:grid!important;place-items:center!important;
+    border-radius:10px!important;background:rgba(240,185,11,.10)!important;color:#B17F00!important;font-size:14px!important;
+  }
+  .student-page #paymentMethodChoiceModal [data-payment-choice] h3{font-size:11px!important;margin:0 0 2px!important;color:var(--s-text,#0B0E11)!important}
+  .student-page #paymentMethodChoiceModal [data-payment-choice] p{font-size:7.5px!important;line-height:1.3!important}
+
+  /* success */
+  .student-page #coursePaymentSuccessBody{
+    padding-top:6px!important;text-align:center!important;
+  }
+  .student-page .payment-success-icon{
+    width:54px!important;height:54px!important;margin:0 auto 10px!important;display:grid!important;place-items:center!important;
+    border-radius:50%!important;background:rgba(14,203,129,.11)!important;color:#078A58!important;font-size:20px!important;
+  }
+  .student-page #coursePaymentSuccessBody>small{display:block!important;color:#078A58!important;font-size:6.5px!important;font-weight:950!important;letter-spacing:.12em!important}
+  .student-page #coursePaymentSuccessBody h3{margin:4px 0!important;font-size:18px!important;color:var(--s-text,#0B0E11)!important}
+  .student-page #coursePaymentSuccessBody>p{margin:0 0 10px!important;font-size:8.5px!important;color:var(--s-muted,#707A8A)!important}
+  .student-page .payment-success-state{
+    padding:10px!important;display:grid!important;grid-template-columns:32px minmax(0,1fr)!important;gap:8px!important;align-items:center!important;text-align:left!important;
+    border-radius:10px!important;background:rgba(240,185,11,.07)!important;border:1px solid rgba(240,185,11,.13)!important;
+  }
+  .student-page .payment-success-state>i{width:32px!important;height:32px!important;display:grid!important;place-items:center!important;border-radius:9px!important;background:rgba(240,185,11,.11)!important;color:#A87900!important}
+  .student-page .payment-success-state b{display:block!important;font-size:9px!important;color:var(--s-text,#0B0E11)!important}
+  .student-page .payment-success-state span{display:block!important;margin-top:2px!important;font-size:7px!important;color:var(--s-muted,#707A8A)!important}
+}
