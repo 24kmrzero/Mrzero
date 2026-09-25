@@ -822,3 +822,57 @@ html[data-theme="dark"] #p-profile .profile-saved-badge{
     margin-bottom:0!important;
   }
 }
+
+
+/* v12.96 — profile history spacing cleanup */
+@media(max-width:760px){
+  body.student-page[data-student-panel="profile"] #p-profile .profile-compact-shell{
+    gap:6px!important;
+  }
+
+  body.student-page[data-student-panel="profile"] #p-profile .personal-info-card{
+    margin-bottom:0!important;
+  }
+
+  body.student-page[data-student-panel="profile"] #p-profile .premium-history-details{
+    margin:0!important;
+    border-radius:12px!important;
+  }
+
+  body.student-page[data-student-panel="profile"] #p-profile .premium-history-details + .premium-history-details{
+    margin-top:2px!important;
+  }
+
+  body.student-page[data-student-panel="profile"] #p-profile .premium-history-details summary{
+    min-height:48px!important;
+    padding:9px 11px!important;
+    gap:8px!important;
+  }
+
+  body.student-page[data-student-panel="profile"] #p-profile .premium-history-details summary > span{
+    flex:1 1 auto!important;
+    min-width:0!important;
+    display:flex!important;
+    align-items:center!important;
+    gap:7px!important;
+    white-space:nowrap!important;
+  }
+
+  body.student-page[data-student-panel="profile"] #p-profile .premium-history-details summary > span > small{
+    display:inline-flex!important;
+    align-items:center!important;
+    margin:0 0 0 auto!important;
+    font-size:7px!important;
+    line-height:1!important;
+    white-space:nowrap!important;
+  }
+
+  body.student-page[data-student-panel="profile"] #p-profile .premium-history-details summary > i{
+    flex:0 0 auto!important;
+    margin-left:2px!important;
+  }
+
+  body.student-page[data-student-panel="profile"] #p-profile{
+    padding-bottom:calc(68px + env(safe-area-inset-bottom))!important;
+  }
+}
