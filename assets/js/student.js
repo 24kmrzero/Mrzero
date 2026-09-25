@@ -1118,14 +1118,14 @@
     const reference=String(f.elements.transaction_reference.value||'').trim();
     if(reference.length<3)return A.toast('Enter a valid bank transaction reference.','error');
     const bankMethod=state.paymentMethods.find(m=>/^local bank transfer$/i.test(String(m.name||'').trim()));
-    if(/^TEST/i.test(String(bankMethod?.account_number||''))||/^TEST/i.test(String(bankMethod?.account_title||''))) return A.toast('Bank details are in TEST MODE. Add the real bank account from Admin before accepting payments.','warning');
+    const bankTest=/^TEST/i.test(String(bankMethod?.account_number||''))||/^TEST/i.test(String(bankMethod?.account_title||''));
     A.setLoading(button,true,'Submitting...');
     let path='';
     try{
       path=`${state.user.id}/premium-bank/${Date.now()}-${A.fileSafeName(file.name)}`;
       const upload=await A.supabase.storage.from('payment-receipts').upload(path,file,{contentType:file.type,upsert:false});
       if(upload.error)throw upload.error;
-      const {error}=await A.supabase.rpc('submit_premium_bank_payment',{p_reference:reference,p_receipt_path:path,p_note:String(f.elements.student_note.value||'').trim()||null});
+      const {error}=await A.supabase.rpc('submit_premium_bank_payment',{p_reference:reference,p_receipt_path:path,p_note:bankTest?`[TEST MODE]${String(f.elements.student_note.value||'').trim()?' '+String(f.elements.student_note.value||'').trim():''}`:(String(f.elements.student_note.value||'').trim()||null)});
       if(error){await A.supabase.storage.from('payment-receipts').remove([path]);throw error;}
       await auditEvent('premium_payment_submitted','premium_package',null,'success',{method:'local_bank'});
       A.closeModal('premiumBankModal');f.reset();await loadAll();renderAll();await flushMyEmailQueue();
@@ -1134,7 +1134,7 @@
     finally{A.setLoading(button,false);}
   }
 
-  async function submitPremiumUsdt(event){event.preventDefault();const f=event.currentTarget,file=f.elements.receipt.files?.[0],button=f.querySelector('button[type=submit]');const usdtMethod=state.paymentMethods.find(m=>/usdt|trc\s*20|trc20/i.test(`${m.name||''} ${m.instructions||''}`));if(/^TEST/i.test(String(usdtMethod?.account_number||''))||/^TEST/i.test(String(usdtMethod?.account_title||'')))return A.toast('USDT wallet is in TEST MODE. Add the real TRC20 address from Admin before accepting payments.','warning');if(!file)return A.toast('Choose a payment receipt.','error');if(file.size>5*1024*1024)return A.toast('Receipt must be 5 MB or smaller.','error');A.setLoading(button,true,'Submitting...');let path='';try{path=`${state.user.id}/premium/${Date.now()}-${A.fileSafeName(file.name)}`;const upload=await A.supabase.storage.from('payment-receipts').upload(path,file,{contentType:file.type,upsert:false});if(upload.error)throw upload.error;const {error}=await A.supabase.rpc('submit_premium_usdt_payment',{p_reference:f.elements.transaction_reference.value.trim(),p_receipt_path:path,p_note:f.elements.student_note.value.trim()||null});if(error){await A.supabase.storage.from('payment-receipts').remove([path]);throw error;}await auditEvent('premium_payment_submitted','premium_package',null,'success',{method:'usdt'});A.closeModal('premiumUsdtModal');f.reset();await loadAll();renderAll();await flushMyEmailQueue();A.toast('Premium payment submitted for review.','success');}catch(error){A.toast(A.friendlyError(error,'Could not submit premium payment.'),'error');}finally{A.setLoading(button,false);}}
+  async function submitPremiumUsdt(event){event.preventDefault();const f=event.currentTarget,file=f.elements.receipt.files?.[0],button=f.querySelector('button[type=submit]');const usdtMethod=state.paymentMethods.find(m=>/usdt|trc\s*20|trc20/i.test(`${m.name||''} ${m.instructions||''}`));const usdtTest=/^TEST/i.test(String(usdtMethod?.account_number||''))||/^TEST/i.test(String(usdtMethod?.account_title||''));if(!file)return A.toast('Choose a payment receipt.','error');if(file.size>5*1024*1024)return A.toast('Receipt must be 5 MB or smaller.','error');A.setLoading(button,true,'Submitting...');let path='';try{path=`${state.user.id}/premium/${Date.now()}-${A.fileSafeName(file.name)}`;const upload=await A.supabase.storage.from('payment-receipts').upload(path,file,{contentType:file.type,upsert:false});if(upload.error)throw upload.error;const {error}=await A.supabase.rpc('submit_premium_usdt_payment',{p_reference:f.elements.transaction_reference.value.trim(),p_receipt_path:path,p_note:usdtTest?`[TEST MODE]${f.elements.student_note.value.trim()?' '+f.elements.student_note.value.trim():''}`:(f.elements.student_note.value.trim()||null)});if(error){await A.supabase.storage.from('payment-receipts').remove([path]);throw error;}await auditEvent('premium_payment_submitted','premium_package',null,'success',{method:'usdt'});A.closeModal('premiumUsdtModal');f.reset();await loadAll();renderAll();await flushMyEmailQueue();A.toast('Premium payment submitted for review.','success');}catch(error){A.toast(A.friendlyError(error,'Could not submit premium payment.'),'error');}finally{A.setLoading(button,false);}}
   async function submitIbVerification(event){
     event.preventDefault();
     const f=event.currentTarget,button=f.querySelector('button[type=submit]');
@@ -1547,7 +1547,7 @@
     if(!method)return false;
     const account=String(method.account_number||'').trim();
     if(!account||/^(—|-|n\/a|na)$/i.test(account))return false;
-    if(type==='usdt'&&!validTrc20Address(account))return false;
+    if(type==='usdt'&&!validTrc20Address(account)&&!/^TEST/i.test(account))return false;
     if(String(method.name||'').trim().toLowerCase()===account.toLowerCase())return false;
     return true;
   }
@@ -1759,7 +1759,7 @@
     const fd = new FormData(form);
     const course = state.courses.find(c => c.id === fd.get('course_id'));
     const method = state.paymentMethods.find(m => m.id === fd.get('payment_method_id'));
-    if(!method || !validTrc20Address(method.account_number)) return A.toast('USDT TRC20 wallet is not configured yet. Payment cannot be submitted until Admin adds the real wallet address.','warning');
+    if(!method || (!validTrc20Address(method.account_number) && !/^TEST/i.test(String(method.account_number||'')))) return A.toast('USDT TRC20 wallet is not configured yet. Payment cannot be submitted until Admin adds a wallet address.','warning');
     const file = fd.get('receipt');
     if (!file || !file.size) return A.toast('Please select a payment receipt.', 'error');
     if (file.size > 5 * 1024 * 1024) return A.toast('Receipt must be 5 MB or smaller.', 'error');
