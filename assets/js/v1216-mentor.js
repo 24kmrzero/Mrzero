@@ -90,8 +90,10 @@ async function requireMentor(){
   if(pm.error)throw pm.error;
   for(const k of Object.keys(state.perms))state.perms[k]=Boolean((pm.data||[]).find(x=>x.feature_key===k)?.enabled);
   if(state.perms.signals){
-    if(signals.error)throw signals.error;
-    state.signals=signals.data||[];
+    if(signals.error){
+      console.warn('mentor signals load',signals.error);
+      state.signals=[];
+    }else state.signals=signals.data||[];
   }else state.signals=[];
   return true
 }
