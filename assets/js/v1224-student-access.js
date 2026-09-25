@@ -134,7 +134,7 @@ async function submitPremium(e,type){
    const successBody=$('#premiumPaymentSuccessBody');
    if(successBody)successBody.innerHTML=`<span class="payment-success-icon"><i class="fa-solid fa-check"></i></span><small>PAYMENT SUBMITTED</small><h3>30-Day Premium Access</h3><p>Your ${type==='bank'?'bank transfer':'USDT TRC20 payment'} proof has been received.</p><div class="payment-success-state"><i class="fa-solid fa-clock"></i><div><b>Under Admin Review</b><span>After approval, Premium Market Access will be activated/extended for ${Number(access?.monthly_days||30)} days.</span></div></div>`;
    (window.__24K_OPEN_HISTORY_MODAL__?window.__24K_OPEN_HISTORY_MODAL__('premiumPaymentSuccessModal'):A.openModal('premiumPaymentSuccessModal'));
-   A.toast?.('Premium payment submitted for Admin review.','success');await load();
+   A.toast?.('Premium payment submitted for Admin review.','success');await load();await window.StudentBase?.reload?.();
  }catch(e2){if(path)await sb.storage.from('payment-receipts').remove([path]).catch(()=>{});err(e2,'Could not submit Premium payment.')}finally{A.setLoading(b,false)}
 }
 function brokerGuide(){
