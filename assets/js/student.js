@@ -517,17 +517,22 @@
   }
 
   function signalMobileCard(signal) {
-    const sourceDate = signalWorkspaceView === 'history' ? signalHistorySourceDate(signal) : new Date(signal.published_at || signal.created_at || Date.now());
+    const isHistory = signalWorkspaceView === 'history';
+    const sourceDate = isHistory ? signalHistorySourceDate(signal) : new Date(signal.published_at || signal.created_at || Date.now());
     const date = Number.isNaN(sourceDate.getTime()) ? '—' : new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Karachi',day:'2-digit',month:'short',year:'numeric'}).format(sourceDate);
     const time = Number.isNaN(sourceDate.getTime()) ? '—' : new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Karachi',hour:'2-digit',minute:'2-digit',hour12:true}).format(sourceDate);
     const symbol = String(signal.symbol || '').replace('/','').toUpperCase();
     const meta = instrumentMeta(symbol);
     const direction = String(signal.direction || '—').toUpperCase();
-    return `<details class="mobile-signal-accordion mobile-signal-four">
+    const pips = latestSignalPips(signal);
+    const pipsClass = pips == null ? 'neutral' : Number(pips) > 0 ? 'positive' : Number(pips) < 0 ? 'negative' : 'neutral';
+    const pipsText = pips == null ? '—' : `${signed(Number(pips))} Pips`;
+    return `<details class="mobile-signal-accordion mobile-signal-four${isHistory?' history-pips-row':''}">
       <summary>
         <span class="msa-main-date"><small>DATE</small><b>${A.escapeHtml(date)}</b><em>${A.escapeHtml(time)} PKT</em></span>
         <span class="msa-main-pair"><small>PAIR</small><b>${A.escapeHtml(displaySymbol(symbol))}</b><em>${A.escapeHtml(meta.name)}</em></span>
         <span class="msa-main-entry"><small>ENTRY</small><b>${entryText(signal)}</b></span>
+        ${isHistory?`<span class="msa-main-pips"><small>PIPS</small><b class="${pipsClass}">${A.escapeHtml(pipsText)}</b></span>`:''}
         <span class="msa-direction"><small>DIRECTION</small><span class="table-direction ${String(signal.direction||'').toLowerCase()}">${A.escapeHtml(direction)}</span></span>
         <span class="msa-chevron"><i class="fa-solid fa-chevron-down"></i></span>
       </summary>
