@@ -80,6 +80,7 @@ function renderPerformance(){
     week=all.filter(s=>new Date(s.closed_at||s.last_status_at||s.created_at)>=weekAgo).reduce((a,s)=>a+signalPips(s),0),
     month=all.filter(s=>new Date(s.closed_at||s.last_status_at||s.created_at)>=monthStart).reduce((a,s)=>a+signalPips(s),0);
   const hero=$('#mentorHeroNetPips');if(hero)hero.textContent=`${net>=0?'+':''}${money(net)} pips`;
+  const updated=$('#mentorPerformanceUpdated');if(updated)updated.textContent=`Updated ${now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true})}`;
 
   const metrics=[
     {label:'NET PERFORMANCE',value:net,icon:'fa-chart-line',tone:'primary',hint:'All recorded signal results'},
@@ -106,7 +107,7 @@ function renderPerformance(){
     const end=new Date(d);end.setDate(end.getDate()+1);
     return{d,count:all.filter(s=>{const x=new Date(s.created_at);return x>=d&&x<end}).length}
   }),mx=Math.max(1,...days.map(x=>x.count));
-  $('#mentorSignalBars').innerHTML=days.map(x=>`<span style="height:${Math.max(5,x.count/mx*100)}%" title="${x.count} signal${x.count===1?'':'s'}"><small>${x.d.getDate()}</small></span>`).join('');
+  $('#mentorSignalBars').innerHTML=days.map((x,index)=>`<span class="${index===days.length-1?'is-latest':''}" data-count="${x.count}" style="height:${Math.max(5,x.count/mx*100)}%" title="${x.count} signal${x.count===1?'':'s'}"><small>${x.d.getDate()}</small></span>`).join('');
 
   const resolved=all.filter(s=>signalIsClosed(s)&&s.status!=='cancelled'&&s.result_pips!==null),
     wins=resolved.filter(s=>signalPips(s)>0).length,
@@ -117,12 +118,15 @@ function renderPerformance(){
 
   const pairs={};all.forEach(s=>{const k=mentorDisplaySymbol(s.symbol);pairs[k]=(pairs[k]||0)+1});
   const ps=Object.entries(pairs).sort((a,b)=>b[1]-a[1]).slice(0,6),pmax=Math.max(1,...ps.map(x=>x[1]));
-  $('#mentorTopPairs').innerHTML=ps.length?ps.map(([pair,count])=>`<div class="mrzero-market-row"><b>${esc(pair)}</b><div class="mrzero-market-track"><i style="width:${Math.max(8,count/pmax*100)}%"></i></div><small>${count} signal${count===1?'':'s'}</small></div>`).join(''):'<div class="mentor-empty">No market activity yet.</div>';
+  const totalPairSignals=ps.reduce((sum,[,count])=>sum+count,0)||1;
+  $('#mentorTopPairs').innerHTML=ps.length?ps.map(([pair,count])=>{const pct=Math.round(count/totalPairSignals*100);return `<div class="mrzero-market-row"><b>${esc(pair)}</b><div class="mrzero-market-track"><i style="width:${Math.max(8,count/pmax*100)}%"></i></div><small>${pct}% · ${count} signal${count===1?'':'s'}</small></div>`}).join(''):'<div class="mentor-empty">No market activity yet.</div>';
 
   const recent=[...all].sort((a,b)=>new Date(b.last_status_at||b.updated_at||b.created_at)-new Date(a.last_status_at||a.updated_at||a.created_at)).slice(0,7);
   $('#mentorRecentActivity').innerHTML=recent.length?recent.map(s=>{
     const status=signalStatusLabel(s.status),p=signalPips(s),stamp=mentorSignalStamp(s.last_status_at||s.updated_at||s.created_at);
-    return `<div class="mrzero-activity-item"><div class="mrzero-activity-icon"><i class="fa-solid ${signalIsClosed(s)?'fa-circle-check':'fa-bolt'}"></i></div><div class="mrzero-activity-copy"><b>${esc(mentorDisplaySymbol(s.symbol))} · ${esc(signalTypeLabel(s))}</b><small>${esc(stamp.date)} · ${esc(stamp.time)}${s.result_pips==null?'':` · ${pipText(p)}`}</small></div><span class="mrzero-activity-status">${esc(status)}</span></div>`
+    const statusKey=String(s.status||'').toLowerCase(),statusTone=/tp\d*_hit|closed|manually_closed/.test(statusKey)?'good':statusKey==='sl_hit'?'bad':/cancelled|breakeven/.test(statusKey)?'neutral':'gold';
+    const pipTone=p>0?'good':p<0?'bad':'neutral';
+    return `<div class="mrzero-activity-item"><div class="mrzero-activity-icon"><i class="fa-solid ${signalIsClosed(s)?'fa-circle-check':'fa-bolt'}"></i></div><div class="mrzero-activity-copy"><b>${esc(mentorDisplaySymbol(s.symbol))} · ${esc(signalTypeLabel(s))}</b><div class="mrzero-activity-meta"><small>${esc(stamp.date)} · ${esc(stamp.time)}</small>${s.result_pips==null?'':`<span class="mrzero-pips-badge ${pipTone}">${pipText(p)}</span>`}</div></div><span class="mrzero-activity-status ${statusTone}">${esc(status)}</span></div>`
   }).join(''):'<div class="mentor-empty">No recent activity.</div>'
 }
 function statusChip(v){return `<span class="mentor-chip gold">${esc(String(v||'').replaceAll('_',' ').toUpperCase())}</span>`}
