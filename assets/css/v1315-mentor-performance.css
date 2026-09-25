@@ -1813,3 +1813,22 @@ html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-market-rank{
     gap:3px;
   }
 }
+
+
+/* V13.19 — Monthly momentum density + semantic polish */
+[data-mentor-panel="performance"] .mrzero-signal-bars{grid-template-columns:repeat(var(--days,31),minmax(0,1fr))!important;min-width:0!important;width:100%!important;gap:2px!important}
+[data-mentor-panel="performance"] .mrzero-momentum-col small{display:none!important}
+[data-mentor-panel="performance"] .mrzero-momentum-col:nth-child(1) small,
+[data-mentor-panel="performance"] .mrzero-momentum-col:nth-child(5) small,
+[data-mentor-panel="performance"] .mrzero-momentum-col:nth-child(10) small,
+[data-mentor-panel="performance"] .mrzero-momentum-col:nth-child(15) small,
+[data-mentor-panel="performance"] .mrzero-momentum-col:nth-child(20) small,
+[data-mentor-panel="performance"] .mrzero-momentum-col:nth-child(25) small,
+[data-mentor-panel="performance"] .mrzero-momentum-col:last-child small,
+[data-mentor-panel="performance"] .mrzero-momentum-col.is-latest small{display:block!important}
+[data-mentor-panel="performance"] .mrzero-momentum-panel{overflow:hidden!important}
+@media(max-width:760px){
+  [data-mentor-panel="performance"] .mrzero-momentum-panel{overflow:hidden!important}
+  [data-mentor-panel="performance"] .mrzero-momentum-panel .mrzero-signal-bars{width:100%!important;min-width:0!important;overflow:visible!important;grid-template-columns:repeat(var(--days,31),minmax(0,1fr))!important}
+  [data-mentor-panel="performance"] .mrzero-momentum-col i{width:min(9px,72%)!important}
+}
