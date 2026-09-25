@@ -821,3 +821,84 @@ html[data-theme="light"] #mentorSignalDetailModal .mentor-running-pips{border-co
     grid-template-columns:repeat(2,1fr);
   }
 }
+
+
+/* V13.22 — Ultra-compact collapsed signal rows */
+@media(max-width:760px){
+  [data-mentor-panel="signals"] .mentor-signal-mobile-list{
+    gap:5px!important;
+  }
+  [data-mentor-panel="signals"] .mentor-signal-mobile-card{
+    min-height:0!important;
+    border-radius:11px!important;
+  }
+
+  /* Important: collapsed details take ZERO height */
+  [data-mentor-panel="signals"] .mentor-signal-row-dropdown{
+    display:none!important;
+    opacity:1!important;
+    border-top:0!important;
+  }
+  [data-mentor-panel="signals"] .mentor-signal-mobile-card.is-open .mentor-signal-row-dropdown{
+    display:block!important;
+    border-top:1px solid #20262f!important;
+  }
+  html[data-theme="light"] [data-mentor-panel="signals"] .mentor-signal-mobile-card.is-open .mentor-signal-row-dropdown{
+    border-top-color:#edf0f2!important;
+  }
+
+  [data-mentor-panel="signals"] .mentor-signal-row-toggle{
+    min-height:48px!important;
+    padding:6px 9px 6px 10px!important;
+    gap:4px!important;
+  }
+  [data-mentor-panel="signals"] .mentor-signal-row-toggle .mentor-signal-icon.mini{
+    width:25px!important;
+    height:25px!important;
+    border-radius:7px!important;
+    font-size:8px!important;
+  }
+  [data-mentor-panel="signals"] .mentor-signal-row-main>b{
+    font-size:10.5px!important;
+  }
+  [data-mentor-panel="signals"] .mentor-signal-row-main>small{
+    font-size:5.4px!important;
+  }
+  [data-mentor-panel="signals"] .mentor-signal-row-entry small,
+  [data-mentor-panel="signals"] .mentor-signal-row-sl small,
+  [data-mentor-panel="signals"] .mentor-signal-row-pips small{
+    font-size:4.8px!important;
+  }
+  [data-mentor-panel="signals"] .mentor-signal-row-entry b,
+  [data-mentor-panel="signals"] .mentor-signal-row-sl b,
+  [data-mentor-panel="signals"] .mentor-signal-row-pips b{
+    font-size:7.5px!important;
+  }
+  [data-mentor-panel="signals"] .mentor-signal-row-type .mentor-type-badge,
+  [data-mentor-panel="signals"] .mentor-signal-row-status .mentor-status-badge{
+    min-height:17px!important;
+    padding:0 4px!important;
+    font-size:5px!important;
+  }
+  [data-mentor-panel="signals"] .mentor-signal-row-chevron{
+    font-size:6.5px!important;
+  }
+
+  [data-mentor-panel="signals"] .mentor-signal-row-levels{
+    padding:7px 9px 5px 10px!important;
+  }
+  [data-mentor-panel="signals"] .mentor-signal-row-levels span{
+    padding:5px 6px!important;
+    border-radius:7px!important;
+  }
+  [data-mentor-panel="signals"] .mentor-signal-row-bottom{
+    padding:5px 9px 8px 10px!important;
+  }
+}
+
+@media(max-width:470px){
+  [data-mentor-panel="signals"] .mentor-signal-row-toggle{
+    min-height:46px!important;
+    grid-template-columns:25px minmax(76px,1fr) auto minmax(45px,.66fr) minmax(50px,.72fr) 9px!important;
+  }
+}
