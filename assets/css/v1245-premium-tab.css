@@ -1,0 +1,85 @@
+/* 24K MR ZERO — Dedicated Premium tab v12.45 */
+#p-premium{padding-bottom:22px}
+.premium-page-shell{display:grid;gap:14px}
+.premium-page-hero,.premium-page-flow{
+  border:1px solid rgba(201,154,5,.15);
+  border-radius:20px;
+  background:var(--card-bg,#fff);
+  box-shadow:0 14px 34px rgba(18,22,28,.05);
+}
+.premium-page-hero{padding:22px}
+.premium-page-flow{padding:20px}
+.premium-page-hero-copy{display:flex;align-items:flex-start;gap:14px}
+.premium-page-crown{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(145deg,#FCD535,#D09A00);color:#181A20;font-size:20px;flex:0 0 auto}
+.premium-page-hero-copy small,.premium-page-section-head small{display:block;color:#ad7b00;font-size:10px;font-weight:900;letter-spacing:.11em}
+.premium-page-hero-copy h2{margin:3px 0 4px;font-size:28px;line-height:1.05}
+.premium-page-hero-copy p,.premium-page-section-head p{margin:0;color:var(--muted,#7b7f87);font-size:12px;line-height:1.45}
+.premium-page-status{margin-top:18px;padding:16px;display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:12px;align-items:center;border:1px solid rgba(201,154,5,.16);border-radius:16px;background:linear-gradient(145deg,rgba(252,213,53,.08),rgba(252,213,53,.02))}
+.premium-page-status .pps-icon{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;background:rgba(201,154,5,.13);color:#ad7b00}
+.premium-page-status>div small{display:block;color:#9b7b27;font-size:9px;font-weight:900;letter-spacing:.08em}
+.premium-page-status>div b{display:block;margin-top:2px;font-size:15px}
+.premium-page-status>div p{margin:3px 0 0;color:var(--muted,#7b7f87);font-size:10px}
+.pps-state{min-height:27px;padding:0 9px;border-radius:999px;display:inline-flex;align-items:center;gap:5px;font-size:8px;font-weight:900}
+.pps-state i{width:6px;height:6px;border-radius:50%;background:currentColor}
+.pps-state.active{background:rgba(14,203,129,.09);color:#078a58}.pps-state.locked{background:rgba(246,70,93,.08);color:#d64d62}
+.premium-page-benefits{margin-top:10px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.premium-page-benefits span{min-height:64px;padding:10px;border:1px solid var(--line,rgba(18,22,28,.08));border-radius:13px;background:var(--soft,#f7f7f8);display:grid;grid-template-columns:28px minmax(0,1fr);grid-template-rows:auto auto;column-gap:8px;align-content:center}
+.premium-page-benefits i{grid-row:1/3;width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:rgba(201,154,5,.10);color:#b17f00}
+.premium-page-benefits b{font-size:11px}.premium-page-benefits small{color:var(--muted,#7b7f87);font-size:8px}
+.premium-page-section-head{display:grid;gap:5px;margin-bottom:14px}.premium-page-section-head h3{margin:0;font-size:21px}.premium-page-section-head.home{margin-bottom:12px}
+.premium-page-back{width:max-content;border:1px solid var(--line,rgba(18,22,28,.08));background:var(--soft,#f7f7f8);color:inherit;border-radius:10px;min-height:35px;padding:0 11px;margin-bottom:5px;font-size:10px;font-weight:800}
+.premium-path-grid,.premium-payment-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.premium-path-card,.premium-action-card{border:1px solid var(--line,rgba(18,22,28,.08));background:var(--soft,#f7f7f8);color:inherit;border-radius:16px;padding:15px;text-align:left;cursor:pointer}
+.premium-path-card{display:grid;grid-template-columns:44px minmax(0,1fr) 30px;gap:12px;align-items:center;min-height:112px}
+.ppc-icon{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;background:rgba(201,154,5,.11);color:#b17f00;font-size:16px}.premium-path-card.broker .ppc-icon{background:rgba(14,203,129,.08);color:#078a58}
+.premium-path-card small{display:block;color:#9b7b27;font-size:8px;font-weight:900;letter-spacing:.08em}.premium-path-card h4{margin:3px 0 4px;font-size:16px}.premium-path-card p{margin:0;color:var(--muted,#7b7f87);font-size:10px;line-height:1.4}
+.ppc-arrow{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:#fff;color:#b17f00}
+.premium-plan-card{padding:16px;border:1px solid rgba(201,154,5,.17);border-radius:15px;background:linear-gradient(145deg,rgba(252,213,53,.08),transparent);display:grid;grid-template-columns:1fr auto;gap:14px;align-items:end;margin-bottom:10px}
+.premium-plan-card>div>small{color:#a77700;font-size:8px;font-weight:900;letter-spacing:.09em}.premium-plan-card h4{margin:3px 0;font-size:17px}.premium-plan-card p{margin:0;color:var(--muted,#7b7f87);font-size:10px}
+.premium-plan-prices{display:flex;gap:8px}.premium-plan-prices span{min-width:130px;padding:9px;border-radius:10px;background:var(--soft,#f7f7f8);display:grid;gap:2px}.premium-plan-prices small{font-size:7px;color:var(--muted,#7b7f87);font-weight:800}.premium-plan-prices b{font-size:11px}
+.premium-action-card{display:grid;grid-template-columns:40px 1fr 22px;gap:10px;align-items:center;min-height:78px}.premium-action-card>span{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:rgba(201,154,5,.10);color:#b17f00}.premium-action-card b{display:block;font-size:12px}.premium-action-card small{display:block;margin-top:2px;color:var(--muted,#7b7f87);font-size:9px}.premium-action-card>i{color:#b17f00}
+.premium-action-card:disabled{opacity:.45;cursor:not-allowed}
+.premium-page-empty{padding:18px;border:1px dashed rgba(201,154,5,.26);border-radius:14px;display:grid;grid-template-columns:42px 1fr auto;gap:12px;align-items:center;background:rgba(201,154,5,.04)}.premium-page-empty>span{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:rgba(201,154,5,.10);color:#b17f00}.premium-page-empty b{display:block}.premium-page-empty p{margin:3px 0 0;color:var(--muted,#7b7f87);font-size:10px}
+.premium-broker-status{padding:10px 12px;border-radius:11px;display:flex;gap:9px;align-items:center;margin-bottom:10px;background:var(--soft,#f7f7f8)}.premium-broker-status>i{color:#b17f00}.premium-broker-status small{display:block;font-size:7px;color:var(--muted,#7b7f87)}.premium-broker-status b{display:block;font-size:10px}.premium-broker-status span{font-size:8px;color:var(--muted,#7b7f87)}
+.premium-broker-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.premium-broker-grid button{min-height:76px;border:1px solid var(--line,rgba(18,22,28,.08));border-radius:13px;background:var(--soft,#f7f7f8);color:inherit;display:grid;place-items:center;align-content:center;gap:7px;font-weight:850}.premium-broker-grid button i{font-size:16px;color:#b17f00}.premium-broker-grid button.is-active{border-color:rgba(201,154,5,.4);background:rgba(201,154,5,.08)}
+.premium-account-mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.premium-account-mode-grid button{min-height:84px;padding:11px;border:1px solid var(--line,rgba(18,22,28,.08));border-radius:13px;background:var(--soft,#f7f7f8);color:inherit;display:grid;grid-template-columns:36px 1fr;gap:9px;text-align:left;align-items:center}.premium-account-mode-grid button>span{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:rgba(201,154,5,.10);color:#b17f00}.premium-account-mode-grid b{display:block;font-size:11px}.premium-account-mode-grid small{display:block;margin-top:3px;color:var(--muted,#7b7f87);font-size:8px}.premium-account-mode-grid button.is-active{border-color:rgba(201,154,5,.4);background:rgba(201,154,5,.07)}
+.premium-broker-guide{margin-top:10px;padding:12px;border:1px solid rgba(201,154,5,.16);border-radius:12px;background:rgba(201,154,5,.04)}.premium-broker-guide small{display:block;color:#a77700;font-size:7px;font-weight:900;letter-spacing:.08em}.premium-broker-guide p{margin:4px 0 0;color:var(--muted,#7b7f87);font-size:9px;line-height:1.45}
+.premium-partner-link{margin-top:10px;padding:11px;border:1px solid var(--line,rgba(18,22,28,.08));border-radius:12px;background:var(--soft,#f7f7f8);display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:7px;align-items:center}.premium-partner-link>div{min-width:0}.premium-partner-link small{display:block;font-size:7px;color:var(--muted,#7b7f87);font-weight:800}.premium-partner-link b{display:block;margin-top:3px;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.premium-partner-link .app-btn{min-height:34px;font-size:8px}
+.premium-verify-btn{width:100%;margin-top:10px;min-height:44px}
+.premium-page-hint{margin-top:10px;min-height:54px;border:1px dashed var(--line,rgba(18,22,28,.08));border-radius:12px;display:flex;align-items:center;justify-content:center;gap:8px;color:var(--muted,#7b7f87);font-size:10px}
+
+html[data-theme="dark"] .premium-page-hero,html[data-theme="dark"] .premium-page-flow{background:#181a20;border-color:rgba(255,255,255,.06)}
+html[data-theme="dark"] .premium-page-benefits span,html[data-theme="dark"] .premium-path-card,html[data-theme="dark"] .premium-action-card,html[data-theme="dark"] .premium-plan-prices span,html[data-theme="dark"] .premium-broker-grid button,html[data-theme="dark"] .premium-account-mode-grid button,html[data-theme="dark"] .premium-partner-link,html[data-theme="dark"] .premium-page-back{background:#202229;border-color:rgba(255,255,255,.06)}
+html[data-theme="dark"] .ppc-arrow{background:#262930}
+
+@media(max-width:760px){
+  #p-premium{padding:0 0 84px!important}
+  .premium-page-shell{gap:9px!important}
+  .premium-page-hero,.premium-page-flow{border-radius:15px!important;box-shadow:0 8px 22px rgba(18,22,28,.04)!important}
+  .premium-page-hero{padding:12px!important}
+  .premium-page-flow{padding:11px!important}
+  .premium-page-crown{width:40px!important;height:40px!important;border-radius:11px!important;font-size:15px!important}
+  .premium-page-hero-copy{gap:9px!important}
+  .premium-page-hero-copy small{font-size:5.8px!important}
+  .premium-page-hero-copy h2{font-size:18px!important;margin:2px 0 3px!important}
+  .premium-page-hero-copy p{font-size:7.5px!important}
+  .premium-page-status{margin-top:10px!important;padding:9px!important;grid-template-columns:34px minmax(0,1fr) auto!important;gap:8px!important;border-radius:11px!important}
+  .premium-page-status .pps-icon{width:34px!important;height:34px!important;border-radius:9px!important;font-size:12px!important}
+  .premium-page-status>div small{font-size:5.2px!important}.premium-page-status>div b{font-size:10px!important}.premium-page-status>div p{font-size:6.6px!important}
+  .pps-state{min-height:21px!important;padding:0 6px!important;font-size:5.3px!important}
+  .premium-page-benefits{gap:5px!important;margin-top:7px!important}.premium-page-benefits span{min-height:44px!important;padding:6px!important;border-radius:9px!important;grid-template-columns:22px 1fr!important;column-gap:5px!important}.premium-page-benefits i{width:22px!important;height:22px!important;border-radius:7px!important;font-size:8px!important}.premium-page-benefits b{font-size:7.5px!important}.premium-page-benefits small{font-size:5.6px!important}
+  .premium-page-section-head{margin-bottom:9px!important;gap:3px!important}.premium-page-section-head small{font-size:5.5px!important}.premium-page-section-head h3{font-size:15px!important}.premium-page-section-head p{font-size:7.5px!important}
+  .premium-page-back{min-height:30px!important;padding:0 8px!important;font-size:7px!important;border-radius:8px!important}
+  .premium-path-grid,.premium-payment-grid{grid-template-columns:1fr!important;gap:7px!important}
+  .premium-path-card{min-height:76px!important;padding:9px!important;border-radius:11px!important;grid-template-columns:34px 1fr 24px!important;gap:8px!important}.ppc-icon{width:34px!important;height:34px!important;border-radius:9px!important;font-size:12px!important}.premium-path-card small{font-size:5.4px!important}.premium-path-card h4{font-size:11px!important;margin:2px 0 3px!important}.premium-path-card p{font-size:7px!important}.ppc-arrow{width:24px!important;height:24px!important;border-radius:8px!important;font-size:8px!important}
+  .premium-plan-card{padding:10px!important;border-radius:11px!important;grid-template-columns:1fr!important;gap:8px!important}.premium-plan-card>div>small{font-size:5.5px!important}.premium-plan-card h4{font-size:12px!important}.premium-plan-card p{font-size:7px!important}.premium-plan-prices{display:grid!important;grid-template-columns:1fr 1fr!important;gap:5px!important}.premium-plan-prices span{min-width:0!important;padding:7px!important;border-radius:8px!important}.premium-plan-prices small{font-size:5.2px!important}.premium-plan-prices b{font-size:7.8px!important}
+  .premium-action-card{min-height:62px!important;padding:8px!important;border-radius:10px!important;grid-template-columns:32px 1fr 18px!important;gap:7px!important}.premium-action-card>span{width:32px!important;height:32px!important;border-radius:9px!important;font-size:10px!important}.premium-action-card b{font-size:9px!important}.premium-action-card small{font-size:6.5px!important}
+  .premium-page-empty{padding:10px!important;border-radius:10px!important;grid-template-columns:34px 1fr!important}.premium-page-empty>span{width:34px!important;height:34px!important;border-radius:9px!important}.premium-page-empty b{font-size:9px!important}.premium-page-empty p{font-size:6.8px!important}.premium-page-empty .app-btn{grid-column:1/-1!important;width:100%!important}
+  .premium-broker-grid{gap:5px!important}.premium-broker-grid button{min-height:58px!important;border-radius:9px!important;font-size:7px!important}.premium-broker-grid button i{font-size:11px!important}
+  .premium-account-mode-grid{grid-template-columns:1fr!important;gap:6px!important;margin-top:7px!important}.premium-account-mode-grid button{min-height:58px!important;padding:8px!important;border-radius:9px!important;grid-template-columns:30px 1fr!important;gap:7px!important}.premium-account-mode-grid button>span{width:30px!important;height:30px!important;border-radius:8px!important;font-size:9px!important}.premium-account-mode-grid b{font-size:8.5px!important}.premium-account-mode-grid small{font-size:6.2px!important}
+  .premium-broker-guide{margin-top:7px!important;padding:9px!important;border-radius:9px!important}.premium-broker-guide small{font-size:5.4px!important}.premium-broker-guide p{font-size:6.7px!important}
+  .premium-partner-link{margin-top:7px!important;padding:8px!important;border-radius:9px!important;grid-template-columns:1fr 1fr!important}.premium-partner-link>div{grid-column:1/-1!important}.premium-partner-link small{font-size:5.4px!important}.premium-partner-link b{font-size:7px!important}.premium-partner-link .app-btn{width:100%!important;min-height:32px!important;font-size:6.5px!important}
+  .premium-verify-btn{margin-top:7px!important;min-height:38px!important;font-size:8px!important}
+  .premium-broker-status{padding:8px!important;margin-bottom:7px!important;border-radius:9px!important}.premium-broker-status small{font-size:5px!important}.premium-broker-status b{font-size:8px!important}.premium-broker-status span{font-size:6px!important}
+  .premium-page-hint{min-height:42px!important;font-size:7px!important}
+}
