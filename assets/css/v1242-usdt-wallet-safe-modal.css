@@ -1,0 +1,165 @@
+/* 24K MR ZERO — USDT wallet + safe mobile payment sheet v12.42 */
+@media(max-width:760px){
+  /* Payment modals use a true 3-row sheet: header / scroll body / footer.
+     Nothing can sit behind the app navigator or phone gesture area. */
+  body.modal-open{
+    overflow:hidden!important;
+  }
+  body.modal-open .student-mobile-nav{
+    display:none!important;
+    visibility:hidden!important;
+    opacity:0!important;
+    pointer-events:none!important;
+  }
+  .student-page #paymentMethodChoiceModal .app-modal-card,
+  .student-page #paymentModal .app-modal-card,
+  .student-page #bankPaymentModal .app-modal-card,
+  .student-page #coursePaymentSuccessModal .app-modal-card{
+    display:grid!important;
+    grid-template-rows:auto minmax(0,1fr) auto!important;
+    width:100%!important;
+    height:min(94dvh,calc(100dvh - 10px))!important;
+    max-height:min(94dvh,calc(100dvh - 10px))!important;
+    overflow:hidden!important;
+  }
+  .student-page #paymentMethodChoiceModal .app-modal-head,
+  .student-page #paymentModal .app-modal-head,
+  .student-page #bankPaymentModal .app-modal-head,
+  .student-page #coursePaymentSuccessModal .app-modal-head{
+    position:relative!important;
+    top:auto!important;
+  }
+  .student-page #paymentMethodChoiceModal .app-modal-body,
+  .student-page #paymentModal .app-modal-body,
+  .student-page #bankPaymentModal .app-modal-body,
+  .student-page #coursePaymentSuccessModal .app-modal-body{
+    min-height:0!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    padding-bottom:24px!important;
+    -webkit-overflow-scrolling:touch!important;
+  }
+  .student-page #paymentMethodChoiceModal .app-modal-foot,
+  .student-page #paymentModal .app-modal-foot,
+  .student-page #bankPaymentModal .app-modal-foot,
+  .student-page #coursePaymentSuccessModal .app-modal-foot{
+    position:relative!important;
+    bottom:auto!important;
+    padding:12px 14px max(18px,calc(12px + env(safe-area-inset-bottom)))!important;
+    background:var(--s-surface,#fff)!important;
+    border-top:1px solid var(--s-line,#E7E9ED)!important;
+    box-shadow:0 -10px 24px rgba(18,22,28,.055)!important;
+  }
+  html[data-theme="dark"] .student-page #paymentMethodChoiceModal .app-modal-foot,
+  html[data-theme="dark"] .student-page #paymentModal .app-modal-foot,
+  html[data-theme="dark"] .student-page #bankPaymentModal .app-modal-foot,
+  html[data-theme="dark"] .student-page #coursePaymentSuccessModal .app-modal-foot{
+    background:#101113!important;
+    border-top-color:rgba(255,255,255,.055)!important;
+  }
+
+  /* Actual client-facing TRC20 payment destination */
+  .student-page .usdt-wallet-card{
+    margin:0 0 12px!important;
+    padding:11px!important;
+    display:grid!important;
+    gap:9px!important;
+    border:1px solid rgba(240,185,11,.22)!important;
+    border-radius:12px!important;
+    background:
+      radial-gradient(180px 80px at 100% 0,rgba(240,185,11,.09),transparent 75%),
+      linear-gradient(145deg,#FFFDF8,#FFF)!important;
+    box-shadow:0 8px 20px rgba(108,82,10,.055)!important;
+  }
+  html[data-theme="dark"] .student-page .usdt-wallet-card{
+    border-color:rgba(240,185,11,.13)!important;
+    background:
+      radial-gradient(180px 80px at 100% 0,rgba(240,185,11,.06),transparent 75%),
+      linear-gradient(145deg,#1A1C21,#15171B)!important;
+  }
+  .student-page .usdt-wallet-top{
+    display:grid!important;
+    grid-template-columns:36px minmax(0,1fr) auto!important;
+    gap:9px!important;
+    align-items:center!important;
+  }
+  .student-page .usdt-wallet-icon{
+    width:36px!important;height:36px!important;
+    display:grid!important;place-items:center!important;
+    border-radius:10px!important;
+    background:linear-gradient(145deg,#FCD535,#D69F00)!important;
+    color:#181A20!important;font-size:13px!important;
+  }
+  .student-page .usdt-wallet-top>div{display:grid!important;gap:2px!important}
+  .student-page .usdt-wallet-top small{
+    font-size:5.8px!important;font-weight:950!important;letter-spacing:.10em!important;color:#9AA4B2!important;
+  }
+  .student-page .usdt-wallet-top b{
+    font-size:10.5px!important;color:var(--s-text,#0B0E11)!important;
+  }
+  .student-page .usdt-network-badge{
+    min-height:24px!important;padding:0 8px!important;
+    display:inline-flex!important;align-items:center!important;
+    border-radius:999px!important;
+    background:rgba(14,203,129,.09)!important;color:#078A58!important;
+    font-size:6.5px!important;font-weight:900!important;
+  }
+
+  .student-page .usdt-wallet-address{
+    padding:9px!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) auto!important;
+    gap:5px 8px!important;
+    align-items:center!important;
+    border:1px solid var(--s-line,#E7E9ED)!important;
+    border-radius:10px!important;
+    background:var(--s-surface-2,#F3F4F6)!important;
+  }
+  .student-page .usdt-wallet-address small{
+    grid-column:1/-1!important;
+    font-size:5.8px!important;font-weight:950!important;letter-spacing:.09em!important;color:#9AA4B2!important;
+  }
+  .student-page .usdt-wallet-address code{
+    min-width:0!important;
+    display:block!important;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace!important;
+    font-size:8.6px!important;line-height:1.25!important;font-weight:800!important;
+    color:var(--s-text,#0B0E11)!important;
+    word-break:break-all!important;
+    user-select:all!important;
+  }
+  .student-page .usdt-wallet-address button{
+    min-height:34px!important;padding:0 10px!important;
+    display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:5px!important;
+    border:0!important;border-radius:8px!important;
+    background:#F0B90B!important;color:#181A20!important;
+    font-size:7px!important;font-weight:900!important;
+  }
+  .student-page .usdt-wallet-note{
+    display:grid!important;grid-template-columns:22px minmax(0,1fr)!important;gap:7px!important;align-items:center!important;
+    color:var(--s-muted,#707A8A)!important;
+  }
+  .student-page .usdt-wallet-note>i{
+    width:22px!important;height:22px!important;display:grid!important;place-items:center!important;
+    border-radius:7px!important;background:rgba(240,185,11,.10)!important;color:#B17F00!important;font-size:8px!important;
+  }
+  .student-page .usdt-wallet-note span{
+    font-size:7px!important;line-height:1.35!important;
+  }
+  .student-page .usdt-wallet-note b{color:var(--s-text,#0B0E11)!important}
+
+  /* Missing address is a setup blocker, not a fake payment destination. */
+  .student-page .usdt-wallet-missing{
+    margin-bottom:12px!important;
+  }
+
+  /* Keep textarea and receipt controls fully scrollable above footer. */
+  .student-page #paymentModal textarea,
+  .student-page #bankPaymentModal textarea{
+    margin-bottom:8px!important;
+  }
+  .student-page #paymentModal .check-row,
+  .student-page #bankPaymentModal .check-row{
+    margin-bottom:8px!important;
+  }
+}
