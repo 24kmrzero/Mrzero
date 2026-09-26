@@ -1,0 +1,407 @@
+/* 24K MR ZERO — Team Home fintech dashboard v13.54
+   Personalized hero, health score, priority center, sparklines, activity feed, badges and skeleton loading. */
+
+@media(max-width:780px){
+  /* HERO: personalized + team health */
+  #teamApp:not(.hidden) .team-home-hero-top{
+    align-items:start!important;
+  }
+  #teamApp:not(.hidden) .team-home-hero h2{
+    margin:9px 0 3px!important;
+    font-size:22px!important;
+    line-height:1.03!important;
+    letter-spacing:-.045em!important;
+  }
+  #teamApp:not(.hidden) .team-home-hero h2 #teamGreeting{
+    font-weight:650!important;
+    color:#58626e!important;
+  }
+  #teamApp:not(.hidden) .team-home-hero h2 #heroName{
+    font-weight:950!important;
+    color:#171c24!important;
+  }
+  #teamApp:not(.hidden) .team-home-health-row{
+    display:grid!important;
+    grid-template-columns:116px minmax(0,1fr)!important;
+    gap:8px!important;
+    margin-top:11px!important;
+  }
+  #teamApp:not(.hidden) .team-health-meter{
+    min-width:0!important;
+    display:flex!important;
+    align-items:center!important;
+    gap:7px!important;
+    padding:8px!important;
+    border:1px solid #e6dfcf!important;
+    border-radius:12px!important;
+    background:rgba(255,255,255,.76)!important;
+  }
+  #teamApp:not(.hidden) .team-health-ring{
+    --health:0;
+    position:relative!important;
+    width:38px!important;
+    height:38px!important;
+    min-width:38px!important;
+    display:grid!important;
+    place-items:center!important;
+    border-radius:50%!important;
+    background:conic-gradient(#f0b90b calc(var(--health)*1%),#eceff2 0)!important;
+  }
+  #teamApp:not(.hidden) .team-health-ring:after{
+    content:""!important;
+    position:absolute!important;
+    inset:4px!important;
+    border-radius:50%!important;
+    background:#fff!important;
+  }
+  #teamApp:not(.hidden) .team-health-ring b{
+    position:relative!important;
+    z-index:1!important;
+    color:#1e242c!important;
+    font-size:9px!important;
+    font-weight:950!important;
+  }
+  #teamApp:not(.hidden) .team-health-meter>div{
+    min-width:0!important;
+    display:grid!important;
+    gap:1px!important;
+  }
+  #teamApp:not(.hidden) .team-health-meter small{
+    color:#939ba4!important;
+    font-size:5.4px!important;
+    font-weight:900!important;
+    letter-spacing:.08em!important;
+  }
+  #teamApp:not(.hidden) .team-health-meter>div>b{
+    color:#282e36!important;
+    font-size:7.5px!important;
+    line-height:1.1!important;
+  }
+  #teamApp:not(.hidden) .team-health-meter em{
+    display:block!important;
+    color:#929aa4!important;
+    font-size:5.5px!important;
+    font-style:normal!important;
+    line-height:1.2!important;
+  }
+  #teamApp:not(.hidden) .team-home-health-row .team-home-attention{
+    min-width:0!important;
+    margin:0!important;
+    padding:8px 9px!important;
+  }
+  #teamApp:not(.hidden) .team-home-health-row .team-home-attention-copy b{
+    font-size:12.5px!important;
+  }
+  #teamApp:not(.hidden) .team-home-health-row .team-home-attention-copy em{
+    max-width:170px!important;
+  }
+
+  /* PRIORITY CENTER */
+  #teamApp:not(.hidden) .team-priority-center{
+    margin-top:0!important;
+  }
+  #teamApp:not(.hidden) .team-priority-cards{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:6px!important;
+  }
+  #teamApp:not(.hidden) .team-priority-card{
+    -webkit-appearance:none!important;
+    appearance:none!important;
+    min-width:0!important;
+    min-height:56px!important;
+    display:grid!important;
+    grid-template-columns:28px minmax(0,1fr) 7px!important;
+    align-items:center!important;
+    gap:7px!important;
+    padding:8px!important;
+    border:1px solid #e5e7ea!important;
+    border-radius:12px!important;
+    background:#fff!important;
+    color:#252b33!important;
+    box-shadow:0 4px 12px rgba(24,31,40,.025)!important;
+    font:inherit!important;
+    text-align:left!important;
+  }
+  #teamApp:not(.hidden) .team-priority-card>span{
+    width:28px!important;
+    height:28px!important;
+    display:grid!important;
+    place-items:center!important;
+    border-radius:9px!important;
+    background:#f3f4f6!important;
+    color:#7b8490!important;
+    font-size:8px!important;
+  }
+  #teamApp:not(.hidden) .team-priority-card>div{
+    min-width:0!important;
+    display:grid!important;
+    gap:1px!important;
+  }
+  #teamApp:not(.hidden) .team-priority-card small{
+    color:#8b94a0!important;
+    font-size:5.8px!important;
+    line-height:1.1!important;
+  }
+  #teamApp:not(.hidden) .team-priority-card b{
+    color:#252b33!important;
+    font-size:10.5px!important;
+    line-height:1!important;
+  }
+  #teamApp:not(.hidden) .team-priority-card em{
+    color:#8a939d!important;
+    font-size:5.8px!important;
+    font-style:normal!important;
+    line-height:1.1!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+  #teamApp:not(.hidden) .team-priority-card>i{
+    color:#a7adb4!important;
+    font-size:6px!important;
+  }
+  #teamApp:not(.hidden) .team-priority-card.green>span{
+    background:#ecfaf5!important;color:#159568!important;
+  }
+  #teamApp:not(.hidden) .team-priority-card.amber>span{
+    background:#fff7df!important;color:#b17d00!important;
+  }
+  #teamApp:not(.hidden) .team-priority-card.blue>span{
+    background:#eef5ff!important;color:#4b79ba!important;
+  }
+  #teamApp:not(.hidden) .team-priority-card.red>span{
+    background:#fff0f1!important;color:#d95461!important;
+  }
+
+  /* KPI micro sparklines */
+  #teamApp:not(.hidden) .overview-kpi-foot{
+    display:flex!important;
+    align-items:flex-end!important;
+    justify-content:space-between!important;
+    gap:6px!important;
+    margin-top:3px!important;
+  }
+  #teamApp:not(.hidden) .overview-kpi-foot>small{
+    min-width:0!important;
+    display:block!important;
+    overflow:hidden!important;
+    color:#7b8490!important;
+    font-size:6.3px!important;
+    line-height:1.15!important;
+    white-space:nowrap!important;
+    text-overflow:ellipsis!important;
+  }
+  #teamApp:not(.hidden) .home-spark{
+    width:42px!important;
+    height:16px!important;
+    flex:0 0 42px!important;
+    display:flex!important;
+    align-items:flex-end!important;
+    justify-content:flex-end!important;
+    gap:2px!important;
+  }
+  #teamApp:not(.hidden) .home-spark i{
+    width:3px!important;
+    min-height:2px!important;
+    display:block!important;
+    border-radius:3px 3px 1px 1px!important;
+    background:#c8ced5!important;
+  }
+  #teamApp:not(.hidden) .home-spark.green i{background:#4dcea0!important}
+  #teamApp:not(.hidden) .home-spark.amber i,
+  #teamApp:not(.hidden) .home-spark.gold i{background:#e0b32a!important}
+  #teamApp:not(.hidden) .home-spark.blue i{background:#77a4df!important}
+
+  /* Recent activity */
+  #teamApp:not(.hidden) .team-activity-card{
+    margin-top:8px!important;
+  }
+  #teamApp:not(.hidden) .team-activity-list{
+    display:grid!important;
+    gap:0!important;
+  }
+  #teamApp:not(.hidden) .team-activity-item{
+    position:relative!important;
+    min-height:48px!important;
+    display:grid!important;
+    grid-template-columns:28px minmax(0,1fr) auto!important;
+    align-items:center!important;
+    gap:8px!important;
+    padding:6px 0!important;
+    border-bottom:1px solid #eef0f2!important;
+  }
+  #teamApp:not(.hidden) .team-activity-item:last-child{
+    border-bottom:0!important;
+  }
+  #teamApp:not(.hidden) .team-activity-item>span{
+    width:28px!important;
+    height:28px!important;
+    display:grid!important;
+    place-items:center!important;
+    border-radius:9px!important;
+    background:#f3f4f6!important;
+    color:#7c8590!important;
+    font-size:8px!important;
+  }
+  #teamApp:not(.hidden) .team-activity-item>span.green{
+    background:#ecfaf5!important;color:#159568!important;
+  }
+  #teamApp:not(.hidden) .team-activity-item>span.gold{
+    background:#fff7df!important;color:#ad7a00!important;
+  }
+  #teamApp:not(.hidden) .team-activity-item>span.blue{
+    background:#eef5ff!important;color:#4d79b7!important;
+  }
+  #teamApp:not(.hidden) .team-activity-item>div{
+    min-width:0!important;
+    display:grid!important;
+    gap:2px!important;
+  }
+  #teamApp:not(.hidden) .team-activity-item b{
+    color:#30363f!important;
+    font-size:8.3px!important;
+    line-height:1.15!important;
+  }
+  #teamApp:not(.hidden) .team-activity-item small{
+    overflow:hidden!important;
+    color:#8a939e!important;
+    font-size:6.3px!important;
+    line-height:1.2!important;
+    white-space:nowrap!important;
+    text-overflow:ellipsis!important;
+  }
+  #teamApp:not(.hidden) .team-activity-item em{
+    color:#a0a7af!important;
+    font-size:5.8px!important;
+    font-style:normal!important;
+    white-space:nowrap!important;
+  }
+
+  /* Notification dots on mobile nav */
+  #teamApp:not(.hidden) .team-mobile-nav button{
+    position:relative!important;
+  }
+  #teamApp:not(.hidden) .team-mobile-badge{
+    position:absolute!important;
+    top:3px!important;
+    right:18%!important;
+    min-width:14px!important;
+    height:14px!important;
+    display:grid!important;
+    place-items:center!important;
+    padding:0 3px!important;
+    border:2px solid rgba(255,255,255,.96)!important;
+    border-radius:999px!important;
+    background:#e24d5a!important;
+    color:#fff!important;
+    font-size:5.5px!important;
+    font-style:normal!important;
+    font-weight:900!important;
+    line-height:1!important;
+  }
+  #teamApp:not(.hidden) .team-mobile-badge[hidden]{
+    display:none!important;
+  }
+
+  /* Skeleton loading when refreshing */
+  #teamApp:not(.hidden) .home-loading .team-home-hero,
+  #teamApp:not(.hidden) .home-loading .team-priority-cards,
+  #teamApp:not(.hidden) .home-loading .team-home-kpi-rail,
+  #teamApp:not(.hidden) .home-loading .team-home-quick-actions,
+  #teamApp:not(.hidden) .home-loading .team-home-grid,
+  #teamApp:not(.hidden) .home-loading .team-activity-card,
+  #teamApp:not(.hidden) .home-loading .team-home-links{
+    position:relative!important;
+    overflow:hidden!important;
+    pointer-events:none!important;
+  }
+  #teamApp:not(.hidden) .home-loading .team-home-hero:before,
+  #teamApp:not(.hidden) .home-loading .team-priority-cards:before,
+  #teamApp:not(.hidden) .home-loading .team-home-kpi-rail:before,
+  #teamApp:not(.hidden) .home-loading .team-home-quick-actions:before,
+  #teamApp:not(.hidden) .home-loading .team-home-grid:before,
+  #teamApp:not(.hidden) .home-loading .team-activity-card:before,
+  #teamApp:not(.hidden) .home-loading .team-home-links:before{
+    content:""!important;
+    position:absolute!important;
+    z-index:30!important;
+    inset:0!important;
+    background:linear-gradient(100deg,rgba(246,247,248,.42) 25%,rgba(255,255,255,.88) 42%,rgba(246,247,248,.42) 60%)!important;
+    background-size:220% 100%!important;
+    animation:teamSkeleton 1s linear infinite!important;
+    border-radius:inherit!important;
+  }
+  @keyframes teamSkeleton{
+    from{background-position:200% 0}
+    to{background-position:-20% 0}
+  }
+
+  /* Dark parity */
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-home-hero h2 #teamGreeting{
+    color:#8f99a6!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-home-hero h2 #heroName,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-health-meter>div>b,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-priority-card b,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-activity-item b{
+    color:#eef2f6!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-health-meter,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-priority-card{
+    border-color:#29313a!important;
+    background:#10161d!important;
+    box-shadow:none!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-health-ring{
+    background:conic-gradient(#e0ae14 calc(var(--health)*1%),#252c35 0)!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-health-ring:after{
+    background:#10161d!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-health-ring b{
+    color:#eef2f6!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-activity-item{
+    border-bottom-color:#252c34!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-mobile-badge{
+    border-color:#0d1218!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .home-loading .team-home-hero:before,
+  html[data-theme="dark"] #teamApp:not(.hidden) .home-loading .team-priority-cards:before,
+  html[data-theme="dark"] #teamApp:not(.hidden) .home-loading .team-home-kpi-rail:before,
+  html[data-theme="dark"] #teamApp:not(.hidden) .home-loading .team-home-quick-actions:before,
+  html[data-theme="dark"] #teamApp:not(.hidden) .home-loading .team-home-grid:before,
+  html[data-theme="dark"] #teamApp:not(.hidden) .home-loading .team-activity-card:before,
+  html[data-theme="dark"] #teamApp:not(.hidden) .home-loading .team-home-links:before{
+    background:linear-gradient(100deg,rgba(13,18,24,.50) 25%,rgba(38,44,53,.74) 42%,rgba(13,18,24,.50) 60%)!important;
+    background-size:220% 100%!important;
+  }
+}
+
+@media(max-width:390px){
+  #teamApp:not(.hidden) .team-home-health-row{
+    grid-template-columns:104px minmax(0,1fr)!important;
+    gap:6px!important;
+  }
+  #teamApp:not(.hidden) .team-health-meter{
+    gap:5px!important;
+    padding:7px!important;
+  }
+  #teamApp:not(.hidden) .team-health-ring{
+    width:34px!important;
+    height:34px!important;
+    min-width:34px!important;
+  }
+  #teamApp:not(.hidden) .team-priority-card{
+    min-height:53px!important;
+    grid-template-columns:25px minmax(0,1fr) 6px!important;
+    gap:5px!important;
+    padding:7px!important;
+  }
+  #teamApp:not(.hidden) .team-priority-card>span{
+    width:25px!important;
+    height:25px!important;
+  }
+}
