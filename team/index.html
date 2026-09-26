@@ -27,6 +27,7 @@
   <link rel="stylesheet" href="/assets/css/v1354-team-home-fintech.css?v=13.54">
   <link rel="stylesheet" href="/assets/css/v1355-team-executive.css?v=13.55.1">
   <link rel="stylesheet" href="/assets/css/v1356-team-clients.css?v=13.56">
+  <link rel="stylesheet" href="/assets/css/v1357-team-chat.css?v=13.57">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/assets/js/config.js?v=12.18"></script>
 </head>
@@ -299,12 +300,80 @@
         <article class="panel-card daily-history"><div class="card-head"><div><h3>Daily Report History</h3><small>Manual work plus auto-tracked course activity.</small></div></div><div id="dailyReportsList" class="table-wrap"></div></article>
       </section>
 
-      <section class="view" data-view-panel="chat">
-        <div class="chat-kpis" id="chatKpis"></div>
-        <div class="live-desk-shell">
-          <aside class="live-desk-list"><div class="desk-title"><div><h3>Live Desk</h3><small><i></i> Online</small></div></div><input id="chatSearch" type="search" placeholder="Search name, WhatsApp, email, message..."><div class="chat-filter-row"><button class="active" data-chat-filter="all">All</button><button data-chat-filter="mine">My Chats</button><button data-chat-filter="waiting">Waiting</button><button data-chat-filter="closed">Closed</button></div><div id="chatThreads" class="chat-thread-list"></div></aside>
-          <section class="live-desk-conversation"><div id="chatConversationHead" class="conversation-head"><div><b>Select a conversation</b><small>Live Desk</small></div></div><div id="chatMessages" class="chat-messages"><div class="chat-empty">Choose a conversation from the left.</div></div><div id="chatQuickTools" class="chat-quick-tools"><span>AI TOOLS</span><button type="button" data-quick-reply="Thank you. I am checking this for you now.">Suggest Reply</button><button type="button" data-quick-reply="Please share your Client ID and active WhatsApp number.">Client Details</button><button type="button" data-quick-reply="I will guide you with the next step shortly.">Next Action</button></div><form id="chatReplyForm" class="chat-reply-form"><textarea id="chatReply" placeholder="Type a reply..." required></textarea><button class="gold-btn" type="submit"><i class="fa-solid fa-paper-plane"></i></button></form></section>
-          <aside id="chatProfile" class="live-desk-profile"><div class="chat-empty">Lead profile will appear here.</div></aside>
+      <section class="view team-chat-v2" data-view-panel="chat">
+        <article class="team-chat-command">
+          <div class="team-chat-command-top">
+            <div>
+              <span class="team-chat-kicker"><i class="fa-regular fa-comments"></i> LIVE DESK</span>
+              <h2>Conversation Center</h2>
+              <p>AI + human support, lead conversations and follow-ups in one focused workspace.</p>
+            </div>
+            <span class="team-chat-online"><i></i><b>Online</b><small id="chatAttentionLabel">All clear</small></span>
+          </div>
+          <div class="chat-kpis team-chat-kpi-rail" id="chatKpis"></div>
+        </article>
+
+        <div class="team-chat-section-head">
+          <div><small>INBOX</small><b>Live Conversations</b></div>
+          <span id="chatInboxMeta">0 conversations</span>
+        </div>
+
+        <div class="live-desk-shell team-chat-shell no-active" id="teamChatShell">
+          <aside class="live-desk-list team-chat-inbox">
+            <div class="team-chat-inbox-head">
+              <div><b>Inbox</b><small><i></i> Live</small></div>
+              <button type="button" id="chatInboxRefresh" aria-label="Refresh conversations"><i class="fa-solid fa-rotate"></i></button>
+            </div>
+
+            <label class="team-chat-search">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input id="chatSearch" type="search" autocomplete="off" placeholder="Search name, WhatsApp, email or message...">
+              <button type="button" id="chatSearchClear" aria-label="Clear search" hidden><i class="fa-solid fa-xmark"></i></button>
+            </label>
+
+            <div class="chat-filter-row team-chat-filter-row">
+              <button class="active" data-chat-filter="all"><span>All</span><em id="chatFilterAll">0</em></button>
+              <button data-chat-filter="mine"><span>My Chats</span><em id="chatFilterMine">0</em></button>
+              <button data-chat-filter="waiting"><span>Waiting</span><em id="chatFilterWaiting">0</em></button>
+              <button data-chat-filter="closed"><span>Closed</span></button>
+            </div>
+
+            <div id="chatThreads" class="chat-thread-list team-chat-thread-list"></div>
+          </aside>
+
+          <section class="live-desk-conversation team-chat-conversation" id="teamChatConversation">
+            <div id="chatConversationHead" class="conversation-head team-chat-conversation-head">
+              <button type="button" class="chat-mobile-back" data-chat-mobile-back aria-label="Back to inbox"><i class="fa-solid fa-arrow-left"></i></button>
+              <div class="chat-conversation-placeholder-title"><b>Select a conversation</b><small>Live Desk</small></div>
+            </div>
+
+            <div id="chatMessages" class="chat-messages team-chat-messages">
+              <div class="team-chat-empty-state">
+                <span><i class="fa-regular fa-comments"></i></span>
+                <div><b>No conversation selected</b><small>Choose a conversation from your inbox to start working.</small></div>
+              </div>
+            </div>
+
+            <div id="chatQuickTools" class="chat-quick-tools team-chat-quick-tools">
+              <span><i class="fa-solid fa-wand-magic-sparkles"></i> AI TOOLS</span>
+              <button type="button" data-quick-reply="Thank you. I am checking this for you now.">Suggest Reply</button>
+              <button type="button" data-quick-reply="Please share your Client ID and active WhatsApp number.">Client Details</button>
+              <button type="button" data-quick-reply="I will guide you with the next step shortly.">Next Action</button>
+            </div>
+
+            <form id="chatReplyForm" class="chat-reply-form team-chat-reply-form">
+              <textarea id="chatReply" placeholder="Type a reply..." required></textarea>
+              <button class="gold-btn" type="submit" aria-label="Send reply"><i class="fa-solid fa-paper-plane"></i></button>
+            </form>
+          </section>
+
+          <aside id="chatProfile" class="live-desk-profile team-chat-profile">
+            <button type="button" class="team-chat-profile-close" data-chat-profile-close aria-label="Close lead profile"><i class="fa-solid fa-xmark"></i></button>
+            <div class="team-chat-empty-state profile-empty">
+              <span><i class="fa-regular fa-address-card"></i></span>
+              <div><b>Lead profile</b><small>Select a conversation to see contact and sales-stage details.</small></div>
+            </div>
+          </aside>
         </div>
       </section>
 
@@ -373,7 +442,7 @@
   </div>
 
   <div id="teamToast" class="team-toast" aria-live="polite"></div>
-  <script src="/assets/js/v110-team-command-center.js?v=13.56"></script>
+  <script src="/assets/js/v110-team-command-center.js?v=13.57"></script>
   <script src="/assets/js/v1216-team-mobile.js?v=13.55"></script>
 </body>
 </html>
