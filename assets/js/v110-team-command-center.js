@@ -456,8 +456,101 @@ function renderDaily(){
   if($('#manualVip')) $('#manualVip').value=Number(p.vip_count||0);
   if($('#dailyReportsList')) $('#dailyReportsList').innerHTML=`<table><thead><tr><th>Date</th><th>Leads</th><th>Messages</th><th>Calls</th><th>Follow-ups</th><th>New Accounts</th><th>IB Shifts</th><th>XM</th><th>DPrime</th><th>Exness</th><th>Status</th></tr></thead><tbody>${reports.length?reports.map(x=>`<tr><td>${esc(x.date||'')}</td><td>${num(x.leads_contacted)}</td><td>${num(x.messages_sent)}</td><td>${num(x.calls_made)}</td><td>${num(x.follow_ups)}</td><td>${num(x.new_broker_accounts)}</td><td>${num(x.ib_partner_shifts)}</td><td>${num(x.xm_lots,1)}</td><td>${num(x.dprime_lots,1)}</td><td>${num(x.exness_lots,1)}</td><td>${esc(x.status||'submitted')}</td></tr>`).join(''):'<tr><td colspan="11">No daily reports yet.</td></tr>'}</tbody></table>`;
 }
-function progressCard(title,value,tier,nextText,pct){return `<article class="progress-card"><div class="card-head"><h3>${title}</h3><span class="rate-big">${tier}</span></div><div class="progress-meta"><span>Current level</span><span>${esc(String(value))}</span></div><div class="bar"><i style="width:${pct}%"></i></div><div class="next-copy">${nextText}</div></article>`}
-function renderEarnings(p){const cards=[['Total Earnings',money(p.total_earnings),'All commission streams'],['Course Earnings',money(p.course_earnings),`${p.course_rate||0}% current rate`],['VIP Earnings',money(p.vip_earnings),`${p.vip_rate||0}% current rate`],['Lot Earnings',money(p.lot_earnings),`${num(p.total_lots,1)} monthly lots`]];$('#earningsCards').innerHTML=cards.map(x=>`<article class="earning-card"><span>${x[0]}</span><b>${x[1]}</b><small>${x[2]}</small></article>`).join('');const c=tierCourse(p.course_sales),v=tierVip(p.vip_count),l=tierLots(p.total_lots);$('#earningsProgress').innerHTML=progressCard('Course Commission',`${num(p.course_sales,2)} paid value`,`${c.rate}%`,c.next?`Need ${num(Math.max(0,c.next-p.course_sales),2)} more value for ${c.nextRate}%`:'Top course level active',progressPct(p.course_sales,c.next,c.prev))+progressCard('VIP Commission',`${num(p.vip_count)} clients`,`${v.rate}%`,v.next?`Need ${num(Math.max(0,v.next-p.vip_count))} more VIP for ${v.nextRate}%`:'Top VIP level active',progressPct(p.vip_count,v.next,v.prev))+progressCard('Broker Lots',`${num(p.total_lots,1)} lots`,`${l.std}/lot`,l.next?`Need ${num(Math.max(0,l.next-p.total_lots),1)} lots for next level`:'Top lot level active',progressPct(p.total_lots,l.next,l.prev));const brokers=[['XM',p.xm_lots,p.xm_rate,p.xm_earnings],['DPrime',p.dprime_lots,p.dprime_rate,p.dprime_earnings],['Exness',p.exness_lots,p.exness_rate,p.exness_earnings]];$('#brokerGrid').innerHTML=brokers.map(b=>`<div class="broker-card"><span class="rate">$${num(b[2],1)}/lot</span><b>${b[0]}</b><div class="broker-stats"><div><span>Lots</span><b>${num(b[1],1)}</b></div><div><span>Earnings</span><b>${money(b[3])}</b></div></div></div>`).join('')}
+function progressCard(title,value,tier,nextText,pct,icon='fa-chart-line',tone='gold'){
+  const safePct=Math.max(0,Math.min(100,Number(pct||0)));
+  return `<article class="progress-card premium-progress-card ${tone}">
+    <div class="premium-progress-head">
+      <span class="premium-progress-icon"><i class="fa-solid ${icon}"></i></span>
+      <div><small>COMMISSION LEVEL</small><h3>${title}</h3></div>
+      <span class="rate-big">${tier}</span>
+    </div>
+    <div class="progress-meta"><span>Current progress</span><b>${esc(String(value))}</b></div>
+    <div class="bar premium-progress-bar"><i style="width:${safePct}%"></i></div>
+    <div class="next-copy"><i class="fa-solid ${safePct>=100?'fa-circle-check':'fa-arrow-trend-up'}"></i><span>${esc(nextText)}</span></div>
+  </article>`
+}
+function renderEarnings(p){
+  p=p||{};
+  const total=Number(p.total_earnings||0),
+    courseE=Number(p.course_earnings||0),
+    vipE=Number(p.vip_earnings||0),
+    lotE=Number(p.lot_earnings||0),
+    selected=$('#teamMonth')?.value||monthNow(),
+    projected=selectedMonthProjection(total);
+
+  if($('#earningsHeroTotal'))$('#earningsHeroTotal').textContent=money(total);
+  if($('#earningsProjected'))$('#earningsProjected').textContent=money(projected);
+  if($('#earningsHeroMonth'))$('#earningsHeroMonth').textContent=monthLabel(selected);
+  if($('#earningsRank')){
+    $('#earningsRank').textContent=homeRank&&Number(homeRank.team_count)?`#${num(homeRank.rank)}`:'—';
+    if($('#earningsRankMeta'))$('#earningsRankMeta').textContent=homeRank&&Number(homeRank.team_count)?`of ${num(homeRank.team_count)} team members`:'Live team position'
+  }
+
+  const totalSafe=Math.max(1,total),
+    cards=[
+      {label:'Course Earnings',value:courseE,sub:`${p.course_rate||0}% current rate`,icon:'fa-graduation-cap',tone:'blue',share:courseE/totalSafe*100},
+      {label:'VIP Earnings',value:vipE,sub:`${p.vip_rate||0}% current rate`,icon:'fa-crown',tone:'purple',share:vipE/totalSafe*100},
+      {label:'Lot Earnings',value:lotE,sub:`${num(p.total_lots,1)} monthly lots`,icon:'fa-chart-column',tone:'gold',share:lotE/totalSafe*100}
+    ];
+  $('#earningsCards').innerHTML=cards.map(x=>`<article class="earning-card premium-earning-card ${x.tone}">
+    <div class="premium-earning-card-top"><span class="premium-earning-icon"><i class="fa-solid ${x.icon}"></i></span><em>${Math.round(Math.max(0,x.share))}%</em></div>
+    <small>${x.label}</small>
+    <b>${money(x.value)}</b>
+    <span>${x.sub}</span>
+    <i class="earning-share"><u style="width:${Math.max(x.value?6:0,Math.min(100,x.share))}%"></u></i>
+  </article>`).join('');
+
+  const c=tierCourse(Number(p.course_sales||0)),
+    v=tierVip(Number(p.vip_count||0)),
+    l=tierLots(Number(p.total_lots||0));
+
+  $('#earningsProgress').innerHTML=
+    progressCard(
+      'Course Commission',
+      `${num(p.course_sales,2)} paid value`,
+      `${c.rate}%`,
+      c.next?`Need ${num(Math.max(0,c.next-p.course_sales),2)} more value for ${c.nextRate}%`:'Top course level active',
+      progressPct(p.course_sales,c.next,c.prev),
+      'fa-graduation-cap','blue'
+    )+
+    progressCard(
+      'VIP Commission',
+      `${num(p.vip_count)} clients`,
+      `${v.rate}%`,
+      v.next?`Need ${num(Math.max(0,v.next-p.vip_count))} more VIP for ${v.nextRate}%`:'Top VIP level active',
+      progressPct(p.vip_count,v.next,v.prev),
+      'fa-crown','purple'
+    )+
+    progressCard(
+      'Broker Lots',
+      `${num(p.total_lots,1)} lots`,
+      `$${num(l.std,1)}/lot`,
+      l.next?`Need ${num(Math.max(0,l.next-p.total_lots),1)} lots for next level`:'Top lot level active',
+      progressPct(p.total_lots,l.next,l.prev),
+      'fa-chart-column','gold'
+    );
+
+  const brokers=[
+    {name:'XM',lots:Number(p.xm_lots||0),rate:Number(p.xm_rate||0),earn:Number(p.xm_earnings||0),icon:'XM'},
+    {name:'DPrime',lots:Number(p.dprime_lots||0),rate:Number(p.dprime_rate||0),earn:Number(p.dprime_earnings||0),icon:'DP'},
+    {name:'Exness',lots:Number(p.exness_lots||0),rate:Number(p.exness_rate||0),earn:Number(p.exness_earnings||0),icon:'EX'}
+  ];
+  const maxLots=Math.max(1,...brokers.map(b=>b.lots));
+  if($('#earningsLotsTotal'))$('#earningsLotsTotal').textContent=`${num(p.total_lots,1)} lots`;
+  $('#brokerGrid').innerHTML=brokers.map(b=>`<article class="broker-card premium-broker-card">
+    <div class="premium-broker-head">
+      <span class="premium-broker-logo">${b.icon}</span>
+      <div><small>BROKER</small><b>${b.name}</b></div>
+      <span class="rate">$${num(b.rate,1)}/lot</span>
+    </div>
+    <div class="broker-stats">
+      <div><span>Lots</span><b>${num(b.lots,1)}</b></div>
+      <div><span>Earnings</span><b>${money(b.earn)}</b></div>
+    </div>
+    <span class="premium-broker-progress"><i style="width:${Math.max(b.lots?7:0,Math.round(b.lots/maxLots*100))}%"></i></span>
+  </article>`).join('')
+}
+
 function datesForPreset(preset){const now=new Date(),iso=d=>d.toISOString().slice(0,10);if(preset==='today')return[iso(now),iso(now)];if(preset==='yesterday'){const d=new Date(now);d.setDate(d.getDate()-1);return[iso(d),iso(d)]}if(preset==='7'){const d=new Date(now);d.setDate(d.getDate()-6);return[iso(d),iso(now)]}if(preset==='lastmonth'){const s=new Date(now.getFullYear(),now.getMonth()-1,1),e=new Date(now.getFullYear(),now.getMonth(),0);return[iso(s),iso(e)]}return[iso(now),iso(now)]}
 async function loadRange(preset,start,end){try{if(preset!=='custom')[start,end]=datesForPreset(preset);rangeData=await rpc('team_get_range_metrics',{p_token:token(),p_start:start,p_end:end});rangeData._start=start;rangeData._end=end;renderRange();renderLinks(payload?.links||[]);$$('[data-range]').forEach(b=>b.classList.toggle('active',b.dataset.range===preset))}catch(e){console.warn(e);toast('Performance range could not load.','error')}}
 function inRange(v){if(!rangeData?._start||!v)return false;const s=String(v).slice(0,10);return s>=rangeData._start&&s<=rangeData._end}
