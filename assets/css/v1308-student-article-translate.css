@@ -1,0 +1,168 @@
+/* 24K MR ZERO — Student bilingual article reader + premium detail modal v13.08 */
+
+#articleModal .app-modal-card,
+#chartModal .app-modal-card{
+  overflow:hidden;
+  border-radius:22px;
+  box-shadow:0 28px 90px rgba(16,24,40,.22);
+}
+#articleModal .app-modal-head,
+#chartModal .app-modal-head{
+  position:sticky;
+  top:0;
+  z-index:10;
+  backdrop-filter:blur(14px);
+}
+#articleModal .app-modal-body,
+#chartModal .app-modal-body{
+  padding:14px;
+}
+#articleModal .detail-image,
+#chartModal .detail-image{
+  width:100%;
+  max-height:360px;
+  object-fit:cover;
+  display:block;
+  margin:0 0 12px;
+  border-radius:16px;
+  border:1px solid var(--app-line);
+  background:var(--app-soft);
+}
+.article-reader-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:10px;
+}
+.article-reader-top .course-meta{
+  margin:0;
+}
+.article-translate-btn{
+  min-height:38px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  padding:0 12px;
+  border:1px solid rgba(196,149,0,.30);
+  border-radius:11px;
+  background:linear-gradient(180deg,#fffaf0,#fff4c9);
+  color:#8b6800;
+  font:inherit;
+  font-size:11px;
+  font-weight:850;
+  white-space:nowrap;
+  cursor:pointer;
+  box-shadow:0 5px 14px rgba(174,131,0,.08);
+}
+.article-translate-btn.roman-active{
+  border-color:rgba(22,199,132,.30);
+  background:linear-gradient(180deg,#effcf7,#e8f9f2);
+  color:#137b58;
+}
+.article-reader-language{
+  width:max-content;
+  min-height:28px;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin-bottom:12px;
+  padding:0 9px;
+  border:1px solid var(--app-line);
+  border-radius:999px;
+  background:var(--app-soft);
+  color:var(--app-muted);
+  font-size:10px;
+  font-weight:800;
+}
+.article-reader-language i{
+  color:#d3a000;
+  font-size:6px;
+}
+.article-reader-body{
+  padding:16px;
+  border:1px solid var(--app-line);
+  border-radius:15px;
+  background:var(--app-card);
+  color:var(--app-text);
+  font-size:14px;
+  line-height:1.75;
+  white-space:normal;
+}
+html[data-theme="dark"] .article-translate-btn{
+  border-color:rgba(240,185,11,.24);
+  background:linear-gradient(180deg,rgba(240,185,11,.10),rgba(240,185,11,.045));
+  color:#efc741;
+}
+html[data-theme="dark"] .article-translate-btn.roman-active{
+  border-color:rgba(22,199,132,.26);
+  background:linear-gradient(180deg,rgba(22,199,132,.10),rgba(22,199,132,.04));
+  color:#62d8ad;
+}
+
+@media(max-width:760px){
+  #articleModal,
+  #chartModal{
+    align-items:flex-end;
+    padding:0;
+  }
+  #articleModal .app-modal-card,
+  #chartModal .app-modal-card{
+    width:100%;
+    max-width:none;
+    max-height:94dvh;
+    margin:0;
+    border-radius:22px 22px 0 0;
+  }
+  #articleModal .app-modal-head,
+  #chartModal .app-modal-head{
+    min-height:60px;
+    padding:12px 14px;
+  }
+  #articleModal .app-modal-body,
+  #chartModal .app-modal-body{
+    padding:10px;
+  }
+  #articleModal .detail-image,
+  #chartModal .detail-image{
+    max-height:260px;
+    margin-bottom:9px;
+    border-radius:13px;
+  }
+  .article-reader-top{
+    align-items:flex-start;
+    gap:8px;
+    margin-bottom:8px;
+  }
+  .article-reader-top .course-meta{
+    flex:1 1 auto;
+    min-width:0;
+  }
+  .article-translate-btn{
+    min-height:34px;
+    padding:0 9px;
+    border-radius:9px;
+    font-size:9px;
+  }
+  .article-reader-language{
+    min-height:25px;
+    margin-bottom:8px;
+    font-size:8px;
+  }
+  .article-reader-body{
+    padding:12px;
+    border-radius:12px;
+    font-size:12.5px;
+    line-height:1.7;
+  }
+}
+@media(max-width:420px){
+  .article-reader-top{
+    display:grid;
+    grid-template-columns:1fr;
+  }
+  .article-translate-btn{
+    width:100%;
+  }
+}
