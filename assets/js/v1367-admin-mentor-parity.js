@@ -5,6 +5,10 @@ let state=null;
 const $=s=>document.querySelector(s);
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const stamp=v=>{const d=v?new Date(v):null;if(!d||Number.isNaN(d.getTime()))return{date:'—',time:'—'};return{date:new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Karachi',day:'2-digit',month:'short',year:'numeric'}).format(d),time:new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Karachi',hour:'2-digit',minute:'2-digit',hour12:true}).format(d)}};
+const adminContentDesktop=()=>window.matchMedia&&window.matchMedia('(min-width: 901px)').matches;
+const contentDayKey=v=>{const d=v?new Date(v):null;if(!d||Number.isNaN(d.getTime()))return'unknown';const p=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Karachi',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(d);const m=Object.fromEntries(p.map(x=>[x.type,x.value]));return m.year+'-'+m.month+'-'+m.day};
+const contentDayLabel=v=>{const key=contentDayKey(v),today=contentDayKey(new Date()),yesterday=contentDayKey(new Date(Date.now()-86400000));if(key===today)return'Today';if(key===yesterday)return'Yesterday';const d=v?new Date(v):null;return(!d||Number.isNaN(d.getTime()))?'Older':new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Karachi',day:'2-digit',month:'short',year:'numeric'}).format(d)};
+
 const signalFinal=s=>{const st=String(s?.status||'');return Boolean(s?.closed_at)||['tp4_hit','sl_hit','closed','cancelled'].includes(st)||(st==='tp3_hit'&&(s?.take_profit_4===null||s?.take_profit_4===undefined||s?.take_profit_4===''))};
 const signed=n=>{const x=Number(n||0);return (x>0?'+':'')+x.toLocaleString('en-US',{maximumFractionDigits:1})};
 
@@ -60,8 +64,9 @@ function renderCharts(){
   ].join('');
   const items=chartFilters(all);
   if(!items.length){box.innerHTML='<div class="empty-state"><i class="fa-solid fa-chart-line"></i><h3>No chart analysis found</h3><p>Change the filters or publish a new analysis.</p></div>';return}
-  box.innerHTML=items.map((x,i)=>{const t=stamp(x.published_at||x.created_at),symbol=String(x.symbol||'CHART').toUpperCase(),live=Boolean(x.is_published);
-    return '<article class="admin-mentor-content-card '+(i%2?'cream':'white')+'">'+
+  let lastChartDay='';
+  box.innerHTML=items.map((x,i)=>{const rawDate=x.published_at||x.created_at,t=stamp(rawDate),symbol=String(x.symbol||'CHART').toUpperCase(),live=Boolean(x.is_published),dayKey=contentDayKey(rawDate),groupHead=adminContentDesktop()&&dayKey!==lastChartDay?'<div class="admin-content-date-group"><div><span>'+esc(contentDayLabel(rawDate))+'</span><small>'+esc(t.date)+'</small></div><i></i></div>':'';lastChartDay=dayKey;
+    return groupHead+'<article class="admin-mentor-content-card '+(i%2?'cream':'white')+'">'+
       '<div class="admin-mentor-media">'+
         (x.image_url?'<img src="'+esc(x.image_url)+'" alt="'+esc(x.title||symbol)+'" loading="lazy">':'<div class="admin-mentor-placeholder"><i class="fa-solid fa-chart-line"></i><span>24K RESEARCH</span></div>')+
         '<div class="admin-mentor-media-top"><span class="gold">'+esc(symbol)+'</span>'+(x.timeframe?'<span>'+esc(x.timeframe)+'</span>':'')+'<span class="'+(live?'live':'draft')+'">'+(live?'Published':'Draft')+'</span></div>'+
@@ -106,8 +111,9 @@ function renderArticles(){
   ].join('');
   const items=articleFilters(all);
   if(!items.length){box.innerHTML='<div class="empty-state"><i class="fa-solid fa-newspaper"></i><h3>No articles found</h3><p>Change the filters or create a new article.</p></div>';return}
-  box.innerHTML=items.map((x,i)=>{const t=stamp(x.published_at||x.created_at),category=String(x.category||'General'),live=Boolean(x.is_published),excerpt=x.excerpt||String(x.content||'').slice(0,180)||'No excerpt added.';
-    return '<article class="admin-mentor-content-card '+(i%2?'cream':'white')+'">'+
+  let lastArticleDay='';
+  box.innerHTML=items.map((x,i)=>{const rawDate=x.published_at||x.created_at,t=stamp(rawDate),category=String(x.category||'General'),live=Boolean(x.is_published),excerpt=x.excerpt||String(x.content||'').slice(0,180)||'No excerpt added.',dayKey=contentDayKey(rawDate),groupHead=adminContentDesktop()&&dayKey!==lastArticleDay?'<div class="admin-content-date-group"><div><span>'+esc(contentDayLabel(rawDate))+'</span><small>'+esc(t.date)+'</small></div><i></i></div>':'';lastArticleDay=dayKey;
+    return groupHead+'<article class="admin-mentor-content-card '+(i%2?'cream':'white')+'">'+
       '<div class="admin-mentor-media">'+
         (x.cover_url?'<img src="'+esc(x.cover_url)+'" alt="'+esc(x.title||category)+'" loading="lazy">':'<div class="admin-mentor-placeholder"><i class="fa-solid fa-newspaper"></i><span>24K EDITORIAL</span></div>')+
         '<div class="admin-mentor-media-top"><span class="gold">'+esc(category)+'</span><span class="'+(live?'live':'draft')+'">'+(live?'Published':'Draft')+'</span></div>'+
