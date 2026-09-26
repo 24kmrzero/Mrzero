@@ -23,8 +23,24 @@ function currentTheme(){return localStorage.getItem(THEME_KEY)||'light'}
 if(localStorage.getItem('24k_team_theme_v1220')!=='1'){localStorage.setItem(THEME_KEY,'light');localStorage.setItem('24k_team_theme_v1220','1')}
 const viewMeta={overview:['Team Overview','Your clients, follow-ups and earnings at a glance.'],clients:['My Clients','Your complete work list — old clients and new Ad/Auto leads together.'],search:['Search Client','Check the assigned manager before dealing with a client.'],daily:['Daily Report','Enter only the work you did manually.'],chat:['Live Chat','AI + human support conversations in one Live Desk.'],earnings:['Earnings','Course, VIP and Broker Lot earnings calculated automatically.'],performance:['Performance','See how assigned leads move from contact to conversion.'],history:['History','Previous months and old tracking records.'],links:['My Tracking Links','Read-only link attribution and conversion performance.']};
 function setView(name){if(!viewMeta[name])name='overview';$$('.view').forEach(x=>x.classList.toggle('active',x.dataset.viewPanel===name));$$('.nav-btn[data-view]').forEach(x=>x.classList.toggle('active',x.dataset.view===name));$$('[data-team-mobile-view]').forEach(x=>x.classList.toggle('active',x.dataset.teamMobileView===name));if($('#teamPageTitle'))$('#teamPageTitle').textContent=viewMeta[name][0];if($('#teamPageSubtitle'))$('#teamPageSubtitle').textContent=viewMeta[name][1];history.replaceState(null,'',`#${name}`);if(name==='chat')loadChat().catch(e=>toast(e.message||'Could not load Live Desk.','error'));if(name==='performance'&&!rangeData)loadRange('today')}
-function loginView(msg=''){$('#teamLogin')?.classList.remove('hidden');$('#teamApp')?.classList.add('hidden');if($('#teamLoginError'))$('#teamLoginError').textContent=msg}
-function appView(){$('#teamLogin')?.classList.add('hidden');$('#teamApp')?.classList.remove('hidden')}
+function loginView(msg=''){
+  const login=$('#teamLogin'),app=$('#teamApp');
+  login?.classList.remove('hidden');app?.classList.add('hidden');
+  login?.style.removeProperty('display');
+  app?.style.setProperty('display','none','important');
+  document.body.classList.remove('team-authenticated');
+  document.body.classList.add('team-login-visible');
+  if($('#teamLoginError'))$('#teamLoginError').textContent=msg
+}
+function appView(){
+  const login=$('#teamLogin'),app=$('#teamApp');
+  login?.classList.add('hidden');app?.classList.remove('hidden');
+  login?.style.setProperty('display','none','important');
+  app?.style.removeProperty('display');
+  document.body.classList.remove('team-login-visible');
+  document.body.classList.add('team-authenticated');
+  window.scrollTo({top:0,left:0,behavior:'auto'})
+}
 function tierCourse(v){v=Number(v||0);if(v<=100)return{rate:3,next:100,nextRate:4,prev:0};if(v<=200)return{rate:4,next:200,nextRate:5,prev:100};if(v<=300)return{rate:5,next:300,nextRate:7,prev:200};return{rate:7,next:null,nextRate:null,prev:300}}
 function tierVip(v){v=Number(v||0);if(v<=20)return{rate:3,next:20,nextRate:4,prev:0};if(v<=40)return{rate:4,next:40,nextRate:5,prev:20};if(v<=60)return{rate:5,next:60,nextRate:7,prev:40};if(v<=80)return{rate:7,next:80,nextRate:10,prev:60};return{rate:10,next:null,nextRate:null,prev:80}}
 function tierLots(v){v=Number(v||0);if(v<200)return{std:.3,ex:.3,next:200,nextStd:.5,nextEx:.5,prev:0};if(v<400)return{std:.5,ex:.5,next:400,nextStd:.7,nextEx:.7,prev:200};if(v<600)return{std:.7,ex:.7,next:600,nextStd:1,nextEx:1,prev:400};return{std:1,ex:1,next:null,nextStd:null,nextEx:null,prev:600}}
