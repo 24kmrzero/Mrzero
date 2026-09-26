@@ -1,0 +1,283 @@
+/* 24K MR ZERO — Team Dark Theme Final Parity v13.60
+   Screenshot-driven hard overrides: no white/light cards remain in dark mode. */
+
+@media(max-width:780px){
+  html[data-theme="dark"] body{
+    color-scheme:dark!important;
+    background:#070a0e!important;
+  }
+
+  /* Shared dark surface system */
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-home-hero,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-home-attention,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-health-meter,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-smart-summary,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-home-searchbox,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-home-search-results,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-priority-card,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-insight-card,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-home-quick-actions button,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-home-card,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-home-links,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-clients-command,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-client-summary-card,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-client-search,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-client-filter-panel,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-client-card,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-client-empty,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-chat-command,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-chat-kpi,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-chat-shell,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-chat-inbox,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-chat-conversation,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-chat-conversation-head,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-chat-profile,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-earnings-command,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-earnings-total,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-earnings-hero-stat,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-earning-card,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-earnings-policy,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-progress-card,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-broker-card,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-more-identity,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-more-grid button,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-more-controls button{
+    background:#10161d!important;
+    border-color:#2a323c!important;
+    color:#eef2f6!important;
+    box-shadow:none!important;
+  }
+
+  /* Hero cards: preserve premium depth, but stay dark */
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-home-hero,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-clients-command,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-chat-command,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-earnings-command,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-more-identity{
+    background:
+      radial-gradient(260px 130px at 100% 0%,rgba(240,185,11,.055),transparent 72%),
+      linear-gradient(145deg,#111820,#0d1319)!important;
+  }
+
+  /* HOME intelligence — screenshot showed these still white */
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-insight-card,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-insight-card.goals,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-insight-card.pipeline,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-insight-card.trend,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-insight-card.opportunity{
+    background:#10161d!important;
+    border-color:#2a323c!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-insight-head b,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-goal-row b,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-pipeline-step b,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-opportunity-main b,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-projection-row b{
+    color:#eef2f6!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-goal-row span,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-pipeline-step span,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-opportunity-main small,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-insight-head small,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-insight-head>span,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-trend-labels{
+    color:#7f8996!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-goal-bar,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-pipeline-bar,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-trend-chart .trend-grid{
+    background:#242c35!important;
+    stroke:#242c35!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-home-empty,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-home-empty.opportunity-empty,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-home-card .today-work-item{
+    background:#0d1319!important;
+    border-color:#28313a!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-home-empty b,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-home-card .today-work-value b{
+    color:#eef2f6!important;
+  }
+
+  /* HOME/Shared pale icon tiles -> dark gold / muted accents */
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-home-quick-actions button>span,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-priority-card>span,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .today-work-label>i,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-home-empty>span,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-insight-head>i{
+    background:rgba(240,185,11,.09)!important;
+    color:#d4aa20!important;
+  }
+
+  /* CLIENTS: filters/inputs/tabs fully dark */
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-client-search input,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-client-filter-panel select,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-client-controls select,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-client-controls input{
+    background:#0d1319!important;
+    border-color:#2a323c!important;
+    color:#eef2f6!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-client-filter-panel{
+    background:#0d1319!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-client-status-tabs button{
+    background:#111820!important;
+    border-color:#2b343e!important;
+    color:#8b96a3!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-client-status-tabs button.active,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-client-filter-trigger,
+  html[data-theme="dark"] body #teamApp:not(.hidden) #clientResetFilters{
+    background:rgba(240,185,11,.09)!important;
+    border-color:#53471f!important;
+    color:#ddb526!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-client-contact,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-client-info-grid>div{
+    background:#0d1319!important;
+    border-color:#252e38!important;
+  }
+
+  /* CHAT: remove remaining pale surfaces */
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-chat-search,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-chat-search input,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-chat-messages,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-chat-quick-tools,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-chat-reply-form,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-chat-reply-form textarea,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-chat-profile .profile-section,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-chat-profile select,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-chat-profile input{
+    background:#0d1319!important;
+    border-color:#28313a!important;
+    color:#eef2f6!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-chat-filter-row button{
+    background:#111820!important;
+    border-color:#2b343e!important;
+    color:#8b96a3!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-chat-filter-row button.active{
+    background:rgba(240,185,11,.10)!important;
+    border-color:#55481e!important;
+    color:#e0b629!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-chat-thread{
+    background:#10161d!important;
+    border-color:transparent!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-chat-thread.active,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-chat-thread:active{
+    background:rgba(240,185,11,.065)!important;
+    border-color:#50431d!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-desk-msg{
+    background:#111820!important;
+    border-color:#29323b!important;
+    color:#eef2f6!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-desk-msg.team,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-desk-msg.admin{
+    background:rgba(240,185,11,.085)!important;
+    border-color:#51431b!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-desk-msg.ai{
+    background:#101b27!important;
+    border-color:#293e58!important;
+  }
+
+  /* EARNINGS: every panel dark, accent tiles muted */
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-earnings-total,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-earnings-hero-stat,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-earning-card,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-earnings-policy,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-progress-card,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-broker-card{
+    background:#10161d!important;
+    border-color:#2a323c!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-progress-card .next-copy,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-broker-card .broker-stats>div{
+    background:#0d1319!important;
+    border-color:#252e38!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-earning-icon,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-progress-icon,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-earnings-hero-stat>span,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-earnings-policy summary>span>i,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-progress-card .next-copy>i{
+    background:rgba(240,185,11,.09)!important;
+    color:#d5aa21!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-earning-card.blue .premium-earning-icon,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-progress-card.blue .premium-progress-icon{
+    background:rgba(91,143,211,.12)!important;
+    color:#79a4dc!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-earning-card.purple .premium-earning-icon,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-progress-card.purple .premium-progress-icon{
+    background:rgba(143,100,199,.13)!important;
+    color:#b091da!important;
+  }
+
+  /* MORE: no white quick-access/device-control cards */
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-more-grid button,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-more-controls button{
+    background:#10161d!important;
+    border-color:#2a323c!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-more-grid button>i:first-child{
+    background:rgba(240,185,11,.085)!important;
+    color:#d4aa20!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-more-controls button>i{
+    background:#151c24!important;
+    color:#8d98a5!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-more-section-head b,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-more-grid button b,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-more-controls button b{
+    color:#eef2f6!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-more-controls button.danger{
+    background:#171316!important;
+    border-color:#4a2c31!important;
+  }
+
+  /* Pale badges/buttons shown in screenshots -> dark tinted versions */
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-home-kicker,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-clients-kicker,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-chat-kicker,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-earnings-kicker,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-earnings-auto,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-chat-online,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-clients-live,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .insights-head #teamRankChip,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-home-card-head .tiny-btn,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-home-card .today-work-action{
+    background:rgba(240,185,11,.075)!important;
+    border-color:#50441f!important;
+    color:#d8ae25!important;
+  }
+
+  /* Keep Online states green but dark */
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-chat-online,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-more-status{
+    background:rgba(24,183,127,.08)!important;
+    border-color:#20483b!important;
+    color:#54d2a4!important;
+  }
+
+  /* Bottom dock remains fully dark */
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-mobile-nav{
+    background:rgba(12,17,23,.97)!important;
+    border-color:#2b333d!important;
+    box-shadow:0 18px 48px rgba(0,0,0,.32)!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-mobile-nav button.active{
+    background:rgba(240,185,11,.10)!important;
+    color:#f0bd17!important;
+  }
+}
