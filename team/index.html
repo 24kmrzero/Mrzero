@@ -32,6 +32,7 @@
   <link rel="stylesheet" href="/assets/css/v1359-team-dark-qa.css?v=13.59">
   <link rel="stylesheet" href="/assets/css/v1360-team-dark-final.css?v=13.60">
   <link rel="stylesheet" href="/assets/css/v1361-team-dark-accent-fix.css?v=13.61">
+  <link rel="stylesheet" href="/assets/css/v1362-team-remaining-pages.css?v=13.62">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/assets/js/config.js?v=12.18"></script>
 </head>
@@ -265,43 +266,76 @@
         <div id="clientsCards" class="clients-card-list team-client-card-list"></div>
       </section>
 
-      <section class="view" data-view-panel="search">
-        <div class="section-head"><div><h2>Search Client</h2><p>Check the assigned manager before dealing with a client.</p></div><span class="section-badge">OWNERSHIP CHECK</span></div>
-        <article class="panel-card search-client-card"><h3>Find Client</h3><p>Search by Name, WhatsApp, Email or Client ID.</p><div class="search-client-row"><input id="ownershipSearch" type="search" placeholder="Example: 24K-8263, +92..., email or name"><button id="ownershipSearchBtn" class="gold-btn">Search Client</button></div></article>
-        <div class="simple-rule"><b>Simple rule:</b> Your client = deal with them. Another manager’s client = contact that manager. Unassigned = ask Admin. Team members cannot change ownership.</div>
-        <div id="ownershipResult"></div>
+      <section class="view team-search-v2" data-view-panel="search">
+        <article class="team-tool-command">
+          <div class="team-tool-command-top">
+            <div>
+              <span class="team-tool-kicker"><i class="fa-solid fa-magnifying-glass"></i> CLIENT LOOKUP</span>
+              <h2>Search Client</h2>
+              <p>Verify ownership before contacting or working with any client.</p>
+            </div>
+            <span class="team-tool-status"><i class="fa-solid fa-shield-halved"></i><b>READ ONLY</b><small>Ownership check</small></span>
+          </div>
+          <div class="team-ownership-search">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input id="ownershipSearch" type="search" autocomplete="off" placeholder="Name, WhatsApp, Email or Client ID...">
+            <button id="ownershipSearchBtn" type="button"><i class="fa-solid fa-arrow-right"></i><span>Search</span></button>
+          </div>
+        </article>
+        <div class="team-rule-strip"><i class="fa-solid fa-circle-info"></i><span><b>Simple rule:</b> Your client = deal with them. Another manager’s client = coordinate with that manager. Unassigned = ask Admin.</span></div>
+        <div id="ownershipResult" class="team-ownership-result"></div>
       </section>
 
-      <section class="view" data-view-panel="daily">
-        <div class="section-head"><div><h2>Daily Report</h2><p>Enter only the work you did manually. Course activity is auto-tracked.</p></div><span class="section-badge">MANUAL WORK ONLY</span></div>
-        <div class="daily-layout reference-daily">
-          <form id="dailyReportForm" class="panel-card form-card">
-            <div class="card-head"><div><h3>Today’s Team Report</h3><small>These are the fields you can update yourself.</small></div><span class="section-badge">MANUAL INPUT</span></div>
-            <input id="reportDate" type="date" hidden>
-            <div class="form-grid daily-work-grid">
-              <label>Leads Contacted<input id="leadsContacted" type="number" min="0" value="0"></label>
-              <label>Messages Sent<input id="messagesSent" type="number" min="0" value="0"></label>
-              <label>Calls Made<input id="callsMade" type="number" min="0" value="0"></label>
-              <label>Follow-ups<input id="followUps" type="number" min="0" value="0"></label>
+      <section class="view team-daily-v2" data-view-panel="daily">
+        <article class="team-tool-command daily-command">
+          <div class="team-tool-command-top">
+            <div>
+              <span class="team-tool-kicker"><i class="fa-solid fa-clipboard-check"></i> DAILY WORKSPACE</span>
+              <h2>Daily Report</h2>
+              <p>Only enter work you completed manually. Course activity is tracked automatically.</p>
             </div>
-            <div class="form-section-title"><b>Conversions / Broker Activity</b><small>Manual values</small></div>
-            <div class="form-grid tri-grid">
-              <label>New Broker Accounts<input id="newBrokerAccounts" type="number" min="0" value="0"></label>
-              <label>IB / Partner Shifts<input id="ibPartnerShifts" type="number" min="0" value="0"></label>
-              <label>VIP Conversions <small>(auto shown right)</small><input id="manualVip" type="number" min="0" value="0" disabled></label>
-            </div>
-            <div class="form-section-title"><b>Weekly Broker Lots</b><small>Update current week running total</small></div>
-            <div class="form-grid tri-grid">
-              <label>XM Lots<input id="xmWeeklyLots" type="number" min="0" step="0.01" value="0"></label>
-              <label>DPrime Lots<input id="dprimeWeeklyLots" type="number" min="0" step="0.01" value="0"></label>
-              <label>Exness Lots<input id="exnessWeeklyLots" type="number" min="0" step="0.01" value="0"></label>
-              <label class="full">Today’s Note — Optional<textarea id="reportNotes" rows="4" placeholder="Example: Most inquiries today were related to VIP and broker account opening."></textarea></label>
-            </div>
-            <div class="report-submit-row"><span id="dailyStatus">Not submitted</span><button class="gold-btn" type="submit">Submit Daily Report</button></div>
-          </form>
-          <article class="panel-card auto-activity-card"><div class="card-head"><div><h3>Automatic Course Activity</h3><small>Old tracking + new Ad/Auto enrollments appear here automatically.</small></div><span class="section-badge">AUTO TRACKED</span></div><div id="autoActivity"></div></article>
+            <span class="team-tool-status manual"><i class="fa-solid fa-pen"></i><b>MANUAL</b><small>Today’s input</small></span>
+          </div>
+          <div class="team-daily-summary" id="teamDailySummary"></div>
+        </article>
+
+        <div class="team-tool-section-head">
+          <div><small>TODAY</small><b>Manual Work</b></div>
+          <span id="dailyStatus">Not submitted</span>
         </div>
-        <article class="panel-card daily-history"><div class="card-head"><div><h3>Daily Report History</h3><small>Manual work plus auto-tracked course activity.</small></div></div><div id="dailyReportsList" class="table-wrap"></div></article>
+
+        <form id="dailyReportForm" class="panel-card team-daily-form">
+          <input id="reportDate" type="date" hidden>
+          <div class="team-daily-grid">
+            <label><span><i class="fa-solid fa-user-check"></i> Leads Contacted</span><input id="leadsContacted" type="number" min="0" value="0"></label>
+            <label><span><i class="fa-regular fa-message"></i> Messages Sent</span><input id="messagesSent" type="number" min="0" value="0"></label>
+            <label><span><i class="fa-solid fa-phone"></i> Calls Made</span><input id="callsMade" type="number" min="0" value="0"></label>
+            <label><span><i class="fa-solid fa-bell"></i> Follow-ups</span><input id="followUps" type="number" min="0" value="0"></label>
+          </div>
+
+          <div class="team-daily-subhead"><span>CONVERSIONS / BROKER ACTIVITY</span><small>Manual values</small></div>
+          <div class="team-daily-grid">
+            <label><span><i class="fa-solid fa-building-columns"></i> New Broker Accounts</span><input id="newBrokerAccounts" type="number" min="0" value="0"></label>
+            <label><span><i class="fa-solid fa-right-left"></i> IB / Partner Shifts</span><input id="ibPartnerShifts" type="number" min="0" value="0"></label>
+            <label><span><i class="fa-solid fa-crown"></i> VIP Conversions</span><input id="manualVip" type="number" min="0" value="0" disabled></label>
+          </div>
+
+          <div class="team-daily-subhead"><span>WEEKLY BROKER LOTS</span><small>Running total</small></div>
+          <div class="team-daily-grid broker-lots">
+            <label><span>XM Lots</span><input id="xmWeeklyLots" type="number" min="0" step="0.01" value="0"></label>
+            <label><span>DPrime Lots</span><input id="dprimeWeeklyLots" type="number" min="0" step="0.01" value="0"></label>
+            <label><span>Exness Lots</span><input id="exnessWeeklyLots" type="number" min="0" step="0.01" value="0"></label>
+          </div>
+
+          <label class="team-daily-note"><span>Today’s Note <small>Optional</small></span><textarea id="reportNotes" rows="3" placeholder="Add a short note about today’s work..."></textarea></label>
+          <div class="team-daily-submit"><span><i class="fa-solid fa-circle-info"></i> Review values before submitting.</span><button class="gold-btn" type="submit"><i class="fa-solid fa-paper-plane"></i> Submit Report</button></div>
+        </form>
+
+        <div class="team-tool-section-head"><div><small>AUTOMATIC</small><b>Course Activity</b></div><span>Auto tracked</span></div>
+        <article class="panel-card team-auto-activity"><div id="autoActivity"></div></article>
+
+        <div class="team-tool-section-head"><div><small>HISTORY</small><b>Recent Reports</b></div><span>Read only</span></div>
+        <article class="panel-card team-daily-history"><div id="dailyReportsList" class="table-wrap"></div></article>
       </section>
 
       <section class="view team-chat-v2" data-view-panel="chat">
@@ -429,24 +463,68 @@
         <div id="brokerGrid" class="broker-grid earnings-brokers team-broker-grid"></div>
       </section>
 
-      <section class="view" data-view-panel="performance">
-        <div class="section-head performance-head"><div><h2>Performance</h2><p>See how assigned leads move from contact to conversion.</p></div><div class="preset-row"><button class="active" data-range="today">Today</button><button data-range="yesterday">Yesterday</button><button data-range="7">Last 7 Days</button><button data-range="lastmonth">Last Month</button><button data-range="custom">Custom</button></div></div>
-        <div id="customRange" class="custom-range hidden"><input id="rangeStart" type="date"><input id="rangeEnd" type="date"><button id="applyRange" class="gold-btn">Apply</button></div>
-        <div id="rangeKpis" class="performance-kpis"></div>
-        <div class="performance-main-grid"><article class="panel-card"><div class="card-head"><h3>Lead Funnel</h3></div><div id="funnel" class="reference-funnel"></div></article><article class="panel-card"><div class="card-head"><h3>Course / Batch Performance</h3></div><div id="coursePerformance" class="course-performance-grid"></div></article></div>
-        <div class="performance-main-grid"><article class="panel-card"><div class="card-head"><h3>Broker / Sales Activity</h3></div><div id="brokerActivity" class="metric-box-grid"></div></article><article class="panel-card"><div class="card-head"><h3>Needs Attention</h3></div><div id="needsAttention" class="metric-box-grid"></div></article></div>
-        <article class="panel-card"><div class="card-head"><h3>Source Performance</h3></div><div id="rangeLinks" class="table-wrap"></div></article>
+      <section class="view team-performance-v2" data-view-panel="performance">
+        <article class="team-tool-command performance-command">
+          <div class="team-tool-command-top">
+            <div>
+              <span class="team-tool-kicker"><i class="fa-solid fa-chart-line"></i> PERFORMANCE DESK</span>
+              <h2>Performance</h2>
+              <p>Track assigned leads from first contact to conversion.</p>
+            </div>
+            <span class="team-tool-status"><i class="fa-solid fa-chart-simple"></i><b>LIVE</b><small>Range analytics</small></span>
+          </div>
+          <div class="team-performance-range">
+            <div class="preset-row"><button class="active" data-range="today">Today</button><button data-range="yesterday">Yesterday</button><button data-range="7">7 Days</button><button data-range="lastmonth">Last Month</button><button data-range="custom">Custom</button></div>
+            <div id="customRange" class="custom-range hidden"><input id="rangeStart" type="date"><input id="rangeEnd" type="date"><button id="applyRange" class="gold-btn">Apply</button></div>
+          </div>
+        </article>
+
+        <div id="rangeKpis" class="performance-kpis team-performance-kpis"></div>
+
+        <div class="team-performance-grid">
+          <article class="panel-card team-performance-card"><div class="card-head"><div><small>PIPELINE</small><h3>Lead Funnel</h3></div></div><div id="funnel" class="reference-funnel"></div></article>
+          <article class="panel-card team-performance-card"><div class="card-head"><div><small>COURSES</small><h3>Course / Batch Performance</h3></div></div><div id="coursePerformance" class="course-performance-grid"></div></article>
+          <article class="panel-card team-performance-card"><div class="card-head"><div><small>BROKERS</small><h3>Broker / Sales Activity</h3></div></div><div id="brokerActivity" class="metric-box-grid"></div></article>
+          <article class="panel-card team-performance-card"><div class="card-head"><div><small>ATTENTION</small><h3>Needs Attention</h3></div></div><div id="needsAttention" class="metric-box-grid"></div></article>
+        </div>
+
+        <article class="panel-card team-performance-card team-source-performance"><div class="card-head"><div><small>ATTRIBUTION</small><h3>Source Performance</h3></div></div><div id="rangeLinks" class="table-wrap"></div></article>
       </section>
 
-      <section class="view" data-view-panel="history">
-        <div class="section-head"><div><h2>History</h2><p>Previous months and old tracking records. Current work should be done from My Clients.</p></div><span class="section-badge">READ-ONLY HISTORY</span></div>
-        <div id="historyKpis" class="history-kpis"></div>
-        <article class="panel-card"><div class="card-head"><div><h3>Monthly Performance</h3><small>Historical activity stays visible. Earnings before September 2026 are shown as settled.</small></div></div><div id="historyGrid" class="table-wrap"></div></article>
-        <article class="panel-card legacy-links"><div class="card-head"><h3>Legacy / Assigned Tracking Links</h3><button class="tiny-btn" data-view-jump="links">Open links</button></div><div id="historyLinks"></div></article>
+      <section class="view team-history-v2" data-view-panel="history">
+        <article class="team-tool-command history-command">
+          <div class="team-tool-command-top">
+            <div>
+              <span class="team-tool-kicker"><i class="fa-solid fa-clock-rotate-left"></i> ARCHIVE</span>
+              <h2>History</h2>
+              <p>Previous months, historical clients and settled performance records.</p>
+            </div>
+            <span class="team-tool-status"><i class="fa-solid fa-lock"></i><b>READ ONLY</b><small>Historical data</small></span>
+          </div>
+          <div id="historyKpis" class="history-kpis team-history-kpis"></div>
+        </article>
+
+        <div class="team-tool-section-head"><div><small>MONTHLY</small><b>Performance Archive</b></div><span>Oldest → latest</span></div>
+        <article class="panel-card team-history-card"><div id="historyGrid" class="table-wrap"></div></article>
+
+        <div class="team-tool-section-head"><div><small>ATTRIBUTION</small><b>Legacy / Assigned Links</b></div><button class="tiny-btn" data-view-jump="links">Open Links</button></div>
+        <article class="panel-card team-history-links"><div id="historyLinks"></div></article>
       </section>
 
-      <section class="view" data-view-panel="links">
-        <div class="section-head"><div><h2>My Assigned Links</h2><p>Read-only tracking performance for your assigned links.</p></div></div><div id="linksGrid" class="links-grid"></div>
+      <section class="view team-links-v2" data-view-panel="links">
+        <article class="team-tool-command links-command">
+          <div class="team-tool-command-top">
+            <div>
+              <span class="team-tool-kicker"><i class="fa-solid fa-link"></i> ATTRIBUTION</span>
+              <h2>My Tracking Links</h2>
+              <p>Read-only performance for links assigned to your Team account.</p>
+            </div>
+            <span class="team-tool-status"><i class="fa-solid fa-chart-pie"></i><b>TRACKED</b><small>Live attribution</small></span>
+          </div>
+          <div class="team-links-summary" id="teamLinksSummary"></div>
+        </article>
+        <div class="team-tool-section-head"><div><small>ASSIGNED</small><b>Tracking Links</b></div><span id="teamLinksMeta">0 links</span></div>
+        <div id="linksGrid" class="links-grid team-links-grid"></div>
       </section>
 
       <section class="view team-more-page" data-view-panel="more">
@@ -486,7 +564,7 @@
   </div>
 
   <div id="teamToast" class="team-toast" aria-live="polite"></div>
-  <script src="/assets/js/v110-team-command-center.js?v=13.59"></script>
+  <script src="/assets/js/v110-team-command-center.js?v=13.62"></script>
   <script src="/assets/js/v1216-team-mobile.js?v=13.55"></script>
 </body>
 </html>
