@@ -333,7 +333,7 @@
       calendar: '/admin/calendar/', leads: '/admin/enquiries/', links: '/admin/team-manager/',
       'premium-access': '/admin/premium-access/', 'link-manager-ref': '/admin/link-manager/', operations: '/admin/operations/', 'admin-notifications': '/admin/admin-notifications/',
       audit: '/admin/activity-logs/', delivery: '/admin/delivery/', settings: '/admin/settings/',
-      payments: '/admin/payments/', students: '/admin/students/', support: '/admin/support/', methods: '/admin/payment-methods/'
+      payments: '/admin/payments/', students: '/admin/students/', 'v1216-center': '/admin/mentors/', support: '/admin/support/', methods: '/admin/payment-methods/'
     };
     const studentRoutes = {
       dashboard: '/student/', signals: '/student/signals/', charts: '/student/charts/', articles: '/student/articles/',
@@ -346,6 +346,7 @@
       content: 'content', operations: 'operations',
       'zoom-sessions': 'sessions', sessions: 'sessions',
       'payment-methods': 'methods', methods: 'methods',
+      mentors: 'v1216-center', 'mentor-accounts': 'v1216-center', 'v1216-center': 'v1216-center',
       'activity-logs': 'audit', activity: 'audit', audit: 'audit',
       notifications: 'admin-notifications', 'admin-notifications': 'admin-notifications',
       'premium-access': 'premium-access'
