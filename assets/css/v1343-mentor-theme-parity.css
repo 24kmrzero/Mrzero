@@ -1,0 +1,53 @@
+/* V13.43 — Performance theme parity
+   Light and dark themes must use identical geometry; only colors differ. */
+
+@media(max-width:760px){
+  body.mentor-page .mentor-content{
+    padding-left:10px!important;
+    padding-right:10px!important;
+  }
+
+  html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-performance,
+  html[data-theme="dark"] [data-mentor-panel="performance"] .mrzero-performance{
+    width:100%!important;
+    max-width:none!important;
+    margin:0!important;
+    padding:10px!important;
+    border-radius:18px!important;
+    box-sizing:border-box!important;
+  }
+
+  html[data-theme="light"] [data-mentor-panel="performance"],
+  html[data-theme="dark"] [data-mentor-panel="performance"]{
+    width:100%!important;
+    margin:0!important;
+    padding:0!important;
+    box-sizing:border-box!important;
+  }
+
+  [data-mentor-panel="performance"] .mrzero-period-toolbar,
+  [data-mentor-panel="performance"] .mrzero-performance-hero,
+  [data-mentor-panel="performance"] .mrzero-performance-kpis,
+  [data-mentor-panel="performance"] .mrzero-command-grid{
+    width:100%!important;
+    max-width:100%!important;
+    margin-left:0!important;
+    margin-right:0!important;
+    box-sizing:border-box!important;
+  }
+
+  [data-mentor-panel="performance"] .mrzero-period-toolbar{
+    margin-top:0!important;
+  }
+}
+
+/* Desktop/tablet geometry parity too */
+@media(min-width:761px){
+  html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-performance,
+  html[data-theme="dark"] [data-mentor-panel="performance"] .mrzero-performance{
+    width:100%!important;
+    margin:0!important;
+    padding:14px!important;
+    box-sizing:border-box!important;
+  }
+}
