@@ -9,6 +9,16 @@ const money=n=>'$'+Number(n||0).toLocaleString(undefined,{minimumFractionDigits:
 const num=(n,d=0)=>Number(n||0).toLocaleString(undefined,{minimumFractionDigits:d,maximumFractionDigits:d});
 const dt=v=>{if(!v)return'—';const d=new Date(v);return Number.isNaN(d.getTime())?'—':d.toLocaleString(undefined,{year:'numeric',month:'short',day:'2-digit',hour:'2-digit',minute:'2-digit'})};
 const date=v=>{if(!v)return'—';const d=new Date(v);return Number.isNaN(d.getTime())?'—':d.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'2-digit'})};
+function relativeAgo(v){
+  if(!v)return'';
+  const d=new Date(v);if(Number.isNaN(d.getTime()))return'';
+  const sec=Math.round((Date.now()-d.getTime())/1000),abs=Math.abs(sec);
+  if(abs<60)return sec>=0?'just now':'soon';
+  const min=Math.round(abs/60);if(min<60)return sec>=0?`${min}m ago`:`in ${min}m`;
+  const hr=Math.round(min/60);if(hr<24)return sec>=0?`${hr}h ago`:`in ${hr}h`;
+  const day=Math.round(hr/24);if(day<7)return sec>=0?`${day}d ago`:`in ${day}d`;
+  return date(v)
+}
 const monthNow=()=>new Date().toISOString().slice(0,7);
 const today=()=>new Date().toISOString().slice(0,10);
 let payload=null,rangeData=null,chatFilter='all',chatSearch='',activeThread=null,chatList=[],installPrompt=null,homeRank=null,homeChatAttention=0,lastSyncedAt=null;
@@ -22,7 +32,7 @@ function applyTheme(v){document.documentElement.dataset.theme=v;localStorage.set
 function currentTheme(){return localStorage.getItem(THEME_KEY)||'light'}
 if(localStorage.getItem('24k_team_theme_v1220')!=='1'){localStorage.setItem(THEME_KEY,'light');localStorage.setItem('24k_team_theme_v1220','1')}
 const viewMeta={overview:['Team Overview','Your clients, follow-ups and earnings at a glance.'],clients:['My Clients','Your complete work list — old clients and new Ad/Auto leads together.'],search:['Search Client','Check the assigned manager before dealing with a client.'],daily:['Daily Report','Enter only the work you did manually.'],chat:['Live Chat','AI + human support conversations in one Live Desk.'],earnings:['Earnings','Course, VIP and Broker Lot earnings calculated automatically.'],performance:['Performance','See how assigned leads move from contact to conversion.'],history:['History','Previous months and old tracking records.'],links:['My Tracking Links','Read-only link attribution and conversion performance.'],more:['Account Hub','Workspace shortcuts, app controls and Team account settings.']};
-function setView(name){if(!viewMeta[name])name='overview';$$('.view').forEach(x=>x.classList.toggle('active',x.dataset.viewPanel===name));$$('.nav-btn[data-view]').forEach(x=>x.classList.toggle('active',x.dataset.view===name));$$('[data-team-mobile-view]').forEach(x=>x.classList.toggle('active',x.dataset.teamMobileView===name));if($('#teamPageTitle'))$('#teamPageTitle').textContent=viewMeta[name][0];if($('#teamPageSubtitle'))$('#teamPageSubtitle').textContent=viewMeta[name][1];history.replaceState(null,'',`#${name}`);if(name==='chat')loadChat().catch(e=>toast(e.message||'Could not load Live Desk.','error'));if(name==='performance'&&!rangeData)loadRange('today')}
+function setView(name){if(!viewMeta[name])name='overview';$('.view').forEach(x=>{const active=x.dataset.viewPanel===name;x.classList.toggle('active',active);if(active){x.classList.remove('view-enter');requestAnimationFrame(()=>x.classList.add('view-enter'))}});$$('.nav-btn[data-view]').forEach(x=>x.classList.toggle('active',x.dataset.view===name));$$('[data-team-mobile-view]').forEach(x=>x.classList.toggle('active',x.dataset.teamMobileView===name));if($('#teamPageTitle'))$('#teamPageTitle').textContent=viewMeta[name][0];if($('#teamPageSubtitle'))$('#teamPageSubtitle').textContent=viewMeta[name][1];history.replaceState(null,'',`#${name}`);if(name==='chat')loadChat().catch(e=>toast(e.message||'Could not load Live Desk.','error'));if(name==='performance'&&!rangeData)loadRange('today')}
 function loginView(msg=''){
   const login=$('#teamLogin'),app=$('#teamApp');
   login?.classList.remove('hidden');app?.classList.add('hidden');
@@ -104,12 +114,12 @@ function renderHomeActivity(clients,reports,converted,totalEarnings){
   const items=[];
   clients.slice().sort((a,b)=>new Date(clientDate(b)||0)-new Date(clientDate(a)||0)).slice(0,3).forEach(c=>{
     const stamp=clientDate(c);
-    items.push({time:new Date(stamp||0).getTime(),icon:'fa-user-plus',tone:'blue',title:'Client assigned',copy:`${c.full_name||'Student'} · ${(c.enrollments||[])[0]?.course_title||'No course'}`,stamp:date(stamp)})
+    items.push({time:new Date(stamp||0).getTime(),icon:'fa-user-plus',tone:'blue',title:'Client assigned',copy:`${c.full_name||'Student'} · ${(c.enrollments||[])[0]?.course_title||'No course'}`,stamp:relativeAgo(stamp)})
   });
   const latestReport=reports.slice().sort((a,b)=>String(b.date||'').localeCompare(String(a.date||'')))[0];
-  if(latestReport)items.push({time:new Date((latestReport.date||'')+'T12:00:00').getTime(),icon:'fa-clipboard-check',tone:'green',title:'Daily report submitted',copy:`${num(latestReport.leads_contacted)} contacted · ${num(latestReport.follow_ups)} follow-ups`,stamp:date(latestReport.date)});
+  if(latestReport)items.push({time:new Date((latestReport.date||'')+'T12:00:00').getTime(),icon:'fa-clipboard-check',tone:'green',title:'Daily report submitted',copy:`${num(latestReport.leads_contacted)} contacted · ${num(latestReport.follow_ups)} follow-ups`,stamp:relativeAgo((latestReport.date||'')+'T12:00:00')});
   const convertedClient=clients.filter(c=>clientStatus(c)==='converted').sort((a,b)=>new Date(clientDate(b)||0)-new Date(clientDate(a)||0))[0];
-  if(convertedClient)items.push({time:new Date(clientDate(convertedClient)||0).getTime(),icon:'fa-circle-check',tone:'green',title:'Converted client',copy:convertedClient.full_name||'Client converted',stamp:date(clientDate(convertedClient))});
+  if(convertedClient)items.push({time:new Date(clientDate(convertedClient)||0).getTime(),icon:'fa-circle-check',tone:'green',title:'Converted client',copy:convertedClient.full_name||'Client converted',stamp:relativeAgo(clientDate(convertedClient))});
   if(totalEarnings>0)items.push({time:Date.now()-1,icon:'fa-sack-dollar',tone:'gold',title:'Earnings active',copy:`${money(totalEarnings)} total recorded earnings`,stamp:monthLabel($('#teamMonth')?.value||monthNow())});
   items.sort((a,b)=>b.time-a.time);
   box.innerHTML=items.length?items.slice(0,4).map(x=>`<div class="team-activity-item"><span class="${x.tone}"><i class="fa-solid ${x.icon}"></i></span><div><b>${esc(x.title)}</b><small>${esc(x.copy)}</small></div><em>${esc(x.stamp||'')}</em></div>`).join(''):`<div class="team-home-empty activity-empty"><span><i class="fa-solid fa-wave-square"></i></span><div><b>Activity will appear here</b><small>New leads, reports and conversions will build your live feed.</small></div></div>`
