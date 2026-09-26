@@ -8,7 +8,7 @@
     paymentMethods: [], signals: [], signalUpdates: [], charts: [], articles: [], announcements: [], resources: [], support: [], riskAccepted: true, premium: null, premiumLoaded: false, premiumPayments: [], ibVerifications: [],
     selectedCourse: null, courseFilter: 'all'
   };
-  window.StudentBase = { state, reload: async () => { await loadAll(); renderAll(); return state; } };
+  window.StudentBase = { state, reload: async () => { await Promise.all([loadAll(), refreshMarketContent({ render:false, retries:2 })]); renderAll(); return state; } };
   let openPanel;
   let signalStatusView = 'all';
   let signalWorkspaceView = 'active';
@@ -234,7 +234,13 @@
     studentNavigation.open(studentNavigation.keyFromLocation(), true, false);
     revealStudentApp();
 
-    await loadAll();
+    // Load account data and market content independently. Market content has its own
+    // retry path so a temporary Signals/Charts/Articles request failure never leaves
+    // the dashboard empty until a manual browser refresh.
+    await Promise.all([
+      loadAll(),
+      refreshMarketContent({ render:true, retries:2 })
+    ]);
     renderAll();
     const resolvedPanel = studentNavigation.keyFromLocation();
     if (['signals','charts','articles'].includes(resolvedPanel) && state.premiumLoaded && !state.premium?.has_access) {
@@ -260,10 +266,6 @@
       ['enrollments', sb.from('enrollments').select('*').eq('student_id', state.user.id), true],
       ['payments', sb.from('payments').select('*,courses(title,currency)').eq('student_id', state.user.id).order('created_at', { ascending: false }), true],
       ['paymentMethods', sb.from('payment_methods').select('*').eq('is_active', true).order('sort_order'), false],
-      ['signals', sb.from('signals').select('*').eq('is_published', true).order('published_at', { ascending: false }), false],
-      ['signalUpdates', sb.from('signal_updates').select('*').order('created_at', { ascending: false }), false],
-      ['charts', sb.from('charts').select('*').eq('is_published', true).order('published_at', { ascending: false }), false],
-      ['articles', sb.from('articles').select('*').eq('is_published', true).order('published_at', { ascending: false }), false],
       ['announcements', sb.from('announcements').select('*').eq('is_published', true).order('published_at', { ascending: false }), false],
       ['resources', sb.from('course_resources').select('*').order('created_at', { ascending: false }), false],
       ['risk', sb.from('terms_acceptances').select('id').eq('user_id', state.user.id).eq('document_type', 'risk_disclaimer').eq('version', A.cfg.RISK_VERSION).limit(1), false]
@@ -1566,7 +1568,7 @@
         event.preventDefault();
         event.stopPropagation();
         A.setLoading(refreshDashboard, true, 'Refreshing...');
-        try { await loadAll(); renderAll(); A.toast('Dashboard refreshed.', 'success'); }
+        try { await Promise.all([loadAll(),refreshMarketContent({render:false,retries:2})]); renderAll(); A.toast('Dashboard refreshed.', 'success'); }
         catch (error) { A.toast(A.friendlyError(error, 'Could not refresh the dashboard.'), 'error'); }
         finally { A.setLoading(refreshDashboard, false); }
       }
@@ -1924,27 +1926,69 @@
     if (!window.__24K_DASH_CLOCK__) window.__24K_DASH_CLOCK__=setInterval(update,1000);
   }
 
-  async function refreshSignalState(){
-    const [signals,updates]=await Promise.all([
-      A.supabase.from('signals').select('*').eq('is_published',true).order('published_at',{ascending:false}),
-      A.supabase.from('signal_updates').select('*').order('created_at',{ascending:false})
+  let marketContentSyncSeq=0;
+  const marketWait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+
+  async function marketQuery(label,factory,retries=2){
+    let lastError=null;
+    for(let attempt=0;attempt<=retries;attempt++){
+      try{
+        const response=await factory();
+        if(!response?.error)return response?.data||[];
+        lastError=response.error;
+      }catch(error){lastError=error}
+      if(attempt<retries)await marketWait(140*(attempt+1));
+    }
+    console.warn(`[Student market] ${label} refresh failed after retry`,lastError);
+    throw lastError||new Error(label+' refresh failed');
+  }
+
+  async function refreshMarketContent({render=true,retries=1}={}){
+    const seq=++marketContentSyncSeq;
+    const results=await Promise.allSettled([
+      marketQuery('signals',()=>A.supabase.from('signals').select('*').eq('is_published',true).order('published_at',{ascending:false}),retries),
+      marketQuery('signal updates',()=>A.supabase.from('signal_updates').select('*').order('created_at',{ascending:false}),retries),
+      marketQuery('charts',()=>A.supabase.from('charts').select('*').eq('is_published',true).order('published_at',{ascending:false}),retries),
+      marketQuery('articles',()=>A.supabase.from('articles').select('*').eq('is_published',true).order('published_at',{ascending:false}),retries)
     ]);
-    if(signals.error)throw signals.error;
-    if(updates.error)throw updates.error;
-    state.signals=signals.data||[];state.signalUpdates=updates.data||[];
-    renderSignals();renderKpis();renderDashboard();
+    // A newer refresh may already be in flight/completed. Never let an older response
+    // overwrite fresher realtime data.
+    if(seq!==marketContentSyncSeq)return false;
+    const keys=['signals','signalUpdates','charts','articles'];
+    results.forEach((result,index)=>{
+      if(result.status==='fulfilled')state[keys[index]]=result.value||[];
+      // On failure keep the last good state instead of replacing it with [].
+    });
+    if(render){
+      renderSignals();renderCharts();renderArticles();renderKpis();renderDashboard();
+      window.dispatchEvent(new CustomEvent('24k:student-market-updated',{detail:{
+        signals:state.signals,signalUpdates:state.signalUpdates,charts:state.charts,articles:state.articles
+      }}));
+    }
+    return results.some(result=>result.status==='fulfilled');
+  }
+
+  async function refreshSignalState(){
+    await refreshMarketContent({render:true,retries:1});
   }
 
   function subscribeRealtime() {
-    let generalTimer,signalTimer,premiumTimer;
-    const refreshGeneral=()=>{clearTimeout(generalTimer);generalTimer=setTimeout(async()=>{try{await loadAll();renderAll();}catch(error){console.error('Realtime refresh failed',error);}},300);};
-    const refreshSignals=()=>{clearTimeout(signalTimer);signalTimer=setTimeout(async()=>{try{await refreshSignalState();}catch(error){console.error('Signal realtime refresh failed',error);}},120);};
-    const refreshPremium=()=>{clearTimeout(premiumTimer);premiumTimer=setTimeout(async()=>{try{await loadPremiumState();renderPremium();}catch(error){console.error('Premium realtime refresh failed',error);}},180);};
-    const channel=A.supabase.channel(`student-live-v969-${state.user.id}`)
-      .on('postgres_changes',{event:'*',schema:'public',table:'signals'},refreshSignals)
-      .on('postgres_changes',{event:'*',schema:'public',table:'signal_updates'},payload=>{if(payload.eventType==='INSERT')showSignalNotification(payload.new);refreshSignals();})
-      .on('postgres_changes',{event:'*',schema:'public',table:'charts'},refreshGeneral)
-      .on('postgres_changes',{event:'*',schema:'public',table:'articles'},refreshGeneral)
+    let generalTimer,marketTimer,premiumTimer;
+    const refreshGeneral=()=>{clearTimeout(generalTimer);generalTimer=setTimeout(async()=>{try{await loadAll();renderAll();}catch(error){console.error('Realtime refresh failed',error);}},180);};
+    const refreshMarket=()=>{clearTimeout(marketTimer);marketTimer=setTimeout(async()=>{try{await refreshMarketContent({render:true,retries:1});}catch(error){console.error('Market realtime refresh failed',error);}},45);};
+    const refreshPremium=()=>{clearTimeout(premiumTimer);premiumTimer=setTimeout(async()=>{try{await loadPremiumState();renderPremium();}catch(error){console.error('Premium realtime refresh failed',error);}},120);};
+
+    // Remove an older student channel before creating a fresh one (important after
+    // bfcache restores / repeated init in mobile browsers).
+    try{
+      if(window.__24K_STUDENT_REALTIME_CHANNEL__)A.supabase.removeChannel(window.__24K_STUDENT_REALTIME_CHANNEL__);
+    }catch{}
+
+    const channel=A.supabase.channel(`student-live-v1368-${state.user.id}`)
+      .on('postgres_changes',{event:'*',schema:'public',table:'signals'},refreshMarket)
+      .on('postgres_changes',{event:'*',schema:'public',table:'signal_updates'},payload=>{if(payload.eventType==='INSERT')showSignalNotification(payload.new);refreshMarket();})
+      .on('postgres_changes',{event:'*',schema:'public',table:'charts'},refreshMarket)
+      .on('postgres_changes',{event:'*',schema:'public',table:'articles'},refreshMarket)
       .on('postgres_changes',{event:'*',schema:'public',table:'announcements'},refreshGeneral)
       .on('postgres_changes',{event:'*',schema:'public',table:'payments',filter:`student_id=eq.${state.user.id}`},refreshGeneral)
       .on('postgres_changes',{event:'*',schema:'public',table:'premium_payments',filter:`student_id=eq.${state.user.id}`},refreshPremium)
@@ -1954,15 +1998,38 @@
       .on('postgres_changes',{event:'*',schema:'public',table:'enrollments',filter:`student_id=eq.${state.user.id}`},refreshGeneral)
       .subscribe(status=>{
         if(status==='SUBSCRIBED'){
-          if(window.__24K_SIGNAL_FALLBACK_POLL__){clearInterval(window.__24K_SIGNAL_FALLBACK_POLL__);window.__24K_SIGNAL_FALLBACK_POLL__=null;}
+          if(window.__24K_MARKET_FALLBACK_POLL__){clearInterval(window.__24K_MARKET_FALLBACK_POLL__);window.__24K_MARKET_FALLBACK_POLL__=null;}
+          // Close the tiny gap between the first HTTP snapshot and realtime subscription.
+          refreshMarket();
           return;
         }
         if(status==='CHANNEL_ERROR'||status==='TIMED_OUT'||status==='CLOSED'){
           console.warn('Student realtime channel status:',status);
-          if(!window.__24K_SIGNAL_FALLBACK_POLL__) window.__24K_SIGNAL_FALLBACK_POLL__=setInterval(()=>refreshSignals(),15000);
+          // Fail-safe only. Normal path is realtime and should update in milliseconds.
+          if(!window.__24K_MARKET_FALLBACK_POLL__)window.__24K_MARKET_FALLBACK_POLL__=setInterval(()=>{
+            if(!document.hidden)refreshMarket();
+          },5000);
         }
       });
     window.__24K_STUDENT_REALTIME_CHANNEL__=channel;
+
+    // Browsers may suspend websocket traffic while a tab/app is backgrounded.
+    // On return, instantly reconcile with the latest database snapshot.
+    if(!window.__24K_MARKET_FOREGROUND_SYNC_BOUND__){
+      window.__24K_MARKET_FOREGROUND_SYNC_BOUND__=true;
+      let lastForegroundSync=0;
+      const foregroundSync=()=>{
+        if(document.hidden)return;
+        const now=Date.now();
+        if(now-lastForegroundSync<900)return;
+        lastForegroundSync=now;
+        refreshMarket();
+      };
+      document.addEventListener('visibilitychange',foregroundSync);
+      window.addEventListener('focus',foregroundSync);
+      window.addEventListener('online',foregroundSync);
+      window.addEventListener('pageshow',foregroundSync);
+    }
   }
 
   function signalIsFinal(s){const st=String(s?.status||'');return Boolean(s?.closed_at)||['tp4_hit','sl_hit','breakeven_hit','manually_closed','cancelled'].includes(st)||(st==='tp3_hit'&&(s?.take_profit_4===null||s?.take_profit_4===undefined||s?.take_profit_4===''));}
