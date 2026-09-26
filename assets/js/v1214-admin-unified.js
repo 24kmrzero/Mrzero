@@ -116,6 +116,16 @@ function fillLinkSelects(){const c=$('#v14LinkCourse');if(c)c.innerHTML='<option
 function teamTab(k){$$('[data-v14-team-tab]').forEach(b=>b.classList.toggle('on',b.dataset.v14TeamTab===k));$$('[data-v14-team-panel]').forEach(p=>p.classList.toggle('on',p.dataset.v14TeamPanel===k))}
 function newTeam(){const f=$('#v14TeamForm');f.reset();f.elements.team_id.value='';f.elements.receive_leads.checked=true;f.elements.is_active.checked=true;f.elements.password.required=true;$('#v14TeamModalTitle').textContent='Add Team Member';openModal('v14TeamModal')}
 function editTeam(id){const a=state.team.find(x=>x.id===id);if(!a)return;const f=$('#v14TeamForm');f.reset();f.elements.team_id.value=a.id;f.elements.display_name.value=a.display_name||'';f.elements.username.value=a.username||'';f.elements.whatsapp.value=a.whatsapp||'';f.elements.email.value=a.email||'';if(f.elements.salutation){const n=String(a.display_name||'').trim();f.elements.salutation.value=a.salutation||(/^miss\b|^ms\.?\b/i.test(n)?'Miss':/^sir\b/i.test(n)?'Sir':'');}f.elements.receive_leads.checked=a.receive_leads!==false;f.elements.is_active.checked=a.is_active!==false;f.elements.password.required=false;$('#v14TeamModalTitle').textContent='Edit Team Member';openModal('v14TeamModal')}
+async function openTeamEditorDirect(id){
+  try{
+    await loadTeamLinks();
+    editTeam(id);
+  }catch(error){
+    toast(A.friendlyError(error,'Could not open Team member.'),'error');
+  }
+}
+window.AdminUnifiedEditTeam=openTeamEditorDirect;
+window.AdminUnifiedNewTeam=()=>newTeam();
 async function saveTeam(e){e.preventDefault();const f=e.currentTarget,d=Object.fromEntries(new FormData(f));try{await rpc('admin_upsert_team_account_v12_15',{p_team_id:d.team_id||null,p_display_name:String(d.display_name||'').trim(),p_username:String(d.username||'').trim(),p_email:String(d.email||'').trim(),p_whatsapp:String(d.whatsapp||'').trim(),p_password:String(d.password||''),p_is_active:f.elements.is_active.checked,p_receive_leads:f.elements.receive_leads.checked,p_salutation:String(d.salutation||'').trim()||null});closeModal('v14TeamModal');toast('Team member saved.','success');await loadTeamLinks()}catch(x){toast(A.friendlyError(x,'Could not save Team member.'),'error')}}
 function setLinkType(t){linkType=t;const f=$('#v14LinkForm');f.elements.link_type.value=t;$$('[data-v14-link-type]').forEach(b=>b.classList.toggle('on',b.dataset.v14LinkType===t));$('[data-v14-normal-fields]').style.display=t==='normal'?'block':'none';$('[data-v14-ad-fields]').style.display=t==='ad'?'block':'none';$('#v14LinkModalTitle').textContent=f.elements.id.value?(t==='ad'?'Edit Ad Link':'Edit Normal Link'):(t==='ad'?'Create Ad Link':'Create Normal Link')}
 function newLink(){const f=$('#v14LinkForm');f.reset();f.elements.id.value='';f.elements.ref_code.value='';f.elements.is_active.checked=true;setLinkType('normal');fillLinkSelects();f.elements.lead_to.value='auto';openModal('v14LinkModal')}
