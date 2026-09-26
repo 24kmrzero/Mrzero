@@ -9,8 +9,8 @@
   html[data-auth-scope="admin"][data-theme="light"] .app-shell,
   html[data-auth-scope="admin"][data-theme="light"] .app-main{
     background:
-      radial-gradient(760px 360px at 100% -5%,rgba(214,160,20,.075),transparent 70%),
-      linear-gradient(180deg,#fbf6ea 0%,#f7efdf 46%,#f5ecdc 100%)!important;
+      radial-gradient(760px 340px at 100% -6%,rgba(180,150,90,.018),transparent 70%),
+      linear-gradient(180deg,#faf9f7 0%,#f6f5f2 48%,#f3f2ef 100%)!important;
   }
   html[data-auth-scope="admin"][data-theme="light"] .app-content{background:transparent!important}
 
