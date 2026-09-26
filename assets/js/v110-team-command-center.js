@@ -50,43 +50,70 @@ async function login(e){e.preventDefault();const f=e.currentTarget,b=f.querySele
 async function logout(){try{if(token())await rpc('team_logout',{p_token:token()})}catch(_){}localStorage.removeItem(TOKEN_KEY);sessionStorage.removeItem('24k_team_session');payload=null;loginView()}
 async function commandCenter(month){try{return await rpc('team_get_command_center_v12_18',{p_token:token(),p_month:month+'-01'})}catch(e){if(/function|schema cache|does not exist/i.test(e.message||''))return await rpc('team_get_command_center',{p_token:token(),p_month:month+'-01'});throw e}}
 async function load(){if(!token())return loginView();try{const month=$('#teamMonth')?.value||monthNow();payload=await commandCenter(month);appView();renderAll();await loadRange('today')}catch(err){console.error(err);if(/session|expired|invalid/i.test(err.message||'')){localStorage.removeItem(TOKEN_KEY);loginView('Your Team session expired. Please sign in again.')}else loginView('Could not load Team Panel: '+(err.message||'Unknown error'))}}
-function renderAll(){const a=payload.account||{},p=payload.performance||{};const name=a.display_name||a.username||'Team Member';$('#teamMemberName').textContent=name;$('#heroName').textContent=name;$('#teamAvatar').textContent=initials(name);$('#teamUsername').textContent='@'+(a.username||'team');$('#teamMonthLabel').textContent=monthLabel($('#teamMonth').value);renderOverview();renderClients();renderDaily();renderEarnings(p);renderHistory(payload.history||[]);renderLinks(payload.links||[])}
+function renderAll(){const a=payload.account||{},p=payload.performance||{};const name=a.display_name||a.username||'Team Member';$('#teamMemberName').textContent=name;$('#heroName').textContent=name;$('#teamAvatar').textContent=initials(name);if($('#teamHomeAvatar'))$('#teamHomeAvatar').textContent=initials(name);$('#teamUsername').textContent='@'+(a.username||'team');$('#teamMonthLabel').textContent=monthLabel($('#teamMonth').value);renderOverview();renderClients();renderDaily();renderEarnings(p);renderHistory(payload.history||[]);renderLinks(payload.links||[])}
 function clientDate(c){return c.assigned_at||c.signup_date||null}
 function sameDay(v,d=today()){return v&&String(v).slice(0,10)===d}
 function clientStatus(c){return String(c.client_status||'new').toLowerCase()}
+function animateHomeMetric(el,target,type='number'){
+  if(!el)return;
+  const final=Number(target||0);
+  if(!Number.isFinite(final)){el.textContent=target;return}
+  const start=performance.now(),duration=420;
+  const tick=now=>{
+    const p=Math.min(1,(now-start)/duration),ease=1-Math.pow(1-p,3),v=final*ease;
+    el.textContent=type==='money'?money(v):Math.round(v).toLocaleString();
+    if(p<1)requestAnimationFrame(tick)
+  };
+  requestAnimationFrame(tick)
+}
 function renderOverview(){
   const clients=payload.clients||[],p=payload.performance||{},reports=payload.daily_reports||[],links=payload.links||[];
   const td=today(),newToday=clients.filter(c=>sameDay(clientDate(c),td)).length,
     follow=clients.filter(c=>['new','follow_up','interested'].includes(clientStatus(c))||c.next_follow_up&&String(c.next_follow_up).slice(0,10)<=td).length,
     converted=clients.filter(c=>clientStatus(c)==='converted').length,
     report=reports.find(r=>r.date===td),
-    convertedToday=clients.filter(c=>sameDay(clientDate(c),td)&&clientStatus(c)==='converted').length;
+    convertedToday=clients.filter(c=>sameDay(clientDate(c),td)&&clientStatus(c)==='converted').length,
+    totalEarnings=Number(p.total_earnings||0),
+    base=Math.max(1,clients.length);
+
   $('#todayAttention').textContent=follow;
-  $('#overviewMiniText').textContent=`${clients.length} total clients · ${converted} converted · ${money(p.total_earnings)} earnings`;
+  $('#overviewMiniText').textContent=`${clients.length} total clients · ${converted} converted · ${money(totalEarnings)} earnings`;
+  const priorityDot=$('#teamPriorityDot');
+  if(priorityDot){priorityDot.className='team-priority-dot '+(follow>0?'attention':'clear')}
 
   const k=[
-    ['My Total Clients',clients.length,'All assigned clients','fa-user-group'],
-    ['New Leads Today',newToday,'Received today','fa-user-plus'],
-    ['Need Follow-up',follow,'Needs your attention','fa-bell'],
-    ['Converted This Month',converted,'Completed conversions','fa-circle-check'],
-    ['Total Earnings',money(p.total_earnings),'Since Sep 2026','fa-sack-dollar']
+    {label:'My Total Clients',value:clients.length,sub:'All assigned clients',icon:'fa-user-group',chip:clients.length?'Live':'Waiting',tone:'blue',progress:clients.length?100:0,type:'number'},
+    {label:'New Leads Today',value:newToday,sub:'Received today',icon:'fa-user-plus',chip:newToday?`+${newToday} today`:'No new leads',tone:newToday?'green':'neutral',progress:Math.min(100,newToday/base*100),type:'number'},
+    {label:'Need Follow-up',value:follow,sub:'Needs your attention',icon:'fa-bell',chip:follow?'Action needed':'All clear',tone:follow?'amber':'green',progress:Math.min(100,follow/base*100),type:'number'},
+    {label:'Converted This Month',value:converted,sub:'Completed conversions',icon:'fa-circle-check',chip:converted?`${converted} converted`:'No conversions',tone:converted?'green':'neutral',progress:Math.min(100,converted/base*100),type:'number'},
+    {label:'Total Earnings',value:totalEarnings,sub:'Since Sep 2026',icon:'fa-sack-dollar',chip:totalEarnings>0?'Earnings live':'No earnings yet',tone:totalEarnings>0?'gold':'neutral',progress:totalEarnings>0?100:0,type:'money'}
   ];
-  $('#overviewKpis').innerHTML=k.map((x,i)=>`<article class="overview-kpi ${i===4?'gold':''}"><div class="overview-kpi-head"><span>${x[0]}</span><i class="fa-solid ${x[3]}"></i></div><b>${x[1]}</b><small>${x[2]}</small></article>`).join('');
+  $('#overviewKpis').innerHTML=k.map((x,i)=>`<article class="overview-kpi ${i===4?'gold':''}">
+    <div class="overview-kpi-head"><span>${x.label}</span><i class="fa-solid ${x.icon}"></i></div>
+    <div class="overview-kpi-value-row"><b data-home-metric="${i}" data-type="${x.type}">${x.type==='money'?money(x.value):Number(x.value).toLocaleString()}</b><em class="overview-kpi-chip ${x.tone}">${esc(x.chip)}</em></div>
+    <small>${x.sub}</small>
+    <span class="overview-kpi-progress"><i style="width:${Math.max(x.progress?6:0,x.progress)}%"></i></span>
+  </article>`).join('');
+  k.forEach((x,i)=>animateHomeMetric($(`[data-home-metric="${i}"]`),x.value,x.type));
 
   const recent=clients.slice().sort((a,b)=>new Date(clientDate(b)||0)-new Date(clientDate(a)||0)).slice(0,5);
-  $('#recentClients').innerHTML=recent.length?recent.map((c,i)=>`<div class="recent-client"><div><b>${i+1}. ${esc(c.full_name||'Student')}</b><small>${esc(c.client_id||'')} · ${esc((c.enrollments||[])[0]?.course_title||'No course')}</small></div><div><div class="client-source-tag">${sameDay(clientDate(c),td)?'Ad / Auto':'Old'}</div>${c.whatsapp?`<a class="wa-mini" target="_blank" rel="noopener" href="${waLink(c.whatsapp,`Hello ${c.full_name||''}`)}">WhatsApp</a>`:''}</div></div>`).join(''):'<div class="chat-empty">No assigned clients yet.</div>';
+  $('#recentClients').innerHTML=recent.length?recent.map((c,i)=>`<div class="recent-client"><div><b>${i+1}. ${esc(c.full_name||'Student')}</b><small>${esc(c.client_id||'')} · ${esc((c.enrollments||[])[0]?.course_title||'No course')}</small></div><div><div class="client-source-tag">${sameDay(clientDate(c),td)?'Ad / Auto':'Old'}</div>${c.whatsapp?`<a class="wa-mini" target="_blank" rel="noopener" href="${waLink(c.whatsapp,`Hello ${c.full_name||''}`)}"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>`:''}</div></div>`).join(''):`<div class="team-home-empty"><span><i class="fa-solid fa-user-clock"></i></span><div><b>No assigned clients yet</b><small>New assigned leads will appear here automatically.</small></div></div>`;
 
   const work=[
-    ['New leads today',newToday,'clients','Open'],
-    ['Need follow-up',follow,'clients','Follow up'],
-    ['Leads contacted',report?.leads_contacted||0,'daily','Update'],
-    ['Converted today',convertedToday,'clients','View'],
-    ['Daily report',report?'Submitted':'Pending','daily',report?'View':'Submit']
+    ['New leads today',newToday,'clients','Open','fa-user-plus'],
+    ['Need follow-up',follow,'clients','Follow up','fa-bell'],
+    ['Leads contacted',report?.leads_contacted||0,'daily','Update','fa-phone'],
+    ['Converted today',convertedToday,'clients','View','fa-circle-check'],
+    ['Daily report',report?'Submitted':'Pending','daily',report?'View':'Submit','fa-clipboard-check']
   ];
-  $('#todayWork').innerHTML=work.map(x=>`<div class="today-work-item"><span>${x[0]}</span><div class="today-work-value"><b>${x[1]}</b><button type="button" class="today-work-action" data-view-jump="${x[2]}">${x[3]}</button></div></div>`).join('');
+  $('#todayWork').innerHTML=work.map(x=>`<div class="today-work-item"><span class="today-work-label"><i class="fa-solid ${x[4]}"></i><span>${x[0]}</span></span><div class="today-work-value"><b>${x[1]}</b><button type="button" class="today-work-action" data-view-jump="${x[2]}">${x[3]}</button></div></div>`).join('');
 
-  $('#overviewLinks').innerHTML=links.length?links.slice(0,6).map(l=>`<div class="overview-link-chip"><b>${esc(l.name||'Tracked Link')}</b><small>${esc(l.source||'Direct')} · ${esc(l.ref_code||'')}</small></div>`).join(''):'<span class="muted">No assigned links.</span>';
+  $('#overviewLinks').innerHTML=links.length?links.slice(0,6).map(l=>`<div class="overview-link-chip"><b>${esc(l.name||'Tracked Link')}</b><small>${esc(l.source||'Direct')} · ${esc(l.ref_code||'')}</small></div>`).join(''):`<div class="team-home-empty links-empty"><span><i class="fa-solid fa-link"></i></span><div><b>No tracking links</b><small>Assigned links will appear here.</small></div></div>`;
+
+  const home=$('[data-view-panel="overview"]');
+  if(home){home.classList.remove('home-ready');requestAnimationFrame(()=>home.classList.add('home-ready'))}
 }
+
 function clientMatches(c){const q=($('#clientSearch')?.value||'').toLowerCase(),f=$('#clientCourseFilter')?.value||'all',s=$('#clientStatusFilter')?.value||'all';const text=`${c.full_name||''} ${c.email||''} ${c.whatsapp||''} ${c.client_id||''}`.toLowerCase();if(q&&!text.includes(q))return false;const courses=(c.enrollments||[]).map(e=>String(e.course_title||'').toLowerCase()).join(' ');if(f==='level1'&&!/basic|level 1/.test(courses))return false;if(f==='level2'&&!/level 2|advanced/.test(courses))return false;if(f==='vip'&&String(c.vip_status||'')!=='approved')return false;if(s!=='all'&&clientStatus(c)!==s)return false;return true}
 function statusOptions(v){return['new','contacted','interested','follow_up','converted','inactive'].map(x=>`<option value="${x}" ${x===v?'selected':''}>${x==='inactive'?'not interested':x.replaceAll('_',' ')}</option>`).join('')}
 function localInput(v){if(!v)return'';const d=new Date(v);if(Number.isNaN(d.getTime()))return'';const z=new Date(d.getTime()-d.getTimezoneOffset()*60000);return z.toISOString().slice(0,16)}
