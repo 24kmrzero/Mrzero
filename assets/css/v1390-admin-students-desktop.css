@@ -1,5 +1,5 @@
-/* Keep newly added attribution columns invisible on mobile/tablet. */
-.student-attribution-col{display:none!important}
+/* Desktop attribution strip is hidden by default so mobile/tablet stay unchanged. */
+.student-attribution-row{display:none!important}
 
 /* 24K MR ZERO — Admin Student Management premium desktop v13.90
    Desktop only. Existing mobile Student Management remains untouched. */
@@ -368,7 +368,8 @@
 
   #p-students .student-management-table{
     width:100%!important;
-    min-width:1510px!important;
+    min-width:0!important;
+    table-layout:fixed!important;
     border-collapse:separate!important;
     border-spacing:0 7px!important;
     background:transparent!important;
@@ -463,80 +464,128 @@
     min-width:145px!important;
   }
 
-  #p-students .student-management-table .student-attribution-col{
-    display:table-cell!important;
+
+
+  /* Two-tier premium student record */
+  #p-students .student-management-table col,
+  #p-students .student-management-table thead th,
+  #p-students .student-management-table tbody td{
+    min-width:0!important;
   }
 
-  #p-students .student-management-table td:nth-child(5){
-    min-width:190px!important;
+  #p-students .student-management-table thead th:nth-child(1),
+  #p-students .student-management-table tbody tr.student-record-main td:nth-child(1){width:42px!important}
+
+  #p-students .student-management-table thead th:nth-child(2),
+  #p-students .student-management-table tbody tr.student-record-main td:nth-child(2){width:17%!important}
+
+  #p-students .student-management-table thead th:nth-child(3),
+  #p-students .student-management-table tbody tr.student-record-main td:nth-child(3){width:12%!important}
+
+  #p-students .student-management-table thead th:nth-child(4),
+  #p-students .student-management-table tbody tr.student-record-main td:nth-child(4){width:14%!important}
+
+  #p-students .student-management-table thead th:nth-child(5),
+  #p-students .student-management-table tbody tr.student-record-main td:nth-child(5){width:14%!important}
+
+  #p-students .student-management-table thead th:nth-child(6),
+  #p-students .student-management-table tbody tr.student-record-main td:nth-child(6){width:11%!important}
+
+  #p-students .student-management-table thead th:nth-child(7),
+  #p-students .student-management-table tbody tr.student-record-main td:nth-child(7){width:9%!important}
+
+  #p-students .student-management-table thead th:nth-child(8),
+  #p-students .student-management-table tbody tr.student-record-main td:nth-child(8){width:13%!important}
+
+  #p-students .student-management-table thead th:nth-child(9),
+  #p-students .student-management-table tbody tr.student-record-main td:nth-child(9){width:14%!important}
+
+  #p-students .student-record-main td{
+    border-bottom:0!important;
   }
 
-  #p-students .student-management-table td:nth-child(6){
-    min-width:175px!important;
+  #p-students .student-record-main td:first-child{
+    border-radius:11px 0 0 0!important;
   }
 
-  #p-students .student-management-table td:nth-child(7){
-    min-width:145px!important;
+  #p-students .student-record-main td:last-child{
+    border-radius:0 11px 0 0!important;
   }
 
-  #p-students .student-management-table td:nth-child(10){
-    min-width:145px!important;
+  #p-students .student-attribution-row{
+    display:table-row!important;
   }
 
-  #p-students .student-management-table td:nth-child(7)>b{
-    color:#20262e!important;
-    font-size:9.5px!important;
+  #p-students .student-attribution-row td{
+    padding:0 9px 9px!important;
+    border:0!important;
+    background:transparent!important;
   }
 
-  #p-students .student-source-cell,
-  #p-students .student-team-cell{
-    vertical-align:middle!important;
-  }
-
-  #p-students .student-origin{
-    min-height:24px!important;
-    display:inline-flex!important;
-    align-items:center!important;
+  #p-students .student-attribution-strip{
+    display:grid!important;
+    grid-template-columns:1fr 1.18fr 1.25fr 1fr 1.12fr!important;
     gap:6px!important;
-    padding:0 8px!important;
-    border:1px solid #e3d9bc!important;
-    border-radius:999px!important;
+    padding:8px!important;
+    border:1px solid #e4e7ea!important;
+    border-top:0!important;
+    border-left:2px solid #d8a20a!important;
+    border-radius:0 0 11px 11px!important;
+    background:#fff!important;
+    box-shadow:0 7px 18px rgba(18,24,32,.025)!important;
+  }
+
+  #p-students .student-attribution-item{
+    min-width:0!important;
+    min-height:54px!important;
+    display:grid!important;
+    grid-template-columns:24px 1fr!important;
+    grid-template-rows:auto auto!important;
+    column-gap:7px!important;
+    align-content:center!important;
+    padding:8px 9px!important;
+    border:1px solid #eceef0!important;
+    border-radius:9px!important;
+    background:#fafbfc!important;
+  }
+
+  #p-students .student-attribution-item>span{
+    grid-row:1/3!important;
+    width:24px!important;
+    height:24px!important;
+    display:grid!important;
+    place-items:center!important;
+    align-self:center!important;
+    border:1px solid #e4d7a9!important;
+    border-radius:7px!important;
     background:#fffaf0!important;
-    color:#876300!important;
-    font-size:7.4px!important;
-    font-weight:900!important;
+    color:#9a7100!important;
+    font-size:7px!important;
+    font-weight:950!important;
+  }
+
+  #p-students .student-attribution-item small{
+    min-width:0!important;
+    color:#9aa1aa!important;
+    font-size:6.5px!important;
+    font-weight:950!important;
+    letter-spacing:.08em!important;
     white-space:nowrap!important;
   }
 
-  #p-students .student-origin.direct{
-    border-color:#dfe3e7!important;
-    background:#f7f8f9!important;
-    color:#69737f!important;
-  }
-
-  #p-students .student-origin-link,
-  #p-students .student-team-name{
-    display:block!important;
-    max-width:180px!important;
+  #p-students .student-attribution-item b{
+    min-width:0!important;
     overflow:hidden!important;
     text-overflow:ellipsis!important;
     white-space:nowrap!important;
-    color:#20262e!important;
-    font-size:9.3px!important;
+    color:#252b33!important;
+    font-size:8.3px!important;
     font-weight:900!important;
   }
 
-  #p-students .student-team-empty{
-    min-height:23px!important;
-    display:inline-flex!important;
-    align-items:center!important;
-    padding:0 8px!important;
-    border:1px solid #e3e6e9!important;
-    border-radius:999px!important;
-    background:#f8f9fa!important;
-    color:#77818d!important;
-    font-size:7.2px!important;
-    font-weight:850!important;
+  #p-students .student-attribution-item.source{
+    background:#fffaf1!important;
+    border-color:#ebdfba!important;
   }
 
   #p-students .student-management-table .status-pill{
@@ -648,6 +697,79 @@
     font-style:normal!important;
     font-weight:650!important;
   }
+
+  #userDetailsModal .student-attribution-history{
+    grid-column:1/-1!important;
+    margin-top:10px!important;
+    border:1px solid #e4e7ea!important;
+    border-radius:13px!important;
+    background:#fff!important;
+  }
+
+  #userDetailsModal .student-history-list{
+    display:grid!important;
+    gap:6px!important;
+    margin-top:9px!important;
+  }
+
+  #userDetailsModal .student-history-entry{
+    display:grid!important;
+    grid-template-columns:30px 1fr 1fr 1.1fr .8fr!important;
+    gap:7px!important;
+    align-items:center!important;
+    padding:8px!important;
+    border:1px solid #e8eaed!important;
+    border-radius:9px!important;
+    background:#fafbfc!important;
+  }
+
+  #userDetailsModal .student-history-entry>span{
+    width:26px!important;
+    height:26px!important;
+    display:grid!important;
+    place-items:center!important;
+    border-radius:7px!important;
+    background:#fff6d9!important;
+    color:#8f6800!important;
+    font-size:7px!important;
+    font-weight:950!important;
+  }
+
+  #userDetailsModal .student-history-entry small{
+    display:block!important;
+    color:#9aa1aa!important;
+    font-size:6px!important;
+    font-weight:900!important;
+    letter-spacing:.07em!important;
+  }
+
+  #userDetailsModal .student-history-entry b{
+    display:block!important;
+    margin-top:2px!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+    color:#252b33!important;
+    font-size:8.3px!important;
+  }
+
+  #userDetailsModal .student-history-empty{
+    min-height:88px!important;
+    display:grid!important;
+    place-items:center!important;
+    align-content:center!important;
+    gap:4px!important;
+    margin-top:8px!important;
+    border:1px dashed #ded8c8!important;
+    border-radius:10px!important;
+    background:#faf9f6!important;
+    color:#7e8791!important;
+  }
+
+  #userDetailsModal .student-history-empty i{color:#a67b00!important}
+  #userDetailsModal .student-history-empty b{color:#252b33!important;font-size:10px!important}
+  #userDetailsModal .student-history-empty small{font-size:7px!important}
+
 
   /* ===== Dark desktop parity ===== */
   html[data-theme="dark"] #p-students>.panel-heading,
