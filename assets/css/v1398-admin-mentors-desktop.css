@@ -1,3 +1,7 @@
+/* Mentor-only desktop additions stay hidden on mobile. */
+.v1216-mentor-overview,
+.v1216-mentor-kicker{display:none}
+
 /* 24K MR ZERO — Enrollment Center + Mentor Accounts premium desktop v13.98
    Desktop only. Existing mobile remains unchanged. */
 @media (min-width:901px){
