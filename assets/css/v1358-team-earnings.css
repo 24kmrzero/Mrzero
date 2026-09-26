@@ -1,0 +1,651 @@
+/* 24K MR ZERO — Team Earnings Premium Workspace v13.58 */
+
+@media(max-width:780px){
+  #teamApp:not(.hidden) .team-earnings-v2{
+    width:auto!important;
+    max-width:none!important;
+    margin:10px 11px 0!important;
+    padding:0 0 10px!important;
+  }
+
+  /* Executive earnings command card */
+  #teamApp:not(.hidden) .team-earnings-command{
+    position:relative!important;
+    overflow:hidden!important;
+    padding:13px!important;
+    border:1px solid #e4dfd1!important;
+    border-radius:17px!important;
+    background:
+      radial-gradient(260px 140px at 100% 0%,rgba(240,185,11,.10),transparent 72%),
+      linear-gradient(145deg,#fff,#fdfcf8)!important;
+    box-shadow:0 8px 22px rgba(35,40,48,.035)!important;
+  }
+
+  #teamApp:not(.hidden) .team-earnings-command-top{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) auto!important;
+    align-items:start!important;
+    gap:8px!important;
+  }
+
+  #teamApp:not(.hidden) .team-earnings-command-top>div{min-width:0!important}
+
+  #teamApp:not(.hidden) .team-earnings-kicker{
+    display:inline-flex!important;
+    align-items:center!important;
+    gap:5px!important;
+    min-height:21px!important;
+    padding:0 7px!important;
+    border:1px solid #eadfbf!important;
+    border-radius:999px!important;
+    background:#fff9e8!important;
+    color:#9d7100!important;
+    font-size:5.9px!important;
+    font-weight:900!important;
+    letter-spacing:.10em!important;
+  }
+
+  #teamApp:not(.hidden) .team-earnings-command h2{
+    margin:9px 0 3px!important;
+    color:#20252d!important;
+    font-size:21px!important;
+    line-height:1.05!important;
+    letter-spacing:-.04em!important;
+  }
+
+  #teamApp:not(.hidden) .team-earnings-command p{
+    margin:0!important;
+    max-width:310px!important;
+    color:#707a86!important;
+    font-size:8.2px!important;
+    line-height:1.4!important;
+  }
+
+  #teamApp:not(.hidden) .team-earnings-auto{
+    min-width:62px!important;
+    display:grid!important;
+    grid-template-columns:18px auto!important;
+    grid-template-rows:auto auto!important;
+    align-items:center!important;
+    gap:2px 4px!important;
+    padding:7px 8px!important;
+    border:1px solid #eadfbf!important;
+    border-radius:11px!important;
+    background:#fff9e8!important;
+  }
+
+  #teamApp:not(.hidden) .team-earnings-auto>i{
+    grid-row:1/3!important;
+    width:18px!important;
+    height:18px!important;
+    display:grid!important;
+    place-items:center!important;
+    border-radius:6px!important;
+    background:#f0b90b!important;
+    color:#17130a!important;
+    font-size:6px!important;
+  }
+
+  #teamApp:not(.hidden) .team-earnings-auto>b{
+    color:#9f7200!important;
+    font-size:6.8px!important;
+    line-height:1!important;
+  }
+
+  #teamApp:not(.hidden) .team-earnings-auto>small{
+    color:#9a9180!important;
+    font-size:5.2px!important;
+    white-space:nowrap!important;
+  }
+
+  /* Hero financial summary */
+  #teamApp:not(.hidden) .team-earnings-hero{
+    display:grid!important;
+    grid-template-columns:1.2fr 1fr 1fr!important;
+    gap:6px!important;
+    margin-top:11px!important;
+  }
+
+  #teamApp:not(.hidden) .team-earnings-total,
+  #teamApp:not(.hidden) .team-earnings-hero-stat{
+    min-width:0!important;
+    padding:9px!important;
+    border:1px solid #e8e9eb!important;
+    border-radius:11px!important;
+    background:rgba(255,255,255,.78)!important;
+  }
+
+  #teamApp:not(.hidden) .team-earnings-total{
+    display:grid!important;
+    align-content:center!important;
+    gap:2px!important;
+  }
+
+  #teamApp:not(.hidden) .team-earnings-total small,
+  #teamApp:not(.hidden) .team-earnings-hero-stat small{
+    color:#939ca6!important;
+    font-size:5.3px!important;
+    font-weight:900!important;
+    letter-spacing:.08em!important;
+  }
+
+  #teamApp:not(.hidden) .team-earnings-total b{
+    margin:1px 0!important;
+    color:#c88e00!important;
+    font-size:19px!important;
+    line-height:1!important;
+    font-weight:950!important;
+    letter-spacing:-.03em!important;
+  }
+
+  #teamApp:not(.hidden) .team-earnings-total>span{
+    color:#8b94a0!important;
+    font-size:5.8px!important;
+  }
+
+  #teamApp:not(.hidden) .team-earnings-hero-stat{
+    display:grid!important;
+    grid-template-columns:24px minmax(0,1fr)!important;
+    align-items:center!important;
+    gap:6px!important;
+  }
+
+  #teamApp:not(.hidden) .team-earnings-hero-stat>span{
+    width:24px!important;
+    height:24px!important;
+    display:grid!important;
+    place-items:center!important;
+    border-radius:8px!important;
+    background:#fff5d8!important;
+    color:#b27e00!important;
+    font-size:7px!important;
+  }
+
+  #teamApp:not(.hidden) .team-earnings-hero-stat>div{
+    min-width:0!important;
+    display:grid!important;
+    gap:1px!important;
+  }
+
+  #teamApp:not(.hidden) .team-earnings-hero-stat b{
+    overflow:hidden!important;
+    color:#292f37!important;
+    font-size:8.6px!important;
+    line-height:1.1!important;
+    white-space:nowrap!important;
+    text-overflow:ellipsis!important;
+  }
+
+  #teamApp:not(.hidden) .team-earnings-hero-stat em{
+    overflow:hidden!important;
+    color:#8e97a1!important;
+    font-size:5.3px!important;
+    font-style:normal!important;
+    white-space:nowrap!important;
+    text-overflow:ellipsis!important;
+  }
+
+  /* Earnings sources as a compact swipe rail */
+  #teamApp:not(.hidden) .team-earnings-source-rail{
+    display:flex!important;
+    grid-template-columns:none!important;
+    gap:6px!important;
+    margin-top:10px!important;
+    padding:0 0 1px!important;
+    overflow-x:auto!important;
+    scrollbar-width:none!important;
+  }
+  #teamApp:not(.hidden) .team-earnings-source-rail::-webkit-scrollbar{display:none!important}
+
+  #teamApp:not(.hidden) .premium-earning-card{
+    position:relative!important;
+    overflow:hidden!important;
+    flex:0 0 138px!important;
+    min-width:138px!important;
+    min-height:94px!important;
+    padding:9px!important;
+    border:1px solid #e7e9ec!important;
+    border-radius:12px!important;
+    background:#fff!important;
+    box-shadow:none!important;
+  }
+
+  #teamApp:not(.hidden) .premium-earning-card-top{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:6px!important;
+    margin-bottom:6px!important;
+  }
+
+  #teamApp:not(.hidden) .premium-earning-icon{
+    width:25px!important;
+    height:25px!important;
+    display:grid!important;
+    place-items:center!important;
+    border-radius:8px!important;
+    background:#f3f4f6!important;
+    color:#77828e!important;
+    font-size:7px!important;
+  }
+
+  #teamApp:not(.hidden) .premium-earning-card.blue .premium-earning-icon{background:#eef5ff!important;color:#4d7dba!important}
+  #teamApp:not(.hidden) .premium-earning-card.purple .premium-earning-icon{background:#f5efff!important;color:#835bc0!important}
+  #teamApp:not(.hidden) .premium-earning-card.gold .premium-earning-icon{background:#fff6dc!important;color:#ad7b00!important}
+
+  #teamApp:not(.hidden) .premium-earning-card-top em{
+    color:#99a1aa!important;
+    font-size:5.2px!important;
+    font-style:normal!important;
+    font-weight:850!important;
+  }
+
+  #teamApp:not(.hidden) .premium-earning-card>small{
+    display:block!important;
+    color:#89939e!important;
+    font-size:5.8px!important;
+    font-weight:850!important;
+  }
+
+  #teamApp:not(.hidden) .premium-earning-card>b{
+    display:block!important;
+    margin:4px 0 3px!important;
+    color:#242a32!important;
+    font-size:13px!important;
+    line-height:1!important;
+  }
+
+  #teamApp:not(.hidden) .premium-earning-card>span{
+    display:block!important;
+    overflow:hidden!important;
+    color:#8f98a2!important;
+    font-size:5.5px!important;
+    white-space:nowrap!important;
+    text-overflow:ellipsis!important;
+  }
+
+  #teamApp:not(.hidden) .earning-share{
+    position:absolute!important;
+    left:9px!important;
+    right:9px!important;
+    bottom:8px!important;
+    height:2px!important;
+    overflow:hidden!important;
+    border-radius:99px!important;
+    background:#eff1f3!important;
+  }
+
+  #teamApp:not(.hidden) .earning-share u{
+    display:block!important;
+    height:100%!important;
+    border-radius:inherit!important;
+    background:linear-gradient(90deg,#e1ab07,#efca4d)!important;
+    text-decoration:none!important;
+  }
+
+  #teamApp:not(.hidden) .premium-earning-card.blue .earning-share u{background:#6c9bd7!important}
+  #teamApp:not(.hidden) .premium-earning-card.purple .earning-share u{background:#a17bd2!important}
+
+  /* Compact policy notice */
+  #teamApp:not(.hidden) .team-earnings-policy{
+    margin-top:8px!important;
+    border:1px solid #e5e7eb!important;
+    border-radius:12px!important;
+    background:#fff!important;
+    overflow:hidden!important;
+  }
+
+  #teamApp:not(.hidden) .team-earnings-policy summary{
+    min-height:42px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:8px!important;
+    padding:0 10px!important;
+    list-style:none!important;
+    cursor:pointer!important;
+  }
+  #teamApp:not(.hidden) .team-earnings-policy summary::-webkit-details-marker{display:none!important}
+  #teamApp:not(.hidden) .team-earnings-policy summary>span{
+    display:flex!important;
+    align-items:center!important;
+    gap:6px!important;
+  }
+  #teamApp:not(.hidden) .team-earnings-policy summary>span>i{
+    width:25px!important;
+    height:25px!important;
+    display:grid!important;
+    place-items:center!important;
+    border-radius:8px!important;
+    background:#fff6dc!important;
+    color:#b27e00!important;
+    font-size:7px!important;
+  }
+  #teamApp:not(.hidden) .team-earnings-policy summary b{
+    color:#39414a!important;
+    font-size:7.4px!important;
+  }
+  #teamApp:not(.hidden) .team-earnings-policy summary>i{
+    color:#9ba2aa!important;
+    font-size:6px!important;
+    transition:transform .16s ease!important;
+  }
+  #teamApp:not(.hidden) .team-earnings-policy[open] summary>i{transform:rotate(180deg)!important}
+  #teamApp:not(.hidden) .team-earnings-policy p{
+    margin:0!important;
+    padding:0 10px 10px!important;
+    color:#7e8893!important;
+    font-size:6.5px!important;
+    line-height:1.45!important;
+  }
+
+  /* Section headings */
+  #teamApp:not(.hidden) .team-earnings-section-head{
+    display:flex!important;
+    align-items:end!important;
+    justify-content:space-between!important;
+    gap:8px!important;
+    margin:13px 2px 7px!important;
+  }
+  #teamApp:not(.hidden) .team-earnings-section-head>div{display:grid!important;gap:1px!important}
+  #teamApp:not(.hidden) .team-earnings-section-head small{
+    color:#929aa4!important;
+    font-size:5.6px!important;
+    font-weight:900!important;
+    letter-spacing:.11em!important;
+  }
+  #teamApp:not(.hidden) .team-earnings-section-head b{
+    color:#242a32!important;
+    font-size:12px!important;
+  }
+  #teamApp:not(.hidden) .team-earnings-section-head>span{
+    color:#8c95a0!important;
+    font-size:6px!important;
+  }
+
+  /* Commission levels become horizontal swipe cards instead of huge vertical blocks */
+  #teamApp:not(.hidden) .team-earnings-progress{
+    display:flex!important;
+    grid-template-columns:none!important;
+    gap:7px!important;
+    margin:0!important;
+    padding:0 0 2px!important;
+    overflow-x:auto!important;
+    scrollbar-width:none!important;
+  }
+  #teamApp:not(.hidden) .team-earnings-progress::-webkit-scrollbar{display:none!important}
+
+  #teamApp:not(.hidden) .premium-progress-card{
+    flex:0 0 236px!important;
+    min-width:236px!important;
+    min-height:132px!important;
+    padding:10px!important;
+    border:1px solid #e5e7eb!important;
+    border-radius:14px!important;
+    background:#fff!important;
+    box-shadow:0 5px 14px rgba(34,40,48,.025)!important;
+  }
+
+  #teamApp:not(.hidden) .premium-progress-head{
+    display:grid!important;
+    grid-template-columns:28px minmax(0,1fr) auto!important;
+    align-items:center!important;
+    gap:7px!important;
+  }
+
+  #teamApp:not(.hidden) .premium-progress-icon{
+    width:28px!important;
+    height:28px!important;
+    display:grid!important;
+    place-items:center!important;
+    border-radius:9px!important;
+    background:#fff6dc!important;
+    color:#ad7b00!important;
+    font-size:7px!important;
+  }
+  #teamApp:not(.hidden) .premium-progress-card.blue .premium-progress-icon{background:#eef5ff!important;color:#4c79b8!important}
+  #teamApp:not(.hidden) .premium-progress-card.purple .premium-progress-icon{background:#f5efff!important;color:#835bc0!important}
+
+  #teamApp:not(.hidden) .premium-progress-head>div{min-width:0!important;display:grid!important;gap:1px!important}
+  #teamApp:not(.hidden) .premium-progress-head small{
+    color:#939ca6!important;
+    font-size:5.2px!important;
+    font-weight:900!important;
+    letter-spacing:.07em!important;
+  }
+  #teamApp:not(.hidden) .premium-progress-head h3{
+    margin:0!important;
+    color:#292f37!important;
+    font-size:8.5px!important;
+    line-height:1.1!important;
+  }
+  #teamApp:not(.hidden) .premium-progress-head .rate-big{
+    color:#c89000!important;
+    font-size:13px!important;
+    font-weight:950!important;
+  }
+
+  #teamApp:not(.hidden) .premium-progress-card .progress-meta{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:6px!important;
+    margin:10px 0 5px!important;
+    color:#8b94a0!important;
+    font-size:5.8px!important;
+  }
+  #teamApp:not(.hidden) .premium-progress-card .progress-meta b{
+    color:#48515b!important;
+    font-size:6.4px!important;
+  }
+
+  #teamApp:not(.hidden) .premium-progress-bar{
+    height:4px!important;
+    overflow:hidden!important;
+    border:0!important;
+    border-radius:99px!important;
+    background:#eef0f2!important;
+  }
+  #teamApp:not(.hidden) .premium-progress-bar>i{
+    display:block!important;
+    height:100%!important;
+    border-radius:inherit!important;
+    background:linear-gradient(90deg,#dcaa0b,#efca4c)!important;
+  }
+  #teamApp:not(.hidden) .premium-progress-card.blue .premium-progress-bar>i{background:#6c9bd7!important}
+  #teamApp:not(.hidden) .premium-progress-card.purple .premium-progress-bar>i{background:#a17bd2!important}
+  #teamApp:not(.hidden) .premium-progress-bar>i:after{display:none!important}
+
+  #teamApp:not(.hidden) .premium-progress-card .next-copy{
+    min-height:34px!important;
+    display:flex!important;
+    align-items:center!important;
+    gap:6px!important;
+    margin-top:8px!important;
+    padding:7px!important;
+    border-radius:9px!important;
+    background:#fafbfc!important;
+    color:#77828e!important;
+    font-size:5.8px!important;
+    line-height:1.3!important;
+  }
+  #teamApp:not(.hidden) .premium-progress-card .next-copy>i{
+    width:20px!important;
+    height:20px!important;
+    min-width:20px!important;
+    display:grid!important;
+    place-items:center!important;
+    border-radius:7px!important;
+    background:#fff6dc!important;
+    color:#b27e00!important;
+    font-size:5.7px!important;
+  }
+
+  /* Broker performance as compact swipe cards */
+  #teamApp:not(.hidden) .team-broker-grid{
+    display:flex!important;
+    grid-template-columns:none!important;
+    gap:7px!important;
+    margin:0!important;
+    padding:0 0 2px!important;
+    overflow-x:auto!important;
+    scrollbar-width:none!important;
+  }
+  #teamApp:not(.hidden) .team-broker-grid::-webkit-scrollbar{display:none!important}
+
+  #teamApp:not(.hidden) .premium-broker-card{
+    flex:0 0 184px!important;
+    min-width:184px!important;
+    min-height:116px!important;
+    padding:10px!important;
+    border:1px solid #e5e7eb!important;
+    border-radius:14px!important;
+    background:#fff!important;
+    box-shadow:0 5px 14px rgba(34,40,48,.025)!important;
+  }
+
+  #teamApp:not(.hidden) .premium-broker-head{
+    display:grid!important;
+    grid-template-columns:30px minmax(0,1fr) auto!important;
+    align-items:center!important;
+    gap:7px!important;
+  }
+
+  #teamApp:not(.hidden) .premium-broker-logo{
+    width:30px!important;
+    height:30px!important;
+    display:grid!important;
+    place-items:center!important;
+    border-radius:9px!important;
+    background:#141920!important;
+    color:#e8c744!important;
+    font-size:7px!important;
+    font-weight:950!important;
+    letter-spacing:-.02em!important;
+  }
+
+  #teamApp:not(.hidden) .premium-broker-head>div{min-width:0!important;display:grid!important;gap:1px!important}
+  #teamApp:not(.hidden) .premium-broker-head small{
+    color:#969ea7!important;
+    font-size:5.2px!important;
+    font-weight:900!important;
+  }
+  #teamApp:not(.hidden) .premium-broker-head b{
+    color:#282e36!important;
+    font-size:9px!important;
+    line-height:1!important;
+  }
+  #teamApp:not(.hidden) .premium-broker-head .rate{
+    color:#178c65!important;
+    font-size:6px!important;
+    font-weight:900!important;
+  }
+
+  #teamApp:not(.hidden) .premium-broker-card .broker-stats{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:5px!important;
+    margin-top:9px!important;
+  }
+  #teamApp:not(.hidden) .premium-broker-card .broker-stats>div{
+    padding:7px!important;
+    border:1px solid #eef0f2!important;
+    border-radius:9px!important;
+    background:#fafbfc!important;
+  }
+  #teamApp:not(.hidden) .premium-broker-card .broker-stats span{
+    color:#919aa4!important;
+    font-size:5.3px!important;
+  }
+  #teamApp:not(.hidden) .premium-broker-card .broker-stats b{
+    margin-top:2px!important;
+    color:#343b44!important;
+    font-size:8px!important;
+  }
+
+  #teamApp:not(.hidden) .premium-broker-progress{
+    display:block!important;
+    height:3px!important;
+    margin-top:8px!important;
+    overflow:hidden!important;
+    border-radius:99px!important;
+    background:#eef0f2!important;
+  }
+  #teamApp:not(.hidden) .premium-broker-progress i{
+    display:block!important;
+    height:100%!important;
+    border-radius:inherit!important;
+    background:linear-gradient(90deg,#e0ab0c,#efcc53)!important;
+  }
+
+  /* Dark parity */
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-earnings-command,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-earnings-total,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-earnings-hero-stat,
+  html[data-theme="dark"] #teamApp:not(.hidden) .premium-earning-card,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-earnings-policy,
+  html[data-theme="dark"] #teamApp:not(.hidden) .premium-progress-card,
+  html[data-theme="dark"] #teamApp:not(.hidden) .premium-broker-card{
+    border-color:#29313a!important;
+    background:#10161d!important;
+    box-shadow:none!important;
+  }
+
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-earnings-command{
+    background:
+      radial-gradient(260px 140px at 100% 0%,rgba(240,185,11,.055),transparent 72%),
+      #10161d!important;
+  }
+
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-earnings-command h2,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-earnings-hero-stat b,
+  html[data-theme="dark"] #teamApp:not(.hidden) .premium-earning-card>b,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-earnings-policy summary b,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-earnings-section-head b,
+  html[data-theme="dark"] #teamApp:not(.hidden) .premium-progress-head h3,
+  html[data-theme="dark"] #teamApp:not(.hidden) .premium-progress-card .progress-meta b,
+  html[data-theme="dark"] #teamApp:not(.hidden) .premium-broker-head b,
+  html[data-theme="dark"] #teamApp:not(.hidden) .premium-broker-card .broker-stats b{
+    color:#eef2f6!important;
+  }
+
+  html[data-theme="dark"] #teamApp:not(.hidden) .premium-progress-card .next-copy,
+  html[data-theme="dark"] #teamApp:not(.hidden) .premium-broker-card .broker-stats>div{
+    border-color:#252d36!important;
+    background:#0f151b!important;
+  }
+
+  html[data-theme="dark"] #teamApp:not(.hidden) .premium-progress-bar,
+  html[data-theme="dark"] #teamApp:not(.hidden) .premium-broker-progress,
+  html[data-theme="dark"] #teamApp:not(.hidden) .earning-share{
+    background:#242c35!important;
+  }
+
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-earnings-policy p{
+    color:#818b97!important;
+  }
+}
+
+@media(max-width:390px){
+  #teamApp:not(.hidden) .team-earnings-hero{
+    grid-template-columns:1fr 1fr!important;
+  }
+  #teamApp:not(.hidden) .team-earnings-total{
+    grid-column:1/-1!important;
+  }
+  #teamApp:not(.hidden) .premium-progress-card{
+    flex-basis:222px!important;
+    min-width:222px!important;
+  }
+}
+
+/* Desktop polish */
+@media(min-width:781px){
+  .team-earnings-command{
+    padding:20px;border:1px solid var(--r18-line);border-radius:18px;background:var(--r18-surface);margin-bottom:12px
+  }
+  .team-earnings-command-top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+  .team-earnings-hero{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:10px;margin-top:14px}
+  .team-earnings-source-rail{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:10px!important;margin-top:12px!important}
+  .team-earnings-section-head{display:flex;align-items:center;justify-content:space-between;margin:14px 0 8px}
+}
