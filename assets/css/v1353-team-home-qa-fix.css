@@ -1,0 +1,298 @@
+/* 24K MR ZERO — Team Home final mobile correction v13.53
+   Hard last-pass overrides for the mobile Home UI shown in QA screenshots. */
+
+@media (max-width:780px){
+  /* HERO PROFILE — never fall back to a native browser button */
+  #teamApp:not(.hidden) .team-home-profile-pill{
+    -webkit-appearance:none!important;
+    appearance:none!important;
+    width:42px!important;
+    min-width:42px!important;
+    max-width:42px!important;
+    height:42px!important;
+    min-height:42px!important;
+    display:grid!important;
+    place-items:center!important;
+    padding:0!important;
+    margin:0!important;
+    border:1px solid rgba(213,165,26,.22)!important;
+    border-radius:12px!important;
+    background:linear-gradient(145deg,#ffe67b,#efba18)!important;
+    color:#151515!important;
+    box-shadow:0 7px 16px rgba(213,160,0,.13)!important;
+    font:inherit!important;
+    line-height:1!important;
+    overflow:hidden!important;
+  }
+  #teamApp:not(.hidden) .team-home-profile-pill .team-home-profile-avatar{
+    width:auto!important;
+    height:auto!important;
+    display:block!important;
+    padding:0!important;
+    margin:0!important;
+    border:0!important;
+    border-radius:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+    color:#151515!important;
+    font-size:11px!important;
+    font-weight:950!important;
+    line-height:1!important;
+  }
+  #teamApp:not(.hidden) .team-home-profile-pill .team-home-profile-copy,
+  #teamApp:not(.hidden) .team-home-profile-pill>i{
+    display:none!important;
+  }
+
+  /* KPI status chips — force true micro-pill sizing, no browser/default italics */
+  #teamApp:not(.hidden) .team-home-kpi-rail .overview-kpi-value-row{
+    display:flex!important;
+    align-items:flex-end!important;
+    justify-content:space-between!important;
+    gap:4px!important;
+    margin:7px 0 3px!important;
+  }
+  #teamApp:not(.hidden) .team-home-kpi-rail .overview-kpi-value-row>b{
+    display:block!important;
+    margin:0!important;
+    padding:0!important;
+    color:#171c24!important;
+    font-size:20px!important;
+    font-weight:900!important;
+    font-style:normal!important;
+    line-height:1!important;
+    letter-spacing:-.04em!important;
+  }
+  #teamApp:not(.hidden) .team-home-kpi-rail .overview-kpi-chip{
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    width:auto!important;
+    max-width:68px!important;
+    min-height:17px!important;
+    margin:0 0 1px!important;
+    padding:0 5px!important;
+    border:0!important;
+    border-radius:999px!important;
+    background:#f3f4f6!important;
+    color:#737d88!important;
+    font-family:Inter,system-ui,sans-serif!important;
+    font-size:5.6px!important;
+    font-style:normal!important;
+    font-weight:850!important;
+    line-height:17px!important;
+    letter-spacing:0!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+  #teamApp:not(.hidden) .team-home-kpi-rail .overview-kpi-chip.green{
+    background:#ebfaf4!important;color:#128e64!important;
+  }
+  #teamApp:not(.hidden) .team-home-kpi-rail .overview-kpi-chip.amber,
+  #teamApp:not(.hidden) .team-home-kpi-rail .overview-kpi-chip.gold{
+    background:#fff6dc!important;color:#a97800!important;
+  }
+  #teamApp:not(.hidden) .team-home-kpi-rail .overview-kpi-chip.blue{
+    background:#eef5ff!important;color:#4777bd!important;
+  }
+  #teamApp:not(.hidden) .team-home-kpi-rail .overview-kpi>small{
+    display:block!important;
+    margin-top:0!important;
+    font-size:6.7px!important;
+    line-height:1.2!important;
+    color:#7a8490!important;
+    font-style:normal!important;
+  }
+
+  /* Recent clients empty state — compact, aligned, no giant typography */
+  #teamApp:not(.hidden) #recentClients>.team-home-empty{
+    min-height:58px!important;
+    display:flex!important;
+    align-items:center!important;
+    gap:9px!important;
+    padding:9px!important;
+    margin:0!important;
+    border:1px dashed #e3e6e9!important;
+    border-radius:11px!important;
+    background:#fafbfc!important;
+  }
+  #teamApp:not(.hidden) #recentClients>.team-home-empty>span{
+    width:30px!important;
+    height:30px!important;
+    min-width:30px!important;
+    display:grid!important;
+    place-items:center!important;
+    margin:0!important;
+    padding:0!important;
+    border-radius:9px!important;
+    background:#fff5dc!important;
+    color:#c98e00!important;
+    font-size:9px!important;
+    line-height:1!important;
+  }
+  #teamApp:not(.hidden) #recentClients>.team-home-empty>div{
+    min-width:0!important;
+    display:grid!important;
+    gap:2px!important;
+  }
+  #teamApp:not(.hidden) #recentClients>.team-home-empty b{
+    display:block!important;
+    margin:0!important;
+    padding:0!important;
+    color:#2d343d!important;
+    font-size:8.8px!important;
+    font-weight:850!important;
+    line-height:1.2!important;
+  }
+  #teamApp:not(.hidden) #recentClients>.team-home-empty small{
+    display:block!important;
+    margin:0!important;
+    padding:0!important;
+    color:#87919c!important;
+    font-size:6.5px!important;
+    font-weight:500!important;
+    line-height:1.3!important;
+  }
+
+  /* Action Center — icon separated from label */
+  #teamApp:not(.hidden) #todayWork .today-work-item{
+    min-height:40px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:8px!important;
+    padding:6px 7px!important;
+    margin:0!important;
+    border:1px solid #ebe4d5!important;
+    border-radius:10px!important;
+    background:#fcfbf8!important;
+  }
+  #teamApp:not(.hidden) #todayWork .today-work-label{
+    min-width:0!important;
+    display:flex!important;
+    align-items:center!important;
+    gap:7px!important;
+    margin:0!important;
+    padding:0!important;
+  }
+  #teamApp:not(.hidden) #todayWork .today-work-label>i{
+    width:22px!important;
+    height:22px!important;
+    min-width:22px!important;
+    display:grid!important;
+    place-items:center!important;
+    margin:0!important;
+    padding:0!important;
+    border-radius:7px!important;
+    background:#fff4d6!important;
+    color:#bd8500!important;
+    font-size:7px!important;
+    line-height:1!important;
+  }
+  #teamApp:not(.hidden) #todayWork .today-work-label>span{
+    display:block!important;
+    margin:0!important;
+    padding:0!important;
+    color:#4d5661!important;
+    font-size:7.8px!important;
+    font-weight:650!important;
+    line-height:1.2!important;
+    white-space:nowrap!important;
+  }
+  #teamApp:not(.hidden) #todayWork .today-work-value{
+    min-width:0!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-end!important;
+    gap:5px!important;
+    margin:0!important;
+  }
+  #teamApp:not(.hidden) #todayWork .today-work-value>b{
+    margin:0!important;
+    padding:0!important;
+    color:#222831!important;
+    font-size:11.5px!important;
+    font-weight:900!important;
+    font-style:normal!important;
+    line-height:1!important;
+  }
+
+  /* Tracking links empty state */
+  #teamApp:not(.hidden) #overviewLinks>.team-home-empty{
+    min-height:48px!important;
+    display:flex!important;
+    align-items:center!important;
+    gap:8px!important;
+    padding:7px!important;
+    margin:0!important;
+    border:1px dashed #e3e6e9!important;
+    border-radius:10px!important;
+    background:#fafbfc!important;
+  }
+  #teamApp:not(.hidden) #overviewLinks>.team-home-empty>span{
+    width:27px!important;
+    height:27px!important;
+    min-width:27px!important;
+    display:grid!important;
+    place-items:center!important;
+    margin:0!important;
+    padding:0!important;
+    border-radius:8px!important;
+    background:#fff5dc!important;
+    color:#c98e00!important;
+    font-size:8px!important;
+    line-height:1!important;
+  }
+  #teamApp:not(.hidden) #overviewLinks>.team-home-empty>div{
+    min-width:0!important;
+    display:grid!important;
+    gap:1px!important;
+  }
+  #teamApp:not(.hidden) #overviewLinks>.team-home-empty b{
+    display:block!important;
+    margin:0!important;
+    color:#2d343d!important;
+    font-size:8.4px!important;
+    font-weight:850!important;
+    line-height:1.2!important;
+  }
+  #teamApp:not(.hidden) #overviewLinks>.team-home-empty small{
+    display:block!important;
+    margin:0!important;
+    color:#87919c!important;
+    font-size:6.4px!important;
+    line-height:1.2!important;
+  }
+
+  /* Tighten lower cards now that empty states are compact */
+  #teamApp:not(.hidden) .team-home-card,
+  #teamApp:not(.hidden) .team-home-links{
+    min-height:0!important;
+    height:auto!important;
+  }
+  #teamApp:not(.hidden) .team-home-card.recent-card{
+    padding-bottom:10px!important;
+  }
+
+  /* Dark theme parity */
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-home-kpi-rail .overview-kpi-value-row>b,
+  html[data-theme="dark"] #teamApp:not(.hidden) #todayWork .today-work-value>b,
+  html[data-theme="dark"] #teamApp:not(.hidden) #recentClients>.team-home-empty b,
+  html[data-theme="dark"] #teamApp:not(.hidden) #overviewLinks>.team-home-empty b{
+    color:#eef2f6!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) #recentClients>.team-home-empty,
+  html[data-theme="dark"] #teamApp:not(.hidden) #overviewLinks>.team-home-empty,
+  html[data-theme="dark"] #teamApp:not(.hidden) #todayWork .today-work-item{
+    border-color:#29313a!important;
+    background:#0f151b!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) #todayWork .today-work-label>span{
+    color:#aeb7c1!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-home-profile-pill{
+    border-color:rgba(240,185,11,.22)!important;
+    background:linear-gradient(145deg,#f2c53b,#dba700)!important;
+  }
+}
