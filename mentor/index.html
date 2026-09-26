@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f7f1e7"><link rel="manifest" href="/mentor/manifest.webmanifest?v=12.73"><link rel="apple-touch-icon" href="/assets/logo.png">
 <title>Mentor Panel | 24K MR ZERO</title>
 <link rel="icon" href="/assets/logo.png"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<link rel="stylesheet" href="/assets/css/v1216-mentor.css?v=12.18"><link rel="stylesheet" href="/assets/css/v1218-mentor-reference.css?v=13.14"><link rel="stylesheet" href="/assets/css/v1315-mentor-performance.css?v=13.19"><link rel="stylesheet" href="/assets/css/v1320-mentor-signals.css?v=13.32"><link rel="stylesheet" href="/assets/css/v1333-mentor-charts.css?v=13.33"><link rel="stylesheet" href="/assets/css/v1334-mentor-articles.css?v=13.34"><link rel="stylesheet" href="/assets/css/v1335-mentor-profile.css?v=13.39.1"><link rel="stylesheet" href="/assets/css/v1340-mentor-mobile-gap.css?v=13.40">
+<link rel="stylesheet" href="/assets/css/v1216-mentor.css?v=12.18"><link rel="stylesheet" href="/assets/css/v1218-mentor-reference.css?v=13.14"><link rel="stylesheet" href="/assets/css/v1315-mentor-performance.css?v=13.19"><link rel="stylesheet" href="/assets/css/v1320-mentor-signals.css?v=13.32"><link rel="stylesheet" href="/assets/css/v1333-mentor-charts.css?v=13.33"><link rel="stylesheet" href="/assets/css/v1334-mentor-articles.css?v=13.34"><link rel="stylesheet" href="/assets/css/v1335-mentor-profile.css?v=13.39.1"><link rel="stylesheet" href="/assets/css/v1340-mentor-mobile-gap.css?v=13.40"><link rel="stylesheet" href="/assets/css/v1341-mentor-editors.css?v=13.41">
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script defer src="/assets/js/config.js?v=13.08"></script>
 </head>
 <body class="mentor-page mentor-booting">
@@ -305,8 +305,147 @@
 <div class="mentor-modal" id="mentorSignalModal"><div class="mentor-modal-card"><div class="mentor-modal-head"><div><b id="mentorSignalModalTitle">New Signal</b><small class="eyebrow">24K SIGNAL EXECUTION</small></div><button class="mentor-close" data-close-mentor-modal><i class="fa-solid fa-xmark"></i></button></div><form id="mentorSignalForm"><input type="hidden" name="id"><div class="mentor-modal-body mentor-form mentor-signal-form-premium"><div class="mentor-signal-form-intro full"><span><i class="fa-solid fa-bolt"></i></span><div><b>Trade Setup</b><small>Define entry, protection and targets. Pips update automatically.</small></div></div><label>Symbol<select name="symbol" required><option value="XAUUSD">XAUUSD</option><option value="XAGUSD">XAGUSD</option><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="USDCHF">USDCHF</option><option value="USDCAD">USDCAD</option><option value="AUDUSD">AUDUSD</option><option value="NZDUSD">NZDUSD</option><option value="EURGBP">EURGBP</option><option value="EURJPY">EURJPY</option><option value="EURCHF">EURCHF</option><option value="EURCAD">EURCAD</option><option value="EURAUD">EURAUD</option><option value="EURNZD">EURNZD</option><option value="GBPJPY">GBPJPY</option><option value="GBPCHF">GBPCHF</option><option value="GBPCAD">GBPCAD</option><option value="GBPAUD">GBPAUD</option><option value="GBPNZD">GBPNZD</option><option value="AUDJPY">AUDJPY</option><option value="AUDCAD">AUDCAD</option><option value="AUDCHF">AUDCHF</option><option value="AUDNZD">AUDNZD</option><option value="NZDJPY">NZDJPY</option><option value="NZDCAD">NZDCAD</option><option value="NZDCHF">NZDCHF</option><option value="CADJPY">CADJPY</option><option value="CADCHF">CADCHF</option><option value="CHFJPY">CHFJPY</option><option value="USOIL">USOIL</option><option value="UKOIL">UKOIL</option><option value="NAS100">NAS100</option><option value="US30">US30</option><option value="SPX500">SPX500</option></select></label><label>Type<select name="signal_type" required><option>BUY</option><option>SELL</option><option>BUY STOP</option><option>SELL STOP</option><option>BUY LIMIT</option><option>SELL LIMIT</option></select></label><label>Entry From<input name="entry_from" type="number" step="any" required></label><label>Entry To <small>(optional)</small><input name="entry_to" type="number" step="any"></label><label>Stop Loss<input name="stop_loss" type="number" step="any" required></label><label>TP1<input name="take_profit_1" type="number" step="any" required></label><label>TP2 <small>(optional)</small><input name="take_profit_2" type="number" step="any"></label><label>TP3 <small>(optional)</small><input name="take_profit_3" type="number" step="any"></label><label>TP4 <small>(optional)</small><input name="take_profit_4" type="number" step="any"></label><div class="mentor-pip-preview full" id="mentorPipPreview"><span>Automatic Pip Preview</span><small>Enter Entry, SL and TP levels to calculate projected pips.</small></div><div class="mentor-note-presets full"><span>Quick Note</span><div><button type="button" data-note-preset="Wait for confirmation">Wait for confirmation</button><button type="button" data-note-preset="No confirmation, no trade">No confirmation, no trade</button><button type="button" data-note-preset="Use proper risk management">Use proper risk management</button><button type="button" data-note-preset="Entry after confirmation">Entry after confirmation</button><button type="button" data-note-preset="Educational setup only">Educational setup only</button><button type="button" data-note-preset="custom"><i class="fa-solid fa-pen"></i> Custom Note</button></div></div><label class="full">Custom Note<textarea name="notes" placeholder="Write your own note or choose a quick note above"></textarea></label></div><div class="mentor-modal-foot"><button type="button" class="mentor-btn" data-close-mentor-modal>Cancel</button><button class="mentor-btn gold" type="submit">Publish Signal</button></div></form></div></div>
 <div class="mentor-modal mentor-signal-detail-modal" id="mentorSignalDetailModal"><div class="mentor-modal-card"><div class="mentor-modal-head"><div><b>Manage Signal</b><small class="eyebrow">24K MR ZERO SIGNAL MANAGEMENT</small></div><button class="mentor-close" data-close-mentor-modal><i class="fa-solid fa-xmark"></i></button></div><div class="mentor-modal-body" id="mentorSignalDetailContent"></div></div></div>
 <div class="mentor-modal mentor-filter-sheet" id="mentorSignalFilterModal"><div class="mentor-modal-card"><div class="mentor-modal-head"><div><b>Filters</b><small class="eyebrow">SIGNAL FILTERS</small></div><button class="mentor-close" data-close-mentor-modal><i class="fa-solid fa-xmark"></i></button></div><div class="mentor-modal-body mentor-filter-sheet-body"><label>Pair<select id="mentorMobileSignalPair"><option value="all">All Pairs</option></select></label><label>Type<select id="mentorMobileSignalType"><option value="all">All Types</option><option>BUY</option><option>SELL</option><option>BUY STOP</option><option>SELL STOP</option><option>BUY LIMIT</option><option>SELL LIMIT</option></select></label><label>Status<select id="mentorMobileSignalStatus"><option value="all">All Status</option><option value="active">Active</option><option value="pending">Pending</option><option value="tp1_hit">TP1 Hit</option><option value="tp2_hit">TP2 Hit</option><option value="tp3_hit">TP3 Hit</option><option value="tp4_hit">TP4 Hit</option><option value="breakeven_hit">BE</option><option value="sl_hit">SL</option><option value="manually_closed">Closed</option><option value="cancelled">Cancelled</option></select></label><label>From<input id="mentorMobileSignalFrom" type="date"></label><label>To<input id="mentorMobileSignalTo" type="date"></label></div><div class="mentor-modal-foot"><button type="button" class="mentor-btn" data-reset-signal-filters>Reset</button><button type="button" class="mentor-btn gold" data-apply-signal-filters>Apply</button></div></div></div>
-<div class="mentor-modal mentor-chart-modal" id="mentorChartModal"><div class="mentor-modal-card"><div class="mentor-modal-head"><div><b id="mentorChartModalTitle">New Chart</b><small class="eyebrow">24K MARKET RESEARCH</small></div><button class="mentor-close" data-close-mentor-modal><i class="fa-solid fa-xmark"></i></button></div><form id="mentorChartForm"><input type="hidden" name="id"><input type="hidden" name="existing_image"><div class="mentor-modal-body mentor-form mentor-chart-form-premium"><div class="mentor-chart-form-intro full"><span><i class="fa-solid fa-chart-candlestick"></i></span><div><b>Publish Market Analysis</b><small>Add the chart, pair, timeframe and a clear research summary.</small></div></div><label class="full">Analysis Title<input name="title" required placeholder="Gold H4 market structure update"></label><label>Pair / Symbol<input name="symbol" required placeholder="XAUUSD"></label><label>Timeframe<input name="timeframe" placeholder="H4"></label><label class="full mentor-chart-upload">Chart Image<input name="image" type="file" accept="image/png,image/jpeg,image/webp"><small>PNG, JPG or WEBP</small></label><label class="full">Summary<textarea name="summary" required placeholder="Short analysis summary..."></textarea></label><label class="full">Detailed View <small>(optional)</small><textarea name="details" placeholder="Key levels, confirmation, invalidation or additional notes..."></textarea></label></div><div class="mentor-modal-foot"><button type="button" class="mentor-btn" data-close-mentor-modal>Cancel</button><button class="mentor-btn gold" type="submit"><i class="fa-solid fa-paper-plane"></i> Publish Analysis</button></div></form></div></div>
-<div class="mentor-modal mentor-article-modal" id="mentorArticleModal"><div class="mentor-modal-card"><div class="mentor-modal-head"><div><b id="mentorArticleModalTitle">New Article</b><small class="eyebrow">24K EDITORIAL WORKSPACE</small></div><button class="mentor-close" data-close-mentor-modal><i class="fa-solid fa-xmark"></i></button></div><form id="mentorArticleForm"><input type="hidden" name="id"><input type="hidden" name="existing_cover"><div class="mentor-modal-body mentor-form mentor-article-form-premium"><div class="mentor-article-form-intro full"><span><i class="fa-solid fa-pen-nib"></i></span><div><b>Create Premium Content</b><small>Write a clear title, category, excerpt and structured article for the 24K library.</small></div></div><label class="full">Article Title<input name="title" required placeholder="How to build a high-probability trading bias"></label><label>Category<input name="category" placeholder="Education, Fundamentals..."></label><label class="mentor-article-cover">Cover Image <small>(optional)</small><input name="cover" type="file" accept="image/png,image/jpeg,image/webp"></label><label class="full">Short Excerpt<textarea name="excerpt" placeholder="A short preview shown on the article card..."></textarea></label><label class="full">Article Content<textarea name="content" required placeholder="Write the complete article here..."></textarea></label><label class="mentor-check mentor-article-publish"><input type="checkbox" name="is_published" checked><span><b>Publish now</b><small>Make this article visible immediately.</small></span></label></div><div class="mentor-modal-foot"><button type="button" class="mentor-btn" data-close-mentor-modal>Cancel</button><button class="mentor-btn gold" type="submit"><i class="fa-solid fa-paper-plane"></i> Save Article</button></div></form></div></div>
+<div class="mentor-modal mentor-chart-modal premium-editor-modal" id="mentorChartModal">
+  <div class="mentor-modal-card">
+    <div class="mentor-modal-head premium-editor-head">
+      <div>
+        <b id="mentorChartModalTitle">New Chart</b>
+        <small class="eyebrow">24K MARKET RESEARCH</small>
+      </div>
+      <button class="mentor-close" data-close-mentor-modal aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <form id="mentorChartForm">
+      <input type="hidden" name="id">
+      <input type="hidden" name="existing_image">
+      <div class="mentor-modal-body mentor-form premium-editor-body">
+        <section class="premium-editor-intro">
+          <span class="premium-editor-intro-icon"><i class="fa-solid fa-chart-line"></i></span>
+          <div><b>Publish Market Analysis</b><small>Complete the important details first, then add your chart and market view.</small></div>
+          <span class="premium-required-note">* Required</span>
+        </section>
+
+        <section class="premium-editor-section full">
+          <div class="premium-editor-section-head">
+            <span class="num">01</span>
+            <div><small>BASIC INFO</small><b>Analysis Details</b></div>
+          </div>
+          <div class="premium-editor-grid">
+            <label class="full">Analysis Title <strong>*</strong><input name="title" required placeholder="Gold H4 market structure update"></label>
+            <label>Pair / Symbol <strong>*</strong><input name="symbol" list="mentorChartSymbolList" required placeholder="XAUUSD" autocomplete="off"><datalist id="mentorChartSymbolList"><option value="XAUUSD"><option value="EURUSD"><option value="GBPUSD"><option value="USDJPY"><option value="AUDUSD"><option value="USDCAD"><option value="NZDUSD"><option value="BTCUSD"></datalist></label>
+            <label>Timeframe<input name="timeframe" list="mentorChartTimeframeList" placeholder="H4" autocomplete="off"><datalist id="mentorChartTimeframeList"><option value="M5"><option value="M15"><option value="M30"><option value="H1"><option value="H4"><option value="D1"></datalist></label>
+          </div>
+        </section>
+
+        <section class="premium-editor-section full">
+          <div class="premium-editor-section-head">
+            <span class="num">02</span>
+            <div><small>CHART</small><b>Upload Screenshot</b></div>
+          </div>
+          <label class="premium-upload full">
+            <input name="image" type="file" accept="image/png,image/jpeg,image/webp">
+            <span class="premium-upload-icon"><i class="fa-regular fa-image"></i></span>
+            <span class="premium-upload-copy"><b>Choose chart image</b><small data-file-label="chart">PNG, JPG or WEBP · Tap to select</small></span>
+            <span class="premium-upload-action">Browse</span>
+          </label>
+        </section>
+
+        <section class="premium-editor-section full">
+          <div class="premium-editor-section-head">
+            <span class="num">03</span>
+            <div><small>MARKET VIEW</small><b>Analysis Content</b></div>
+          </div>
+          <div class="premium-editor-grid">
+            <label class="full">Summary <strong>*</strong><textarea name="summary" required rows="3" placeholder="Write the main market view in 1–3 clear lines..."></textarea><small class="field-help">This appears on the chart card.</small></label>
+            <label class="full">Detailed View <span class="optional">Optional</span><textarea name="details" rows="4" placeholder="Key levels, confirmation, invalidation, trade idea or additional notes..."></textarea></label>
+          </div>
+        </section>
+      </div>
+      <div class="mentor-modal-foot premium-editor-foot">
+        <button type="button" class="mentor-btn premium-secondary" data-close-mentor-modal>Cancel</button>
+        <button class="mentor-btn gold premium-primary" type="submit"><i class="fa-solid fa-paper-plane"></i><span>Publish Analysis</span></button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="mentor-modal mentor-article-modal premium-editor-modal" id="mentorArticleModal">
+  <div class="mentor-modal-card">
+    <div class="mentor-modal-head premium-editor-head">
+      <div>
+        <b id="mentorArticleModalTitle">New Article</b>
+        <small class="eyebrow">24K EDITORIAL WORKSPACE</small>
+      </div>
+      <button class="mentor-close" data-close-mentor-modal aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <form id="mentorArticleForm">
+      <input type="hidden" name="id">
+      <input type="hidden" name="existing_cover">
+      <div class="mentor-modal-body mentor-form premium-editor-body">
+        <section class="premium-editor-intro article-intro">
+          <span class="premium-editor-intro-icon"><i class="fa-solid fa-pen-nib"></i></span>
+          <div><b>Create Premium Article</b><small>Choose the writing language, then add your title, preview and full content.</small></div>
+          <span class="premium-required-note">* Required</span>
+        </section>
+
+        <section class="premium-editor-section full">
+          <div class="premium-editor-section-head">
+            <span class="num">01</span>
+            <div><small>LANGUAGE</small><b>Writing Style</b></div>
+          </div>
+          <div class="premium-language-switch" role="radiogroup" aria-label="Article language">
+            <label><input type="radio" name="content_language" value="english" checked><span><b>English</b><small>Write the article in English</small></span></label>
+            <label><input type="radio" name="content_language" value="roman_english"><span><b>Roman English</b><small>Roman Urdu / easy English style</small></span></label>
+          </div>
+        </section>
+
+        <section class="premium-editor-section full">
+          <div class="premium-editor-section-head">
+            <span class="num">02</span>
+            <div><small>ARTICLE SETUP</small><b>Basic Information</b></div>
+          </div>
+          <div class="premium-editor-grid">
+            <label class="full">Article Title <strong>*</strong><input name="title" required placeholder="How to build a high-probability trading bias"></label>
+            <label>Category<input name="category" list="mentorArticleCategoryList" placeholder="Education"><datalist id="mentorArticleCategoryList"><option value="Education"><option value="Technical Analysis"><option value="Fundamental Analysis"><option value="Trading Psychology"><option value="Risk Management"><option value="Market Update"></datalist></label>
+            <label class="premium-upload compact">
+              <input name="cover" type="file" accept="image/png,image/jpeg,image/webp">
+              <span class="premium-upload-icon"><i class="fa-regular fa-image"></i></span>
+              <span class="premium-upload-copy"><b>Cover Image</b><small data-file-label="article">Optional · Tap to select</small></span>
+              <span class="premium-upload-action">Browse</span>
+            </label>
+          </div>
+        </section>
+
+        <section class="premium-editor-section full">
+          <div class="premium-editor-section-head">
+            <span class="num">03</span>
+            <div><small>PREVIEW</small><b>Short Excerpt</b></div>
+          </div>
+          <label class="full"><textarea name="excerpt" rows="3" placeholder="A short preview shown on the article card..."></textarea><small class="field-help">Keep it short and clear for the article card.</small></label>
+        </section>
+
+        <section class="premium-editor-section full">
+          <div class="premium-editor-section-head">
+            <span class="num">04</span>
+            <div><small>CONTENT</small><b>Full Article</b></div>
+          </div>
+          <label class="full"><textarea name="content" required rows="9" placeholder="Write the complete article here..."></textarea></label>
+        </section>
+
+        <section class="premium-publish-row full">
+          <label class="premium-publish-toggle">
+            <input type="checkbox" name="is_published" checked>
+            <span class="toggle-ui"></span>
+            <span><b>Publish now</b><small>Turn off to save this article as a draft.</small></span>
+          </label>
+          <span class="premium-publish-state" data-publish-state><i class="fa-solid fa-circle-check"></i> Ready to publish</span>
+        </section>
+      </div>
+      <div class="mentor-modal-foot premium-editor-foot">
+        <button type="button" class="mentor-btn premium-secondary" data-close-mentor-modal>Cancel</button>
+        <button class="mentor-btn gold premium-primary" type="submit"><i class="fa-solid fa-paper-plane"></i><span>Save Article</span></button>
+      </div>
+    </form>
+  </div>
+</div>
 <div class="mentor-modal" id="mentorBannerModal"><div class="mentor-modal-card"><div class="mentor-modal-head"><div><b id="mentorBannerModalTitle">New Banner</b><small class="eyebrow">WEBSITE CAMPAIGN</small></div><button class="mentor-close" data-close-mentor-modal><i class="fa-solid fa-xmark"></i></button></div><form id="mentorBannerForm"><input type="hidden" name="id"><input type="hidden" name="existing_image"><div class="mentor-modal-body mentor-form"><label class="full">Title<input name="title" required></label><label>Banner Image<input name="image" type="file" accept="image/png,image/jpeg,image/webp"></label><label>Target URL <small>(optional)</small><input name="target_url" placeholder="/courses/"></label><label class="mentor-check"><input type="checkbox" name="is_published" checked> Published</label></div><div class="mentor-modal-foot"><button type="button" class="mentor-btn" data-close-mentor-modal>Cancel</button><button class="mentor-btn gold" type="submit">Save Banner</button></div></form></div></div>
-<div id="mentorToast" class="mentor-toast"></div><script defer src="/assets/js/v1216-mentor.js?v=13.39"></script>
+<div id="mentorToast" class="mentor-toast"></div><script defer src="/assets/js/v1216-mentor.js?v=13.41"></script>
 </body></html>
