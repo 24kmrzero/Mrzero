@@ -1,0 +1,274 @@
+/* 24K MR ZERO — Admin Dashboard Ultra Premium v13.64
+   Premium black/gold command surface, darker KPI rail, glass navigation, refined depth. */
+
+@media(max-width:900px){
+  /* Page canvas */
+  body.app-page{
+    background:
+      radial-gradient(520px 260px at 12% -4%,rgba(226,170,18,.065),transparent 68%),
+      linear-gradient(180deg,#f8f3e8 0%,#f4efe4 36%,#f7f4ed 100%)!important;
+  }
+  .app-content{
+    padding:10px 11px calc(88px + env(safe-area-inset-bottom))!important;
+  }
+
+  /* Premium app header */
+  .app-topbar{
+    position:sticky!important;
+    top:0!important;
+    z-index:1200!important;
+    height:64px!important;
+    padding:0 11px!important;
+    background:
+      linear-gradient(180deg,rgba(15,18,23,.98),rgba(10,13,17,.98))!important;
+    border-bottom:1px solid rgba(228,176,38,.34)!important;
+    box-shadow:0 9px 26px rgba(17,20,26,.12)!important;
+    backdrop-filter:blur(18px)!important;
+  }
+  .app-burger,
+  .app-theme-toggle{
+    width:39px!important;height:39px!important;border-radius:12px!important;
+    border:1px solid rgba(229,177,37,.28)!important;
+    background:linear-gradient(145deg,#181c22,#101318)!important;
+    color:#e1b52b!important;
+    box-shadow:inset 0 1px rgba(255,255,255,.035),0 4px 12px rgba(0,0,0,.12)!important
+  }
+  .app-title strong{color:#fff3c9!important;font-size:13px!important;letter-spacing:-.02em!important}
+  .app-title small{color:#8f98a4!important;font-size:6.8px!important}
+  .app-search{display:none!important}
+
+  /* Command hero */
+  #p-dashboard .admin-dashboard-hero{
+    position:relative!important;
+    isolation:isolate!important;
+    padding:14px!important;
+    border:1px solid rgba(230,178,40,.56)!important;
+    border-radius:20px!important;
+    background:
+      radial-gradient(220px 150px at 92% 8%,rgba(238,185,40,.15),transparent 68%),
+      radial-gradient(200px 120px at 20% 100%,rgba(167,116,0,.12),transparent 72%),
+      linear-gradient(145deg,#12171e 0%,#0b1016 64%,#17130a 100%)!important;
+    box-shadow:
+      0 16px 34px rgba(57,41,0,.16),
+      inset 0 1px rgba(255,255,255,.05),
+      inset 0 0 0 1px rgba(255,216,105,.035)!important;
+  }
+  #p-dashboard .admin-dashboard-hero:before{
+    content:""!important;
+    position:absolute!important;inset:0!important;z-index:-1!important;pointer-events:none!important;
+    background:
+      linear-gradient(120deg,transparent 0 62%,rgba(238,187,46,.04) 62% 63%,transparent 63% 68%,rgba(238,187,46,.035) 68% 69%,transparent 69%),
+      repeating-linear-gradient(90deg,transparent 0 31px,rgba(255,255,255,.012) 32px),
+      repeating-linear-gradient(0deg,transparent 0 31px,rgba(255,255,255,.01) 32px)!important;
+  }
+  #p-dashboard .admin-dashboard-hero:after{
+    content:"24K"!important;
+    position:absolute!important;right:10px!important;bottom:-16px!important;z-index:-1!important;
+    color:rgba(231,180,43,.035)!important;font-size:78px!important;font-weight:950!important;letter-spacing:-.08em!important
+  }
+  .admin-dashboard-kicker{
+    border-color:rgba(230,180,49,.42)!important;
+    background:linear-gradient(180deg,rgba(72,57,17,.64),rgba(40,32,12,.72))!important;
+    color:#efc747!important;
+    box-shadow:inset 0 1px rgba(255,255,255,.04)!important;
+  }
+  #p-dashboard .admin-dashboard-hero h1{
+    color:#fff!important;
+    font-size:24px!important;
+    text-shadow:0 1px 10px rgba(0,0,0,.18)!important;
+  }
+  #p-dashboard .admin-dashboard-hero p{color:#9da6b1!important}
+
+  .admin-live-pill{
+    border-color:#255444!important;
+    background:linear-gradient(180deg,#11221c,#0c1915)!important;
+    box-shadow:inset 0 1px rgba(255,255,255,.025)!important
+  }
+  .admin-live-pill>b{color:#56d5a8!important}
+  .admin-live-pill>small{color:#77968b!important}
+
+  /* Snapshot tiles inside hero */
+  #p-dashboard .admin-platform-snapshot .v1218-mini{
+    position:relative!important;overflow:hidden!important;
+    min-height:58px!important;padding:8px!important;
+    border:1px solid rgba(255,255,255,.075)!important;
+    background:linear-gradient(145deg,rgba(22,28,35,.94),rgba(14,19,25,.94))!important;
+    box-shadow:inset 0 1px rgba(255,255,255,.025)!important;
+  }
+  #p-dashboard .admin-platform-snapshot .v1218-mini:after{
+    content:""!important;position:absolute!important;left:0!important;right:0!important;bottom:0!important;height:2px!important;
+    background:linear-gradient(90deg,rgba(230,174,20,.8),rgba(230,174,20,.06))!important;
+  }
+  .admin-snapshot-icon{
+    background:linear-gradient(145deg,#2a230d,#1b170b)!important;
+    border:1px solid #55461a!important;
+    color:#e4b62a!important;
+    box-shadow:0 0 16px rgba(225,171,18,.07)!important;
+  }
+  #p-dashboard .admin-platform-snapshot .v1218-mini small{color:#77818d!important}
+  #p-dashboard .admin-platform-snapshot .v1218-mini b{color:#f3f5f7!important}
+
+  /* Section labels */
+  .admin-dashboard-section-head{
+    margin:14px 2px 7px!important
+  }
+  .admin-dashboard-section-head small{color:#9a7a19!important}
+  .admin-dashboard-section-head b{font-size:13px!important;letter-spacing:-.025em!important}
+  .admin-dashboard-section-head>span{color:#929aa4!important}
+
+  /* KPI rail = premium black cards */
+  #adminKpis .business-summary-card,
+  #adminKpis .app-kpi{
+    position:relative!important;overflow:hidden!important;
+    min-height:82px!important;
+    border:1px solid #29313a!important;
+    background:
+      radial-gradient(110px 56px at 100% 100%,rgba(229,176,31,.075),transparent 72%),
+      linear-gradient(145deg,#121820,#0d1218)!important;
+    box-shadow:0 9px 20px rgba(30,35,42,.07),inset 0 1px rgba(255,255,255,.025)!important;
+  }
+  #adminKpis .business-summary-card:before,
+  #adminKpis .app-kpi:before{
+    content:""!important;position:absolute!important;left:0!important;top:0!important;bottom:0!important;width:2px!important;
+    background:linear-gradient(180deg,#ecc037,rgba(236,192,55,.12))!important;
+  }
+  #adminKpis .business-summary-card:after,
+  #adminKpis .app-kpi:after{
+    content:""!important;position:absolute!important;right:17px!important;bottom:12px!important;width:52px!important;height:18px!important;
+    border-bottom:1.5px solid rgba(231,181,39,.68)!important;
+    border-radius:50%!important;transform:skewX(-18deg) rotate(-4deg)!important;
+    opacity:.5!important;pointer-events:none!important;
+  }
+  #adminKpis .business-summary-icon,
+  #adminKpis .app-kpi>i:first-child{
+    position:relative!important;z-index:1!important;
+    border:1px solid #58481a!important;
+    background:linear-gradient(145deg,#2b240e,#18140a)!important;
+    color:#e7ba31!important;
+    box-shadow:0 0 16px rgba(229,174,18,.08)!important;
+  }
+  #adminKpis .business-summary-copy b,
+  #adminKpis .app-kpi b{color:#f3f5f7!important}
+  #adminKpis .business-summary-copy small,
+  #adminKpis .app-kpi small{color:#87919d!important}
+  #adminKpis .business-summary-arrow,
+  #adminKpis .dashboard-nav-arrow{
+    color:#e4b62a!important;
+    position:relative!important;z-index:1!important;
+  }
+
+  /* Quick actions stay lighter for hierarchy */
+  .admin-dashboard-quick button{
+    position:relative!important;overflow:hidden!important;
+    min-height:62px!important;
+    border-color:#e4dac0!important;
+    background:linear-gradient(145deg,#fff,#fbf7ed)!important;
+    box-shadow:0 6px 16px rgba(44,40,30,.035)!important;
+  }
+  .admin-dashboard-quick button:before{
+    content:""!important;position:absolute!important;right:-14px!important;top:-18px!important;width:70px!important;height:70px!important;border-radius:50%!important;
+    background:radial-gradient(circle,rgba(225,170,18,.08),transparent 67%)!important;
+  }
+  .admin-dashboard-quick button>span{
+    border:1px solid #ead7a0!important;
+    background:linear-gradient(145deg,#fff4cc,#f6df8a)!important;
+    color:#9d7000!important;
+    box-shadow:inset 0 1px rgba(255,255,255,.8)!important
+  }
+  .admin-dashboard-quick button b{color:#272d35!important}
+  .admin-dashboard-quick button:active{transform:scale(.985)!important}
+
+  /* Work cards */
+  #p-dashboard .admin-dashboard-card{
+    position:relative!important;overflow:hidden!important;
+    border-color:#e4dac0!important;
+    background:linear-gradient(145deg,#fff,#fcf9f1)!important;
+    box-shadow:0 8px 20px rgba(49,43,28,.035)!important;
+  }
+  #p-dashboard .admin-dashboard-card:before{
+    content:""!important;position:absolute!important;left:0!important;top:0!important;right:0!important;height:2px!important;
+    background:linear-gradient(90deg,#e3ad13,rgba(227,173,19,.05))!important;
+  }
+  #p-dashboard .admin-dashboard-card .app-card-head h3{color:#222831!important}
+  #p-dashboard .admin-dashboard-card .app-btn.gold{
+    background:linear-gradient(145deg,#eeb516,#d99c00)!important;color:#17130a!important;border-color:#e2a90d!important
+  }
+
+  /* Analytics cards */
+  #p-dashboard .analytics-card{
+    border-color:#e4dac0!important;
+    background:linear-gradient(145deg,#fff,#fcf9f1)!important;
+    box-shadow:0 7px 18px rgba(42,38,27,.03)!important;
+  }
+
+  /* Bottom app dock */
+  .admin-mobile-nav{
+    left:11px!important;right:11px!important;bottom:calc(7px + env(safe-area-inset-bottom))!important;width:auto!important;
+    min-height:68px!important;padding:6px!important;border:1px solid #29313a!important;border-radius:18px!important;
+    background:rgba(12,16,21,.97)!important;box-shadow:0 17px 42px rgba(0,0,0,.24)!important;backdrop-filter:blur(18px)!important
+  }
+  .admin-mobile-nav button,
+  .admin-mobile-nav a{
+    border-radius:13px!important;color:#8f99a5!important
+  }
+  .admin-mobile-nav .on,
+  .admin-mobile-nav .active,
+  .admin-mobile-nav [aria-current="page"]{
+    background:linear-gradient(145deg,rgba(238,187,40,.16),rgba(101,79,16,.14))!important;
+    color:#f0bd17!important;
+    box-shadow:inset 0 0 0 1px rgba(230,177,35,.18)!important;
+  }
+
+  /* Motion */
+  #adminKpis .business-summary-card,
+  .admin-dashboard-quick button,
+  #p-dashboard .admin-dashboard-card{
+    transition:transform .15s ease,border-color .15s ease,box-shadow .15s ease!important;
+  }
+  #adminKpis .business-summary-card:active,
+  #p-dashboard .admin-dashboard-card:active{transform:scale(.992)!important}
+}
+
+/* Light desktop also gets the premium black command hero */
+@media(min-width:901px){
+  #p-dashboard .admin-dashboard-hero{
+    background:
+      radial-gradient(360px 180px at 100% 0%,rgba(238,185,40,.12),transparent 70%),
+      linear-gradient(145deg,#12171e,#0b1016)!important;
+    border-color:rgba(230,178,40,.45)!important;
+    color:#fff!important;
+  }
+  #p-dashboard .admin-dashboard-hero h1{color:#fff!important}
+  #p-dashboard .admin-dashboard-hero p{color:#9da6b1!important}
+  #p-dashboard .admin-platform-snapshot .v1218-mini{
+    background:#10161d!important;border-color:#2a323c!important
+  }
+  #p-dashboard .admin-platform-snapshot .v1218-mini b{color:#eef2f6!important}
+}
+
+/* Dark theme remains cohesive */
+html[data-theme="dark"] body.app-page{
+  background:#070a0e!important;
+}
+html[data-theme="dark"] .admin-dashboard-quick button,
+html[data-theme="dark"] #p-dashboard .admin-dashboard-card,
+html[data-theme="dark"] #p-dashboard .analytics-card{
+  border-color:#2a323c!important;
+  background:#10161d!important;
+  box-shadow:none!important;
+}
+html[data-theme="dark"] .admin-dashboard-quick button b,
+html[data-theme="dark"] #p-dashboard .admin-dashboard-card h3{
+  color:#eef2f6!important;
+}
+html[data-theme="dark"] .admin-dashboard-quick button>span{
+  border-color:#4e4523!important;
+  background:#171a14!important;
+  color:#d8ad25!important;
+}
+
+@media(prefers-reduced-motion:reduce){
+  #adminKpis .business-summary-card,
+  .admin-dashboard-quick button,
+  #p-dashboard .admin-dashboard-card{transition:none!important}
+}
