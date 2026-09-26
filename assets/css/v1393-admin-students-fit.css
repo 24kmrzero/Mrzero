@@ -1,0 +1,187 @@
+/* 24K MR ZERO — Student serial + fit-width desktop table v13.93
+   New desktop-only columns are hidden by default so mobile stays unchanged. */
+.student-serial-col,
+.student-attribution-col{display:none!important}
+
+@media (min-width:901px){
+  #p-students>.table-scroll{
+    overflow-x:hidden!important;
+    overflow-y:visible!important;
+  }
+
+  #p-students .student-management-table{
+    width:100%!important;
+    min-width:0!important;
+    table-layout:fixed!important;
+  }
+
+  #p-students .student-management-table .student-serial-col,
+  #p-students .student-management-table .student-attribution-col{
+    display:table-cell!important;
+  }
+
+  /* Do not show the mistaken 01–05 strip. */
+  #p-students .student-attribution-row{display:none!important}
+
+  #p-students .student-management-table th,
+  #p-students .student-management-table td{
+    min-width:0!important;
+    max-width:none!important;
+    padding-left:6px!important;
+    padding-right:6px!important;
+    overflow:hidden!important;
+  }
+
+  /* 12-column fit-width layout — no horizontal scroll */
+  #p-students .student-management-table th:nth-child(1),
+  #p-students .student-management-table td:nth-child(1){width:3%!important;text-align:center!important}
+  #p-students .student-management-table th:nth-child(2),
+  #p-students .student-management-table td:nth-child(2){width:3%!important;text-align:center!important}
+  #p-students .student-management-table th:nth-child(3),
+  #p-students .student-management-table td:nth-child(3){width:13%!important}
+  #p-students .student-management-table th:nth-child(4),
+  #p-students .student-management-table td:nth-child(4){width:8%!important}
+  #p-students .student-management-table th:nth-child(5),
+  #p-students .student-management-table td:nth-child(5){width:9%!important}
+  #p-students .student-management-table th:nth-child(6),
+  #p-students .student-management-table td:nth-child(6){width:11%!important}
+  #p-students .student-management-table th:nth-child(7),
+  #p-students .student-management-table td:nth-child(7){width:9%!important}
+  #p-students .student-management-table th:nth-child(8),
+  #p-students .student-management-table td:nth-child(8){width:9%!important}
+  #p-students .student-management-table th:nth-child(9),
+  #p-students .student-management-table td:nth-child(9){width:8%!important}
+  #p-students .student-management-table th:nth-child(10),
+  #p-students .student-management-table td:nth-child(10){width:6%!important}
+  #p-students .student-management-table th:nth-child(11),
+  #p-students .student-management-table td:nth-child(11){width:9%!important}
+  #p-students .student-management-table th:nth-child(12),
+  #p-students .student-management-table td:nth-child(12){width:12%!important}
+
+  #p-students .student-management-table tbody td{
+    font-size:8.1px!important;
+    line-height:1.25!important;
+  }
+
+  #p-students .student-management-table thead th{
+    font-size:6.7px!important;
+    letter-spacing:.045em!important;
+    white-space:nowrap!important;
+  }
+
+  #p-students .student-serial-number{
+    width:25px!important;
+    height:25px!important;
+    display:inline-grid!important;
+    place-items:center!important;
+    border:1px solid #e3d5a4!important;
+    border-radius:7px!important;
+    background:#fff8e7!important;
+    color:#8d6700!important;
+    font-size:8px!important;
+    font-weight:950!important;
+  }
+
+  #p-students .student-management-table .text-link b{
+    display:block!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+    font-size:9.2px!important;
+  }
+
+  #p-students .student-management-table td small{
+    display:block!important;
+    margin-top:2px!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+    font-size:6.8px!important;
+  }
+
+  #p-students .student-origin{
+    max-width:100%!important;
+    min-height:22px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    gap:4px!important;
+    padding:0 6px!important;
+    border:1px solid #e0e4e8!important;
+    border-radius:999px!important;
+    background:#f7f8f9!important;
+    color:#66717e!important;
+    font-size:6.5px!important;
+    font-weight:900!important;
+    white-space:nowrap!important;
+  }
+
+  #p-students .student-origin-link,
+  #p-students .student-team-name{
+    display:block!important;
+    max-width:100%!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+    color:#20262e!important;
+    font-size:8px!important;
+    font-weight:900!important;
+  }
+
+  #p-students .student-team-empty{
+    max-width:100%!important;
+    min-height:22px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    padding:0 6px!important;
+    border:1px solid #e2e5e8!important;
+    border-radius:999px!important;
+    background:#f8f9fa!important;
+    color:#737e8a!important;
+    font-size:6.4px!important;
+    font-weight:850!important;
+    white-space:nowrap!important;
+  }
+
+  #p-students .student-source-cell,
+  #p-students .student-team-cell{
+    overflow:hidden!important;
+  }
+
+  #p-students .student-management-table .status-pill{
+    max-width:100%!important;
+    min-height:22px!important;
+    padding:0 6px!important;
+    font-size:6.3px!important;
+    white-space:nowrap!important;
+  }
+
+  #p-students .student-management-table .table-actions{
+    display:grid!important;
+    grid-template-columns:auto auto auto!important;
+    gap:3px!important;
+    width:100%!important;
+  }
+
+  #p-students .student-management-table .table-actions .app-btn{
+    min-width:0!important;
+    width:100%!important;
+    min-height:27px!important;
+    height:27px!important;
+    padding:0 4px!important;
+    border-radius:7px!important;
+    font-size:6.3px!important;
+    white-space:nowrap!important;
+  }
+
+  #p-students .student-record-main td{
+    border-bottom:1px solid #e4e7ea!important;
+  }
+
+  #p-students .student-record-main td:first-child{
+    border-radius:11px 0 0 11px!important;
+  }
+
+  #p-students .student-record-main td:last-child{
+    border-radius:0 11px 11px 0!important;
+  }
+}
