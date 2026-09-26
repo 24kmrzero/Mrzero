@@ -438,10 +438,49 @@ function renderClients(){
 }
 
 async function saveClient(id,withNote=false){const c=(payload.clients||[]).find(x=>String(x.id)===String(id));if(!c)return;const status=$(`[data-client-status="${id}"]`)?.value||clientStatus(c),follow=$(`[data-client-follow="${id}"]`)?.value||null;let note=c.note||null;if(withNote){const v=prompt('Client note:',note||'');if(v===null)return;note=v.trim()||null}try{await rpc('team_update_client_status',{p_token:token(),p_student_id:id,p_status:status,p_next_follow_up:follow?new Date(follow).toISOString():null,p_note:note});toast('Client updated.');await load()}catch(e){toast(e.message||'Could not update client.','error')}}
-async function searchOwnership(){const q=String($('#ownershipSearch')?.value||'').trim(),box=$('#ownershipResult'),btn=$('#ownershipSearchBtn');if(q.length<2){toast('Enter at least 2 characters.','error');return}btn.disabled=true;box.innerHTML='<div class="panel-card chat-empty"><i class="fa-solid fa-spinner fa-spin"></i> Searching…</div>';try{const d=await rpc('team_search_client_v12_18',{p_token:token(),p_query:q});if(!d?.found){box.innerHTML='<div class="panel-card chat-empty">No matching client found.</div>';return}const c=d.client||{},m=d.manager||{},own=d.ownership||'unassigned';box.innerHTML=`<article class="ownership-card"><div><h3>${esc(c.name||'Student')} ${c.client_id?`· ${esc(c.client_id)}`:''}</h3><p>${own==='mine'?`${esc(c.email||'')} · ${esc(c.whatsapp||'')}`:own==='other'?`Assigned to ${esc(m.name||'another manager')}${m.whatsapp?` · ${esc(m.whatsapp)}`:''}`:'This client is not assigned to a manager.'}</p><p>${own==='mine'?`Status: ${esc(c.status||'new')} · Assigned: ${esc(dt(c.assigned_at))}`:own==='other'?'Please coordinate with the assigned manager. Team members cannot transfer ownership.':'Ask Admin to assign the client before working on it.'}</p>${own==='other'&&m.whatsapp?`<a class="wa-mini" target="_blank" rel="noopener" href="${waLink(m.whatsapp,`Hello ${m.name||''}, I searched client ${c.name||''} ${c.client_id||''}.`)}">Message Manager</a>`:''}</div><span class="ownership-state ${own}">${own==='mine'?'YOUR CLIENT':own==='other'?'OTHER MANAGER':'UNASSIGNED'}</span></article>`}catch(e){box.innerHTML=`<div class="panel-card chat-empty">${esc(e.message||'Could not search client.')}</div>`}finally{btn.disabled=false}}
+async function searchOwnership(){
+  const q=String($('#ownershipSearch')?.value||'').trim(),box=$('#ownershipResult'),btn=$('#ownershipSearchBtn');
+  if(q.length<2){toast('Enter at least 2 characters.','error');return}
+  btn.disabled=true;
+  box.innerHTML='<div class="team-tool-loading"><i class="fa-solid fa-spinner fa-spin"></i><span>Searching client ownership…</span></div>';
+  try{
+    const d=await rpc('team_search_client_v12_18',{p_token:token(),p_query:q});
+    if(!d?.found){
+      box.innerHTML='<div class="team-tool-empty"><span><i class="fa-solid fa-magnifying-glass"></i></span><div><b>No matching client found</b><small>Try another Name, WhatsApp, Email or Client ID.</small></div></div>';
+      return
+    }
+    const c=d.client||{},m=d.manager||{},own=d.ownership||'unassigned';
+    box.innerHTML=`<article class="ownership-card premium-ownership-card ${own}">
+      <div class="premium-ownership-main">
+        <span class="premium-ownership-avatar">${esc(initials(c.name||'Student'))}</span>
+        <div><small>CLIENT</small><h3>${esc(c.name||'Student')}</h3><p>${esc(c.client_id||'No Client ID')}</p></div>
+      </div>
+      <span class="ownership-state ${own}">${own==='mine'?'YOUR CLIENT':own==='other'?'OTHER MANAGER':'UNASSIGNED'}</span>
+      <div class="premium-ownership-details">
+        <div><span>Contact</span><b>${own==='mine'?esc(c.whatsapp||c.email||'—'):own==='other'?esc(m.name||'Assigned Manager'):'Admin assignment required'}</b></div>
+        <div><span>Status</span><b>${own==='mine'?esc(statusLabel(c.status||'new')):own==='other'?'Coordinate first':'Do not work yet'}</b></div>
+        <div><span>Assigned</span><b>${own==='mine'?esc(relativeAgo(c.assigned_at)||dt(c.assigned_at)):own==='other'?esc(m.name||'Another manager'):'Unassigned'}</b></div>
+      </div>
+      ${own==='other'&&m.whatsapp?`<a class="premium-manager-wa" target="_blank" rel="noopener" href="${waLink(m.whatsapp,`Hello ${m.name||''}, I searched client ${c.name||''} ${c.client_id||''}.`)}"><i class="fa-brands fa-whatsapp"></i> Message Manager</a>`:''}
+    </article>`
+  }catch(e){
+    box.innerHTML=`<div class="team-tool-empty error"><span><i class="fa-solid fa-triangle-exclamation"></i></span><div><b>Search failed</b><small>${esc(e.message||'Could not search client.')}</small></div></div>`
+  }finally{btn.disabled=false}
+}
+
 async function saveDaily(e){e.preventDefault();$('#dailyStatus').textContent='Saving…';const args={p_token:token(),p_report_date:$('#reportDate').value,p_leads_contacted:Number($('#leadsContacted').value||0),p_messages_sent:Number($('#messagesSent').value||0),p_calls_made:Number($('#callsMade').value||0),p_follow_ups:Number($('#followUps').value||0),p_new_broker_accounts:Number($('#newBrokerAccounts').value||0),p_ib_partner_shifts:Number($('#ibPartnerShifts').value||0),p_xm_weekly_lots:Number($('#xmWeeklyLots').value||0),p_dprime_weekly_lots:Number($('#dprimeWeeklyLots').value||0),p_exness_weekly_lots:Number($('#exnessWeeklyLots').value||0),p_notes:$('#reportNotes').value.trim()||null};try{try{await rpc('team_submit_daily_report_v12_18',args)}catch(x){if(!/function|schema cache|does not exist/i.test(x.message||''))throw x;await rpc('team_submit_daily_report',{p_token:args.p_token,p_report_date:args.p_report_date,p_new_broker_accounts:args.p_new_broker_accounts,p_ib_partner_shifts:args.p_ib_partner_shifts,p_xm_weekly_lots:args.p_xm_weekly_lots,p_dprime_weekly_lots:args.p_dprime_weekly_lots,p_exness_weekly_lots:args.p_exness_weekly_lots,p_notes:args.p_notes})}toast('Daily report submitted.');await load()}catch(x){$('#dailyStatus').textContent=x.message||'Could not save report.';toast(x.message||'Could not save report.','error')}}
 function renderDaily(){
   const reports=payload?.daily_reports||[], td=today(), r=reports.find(x=>x.date===td)||{};
+  const dailySummary=$('#teamDailySummary');
+  if(dailySummary){
+    const manualTotal=Number(r.leads_contacted||0)+Number(r.messages_sent||0)+Number(r.calls_made||0)+Number(r.follow_ups||0);
+    dailySummary.innerHTML=[
+      ['Manual Actions',manualTotal,'fa-bolt','gold'],
+      ['Leads Contacted',Number(r.leads_contacted||0),'fa-user-check','blue'],
+      ['Follow-ups',Number(r.follow_ups||0),'fa-bell','amber'],
+      ['Report',r.id?'Submitted':'Pending',r.id?'fa-circle-check':'fa-clock',r.id?'green':'neutral']
+    ].map(x=>`<div class="team-daily-summary-card ${x[3]}"><span><i class="fa-solid ${x[2]}"></i></span><div><small>${x[0]}</small><b>${x[1]}</b></div></div>`).join('')
+  }
   if($('#reportDate')) $('#reportDate').value=td;
   const set=(id,v)=>{const el=$(id);if(el)el.value=v??0};
   set('#leadsContacted',r.leads_contacted);set('#messagesSent',r.messages_sent);set('#callsMade',r.calls_made);set('#followUps',r.follow_ups);
@@ -561,7 +600,38 @@ function renderRange(){const m=rangeData?.metrics||{},clients=payload.clients||[
 function renderHistory(h){const clients=payload.clients||[],p=payload.performance||{};$('#historyKpis').innerHTML=[['Historical Clients',clients.length],['Converted Clients',clients.filter(c=>clientStatus(c)==='converted').length],['Broker Lots',num(p.total_lots,1)],['Earnings Since Sep 2026',money(p.total_earnings)]].map(x=>`<div><span>${x[0]}</span><b>${x[1]}</b></div>`).join('');const rows=(h||[]).slice().reverse();$('#historyGrid').innerHTML=`<table><thead><tr><th>Month</th><th>Course Sales</th><th>VIP</th><th>Broker Lots</th><th>Total Earnings</th></tr></thead><tbody>${rows.length?rows.map(x=>{const before=String(x.month).slice(0,7)<'2026-09';return `<tr><td>${esc(monthLabel(String(x.month).slice(0,7)))}</td><td>${money(x.course_sales)}</td><td>${num(x.vip_count)}</td><td>${num(x.lots,1)}</td><td>${before?'<span class="status">Settled</span>':`<b>${money(x.earnings)}</b>`}</td></tr>`}).join(''):'<tr><td colspan="5">No monthly history yet.</td></tr>'}</tbody></table>`;$('#historyLinks').innerHTML=(payload.links||[]).length?(payload.links||[]).map(l=>`<div class="overview-link-chip"><b>${esc(l.name||'Tracked Link')}</b><small>${esc(l.ref_code||'')} · ${esc(l.source||'Direct')}</small></div>`).join(''):'<span class="muted">No legacy links.</span>'}
 function siteRoot(){return(location.origin+(cfg.SITE_BASE_PATH||'/')).replace(/\/$/,'')}
 function trackedUrl(l){const dest=l.destination_path==='/'?'':String(l.destination_path||'').replace(/\/$/,'');const q=new URLSearchParams();if(l.ref_code)q.set('ref',l.ref_code);if(l.source)q.set('source',l.source);if(l.campaign)q.set('campaign',l.campaign);return `${siteRoot()}${dest}/?${q}`}
-function renderLinks(links){const metrics=rangeData?.links||[];$('#linksGrid').innerHTML=links.length?links.map(l=>{const lm=metrics.find(x=>x.link_id===l.id)||{},url=trackedUrl(l);return `<article class="link-card"><div class="link-head"><div><b>${esc(l.name||'Tracked Link')}</b><small>${esc(l.source||'Direct')} · ${esc(l.ref_code||'')}</small></div><span class="status">${l.is_active===false?'Disabled':'Active'}</span></div><div class="tracked-url"><input readonly value="${esc(url)}"><button class="icon-btn" data-copy="${esc(url)}"><i class="fa-solid fa-copy"></i></button></div><div class="mini-metrics"><div><b>${num(lm.clicks)}</b><span>Clicks</span></div><div><b>${num(lm.unique)}</b><span>Unique</span></div><div><b>${num(lm.signups)}</b><span>Signups</span></div><div><b>${num(lm.enrollments)}</b><span>Enrollments</span></div></div></article>`}).join(''):'<article class="panel-card">No assigned links yet.</article>';$$('[data-copy]').forEach(b=>b.onclick=()=>navigator.clipboard.writeText(b.dataset.copy||'').then(()=>toast('Link copied.')))}
+function renderLinks(links){
+  const metrics=rangeData?.links||[];
+  const totalClicks=metrics.reduce((s,x)=>s+Number(x.clicks||0),0),
+    totalUnique=metrics.reduce((s,x)=>s+Number(x.unique||0),0),
+    totalSignups=metrics.reduce((s,x)=>s+Number(x.signups||0),0),
+    totalEnrollments=metrics.reduce((s,x)=>s+Number(x.enrollments||0),0);
+  if($('#teamLinksSummary'))$('#teamLinksSummary').innerHTML=[
+    ['Links',links.length,'fa-link','gold'],
+    ['Clicks',totalClicks,'fa-arrow-pointer','blue'],
+    ['Signups',totalSignups,'fa-user-plus','green'],
+    ['Enrollments',totalEnrollments,'fa-graduation-cap','purple']
+  ].map(x=>`<div class="team-links-summary-card ${x[3]}"><span><i class="fa-solid ${x[2]}"></i></span><div><small>${x[0]}</small><b>${x[1]}</b></div></div>`).join('');
+  if($('#teamLinksMeta'))$('#teamLinksMeta').textContent=`${links.length} link${links.length===1?'':'s'}`;
+  $('#linksGrid').innerHTML=links.length?links.map(l=>{
+    const lm=metrics.find(x=>x.link_id===l.id)||{},url=trackedUrl(l);
+    return `<article class="link-card premium-link-card">
+      <div class="link-head">
+        <div class="premium-link-title"><span><i class="fa-solid fa-link"></i></span><div><b>${esc(l.name||'Tracked Link')}</b><small>${esc(l.source||'Direct')} · ${esc(l.ref_code||'')}</small></div></div>
+        <span class="status">${l.is_active===false?'Disabled':'Active'}</span>
+      </div>
+      <div class="tracked-url premium-tracked-url"><input readonly value="${esc(url)}"><button class="icon-btn" data-copy="${esc(url)}" aria-label="Copy link"><i class="fa-solid fa-copy"></i></button></div>
+      <div class="mini-metrics premium-link-metrics">
+        <div><b>${num(lm.clicks)}</b><span>Clicks</span></div>
+        <div><b>${num(lm.unique)}</b><span>Unique</span></div>
+        <div><b>${num(lm.signups)}</b><span>Signups</span></div>
+        <div><b>${num(lm.enrollments)}</b><span>Enrollments</span></div>
+      </div>
+    </article>`
+  }).join(''):`<article class="team-tool-empty"><span><i class="fa-solid fa-link"></i></span><div><b>No assigned tracking links</b><small>Links assigned by Admin will appear here automatically.</small></div></article>`;
+  $$('[data-copy]').forEach(b=>b.onclick=()=>navigator.clipboard.writeText(b.dataset.copy||'').then(()=>toast('Link copied.')))
+}
+
 function renderChatSummary(summary={}){
   const cards=[
     {label:'AI Active',value:Number(summary.ai_active||0),icon:'fa-robot',tone:'blue',sub:'Handled by AI'},
