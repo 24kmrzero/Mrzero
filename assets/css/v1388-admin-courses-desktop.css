@@ -178,6 +178,208 @@
     font-style:normal!important;
   }
 
+  /* Compact premium course cards — replaces table on desktop */
+  #p-courses .admin-course-mobile-table{display:none!important}
+  #p-courses .admin-course-cards-desktop{
+    display:grid!important;
+    grid-template-columns:repeat(auto-fill,minmax(340px,360px))!important;
+    gap:16px!important;
+    align-items:start!important;
+    justify-content:start!important;
+    width:100%!important;
+  }
+  #p-courses .admin-course-card{
+    width:100%!important;
+    max-width:360px!important;
+    overflow:hidden!important;
+    border:1px solid #e2e5e8!important;
+    border-radius:17px!important;
+    background:#fff!important;
+    box-shadow:0 10px 26px rgba(18,24,32,.045)!important;
+  }
+  #p-courses .admin-course-card.free{border-top:3px solid #16a872!important}
+  #p-courses .admin-course-card.paid{border-top:3px solid #d8a20a!important}
+  #p-courses .admin-course-card-media{
+    width:100%!important;
+    aspect-ratio:16/8.2!important;
+    display:grid!important;
+    place-items:center!important;
+    overflow:hidden!important;
+    background:#0f1216!important;
+  }
+  #p-courses .admin-course-card-media img{
+    width:100%!important;
+    height:100%!important;
+    object-fit:cover!important;
+    display:block!important;
+  }
+  #p-courses .admin-course-card-media.placeholder{
+    background:
+      radial-gradient(circle at 70% 20%,rgba(216,162,10,.09),transparent 35%),
+      #fffaf0!important;
+    color:#b88600!important;
+    font-size:28px!important;
+  }
+  #p-courses .admin-course-card-body{
+    display:grid!important;
+    gap:10px!important;
+    padding:14px!important;
+  }
+  #p-courses .admin-course-card-top{
+    display:flex!important;
+    align-items:flex-start!important;
+    justify-content:space-between!important;
+    gap:10px!important;
+  }
+  #p-courses .admin-course-card-type{
+    display:inline-flex!important;
+    min-height:21px!important;
+    align-items:center!important;
+    padding:0 7px!important;
+    border-radius:999px!important;
+    background:rgba(216,162,10,.08)!important;
+    color:#966d00!important;
+    font-size:6.7px!important;
+    font-weight:950!important;
+    letter-spacing:.08em!important;
+  }
+  #p-courses .admin-course-card.free .admin-course-card-type{
+    background:rgba(22,168,114,.07)!important;
+    color:#14845f!important;
+  }
+  #p-courses .admin-course-card h3{
+    margin:7px 0 0!important;
+    color:#171c23!important;
+    font-size:16px!important;
+    line-height:1.2!important;
+    letter-spacing:-.025em!important;
+  }
+  #p-courses .admin-course-card-status{
+    min-height:22px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    padding:0 7px!important;
+    border:1px solid rgba(22,168,114,.18)!important;
+    border-radius:999px!important;
+    background:rgba(22,168,114,.06)!important;
+    color:#16865f!important;
+    font-size:6.8px!important;
+    font-weight:900!important;
+    white-space:nowrap!important;
+  }
+  #p-courses .admin-course-card p{
+    min-height:40px!important;
+    margin:0!important;
+    color:#737d89!important;
+    font-size:9.5px!important;
+    line-height:1.5!important;
+    display:-webkit-box!important;
+    -webkit-line-clamp:2!important;
+    -webkit-box-orient:vertical!important;
+    overflow:hidden!important;
+  }
+  #p-courses .admin-course-card-metrics{
+    display:grid!important;
+    grid-template-columns:.8fr 1.2fr!important;
+    gap:7px!important;
+  }
+  #p-courses .admin-course-card-metrics>div{
+    min-height:63px!important;
+    display:grid!important;
+    align-content:center!important;
+    gap:3px!important;
+    padding:9px 10px!important;
+    border:1px solid #e7e8ea!important;
+    border-radius:10px!important;
+    background:#fafbfc!important;
+  }
+  #p-courses .admin-course-card-metrics small{
+    color:#9299a3!important;
+    font-size:6.5px!important;
+    font-weight:900!important;
+    letter-spacing:.08em!important;
+  }
+  #p-courses .admin-course-card-metrics b{
+    color:#252b33!important;
+    font-size:10px!important;
+    line-height:1.25!important;
+  }
+  #p-courses .admin-course-card-metrics>div:first-child b{
+    font-size:14px!important;
+    color:#9a7100!important;
+  }
+  #p-courses .admin-course-card.free .admin-course-card-metrics>div:first-child b{
+    color:#15845f!important;
+  }
+  #p-courses .admin-course-card-metrics em{
+    color:#8b939d!important;
+    font-size:7px!important;
+    font-style:normal!important;
+  }
+  #p-courses .admin-course-card-metrics>div:first-child em{
+    text-decoration:line-through!important;
+  }
+  #p-courses .admin-course-card-meta{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:7px!important;
+    flex-wrap:wrap!important;
+  }
+  #p-courses .admin-course-card-meta span{
+    min-height:24px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    gap:5px!important;
+    padding:0 8px!important;
+    border:1px solid #e4dfd6!important;
+    border-radius:999px!important;
+    background:#faf7f1!important;
+    color:#6d655a!important;
+    font-size:7px!important;
+    font-weight:850!important;
+  }
+  #p-courses .admin-course-card-meta span.ok{
+    border-color:rgba(22,168,114,.16)!important;
+    background:rgba(22,168,114,.055)!important;
+    color:#16835f!important;
+  }
+  #p-courses .admin-course-card-actions{
+    display:grid!important;
+    grid-template-columns:1fr 1fr 36px!important;
+    gap:6px!important;
+    padding-top:9px!important;
+    border-top:1px solid #edf0f2!important;
+  }
+  #p-courses .admin-course-card-actions .app-btn{
+    min-height:33px!important;
+    height:33px!important;
+    justify-content:center!important;
+    padding:0 8px!important;
+    border-radius:8px!important;
+    font-size:8px!important;
+    box-shadow:none!important;
+  }
+  #p-courses .admin-course-card-actions .danger{
+    width:36px!important;
+    padding:0!important;
+  }
+  #p-courses .admin-course-card-empty{
+    grid-column:1/-1!important;
+    min-height:180px!important;
+    display:grid!important;
+    place-items:center!important;
+    align-content:center!important;
+    gap:7px!important;
+    border:1px dashed #ded8cb!important;
+    border-radius:14px!important;
+    background:#fff!important;
+    color:#7c8590!important;
+  }
+  #p-courses .admin-course-card-empty i{font-size:24px!important;color:#b48300!important}
+  #p-courses .admin-course-card-empty b{font-size:13px!important;color:#222830!important}
+  #p-courses .admin-course-card-empty small{font-size:8px!important}
+
   /* Premium course table workspace */
   #p-courses .admin-course-table-wrap,
   #p-courses>.table-scroll{
