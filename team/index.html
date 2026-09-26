@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="/assets/css/v1349-team-mobile-final.css?v=13.49">
   <link rel="stylesheet" href="/assets/css/v1350-team-home.css?v=13.50">
   <link rel="stylesheet" href="/assets/css/v1351-team-home-premium.css?v=13.51">
+  <link rel="stylesheet" href="/assets/css/v1352-team-ultra-premium.css?v=13.52">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/assets/js/config.js?v=12.18"></script>
 </head>
@@ -81,12 +82,16 @@
               <h2><span id="heroName">Team Member</span></h2>
               <p><span id="teamMonthLabel">Current Month</span> workspace · clients, follow-ups and earnings in one place.</p>
             </div>
-            <button type="button" class="team-home-primary-action" data-view-jump="clients"><i class="fa-solid fa-user-group"></i><span>Open Clients</span></button>
+            <button type="button" class="team-home-profile-pill" data-view-jump="clients" aria-label="Open clients">
+  <span class="team-home-profile-avatar" id="teamHomeAvatar">TM</span>
+  <span class="team-home-profile-copy"><small>TEAM</small><b>Workspace</b></span>
+  <i class="fa-solid fa-chevron-right"></i>
+</button>
           </div>
 
           <div class="team-home-attention">
             <div class="team-home-attention-copy">
-              <small>TODAY'S PRIORITY</small>
+              <small><i class="team-priority-dot" id="teamPriorityDot"></i> TODAY'S PRIORITY</small>
               <b><span id="todayAttention">0</span> leads need attention</b>
               <em id="overviewMiniText">0 total clients · 0 converted · $0.00 earnings</em>
             </div>
@@ -96,7 +101,7 @@
 
         <div class="team-home-section-head">
           <div><small>LIVE OVERVIEW</small><b>Key Numbers</b></div>
-          <span>Swipe to view</span>
+          <span class="team-home-swipe-hint"><i class="fa-solid fa-arrow-right-long"></i> Swipe</span>
         </div>
         <div id="overviewKpis" class="team-overview-kpis team-home-kpi-rail"></div>
 
@@ -104,7 +109,7 @@
           <div><small>WORKSPACE</small><b>Quick Actions</b></div>
           <span>Daily tools</span>
         </div>
-        <div class="team-home-quick-actions">
+        <div class="team-home-quick-actions" data-home-actions>
           <button type="button" data-view-jump="clients"><span><i class="fa-solid fa-user-group"></i></span><div><b>My Clients</b><small>Open work list</small></div><i class="fa-solid fa-chevron-right"></i></button>
           <button type="button" data-view-jump="clients"><span><i class="fa-solid fa-bell"></i></span><div><b>Follow-ups</b><small>Needs attention</small></div><i class="fa-solid fa-chevron-right"></i></button>
           <button type="button" data-view-jump="daily"><span><i class="fa-solid fa-clipboard-check"></i></span><div><b>Daily Report</b><small>Submit today</small></div><i class="fa-solid fa-chevron-right"></i></button>
@@ -231,7 +236,7 @@
   </div>
 
   <div id="teamToast" class="team-toast" aria-live="polite"></div>
-  <script src="/assets/js/v110-team-command-center.js?v=13.51"></script>
+  <script src="/assets/js/v110-team-command-center.js?v=13.52"></script>
   <script src="/assets/js/v1216-team-mobile.js?v=13.49.5"></script>
 </body>
 </html>
