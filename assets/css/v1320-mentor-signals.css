@@ -2379,3 +2379,91 @@ html[data-theme="light"] .mentor-signal-custom-date input{
     width:100%;
   }
 }
+
+
+/* V13.32 — Easier quick filters + obvious active state */
+.mentor-signal-quick-wrap{
+  margin-top:6px!important;
+}
+.mentor-signal-quick-filters{
+  padding:5px!important;
+  border:1px solid var(--m-line)!important;
+  border-radius:12px!important;
+  background:var(--m-panel)!important;
+}
+.mentor-signal-quick-filters>button,
+.mentor-signal-quick-select{
+  min-height:34px!important;
+  border:1px solid var(--m-line)!important;
+  border-radius:9px!important;
+  background:var(--m-panel2)!important;
+  color:var(--m-muted)!important;
+  transition:.15s ease!important;
+}
+.mentor-signal-quick-filters>button{
+  font-size:7.5px!important;
+  font-weight:850!important;
+}
+.mentor-signal-quick-select select{
+  min-height:34px!important;
+  font-size:7.5px!important;
+  font-weight:850!important;
+}
+.mentor-signal-quick-filters>button.active,
+.mentor-signal-quick-select.is-active{
+  border-color:#e2c96c!important;
+  background:linear-gradient(180deg,#fff9df,#fff4c8)!important;
+  color:#9d7300!important;
+  box-shadow:inset 0 0 0 1px rgba(240,185,11,.08)!important;
+}
+.mentor-signal-quick-select.is-active select{
+  color:#9d7300!important;
+}
+.mentor-signal-quick-select.is-active:after{
+  color:#9d7300!important;
+}
+html[data-theme="light"] .mentor-signal-quick-filters{
+  border-color:#e5e8eb!important;
+  background:#fff!important;
+}
+html[data-theme="light"] .mentor-signal-quick-filters>button,
+html[data-theme="light"] .mentor-signal-quick-select{
+  border-color:#e7eaed!important;
+  background:#f8f9fa!important;
+  color:#66717e!important;
+}
+html[data-theme="light"] .mentor-signal-quick-filters>button.active,
+html[data-theme="light"] .mentor-signal-quick-select.is-active{
+  border-color:#e2c96c!important;
+  background:linear-gradient(180deg,#fff9df,#fff4c8)!important;
+  color:#8e6700!important;
+}
+html[data-theme="dark"] .mentor-signal-quick-filters>button.active,
+html[data-theme="dark"] .mentor-signal-quick-select.is-active{
+  border-color:rgba(240,185,11,.42)!important;
+  background:rgba(240,185,11,.12)!important;
+  color:#f2c329!important;
+}
+
+@media(max-width:760px){
+  .mentor-signal-quick-filters{
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    gap:4px!important;
+    padding:5px!important;
+  }
+  .mentor-signal-quick-filters>button,
+  .mentor-signal-quick-select,
+  .mentor-signal-quick-select select{
+    min-height:33px!important;
+  }
+  .mentor-signal-quick-filters>button,
+  .mentor-signal-quick-select select{
+    font-size:7px!important;
+  }
+  [data-mentor-panel="signals"] .mentor-signal-toolbar{
+    margin-top:6px!important;
+  }
+  [data-mentor-panel="signals"] .mentor-signal-search{
+    height:37px!important;
+  }
+}
