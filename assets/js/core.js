@@ -292,16 +292,23 @@
       const onCancel = () => finish({ confirmed: false, text: '' });
       const onBackdrop = event => { if (event.target === modal) onCancel(); };
       const onKey = event => { if (event.key === 'Escape') onCancel(); };
+      const onPop = () => {
+        setTimeout(() => {
+          if (!settled && !modal.classList.contains('open')) finish({ confirmed: false, text: '' });
+        }, 0);
+      };
       const cleanup = () => {
         accept.removeEventListener('click', onAccept);
         cancel.removeEventListener('click', onCancel);
         modal.removeEventListener('click', onBackdrop);
         document.removeEventListener('keydown', onKey);
+        window.removeEventListener('popstate', onPop);
       };
       accept.addEventListener('click', onAccept);
       cancel.addEventListener('click', onCancel);
       modal.addEventListener('click', onBackdrop);
       document.addEventListener('keydown', onKey);
+      window.addEventListener('popstate', onPop);
     });
   }
 
