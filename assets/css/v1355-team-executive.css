@@ -303,3 +303,49 @@
   .team-insight-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
   .team-insight-card{padding:14px;border:1px solid var(--r18-line);border-radius:14px;background:var(--r18-surface)}
 }
+
+
+/* v13.55.1 — motion / tactile polish */
+@media(max-width:780px){
+  #teamApp:not(.hidden) .view.view-enter{
+    animation:teamViewEnter .22s ease both;
+  }
+  @keyframes teamViewEnter{
+    from{opacity:.55;transform:translateY(3px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+  #teamApp:not(.hidden) button,
+  #teamApp:not(.hidden) a{
+    -webkit-tap-highlight-color:transparent;
+  }
+  #teamApp:not(.hidden) .team-priority-card,
+  #teamApp:not(.hidden) .team-home-quick-actions button,
+  #teamApp:not(.hidden) .team-more-grid button,
+  #teamApp:not(.hidden) .team-more-controls button,
+  #teamApp:not(.hidden) .team-mobile-nav button,
+  #teamApp:not(.hidden) .team-home-follow-btn,
+  #teamApp:not(.hidden) .team-home-profile-pill{
+    transition:transform .14s ease,background-color .14s ease,border-color .14s ease,box-shadow .14s ease!important;
+  }
+  #teamApp:not(.hidden) .team-priority-card:active,
+  #teamApp:not(.hidden) .team-home-quick-actions button:active,
+  #teamApp:not(.hidden) .team-more-grid button:active,
+  #teamApp:not(.hidden) .team-more-controls button:active,
+  #teamApp:not(.hidden) .team-home-follow-btn:active,
+  #teamApp:not(.hidden) .team-home-profile-pill:active{
+    transform:scale(.98)!important;
+  }
+  #teamApp:not(.hidden) .team-mobile-nav button:active{
+    transform:translateY(1px) scale(.97)!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  #teamApp:not(.hidden) .view.view-enter,
+  #teamApp:not(.hidden) .team-priority-card,
+  #teamApp:not(.hidden) .team-home-quick-actions button,
+  #teamApp:not(.hidden) .team-more-grid button,
+  #teamApp:not(.hidden) .team-more-controls button{
+    animation:none!important;
+    transition:none!important;
+  }
+}
