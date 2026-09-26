@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f7f1e7"><link rel="manifest" href="/mentor/manifest.webmanifest?v=12.73"><link rel="apple-touch-icon" href="/assets/logo.png">
 <title>Mentor Panel | 24K MR ZERO</title>
 <link rel="icon" href="/assets/logo.png"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<link rel="stylesheet" href="/assets/css/v1216-mentor.css?v=12.18"><link rel="stylesheet" href="/assets/css/v1218-mentor-reference.css?v=13.14"><link rel="stylesheet" href="/assets/css/v1315-mentor-performance.css?v=13.19"><link rel="stylesheet" href="/assets/css/v1320-mentor-signals.css?v=13.32"><link rel="stylesheet" href="/assets/css/v1333-mentor-charts.css?v=13.33"><link rel="stylesheet" href="/assets/css/v1334-mentor-articles.css?v=13.34"><link rel="stylesheet" href="/assets/css/v1335-mentor-profile.css?v=13.39.1"><link rel="stylesheet" href="/assets/css/v1340-mentor-mobile-gap.css?v=13.40"><link rel="stylesheet" href="/assets/css/v1341-mentor-editors.css?v=13.42"><link rel="stylesheet" href="/assets/css/v1343-mentor-theme-parity.css?v=13.43"><link rel="stylesheet" href="/assets/css/v1344-mentor-performance-parity.css?v=13.45">
+<link rel="stylesheet" href="/assets/css/v1216-mentor.css?v=12.18"><link rel="stylesheet" href="/assets/css/v1218-mentor-reference.css?v=13.14"><link rel="stylesheet" href="/assets/css/v1315-mentor-performance.css?v=13.19"><link rel="stylesheet" href="/assets/css/v1320-mentor-signals.css?v=13.32"><link rel="stylesheet" href="/assets/css/v1333-mentor-charts.css?v=13.33"><link rel="stylesheet" href="/assets/css/v1334-mentor-articles.css?v=13.46"><link rel="stylesheet" href="/assets/css/v1335-mentor-profile.css?v=13.39.1"><link rel="stylesheet" href="/assets/css/v1340-mentor-mobile-gap.css?v=13.40"><link rel="stylesheet" href="/assets/css/v1341-mentor-editors.css?v=13.42"><link rel="stylesheet" href="/assets/css/v1343-mentor-theme-parity.css?v=13.43"><link rel="stylesheet" href="/assets/css/v1344-mentor-performance-parity.css?v=13.45">
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script defer src="/assets/js/config.js?v=13.08"></script>
 </head>
 <body class="mentor-page mentor-booting">
@@ -367,6 +367,26 @@
     </form>
   </div>
 </div>
+<div class="mentor-modal mentor-article-preview-modal" id="mentorArticlePreviewModal">
+  <div class="mentor-modal-card">
+    <div class="mentor-modal-head mentor-article-preview-head">
+      <div>
+        <b id="mentorArticlePreviewTitle">Article Preview</b>
+        <small>24K EDITORIAL PREVIEW</small>
+      </div>
+      <button class="mentor-close" data-close-mentor-modal aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="mentor-modal-body mentor-article-preview-body">
+      <div id="mentorArticlePreviewMeta" class="mentor-article-preview-meta"></div>
+      <div class="mentor-article-preview-language">
+        <button type="button" class="active" data-article-preview-lang="english"><i class="fa-solid fa-language"></i> English</button>
+        <button type="button" data-article-preview-lang="roman"><i class="fa-solid fa-language"></i> Roman English</button>
+      </div>
+      <div id="mentorArticlePreviewContent" class="mentor-article-preview-content"></div>
+    </div>
+  </div>
+</div>
+
 <div class="mentor-modal mentor-article-modal premium-editor-modal" id="mentorArticleModal">
   <div class="mentor-modal-card">
     <div class="mentor-modal-head premium-editor-head">
@@ -446,5 +466,5 @@
   </div>
 </div>
 <div class="mentor-modal" id="mentorBannerModal"><div class="mentor-modal-card"><div class="mentor-modal-head"><div><b id="mentorBannerModalTitle">New Banner</b><small class="eyebrow">WEBSITE CAMPAIGN</small></div><button class="mentor-close" data-close-mentor-modal><i class="fa-solid fa-xmark"></i></button></div><form id="mentorBannerForm"><input type="hidden" name="id"><input type="hidden" name="existing_image"><div class="mentor-modal-body mentor-form"><label class="full">Title<input name="title" required></label><label>Banner Image<input name="image" type="file" accept="image/png,image/jpeg,image/webp"></label><label>Target URL <small>(optional)</small><input name="target_url" placeholder="/courses/"></label><label class="mentor-check"><input type="checkbox" name="is_published" checked> Published</label></div><div class="mentor-modal-foot"><button type="button" class="mentor-btn" data-close-mentor-modal>Cancel</button><button class="mentor-btn gold" type="submit">Save Banner</button></div></form></div></div>
-<div id="mentorToast" class="mentor-toast"></div><script defer src="/assets/js/v1216-mentor.js?v=13.42.3"></script>
+<div id="mentorToast" class="mentor-toast"></div><script defer src="/assets/js/v1216-mentor.js?v=13.46"></script>
 </body></html>
