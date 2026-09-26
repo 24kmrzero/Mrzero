@@ -181,3 +181,93 @@
     color:#f5f7fa!important
   }
 }
+
+
+/* v13.99 final priority — Mentor Accounts desktop hard fix */
+@media (min-width:901px){
+  html[data-auth-scope="admin"] body #p-v1216-center{
+    max-width:1450px!important;
+    margin:0 auto!important;
+  }
+  html[data-auth-scope="admin"] body #p-v1216-center>.panel-heading{
+    min-height:124px!important;
+    padding:19px 20px!important;
+    border-radius:17px!important;
+    border-left:3px solid #d8a20a!important;
+    background:
+      radial-gradient(360px 160px at 94% 0%,rgba(216,162,10,.045),transparent 72%),
+      #fff!important;
+    box-shadow:0 9px 24px rgba(18,24,32,.045)!important;
+  }
+  html[data-auth-scope="admin"] body #p-v1216-center>.panel-heading:before{
+    display:inline-flex!important;
+  }
+  html[data-auth-scope="admin"] body #p-v1216-center .v1216-kpis{
+    gap:8px!important;
+  }
+  html[data-auth-scope="admin"] body #p-v1216-center .v1216-kpi{
+    min-height:76px!important;
+    border-radius:12px!important;
+    background:#fff!important;
+  }
+  html[data-auth-scope="admin"] body #p-v1216-center .v1216-course-grid{
+    gap:8px!important;
+  }
+  html[data-auth-scope="admin"] body #p-v1216-center .v1216-course{
+    min-height:72px!important;
+    border-radius:12px!important;
+    background:#fff!important;
+  }
+
+  /* manager availability must stay compact — never a large empty panel */
+  html[data-auth-scope="admin"] body #p-v1216-center>.app-card{
+    min-height:92px!important;
+    height:auto!important;
+    padding:13px 14px!important;
+    margin-bottom:10px!important;
+  }
+  html[data-auth-scope="admin"] body #p-v1216-center>.app-card .app-card-head{
+    margin-bottom:8px!important;
+  }
+  html[data-auth-scope="admin"] body #p-v1216-center .v1216-manager-row{
+    min-height:0!important;
+    height:auto!important;
+    align-items:flex-start!important;
+  }
+  html[data-auth-scope="admin"] body #p-v1216-center .v1216-manager{
+    min-height:36px!important;
+    height:auto!important;
+  }
+
+  /* mentor section and cards */
+  html[data-auth-scope="admin"] body #p-v1216-center [data-v1216-sub="mentors"]>.panel-heading{
+    min-height:84px!important;
+    padding:14px 16px!important;
+    border-radius:13px!important;
+  }
+  html[data-auth-scope="admin"] body #p-v1216-center .v1216-mentor-grid{
+    display:grid!important;
+    grid-template-columns:repeat(auto-fill,minmax(330px,370px))!important;
+    gap:14px!important;
+    justify-content:start!important;
+    align-items:start!important;
+  }
+  html[data-auth-scope="admin"] body #p-v1216-center .v1216-mentor-card.v1216-mentor-premium{
+    width:100%!important;
+    max-width:370px!important;
+    min-height:238px!important;
+    padding:14px!important;
+    border:1px solid #e1e4e8!important;
+    border-top:3px solid #d8a20a!important;
+    border-radius:16px!important;
+    background:#fff!important;
+    box-shadow:0 10px 26px rgba(18,24,32,.045)!important;
+  }
+  html[data-auth-scope="admin"] body #p-v1216-center .v1216-mentor-card.v1216-mentor-premium>h3,
+  html[data-auth-scope="admin"] body #p-v1216-center .v1216-mentor-card.v1216-mentor-premium>small{
+    display:none!important;
+  }
+  html[data-auth-scope="admin"] body #p-v1216-center .v1216-tabs{
+    margin-bottom:10px!important;
+  }
+}
