@@ -222,6 +222,7 @@
     if (history.state?.__24kModal && history.state?.__24kModalId === id) {
       setTimeout(() => {
         if (document.querySelector('.app-modal.open')) return;
+        if (!(history.state?.__24kModal && history.state?.__24kModalId === id)) return;
         try { history.back(); } catch (_) {}
       }, 0);
     }
