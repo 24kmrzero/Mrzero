@@ -16,6 +16,9 @@
   let historyDateFilter = 'month';
   let historyCustomStart = '';
   let historyCustomEnd = '';
+  // Market sync primitives must exist before the first async data load.
+  // Keep these above every await/call path to avoid temporal-dead-zone startup crashes.
+  let marketContentSyncSeq = 0;
 
   // V10.21: Premium Access state must be initialized before the first renderAll().
   // Previously these const declarations lived below the initial await/load/render path,
@@ -210,7 +213,7 @@
   if (!result) return;
   state.user = result.user;
   state.profile = result.profile;
-  document.getElementById('logoutButton').addEventListener('click', async()=>{await auditEvent('logout','session',null,'success',{});await A.logout();});
+  document.getElementById('logoutButton')?.addEventListener('click', async()=>{await auditEvent('logout','session',null,'success',{});await A.logout();});
   const supportWhatsApp = document.getElementById('supportWhatsApp'); if (supportWhatsApp) supportWhatsApp.href = `https://wa.me/${A.cfg.SUPPORT_WHATSAPP}`;
 
   const initials = (state.profile.full_name || state.profile.email || 'ST').split(/\s+/).slice(0, 2).map(x => x[0]).join('').toUpperCase();
@@ -218,7 +221,7 @@
   const dashboardWelcome = document.getElementById('dashboardWelcomeName');
   if (dashboardWelcome) dashboardWelcome.textContent = `${memberName} 👋`;
   initDashboardClock();
-  document.getElementById('studentAvatar').textContent = initials;
+  const studentAvatar=document.getElementById('studentAvatar'); if(studentAvatar) studentAvatar.textContent = initials;
 
   const revealStudentApp = () => {
     document.getElementById('pageLoader')?.classList.add('hidden');
@@ -1965,8 +1968,7 @@
     if (!window.__24K_DASH_CLOCK__) window.__24K_DASH_CLOCK__=setInterval(update,1000);
   }
 
-  let marketContentSyncSeq=0;
-  const marketWait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+  function marketWait(ms){return new Promise(resolve=>setTimeout(resolve,ms));}
 
   async function marketQuery(label,factory,retries=2){
     let lastError=null;
@@ -2023,7 +2025,7 @@
       if(window.__24K_STUDENT_REALTIME_CHANNEL__)A.supabase.removeChannel(window.__24K_STUDENT_REALTIME_CHANNEL__);
     }catch{}
 
-    const channel=A.supabase.channel(`student-live-v1368-${state.user.id}`)
+    const channel=A.supabase.channel(`student-live-v1370-${state.user.id}`)
       .on('postgres_changes',{event:'*',schema:'public',table:'signals'},refreshMarket)
       .on('postgres_changes',{event:'*',schema:'public',table:'signal_updates'},payload=>{if(payload.eventType==='INSERT')showSignalNotification(payload.new);refreshMarket();})
       .on('postgres_changes',{event:'*',schema:'public',table:'charts'},refreshMarket)
