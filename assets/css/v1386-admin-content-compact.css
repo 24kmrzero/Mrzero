@@ -1,0 +1,154 @@
+/* 24K MR ZERO — Admin compact content cards matching Student desktop footprint v13.86
+   Desktop only. Mobile remains exactly as-is. */
+@media (min-width:901px){
+
+  /* Exact Student/User desktop card footprint */
+  #p-charts .admin-research-history,
+  #p-articles .admin-research-history{
+    display:grid!important;
+    grid-template-columns:repeat(auto-fill,minmax(340px,360px))!important;
+    gap:20px!important;
+    align-items:start!important;
+    justify-content:start!important;
+    width:100%!important;
+  }
+
+  #p-charts .admin-mentor-content-card,
+  #p-articles .admin-mentor-content-card{
+    width:100%!important;
+    max-width:360px!important;
+    min-width:0!important;
+    border-radius:18px!important;
+    overflow:hidden!important;
+    align-self:start!important;
+  }
+
+  #p-charts .admin-mentor-media,
+  #p-articles .admin-mentor-media{
+    width:100%!important;
+    aspect-ratio:16 / 9!important;
+    min-height:0!important;
+    height:auto!important;
+    max-height:none!important;
+  }
+
+  #p-charts .admin-mentor-media img,
+  #p-articles .admin-mentor-media img{
+    width:100%!important;
+    height:100%!important;
+    min-height:0!important;
+    object-fit:cover!important;
+    display:block!important;
+  }
+
+  /* User-panel-like compact body while keeping Admin actions */
+  #p-charts .admin-mentor-card-body,
+  #p-articles .admin-mentor-card-body{
+    padding:15px!important;
+    gap:8px!important;
+  }
+
+  #p-charts .admin-mentor-card-meta,
+  #p-articles .admin-mentor-card-meta{
+    display:flex!important;
+    flex-wrap:wrap!important;
+    gap:7px 10px!important;
+    margin:0!important;
+    color:#7a8492!important;
+    font-size:9px!important;
+    line-height:1.25!important;
+  }
+
+  #p-charts .admin-mentor-card-body h3,
+  #p-articles .admin-mentor-card-body h3{
+    margin:0!important;
+    color:#181d24!important;
+    font-size:16px!important;
+    line-height:1.22!important;
+    letter-spacing:-.02em!important;
+  }
+
+  #p-charts .admin-mentor-card-body p,
+  #p-articles .admin-mentor-card-body p{
+    min-height:36px!important;
+    margin:0!important;
+    display:-webkit-box!important;
+    -webkit-line-clamp:2!important;
+    -webkit-box-orient:vertical!important;
+    overflow:hidden!important;
+    color:#737e8b!important;
+    font-size:10.5px!important;
+    line-height:1.5!important;
+  }
+
+  #p-charts .admin-mentor-card-foot,
+  #p-articles .admin-mentor-card-foot{
+    min-height:40px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:8px!important;
+    padding-top:8px!important;
+    border-top:1px solid #edf0f2!important;
+  }
+
+  #p-charts .admin-mentor-state,
+  #p-articles .admin-mentor-state{
+    font-size:8px!important;
+    white-space:nowrap!important;
+  }
+
+  #p-charts .admin-mentor-actions,
+  #p-articles .admin-mentor-actions{
+    display:flex!important;
+    align-items:center!important;
+    gap:5px!important;
+  }
+
+  #p-charts .admin-mentor-actions :is(button,a),
+  #p-articles .admin-mentor-actions :is(button,a){
+    min-height:31px!important;
+    height:31px!important;
+    padding:0 9px!important;
+    border-radius:8px!important;
+    font-size:8.5px!important;
+  }
+
+  #p-charts .admin-mentor-actions .danger,
+  #p-articles .admin-mentor-actions .danger{
+    width:31px!important;
+    min-width:31px!important;
+    padding:0!important;
+  }
+
+  /* Keep media badges compact like Student cards */
+  #p-charts .admin-mentor-media-top,
+  #p-articles .admin-mentor-media-top{
+    left:9px!important;
+    right:9px!important;
+    top:9px!important;
+    gap:5px!important;
+  }
+
+  #p-charts .admin-mentor-media-top span,
+  #p-articles .admin-mentor-media-top span{
+    min-height:22px!important;
+    padding:0 7px!important;
+    font-size:7px!important;
+  }
+
+  #p-charts .admin-mentor-index,
+  #p-articles .admin-mentor-index{
+    right:9px!important;
+    bottom:8px!important;
+    font-size:8px!important;
+  }
+
+  /* Empty result should span the available desktop row instead of becoming a 360px card */
+  #p-charts .admin-research-history>.empty-state,
+  #p-articles .admin-research-history>.empty-state{
+    grid-column:1/-1!important;
+    width:100%!important;
+    max-width:none!important;
+  }
+}
