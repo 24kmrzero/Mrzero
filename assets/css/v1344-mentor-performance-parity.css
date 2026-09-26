@@ -1,0 +1,53 @@
+/* V13.44 — exact mobile Performance geometry parity
+   Force identical light/dark spacing from the same anchors. */
+
+@media(max-width:760px){
+  /* Scope this geometry to Performance only so other Mentor tabs stay untouched. */
+  body.mentor-page .mentor-content:has(> [data-mentor-panel="performance"].active){
+    padding-top:18px!important;
+    padding-left:20px!important;
+    padding-right:20px!important;
+    padding-bottom:calc(72px + env(safe-area-inset-bottom))!important;
+    max-width:none!important;
+    margin:0!important;
+    box-sizing:border-box!important;
+  }
+
+  html[data-theme="light"] [data-mentor-panel="performance"],
+  html[data-theme="dark"] [data-mentor-panel="performance"]{
+    width:100%!important;
+    max-width:none!important;
+    margin:0!important;
+    padding:0!important;
+    box-sizing:border-box!important;
+  }
+
+  html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-performance,
+  html[data-theme="dark"] [data-mentor-panel="performance"] .mrzero-performance{
+    width:100%!important;
+    max-width:none!important;
+    margin:0!important;
+    padding:0!important;
+    gap:12px!important;
+    border-radius:0!important;
+    background:transparent!important;
+    box-sizing:border-box!important;
+  }
+
+  /* Every primary block shares the exact same left/right anchor. */
+  [data-mentor-panel="performance"] .mrzero-period-toolbar,
+  [data-mentor-panel="performance"] .mrzero-performance-hero,
+  [data-mentor-panel="performance"] .mrzero-performance-kpis,
+  [data-mentor-panel="performance"] .mrzero-command-grid{
+    width:100%!important;
+    max-width:100%!important;
+    margin-left:0!important;
+    margin-right:0!important;
+    box-sizing:border-box!important;
+  }
+
+  [data-mentor-panel="performance"] .mrzero-period-toolbar{
+    margin-top:0!important;
+    margin-bottom:0!important;
+  }
+}
