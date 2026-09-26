@@ -1385,3 +1385,22 @@ html[data-theme="light"] .mentor-more-logout small{color:#6d7783}
     grid-template-columns:1fr 1fr!important;
   }
 }
+
+
+/* V13.39.1 — three balanced Quick Access cards after removing Banners */
+.mentor-more-links{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+}
+@media(max-width:760px){
+  .mentor-more-links{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  }
+}
+@media(max-width:430px){
+  .mentor-more-links{
+    grid-template-columns:1fr 1fr!important;
+  }
+  .mentor-more-links>button:last-child{
+    grid-column:1/-1;
+  }
+}
