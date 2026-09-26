@@ -1,6 +1,6 @@
 (function(){
 'use strict';
-/* mentor build 13.35 */
+/* mentor build 13.36 */
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js',{scope:'/'}).catch(e=>console.warn('[24K Mentor PWA]',e?.message||e)));
 }
@@ -866,34 +866,27 @@ function renderNews(){const b=$('#mentorNews');if(!b)return;b.innerHTML=state.ne
 function renderSettings(){
   const name=state.profile?.full_name||'Mentor',
     email=state.profile?.email||state.user?.email||'',
-    enabled=Object.entries(state.perms).filter(x=>x[1]).map(x=>x[0]),
-    initials=String(name).trim().split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase()||'M',
-    accessCount=enabled.length,
-    accessTotal=Object.keys(state.perms).length,
-    accessPct=accessTotal?Math.round(accessCount/accessTotal*100):0;
+    enabled=Object.entries(state.perms).filter(x=>x[1]).map(x=>x[0]);
 
   const settingsHtml=`<article class="mentor-card"><span class="eyebrow">ACTIVE MENTOR</span><h3>${esc(name)}</h3><p>${esc(email)}</p><div class="mentor-meta">${enabled.map(x=>`<span class="mentor-chip gold">${esc(x.toUpperCase())}</span>`).join('')||'<span class="mentor-chip">No creation permissions</span>'}</div><p>Permissions are controlled by Admin.</p></article>`;
+
   const profileHtml=`
-    <div class="mentor-profile-account-hero">
-      <div class="mentor-profile-avatar"><span>${esc(initials)}</span><i class="fa-solid fa-circle-check"></i></div>
+    <div class="mentor-profile-account-hero clean">
+      <div class="mentor-profile-brandmark"><img src="/assets/logo-v965.png" alt="24K MR ZERO"></div>
       <div class="mentor-profile-identity">
         <span class="mentor-profile-status"><i></i> ACTIVE MENTOR</span>
         <h3>${esc(name)}</h3>
         <p><i class="fa-regular fa-envelope"></i> ${esc(email)}</p>
       </div>
-      <span class="mentor-profile-role"><i class="fa-solid fa-shield-halved"></i> Mentor</span>
+      <span class="mentor-profile-verified"><i class="fa-solid fa-circle-check"></i> Verified</span>
     </div>
-    <div class="mentor-profile-access">
-      <div class="mentor-profile-access-top">
-        <div><small>CONTENT ACCESS</small><b>${accessCount} of ${accessTotal} enabled</b></div>
-        <strong>${accessPct}%</strong>
-      </div>
-      <div class="mentor-profile-access-bar"><i style="width:${accessPct}%"></i></div>
-      <div class="mentor-profile-permissions">
+
+    <div class="mentor-profile-access-simple">
+      <div class="mentor-profile-access-title"><span><i class="fa-solid fa-shield-halved"></i> Workspace Access</span><small>Admin managed</small></div>
+      <div class="mentor-profile-permissions-simple">
         ${Object.keys(state.perms).map(k=>`<span class="${state.perms[k]?'on':'off'}"><i class="fa-solid ${state.perms[k]?'fa-check':'fa-lock'}"></i>${esc(k.charAt(0).toUpperCase()+k.slice(1))}</span>`).join('')}
       </div>
-    </div>
-    <div class="mentor-profile-admin-note"><span><i class="fa-solid fa-shield"></i></span><div><b>Admin Managed Access</b><small>Creation permissions and workspace access are controlled by Admin.</small></div></div>`;
+    </div>`;
 
   const settings=$('#mentorSettings'),profile=$('#mentorProfileContent');
   if(settings)settings.innerHTML=settingsHtml;
