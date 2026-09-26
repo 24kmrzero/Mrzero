@@ -51,3 +51,15 @@
     margin-bottom:0!important;
   }
 }
+
+
+/* V13.45 — monthly net value/subtitle breathing room */
+@media(max-width:760px){
+  [data-mentor-panel="performance"] .mrzero-performance-live>b{
+    margin-bottom:6px!important;
+  }
+  [data-mentor-panel="performance"] .mrzero-performance-live>small:not(.mrzero-last-updated){
+    margin-top:0!important;
+    line-height:1.35!important;
+  }
+}
