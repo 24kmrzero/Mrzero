@@ -23,6 +23,7 @@
 .method-toggle-btn i{font-size:9px!important}
 </style>
 <link rel="stylesheet" href="assets/css/v1218-admin-reference.css?v=12.75">
+<link rel="stylesheet" href="assets/css/v1363-admin-dashboard-premium.css?v=13.63">
 </head>
 <body class="app-page">
 <div id="pageLoader" class="loading-screen"><div><img src="assets/logo.png?v=9.69" alt="24K Digital Gold"><i class="fa-solid fa-spinner fa-spin"></i><p>Loading admin controls...</p></div></div>
@@ -55,21 +56,57 @@
     </nav></div>
     <div class="app-side-foot"><a href="/"><i class="fa-solid fa-house"></i> Website Home</a><button id="logoutButton"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button></div>
   </aside>
+  <button type="button" id="adminSideBackdrop" class="admin-side-backdrop" aria-label="Close navigation"></button>
 
   <main class="app-main">
-    <header class="app-topbar"><button class="app-burger" id="burger"><i class="fa-solid fa-bars"></i></button><div class="app-title"><strong>24K Excellence Admin</strong><small>Manage content, classes and payments</small></div><div class="app-search"><i class="fa-solid fa-magnifying-glass"></i><input id="adminSearch" type="search" placeholder="Search records..."></div><button class="app-theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme" title="Switch to light theme"><i class="fa-solid fa-sun"></i></button><button class="app-notify" data-goto="admin-notifications" aria-label="Open Admin Notifications"><i class="fa-solid fa-bell"></i><span id="topAdminNotificationCount">0</span></button><div class="app-avatar">AD</div></header>
+    <header class="app-topbar"><button class="app-burger" id="burger"><i class="fa-solid fa-bars"></i></button><div class="app-title"><strong>24K MR ZERO Admin</strong><small>Operations Command Center</small></div><div class="app-search"><i class="fa-solid fa-magnifying-glass"></i><input id="adminSearch" type="search" placeholder="Search records..."></div><button class="app-theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme" title="Switch to light theme"><i class="fa-solid fa-sun"></i></button><button class="app-notify" data-goto="admin-notifications" aria-label="Open Admin Notifications"><i class="fa-solid fa-bell"></i><span id="topAdminNotificationCount">0</span></button><div class="app-avatar">AD</div></header>
     <div class="app-content">
-      <section class="panel on" id="p-dashboard">
-        <div class="panel-heading"><div><h1>Admin Dashboard</h1><p>Live snapshot of students, payments, content and upcoming classes.</p></div></div>
-        <div class="kpi-grid" id="adminKpis"></div>
-        <div class="dashboard-business-grid">
-          <div class="dashboard-work-column">
-            <div class="app-card dashboard-action-card"><div class="app-card-head"><div><h3>Payments Requiring Action</h3><p>Review receipts before unlocking course access</p></div><button class="app-btn small gold" data-goto="payments">Open Payments</button></div><div id="dashboardPayments"></div></div>
-            <div class="app-card dashboard-action-card"><div class="app-card-head"><div><h3>Upcoming Sessions</h3><p>Online class schedule</p></div><button class="app-btn small outline" data-goto="sessions">Manage Sessions</button></div><div id="dashboardSessions"></div></div>
+      <section class="panel on admin-dashboard-v2" id="p-dashboard">
+        <div id="v18Command" class="admin-dashboard-hero">
+          <div class="admin-dashboard-hero-top">
+            <div>
+              <span class="admin-dashboard-kicker"><i class="fa-solid fa-shield-halved"></i> ADMIN COMMAND CENTER</span>
+              <h1>Platform Overview</h1>
+              <p>Users, enrollments, payments, classes and content — one live operations view.</p>
+            </div>
+            <span class="admin-live-pill"><i></i><b>LIVE</b><small>Platform status</small></span>
           </div>
-          <aside class="dashboard-analytics-column" id="dashboardAnalytics" aria-label="Business analytics"></aside>
+          <div id="v18PlatformSnapshot" class="v1218-mini-grid admin-platform-snapshot"></div>
         </div>
-        <div class="app-card dashboard-quick-actions"><div class="app-card-head"><div><h3>Quick Actions</h3><p>Create content or schedule a class</p></div></div><div class="course-actions"><button class="app-btn gold" data-goto="signals"><i class="fa-solid fa-bolt"></i> Add Signal</button><button class="app-btn outline" data-goto="charts"><i class="fa-solid fa-chart-line"></i> Upload Chart</button><button class="app-btn outline" data-goto="articles"><i class="fa-solid fa-newspaper"></i> Write Article</button><button class="app-btn outline" data-goto="sessions"><i class="fa-solid fa-video"></i> Schedule Online Class</button><button class="app-btn outline" data-goto="announcements"><i class="fa-solid fa-bullhorn"></i> Announcement</button></div></div>
+
+        <div class="admin-dashboard-section-head">
+          <div><small>LIVE OVERVIEW</small><b>Key Numbers</b></div>
+          <span><i class="fa-solid fa-arrow-right-long"></i> Swipe / tap</span>
+        </div>
+        <div class="kpi-grid admin-kpi-rail" id="adminKpis"></div>
+
+        <div class="admin-dashboard-section-head">
+          <div><small>WORKSPACE</small><b>Quick Actions</b></div>
+          <span>Admin tools</span>
+        </div>
+        <div class="admin-dashboard-quick">
+          <button type="button" data-goto="signals"><span><i class="fa-solid fa-bolt"></i></span><div><b>New Signal</b><small>Publish setup</small></div><i class="fa-solid fa-chevron-right"></i></button>
+          <button type="button" data-goto="charts"><span><i class="fa-solid fa-chart-line"></i></span><div><b>Upload Chart</b><small>Research desk</small></div><i class="fa-solid fa-chevron-right"></i></button>
+          <button type="button" data-goto="articles"><span><i class="fa-solid fa-newspaper"></i></span><div><b>Write Article</b><small>Publish content</small></div><i class="fa-solid fa-chevron-right"></i></button>
+          <button type="button" data-goto="sessions"><span><i class="fa-solid fa-video"></i></span><div><b>Schedule Class</b><small>Zoom session</small></div><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+
+        <div class="admin-dashboard-grid">
+          <article class="app-card admin-dashboard-card">
+            <div class="app-card-head"><div><small>PAYMENTS</small><h3>Requiring Action</h3><p>Review receipts before course access unlocks.</p></div><button class="app-btn small gold" data-goto="payments">Open</button></div>
+            <div id="dashboardPayments"></div>
+          </article>
+          <article class="app-card admin-dashboard-card">
+            <div class="app-card-head"><div><small>SCHEDULE</small><h3>Upcoming Sessions</h3><p>Next online classes and session status.</p></div><button class="app-btn small outline" data-goto="sessions">Manage</button></div>
+            <div id="dashboardSessions"></div>
+          </article>
+        </div>
+
+        <div class="admin-dashboard-section-head">
+          <div><small>ANALYTICS</small><b>Platform Performance</b></div>
+          <span>Live trends</span>
+        </div>
+        <aside class="dashboard-analytics-column admin-dashboard-analytics" id="dashboardAnalytics" aria-label="Business analytics"></aside>
       </section>
 
       <section class="panel" id="p-signals">
@@ -291,5 +328,6 @@
 <script src="assets/js/v1216-admin-final.js?v=12.63"></script>
 <script src="assets/js/v1218-admin-reference.js?v=12.56"></script>
 <script src="assets/js/v1250-premium-setup-admin.js?v=12.50"></script>
+<script src="assets/js/v1363-admin-dashboard-premium.js?v=13.63"></script>
 </body>
 </html>
