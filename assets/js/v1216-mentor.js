@@ -1,6 +1,6 @@
 (function(){
 'use strict';
-/* mentor build 13.42 */
+/* mentor build 13.42.3 */
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js',{scope:'/'}).catch(e=>console.warn('[24K Mentor PWA]',e?.message||e)));
 }
@@ -101,7 +101,7 @@ function closeModals(fromPop=false){
   open.forEach(x=>x.classList.remove('open'));
   if(fromPop||mentorModalHistoryPop||!open.length)return;
   if(history.state?.__24kMentorModal){
-    setTimeout(()=>{if(!document.querySelector('.mentor-modal.open')){try{history.back()}catch{}}},0)
+    setTimeout(()=>{if(!document.querySelector('.mentor-modal.open')&&history.state?.__24kMentorModal){try{history.back()}catch{}}},0)
   }
 }
 window.addEventListener('popstate',()=>{
