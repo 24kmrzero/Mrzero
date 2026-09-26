@@ -2,6 +2,19 @@
    Desktop-only refinement. Mobile/tablet <=900px intentionally untouched. */
 @media (min-width:901px){
 
+  /* warmer premium admin canvas */
+  html[data-auth-scope="admin"][data-theme="light"] body.app-page,
+  html[data-auth-scope="admin"][data-theme="light"] body.admin-page,
+  html[data-auth-scope="admin"][data-theme="light"] .app-shell,
+  html[data-auth-scope="admin"][data-theme="light"] .app-main{
+    background:
+      radial-gradient(760px 360px at 100% -5%,rgba(214,160,20,.075),transparent 70%),
+      linear-gradient(180deg,#fbf6ea 0%,#f7efdf 46%,#f5ecdc 100%)!important;
+  }
+  html[data-auth-scope="admin"][data-theme="light"] .app-content{
+    background:transparent!important;
+  }
+
   /* tighter page canvas — no artificial bottom runway */
   html[data-auth-scope="admin"] .app-content{
     max-width:1580px!important;
