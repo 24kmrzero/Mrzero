@@ -1,0 +1,305 @@
+/* 24K MR ZERO — Team Executive Fintech Layer v13.55
+   Smart summary, search, goals, pipeline, trend, opportunity, account hub, PWA polish. */
+
+:root{
+  --team-exec-bg:#f5f6f7;
+  --team-exec-card:#ffffff;
+  --team-exec-line:#e5e7eb;
+  --team-exec-text:#20252d;
+  --team-exec-muted:#7b8591;
+  --team-exec-gold:#d99e00;
+  --team-exec-green:#16a874;
+  --team-exec-red:#d8515d;
+  --team-exec-blue:#4d7fc2;
+}
+
+@media(max-width:780px){
+  /* Smart summary */
+  #teamApp:not(.hidden) .team-smart-summary{
+    position:relative!important;
+    z-index:1!important;
+    display:grid!important;
+    grid-template-columns:28px minmax(0,1fr) auto!important;
+    align-items:center!important;
+    gap:7px!important;
+    margin-top:8px!important;
+    padding:8px!important;
+    border:1px solid #e8e1cf!important;
+    border-radius:11px!important;
+    background:rgba(255,255,255,.76)!important;
+  }
+  #teamApp:not(.hidden) .team-smart-summary-icon{
+    width:28px!important;height:28px!important;display:grid!important;place-items:center!important;
+    border-radius:9px!important;background:#fff5d8!important;color:#b98200!important;font-size:8px!important;
+  }
+  #teamApp:not(.hidden) .team-smart-summary>div{min-width:0!important;display:grid!important;gap:1px!important}
+  #teamApp:not(.hidden) .team-smart-summary small{
+    color:#959da6!important;font-size:5.3px!important;font-weight:900!important;letter-spacing:.10em!important
+  }
+  #teamApp:not(.hidden) .team-smart-summary b{
+    overflow:hidden!important;color:#30363f!important;font-size:7.3px!important;line-height:1.25!important;
+    white-space:nowrap!important;text-overflow:ellipsis!important
+  }
+  #teamApp:not(.hidden) .team-sync-chip{
+    display:inline-flex!important;align-items:center!important;gap:4px!important;min-height:22px!important;
+    padding:0 6px!important;border:1px solid #e5e7eb!important;border-radius:999px!important;
+    background:#fafbfc!important;color:#7f8994!important;font-size:5.5px!important;font-weight:800!important;white-space:nowrap!important
+  }
+  #teamApp:not(.hidden) .team-sync-chip.offline{background:#fff1f2!important;color:#c95460!important;border-color:#f3d1d5!important}
+
+  /* Home quick search */
+  #teamApp:not(.hidden) .team-home-search{
+    position:relative!important;
+    z-index:40!important;
+    margin:9px 0 2px!important;
+  }
+  #teamApp:not(.hidden) .team-home-searchbox{
+    display:grid!important;grid-template-columns:18px minmax(0,1fr) 30px!important;align-items:center!important;
+    gap:6px!important;height:42px!important;padding:0 7px 0 10px!important;border:1px solid #e4e7eb!important;
+    border-radius:13px!important;background:#fff!important;box-shadow:0 5px 14px rgba(33,39,48,.025)!important
+  }
+  #teamApp:not(.hidden) .team-home-searchbox>i{color:#9aa2ab!important;font-size:8px!important}
+  #teamApp:not(.hidden) .team-home-searchbox input{
+    width:100%!important;min-width:0!important;height:38px!important;padding:0!important;border:0!important;outline:0!important;
+    background:transparent!important;color:#242a32!important;font-size:9px!important;font-weight:650!important;box-shadow:none!important
+  }
+  #teamApp:not(.hidden) .team-home-searchbox input::placeholder{color:#a0a7af!important}
+  #teamApp:not(.hidden) .team-home-searchbox button{
+    -webkit-appearance:none!important;appearance:none!important;width:30px!important;height:30px!important;display:grid!important;place-items:center!important;
+    padding:0!important;border:1px solid #e5d7ac!important;border-radius:9px!important;background:#fff8e6!important;color:#ad7a00!important
+  }
+  #teamApp:not(.hidden) .team-home-search-results{
+    position:absolute!important;left:0!important;right:0!important;top:47px!important;z-index:80!important;
+    display:grid!important;gap:2px!important;padding:5px!important;border:1px solid #e4e7eb!important;border-radius:13px!important;
+    background:#fff!important;box-shadow:0 18px 40px rgba(31,36,44,.12)!important
+  }
+  #teamApp:not(.hidden) .team-home-search-results.hidden{display:none!important}
+  #teamApp:not(.hidden) .team-home-search-results button{
+    -webkit-appearance:none!important;appearance:none!important;display:grid!important;grid-template-columns:28px minmax(0,1fr) 8px!important;
+    align-items:center!important;gap:7px!important;min-height:46px!important;padding:6px!important;border:0!important;border-radius:9px!important;
+    background:transparent!important;color:#252b33!important;font:inherit!important;text-align:left!important
+  }
+  #teamApp:not(.hidden) .team-home-search-results button:active{background:#f7f8fa!important}
+  #teamApp:not(.hidden) .team-home-search-results button>span{
+    width:28px!important;height:28px!important;display:grid!important;place-items:center!important;border-radius:9px!important;
+    background:#fff5d9!important;color:#b47e00!important;font-size:8px!important;font-weight:900!important
+  }
+  #teamApp:not(.hidden) .team-home-search-results button>div{min-width:0!important;display:grid!important;gap:1px!important}
+  #teamApp:not(.hidden) .team-home-search-results button b{font-size:7.8px!important}
+  #teamApp:not(.hidden) .team-home-search-results button small{
+    overflow:hidden!important;color:#8b94a0!important;font-size:6.1px!important;white-space:nowrap!important;text-overflow:ellipsis!important
+  }
+  #teamApp:not(.hidden) .team-home-search-results button>i{color:#a5abb2!important;font-size:6px!important}
+
+  /* Executive insights */
+  #teamApp:not(.hidden) .insights-head #teamRankChip{
+    display:inline-flex!important;align-items:center!important;gap:4px!important;min-height:20px!important;padding:0 6px!important;
+    border:1px solid #eadfbf!important;border-radius:999px!important;background:#fff9e8!important;color:#9c7000!important;
+    font-size:5.8px!important;font-weight:900!important
+  }
+  #teamApp:not(.hidden) .team-insight-grid{
+    display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important
+  }
+  #teamApp:not(.hidden) .team-insight-card{
+    min-width:0!important;min-height:144px!important;padding:10px!important;border:1px solid #e5e7eb!important;border-radius:14px!important;
+    background:#fff!important;box-shadow:0 5px 15px rgba(35,41,49,.025)!important
+  }
+  #teamApp:not(.hidden) .team-insight-head{
+    display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:6px!important;margin-bottom:9px!important
+  }
+  #teamApp:not(.hidden) .team-insight-head>div{display:grid!important;gap:1px!important}
+  #teamApp:not(.hidden) .team-insight-head small{color:#939ca6!important;font-size:5.4px!important;font-weight:900!important;letter-spacing:.09em!important}
+  #teamApp:not(.hidden) .team-insight-head b{color:#262c34!important;font-size:8.5px!important;line-height:1.15!important}
+  #teamApp:not(.hidden) .team-insight-head>i{
+    width:24px!important;height:24px!important;display:grid!important;place-items:center!important;border-radius:8px!important;
+    background:#fff6dd!important;color:#b67f00!important;font-size:7px!important
+  }
+  #teamApp:not(.hidden) .team-insight-head>span{color:#8c95a0!important;font-size:5.7px!important}
+
+  /* Goals */
+  #teamApp:not(.hidden) .team-goal-list{display:grid!important;gap:6px!important}
+  #teamApp:not(.hidden) .team-goal-row{
+    position:relative!important;display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:4px 6px!important;padding-bottom:6px!important
+  }
+  #teamApp:not(.hidden) .team-goal-row>div{min-width:0!important;display:grid!important;gap:1px!important}
+  #teamApp:not(.hidden) .team-goal-row span{color:#8b94a0!important;font-size:5.6px!important}
+  #teamApp:not(.hidden) .team-goal-row b{color:#313740!important;font-size:7px!important;line-height:1.1!important}
+  #teamApp:not(.hidden) .team-goal-row em{color:#a47300!important;font-size:6px!important;font-style:normal!important;font-weight:900!important}
+  #teamApp:not(.hidden) .team-goal-bar{
+    grid-column:1/-1!important;height:3px!important;overflow:hidden!important;border-radius:99px!important;background:#eff1f3!important
+  }
+  #teamApp:not(.hidden) .team-goal-bar i{display:block!important;height:100%!important;border-radius:inherit!important;background:linear-gradient(90deg,#e2ab07,#f1cd55)!important}
+  #teamApp:not(.hidden) .team-projection-row{
+    display:flex!important;align-items:center!important;justify-content:space-between!important;gap:6px!important;margin-top:2px!important;padding-top:7px!important;
+    border-top:1px solid #eef0f2!important
+  }
+  #teamApp:not(.hidden) .team-projection-row span{color:#8a939e!important;font-size:5.7px!important}
+  #teamApp:not(.hidden) .team-projection-row b{color:#bd8500!important;font-size:8px!important}
+
+  /* Pipeline */
+  #teamApp:not(.hidden) .team-pipeline{display:grid!important;gap:7px!important}
+  #teamApp:not(.hidden) .team-pipeline-step{
+    position:relative!important;display:grid!important;grid-template-columns:minmax(0,1fr) 7px!important;align-items:center!important;gap:5px!important
+  }
+  #teamApp:not(.hidden) .team-pipeline-step>div{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:5px!important}
+  #teamApp:not(.hidden) .team-pipeline-step span{color:#727d89!important;font-size:5.9px!important}
+  #teamApp:not(.hidden) .team-pipeline-step b{color:#2c323a!important;font-size:7.5px!important}
+  #teamApp:not(.hidden) .team-pipeline-step>i{grid-column:2!important;grid-row:1/3!important;color:#c4c9cf!important;font-size:5px!important}
+  #teamApp:not(.hidden) .team-pipeline-bar{
+    grid-column:1!important;height:4px!important;overflow:hidden!important;border-radius:99px!important;background:#f0f2f4!important
+  }
+  #teamApp:not(.hidden) .team-pipeline-bar i{display:block!important;height:100%!important;border-radius:inherit!important;background:#99a7b7!important}
+  #teamApp:not(.hidden) .team-pipeline-step.interested .team-pipeline-bar i{background:#6e9bd5!important}
+  #teamApp:not(.hidden) .team-pipeline-step.follow_up .team-pipeline-bar i{background:#e1b62d!important}
+  #teamApp:not(.hidden) .team-pipeline-step.converted .team-pipeline-bar i{background:#39bd8d!important}
+
+  /* Trend */
+  #teamApp:not(.hidden) .team-trend-chart{height:100px!important;display:grid!important;grid-template-rows:1fr auto!important;gap:3px!important}
+  #teamApp:not(.hidden) .team-trend-chart svg{width:100%!important;height:82px!important;overflow:visible!important}
+  #teamApp:not(.hidden) .team-trend-chart .trend-grid{fill:none!important;stroke:#eef0f2!important;stroke-width:1!important}
+  #teamApp:not(.hidden) .team-trend-chart .trend-line{fill:none!important;stroke:#d8a300!important;stroke-width:2.3!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+  #teamApp:not(.hidden) .team-trend-chart circle{fill:#fff!important;stroke:#d8a300!important;stroke-width:1.6!important}
+  #teamApp:not(.hidden) .team-trend-labels{display:flex!important;justify-content:space-between!important;color:#99a1aa!important;font-size:5.2px!important}
+
+  /* Opportunity */
+  #teamApp:not(.hidden) .team-opportunity{display:grid!important;gap:9px!important}
+  #teamApp:not(.hidden) .team-opportunity-main{display:grid!important;grid-template-columns:34px minmax(0,1fr)!important;align-items:center!important;gap:8px!important}
+  #teamApp:not(.hidden) .team-opportunity-avatar{
+    width:34px!important;height:34px!important;display:grid!important;place-items:center!important;border-radius:11px!important;
+    background:linear-gradient(145deg,#ffe676,#edb517)!important;color:#17130a!important;font-size:8px!important;font-weight:950!important
+  }
+  #teamApp:not(.hidden) .team-opportunity-main>div{min-width:0!important;display:grid!important;gap:1px!important}
+  #teamApp:not(.hidden) .team-opportunity-main b{overflow:hidden!important;color:#282e36!important;font-size:8.3px!important;white-space:nowrap!important;text-overflow:ellipsis!important}
+  #teamApp:not(.hidden) .team-opportunity-main small{overflow:hidden!important;color:#808a95!important;font-size:6.1px!important;white-space:nowrap!important;text-overflow:ellipsis!important}
+  #teamApp:not(.hidden) .team-opportunity-main em{color:#b47f00!important;font-size:5.8px!important;font-style:normal!important}
+  #teamApp:not(.hidden) .team-opportunity-actions{display:grid!important;grid-template-columns:1fr auto!important;gap:5px!important}
+  #teamApp:not(.hidden) .team-opportunity-actions a,
+  #teamApp:not(.hidden) .team-opportunity-actions button{
+    -webkit-appearance:none!important;appearance:none!important;min-height:29px!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:4px!important;
+    padding:0 8px!important;border:1px solid #e5e7eb!important;border-radius:8px!important;background:#fafbfc!important;color:#4b5662!important;
+    font:inherit!important;font-size:6.4px!important;font-weight:850!important;text-decoration:none!important
+  }
+  #teamApp:not(.hidden) .team-opportunity-actions a{border-color:#cdeee1!important;background:#effbf6!important;color:#148861!important}
+
+  /* Collapse controls */
+  #teamApp:not(.hidden) .team-card-actions{display:flex!important;align-items:center!important;gap:5px!important}
+  #teamApp:not(.hidden) .team-collapse-toggle{
+    -webkit-appearance:none!important;appearance:none!important;width:30px!important;height:30px!important;display:grid!important;place-items:center!important;
+    padding:0!important;border:1px solid #e4e7eb!important;border-radius:9px!important;background:#fafbfc!important;color:#8b94a0!important;font-size:6px!important
+  }
+  #teamApp:not(.hidden) .team-collapse-toggle.open i{transform:rotate(180deg)!important}
+  #teamApp:not(.hidden) .home-collapsed{display:none!important}
+  #teamApp:not(.hidden) .team-activity-card:has(.home-collapsed),
+  #teamApp:not(.hidden) .team-home-links:has(.home-collapsed){padding-bottom:10px!important}
+
+  /* More = proper account hub */
+  #teamApp:not(.hidden) .team-more-page{
+    width:auto!important;margin:10px 11px 0!important;padding:0 0 10px!important
+  }
+  #teamApp:not(.hidden) .team-more-identity{
+    position:relative!important;display:grid!important;grid-template-columns:42px minmax(0,1fr) auto!important;align-items:center!important;gap:9px!important;
+    padding:13px!important;border:1px solid #e4dfd1!important;border-radius:16px!important;background:linear-gradient(145deg,#fff,#fdfbf4)!important;
+    box-shadow:0 7px 20px rgba(34,40,48,.035)!important;overflow:hidden!important
+  }
+  #teamApp:not(.hidden) .team-more-logo{position:absolute!important;right:8px!important;bottom:-7px!important;width:76px!important;opacity:.035!important;pointer-events:none!important}
+  #teamApp:not(.hidden) .team-more-avatar{
+    width:42px!important;height:42px!important;display:grid!important;place-items:center!important;border-radius:13px!important;
+    background:linear-gradient(145deg,#ffe477,#edb415)!important;color:#17130a!important;font-size:10px!important;font-weight:950!important
+  }
+  #teamApp:not(.hidden) .team-more-identity>div{min-width:0!important;display:grid!important;gap:1px!important}
+  #teamApp:not(.hidden) .team-more-identity small{color:#949ca6!important;font-size:5.6px!important;font-weight:900!important;letter-spacing:.11em!important}
+  #teamApp:not(.hidden) .team-more-identity h2{margin:0!important;color:#232930!important;font-size:15px!important;line-height:1.05!important}
+  #teamApp:not(.hidden) .team-more-identity p{margin:0!important;color:#818b96!important;font-size:6.6px!important}
+  #teamApp:not(.hidden) .team-more-status{
+    display:inline-flex!important;align-items:center!important;gap:4px!important;padding:4px 6px!important;border-radius:999px!important;
+    background:#ecfaf5!important;color:#148c64!important;font-size:5.7px!important;font-weight:900!important
+  }
+  #teamApp:not(.hidden) .team-more-status i{width:5px!important;height:5px!important;border-radius:50%!important;background:#18b77f!important}
+  #teamApp:not(.hidden) .team-more-section-head{
+    display:flex!important;align-items:end!important;justify-content:space-between!important;gap:8px!important;margin:14px 2px 7px!important
+  }
+  #teamApp:not(.hidden) .team-more-section-head>div{display:grid!important;gap:1px!important}
+  #teamApp:not(.hidden) .team-more-section-head small{color:#939ca6!important;font-size:5.6px!important;font-weight:900!important;letter-spacing:.11em!important}
+  #teamApp:not(.hidden) .team-more-section-head b{color:#262c34!important;font-size:12px!important}
+  #teamApp:not(.hidden) .team-more-section-head>span{color:#8c95a0!important;font-size:5.8px!important}
+  #teamApp:not(.hidden) .team-more-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}
+  #teamApp:not(.hidden) .team-more-grid button,
+  #teamApp:not(.hidden) .team-more-controls button{
+    -webkit-appearance:none!important;appearance:none!important;min-width:0!important;display:grid!important;align-items:center!important;
+    border:1px solid #e5e7eb!important;border-radius:12px!important;background:#fff!important;color:#2b3139!important;font:inherit!important;text-align:left!important
+  }
+  #teamApp:not(.hidden) .team-more-grid button{
+    grid-template-columns:28px minmax(0,1fr) 7px!important;gap:7px!important;min-height:54px!important;padding:8px!important
+  }
+  #teamApp:not(.hidden) .team-more-grid button>i:first-child{
+    width:28px!important;height:28px!important;display:grid!important;place-items:center!important;border-radius:9px!important;background:#fff5db!important;color:#b98000!important;font-size:8px!important
+  }
+  #teamApp:not(.hidden) .team-more-grid button>span{min-width:0!important;display:grid!important;gap:1px!important}
+  #teamApp:not(.hidden) .team-more-grid button b{font-size:7.8px!important}
+  #teamApp:not(.hidden) .team-more-grid button small{color:#8c95a0!important;font-size:5.9px!important}
+  #teamApp:not(.hidden) .team-more-grid button>i:last-child{color:#a5abb2!important;font-size:5.5px!important}
+  #teamApp:not(.hidden) .team-more-controls{display:grid!important;gap:6px!important}
+  #teamApp:not(.hidden) .team-more-controls button{
+    grid-template-columns:30px minmax(0,1fr)!important;gap:8px!important;min-height:52px!important;padding:8px 10px!important
+  }
+  #teamApp:not(.hidden) .team-more-controls button>i{
+    width:30px!important;height:30px!important;display:grid!important;place-items:center!important;border-radius:9px!important;background:#f5f6f8!important;color:#66717e!important;font-size:8px!important
+  }
+  #teamApp:not(.hidden) .team-more-controls button>span{display:grid!important;gap:1px!important}
+  #teamApp:not(.hidden) .team-more-controls button b{font-size:8px!important}
+  #teamApp:not(.hidden) .team-more-controls button small{color:#8d96a0!important;font-size:6px!important}
+  #teamApp:not(.hidden) .team-more-controls button.danger{border-color:#f1d7da!important;background:#fffafb!important}
+  #teamApp:not(.hidden) .team-more-controls button.danger>i{background:#fff0f1!important;color:#ce525e!important}
+  #teamApp:not(.hidden) .team-more-controls button.danger b{color:#bd4d58!important}
+
+  /* Standalone/safe area */
+  @media(display-mode:standalone){
+    body.team-authenticated .team-topbar{padding-top:calc(9px + env(safe-area-inset-top))!important}
+    body.team-authenticated #teamApp:not(.hidden) .team-mobile-nav{bottom:calc(7px + env(safe-area-inset-bottom))!important}
+  }
+
+  /* Dark parity */
+  html[data-theme="dark"] body.team-authenticated .team-smart-summary,
+  html[data-theme="dark"] body.team-authenticated .team-home-searchbox,
+  html[data-theme="dark"] body.team-authenticated .team-home-search-results,
+  html[data-theme="dark"] body.team-authenticated .team-insight-card,
+  html[data-theme="dark"] body.team-authenticated .team-more-identity,
+  html[data-theme="dark"] body.team-authenticated .team-more-grid button,
+  html[data-theme="dark"] body.team-authenticated .team-more-controls button{
+    border-color:#29313a!important;background:#10161d!important;box-shadow:none!important;color:#eef2f6!important
+  }
+  html[data-theme="dark"] body.team-authenticated .team-smart-summary b,
+  html[data-theme="dark"] body.team-authenticated .team-home-searchbox input,
+  html[data-theme="dark"] body.team-authenticated .team-home-search-results button,
+  html[data-theme="dark"] body.team-authenticated .team-insight-head b,
+  html[data-theme="dark"] body.team-authenticated .team-goal-row b,
+  html[data-theme="dark"] body.team-authenticated .team-pipeline-step b,
+  html[data-theme="dark"] body.team-authenticated .team-opportunity-main b,
+  html[data-theme="dark"] body.team-authenticated .team-more-identity h2,
+  html[data-theme="dark"] body.team-authenticated .team-more-section-head b,
+  html[data-theme="dark"] body.team-authenticated .team-more-grid button,
+  html[data-theme="dark"] body.team-authenticated .team-more-controls button{
+    color:#eef2f6!important
+  }
+  html[data-theme="dark"] body.team-authenticated .team-home-search-results{box-shadow:0 18px 44px rgba(0,0,0,.35)!important}
+  html[data-theme="dark"] body.team-authenticated .team-home-searchbox button,
+  html[data-theme="dark"] body.team-authenticated .team-collapse-toggle{border-color:#2d3540!important;background:#141b23!important;color:#d0aa25!important}
+  html[data-theme="dark"] body.team-authenticated .team-goal-bar,
+  html[data-theme="dark"] body.team-authenticated .team-pipeline-bar{background:#242c35!important}
+  html[data-theme="dark"] body.team-authenticated .team-trend-chart .trend-grid{stroke:#242c35!important}
+  html[data-theme="dark"] body.team-authenticated .team-trend-chart circle{fill:#10161d!important}
+  html[data-theme="dark"] body.team-authenticated .team-more-controls button.danger{border-color:#4a2c31!important;background:#171316!important}
+}
+
+@media(max-width:390px){
+  #teamApp:not(.hidden) .team-insight-grid{gap:6px!important}
+  #teamApp:not(.hidden) .team-insight-card{min-height:138px!important;padding:9px!important}
+  #teamApp:not(.hidden) .team-more-grid{gap:6px!important}
+}
+
+@media(min-width:781px){
+  /* Desktop keeps new executive widgets clean without changing the approved desktop shell. */
+  .team-smart-summary,.team-home-search,.team-priority-center,.team-insight-grid,.team-more-page{max-width:100%}
+  .team-insight-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+  .team-insight-card{padding:14px;border:1px solid var(--r18-line);border-radius:14px;background:var(--r18-surface)}
+}
