@@ -1,0 +1,126 @@
+/* 24K MR ZERO — Team Dark Accent Correction v13.61
+   Screenshot QA: remove remaining cream/white controls from dark mode and protect content from bottom dock. */
+
+@media(max-width:780px){
+  /* Give all major views enough safe space above the fixed dock */
+  #teamApp:not(.hidden) .team-home-v2,
+  #teamApp:not(.hidden) .team-clients-v2,
+  #teamApp:not(.hidden) .team-chat-v2,
+  #teamApp:not(.hidden) .team-earnings-v2,
+  #teamApp:not(.hidden) .team-more-page{
+    padding-bottom:104px!important;
+  }
+
+  /* HOME — CTA buttons and pale icon tiles must stay dark */
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-home-card-head .tiny-btn,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-home-card .today-work-action,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-collapse-toggle,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-home-follow-btn,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-client-filter-trigger,
+  html[data-theme="dark"] body #teamApp:not(.hidden) #clientResetFilters{
+    background:#171a14!important;
+    border-color:#4e4523!important;
+    color:#d8ad25!important;
+    box-shadow:none!important;
+  }
+
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-home-quick-actions button>span,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .today-work-label>i,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-home-empty>span,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-home-empty.opportunity-empty>span,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-insight-head>i{
+    background:#1a1a13!important;
+    border:1px solid #3f381d!important;
+    color:#d7aa1f!important;
+  }
+
+  html[data-theme="dark"] body #teamApp:not(.hidden) .insights-head #teamRankChip{
+    background:#171a14!important;
+    border-color:#4e4523!important;
+    color:#d8ad25!important;
+  }
+
+  /* CLIENTS — live count and active chips */
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-clients-live{
+    background:#10161d!important;
+    border-color:#2a323c!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-client-status-tabs button.active{
+    background:#171a14!important;
+    border-color:#4e4523!important;
+    color:#d8ad25!important;
+  }
+
+  /* CHAT — Online chip and active filter stay dark, not mint/cream */
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-chat-online{
+    background:#0f1916!important;
+    border-color:#214438!important;
+    color:#55d0a4!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-chat-filter-row button.active{
+    background:#171a14!important;
+    border-color:#4e4523!important;
+    color:#d8ad25!important;
+  }
+
+  /* EARNINGS — remaining cream pills/tiles from screenshot */
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-earnings-kicker,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-earnings-auto,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-earnings-policy summary>span>i,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-earnings-hero-stat>span,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-progress-card .next-copy>i,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-broker-logo{
+    background:#171a14!important;
+    border-color:#4e4523!important;
+    color:#d8ad25!important;
+  }
+
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-earnings-auto>i{
+    background:#2b240b!important;
+    color:#f0bd17!important;
+  }
+
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-earning-icon,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-progress-icon{
+    background:#171a14!important;
+    border:1px solid #3e371c!important;
+    color:#d7aa20!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-earning-card.blue .premium-earning-icon,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-progress-card.blue .premium-progress-icon{
+    background:#111a27!important;
+    border-color:#283b55!important;
+    color:#79a4dc!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-earning-card.purple .premium-earning-icon,
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-progress-card.purple .premium-progress-icon{
+    background:#1b1525!important;
+    border-color:#3d2e50!important;
+    color:#b091da!important;
+  }
+
+  html[data-theme="dark"] body #teamApp:not(.hidden) .premium-progress-card .next-copy{
+    background:#0d1319!important;
+    border-color:#252e38!important;
+    color:#87919c!important;
+  }
+
+  /* MORE — active/account states should not flash white */
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-more-status{
+    background:#0f1916!important;
+    border-color:#214438!important;
+    color:#55d0a4!important;
+  }
+
+  /* White SVG/chart circle fill seen in dark performance card */
+  html[data-theme="dark"] body #teamApp:not(.hidden) .team-trend-chart circle{
+    fill:#10161d!important;
+  }
+
+  /* Keep native form backgrounds dark as an extra safety net */
+  html[data-theme="dark"] body #teamApp:not(.hidden) input,
+  html[data-theme="dark"] body #teamApp:not(.hidden) select,
+  html[data-theme="dark"] body #teamApp:not(.hidden) textarea{
+    color-scheme:dark!important;
+  }
+}
