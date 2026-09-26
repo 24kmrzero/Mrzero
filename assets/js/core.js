@@ -186,7 +186,8 @@
   let modalHistoryPop = false;
 
   function syncModalHistoryOpen(id) {
-    if (!id || id === 'appConfirmModal') return;
+    if (!id) return;
+    if (history.state?.__24kCourseModal) return;
     try {
       const current = history.state || {};
       if (current.__24kModal && current.__24kModalId === id) return;
@@ -217,7 +218,7 @@
     modal.setAttribute('aria-hidden', 'true');
     if (!document.querySelector('.app-modal.open')) document.body.classList.remove('modal-open');
 
-    if (!wasOpen || options.skipHistory || modalHistoryPop || id === 'appConfirmModal') return;
+    if (!wasOpen || options.skipHistory || modalHistoryPop) return;
     if (history.state?.__24kModal && history.state?.__24kModalId === id) {
       setTimeout(() => {
         if (document.querySelector('.app-modal.open')) return;
@@ -227,7 +228,7 @@
   }
 
   window.addEventListener('popstate', () => {
-    const open = [...document.querySelectorAll('.app-modal.open')].reverse().find(m => m.id !== 'appConfirmModal');
+    const open = [...document.querySelectorAll('.app-modal.open')].reverse()[0];
     if (!open) return;
     modalHistoryPop = true;
     closeModal(open.id, { skipHistory: true });
