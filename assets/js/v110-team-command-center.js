@@ -548,7 +548,10 @@ function renderEarnings(p){
       <div><span>Earnings</span><b>${money(b.earn)}</b></div>
     </div>
     <span class="premium-broker-progress"><i style="width:${Math.max(b.lots?7:0,Math.round(b.lots/maxLots*100))}%"></i></span>
-  </article>`).join('')
+  </article>`).join('');
+  requestAnimationFrame(()=>{
+    ['#earningsCards','#earningsProgress','#brokerGrid'].forEach(sel=>{const el=$(sel);if(el)el.scrollLeft=0})
+  })
 }
 
 function datesForPreset(preset){const now=new Date(),iso=d=>d.toISOString().slice(0,10);if(preset==='today')return[iso(now),iso(now)];if(preset==='yesterday'){const d=new Date(now);d.setDate(d.getDate()-1);return[iso(d),iso(d)]}if(preset==='7'){const d=new Date(now);d.setDate(d.getDate()-6);return[iso(d),iso(now)]}if(preset==='lastmonth'){const s=new Date(now.getFullYear(),now.getMonth()-1,1),e=new Date(now.getFullYear(),now.getMonth(),0);return[iso(s),iso(e)]}return[iso(now),iso(now)]}
