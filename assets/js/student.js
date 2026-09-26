@@ -784,7 +784,7 @@
 
   function renderArticles() {
     const query = document.getElementById('articleSearch')?.value.trim().toLowerCase() || '';
-    const rows = state.articles.filter(a => !query || `${a.title} ${a.excerpt} ${a.content}`.toLowerCase().includes(query));
+    const rows = state.articles.filter(a => !query || `${a.title} ${a.excerpt} ${a.content} ${a.content_roman||''}`.toLowerCase().includes(query));
     document.getElementById('articlesGrid').innerHTML = rows.length ? rows.map(article => `<article class="content-card compact-media-card"><div class="content-cover media-thumb-16x9 ${article.cover_url ? 'has-image' : ''}">${safeMediaImage(article.cover_url, article.title, 'fa-book-open')}</div><div class="content-body"><div class="course-meta content-meta-strong"><span>${A.escapeHtml(article.category || 'Education')}</span><span><i class="fa-solid fa-calendar"></i> ${A.formatDate(article.published_at)}</span></div><h3>${A.escapeHtml(article.title)}</h3><p>${A.escapeHtml(article.excerpt || '')}</p><button class="app-btn small gold" data-read-article="${article.id}">Read Article</button></div></article>`).join('') : empty('No article matches your search.', 'fa-newspaper');
   }
 
@@ -1557,6 +1557,12 @@
       if (receipt) await viewReceipt(receipt.dataset.viewReceipt);
       const resource = event.target.closest('[data-download-resource]');
       if (resource) await downloadResource(resource.dataset.downloadResource);
+      const articleTranslate = event.target.closest('[data-article-translate]');
+      if (articleTranslate) {
+        const article = state.articles.find(a => String(a.id) === String(articleTranslate.dataset.articleTranslate));
+        if (article) renderArticleReader(article, articleTranslate.dataset.language === 'roman' ? 'english' : 'roman');
+        return;
+      }
       const signalHistory = event.target.closest('[data-student-signal-history]');
       if (signalHistory) openSignalHistory(signalHistory.dataset.studentSignalHistory);
       const accessStepButton=event.target.closest('[data-access-step-target]'); if(accessStepButton){setAccessStep(accessStepButton.dataset.accessStepTarget||'home'); return;}
@@ -1897,64 +1903,26 @@
     A.openModal('chartModal');
   }
 
+  function renderArticleReader(article, language='english') {
+    const hasRoman=Boolean(String(article.content_roman||'').trim());
+    const roman=language==='roman'&&hasRoman;
+    const body=roman ? article.content_roman : (article.content || article.excerpt || '');
+    document.getElementById('articleModalTitle').textContent = article.title;
+    document.getElementById('articleModalContent').innerHTML = `
+      ${article.cover_url?`<img src="${attr(article.cover_url)}" alt="${attr(article.title)}" class="detail-image" loading="lazy" decoding="async">`:''}
+      <div class="article-reader-top">
+        <div class="course-meta"><span>${A.escapeHtml(article.category||'Education')}</span><span>${A.formatDate(article.published_at)}</span></div>
+        ${hasRoman?`<button type="button" class="article-translate-btn ${roman?'roman-active':''}" data-article-translate="${article.id}" data-language="${roman?'roman':'english'}"><i class="fa-solid fa-language"></i><span>${roman?'Read in English':'Roman English'}</span></button>`:''}
+      </div>
+      <div class="article-reader-language"><i class="fa-solid fa-circle"></i> ${roman?'Roman English':'English'}</div>
+      <div class="article-reader-body">${A.escapeHtml(body).replace(/\n/g,'<br>')}</div>`;
+  }
+
   function openArticle(id) {
     const article = state.articles.find(a => a.id === id); if (!article) return;
-    document.getElementById('articleModalTitle').textContent = article.title;
-    document.getElementById('articleModalContent').innerHTML = `${article.cover_url?`<img src="${attr(article.cover_url)}" alt="${attr(article.title)}" class="detail-image" loading="lazy" decoding="async">`:''}<div class="course-meta"><span>${A.escapeHtml(article.category||'Education')}</span><span>${A.formatDate(article.published_at)}</span></div><div>${A.escapeHtml(article.content || article.excerpt || '').replace(/\n/g,'<br>')}</div>`;
+    renderArticleReader(article,'english');
     A.openModal('articleModal');
   }
-
-  async function viewReceipt(id) {
-    const payment = state.payments.find(p => p.id === id); if (!payment?.receipt_path) return;
-    const { data, error } = await A.supabase.storage.from('payment-receipts').createSignedUrl(payment.receipt_path, 120);
-    if (error) return A.toast(A.friendlyError(error), 'error');
-    window.open(data.signedUrl, '_blank', 'noopener');
-  }
-
-  async function downloadResource(id) {
-    const resource = state.resources.find(r => r.id === id); if (!resource) return;
-    const { data, error } = await A.supabase.storage.from('course-resources').createSignedUrl(resource.file_path, 120, { download: resource.file_name });
-    if (error) return A.toast(A.friendlyError(error), 'error');
-    window.open(data.signedUrl, '_blank', 'noopener');
-  }
-
-  async function saveProfile(event) {
-    event.preventDefault(); const form = event.currentTarget; const button = form.querySelector('button[type="submit"]'); const values = Object.fromEntries(new FormData(form));
-    const experience = String(values.experience || '').trim();
-    if (!experience) return A.toast('Please enter your trading experience.', 'warning');
-    A.setLoading(button, true, 'Saving...');
-    try {
-      const changes = { experience };
-      const { error } = await A.supabase.from('profiles').update(changes).eq('id', state.user.id); if (error) throw error;
-      await auditEvent('profile_updated','profile',state.user.id,'success',{fields:['experience']});
-      Object.assign(state.profile, changes);
-      window.dispatchEvent(new CustomEvent('24k:student-base-updated',{detail:state}));
-      A.toast('Trading experience saved.', 'success');
-    } catch (error) { A.toast(A.friendlyError(error, 'Could not save trading experience.'), 'error'); }
-    finally { A.setLoading(button, false); }
-  }
-
-  async function submitSupport(event) {
-    event.preventDefault(); const form = event.currentTarget; const button = form.querySelector('button[type="submit"]'); const values = Object.fromEntries(new FormData(form));
-    A.setLoading(button, true, 'Submitting...');
-    try {
-      const row = { id: A.uid(), student_id: state.user.id, category: values.category, subject: String(values.subject).trim(), message: String(values.message).trim(), status: 'open', created_at: new Date().toISOString() };
-      const { error } = await A.supabase.from('support_requests').insert({ student_id: state.user.id, category: row.category, subject: row.subject, message: row.message }); if (error) throw error; await loadAll();
-      form.reset(); renderSupport(); await flushMyEmailQueue(); A.toast('Support request submitted.', 'success');
-    } catch (error) { A.toast(A.friendlyError(error, 'Could not submit request.'), 'error'); }
-    finally { A.setLoading(button, false); }
-  }
-
-  async function acceptRisk(event) {
-    event.preventDefault(); const form = event.currentTarget; const button = form.querySelector('button[type="submit"]'); A.setLoading(button, true, 'Saving...');
-    try {
-      const { error } = await A.supabase.from('terms_acceptances').upsert({ user_id: state.user.id, document_type: 'risk_disclaimer', version: A.cfg.RISK_VERSION, accepted_at: new Date().toISOString(), ip_address: null }, { onConflict: 'user_id,document_type,version' });
-        if (error) throw error;
-      state.riskAccepted = true; A.closeModal('riskModal'); A.toast('Risk disclaimer accepted.', 'success');
-    } catch (error) { A.toast(A.friendlyError(error, 'Could not record acceptance.'), 'error'); }
-    finally { A.setLoading(button, false); }
-  }
-
 
   function initDashboardClock() {
     const update = () => {
