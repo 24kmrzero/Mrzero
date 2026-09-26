@@ -19,7 +19,8 @@
   // Market sync primitives must exist before the first async data load.
   // Keep these above every await/call path to avoid temporal-dead-zone startup crashes.
   let marketContentSyncSeq = 0;
-
+  // Keep interactive state initialized before auth/data awaits so early clicks cannot hit TDZ.
+  const courseFlowModalIds = new Set(['courseDetailsModal','paymentMethodChoiceModal','paymentModal','bankPaymentModal','coursePaymentSuccessModal','premiumBankModal','premiumUsdtModal','premiumPaymentSuccessModal','ibVerificationModal']);
   // V10.21: Premium Access state must be initialized before the first renderAll().
   // Previously these const declarations lived below the initial await/load/render path,
   // so renderPremium() -> renderAccessSelection() hit the temporal dead zone and crashed
@@ -1646,8 +1647,6 @@
     if(/^TEST/i.test(v)) return false;
     return /^T[1-9A-HJ-NP-Za-km-z]{33}$/.test(v);
   }
-
-  const courseFlowModalIds = new Set(['courseDetailsModal','paymentMethodChoiceModal','paymentModal','bankPaymentModal','coursePaymentSuccessModal','premiumBankModal','premiumUsdtModal','premiumPaymentSuccessModal','ibVerificationModal']);
 
   function openCourseFlowModal(id){
     A.openModal(id);
