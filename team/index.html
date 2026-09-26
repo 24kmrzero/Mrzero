@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="/assets/css/v1351-team-home-premium.css?v=13.51">
   <link rel="stylesheet" href="/assets/css/v1352-team-ultra-premium.css?v=13.52">
   <link rel="stylesheet" href="/assets/css/v1353-team-home-qa-fix.css?v=13.53">
+  <link rel="stylesheet" href="/assets/css/v1354-team-home-fintech.css?v=13.54">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/assets/js/config.js?v=12.18"></script>
 </head>
@@ -75,30 +76,44 @@
         </div>
       </header>
 
-      <section class="view active team-home-v2" data-view-panel="overview">
+      <section class="view active team-home-v2 home-loading" data-view-panel="overview">
         <article class="team-home-hero">
           <div class="team-home-hero-top">
             <div class="team-home-hero-copy">
               <span class="team-home-kicker"><i class="fa-solid fa-bolt"></i> TEAM COMMAND CENTER</span>
-              <h2><span id="heroName">Team Member</span></h2>
-              <p><span id="teamMonthLabel">Current Month</span> workspace · clients, follow-ups and earnings in one place.</p>
+              <h2><span id="teamGreeting">Good day</span>, <span id="heroName">Team Member</span></h2>
+              <p><span id="teamMonthLabel">Current Month</span> · live team workspace</p>
             </div>
             <button type="button" class="team-home-profile-pill" data-view-jump="clients" aria-label="Open clients">
-  <span class="team-home-profile-avatar" id="teamHomeAvatar">TM</span>
-  <span class="team-home-profile-copy"><small>TEAM</small><b>Workspace</b></span>
-  <i class="fa-solid fa-chevron-right"></i>
-</button>
+              <span class="team-home-profile-avatar" id="teamHomeAvatar">TM</span>
+              <span class="team-home-profile-copy"><small>TEAM</small><b>Workspace</b></span>
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
           </div>
 
-          <div class="team-home-attention">
-            <div class="team-home-attention-copy">
-              <small><i class="team-priority-dot" id="teamPriorityDot"></i> TODAY'S PRIORITY</small>
-              <b><span id="todayAttention">0</span> leads need attention</b>
-              <em id="overviewMiniText">0 total clients · 0 converted · $0.00 earnings</em>
+          <div class="team-home-health-row">
+            <div class="team-health-meter">
+              <span class="team-health-ring" id="teamHealthRing" style="--health:0"><b id="teamHealthScore">0</b></span>
+              <div><small>TEAM HEALTH</small><b id="teamHealthLabel">Getting started</b><em id="teamHealthMeta">Live activity score</em></div>
             </div>
-            <button type="button" class="team-home-follow-btn" data-view-jump="clients"><i class="fa-solid fa-arrow-right"></i></button>
+            <div class="team-home-attention">
+              <div class="team-home-attention-copy">
+                <small><i class="team-priority-dot" id="teamPriorityDot"></i> TODAY'S PRIORITY</small>
+                <b><span id="todayAttention">0</span> leads need attention</b>
+                <em id="overviewMiniText">0 total clients · 0 converted · $0.00 earnings</em>
+              </div>
+              <button type="button" class="team-home-follow-btn" data-view-jump="clients"><i class="fa-solid fa-arrow-right"></i></button>
+            </div>
           </div>
         </article>
+
+        <section class="team-priority-center">
+          <div class="team-home-section-head">
+            <div><small>NOW</small><b>Priority Center</b></div>
+            <span id="teamPrioritySummary">All clear</span>
+          </div>
+          <div id="teamPriorityCards" class="team-priority-cards"></div>
+        </section>
 
         <div class="team-home-section-head">
           <div><small>LIVE OVERVIEW</small><b>Key Numbers</b></div>
@@ -134,6 +149,14 @@
             <div id="todayWork" class="today-work-list"></div>
           </article>
         </div>
+
+        <article class="panel-card team-home-card team-activity-card">
+          <div class="card-head team-home-card-head">
+            <div><small>LIVE FEED</small><h3>Recent Activity</h3></div>
+            <button class="tiny-btn" data-view-jump="history">History</button>
+          </div>
+          <div id="teamRecentActivity" class="team-activity-list"></div>
+        </article>
 
         <article class="panel-card compact-links team-home-links">
           <div class="card-head team-home-card-head">
@@ -228,8 +251,8 @@
     </main>
   <nav class="team-mobile-nav" id="teamMobileNav" aria-label="Team mobile navigation">
     <button class="active" data-team-mobile-view="overview"><i class="fa-solid fa-house"></i><span>Home</span></button>
-    <button data-team-mobile-view="clients"><i class="fa-solid fa-users"></i><span>Clients</span></button>
-    <button data-team-mobile-view="chat"><i class="fa-regular fa-message"></i><span>Chat</span></button>
+    <button data-team-mobile-view="clients"><i class="fa-solid fa-users"></i><span>Clients</span><em id="teamClientsBadge" class="team-mobile-badge" hidden>0</em></button>
+    <button data-team-mobile-view="chat"><i class="fa-regular fa-message"></i><span>Chat</span><em id="teamMobileChatBadge" class="team-mobile-badge" hidden>0</em></button>
     <button data-team-mobile-view="earnings"><i class="fa-solid fa-sack-dollar"></i><span>Earnings</span></button>
     <button data-team-mobile-profile><i class="fa-solid fa-ellipsis"></i><span>More</span></button>
   </nav>
@@ -237,7 +260,7 @@
   </div>
 
   <div id="teamToast" class="team-toast" aria-live="polite"></div>
-  <script src="/assets/js/v110-team-command-center.js?v=13.53"></script>
+  <script src="/assets/js/v110-team-command-center.js?v=13.54"></script>
   <script src="/assets/js/v1216-team-mobile.js?v=13.49.5"></script>
 </body>
 </html>
