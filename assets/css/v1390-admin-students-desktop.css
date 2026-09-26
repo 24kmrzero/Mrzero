@@ -1,3 +1,6 @@
+/* Keep newly added attribution columns invisible on mobile/tablet. */
+.student-attribution-col{display:none!important}
+
 /* 24K MR ZERO — Admin Student Management premium desktop v13.90
    Desktop only. Existing mobile Student Management remains untouched. */
 
@@ -365,7 +368,7 @@
 
   #p-students .student-management-table{
     width:100%!important;
-    min-width:1220px!important;
+    min-width:1510px!important;
     border-collapse:separate!important;
     border-spacing:0 7px!important;
     background:transparent!important;
@@ -460,17 +463,80 @@
     min-width:145px!important;
   }
 
+  #p-students .student-management-table .student-attribution-col{
+    display:table-cell!important;
+  }
+
   #p-students .student-management-table td:nth-child(5){
+    min-width:190px!important;
+  }
+
+  #p-students .student-management-table td:nth-child(6){
+    min-width:175px!important;
+  }
+
+  #p-students .student-management-table td:nth-child(7){
     min-width:145px!important;
   }
 
-  #p-students .student-management-table td:nth-child(8){
+  #p-students .student-management-table td:nth-child(10){
     min-width:145px!important;
   }
 
-  #p-students .student-management-table td:nth-child(5)>b{
+  #p-students .student-management-table td:nth-child(7)>b{
     color:#20262e!important;
     font-size:9.5px!important;
+  }
+
+  #p-students .student-source-cell,
+  #p-students .student-team-cell{
+    vertical-align:middle!important;
+  }
+
+  #p-students .student-origin{
+    min-height:24px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    gap:6px!important;
+    padding:0 8px!important;
+    border:1px solid #e3d9bc!important;
+    border-radius:999px!important;
+    background:#fffaf0!important;
+    color:#876300!important;
+    font-size:7.4px!important;
+    font-weight:900!important;
+    white-space:nowrap!important;
+  }
+
+  #p-students .student-origin.direct{
+    border-color:#dfe3e7!important;
+    background:#f7f8f9!important;
+    color:#69737f!important;
+  }
+
+  #p-students .student-origin-link,
+  #p-students .student-team-name{
+    display:block!important;
+    max-width:180px!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+    color:#20262e!important;
+    font-size:9.3px!important;
+    font-weight:900!important;
+  }
+
+  #p-students .student-team-empty{
+    min-height:23px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    padding:0 8px!important;
+    border:1px solid #e3e6e9!important;
+    border-radius:999px!important;
+    background:#f8f9fa!important;
+    color:#77818d!important;
+    font-size:7.2px!important;
+    font-weight:850!important;
   }
 
   #p-students .student-management-table .status-pill{
@@ -572,6 +638,15 @@
     border-radius:11px!important;
     background:#fafbfc!important;
     box-shadow:none!important;
+  }
+
+  #userDetailsModal .detail-card em{
+    display:block!important;
+    margin-top:4px!important;
+    color:#8b939d!important;
+    font-size:8px!important;
+    font-style:normal!important;
+    font-weight:650!important;
   }
 
   /* ===== Dark desktop parity ===== */
