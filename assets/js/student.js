@@ -90,14 +90,14 @@
   // captured sidebar clicks with stopImmediatePropagation() before this router.
   function installStudentNavigation() {
     const routeMap = {
-      dashboard: '/student/',
-      courses: '/student/courses/',
-      signals: '/student/signals/',
-      charts: '/student/charts/',
-      articles: '/student/articles/',
-      announcements: '/student/updates/',
-      premium: '/student/premium/',
-      profile: '/student/profile/'
+      dashboard: '/student/?v=13.73',
+      courses: '/student/courses/?v=13.73',
+      signals: '/student/signals/?v=13.73',
+      charts: '/student/charts/?v=13.73',
+      articles: '/student/articles/?v=13.73',
+      announcements: '/student/updates/?v=13.73',
+      premium: '/student/premium/?v=13.73',
+      profile: '/student/profile/?v=13.73'
     };
     const normalize = value => {
       const raw = String(value || '').toLowerCase().replace(/^#/, '').replace(/^\/+|\/+$/g, '');
