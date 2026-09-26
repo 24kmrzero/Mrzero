@@ -1,0 +1,338 @@
+/* 24K MR ZERO — Admin Dashboard Executive Desktop v13.76
+   Desktop-only refinement. Mobile/tablet <=900px intentionally untouched. */
+@media (min-width:901px){
+
+  /* tighter page canvas — no artificial bottom runway */
+  html[data-auth-scope="admin"] .app-content{
+    max-width:1580px!important;
+    padding:18px 24px 8px!important;
+  }
+  #p-dashboard.admin-dashboard-v2{
+    max-width:1450px!important;
+    margin:0 auto!important;
+    padding:0 0 2px!important;
+    min-height:0!important;
+  }
+
+  /* executive command hero */
+  #p-dashboard .admin-dashboard-hero{
+    position:relative!important;
+    isolation:isolate!important;
+    overflow:hidden!important;
+    padding:22px 24px 20px!important;
+    margin:0 0 14px!important;
+    border:1px solid #dfd8ca!important;
+    border-left:3px solid #d9a20b!important;
+    border-radius:18px!important;
+    background:
+      radial-gradient(520px 220px at 98% 5%,rgba(220,164,11,.095),transparent 68%),
+      linear-gradient(135deg,#fffefb 0%,#fff 58%,#fbf7ed 100%)!important;
+    box-shadow:0 14px 36px rgba(30,35,42,.055)!important;
+  }
+  #p-dashboard .admin-dashboard-hero:before{
+    content:""!important;
+    position:absolute!important;inset:0!important;z-index:-1!important;pointer-events:none!important;
+    background:
+      linear-gradient(115deg,transparent 0 68%,rgba(213,159,8,.035) 68% 69%,transparent 69% 73%,rgba(213,159,8,.028) 73% 74%,transparent 74%)!important;
+  }
+  #p-dashboard .admin-dashboard-hero:after{
+    content:"24K"!important;
+    position:absolute!important;right:24px!important;bottom:-42px!important;z-index:-1!important;
+    font-size:150px!important;font-weight:950!important;letter-spacing:-.09em!important;
+    color:rgba(190,139,0,.035)!important;opacity:1!important;pointer-events:none!important;
+  }
+  #p-dashboard .admin-dashboard-hero-top{
+    display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:22px!important
+  }
+  #p-dashboard .admin-dashboard-kicker{
+    display:inline-flex!important;align-items:center!important;gap:7px!important;
+    min-height:25px!important;padding:0 9px!important;
+    border:1px solid #e8d79c!important;border-radius:999px!important;
+    background:#fff8df!important;color:#946b00!important;
+    font-size:7px!important;font-weight:950!important;letter-spacing:.12em!important;
+    box-shadow:inset 0 1px rgba(255,255,255,.75)!important
+  }
+  #p-dashboard .admin-dashboard-hero h1{
+    margin:10px 0 5px!important;
+    color:#181c23!important;
+    font-size:30px!important;line-height:1.02!important;letter-spacing:-.045em!important;
+    text-shadow:none!important
+  }
+  #p-dashboard .admin-dashboard-hero p{
+    margin:0!important;max-width:720px!important;
+    color:#77808a!important;font-size:11px!important;line-height:1.45!important
+  }
+  #p-dashboard .admin-live-pill{
+    min-width:112px!important;
+    display:grid!important;grid-template-columns:9px auto!important;grid-template-rows:auto auto!important;
+    align-items:center!important;gap:2px 7px!important;
+    padding:10px 12px!important;
+    border:1px solid #cfe7dc!important;border-radius:12px!important;
+    background:rgba(247,252,249,.92)!important;
+    box-shadow:0 7px 18px rgba(29,117,84,.045)!important
+  }
+  #p-dashboard .admin-live-pill>i{
+    width:8px!important;height:8px!important;border-radius:50%!important;
+    background:#23bd83!important;box-shadow:0 0 0 5px rgba(35,189,131,.09)!important
+  }
+  #p-dashboard .admin-live-pill>b{color:#16845e!important;font-size:9px!important;letter-spacing:.04em!important}
+  #p-dashboard .admin-live-pill>small{grid-column:1/-1!important;color:#84918d!important;font-size:6.5px!important;text-align:center!important}
+
+  /* hero snapshot */
+  #p-dashboard .admin-platform-snapshot{
+    display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    gap:10px!important;margin-top:18px!important
+  }
+  #p-dashboard .admin-platform-snapshot .v1218-mini{
+    position:relative!important;overflow:hidden!important;
+    min-height:72px!important;padding:12px 13px!important;
+    display:grid!important;align-content:center!important;
+    border:1px solid #e4e6e9!important;border-radius:13px!important;
+    background:rgba(255,255,255,.88)!important;
+    box-shadow:0 7px 18px rgba(31,37,44,.035)!important
+  }
+  #p-dashboard .admin-platform-snapshot .v1218-mini:before{
+    content:""!important;position:absolute!important;left:0!important;top:13px!important;bottom:13px!important;width:2px!important;
+    background:linear-gradient(#e5ad15,#f0cf72)!important;border-radius:2px!important
+  }
+  #p-dashboard .admin-platform-snapshot .v1218-mini small{
+    color:#858f9a!important;font-size:8px!important;font-weight:800!important;letter-spacing:.02em!important
+  }
+  #p-dashboard .admin-platform-snapshot .v1218-mini b{
+    margin-top:5px!important;color:#1e242c!important;font-size:22px!important;line-height:1!important
+  }
+
+  /* proper section titles - no merged text */
+  #p-dashboard .admin-dashboard-section-head{
+    display:flex!important;align-items:center!important;justify-content:space-between!important;
+    gap:16px!important;margin:15px 2px 8px!important
+  }
+  #p-dashboard .admin-dashboard-section-head>div{
+    display:flex!important;align-items:baseline!important;gap:8px!important;min-width:0!important
+  }
+  #p-dashboard .admin-dashboard-section-head small{
+    display:inline-block!important;
+    color:#aa7c00!important;font-size:7px!important;font-weight:950!important;letter-spacing:.12em!important;text-transform:uppercase!important
+  }
+  #p-dashboard .admin-dashboard-section-head b{
+    display:inline-block!important;color:#242a32!important;font-size:14px!important;line-height:1.2!important;letter-spacing:-.025em!important
+  }
+  #p-dashboard .admin-dashboard-section-head>span{
+    color:#8b949e!important;font-size:8px!important
+  }
+
+  /* KPI command rail */
+  #p-dashboard #adminKpis.business-summary-grid,
+  #p-dashboard #adminKpis.kpi-grid{
+    display:grid!important;
+    grid-template-columns:repeat(6,minmax(0,1fr))!important;
+    gap:9px!important;margin:0!important
+  }
+  #p-dashboard #adminKpis .business-summary-card,
+  #p-dashboard #adminKpis .app-kpi{
+    position:relative!important;overflow:hidden!important;
+    min-width:0!important;min-height:88px!important;padding:13px!important;
+    display:grid!important;grid-template-columns:36px minmax(0,1fr) 12px!important;align-items:center!important;gap:10px!important;
+    border:1px solid #e2e5e8!important;border-radius:14px!important;
+    background:
+      radial-gradient(90px 54px at 100% 100%,rgba(219,163,9,.06),transparent 72%),
+      #fff!important;
+    box-shadow:0 8px 20px rgba(29,35,42,.04)!important;
+    color:#20252d!important;text-align:left!important
+  }
+  #p-dashboard #adminKpis .business-summary-card:before,
+  #p-dashboard #adminKpis .app-kpi:before{
+    content:""!important;position:absolute!important;left:0!important;top:12px!important;bottom:12px!important;width:2px!important;
+    background:linear-gradient(#e5ad15,rgba(229,173,21,.2))!important;border-radius:2px!important
+  }
+  #p-dashboard #adminKpis .business-summary-icon,
+  #p-dashboard #adminKpis .app-kpi>i:first-child{
+    width:36px!important;height:36px!important;display:grid!important;place-items:center!important;
+    border:1px solid #eadcae!important;border-radius:10px!important;
+    background:#fff8e4!important;color:#aa7900!important;font-size:10px!important
+  }
+  #p-dashboard #adminKpis .business-summary-copy b,
+  #p-dashboard #adminKpis .app-kpi b{
+    display:block!important;color:#1d232b!important;font-size:19px!important;line-height:1!important;margin:0 0 4px!important
+  }
+  #p-dashboard #adminKpis .business-summary-copy small,
+  #p-dashboard #adminKpis .app-kpi small{
+    display:block!important;color:#7e8894!important;font-size:7px!important;line-height:1.25!important
+  }
+  #p-dashboard #adminKpis .business-summary-arrow,
+  #p-dashboard #adminKpis .dashboard-nav-arrow{color:#a97b00!important;font-size:7px!important}
+  #p-dashboard #adminKpis .business-summary-card:hover,
+  #p-dashboard #adminKpis .app-kpi:hover{
+    transform:translateY(-2px)!important;
+    border-color:#dfc66e!important;
+    box-shadow:0 12px 28px rgba(45,38,19,.065)!important
+  }
+
+  /* quick actions = premium command buttons */
+  #p-dashboard .admin-dashboard-quick{
+    display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:9px!important
+  }
+  #p-dashboard .admin-dashboard-quick button{
+    position:relative!important;overflow:hidden!important;
+    min-height:74px!important;padding:11px 12px!important;
+    display:grid!important;grid-template-columns:36px minmax(0,1fr) 12px!important;align-items:center!important;gap:10px!important;
+    border:1px solid #e2e5e8!important;border-radius:14px!important;
+    background:#fff!important;color:#20252d!important;text-align:left!important;
+    box-shadow:0 7px 18px rgba(29,35,42,.035)!important
+  }
+  #p-dashboard .admin-dashboard-quick button>span{
+    width:36px!important;height:36px!important;display:grid!important;place-items:center!important;
+    border:1px solid #eadcae!important;border-radius:10px!important;
+    background:linear-gradient(145deg,#fff8e4,#fff2c7)!important;color:#a67600!important;font-size:10px!important
+  }
+  #p-dashboard .admin-dashboard-quick button>div{display:grid!important;gap:3px!important;min-width:0!important}
+  #p-dashboard .admin-dashboard-quick button b{color:#1e242c!important;font-size:10px!important;line-height:1.15!important}
+  #p-dashboard .admin-dashboard-quick button small{color:#88919c!important;font-size:7px!important}
+  #p-dashboard .admin-dashboard-quick button>i{color:#b18309!important;font-size:7px!important}
+  #p-dashboard .admin-dashboard-quick button:hover{
+    transform:translateY(-2px)!important;border-color:#dec56f!important;
+    background:linear-gradient(145deg,#fff,#fffaf0)!important;
+    box-shadow:0 12px 28px rgba(45,38,19,.06)!important
+  }
+
+  /* action + schedule area; do not stretch the short card to match the long card */
+  #p-dashboard .admin-dashboard-grid{
+    display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+    gap:12px!important;align-items:start!important;margin-top:12px!important
+  }
+  #p-dashboard .admin-dashboard-card{
+    position:relative!important;overflow:hidden!important;
+    height:auto!important;min-height:0!important;padding:17px!important;
+    border:1px solid #e1e4e8!important;border-radius:16px!important;
+    background:
+      radial-gradient(160px 80px at 100% 0%,rgba(216,160,8,.055),transparent 72%),
+      #fff!important;
+    box-shadow:0 9px 24px rgba(28,34,41,.04)!important
+  }
+  #p-dashboard .admin-dashboard-card:before{
+    content:""!important;position:absolute!important;left:0!important;top:16px!important;bottom:16px!important;width:2px!important;
+    background:linear-gradient(#e0a70e,rgba(224,167,14,.12))!important
+  }
+  #p-dashboard .admin-dashboard-card .app-card-head{margin-bottom:12px!important}
+  #p-dashboard .admin-dashboard-card .app-card-head small{
+    color:#aa7d03!important;font-size:7px!important;font-weight:950!important;letter-spacing:.10em!important
+  }
+  #p-dashboard .admin-dashboard-card .app-card-head h3{
+    margin:3px 0 3px!important;color:#1d232b!important;font-size:18px!important;letter-spacing:-.025em!important
+  }
+  #p-dashboard .admin-dashboard-card .app-card-head p{margin:0!important;color:#7f8995!important;font-size:9px!important}
+  #p-dashboard .admin-dashboard-card .app-btn{
+    min-height:34px!important;padding:0 11px!important;border-radius:9px!important;font-size:8px!important
+  }
+  #p-dashboard #dashboardPayments .empty-state{
+    min-height:128px!important;display:grid!important;place-items:center!important;align-content:center!important;
+    margin:0!important;padding:18px!important;border:1px dashed #e7dbba!important;border-radius:13px!important;
+    background:#fffaf0!important
+  }
+  #p-dashboard #dashboardSessions{
+    display:grid!important;gap:7px!important
+  }
+  #p-dashboard #dashboardSessions .activity-item{
+    min-height:54px!important;padding:8px 10px!important;border:1px solid #e6e0d4!important;border-radius:11px!important;
+    background:#fffaf1!important
+  }
+
+  /* analytics — static, compact, no sticky blank runway */
+  #p-dashboard .dashboard-analytics-column,
+  #p-dashboard .admin-dashboard-analytics{
+    position:static!important;top:auto!important;
+    display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    align-items:start!important;gap:12px!important;
+    margin:0!important;padding:0!important;min-height:0!important
+  }
+  #p-dashboard .analytics-card,
+  #p-dashboard .trend-analytics-card,
+  #p-dashboard .v933-recovery{
+    height:auto!important;min-height:0!important;
+    padding:15px!important;margin:0!important;
+    border:1px solid #e1e4e8!important;border-radius:16px!important;
+    background:
+      radial-gradient(160px 90px at 100% 0%,rgba(216,160,8,.045),transparent 72%),
+      #fff!important;
+    color:#20252d!important;
+    box-shadow:0 9px 24px rgba(28,34,41,.04)!important
+  }
+  #p-dashboard .analytics-head,
+  #p-dashboard .v933-analytics-head{margin-bottom:9px!important}
+  #p-dashboard .analytics-head h3,
+  #p-dashboard .v933-analytics-head h3{color:#1f252d!important;font-size:16px!important;margin:2px 0!important}
+  #p-dashboard .analytics-head p,
+  #p-dashboard .v933-analytics-head p{color:#7c8691!important;font-size:8px!important}
+  #p-dashboard .analytics-eyebrow,
+  #p-dashboard .v933-analytics-head .eyebrow{color:#aa7a00!important;font-size:6.5px!important;font-weight:950!important}
+  #p-dashboard .analytics-range-row,
+  #p-dashboard .v933-filter-row{display:flex!important;gap:5px!important;flex-wrap:wrap!important;margin:6px 0 8px!important}
+  #p-dashboard .analytics-range-row button,
+  #p-dashboard .v933-filter-row button{
+    min-height:25px!important;padding:0 8px!important;border:1px solid #e4dcc9!important;border-radius:999px!important;
+    background:#fffaf0!important;color:#6f7781!important;font-size:6.5px!important;font-weight:850!important
+  }
+  #p-dashboard .analytics-range-row button.active,
+  #p-dashboard .v933-filter-row button.active{
+    border-color:#d9a20b!important;background:#e3aa10!important;color:#211800!important
+  }
+  #p-dashboard .analytics-trend-chart.round,
+  #p-dashboard .v933-chart-surface{
+    min-height:170px!important;height:auto!important;padding:10px!important;
+    border:1px solid #e8dfca!important;border-radius:13px!important;
+    background:#fffaf1!important
+  }
+  #p-dashboard .analytics-donut-shell,
+  #p-dashboard .v933-donut{width:138px!important;height:138px!important}
+  #p-dashboard .analytics-performance-row,
+  #p-dashboard .v933-performance{
+    min-height:34px!important;margin-top:8px!important;padding-top:8px!important;
+    border-top:1px solid #ece7dd!important;color:#858e98!important;font-size:7px!important
+  }
+
+  /* explicit end-of-dashboard cleanup */
+  #p-dashboard .admin-dashboard-analytics:last-child{margin-bottom:0!important}
+  #p-dashboard:after{display:none!important}
+  .app-main{min-height:0!important}
+}
+
+/* Dark theme desktop parity without touching mobile */
+@media (min-width:901px){
+  html[data-theme="dark"] #p-dashboard .admin-dashboard-hero{
+    border-color:#2b3139!important;border-left-color:#d7a10b!important;
+    background:
+      radial-gradient(520px 220px at 98% 5%,rgba(215,161,11,.08),transparent 68%),
+      linear-gradient(135deg,#11161c,#0d1218 62%,#151209)!important;
+    box-shadow:0 14px 36px rgba(0,0,0,.18)!important
+  }
+  html[data-theme="dark"] #p-dashboard .admin-dashboard-hero h1,
+  html[data-theme="dark"] #p-dashboard .admin-dashboard-section-head b,
+  html[data-theme="dark"] #p-dashboard #adminKpis .business-summary-copy b,
+  html[data-theme="dark"] #p-dashboard #adminKpis .app-kpi b,
+  html[data-theme="dark"] #p-dashboard .admin-dashboard-quick button b,
+  html[data-theme="dark"] #p-dashboard .admin-dashboard-card .app-card-head h3,
+  html[data-theme="dark"] #p-dashboard .analytics-head h3,
+  html[data-theme="dark"] #p-dashboard .v933-analytics-head h3{color:#f2f5f7!important}
+  html[data-theme="dark"] #p-dashboard .admin-platform-snapshot .v1218-mini,
+  html[data-theme="dark"] #p-dashboard #adminKpis .business-summary-card,
+  html[data-theme="dark"] #p-dashboard #adminKpis .app-kpi,
+  html[data-theme="dark"] #p-dashboard .admin-dashboard-quick button,
+  html[data-theme="dark"] #p-dashboard .admin-dashboard-card,
+  html[data-theme="dark"] #p-dashboard .analytics-card,
+  html[data-theme="dark"] #p-dashboard .trend-analytics-card,
+  html[data-theme="dark"] #p-dashboard .v933-recovery{
+    background:#10151b!important;border-color:#29313a!important;box-shadow:none!important
+  }
+  html[data-theme="dark"] #p-dashboard .admin-platform-snapshot .v1218-mini b{color:#f2f5f7!important}
+  html[data-theme="dark"] #p-dashboard .admin-dashboard-quick button>span,
+  html[data-theme="dark"] #p-dashboard #adminKpis .business-summary-icon,
+  html[data-theme="dark"] #p-dashboard #adminKpis .app-kpi>i:first-child{
+    background:#19180f!important;border-color:#4a4021!important;color:#d8ad25!important
+  }
+  html[data-theme="dark"] #p-dashboard #dashboardPayments .empty-state,
+  html[data-theme="dark"] #p-dashboard #dashboardSessions .activity-item,
+  html[data-theme="dark"] #p-dashboard .analytics-trend-chart.round,
+  html[data-theme="dark"] #p-dashboard .v933-chart-surface{
+    background:#141810!important;border-color:#323025!important
+  }
+}
