@@ -1,0 +1,140 @@
+/* 24K MR ZERO — Team dark-mode QA + mobile rail correction v13.59
+   Final screenshot-driven parity pass. */
+
+@media(max-width:780px){
+  /* HOME: executive insight cards must stay dark in dark theme */
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-insight-card{
+    border-color:#2a323c!important;
+    background:#10161d!important;
+    box-shadow:none!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-insight-head b,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-goal-row b,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-pipeline-step b,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-opportunity-main b{
+    color:#eef2f6!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-insight-head small,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-goal-row span,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-pipeline-step span,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-opportunity-main small,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-trend-labels{
+    color:#7f8996!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-goal-bar,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-pipeline-bar{
+    background:#242c35!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-projection-row{
+    border-top-color:#252d36!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-trend-chart .trend-grid{
+    stroke:#242c35!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-trend-chart circle{
+    fill:#10161d!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-home-empty.opportunity-empty{
+    border-color:#29313a!important;
+    background:#0f151b!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-home-empty.opportunity-empty b{
+    color:#eef2f6!important;
+  }
+
+  /* MORE: remove white cards in dark mode and restore readable headings */
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-more-identity{
+    border-color:#2a323c!important;
+    background:
+      radial-gradient(180px 90px at 100% 0%,rgba(240,185,11,.05),transparent 72%),
+      #10161d!important;
+    box-shadow:none!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-more-identity h2,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-more-section-head b{
+    color:#eef2f6!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-more-identity p,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-more-section-head>span{
+    color:#7f8996!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-more-grid button,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-more-controls button{
+    border-color:#2a323c!important;
+    background:#10161d!important;
+    color:#eef2f6!important;
+    box-shadow:none!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-more-grid button b,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-more-controls button b{
+    color:#eef2f6!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-more-grid button small,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-more-controls button small{
+    color:#7f8996!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-more-grid button>i:first-child{
+    background:rgba(240,185,11,.08)!important;
+    color:#d8ad22!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-more-controls button>i{
+    background:#151b23!important;
+    color:#8e99a6!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-more-controls button.danger{
+    border-color:#4a2c31!important;
+    background:#171316!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-more-controls button.danger>i{
+    background:#25171a!important;
+    color:#dc6873!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-more-controls button.danger b{
+    color:#df6e78!important;
+  }
+
+  /* EARNINGS: rails start cleanly and communicate horizontal swipe */
+  #teamApp:not(.hidden) .team-earnings-source-rail,
+  #teamApp:not(.hidden) .team-earnings-progress,
+  #teamApp:not(.hidden) .team-broker-grid{
+    scroll-snap-type:x proximity!important;
+    scroll-padding-left:0!important;
+    overscroll-behavior-x:contain!important;
+  }
+  #teamApp:not(.hidden) .premium-earning-card,
+  #teamApp:not(.hidden) .premium-progress-card,
+  #teamApp:not(.hidden) .premium-broker-card{
+    scroll-snap-align:start!important;
+  }
+
+  /* Prevent the first earnings source from being visually shaved by inherited layout */
+  #teamApp:not(.hidden) .team-earnings-source-rail{
+    padding-left:0!important;
+    margin-left:0!important;
+    transform:none!important;
+  }
+  #teamApp:not(.hidden) .team-earnings-source-rail .premium-earning-card:first-child{
+    margin-left:0!important;
+  }
+
+  /* Keep cards visually consistent in dark mode */
+  html[data-theme="dark"] #teamApp:not(.hidden) .premium-earning-card,
+  html[data-theme="dark"] #teamApp:not(.hidden) .premium-progress-card,
+  html[data-theme="dark"] #teamApp:not(.hidden) .premium-broker-card{
+    border-color:#2a323c!important;
+    background:#10161d!important;
+  }
+
+  /* Clients empty state shouldn't feel excessively tall on an empty account */
+  #teamApp:not(.hidden) .team-client-empty{
+    min-height:132px!important;
+  }
+
+  /* Small contrast correction for section labels across dark pages */
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-home-section-head b,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-client-results-head b,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-chat-section-head b,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-earnings-section-head b{
+    color:#eef2f6!important;
+  }
+}
