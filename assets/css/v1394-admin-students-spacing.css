@@ -1,0 +1,188 @@
+/* 24K MR ZERO — Student table spacing refinement v13.94
+   Desktop only. Mobile remains unchanged. */
+@media (min-width:901px){
+
+  #p-students>.table-scroll{
+    overflow-x:hidden!important;
+    padding:7px!important;
+  }
+
+  #p-students .student-management-table{
+    width:100%!important;
+    min-width:0!important;
+    table-layout:auto!important;
+    border-collapse:separate!important;
+    border-spacing:0 7px!important;
+  }
+
+  /* Use one measured grid for header + every student row */
+  #p-students .student-management-table thead,
+  #p-students .student-management-table tbody{
+    display:block!important;
+    width:100%!important;
+  }
+
+  #p-students .student-management-table thead tr,
+  #p-students .student-management-table tbody tr.student-record-main{
+    width:100%!important;
+    display:grid!important;
+    grid-template-columns:
+      38px
+      42px
+      minmax(135px,1.35fr)
+      minmax(95px,.82fr)
+      minmax(115px,1fr)
+      minmax(145px,1.22fr)
+      minmax(125px,1.02fr)
+      minmax(105px,.88fr)
+      minmax(105px,.88fr)
+      minmax(75px,.62fr)
+      minmax(115px,.92fr)
+      minmax(155px,1.15fr)!important;
+    align-items:center!important;
+    column-gap:0!important;
+  }
+
+  #p-students .student-management-table thead th,
+  #p-students .student-management-table tbody tr.student-record-main td{
+    width:auto!important;
+    min-width:0!important;
+    max-width:none!important;
+    margin:0!important;
+    padding:8px 7px!important;
+    box-sizing:border-box!important;
+  }
+
+  #p-students .student-management-table thead th{
+    min-height:35px!important;
+    display:flex!important;
+    align-items:center!important;
+    border:0!important;
+    background:transparent!important;
+    font-size:6.6px!important;
+  }
+
+  #p-students .student-management-table tbody tr.student-record-main td{
+    min-height:56px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:center!important;
+    border-top:1px solid #e4e7ea!important;
+    border-bottom:1px solid #e4e7ea!important;
+    background:#fff!important;
+  }
+
+  /* Serial + checkbox sit close together */
+  #p-students .student-management-table thead th:nth-child(1),
+  #p-students .student-management-table tbody tr.student-record-main td:nth-child(1),
+  #p-students .student-management-table thead th:nth-child(2),
+  #p-students .student-management-table tbody tr.student-record-main td:nth-child(2){
+    align-items:center!important;
+    justify-content:center!important;
+    text-align:center!important;
+    padding-left:3px!important;
+    padding-right:3px!important;
+  }
+
+  #p-students .student-management-table tbody tr.student-record-main td:nth-child(1){
+    border-left:2px solid #d8a20a!important;
+    border-radius:11px 0 0 11px!important;
+  }
+
+  #p-students .student-management-table tbody tr.student-record-main td:nth-child(12){
+    border-right:1px solid #e4e7ea!important;
+    border-radius:0 11px 11px 0!important;
+  }
+
+  #p-students .student-serial-number{
+    width:25px!important;
+    height:25px!important;
+    margin:0 auto!important;
+  }
+
+  #p-students .student-management-table input[type="checkbox"]{
+    width:15px!important;
+    height:15px!important;
+    margin:0!important;
+  }
+
+  /* Student + compact record text */
+  #p-students .student-management-table tbody tr.student-record-main td:nth-child(3){
+    align-items:flex-start!important;
+  }
+
+  #p-students .student-management-table .text-link{
+    max-width:100%!important;
+  }
+
+  #p-students .student-management-table .text-link b{
+    max-width:100%!important;
+    font-size:9px!important;
+  }
+
+  #p-students .student-management-table td small{
+    max-width:100%!important;
+    font-size:6.5px!important;
+  }
+
+  #p-students .student-source-cell,
+  #p-students .student-team-cell{
+    align-items:flex-start!important;
+  }
+
+  #p-students .student-origin,
+  #p-students .student-team-empty{
+    min-height:21px!important;
+    padding:0 6px!important;
+    font-size:6.2px!important;
+  }
+
+  #p-students .student-origin-link,
+  #p-students .student-team-name{
+    width:100%!important;
+    font-size:7.7px!important;
+  }
+
+  /* Enrollment/payment/access alignment */
+  #p-students .student-management-table tbody tr.student-record-main td:nth-child(9),
+  #p-students .student-management-table tbody tr.student-record-main td:nth-child(10),
+  #p-students .student-management-table tbody tr.student-record-main td:nth-child(11){
+    align-items:flex-start!important;
+  }
+
+  #p-students .student-management-table .status-pill{
+    min-height:22px!important;
+    padding:0 6px!important;
+    font-size:6.2px!important;
+  }
+
+  /* Actions stay inside table width */
+  #p-students .student-management-table tbody tr.student-record-main td:nth-child(12){
+    align-items:stretch!important;
+    padding-left:5px!important;
+    padding-right:5px!important;
+  }
+
+  #p-students .student-management-table .table-actions{
+    width:100%!important;
+    display:grid!important;
+    grid-template-columns:.72fr 1.05fr .82fr!important;
+    gap:4px!important;
+    align-items:center!important;
+  }
+
+  #p-students .student-management-table .table-actions .app-btn{
+    width:100%!important;
+    min-width:0!important;
+    min-height:28px!important;
+    height:28px!important;
+    padding:0 3px!important;
+    font-size:6.15px!important;
+    border-radius:7px!important;
+  }
+
+  /* remove legacy widths that can reopen horizontal overflow */
+  #p-students .student-management-table td:nth-child(n){
+    min-width:0!important;
+  }
+}
