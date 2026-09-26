@@ -26,6 +26,7 @@
   <link rel="stylesheet" href="/assets/css/v1353-team-home-qa-fix.css?v=13.53">
   <link rel="stylesheet" href="/assets/css/v1354-team-home-fintech.css?v=13.54">
   <link rel="stylesheet" href="/assets/css/v1355-team-executive.css?v=13.55.1">
+  <link rel="stylesheet" href="/assets/css/v1356-team-clients.css?v=13.56">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/assets/js/config.js?v=12.18"></script>
 </head>
@@ -213,10 +214,50 @@
         </article>
       </section>
 
-      <section class="view" data-view-panel="clients">
-        <div class="section-head"><div><h2>My Clients</h2><p>Your complete old + current client work list. Use filters to find who needs attention.</p></div><span class="section-badge" id="clientCountBadge">0 clients</span></div>
-        <div class="client-filter-card"><input id="clientSearch" type="search" placeholder="Search name, WhatsApp, email or Client ID..."><select id="clientCourseFilter"><option value="all">All Courses</option><option value="level1">Basic Level 1</option><option value="level2">Level 2</option><option value="vip">VIP</option></select><select id="clientStatusFilter"><option value="all">All Status</option><option value="new">New</option><option value="contacted">Contacted</option><option value="interested">Interested</option><option value="follow_up">Follow-up</option><option value="converted">Converted</option><option value="inactive">Not Interested</option></select></div>
-        <div id="clientsCards" class="clients-card-list"></div>
+      <section class="view team-clients-v2" data-view-panel="clients">
+        <article class="team-clients-command">
+          <div class="team-clients-command-top">
+            <div>
+              <span class="team-clients-kicker"><i class="fa-solid fa-user-group"></i> CLIENT WORKSPACE</span>
+              <h2>My Clients</h2>
+              <p>Assigned leads, follow-ups and conversions in one focused workspace.</p>
+            </div>
+            <span class="team-clients-live"><i></i><b id="clientCountBadge">0</b><small>clients</small></span>
+          </div>
+
+          <div id="clientSummary" class="team-client-summary"></div>
+
+          <div class="team-client-search-row">
+            <label class="team-client-search">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input id="clientSearch" type="search" autocomplete="off" placeholder="Search name, WhatsApp, email or Client ID...">
+              <button type="button" id="clientSearchClear" aria-label="Clear search" hidden><i class="fa-solid fa-xmark"></i></button>
+            </label>
+            <button type="button" class="team-client-filter-trigger" id="clientFilterToggle" aria-expanded="false"><i class="fa-solid fa-sliders"></i><span>Filters</span><em id="clientFilterCount" hidden>0</em></button>
+          </div>
+
+          <div class="team-client-status-tabs" id="clientStatusTabs">
+            <button type="button" class="active" data-client-status-chip="all">All</button>
+            <button type="button" data-client-status-chip="new">New</button>
+            <button type="button" data-client-status-chip="follow_up">Follow-up</button>
+            <button type="button" data-client-status-chip="interested">Interested</button>
+            <button type="button" data-client-status-chip="converted">Converted</button>
+          </div>
+
+          <div class="team-client-filter-panel" id="clientFilterPanel" hidden>
+            <label><span>Course</span><select id="clientCourseFilter"><option value="all">All Courses</option><option value="level1">Basic Level 1</option><option value="level2">Level 2</option><option value="vip">VIP</option></select></label>
+            <label><span>Status</span><select id="clientStatusFilter"><option value="all">All Status</option><option value="new">New</option><option value="contacted">Contacted</option><option value="interested">Interested</option><option value="follow_up">Follow-up</option><option value="converted">Converted</option><option value="inactive">Not Interested</option></select></label>
+            <label><span>Sort</span><select id="clientSort"><option value="priority">Priority First</option><option value="newest">Newest Assigned</option><option value="oldest">Oldest Assigned</option><option value="name">Name A–Z</option></select></label>
+            <button type="button" id="clientResetFilters"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+          </div>
+        </article>
+
+        <div class="team-client-results-head">
+          <div><small>WORK LIST</small><b id="clientResultsTitle">All Clients</b></div>
+          <span id="clientResultsMeta">0 results</span>
+        </div>
+
+        <div id="clientsCards" class="clients-card-list team-client-card-list"></div>
       </section>
 
       <section class="view" data-view-panel="search">
@@ -332,7 +373,7 @@
   </div>
 
   <div id="teamToast" class="team-toast" aria-live="polite"></div>
-  <script src="/assets/js/v110-team-command-center.js?v=13.55.2"></script>
+  <script src="/assets/js/v110-team-command-center.js?v=13.56"></script>
   <script src="/assets/js/v1216-team-mobile.js?v=13.55"></script>
 </body>
 </html>
