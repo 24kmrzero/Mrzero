@@ -1,6 +1,6 @@
 (function(){
 'use strict';
-/* mentor build 13.41 */
+/* mentor build 13.42 */
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js',{scope:'/'}).catch(e=>console.warn('[24K Mentor PWA]',e?.message||e)));
 }
@@ -78,7 +78,25 @@ function showView(k){
   closeMentorMenu();
   if(window.innerWidth<=760)window.scrollTo({top:0,behavior:'smooth'});
 }
-function openModal(kind){const id=`#mentor${kind[0].toUpperCase()+kind.slice(1)}Modal`,modal=$(id);if(!modal)return;modal.classList.add('open');const body=modal.querySelector('.mentor-modal-body'),card=modal.querySelector('.mentor-modal-card');if(body)body.scrollTop=0;if(card)card.scrollTop=0;requestAnimationFrame(()=>{if(body)body.scrollTop=0;if(card)card.scrollTop=0})}function closeModals(){document.querySelectorAll('.mentor-modal').forEach(x=>x.classList.remove('open'))}function resetMentorEditor(kind){if(kind==='signal'){const f=$('#mentorSignalForm');f?.reset();if(f?.elements.id)f.elements.id.value='';$$('[data-note-preset]').forEach(x=>x.classList.remove('active'));const t=$('#mentorSignalModalTitle');if(t)t.textContent='New Signal';renderMentorPipPreview()}else if(kind==='chart'){const f=$('#mentorChartForm');f?.reset();if(f?.elements.id)f.elements.id.value='';if(f?.elements.existing_image)f.elements.existing_image.value='';syncEditorFileLabel('chart',null);const t=$('#mentorChartModalTitle');if(t)t.textContent='New Chart'}else if(kind==='article'){const f=$('#mentorArticleForm');f?.reset();if(f?.elements.id)f.elements.id.value='';if(f?.elements.existing_cover)f.elements.existing_cover.value='';if(f?.elements.is_published)f.elements.is_published.checked=true;const lang=f?.querySelector('input[name="content_language"][value="english"]');if(lang)lang.checked=true;syncArticleEditorUI();syncEditorFileLabel('article',null);const t=$('#mentorArticleModalTitle');if(t)t.textContent='New Article'}else if(kind==='banner'){const f=$('#mentorBannerForm');f?.reset();if(f?.elements.id)f.elements.id.value='';if(f?.elements.existing_image)f.elements.existing_image.value='';if(f?.elements.is_published)f.elements.is_published.checked=true;const t=$('#mentorBannerModalTitle');if(t)t.textContent='New Banner'}}
+function openModal(kind){
+  const id=`#mentor${kind[0].toUpperCase()+kind.slice(1)}Modal`,modal=$(id);if(!modal)return;
+  try{
+    if(!history.state?.__24kMentorModal){
+      history.pushState({...history.state,__24kMentorModal:true,__24kMentorModalId:modal.id},'',location.href);
+    }
+  }catch{}
+  modal.classList.add('open');
+  const body=modal.querySelector('.mentor-modal-body'),card=modal.querySelector('.mentor-modal-card');
+  if(body)body.scrollTop=0;if(card)card.scrollTop=0;
+  requestAnimationFrame(()=>{if(body)body.scrollTop=0;if(card)card.scrollTop=0})
+}
+function closeModals(fromHistory=false){
+  const open=document.querySelector('.mentor-modal.open');
+  if(open&&!fromHistory&&history.state?.__24kMentorModal){
+    try{history.back();return}catch{}
+  }
+  document.querySelectorAll('.mentor-modal').forEach(x=>x.classList.remove('open'))
+}function resetMentorEditor(kind){if(kind==='signal'){const f=$('#mentorSignalForm');f?.reset();if(f?.elements.id)f.elements.id.value='';$$('[data-note-preset]').forEach(x=>x.classList.remove('active'));const t=$('#mentorSignalModalTitle');if(t)t.textContent='New Signal';renderMentorPipPreview()}else if(kind==='chart'){const f=$('#mentorChartForm');f?.reset();if(f?.elements.id)f.elements.id.value='';if(f?.elements.existing_image)f.elements.existing_image.value='';syncEditorFileLabel('chart',null);const t=$('#mentorChartModalTitle');if(t)t.textContent='New Chart'}else if(kind==='article'){const f=$('#mentorArticleForm');f?.reset();if(f?.elements.id)f.elements.id.value='';if(f?.elements.existing_cover)f.elements.existing_cover.value='';if(f?.elements.is_published)f.elements.is_published.checked=true;syncArticleEditorUI();syncEditorFileLabel('article',null);const t=$('#mentorArticleModalTitle');if(t)t.textContent='New Article'}else if(kind==='banner'){const f=$('#mentorBannerForm');f?.reset();if(f?.elements.id)f.elements.id.value='';if(f?.elements.existing_image)f.elements.existing_image.value='';if(f?.elements.is_published)f.elements.is_published.checked=true;const t=$('#mentorBannerModalTitle');if(t)t.textContent='New Banner'}}
 async function requireMentor(){
   if(!sb)throw new Error('Supabase configuration is missing.');
   let user=null;
@@ -836,7 +854,7 @@ function renderArticles(){
         ${x.cover_url?`<img src="${esc(x.cover_url)}" alt="${esc(x.title||category)}" loading="lazy">`:`<div class="mentor-article-placeholder"><i class="fa-solid fa-newspaper"></i><span>24K EDITORIAL</span></div>`}
         <div class="mentor-article-media-top">
           <span class="category">${esc(category)}</span>
-          <span class="language">${x.content_language==='roman_english'?'Roman':'EN'}</span>
+          <span class="language">${x.content_roman?'EN + Roman':'EN'}</span>
           <span class="status ${x.is_published?'published':'draft'}">${x.is_published?'Published':'Draft'}</span>
         </div>
         <span class="mentor-article-index">${String(index+1).padStart(2,'0')}</span>
@@ -922,24 +940,27 @@ function syncEditorFileLabel(kind,file){
 }
 function syncArticleEditorUI(){
   const f=$('#mentorArticleForm');if(!f)return;
-  const lang=f.querySelector('input[name="content_language"]:checked')?.value||'english';
-  f.dataset.language=lang;
-  const title=f.elements.title,excerpt=f.elements.excerpt,content=f.elements.content;
-  if(lang==='roman_english'){
-    if(title)title.placeholder='Example: Gold me confirmation ka wait kyun zaroori hai';
-    if(excerpt)excerpt.placeholder='Article ka short preview Roman English me likhein...';
-    if(content)content.placeholder='Roman English me complete article yahan likhein...'
-  }else{
-    if(title)title.placeholder='How to build a high-probability trading bias';
-    if(excerpt)excerpt.placeholder='A short preview shown on the article card...';
-    if(content)content.placeholder='Write the complete article here...'
-  }
   const published=Boolean(f.elements.is_published?.checked),stateEl=f.querySelector('[data-publish-state]');
   if(stateEl){stateEl.classList.toggle('draft',!published);stateEl.innerHTML=published?'<i class="fa-solid fa-circle-check"></i> Ready to publish':'<i class="fa-solid fa-pen"></i> Saving as draft'}
 }
 function editChart(id){const x=state.charts.find(v=>v.id===id);if(!x)return;const f=$('#mentorChartForm');f.elements.id.value=x.id;f.elements.existing_image.value=x.image_url||'';f.elements.title.value=x.title||'';f.elements.symbol.value=x.symbol||'';f.elements.timeframe.value=x.timeframe||'';f.elements.summary.value=x.summary||'';f.elements.details.value=x.details||'';syncEditorFileLabel('chart',x.image_url?{name:'Current chart image retained'}:null);$('#mentorChartModalTitle').textContent='Edit Chart';openModal('chart')}
 async function saveChart(e){e.preventDefault();const f=e.currentTarget,b=f.querySelector('button[type=submit]'),d=Object.fromEntries(new FormData(f)),oldImage=String(d.existing_image||'');let image=null,saved=false;b.disabled=true;try{image=await upload(f.elements.image.files[0],'charts');const row={title:String(d.title||'').trim(),symbol:String(d.symbol||'').trim().toUpperCase(),timeframe:String(d.timeframe||'').trim()||null,summary:String(d.summary||'').trim(),details:String(d.details||'').trim()||null,image_url:image||oldImage||null,is_published:true};if(!row.title||!row.symbol||!row.summary)throw new Error('Title, symbol and summary are required.');let r;if(d.id)r=await sb.from('charts').update(row).eq('id',d.id).eq('created_by',state.user.id);else r=await sb.from('charts').insert({...row,published_at:new Date().toISOString(),created_by:state.user.id});if(r.error)throw r.error;saved=true;if(image&&oldImage&&image!==oldImage)await removeContentAsset(oldImage);f.reset();f.elements.id.value='';f.elements.existing_image.value='';$('#mentorChartModalTitle').textContent='New Chart';closeModals();toast(d.id?'Chart updated.':'Chart published.');await load()}catch(err){if(image&&!saved)await removeContentAsset(image);toast(err.message||'Could not save chart.')}finally{b.disabled=false}}
-function editArticle(id){const x=state.articles.find(v=>v.id===id);if(!x)return;const f=$('#mentorArticleForm');f.elements.id.value=x.id;f.elements.existing_cover.value=x.cover_url||'';f.elements.title.value=x.title||'';if(f.elements.category)f.elements.category.value=x.category||'';f.elements.excerpt.value=x.excerpt||'';f.elements.content.value=x.content||'';f.elements.is_published.checked=Boolean(x.is_published);const lang=x.content_language||'english',radio=f.querySelector('input[name="content_language"][value="'+lang+'"]')||f.querySelector('input[name="content_language"][value="english"]');if(radio)radio.checked=true;syncArticleEditorUI();syncEditorFileLabel('article',x.cover_url?{name:'Current cover image retained'}:null);$('#mentorArticleModalTitle').textContent='Edit Article';openModal('article')}
+function editArticle(id){
+  const x=state.articles.find(v=>v.id===id);if(!x)return;
+  const f=$('#mentorArticleForm');
+  f.elements.id.value=x.id;
+  f.elements.existing_cover.value=x.cover_url||'';
+  f.elements.title.value=x.title||'';
+  if(f.elements.category)f.elements.category.value=x.category||'';
+  f.elements.excerpt.value=x.excerpt||'';
+  f.elements.content.value=x.content||'';
+  if(f.elements.content_roman)f.elements.content_roman.value=x.content_roman||'';
+  f.elements.is_published.checked=Boolean(x.is_published);
+  syncArticleEditorUI();
+  syncEditorFileLabel('article',x.cover_url?{name:'Current cover image retained'}:null);
+  $('#mentorArticleModalTitle').textContent='Edit Article';
+  openModal('article')
+}
 async function saveArticle(e){
   e.preventDefault();
   const f=e.currentTarget,b=f.querySelector('button[type=submit]'),d=Object.fromEntries(new FormData(f)),published=f.elements.is_published.checked,oldCover=String(d.existing_cover||'');
@@ -947,9 +968,9 @@ async function saveArticle(e){
   b.disabled=true;
   try{
     cover=await upload(f.elements.cover.files[0],'articles');
-    const title=String(d.title||'').trim(),content=String(d.content||'').trim(),language=['english','roman_english'].includes(String(d.content_language||''))?String(d.content_language):'english';
-    const row={title,category:String(d.category||'').trim()||'General',excerpt:String(d.excerpt||'').trim()||null,content,content_language:language,cover_url:cover||oldCover||null,is_published:published,published_at:published?new Date().toISOString():null};
-    if(!title||!content)throw new Error('Title and article content are required.');
+    const title=String(d.title||'').trim(),content=String(d.content||'').trim(),contentRoman=String(d.content_roman||'').trim();
+    const row={title,category:String(d.category||'').trim()||'General',excerpt:String(d.excerpt||'').trim()||null,content,content_roman:contentRoman,content_language:'english',cover_url:cover||oldCover||null,is_published:published,published_at:published?new Date().toISOString():null};
+    if(!title||!content||!contentRoman)throw new Error('Title, English content and Roman English content are required.');
     let r;
     if(d.id)r=await sb.from('articles').update(row).eq('id',d.id).eq('created_by',state.user.id);
     else r=await sb.from('articles').insert({...row,slug:`${slug(title)}-${Date.now().toString(36)}`,created_by:state.user.id});
@@ -957,10 +978,9 @@ async function saveArticle(e){
     saved=true;
     if(cover&&oldCover&&cover!==oldCover)await removeContentAsset(oldCover);
     f.reset();f.elements.id.value='';f.elements.existing_cover.value='';f.elements.is_published.checked=true;
-    const english=f.querySelector('input[name="content_language"][value="english"]');if(english)english.checked=true;
     syncArticleEditorUI();syncEditorFileLabel('article',null);
     $('#mentorArticleModalTitle').textContent='New Article';closeModals();
-    toast(d.id?'Article updated.':published?'Article published.':'Article saved as draft.');
+    toast(d.id?'Article updated.':published?'Bilingual article published.':'Bilingual article saved as draft.');
     await load()
   }catch(err){if(cover&&!saved)await removeContentAsset(cover);toast(err.message||'Could not save article.')}finally{b.disabled=false}
 }
@@ -969,8 +989,14 @@ async function logout(){await sb?.auth.signOut();location.href='/mentor-login.ht
 document.addEventListener('change',e=>{
   if(e.target.matches('#mentorChartForm input[name="image"]')){syncEditorFileLabel('chart',e.target.files?.[0]||null);return}
   if(e.target.matches('#mentorArticleForm input[name="cover"]')){syncEditorFileLabel('article',e.target.files?.[0]||null);return}
-  if(e.target.matches('#mentorArticleForm input[name="content_language"], #mentorArticleForm input[name="is_published"]')){syncArticleEditorUI();return}
+  if(e.target.matches('#mentorArticleForm input[name="is_published"]')){syncArticleEditorUI();return}
 });
+if(!window.__24K_MENTOR_MODAL_BACK__){
+  window.__24K_MENTOR_MODAL_BACK__=true;
+  window.addEventListener('popstate',()=>{
+    if(document.querySelector('.mentor-modal.open'))closeModals(true);
+  });
+}
 document.addEventListener('click',e=>{const install=e.target.closest('#mentorInstallButton');if(install){e.preventDefault();(async()=>{if(mentorStandalone())return toast('Mentor App is already installed.','success');if(mentorInstallPrompt){mentorInstallPrompt.prompt();const choice=await mentorInstallPrompt.userChoice;if(choice?.outcome==='accepted')toast('Installing 24K Mentor App…','success');mentorInstallPrompt=null;updateMentorInstall();return}const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);toast(ios?'Use Share → Add to Home Screen to install the app.':'Use your browser menu → Install app / Add to Home screen.','info')})().catch(()=>{});return}const preset=e.target.closest('[data-note-preset]');if(preset){const f=$('#mentorSignalForm'),ta=f?.elements.notes;if(!ta)return;$$('[data-note-preset]').forEach(x=>x.classList.toggle('active',x===preset));if(preset.dataset.notePreset==='custom'){ta.value='';ta.focus()}else{ta.value=preset.dataset.notePreset}return}const copySignal=e.target.closest('[data-copy-signal]');if(copySignal){const s=(state.signals||[]).find(x=>String(x.id)===String(copySignal.dataset.copySignal));if(s){const text=[`${s.symbol} — ${signalTypeLabel(s)}`,`Entry: ${s.entry_from}${s.entry_to!=null?' - '+s.entry_to:''}`,`SL: ${s.stop_loss}`,`TP1: ${s.take_profit_1??'—'}`,`TP2: ${s.take_profit_2??'—'}`,`TP3: ${s.take_profit_3??'—'}`,`TP4: ${s.take_profit_4??'—'}`,s.notes?`Note: ${s.notes}`:''].filter(Boolean).join('\n');navigator.clipboard?.writeText(text).then(()=>toast('Signal copied.')).catch(()=>toast('Could not copy signal.'))}return}const noteSignal=e.target.closest('[data-note-signal]');if(noteSignal){const s=(state.signals||[]).find(x=>String(x.id)===String(noteSignal.dataset.noteSignal));toast(s?.notes||'No note added.');return}const toggleSignalRow=e.target.closest('[data-toggle-signal-row]');if(toggleSignalRow){const card=toggleSignalRow.closest('.mentor-signal-mobile-card');if(!card)return;const wasOpen=card.classList.contains('is-open');document.querySelectorAll('.mentor-signal-mobile-card.is-open').forEach(x=>{x.classList.remove('is-open');x.querySelector('[data-toggle-signal-row]')?.setAttribute('aria-expanded','false');x.querySelector('.mentor-signal-row-dropdown')?.setAttribute('aria-hidden','true')});if(!wasOpen){card.classList.add('is-open');toggleSignalRow.setAttribute('aria-expanded','true');card.querySelector('.mentor-signal-row-dropdown')?.setAttribute('aria-hidden','false')}return}const viewSignal=e.target.closest('[data-view-signal]');if(viewSignal){renderSignalDetail(viewSignal.dataset.viewSignal);return}const openFilters=e.target.closest('[data-open-signal-filters]');if(openFilters){const ids=[['mentorMobileSignalPair','mentorSignalPairFilter'],['mentorMobileSignalType','mentorSignalTypeFilter'],['mentorMobileSignalStatus','mentorSignalStatusFilter'],['mentorMobileSignalFrom','mentorSignalFrom'],['mentorMobileSignalTo','mentorSignalTo']];ids.forEach(([a,b])=>{const A=$('#'+a),B=$('#'+b);if(A&&B)A.value=B.value});openModal('signalFilter');return}const applyFilters=e.target.closest('[data-apply-signal-filters]');if(applyFilters){state.signalPeriod='custom';const ids=[['mentorSignalPairFilter','mentorMobileSignalPair'],['mentorSignalTypeFilter','mentorMobileSignalType'],['mentorSignalStatusFilter','mentorMobileSignalStatus'],['mentorSignalFrom','mentorMobileSignalFrom'],['mentorSignalTo','mentorMobileSignalTo']];ids.forEach(([a,b])=>{const A=$('#'+a),B=$('#'+b);if(A&&B)A.value=B.value});closeModals();renderSignals();syncSignalPeriodButtons();focusFilteredSignalResults();return}const resetFilters=e.target.closest('[data-reset-signal-filters]');if(resetFilters){for(const id of ['mentorSignalSearch','mentorSignalFrom','mentorSignalTo','mentorMobileSignalFrom','mentorMobileSignalTo']){const el=$('#'+id);if(el)el.value=''}for(const id of ['mentorSignalPairFilter','mentorSignalTypeFilter','mentorSignalStatusFilter','mentorMobileSignalPair','mentorMobileSignalType','mentorMobileSignalStatus']){const el=$('#'+id);if(el)el.value='all'}state.signalFilters={q:'',pair:'all',type:'all',status:'all',from:'',to:''};state.signalPeriod='all';renderSignals();syncSignalPeriodButtons();focusFilteredSignalResults();return}const quickDate=e.target.closest('[data-apply-quick-date]');if(quickDate){state.signalPeriod='custom';syncSignalPeriodButtons();toggleSignalCustomDate(false);renderSignals();focusFilteredSignalResults();return}const period=e.target.closest('[data-signal-period]');if(period){setSignalPeriod(period.dataset.signalPeriod);return}const cp=e.target.closest('[data-chart-period]');if(cp){setChartPeriod(cp.dataset.chartPeriod);return}const ccf=e.target.closest('[data-clear-chart-filters]');if(ccf){clearChartFilters();return}const sc=e.target.closest('[data-share-chart]');if(sc){shareChart(sc.dataset.shareChart).catch(x=>toast(x.message||'Could not share chart.'));return}const ap=e.target.closest('[data-article-period]');if(ap){setArticlePeriod(ap.dataset.articlePeriod);return}const caf=e.target.closest('[data-clear-article-filters]');if(caf){clearArticleFilters();return}const v=e.target.closest('[data-mentor-view]');if(v){e.preventDefault();closeModals();showView(v.dataset.mentorView);return}const o=e.target.closest('[data-open-mentor-modal]');if(o){resetMentorEditor(o.dataset.openMentorModal);openModal(o.dataset.openMentorModal);return}if(e.target.closest('[data-close-mentor-modal]'))return closeModals();const sa=e.target.closest('[data-signal-action]');if(sa)signalAction(sa.dataset.id,sa.dataset.signalAction).catch(x=>toast(x.message));const es=e.target.closest('[data-edit-signal]');if(es)editSignal(es.dataset.editSignal);const st=e.target.closest('[data-signal-tab]');if(st){state.signalTab=st.dataset.signalTab;$$('[data-signal-tab]').forEach(x=>x.classList.toggle('active',x===st));renderSignals()}const ec=e.target.closest('[data-edit-chart]');if(ec)editChart(ec.dataset.editChart);const dc=e.target.closest('[data-delete-chart]');if(dc)del('charts',dc.dataset.deleteChart,'chart').catch(x=>toast(x.message));const ea=e.target.closest('[data-edit-article]');if(ea)editArticle(ea.dataset.editArticle);const da=e.target.closest('[data-delete-article]');if(da)del('articles',da.dataset.deleteArticle,'article').catch(x=>toast(x.message));const eb=e.target.closest('[data-edit-banner]');if(eb)editBanner(eb.dataset.editBanner);const db=e.target.closest('[data-delete-banner]');if(db)del('mentor_banners',db.dataset.deleteBanner,'banner').catch(x=>toast(x.message));const va=e.target.closest('[data-view-article]');if(va){const a=state.articles.find(x=>x.id===va.dataset.viewArticle);if(a)alert(`${a.title}\n\n${a.content||a.excerpt||''}`)}});
 $('#mentorSignalForm')?.addEventListener('submit',saveSignal);$('#mentorSignalForm')?.addEventListener('input',renderMentorPipPreview);$('#mentorSignalForm')?.addEventListener('change',renderMentorPipPreview);$('#mentorChartForm')?.addEventListener('submit',saveChart);$('#mentorArticleForm')?.addEventListener('submit',saveArticle);$('#mentorBannerForm')?.addEventListener('submit',saveBanner);$('#mentorLogout')?.addEventListener('click',logout);$('#mentorProfileLogout')?.addEventListener('click',logout);function mentorRefresh(btn){if(btn?.classList.contains('is-loading'))return;btn?.classList.add('is-loading');document.body.classList.add('mentor-refreshing');load().then(()=>toast('Updated')).catch(e=>toast(e.message)).finally(()=>{btn?.classList.remove('is-loading');document.body.classList.remove('mentor-refreshing')})}
 $('#mentorMenuToggle')?.addEventListener('click',openMentorMenu);$('#mentorMenuClose')?.addEventListener('click',closeMentorMenu);$('#mentorSidebarOverlay')?.addEventListener('click',closeMentorMenu);
