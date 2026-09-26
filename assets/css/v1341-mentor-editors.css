@@ -875,3 +875,116 @@ html[data-theme="light"] .premium-language-label b{color:#22272e}
     min-height:135px!important;
   }
 }
+
+
+/* V13.42 — one article, shared heading, two saved content versions */
+.premium-bilingual-section .premium-editor-section-head{
+  align-items:center;
+}
+.premium-two-language-badge{
+  margin-left:auto;
+  min-height:24px;
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:0 8px;
+  border:1px solid rgba(240,185,11,.20);
+  border-radius:999px;
+  background:rgba(240,185,11,.07);
+  color:#d4a000;
+  font-size:6px;
+  font-weight:900;
+  white-space:nowrap;
+}
+.premium-bilingual-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+.premium-language-editor{
+  min-width:0;
+  display:grid!important;
+  gap:7px!important;
+  padding:9px;
+  border:1px solid #29303a;
+  border-radius:11px;
+  background:#141920;
+}
+.premium-language-editor.english{
+  border-top:2px solid #f0b90b;
+}
+.premium-language-editor.roman{
+  border-top:2px solid #16c784;
+}
+.premium-language-label{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.premium-language-label>i{
+  width:28px;
+  height:28px;
+  display:grid;
+  place-items:center;
+  border-radius:8px;
+  background:rgba(240,185,11,.09);
+  color:#d5a000;
+  font-size:9px;
+  font-style:normal;
+}
+.premium-language-editor.roman .premium-language-label>i{
+  background:rgba(22,199,132,.08);
+  color:#16ad76;
+}
+.premium-language-label>span{
+  display:grid;
+  gap:1px;
+}
+.premium-language-label b{
+  color:#edf1f4;
+  font-size:8.5px;
+}
+.premium-language-label small{
+  color:#717c89!important;
+  font-size:5.8px!important;
+}
+.premium-language-editor textarea{
+  min-height:210px!important;
+  background:#10151b!important;
+}
+html[data-theme="light"] .premium-language-editor{
+  border-color:#dfe4e8;
+  background:#fafbfc;
+}
+html[data-theme="light"] .premium-language-label b{
+  color:#20252b;
+}
+html[data-theme="light"] .premium-language-editor textarea{
+  background:#fff!important;
+}
+@media(max-width:760px){
+  .premium-two-language-badge{
+    min-height:21px;
+    padding:0 6px;
+    font-size:5.2px;
+  }
+  .premium-bilingual-grid{
+    grid-template-columns:1fr;
+    gap:6px;
+  }
+  .premium-language-editor{
+    padding:7px;
+    border-radius:9px;
+  }
+  .premium-language-label>i{
+    width:25px;
+    height:25px;
+    border-radius:7px;
+    font-size:8px;
+  }
+  .premium-language-label b{font-size:7.5px}
+  .premium-language-label small{font-size:5.2px!important}
+  .premium-language-editor textarea{
+    min-height:135px!important;
+  }
+}
