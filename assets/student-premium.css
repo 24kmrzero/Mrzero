@@ -3497,3 +3497,109 @@ html[data-theme="light"] .student-page .compact-history-table .signal-date-cell 
     text-overflow: clip !important;
   }
 }
+
+
+/* V13.42 — bilingual article reader */
+.article-language-badge{
+  display:inline-flex!important;
+  align-items:center;
+  gap:5px;
+  color:#9a7300!important;
+  font-weight:800;
+}
+.article-reader-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin:4px 0 12px;
+}
+.article-reader-top .course-meta{
+  margin:0;
+}
+.article-translate-btn{
+  min-height:36px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  padding:0 12px;
+  border:1px solid rgba(201,154,5,.28);
+  border-radius:10px;
+  background:linear-gradient(180deg,#fff9df,#fff4c7);
+  color:#806000;
+  font:inherit;
+  font-size:11px;
+  font-weight:850;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.article-translate-btn i{font-size:12px}
+.article-translate-btn.roman-active{
+  border-color:rgba(22,163,74,.22);
+  background:#effbf5;
+  color:#16734e;
+}
+.article-reader-language{
+  width:max-content;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin:0 0 10px;
+  padding:5px 8px;
+  border-radius:999px;
+  background:rgba(201,154,5,.08);
+  color:#806000;
+  font-size:9px;
+  font-weight:850;
+  letter-spacing:.02em;
+}
+.article-reader-language i{
+  color:#22b77b;
+  font-size:6px;
+}
+.article-reader-body{
+  color:var(--text,#20252b);
+  font-size:14px;
+  line-height:1.75;
+  font-weight:520;
+}
+html[data-theme="dark"] .article-translate-btn{
+  border-color:rgba(240,185,11,.26);
+  background:rgba(240,185,11,.09);
+  color:#f0c84b;
+}
+html[data-theme="dark"] .article-translate-btn.roman-active{
+  border-color:rgba(22,199,132,.24);
+  background:rgba(22,199,132,.09);
+  color:#62d7aa;
+}
+html[data-theme="dark"] .article-reader-language{
+  background:rgba(240,185,11,.08);
+  color:#e2b326;
+}
+@media(max-width:760px){
+  .article-reader-top{
+    align-items:flex-start;
+    margin-bottom:9px;
+  }
+  .article-translate-btn{
+    min-height:34px;
+    padding:0 10px;
+    border-radius:9px;
+    font-size:10px;
+  }
+  .article-reader-body{
+    font-size:13px;
+    line-height:1.7;
+  }
+}
+@media(max-width:420px){
+  .article-reader-top{
+    display:grid;
+    grid-template-columns:1fr;
+  }
+  .article-translate-btn{
+    width:100%;
+  }
+}
