@@ -41,7 +41,22 @@
 
     const table=panel.querySelector('.table-scroll');
     if(table)table.classList.add('admin-course-table-wrap');
-    panel.querySelectorAll('#coursesBody tr').forEach(row=>row.classList.add('admin-course-row'));
+    panel.querySelectorAll('#coursesBody tr').forEach(row=>{
+      row.classList.add('admin-course-row');
+      const id=row.querySelector('[data-edit="course"][data-id]')?.dataset.id||'';
+      const course=courses.find(c=>String(c.id)===String(id));
+      if(course){
+        row.dataset.courseType=String(course.course_type||'paid').toLowerCase();
+        row.dataset.courseStatus=String(course.status||'active').toLowerCase();
+      }
+      const cells=row.children;
+      if(cells?.[3])cells[3].classList.add('admin-course-next-class');
+      if(cells?.[4])cells[4].classList.add('admin-course-access-cell');
+      if(cells?.[5]&&!cells[5].querySelector('.admin-course-published')){
+        const yes=String(cells[5].textContent||'').trim().toLowerCase()==='yes';
+        cells[5].innerHTML='<span class="admin-course-published '+(yes?'yes':'no')+'"><i class="fa-solid '+(yes?'fa-circle-check':'fa-circle-minus')+'"></i> '+(yes?'Published':'Hidden')+'</span>';
+      }
+    });
   }
 
   function sync(){
