@@ -1,6 +1,6 @@
 (function(){
 'use strict';
-/* mentor build 13.31 */
+/* mentor build 13.32 */
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js',{scope:'/'}).catch(e=>console.warn('[24K Mentor PWA]',e?.message||e)));
 }
@@ -365,9 +365,18 @@ function readSignalFilters(){state.signalFilters.q=String($('#mentorSignalSearch
 function applySignalFilters(items){const f=state.signalFilters;return items.filter(s=>{const hay=`${s.symbol||''} ${signalTypeLabel(s)} ${s.status||''} ${s.notes||''}`.toLowerCase();if(f.q&&!hay.includes(f.q))return false;if(f.pair!=='all'&&String(s.symbol||'').toUpperCase()!==f.pair)return false;if(f.type!=='all'&&signalTypeLabel(s)!==f.type)return false;if(f.status!=='all'&&String(s.status||'')!==f.status)return false;const d=signalDateOnly(s.created_at||s.published_at);if(f.from&&d&&d<f.from)return false;if(f.to&&d&&d>f.to)return false;return true})}
 function signalFilterDateValue(d){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`}
 function syncSignalPeriodButtons(){
-  $('[data-signal-period]').forEach(x=>x.classList.toggle('active',x.dataset.signalPeriod===state.signalPeriod));
+  const pair=$('#mentorSignalPairFilter')?.value||'all',
+    type=$('#mentorSignalTypeFilter')?.value||'all',
+    status=$('#mentorSignalStatusFilter')?.value||'all';
+  const extraActive=pair!=='all'||type!=='all'||status!=='all';
+  $$('[data-signal-period]').forEach(x=>{
+    const key=x.dataset.signalPeriod;
+    const active=key==='all'?(state.signalPeriod==='all'&&!extraActive):(key===state.signalPeriod);
+    x.classList.toggle('active',active)
+  });
   for(const id of ['mentorSignalPairFilter','mentorSignalTypeFilter','mentorSignalStatusFilter']){
-    const el=$('#'+id);if(el)el.closest('.mentor-signal-quick-select')?.classList.toggle('is-active',el.value!=='all')
+    const el=$('#'+id);
+    if(el)el.closest('.mentor-signal-quick-select')?.classList.toggle('is-active',el.value!=='all')
   }
 }
 function focusFilteredSignalResults(){
@@ -403,6 +412,14 @@ function setSignalPeriod(period){
   syncSignalPeriodButtons();renderSignals();focusFilteredSignalResults()
 }
 
+function mentorSafeSignalPips(s){
+  try{const v=signalPips(s);return Number.isFinite(Number(v))?Number(v):0}
+  catch(e){console.warn('[24K Signal pips]',e);const v=Number(s?.result_pips);return Number.isFinite(v)?v:0}
+}
+function mentorSafeHasPerformance(s){
+  try{return mentorHasRecordedPerformance(s)}
+  catch(e){console.warn('[24K Signal performance]',e);return s?.result_pips!==null&&s?.result_pips!==undefined&&s?.result_pips!==''}
+}
 function signalActionButtons(s){
   if(signalIsClosed(s))return '';
   const hit=Number(s.tp_hit||0),parts=[];
@@ -416,7 +433,7 @@ function signalActionButtons(s){
 }
 function renderSignalDetail(id){
   const s=(state.signals||[]).find(x=>String(x.id)===String(id)),box=$('#mentorSignalDetailContent');if(!s||!box)return;
-  const p=signalPips(s),hasPips=mentorHasRecordedPerformance(s),current=hasPips?pipText(p):'—';
+  const p=mentorSafeSignalPips(s),hasPips=mentorSafeHasPerformance(s),current=hasPips?pipText(p):'—';
   const pTone=p>0?'good':p<0?'bad':'neutral';
   const dir=String(s.direction||'BUY').toLowerCase(),isClosed=signalIsClosed(s);
   const created=mentorSignalStamp(s.created_at||s.published_at),updated=mentorSignalStamp(s.last_status_at||s.closed_at||s.updated_at||s.created_at);
@@ -510,11 +527,11 @@ function renderSignals(){
   if(ac)ac.textContent=String(active.length);if(hc)hc.textContent=String(hist.length);
   syncSignalPeriodButtons();
 
-  const scored=hist.filter(s=>String(s.status||'')!=='cancelled'&&mentorHasRecordedPerformance(s)),
-    wins=scored.filter(s=>signalPips(s)>0).length,
-    losses=scored.filter(s=>signalPips(s)<0).length,
+  const scored=hist.filter(s=>String(s.status||'')!=='cancelled'&&mentorSafeHasPerformance(s)),
+    wins=scored.filter(s=>mentorSafeSignalPips(s)>0).length,
+    losses=scored.filter(s=>mentorSafeSignalPips(s)<0).length,
     winRate=scored.length?wins/scored.length*100:0,
-    net=filteredAll.filter(mentorHasRecordedPerformance).reduce((a,s)=>a+signalPips(s),0);
+    net=filteredAll.filter(mentorSafeHasPerformance).reduce((a,s)=>a+mentorSafeSignalPips(s),0);
   const statActive=$('#mentorSignalStatActive'),statClosed=$('#mentorSignalStatClosed'),statWin=$('#mentorSignalStatWinRate'),statNet=$('#mentorSignalStatNet');
   if(statActive)statActive.textContent=String(active.length);
   if(statClosed)statClosed.textContent=String(hist.length);
@@ -529,8 +546,8 @@ function renderSignals(){
   box.classList.toggle('hidden',state.signalTab==='report');
 
   if(state.signalTab==='report'){
-    const be=scored.filter(s=>signalPips(s)===0).length;
-    const avg=scored.length?scored.reduce((a,s)=>a+signalPips(s),0)/scored.length:0;
+    const be=scored.filter(s=>mentorSafeSignalPips(s)===0).length;
+    const avg=scored.length?scored.reduce((a,s)=>a+mentorSafeSignalPips(s),0)/scored.length:0;
     const report=[
       {label:'FILTERED SIGNALS',value:filteredAll.length,icon:'fa-layer-group',tone:'gold',hint:state.signalPeriod==='all'?'All published records':state.signalPeriod+' period'},
       {label:'RESOLVED',value:scored.length,icon:'fa-circle-check',tone:'neutral',hint:`${wins} wins - ${losses} losses - ${be} BE`},
@@ -547,7 +564,7 @@ function renderSignals(){
   }
 
   const desktop=`<div class="mentor-signal-table-wrap"><table class="mentor-signal-table mentor-official-table"><thead><tr><th>Date</th><th>Pair</th><th>Type</th><th>Entry</th><th>SL</th><th>TP1</th><th>TP2</th><th>TP3</th><th>TP4</th><th>Status</th><th>Pips</th><th>Note</th><th>Manage</th></tr></thead><tbody>${items.map(s=>{
-    const p=signalPips(s),hasPips=mentorHasRecordedPerformance(s),dir=String(s.direction||'BUY').toLowerCase(),stamp=mentorSignalStamp(s.created_at||s.published_at);
+    const p=mentorSafeSignalPips(s),hasPips=mentorSafeHasPerformance(s),dir=String(s.direction||'BUY').toLowerCase(),stamp=mentorSignalStamp(s.created_at||s.published_at);
     return `<tr class="mentor-signal-row ${dir}">
       <td><b>${esc(stamp.date)}</b><small class="mentor-table-time">${esc(stamp.time)}</small></td>
       <td><b class="mentor-signal-pair">${esc(mentorDisplaySymbol(s.symbol))}</b></td>
@@ -563,7 +580,7 @@ function renderSignals(){
   }).join('')}</tbody></table></div>`;
 
   const mobile=`<div class="mentor-signal-mobile-list">${items.map(s=>{
-    const p=signalPips(s),hasPips=mentorHasRecordedPerformance(s),dir=String(s.direction||'BUY').toLowerCase(),stamp=mentorSignalStamp(s.created_at||s.published_at);
+    const p=mentorSafeSignalPips(s),hasPips=mentorSafeHasPerformance(s),dir=String(s.direction||'BUY').toLowerCase(),stamp=mentorSignalStamp(s.created_at||s.published_at);
     const resultText=hasPips?pipText(p):(signalIsClosed(s)?'-':'LIVE');
     return `<article class="mentor-signal-mobile-card ${dir}" data-signal-row="${s.id}">
       <div class="mentor-signal-row-line">
