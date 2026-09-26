@@ -226,3 +226,19 @@ html[data-theme="dark"] .team-forgot-box{
   .team-login-card h1{font-size:22px!important}
   .team-login-card>p{font-size:10px!important}
 }
+
+
+/* V13.48 — auth visibility lock
+   Never let responsive !important display rules override the login/app hidden state. */
+#teamLogin.hidden,
+#teamApp.hidden{
+  display:none!important;
+}
+#teamApp:not(.hidden) .team-mobile-nav{
+  display:none;
+}
+@media(max-width:780px){
+  #teamApp:not(.hidden) .team-mobile-nav{
+    display:grid!important;
+  }
+}
