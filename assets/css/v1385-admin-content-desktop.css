@@ -1,0 +1,359 @@
+/* 24K MR ZERO — Admin Charts + Articles premium desktop v13.85
+   DESKTOP ONLY. Mobile/tablet <=900px intentionally untouched. */
+
+@media (min-width:901px){
+
+  /* ===== shared editorial / research command hero ===== */
+  #p-charts,
+  #p-articles{
+    max-width:1450px!important;
+    margin:0 auto!important;
+    padding-bottom:4px!important;
+  }
+
+  #p-charts .admin-content-command,
+  #p-articles .admin-content-command{
+    min-height:142px!important;
+    display:flex!important;
+    align-items:flex-start!important;
+    justify-content:space-between!important;
+    gap:22px!important;
+    padding:20px 21px!important;
+    margin:0 0 9px!important;
+    border:1px solid #e0e3e7!important;
+    border-left:3px solid #d8a20a!important;
+    border-radius:18px!important;
+    background:
+      radial-gradient(430px 190px at 94% 0%,rgba(216,162,10,.055),transparent 70%),
+      #fff!important;
+    box-shadow:0 9px 26px rgba(18,24,32,.05)!important;
+  }
+  #p-charts .admin-content-command:after,
+  #p-articles .admin-content-command:after{
+    right:14px!important;top:-31px!important;
+    font-size:124px!important;
+    color:rgba(190,139,0,.032)!important;
+  }
+  #p-charts .admin-content-command>div,
+  #p-articles .admin-content-command>div{position:relative!important;z-index:2!important;min-width:0!important}
+  #p-charts .admin-content-kicker,
+  #p-articles .admin-content-kicker{
+    min-height:24px!important;
+    display:inline-flex!important;align-items:center!important;gap:7px!important;
+    padding:0 9px!important;
+    border:1px solid #e8d99f!important;border-radius:999px!important;
+    background:#fffaf0!important;color:#8d6800!important;
+    font-size:7.4px!important;font-weight:950!important;letter-spacing:.13em!important;
+  }
+  #p-charts .admin-content-command h2,
+  #p-articles .admin-content-command h2{
+    margin:10px 0 5px!important;
+    font-size:28px!important;line-height:1!important;letter-spacing:-.04em!important;
+    color:#181a20!important;
+  }
+  #p-charts .admin-content-command p,
+  #p-articles .admin-content-command p{
+    max-width:650px!important;margin:0!important;
+    color:#707b88!important;font-size:10.5px!important;line-height:1.5!important;
+  }
+  #p-charts .admin-content-command>div>small,
+  #p-articles .admin-content-command>div>small{
+    display:inline-flex!important;
+    margin-top:10px!important;padding:4px 7px!important;
+    border:1px solid #ebdfb6!important;border-radius:999px!important;
+    background:#fffdf7!important;color:#a17704!important;
+    font-size:6.4px!important;font-weight:900!important;letter-spacing:.09em!important;
+  }
+  #p-charts .admin-content-command>.app-btn,
+  #p-articles .admin-content-command>.app-btn{
+    position:relative!important;z-index:3!important;
+    min-width:132px!important;min-height:39px!important;height:39px!important;
+    padding:0 13px!important;
+    border:1px solid #d7a109!important;border-radius:10px!important;
+    background:linear-gradient(180deg,#f5bf20,#dfa407)!important;
+    color:#211800!important;
+    box-shadow:0 8px 18px rgba(181,127,0,.13)!important;
+    font-size:8.5px!important;font-weight:900!important;
+  }
+
+  /* ===== KPI row: compact premium Mentor hierarchy ===== */
+  #p-charts .admin-mentor-stats,
+  #p-articles .admin-mentor-stats{
+    display:grid!important;
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    gap:8px!important;
+    margin:0 0 9px!important;
+  }
+  #p-charts .admin-mentor-stat,
+  #p-articles .admin-mentor-stat{
+    min-height:73px!important;
+    display:flex!important;align-items:center!important;gap:10px!important;
+    padding:10px 11px!important;
+    border:1px solid #e4e7ea!important;border-radius:12px!important;
+    background:#fff!important;
+    box-shadow:0 7px 20px rgba(18,24,32,.03)!important;
+  }
+  #p-charts .admin-mentor-stat>i,
+  #p-articles .admin-mentor-stat>i{
+    width:31px!important;height:31px!important;flex:0 0 31px!important;
+    display:grid!important;place-items:center!important;
+    border:1px solid rgba(216,162,10,.12)!important;border-radius:9px!important;
+    background:rgba(216,162,10,.08)!important;color:#c48f00!important;
+    font-size:10px!important;
+  }
+  #p-charts .admin-mentor-stat small,
+  #p-articles .admin-mentor-stat small{
+    color:#747f8d!important;font-size:7px!important;font-weight:950!important;letter-spacing:.1em!important;
+  }
+  #p-charts .admin-mentor-stat b,
+  #p-articles .admin-mentor-stat b{
+    margin-top:2px!important;color:#181a20!important;font-size:19px!important;line-height:1!important;
+  }
+  #p-charts .admin-mentor-stat em,
+  #p-articles .admin-mentor-stat em{
+    margin-top:4px!important;color:#7c8693!important;font-size:7.2px!important;
+  }
+
+  /* ===== premium filter rail ===== */
+  #p-charts .admin-research-filter,
+  #p-articles .admin-research-filter{
+    min-height:48px!important;
+    display:grid!important;
+    gap:6px!important;
+    padding:6px!important;margin:0 0 9px!important;
+    border:1px solid #e1e4e8!important;border-radius:13px!important;
+    background:#fff!important;
+    box-shadow:0 6px 17px rgba(18,24,32,.025)!important;
+  }
+  #p-charts .admin-research-filter{grid-template-columns:minmax(0,1fr) 170px 150px!important}
+  #p-articles .admin-research-filter{grid-template-columns:minmax(0,1fr) 170px 150px 150px!important}
+  #p-charts .admin-research-filter input,
+  #p-charts .admin-research-filter select,
+  #p-articles .admin-research-filter input,
+  #p-articles .admin-research-filter select{
+    width:100%!important;min-width:0!important;
+    height:35px!important;min-height:35px!important;
+    padding:0 10px!important;
+    border:1px solid #e3e6e9!important;border-radius:9px!important;
+    background:#fafbfc!important;color:#555f6b!important;
+    font-size:9px!important;box-shadow:none!important;
+  }
+  #p-charts .admin-research-filter input:focus,
+  #p-charts .admin-research-filter select:focus,
+  #p-articles .admin-research-filter input:focus,
+  #p-articles .admin-research-filter select:focus{
+    border-color:#d9bf69!important;
+    box-shadow:0 0 0 3px rgba(216,162,10,.06)!important;
+  }
+
+  /* ===== content grid / cards ===== */
+  #p-charts .admin-research-history,
+  #p-articles .admin-research-history{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    align-items:start!important;
+    gap:10px!important;
+  }
+  #p-charts .admin-mentor-content-card,
+  #p-articles .admin-mentor-content-card{
+    overflow:hidden!important;
+    border:1px solid #e0e4e8!important;
+    border-radius:15px!important;
+    background:#fff!important;
+    box-shadow:0 8px 22px rgba(18,24,32,.045)!important;
+    transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease!important;
+  }
+  #p-charts .admin-mentor-content-card.cream,
+  #p-articles .admin-mentor-content-card.cream{
+    background:#fff!important;border-color:#e5e1d7!important;
+  }
+  #p-charts .admin-mentor-media,
+  #p-articles .admin-mentor-media{
+    aspect-ratio:16/8.4!important;
+    min-height:0!important;
+    background:#0e1318!important;
+  }
+  #p-charts .admin-mentor-media img,
+  #p-articles .admin-mentor-media img{
+    width:100%!important;height:100%!important;object-fit:cover!important;
+    transition:transform .28s ease!important;
+  }
+  #p-charts .admin-mentor-content-card:hover,
+  #p-articles .admin-mentor-content-card:hover{
+    transform:translateY(-2px)!important;
+    border-color:#dbc36f!important;
+    box-shadow:0 13px 30px rgba(18,24,32,.07)!important;
+  }
+  #p-charts .admin-mentor-content-card:hover .admin-mentor-media img,
+  #p-articles .admin-mentor-content-card:hover .admin-mentor-media img{
+    transform:scale(1.015)!important;
+  }
+  #p-charts .admin-mentor-card-body,
+  #p-articles .admin-mentor-card-body{
+    display:grid!important;gap:7px!important;padding:12px!important;
+  }
+  #p-charts .admin-mentor-card-meta,
+  #p-articles .admin-mentor-card-meta{
+    gap:11px!important;color:#7a8492!important;font-size:7.4px!important;
+  }
+  #p-charts .admin-mentor-card-body h3,
+  #p-articles .admin-mentor-card-body h3{
+    color:#181d24!important;
+    font-size:15.5px!important;line-height:1.2!important;letter-spacing:-.025em!important;
+  }
+  #p-charts .admin-mentor-card-body p,
+  #p-articles .admin-mentor-card-body p{
+    min-height:36px!important;
+    color:#737e8b!important;font-size:8.5px!important;line-height:1.55!important;
+  }
+  #p-charts .admin-mentor-card-foot,
+  #p-articles .admin-mentor-card-foot{
+    min-height:38px!important;
+    padding-top:8px!important;
+    border-top:1px solid #edf0f2!important;
+  }
+  #p-charts .admin-mentor-state,
+  #p-articles .admin-mentor-state{
+    font-size:7px!important;
+  }
+  #p-charts .admin-mentor-actions :is(button,a),
+  #p-articles .admin-mentor-actions :is(button,a){
+    min-height:29px!important;height:29px!important;
+    padding:0 8px!important;
+    border:1px solid #e0e4e8!important;border-radius:8px!important;
+    background:#fafbfc!important;color:#66717e!important;
+    font-size:7px!important;
+  }
+  #p-charts .admin-mentor-actions :is(button,a):hover,
+  #p-articles .admin-mentor-actions :is(button,a):hover{
+    border-color:#d8bd63!important;background:#fffaf0!important;color:#906a00!important;
+  }
+  #p-charts .admin-mentor-actions .danger,
+  #p-articles .admin-mentor-actions .danger{
+    width:29px!important;padding:0!important;color:#df5268!important;
+  }
+
+  /* ===== desktop content editor modal ===== */
+  #chartFormBox,
+  #articleFormBox{
+    padding:24px!important;
+    align-items:center!important;
+  }
+  #chartFormBox .content-create-card,
+  #articleFormBox .content-create-card{
+    width:min(760px,94vw)!important;
+    max-height:88vh!important;
+    border:1px solid #e0e3e7!important;
+    border-radius:18px!important;
+    background:#fff!important;
+    box-shadow:0 28px 80px rgba(31,37,44,.18)!important;
+    overflow:hidden!important;
+  }
+  #chartFormBox .app-modal-head,
+  #articleFormBox .app-modal-head{
+    min-height:70px!important;
+    padding:15px 18px!important;
+    border-bottom:1px solid #e8eaed!important;
+    background:
+      radial-gradient(220px 90px at 100% 0%,rgba(216,162,10,.055),transparent 70%),
+      #fff!important;
+  }
+  #chartFormBox .app-modal-head h3,
+  #articleFormBox .app-modal-head h3{
+    margin:0!important;color:#181d24!important;
+    font-size:18px!important;letter-spacing:-.025em!important;
+  }
+  #chartFormBox .app-modal-head small,
+  #articleFormBox .app-modal-head small{
+    display:block!important;margin-top:4px!important;
+    color:#78828e!important;font-size:8.5px!important;
+  }
+  #chartFormBox .app-modal-body,
+  #articleFormBox .app-modal-body{
+    padding:16px 18px!important;
+    background:#fff!important;
+  }
+  #chartFormBox .form-grid,
+  #articleFormBox .form-grid{
+    gap:11px!important;
+  }
+  #chartFormBox .form-field label,
+  #articleFormBox .form-field label{
+    color:#626d79!important;font-size:8.5px!important;font-weight:850!important;
+  }
+  #chartFormBox :is(input,select,textarea),
+  #articleFormBox :is(input,select,textarea){
+    border:1px solid #dfe3e7!important;
+    border-radius:9px!important;
+    background:#fafbfc!important;color:#20252d!important;
+    box-shadow:none!important;
+  }
+  #chartFormBox :is(input,select){min-height:40px!important}
+  #articleFormBox :is(input,select){min-height:40px!important}
+  #chartFormBox textarea,
+  #articleFormBox textarea{line-height:1.5!important}
+  #chartFormBox textarea[name="details"]{min-height:150px!important}
+  #articleFormBox textarea[name="content"]{min-height:190px!important}
+  #chartFormBox .check-row:has(input[name="is_published"]),
+  #articleFormBox .check-row:has(input[name="is_published"]){
+    min-height:48px!important;
+    display:flex!important;align-items:center!important;gap:9px!important;
+    padding:9px 11px!important;
+    border:1px solid #e4e6e9!important;border-radius:10px!important;
+    background:#fafbfc!important;color:#59636f!important;
+  }
+  #chartFormBox .check-row input[type="checkbox"],
+  #articleFormBox .check-row input[type="checkbox"]{
+    width:16px!important;min-height:16px!important;height:16px!important;
+  }
+
+  /* User request: scheduling/featured controls must NOT show on desktop.
+     They are still injected and remain unchanged on mobile. */
+  #chartFormBox .form-field:has(input[name="publish_at"]),
+  #chartFormBox .form-field:has(input[name="unpublish_at"]),
+  #chartFormBox label.check-row:has(input[name="featured"]),
+  #articleFormBox .form-field:has(input[name="publish_at"]),
+  #articleFormBox .form-field:has(input[name="unpublish_at"]),
+  #articleFormBox label.check-row:has(input[name="featured"]){
+    display:none!important;
+  }
+
+  #chartFormBox .notice.info{
+    margin-top:11px!important;
+    padding:10px 11px!important;border-radius:10px!important;
+    background:#fffaf0!important;border-color:#ebdfba!important;color:#6b6048!important;
+    font-size:8px!important;
+  }
+  #chartFormBox .app-modal-foot,
+  #articleFormBox .app-modal-foot{
+    min-height:64px!important;
+    padding:12px 18px!important;
+    border-top:1px solid #e8eaed!important;
+    background:#fcfcfb!important;
+  }
+  #chartFormBox .app-modal-foot .app-btn,
+  #articleFormBox .app-modal-foot .app-btn{
+    min-height:38px!important;height:38px!important;padding:0 14px!important;
+    border-radius:9px!important;font-size:8.5px!important;
+  }
+
+  /* dark desktop parity */
+  html[data-theme="dark"] #p-charts .admin-content-command,
+  html[data-theme="dark"] #p-articles .admin-content-command,
+  html[data-theme="dark"] #p-charts .admin-mentor-stat,
+  html[data-theme="dark"] #p-articles .admin-mentor-stat,
+  html[data-theme="dark"] #p-charts .admin-research-filter,
+  html[data-theme="dark"] #p-articles .admin-research-filter,
+  html[data-theme="dark"] #p-charts .admin-mentor-content-card,
+  html[data-theme="dark"] #p-articles .admin-mentor-content-card{
+    background:#101319!important;border-color:#252b35!important;box-shadow:none!important;
+  }
+  html[data-theme="dark"] #p-charts .admin-content-command h2,
+  html[data-theme="dark"] #p-articles .admin-content-command h2,
+  html[data-theme="dark"] #p-charts .admin-mentor-stat b,
+  html[data-theme="dark"] #p-articles .admin-mentor-stat b,
+  html[data-theme="dark"] #p-charts .admin-mentor-card-body h3,
+  html[data-theme="dark"] #p-articles .admin-mentor-card-body h3{color:#f5f7fa!important}
+}
+
+/* Explicitly keep all mobile rules out of this file. */
