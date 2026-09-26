@@ -785,7 +785,7 @@
   function renderArticles() {
     const query = document.getElementById('articleSearch')?.value.trim().toLowerCase() || '';
     const rows = state.articles.filter(a => !query || `${a.title} ${a.excerpt} ${a.content} ${a.content_roman||''}`.toLowerCase().includes(query));
-    document.getElementById('articlesGrid').innerHTML = rows.length ? rows.map(article => `<article class="content-card compact-media-card"><div class="content-cover media-thumb-16x9 ${article.cover_url ? 'has-image' : ''}">${safeMediaImage(article.cover_url, article.title, 'fa-book-open')}</div><div class="content-body"><div class="course-meta content-meta-strong"><span>${A.escapeHtml(article.category || 'Education')}</span><span><i class="fa-solid fa-calendar"></i> ${A.formatDate(article.published_at)}</span></div><h3>${A.escapeHtml(article.title)}</h3><p>${A.escapeHtml(article.excerpt || '')}</p><button class="app-btn small gold" data-read-article="${article.id}">Read Article</button></div></article>`).join('') : empty('No article matches your search.', 'fa-newspaper');
+    document.getElementById('articlesGrid').innerHTML = rows.length ? rows.map(article => `<article class="content-card compact-media-card"><div class="content-cover media-thumb-16x9 ${article.cover_url ? 'has-image' : ''}">${safeMediaImage(article.cover_url, article.title, 'fa-book-open')}</div><div class="content-body"><div class="course-meta content-meta-strong"><span>${A.escapeHtml(article.category || 'Education')}</span>${article.content_roman?'<span><i class="fa-solid fa-language"></i> English / Roman</span>':''}<span><i class="fa-solid fa-calendar"></i> ${A.formatDate(article.published_at)}</span></div><h3>${A.escapeHtml(article.title)}</h3><p>${A.escapeHtml(article.excerpt || '')}</p><button class="app-btn small gold" data-read-article="${article.id}">Read Article</button></div></article>`).join('') : empty('No article matches your search.', 'fa-newspaper');
   }
 
   function upcomingCourseSession(courseId) {
@@ -1455,13 +1455,6 @@
     document.getElementById('articleSearch')?.addEventListener('input', renderArticles);
     document.getElementById('closeSessions').addEventListener('click', resetCourseView);
 
-    if (!window.__24K_COURSE_MODAL_BACK__) {
-      window.__24K_COURSE_MODAL_BACK__ = true;
-      window.addEventListener('popstate', () => {
-        closeOpenCourseFlowModal();
-      });
-    }
-
     document.body.addEventListener('click', async event => {
       const profileEdit=event.target.closest('[data-profile-edit]');
       if(profileEdit){
@@ -1470,12 +1463,6 @@
         field?.scrollIntoView?.({behavior:'smooth',block:'center'});
         setTimeout(()=>{field?.focus?.();field?.select?.();},250);
         return;
-      }
-      const modalCloser=event.target.closest('[data-close-modal]');
-      const backdropModal=event.target.classList?.contains('app-modal') ? event.target : null;
-      const closingId=modalCloser?.dataset.closeModal || backdropModal?.id || '';
-      if(courseFlowModalIds.has(closingId) && history.state?.__24kCourseModal){
-        setTimeout(()=>{ try{ history.back(); }catch{} },0);
       }
       const premiumStep=event.target.closest('[data-premium-page-step]');
       if(premiumStep){premiumPageState.step=premiumStep.dataset.premiumPageStep||'home';renderPremiumTab();return;}
@@ -1619,12 +1606,6 @@
   const courseFlowModalIds = new Set(['courseDetailsModal','paymentMethodChoiceModal','paymentModal','bankPaymentModal','coursePaymentSuccessModal','premiumBankModal','premiumUsdtModal','premiumPaymentSuccessModal','ibVerificationModal']);
 
   function openCourseFlowModal(id){
-    if(!courseFlowModalIds.has(id)) return A.openModal(id);
-    try{
-      if(!history.state?.__24kCourseModal){
-        history.pushState({...history.state,__24kCourseModal:true},'',location.href);
-      }
-    }catch{}
     A.openModal(id);
     return true;
   }
