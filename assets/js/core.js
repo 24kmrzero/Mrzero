@@ -330,8 +330,8 @@
     const adminRoutes = {
       dashboard: '/admin/', content: '/admin/content/', signals: '/admin/signals/', charts: '/admin/charts/', articles: '/admin/articles/',
       announcements: '/admin/announcements/', courses: '/admin/courses/', sessions: '/admin/zoom-sessions/',
-      calendar: '/admin/calendar/', leads: '/admin/enquiries/', links: '/admin/team-manager/',
-      'premium-access': '/admin/premium-access/', 'link-manager-ref': '/admin/link-manager/', operations: '/admin/operations/', 'admin-notifications': '/admin/admin-notifications/',
+      calendar: '/admin/calendar/', leads: '/admin/enquiries/',
+      'team-access-ref': '/admin/team-manager/', 'premium-access': '/admin/premium-access/', 'link-manager-ref': '/admin/link-manager/', operations: '/admin/operations/', 'admin-notifications': '/admin/admin-notifications/',
       audit: '/admin/activity-logs/', delivery: '/admin/delivery/', settings: '/admin/settings/',
       payments: '/admin/payments/', students: '/admin/students/', 'v1216-center': '/admin/mentors/', support: '/admin/support/', methods: '/admin/payment-methods/'
     };
@@ -342,7 +342,8 @@
     };
     const routeMap = authScope === 'admin' ? adminRoutes : studentRoutes;
     const aliases = authScope === 'admin' ? {
-      'team-manager': 'links', 'link-manager': 'links', links: 'links',
+      'team-manager': 'team-access-ref', 'team-accounts': 'team-access-ref', 'team-access-ref': 'team-access-ref',
+      'link-manager': 'link-manager-ref', 'link-manager-ref': 'link-manager-ref', links: 'links',
       content: 'content', operations: 'operations',
       'zoom-sessions': 'sessions', sessions: 'sessions',
       'payment-methods': 'methods', methods: 'methods',
