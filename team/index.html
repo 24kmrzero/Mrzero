@@ -4,7 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#080b11">
-  <link rel="manifest" href="/team/manifest.webmanifest?v=12.70">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="24K Team">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="/team/manifest.webmanifest?v=13.55">
   <link rel="apple-touch-icon" href="/assets/logo.png">
   <title>Team Panel | 24K MR ZERO</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,6 +25,7 @@
   <link rel="stylesheet" href="/assets/css/v1352-team-ultra-premium.css?v=13.52">
   <link rel="stylesheet" href="/assets/css/v1353-team-home-qa-fix.css?v=13.53">
   <link rel="stylesheet" href="/assets/css/v1354-team-home-fintech.css?v=13.54">
+  <link rel="stylesheet" href="/assets/css/v1355-team-executive.css?v=13.55">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/assets/js/config.js?v=12.18"></script>
 </head>
@@ -105,6 +110,11 @@
               <button type="button" class="team-home-follow-btn" data-view-jump="clients"><i class="fa-solid fa-arrow-right"></i></button>
             </div>
           </div>
+          <div class="team-smart-summary">
+            <span class="team-smart-summary-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
+            <div><small>SMART SUMMARY</small><b id="teamSmartSummary">Your workspace is ready.</b></div>
+            <span class="team-sync-chip" id="teamSyncStatus"><i class="fa-solid fa-cloud-arrow-down"></i> Synced now</span>
+          </div>
         </article>
 
         <section class="team-priority-center">
@@ -115,11 +125,47 @@
           <div id="teamPriorityCards" class="team-priority-cards"></div>
         </section>
 
+        <section class="team-home-search">
+          <div class="team-home-searchbox">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input id="teamHomeSearch" type="search" autocomplete="off" placeholder="Search client name, WhatsApp or Client ID...">
+            <button type="button" id="teamHomeSearchAll" aria-label="Search all clients"><i class="fa-solid fa-arrow-right"></i></button>
+          </div>
+          <div id="teamHomeSearchResults" class="team-home-search-results hidden"></div>
+        </section>
+
         <div class="team-home-section-head">
           <div><small>LIVE OVERVIEW</small><b>Key Numbers</b></div>
           <span class="team-home-swipe-hint"><i class="fa-solid fa-arrow-right-long"></i> Swipe</span>
         </div>
         <div id="overviewKpis" class="team-overview-kpis team-home-kpi-rail"></div>
+
+        <div class="team-home-section-head insights-head">
+          <div><small>INTELLIGENCE</small><b>Performance Insights</b></div>
+          <span id="teamRankChip"><i class="fa-solid fa-ranking-star"></i> Rank —</span>
+        </div>
+        <div class="team-insight-grid">
+          <article class="team-insight-card goals">
+            <div class="team-insight-head"><div><small>MONTHLY GOALS</small><b>Next Level Progress</b></div><i class="fa-solid fa-bullseye"></i></div>
+            <div id="teamGoalProgress" class="team-goal-list"></div>
+            <div class="team-projection-row"><span>Projected month-end earnings</span><b id="teamEarningsProjection">$0.00</b></div>
+          </article>
+
+          <article class="team-insight-card pipeline">
+            <div class="team-insight-head"><div><small>LEAD PIPELINE</small><b>Conversion Flow</b></div><i class="fa-solid fa-filter-circle-dollar"></i></div>
+            <div id="teamPipeline" class="team-pipeline"></div>
+          </article>
+
+          <article class="team-insight-card trend">
+            <div class="team-insight-head"><div><small>7-DAY TREND</small><b>Team Activity</b></div><span id="teamTrendTotal">0 actions</span></div>
+            <div id="teamTrendChart" class="team-trend-chart"></div>
+          </article>
+
+          <article class="team-insight-card opportunity">
+            <div class="team-insight-head"><div><small>TOP OPPORTUNITY</small><b>Next Best Action</b></div><i class="fa-solid fa-crosshairs"></i></div>
+            <div id="teamTopOpportunity"></div>
+          </article>
+        </div>
 
         <div class="team-home-section-head quick-head">
           <div><small>WORKSPACE</small><b>Quick Actions</b></div>
@@ -153,17 +199,17 @@
         <article class="panel-card team-home-card team-activity-card">
           <div class="card-head team-home-card-head">
             <div><small>LIVE FEED</small><h3>Recent Activity</h3></div>
-            <button class="tiny-btn" data-view-jump="history">History</button>
+            <div class="team-card-actions"><button type="button" class="team-collapse-toggle" data-home-collapse="teamRecentActivity" aria-label="Expand recent activity"><i class="fa-solid fa-chevron-down"></i></button><button class="tiny-btn" data-view-jump="history">History</button></div>
           </div>
-          <div id="teamRecentActivity" class="team-activity-list"></div>
+          <div id="teamRecentActivity" class="team-activity-list home-collapsed"></div>
         </article>
 
         <article class="panel-card compact-links team-home-links">
           <div class="card-head team-home-card-head">
             <div><small>ATTRIBUTION</small><h3>Tracking Links</h3></div>
-            <button class="tiny-btn" data-view-jump="links">View Links</button>
+            <div class="team-card-actions"><button type="button" class="team-collapse-toggle" data-home-collapse="overviewLinks" aria-label="Expand tracking links"><i class="fa-solid fa-chevron-down"></i></button><button class="tiny-btn" data-view-jump="links">View Links</button></div>
           </div>
-          <div id="overviewLinks" class="overview-link-row"></div>
+          <div id="overviewLinks" class="overview-link-row home-collapsed"></div>
         </article>
       </section>
 
@@ -248,19 +294,45 @@
       <section class="view" data-view-panel="links">
         <div class="section-head"><div><h2>My Assigned Links</h2><p>Read-only tracking performance for your assigned links.</p></div></div><div id="linksGrid" class="links-grid"></div>
       </section>
+
+      <section class="view team-more-page" data-view-panel="more">
+        <article class="team-more-identity">
+          <img src="/assets/logo-v965.png" alt="24K MR ZERO" class="team-more-logo">
+          <span class="team-more-avatar" id="teamMoreAvatar">TM</span>
+          <div><small>TEAM ACCOUNT</small><h2 id="teamMoreName">Team Member</h2><p id="teamMoreUser">@team</p></div>
+          <span class="team-more-status"><i></i> Active</span>
+        </article>
+
+        <div class="team-more-section-head"><div><small>WORKSPACE</small><b>Quick Access</b></div><span>Team tools</span></div>
+        <div class="team-more-grid">
+          <button type="button" data-view-jump="search"><i class="fa-solid fa-magnifying-glass"></i><span><b>Search Client</b><small>Ownership check</small></span><i class="fa-solid fa-chevron-right"></i></button>
+          <button type="button" data-view-jump="daily"><i class="fa-solid fa-clipboard-check"></i><span><b>Daily Report</b><small>Update activity</small></span><i class="fa-solid fa-chevron-right"></i></button>
+          <button type="button" data-view-jump="performance"><i class="fa-solid fa-chart-line"></i><span><b>Performance</b><small>Conversion metrics</small></span><i class="fa-solid fa-chevron-right"></i></button>
+          <button type="button" data-view-jump="history"><i class="fa-regular fa-clock"></i><span><b>History</b><small>Previous months</small></span><i class="fa-solid fa-chevron-right"></i></button>
+          <button type="button" data-view-jump="links"><i class="fa-solid fa-link"></i><span><b>My Links</b><small>Tracking attribution</small></span><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+
+        <div class="team-more-section-head"><div><small>APP & ACCOUNT</small><b>Device Controls</b></div><span id="teamMoreSync">Synced</span></div>
+        <div class="team-more-controls">
+          <button type="button" id="teamMoreInstall"><i class="fa-solid fa-download"></i><span><b>Install Team App</b><small>Add to home screen</small></span></button>
+          <button type="button" id="teamMoreTheme"><i class="fa-solid fa-circle-half-stroke"></i><span><b>Appearance</b><small>Switch light / dark</small></span></button>
+          <button type="button" id="teamMoreRefresh"><i class="fa-solid fa-rotate"></i><span><b>Refresh Data</b><small>Sync latest activity</small></span></button>
+          <button type="button" id="teamMoreLogout" class="danger"><i class="fa-solid fa-right-from-bracket"></i><span><b>Logout</b><small>End Team session</small></span></button>
+        </div>
+      </section>
     </main>
   <nav class="team-mobile-nav" id="teamMobileNav" aria-label="Team mobile navigation">
     <button class="active" data-team-mobile-view="overview"><i class="fa-solid fa-house"></i><span>Home</span></button>
     <button data-team-mobile-view="clients"><i class="fa-solid fa-users"></i><span>Clients</span><em id="teamClientsBadge" class="team-mobile-badge" hidden>0</em></button>
     <button data-team-mobile-view="chat"><i class="fa-regular fa-message"></i><span>Chat</span><em id="teamMobileChatBadge" class="team-mobile-badge" hidden>0</em></button>
     <button data-team-mobile-view="earnings"><i class="fa-solid fa-sack-dollar"></i><span>Earnings</span></button>
-    <button data-team-mobile-profile><i class="fa-solid fa-ellipsis"></i><span>More</span></button>
+    <button data-team-mobile-view="more"><i class="fa-solid fa-ellipsis"></i><span>More</span></button>
   </nav>
   <div class="team-profile-sheet" id="teamProfileSheet" aria-hidden="true"><div class="team-profile-card"><button type="button" class="team-sheet-close" id="teamProfileClose"><i class="fa-solid fa-xmark"></i></button><img src="/assets/logo-v965.png" alt="24K MR ZERO"><small>TEAM MENU</small><h3 id="teamProfileName">Team Member</h3><p>Open every Team workspace from mobile without switching to desktop view.</p><div class="team-profile-shortcuts"><button type="button" data-team-sheet-view="search"><i class="fa-solid fa-magnifying-glass"></i><span>Search Client</span></button><button type="button" data-team-sheet-view="daily"><i class="fa-solid fa-clipboard-check"></i><span>Daily Report</span></button><button type="button" data-team-sheet-view="performance"><i class="fa-solid fa-chart-line"></i><span>Performance</span></button><button type="button" data-team-sheet-view="history"><i class="fa-regular fa-clock"></i><span>History</span></button><button type="button" data-team-sheet-view="links"><i class="fa-solid fa-link"></i><span>My Links</span></button></div><div class="team-profile-actions"><button type="button" id="teamMobileInstall"><i class="fa-solid fa-download"></i> Install Team Panel</button><button type="button" id="teamMobileRefresh"><i class="fa-solid fa-rotate"></i> Refresh Data</button><button type="button" id="teamMobileTheme"><i class="fa-solid fa-sun"></i> Change Theme</button><button type="button" class="danger" id="teamMobileLogout"><i class="fa-solid fa-right-from-bracket"></i> Logout</button></div></div></div>
   </div>
 
   <div id="teamToast" class="team-toast" aria-live="polite"></div>
-  <script src="/assets/js/v110-team-command-center.js?v=13.54"></script>
-  <script src="/assets/js/v1216-team-mobile.js?v=13.49.5"></script>
+  <script src="/assets/js/v110-team-command-center.js?v=13.55"></script>
+  <script src="/assets/js/v1216-team-mobile.js?v=13.55"></script>
 </body>
 </html>
