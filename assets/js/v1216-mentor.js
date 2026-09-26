@@ -1,6 +1,6 @@
 (function(){
 'use strict';
-/* mentor build 13.32 */
+/* mentor build 13.33 */
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js',{scope:'/'}).catch(e=>console.warn('[24K Mentor PWA]',e?.message||e)));
 }
@@ -32,7 +32,7 @@ window.addEventListener('appinstalled',()=>{
 window.addEventListener('load',updateMentorInstall);
 const cfg=window.APP_CONFIG||{},sb=(window.supabase&&cfg.SUPABASE_URL&&cfg.SUPABASE_ANON_KEY)?window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true}}):null;
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-const state={user:null,profile:null,perms:{signals:false,charts:false,articles:false,banners:false},signals:[],charts:[],articles:[],banners:[],courses:[],news:[],signalTab:'active',signalPeriod:'all',signalFilters:{q:'',pair:'all',type:'all',status:'all',from:'',to:''},performanceMonth:null,performanceMonthKeys:[]};
+const state={user:null,profile:null,perms:{signals:false,charts:false,articles:false,banners:false},signals:[],charts:[],articles:[],banners:[],courses:[],news:[],signalTab:'active',signalPeriod:'all',signalFilters:{q:'',pair:'all',type:'all',status:'all',from:'',to:''},chartPeriod:'all',performanceMonth:null,performanceMonthKeys:[]};
 const CLOSED=new Set(['sl_hit','breakeven_hit','manually_closed','closed','cancelled','tp4_hit']);
 function signalIsClosed(s){const st=String(s?.status||'');return Boolean(s?.closed_at)||CLOSED.has(st)||(st==='tp3_hit'&&(s?.take_profit_4===null||s?.take_profit_4===undefined||s?.take_profit_4===''))}
 function applyMentorTheme(v){
@@ -616,7 +616,119 @@ function renderSignals(){
   box.innerHTML=desktop+mobile
 }
 
-function renderCharts(){const box=$('#mentorCharts');if(!box)return;let items=[...state.charts],q=String($('#mentorChartSearch')?.value||'').toLowerCase(),pair=$('#mentorChartPair')?.value||'all';if(q)items=items.filter(x=>`${x.title} ${x.symbol} ${x.summary}`.toLowerCase().includes(q));if(pair!=='all')items=items.filter(x=>x.symbol===pair);items.sort((a,b)=>(new Date(a.created_at)-new Date(b.created_at))*($('#mentorChartSort')?.value==='old'?1:-1));const pairs=[...new Set(state.charts.map(x=>x.symbol).filter(Boolean))].sort(),sel=$('#mentorChartPair');if(sel&&sel.options.length<=1)sel.insertAdjacentHTML('beforeend',pairs.map(x=>`<option>${esc(x)}</option>`).join(''));box.innerHTML=renderHistoryGroups(items,'chart')}
+function mentorChartDate(x){
+  const d=new Date(x?.published_at||x?.created_at||0);
+  return Number.isNaN(d.getTime())?new Date(0):d
+}
+function syncChartControls(){
+  $$('[data-chart-period]').forEach(x=>x.classList.toggle('active',x.dataset.chartPeriod===state.chartPeriod));
+  const pair=$('#mentorChartPair'),sort=$('#mentorChartSort');
+  pair?.closest('.mentor-chart-select')?.classList.toggle('is-active',Boolean(pair&&pair.value!=='all'));
+  sort?.closest('.mentor-chart-select')?.classList.toggle('is-active',Boolean(sort&&sort.value==='old'))
+}
+function setChartPeriod(period){
+  state.chartPeriod=period||'all';
+  syncChartControls();
+  renderCharts();
+  requestAnimationFrame(()=>$('#mentorCharts')?.scrollIntoView({behavior:'smooth',block:'start'}))
+}
+function clearChartFilters(){
+  state.chartPeriod='all';
+  const q=$('#mentorChartSearch'),pair=$('#mentorChartPair'),sort=$('#mentorChartSort');
+  if(q)q.value='';if(pair)pair.value='all';if(sort)sort.value='new';
+  syncChartControls();renderCharts()
+}
+async function shareChart(id){
+  const x=(state.charts||[]).find(v=>String(v.id)===String(id));if(!x)return;
+  const text=`${x.title||'24K Chart Analysis'} Â· ${mentorDisplaySymbol(x.symbol||'')}${x.timeframe?' Â· '+x.timeframe:''}`;
+  const url=x.image_url||location.href;
+  if(navigator.share){await navigator.share({title:x.title||'24K Chart Analysis',text,url});return}
+  await navigator.clipboard?.writeText(`${text}\n${url}`);
+  toast('Chart link copied.')
+}
+function renderCharts(){
+  const box=$('#mentorCharts');if(!box)return;
+  const all=[...(state.charts||[])],now=new Date();
+
+  const pairs=[...new Set(all.map(x=>String(x.symbol||'').toUpperCase()).filter(Boolean))].sort();
+  const pairSelect=$('#mentorChartPair');
+  if(pairSelect){
+    const current=pairSelect.value||'all';
+    pairSelect.innerHTML='<option value="all">Pair</option>'+pairs.map(x=>`<option value="${esc(x)}">${esc(mentorDisplaySymbol(x))}</option>`).join('');
+    pairSelect.value=pairs.includes(current)?current:'all'
+  }
+
+  const startToday=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const startWeek=new Date(startToday);startWeek.setDate(startWeek.getDate()-6);
+  const todayCount=all.filter(x=>mentorChartDate(x)>=startToday).length;
+  const weekCount=all.filter(x=>mentorChartDate(x)>=startWeek).length;
+  const pairCounts={};all.forEach(x=>{const k=mentorDisplaySymbol(x.symbol||'');if(k)pairCounts[k]=(pairCounts[k]||0)+1});
+  const topPair=Object.entries(pairCounts).sort((a,b)=>b[1]-a[1])[0]?.[0]||'â';
+  const totalEl=$('#mentorChartStatTotal'),weekEl=$('#mentorChartStatWeek'),todayEl=$('#mentorChartStatToday'),pairEl=$('#mentorChartStatPair');
+  if(totalEl)totalEl.textContent=String(all.length);
+  if(weekEl)weekEl.textContent=String(weekCount);
+  if(todayEl)todayEl.textContent=String(todayCount);
+  if(pairEl)pairEl.textContent=topPair;
+
+  let items=[...all];
+  const q=String($('#mentorChartSearch')?.value||'').trim().toLowerCase();
+  const pair=pairSelect?.value||'all';
+  const sort=$('#mentorChartSort')?.value||'new';
+
+  if(state.chartPeriod==='today')items=items.filter(x=>mentorChartDate(x)>=startToday);
+  if(state.chartPeriod==='weekly')items=items.filter(x=>mentorChartDate(x)>=startWeek);
+  if(state.chartPeriod==='monthly'){
+    const monthStart=new Date(now.getFullYear(),now.getMonth(),1);
+    items=items.filter(x=>mentorChartDate(x)>=monthStart)
+  }
+  if(q)items=items.filter(x=>`${x.title||''} ${x.symbol||''} ${x.timeframe||''} ${x.summary||''} ${x.details||''}`.toLowerCase().includes(q));
+  if(pair!=='all')items=items.filter(x=>String(x.symbol||'').toUpperCase()===pair);
+  items.sort((a,b)=>(mentorChartDate(a)-mentorChartDate(b))*(sort==='old'?1:-1));
+
+  syncChartControls();
+  const periodName={all:'All Analysis',today:"Today's Analysis",weekly:'This Week',monthly:'This Month'}[state.chartPeriod]||'All Analysis';
+  const resultTitle=$('#mentorChartResultTitle'),resultCount=$('#mentorChartResultCount');
+  if(resultTitle)resultTitle.textContent=pair!=='all'?`${mentorDisplaySymbol(pair)} Â· ${periodName}`:periodName;
+  if(resultCount)resultCount.textContent=`${items.length} result${items.length===1?'':'s'}`;
+
+  if(!items.length){
+    const noLibrary=all.length===0;
+    box.innerHTML=`<div class="mentor-chart-empty">
+      <span class="mentor-chart-empty-icon"><i class="fa-solid ${noLibrary?'fa-chart-line':'fa-magnifying-glass'}"></i></span>
+      <small>${noLibrary?'RESEARCH DESK READY':'NO MATCHING ANALYSIS'}</small>
+      <b>${noLibrary?'Publish your first chart analysis':'No charts match these filters'}</b>
+      <p>${noLibrary?'Build your research library with a clear chart, timeframe and market view.':'Change the period, pair or search to see more analysis.'}</p>
+      <button type="button" class="mentor-btn gold" ${noLibrary?'data-open-mentor-modal="chart"':'data-clear-chart-filters'}><i class="fa-solid ${noLibrary?'fa-plus':'fa-arrow-rotate-left'}"></i> ${noLibrary?'Create First Analysis':'Clear Filters'}</button>
+    </div>`;
+    return
+  }
+
+  box.innerHTML=`<div class="mentor-chart-grid">${items.map((x,index)=>{
+    const stamp=mentorSignalStamp(x.published_at||x.created_at),symbol=mentorDisplaySymbol(x.symbol||'CHART');
+    return `<article class="mentor-chart-card ${index%2?'cream':'white'}">
+      <div class="mentor-chart-media">
+        ${x.image_url?`<img src="${esc(x.image_url)}" alt="${esc(x.title||symbol)}" loading="lazy">`:`<div class="mentor-chart-placeholder"><i class="fa-solid fa-chart-line"></i><span>24K RESEARCH</span></div>`}
+        <div class="mentor-chart-media-top"><span class="pair">${esc(symbol)}</span>${x.timeframe?`<span class="tf">${esc(x.timeframe)}</span>`:''}</div>
+        <span class="mentor-chart-index">${String(index+1).padStart(2,'0')}</span>
+      </div>
+      <div class="mentor-chart-card-body">
+        <div class="mentor-chart-card-meta"><span><i class="fa-regular fa-calendar"></i> ${esc(stamp.date)}</span><span><i class="fa-regular fa-clock"></i> ${esc(stamp.time)}</span></div>
+        <h3>${esc(x.title||symbol+' Analysis')}</h3>
+        <p>${esc(x.summary||'Market analysis update.')}</p>
+        <div class="mentor-chart-card-foot">
+          <span class="mentor-chart-publish"><i class="fa-solid fa-circle-check"></i> Published</span>
+          <div class="mentor-chart-actions">
+            ${x.image_url?`<a href="${esc(x.image_url)}" target="_blank" rel="noopener" title="View chart"><i class="fa-solid fa-expand"></i><span>View</span></a>`:''}
+            <button type="button" data-share-chart="${x.id}" title="Share"><i class="fa-solid fa-share-nodes"></i><span>Share</span></button>
+            <button type="button" data-edit-chart="${x.id}" title="Edit"><i class="fa-solid fa-pen"></i><span>Edit</span></button>
+            <button type="button" class="danger" data-delete-chart="${x.id}" title="Delete"><i class="fa-regular fa-trash-can"></i></button>
+          </div>
+        </div>
+      </div>
+    </article>`
+  }).join('')}</div>`
+}
+
 function renderArticles(){
   const box=$('#mentorArticles');if(!box)return;
   let items=[...state.articles],q=String($('#mentorArticleSearch')?.value||'').toLowerCase(),st=$('#mentorArticleStatus')?.value||'all',cat=$('#mentorArticleCategory')?.value||'all';
@@ -661,10 +773,10 @@ function editArticle(id){const x=state.articles.find(v=>v.id===id);if(!x)return;
 async function saveArticle(e){e.preventDefault();const f=e.currentTarget,b=f.querySelector('button[type=submit]'),d=Object.fromEntries(new FormData(f)),published=f.elements.is_published.checked,oldCover=String(d.existing_cover||'');let cover=null,saved=false;b.disabled=true;try{cover=await upload(f.elements.cover.files[0],'articles');const title=String(d.title||'').trim(),content=String(d.content||'').trim(),row={title,category:String(d.category||'').trim()||'General',excerpt:String(d.excerpt||'').trim()||null,content,cover_url:cover||oldCover||null,is_published:published,published_at:published?new Date().toISOString():null};if(!title||!content)throw new Error('Title and article content are required.');let r;if(d.id)r=await sb.from('articles').update(row).eq('id',d.id).eq('created_by',state.user.id);else r=await sb.from('articles').insert({...row,slug:`${slug(title)}-${Date.now().toString(36)}`,created_by:state.user.id});if(r.error)throw r.error;saved=true;if(cover&&oldCover&&cover!==oldCover)await removeContentAsset(oldCover);f.reset();f.elements.id.value='';f.elements.existing_cover.value='';f.elements.is_published.checked=true;$('#mentorArticleModalTitle').textContent='New Article';closeModals();toast(d.id?'Article updated.':'Article saved.');await load()}catch(err){if(cover&&!saved)await removeContentAsset(cover);toast(err.message||'Could not save article.')}finally{b.disabled=false}}
 async function del(table,id,label){if(!confirm(`Delete this ${label}?`))return;const source=table==='charts'?state.charts:table==='articles'?state.articles:table==='mentor_banners'?state.banners:[],item=source.find(x=>String(x.id)===String(id)),media=item?.image_url||item?.cover_url||null;const r=await sb.from(table).delete().eq('id',id).eq('created_by',state.user.id);if(r.error)throw r.error;if(media)await removeContentAsset(media);toast(`${label} deleted.`);await load()}
 async function logout(){await sb?.auth.signOut();location.href='/mentor-login.html'}
-document.addEventListener('click',e=>{const install=e.target.closest('#mentorInstallButton');if(install){e.preventDefault();(async()=>{if(mentorStandalone())return toast('Mentor App is already installed.','success');if(mentorInstallPrompt){mentorInstallPrompt.prompt();const choice=await mentorInstallPrompt.userChoice;if(choice?.outcome==='accepted')toast('Installing 24K Mentor App…','success');mentorInstallPrompt=null;updateMentorInstall();return}const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);toast(ios?'Use Share → Add to Home Screen to install the app.':'Use your browser menu → Install app / Add to Home screen.','info')})().catch(()=>{});return}const preset=e.target.closest('[data-note-preset]');if(preset){const f=$('#mentorSignalForm'),ta=f?.elements.notes;if(!ta)return;$$('[data-note-preset]').forEach(x=>x.classList.toggle('active',x===preset));if(preset.dataset.notePreset==='custom'){ta.value='';ta.focus()}else{ta.value=preset.dataset.notePreset}return}const copySignal=e.target.closest('[data-copy-signal]');if(copySignal){const s=(state.signals||[]).find(x=>String(x.id)===String(copySignal.dataset.copySignal));if(s){const text=[`${s.symbol} — ${signalTypeLabel(s)}`,`Entry: ${s.entry_from}${s.entry_to!=null?' - '+s.entry_to:''}`,`SL: ${s.stop_loss}`,`TP1: ${s.take_profit_1??'—'}`,`TP2: ${s.take_profit_2??'—'}`,`TP3: ${s.take_profit_3??'—'}`,`TP4: ${s.take_profit_4??'—'}`,s.notes?`Note: ${s.notes}`:''].filter(Boolean).join('\n');navigator.clipboard?.writeText(text).then(()=>toast('Signal copied.')).catch(()=>toast('Could not copy signal.'))}return}const noteSignal=e.target.closest('[data-note-signal]');if(noteSignal){const s=(state.signals||[]).find(x=>String(x.id)===String(noteSignal.dataset.noteSignal));toast(s?.notes||'No note added.');return}const toggleSignalRow=e.target.closest('[data-toggle-signal-row]');if(toggleSignalRow){const card=toggleSignalRow.closest('.mentor-signal-mobile-card');if(!card)return;const wasOpen=card.classList.contains('is-open');document.querySelectorAll('.mentor-signal-mobile-card.is-open').forEach(x=>{x.classList.remove('is-open');x.querySelector('[data-toggle-signal-row]')?.setAttribute('aria-expanded','false');x.querySelector('.mentor-signal-row-dropdown')?.setAttribute('aria-hidden','true')});if(!wasOpen){card.classList.add('is-open');toggleSignalRow.setAttribute('aria-expanded','true');card.querySelector('.mentor-signal-row-dropdown')?.setAttribute('aria-hidden','false')}return}const viewSignal=e.target.closest('[data-view-signal]');if(viewSignal){renderSignalDetail(viewSignal.dataset.viewSignal);return}const openFilters=e.target.closest('[data-open-signal-filters]');if(openFilters){const ids=[['mentorMobileSignalPair','mentorSignalPairFilter'],['mentorMobileSignalType','mentorSignalTypeFilter'],['mentorMobileSignalStatus','mentorSignalStatusFilter'],['mentorMobileSignalFrom','mentorSignalFrom'],['mentorMobileSignalTo','mentorSignalTo']];ids.forEach(([a,b])=>{const A=$('#'+a),B=$('#'+b);if(A&&B)A.value=B.value});openModal('signalFilter');return}const applyFilters=e.target.closest('[data-apply-signal-filters]');if(applyFilters){state.signalPeriod='custom';const ids=[['mentorSignalPairFilter','mentorMobileSignalPair'],['mentorSignalTypeFilter','mentorMobileSignalType'],['mentorSignalStatusFilter','mentorMobileSignalStatus'],['mentorSignalFrom','mentorMobileSignalFrom'],['mentorSignalTo','mentorMobileSignalTo']];ids.forEach(([a,b])=>{const A=$('#'+a),B=$('#'+b);if(A&&B)A.value=B.value});closeModals();renderSignals();syncSignalPeriodButtons();focusFilteredSignalResults();return}const resetFilters=e.target.closest('[data-reset-signal-filters]');if(resetFilters){for(const id of ['mentorSignalSearch','mentorSignalFrom','mentorSignalTo','mentorMobileSignalFrom','mentorMobileSignalTo']){const el=$('#'+id);if(el)el.value=''}for(const id of ['mentorSignalPairFilter','mentorSignalTypeFilter','mentorSignalStatusFilter','mentorMobileSignalPair','mentorMobileSignalType','mentorMobileSignalStatus']){const el=$('#'+id);if(el)el.value='all'}state.signalFilters={q:'',pair:'all',type:'all',status:'all',from:'',to:''};state.signalPeriod='all';renderSignals();syncSignalPeriodButtons();focusFilteredSignalResults();return}const quickDate=e.target.closest('[data-apply-quick-date]');if(quickDate){state.signalPeriod='custom';syncSignalPeriodButtons();toggleSignalCustomDate(false);renderSignals();focusFilteredSignalResults();return}const period=e.target.closest('[data-signal-period]');if(period){setSignalPeriod(period.dataset.signalPeriod);return}const v=e.target.closest('[data-mentor-view]');if(v){e.preventDefault();closeModals();showView(v.dataset.mentorView);return}const o=e.target.closest('[data-open-mentor-modal]');if(o){resetMentorEditor(o.dataset.openMentorModal);openModal(o.dataset.openMentorModal);return}if(e.target.closest('[data-close-mentor-modal]'))return closeModals();const sa=e.target.closest('[data-signal-action]');if(sa)signalAction(sa.dataset.id,sa.dataset.signalAction).catch(x=>toast(x.message));const es=e.target.closest('[data-edit-signal]');if(es)editSignal(es.dataset.editSignal);const st=e.target.closest('[data-signal-tab]');if(st){state.signalTab=st.dataset.signalTab;$$('[data-signal-tab]').forEach(x=>x.classList.toggle('active',x===st));renderSignals()}const ec=e.target.closest('[data-edit-chart]');if(ec)editChart(ec.dataset.editChart);const dc=e.target.closest('[data-delete-chart]');if(dc)del('charts',dc.dataset.deleteChart,'chart').catch(x=>toast(x.message));const ea=e.target.closest('[data-edit-article]');if(ea)editArticle(ea.dataset.editArticle);const da=e.target.closest('[data-delete-article]');if(da)del('articles',da.dataset.deleteArticle,'article').catch(x=>toast(x.message));const eb=e.target.closest('[data-edit-banner]');if(eb)editBanner(eb.dataset.editBanner);const db=e.target.closest('[data-delete-banner]');if(db)del('mentor_banners',db.dataset.deleteBanner,'banner').catch(x=>toast(x.message));const va=e.target.closest('[data-view-article]');if(va){const a=state.articles.find(x=>x.id===va.dataset.viewArticle);if(a)alert(`${a.title}\n\n${a.content||a.excerpt||''}`)}if(e.target.closest('[data-mentor-mobile-profile]'))openModal('profile')});
+document.addEventListener('click',e=>{const install=e.target.closest('#mentorInstallButton');if(install){e.preventDefault();(async()=>{if(mentorStandalone())return toast('Mentor App is already installed.','success');if(mentorInstallPrompt){mentorInstallPrompt.prompt();const choice=await mentorInstallPrompt.userChoice;if(choice?.outcome==='accepted')toast('Installing 24K Mentor App…','success');mentorInstallPrompt=null;updateMentorInstall();return}const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);toast(ios?'Use Share → Add to Home Screen to install the app.':'Use your browser menu → Install app / Add to Home screen.','info')})().catch(()=>{});return}const preset=e.target.closest('[data-note-preset]');if(preset){const f=$('#mentorSignalForm'),ta=f?.elements.notes;if(!ta)return;$$('[data-note-preset]').forEach(x=>x.classList.toggle('active',x===preset));if(preset.dataset.notePreset==='custom'){ta.value='';ta.focus()}else{ta.value=preset.dataset.notePreset}return}const copySignal=e.target.closest('[data-copy-signal]');if(copySignal){const s=(state.signals||[]).find(x=>String(x.id)===String(copySignal.dataset.copySignal));if(s){const text=[`${s.symbol} — ${signalTypeLabel(s)}`,`Entry: ${s.entry_from}${s.entry_to!=null?' - '+s.entry_to:''}`,`SL: ${s.stop_loss}`,`TP1: ${s.take_profit_1??'—'}`,`TP2: ${s.take_profit_2??'—'}`,`TP3: ${s.take_profit_3??'—'}`,`TP4: ${s.take_profit_4??'—'}`,s.notes?`Note: ${s.notes}`:''].filter(Boolean).join('\n');navigator.clipboard?.writeText(text).then(()=>toast('Signal copied.')).catch(()=>toast('Could not copy signal.'))}return}const noteSignal=e.target.closest('[data-note-signal]');if(noteSignal){const s=(state.signals||[]).find(x=>String(x.id)===String(noteSignal.dataset.noteSignal));toast(s?.notes||'No note added.');return}const toggleSignalRow=e.target.closest('[data-toggle-signal-row]');if(toggleSignalRow){const card=toggleSignalRow.closest('.mentor-signal-mobile-card');if(!card)return;const wasOpen=card.classList.contains('is-open');document.querySelectorAll('.mentor-signal-mobile-card.is-open').forEach(x=>{x.classList.remove('is-open');x.querySelector('[data-toggle-signal-row]')?.setAttribute('aria-expanded','false');x.querySelector('.mentor-signal-row-dropdown')?.setAttribute('aria-hidden','true')});if(!wasOpen){card.classList.add('is-open');toggleSignalRow.setAttribute('aria-expanded','true');card.querySelector('.mentor-signal-row-dropdown')?.setAttribute('aria-hidden','false')}return}const viewSignal=e.target.closest('[data-view-signal]');if(viewSignal){renderSignalDetail(viewSignal.dataset.viewSignal);return}const openFilters=e.target.closest('[data-open-signal-filters]');if(openFilters){const ids=[['mentorMobileSignalPair','mentorSignalPairFilter'],['mentorMobileSignalType','mentorSignalTypeFilter'],['mentorMobileSignalStatus','mentorSignalStatusFilter'],['mentorMobileSignalFrom','mentorSignalFrom'],['mentorMobileSignalTo','mentorSignalTo']];ids.forEach(([a,b])=>{const A=$('#'+a),B=$('#'+b);if(A&&B)A.value=B.value});openModal('signalFilter');return}const applyFilters=e.target.closest('[data-apply-signal-filters]');if(applyFilters){state.signalPeriod='custom';const ids=[['mentorSignalPairFilter','mentorMobileSignalPair'],['mentorSignalTypeFilter','mentorMobileSignalType'],['mentorSignalStatusFilter','mentorMobileSignalStatus'],['mentorSignalFrom','mentorMobileSignalFrom'],['mentorSignalTo','mentorMobileSignalTo']];ids.forEach(([a,b])=>{const A=$('#'+a),B=$('#'+b);if(A&&B)A.value=B.value});closeModals();renderSignals();syncSignalPeriodButtons();focusFilteredSignalResults();return}const resetFilters=e.target.closest('[data-reset-signal-filters]');if(resetFilters){for(const id of ['mentorSignalSearch','mentorSignalFrom','mentorSignalTo','mentorMobileSignalFrom','mentorMobileSignalTo']){const el=$('#'+id);if(el)el.value=''}for(const id of ['mentorSignalPairFilter','mentorSignalTypeFilter','mentorSignalStatusFilter','mentorMobileSignalPair','mentorMobileSignalType','mentorMobileSignalStatus']){const el=$('#'+id);if(el)el.value='all'}state.signalFilters={q:'',pair:'all',type:'all',status:'all',from:'',to:''};state.signalPeriod='all';renderSignals();syncSignalPeriodButtons();focusFilteredSignalResults();return}const quickDate=e.target.closest('[data-apply-quick-date]');if(quickDate){state.signalPeriod='custom';syncSignalPeriodButtons();toggleSignalCustomDate(false);renderSignals();focusFilteredSignalResults();return}const period=e.target.closest('[data-signal-period]');if(period){setSignalPeriod(period.dataset.signalPeriod);return}const cp=e.target.closest('[data-chart-period]');if(cp){setChartPeriod(cp.dataset.chartPeriod);return}const ccf=e.target.closest('[data-clear-chart-filters]');if(ccf){clearChartFilters();return}const sc=e.target.closest('[data-share-chart]');if(sc){shareChart(sc.dataset.shareChart).catch(x=>toast(x.message||'Could not share chart.'));return}const v=e.target.closest('[data-mentor-view]');if(v){e.preventDefault();closeModals();showView(v.dataset.mentorView);return}const o=e.target.closest('[data-open-mentor-modal]');if(o){resetMentorEditor(o.dataset.openMentorModal);openModal(o.dataset.openMentorModal);return}if(e.target.closest('[data-close-mentor-modal]'))return closeModals();const sa=e.target.closest('[data-signal-action]');if(sa)signalAction(sa.dataset.id,sa.dataset.signalAction).catch(x=>toast(x.message));const es=e.target.closest('[data-edit-signal]');if(es)editSignal(es.dataset.editSignal);const st=e.target.closest('[data-signal-tab]');if(st){state.signalTab=st.dataset.signalTab;$$('[data-signal-tab]').forEach(x=>x.classList.toggle('active',x===st));renderSignals()}const ec=e.target.closest('[data-edit-chart]');if(ec)editChart(ec.dataset.editChart);const dc=e.target.closest('[data-delete-chart]');if(dc)del('charts',dc.dataset.deleteChart,'chart').catch(x=>toast(x.message));const ea=e.target.closest('[data-edit-article]');if(ea)editArticle(ea.dataset.editArticle);const da=e.target.closest('[data-delete-article]');if(da)del('articles',da.dataset.deleteArticle,'article').catch(x=>toast(x.message));const eb=e.target.closest('[data-edit-banner]');if(eb)editBanner(eb.dataset.editBanner);const db=e.target.closest('[data-delete-banner]');if(db)del('mentor_banners',db.dataset.deleteBanner,'banner').catch(x=>toast(x.message));const va=e.target.closest('[data-view-article]');if(va){const a=state.articles.find(x=>x.id===va.dataset.viewArticle);if(a)alert(`${a.title}\n\n${a.content||a.excerpt||''}`)}if(e.target.closest('[data-mentor-mobile-profile]'))openModal('profile')});
 $('#mentorSignalForm')?.addEventListener('submit',saveSignal);$('#mentorSignalForm')?.addEventListener('input',renderMentorPipPreview);$('#mentorSignalForm')?.addEventListener('change',renderMentorPipPreview);$('#mentorChartForm')?.addEventListener('submit',saveChart);$('#mentorArticleForm')?.addEventListener('submit',saveArticle);$('#mentorBannerForm')?.addEventListener('submit',saveBanner);$('#mentorLogout')?.addEventListener('click',logout);$('#mentorProfileLogout')?.addEventListener('click',logout);function mentorRefresh(btn){if(btn?.classList.contains('is-loading'))return;btn?.classList.add('is-loading');document.body.classList.add('mentor-refreshing');load().then(()=>toast('Updated')).catch(e=>toast(e.message)).finally(()=>{btn?.classList.remove('is-loading');document.body.classList.remove('mentor-refreshing')})}
 $('#mentorMenuToggle')?.addEventListener('click',openMentorMenu);$('#mentorMenuClose')?.addEventListener('click',closeMentorMenu);$('#mentorSidebarOverlay')?.addEventListener('click',closeMentorMenu);
-$('#mentorRefresh')?.addEventListener('click',e=>mentorRefresh(e.currentTarget));$('#mentorTopRefresh')?.addEventListener('click',e=>mentorRefresh(e.currentTarget));$('#mentorMonthSelect')?.addEventListener('change',e=>setPerformanceMonth(e.currentTarget.value));$('#mentorMonthPrev')?.addEventListener('click',()=>shiftPerformanceMonth(-1));$('#mentorMonthNext')?.addEventListener('click',()=>shiftPerformanceMonth(1));$('#mentorThisMonth')?.addEventListener('click',()=>setPerformanceMonth(performanceMonthKey(new Date())));$('#mentorTheme')?.addEventListener('click',()=>applyMentorTheme(document.documentElement.dataset.theme==='light'?'dark':'light'));['#mentorSignalSearch','#mentorSignalPairFilter','#mentorSignalTypeFilter','#mentorSignalStatusFilter','#mentorSignalFrom','#mentorSignalTo'].forEach(s=>$(s)?.addEventListener('input',()=>{if(s==='#mentorSignalFrom'||s==='#mentorSignalTo'){state.signalPeriod='custom'}renderSignals();syncSignalPeriodButtons()}));['#mentorSignalPairFilter','#mentorSignalTypeFilter','#mentorSignalStatusFilter'].forEach(s=>$(s)?.addEventListener('change',()=>{renderSignals();syncSignalPeriodButtons();focusFilteredSignalResults()}));['#mentorSignalFrom','#mentorSignalTo'].forEach(s=>$(s)?.addEventListener('change',()=>{state.signalPeriod='custom';renderSignals();syncSignalPeriodButtons()}));['#mentorChartSearch','#mentorChartPair','#mentorChartSort'].forEach(s=>$(s)?.addEventListener('input',renderCharts));['#mentorArticleSearch','#mentorArticleCategory','#mentorArticleStatus','#mentorArticleSort'].forEach(s=>$(s)?.addEventListener('input',renderArticles));$$('.mentor-modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeModals()}));
+$('#mentorRefresh')?.addEventListener('click',e=>mentorRefresh(e.currentTarget));$('#mentorTopRefresh')?.addEventListener('click',e=>mentorRefresh(e.currentTarget));$('#mentorMonthSelect')?.addEventListener('change',e=>setPerformanceMonth(e.currentTarget.value));$('#mentorMonthPrev')?.addEventListener('click',()=>shiftPerformanceMonth(-1));$('#mentorMonthNext')?.addEventListener('click',()=>shiftPerformanceMonth(1));$('#mentorThisMonth')?.addEventListener('click',()=>setPerformanceMonth(performanceMonthKey(new Date())));$('#mentorTheme')?.addEventListener('click',()=>applyMentorTheme(document.documentElement.dataset.theme==='light'?'dark':'light'));['#mentorSignalSearch','#mentorSignalPairFilter','#mentorSignalTypeFilter','#mentorSignalStatusFilter','#mentorSignalFrom','#mentorSignalTo'].forEach(s=>$(s)?.addEventListener('input',()=>{if(s==='#mentorSignalFrom'||s==='#mentorSignalTo'){state.signalPeriod='custom'}renderSignals();syncSignalPeriodButtons()}));['#mentorSignalPairFilter','#mentorSignalTypeFilter','#mentorSignalStatusFilter'].forEach(s=>$(s)?.addEventListener('change',()=>{renderSignals();syncSignalPeriodButtons();focusFilteredSignalResults()}));['#mentorSignalFrom','#mentorSignalTo'].forEach(s=>$(s)?.addEventListener('change',()=>{state.signalPeriod='custom';renderSignals();syncSignalPeriodButtons()}));$('#mentorChartSearch')?.addEventListener('input',renderCharts);['#mentorChartPair','#mentorChartSort'].forEach(s=>$(s)?.addEventListener('change',()=>{renderCharts();syncChartControls()}));['#mentorArticleSearch','#mentorArticleCategory','#mentorArticleStatus','#mentorArticleSort'].forEach(s=>$(s)?.addEventListener('input',renderArticles));$$('.mentor-modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeModals()}));
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMentorMenu()});
 window.addEventListener('resize',()=>{if(window.innerWidth>760)closeMentorMenu()});
 if(localStorage.getItem('mentor-theme-v1220')!=='1'){localStorage.setItem('mentor-theme','light');localStorage.setItem('mentor-theme-v1220','1')}
