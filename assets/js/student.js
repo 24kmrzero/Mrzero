@@ -21,6 +21,8 @@
   let marketContentSyncSeq = 0;
   // Keep interactive state initialized before auth/data awaits so early clicks cannot hit TDZ.
   const courseFlowModalIds = new Set(['courseDetailsModal','paymentMethodChoiceModal','paymentModal','bankPaymentModal','coursePaymentSuccessModal','premiumBankModal','premiumUsdtModal','premiumPaymentSuccessModal','ibVerificationModal']);
+  let paymentChoiceContext = { courseId: null, triggerButton: null };
+  let paymentChoiceSelection = '';
   // V10.21: Premium Access state must be initialized before the first renderAll().
   // Previously these const declarations lived below the initial await/load/render path,
   // so renderPremium() -> renderAccessSelection() hit the temporal dead zone and crashed
@@ -1672,9 +1674,6 @@
     if(String(method.name||'').trim().toLowerCase()===account.toLowerCase())return false;
     return true;
   }
-
-  let paymentChoiceContext = { courseId: null, triggerButton: null };
-  let paymentChoiceSelection = '';
 
   async function openPaymentModal(courseId, triggerButton=null) {
     const course = state.courses.find(c => c.id === courseId);
