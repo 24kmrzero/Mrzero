@@ -1,0 +1,227 @@
+/* 24K MR ZERO — Admin Dashboard Premium v13.63 */
+
+:root{
+  --ad-gold:#e5aa08;
+  --ad-gold-soft:#fff6d9;
+  --ad-ink:#20252d;
+  --ad-muted:#7e8792;
+  --ad-line:#e5e7eb;
+  --ad-card:#fff;
+  --ad-surface:#fafbfc;
+}
+
+.admin-side-backdrop{display:none}
+.admin-side-close{display:none}
+
+@media(max-width:900px){
+  body.admin-drawer-open{overflow:hidden!important}
+  .admin-side-backdrop{
+    position:fixed!important;inset:0!important;z-index:1750!important;
+    display:block!important;visibility:hidden!important;opacity:0!important;
+    border:0!important;background:rgba(3,6,10,.54)!important;
+    backdrop-filter:blur(3px)!important;transition:opacity .18s ease,visibility .18s ease!important
+  }
+  .admin-side-backdrop.show{visibility:visible!important;opacity:1!important}
+  #side{z-index:1800!important}
+  .admin-side-close{
+    position:absolute!important;right:10px!important;top:10px!important;z-index:4!important;
+    width:34px!important;height:34px!important;display:grid!important;place-items:center!important;
+    border:1px solid rgba(229,170,8,.24)!important;border-radius:10px!important;
+    background:rgba(255,255,255,.08)!important;color:#d9a516!important;font-size:12px!important
+  }
+  html[data-theme="light"] .admin-side-close{
+    background:#fff8e8!important;color:#9b7100!important;border-color:#e7d4a0!important
+  }
+
+  /* Sidebar premium compact */
+  #side .app-side-brand{min-height:106px!important;padding:16px 18px 10px!important}
+  #side .app-side-brand img{max-height:82px!important;max-width:190px!important;object-fit:contain!important}
+  #side .app-side-scroll{padding:0 10px 10px!important}
+  #side .app-nav-label{margin:11px 9px 5px!important;font-size:8px!important;letter-spacing:.14em!important}
+  #side .app-nav a{min-height:39px!important;padding:8px 10px!important;border-radius:10px!important}
+  #side .app-side-foot{padding:9px 10px calc(10px + env(safe-area-inset-bottom))!important}
+
+  /* Top bar */
+  .app-topbar{
+    height:62px!important;padding:0 12px!important;
+    border-bottom:1px solid rgba(219,169,34,.15)!important
+  }
+  .app-burger{
+    width:38px!important;height:38px!important;border-radius:11px!important;
+    border:1px solid rgba(219,169,34,.22)!important
+  }
+  .app-title strong{font-size:13px!important}
+  .app-title small{display:block!important;font-size:7.2px!important;line-height:1.1!important;margin-top:2px!important}
+  .app-notify,.app-avatar{display:none!important}
+
+  /* Dashboard shell */
+  #p-dashboard.admin-dashboard-v2{
+    width:auto!important;margin:0!important;padding:0!important;min-height:0!important
+  }
+  #p-dashboard .admin-dashboard-hero{
+    position:relative!important;overflow:hidden!important;padding:14px!important;
+    border:1px solid #e3dbc2!important;border-radius:17px!important;
+    background:
+      radial-gradient(240px 130px at 100% 0%,rgba(230,171,8,.10),transparent 72%),
+      linear-gradient(145deg,#fff,#fdfbf4)!important;
+    box-shadow:0 8px 22px rgba(35,40,48,.035)!important;
+    margin-bottom:10px!important
+  }
+  .admin-dashboard-hero-top{
+    display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;align-items:start!important;gap:8px!important
+  }
+  .admin-dashboard-hero-top>div{min-width:0!important}
+  .admin-dashboard-kicker{
+    display:inline-flex!important;align-items:center!important;gap:5px!important;
+    min-height:21px!important;padding:0 7px!important;border:1px solid #eadfbf!important;border-radius:999px!important;
+    background:#fff9e8!important;color:#9d7100!important;font-size:5.8px!important;font-weight:900!important;letter-spacing:.10em!important
+  }
+  #p-dashboard .admin-dashboard-hero h1{
+    margin:9px 0 3px!important;color:#20252d!important;font-size:22px!important;line-height:1.02!important;letter-spacing:-.045em!important
+  }
+  #p-dashboard .admin-dashboard-hero p{
+    margin:0!important;max-width:320px!important;color:#707a86!important;font-size:8.2px!important;line-height:1.4!important
+  }
+  .admin-live-pill{
+    min-width:62px!important;display:grid!important;grid-template-columns:6px auto!important;grid-template-rows:auto auto!important;
+    align-items:center!important;gap:2px 5px!important;padding:7px 8px!important;border:1px solid #dbeee7!important;border-radius:11px!important;background:#f6fcfa!important
+  }
+  .admin-live-pill>i{width:6px!important;height:6px!important;border-radius:50%!important;background:#1ab983!important;box-shadow:0 0 0 4px rgba(26,185,131,.08)!important}
+  .admin-live-pill>b{font-size:6.8px!important;color:#1a8d67!important}
+  .admin-live-pill>small{grid-column:1/-1!important;color:#7d8d87!important;font-size:5.2px!important;text-align:center!important}
+
+  .admin-platform-snapshot{
+    display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important;margin-top:11px!important
+  }
+  #p-dashboard .admin-platform-snapshot .v1218-mini{
+    min-width:0!important;display:grid!important;grid-template-columns:26px minmax(0,1fr)!important;align-items:center!important;gap:7px!important;
+    padding:8px!important;border:1px solid #e7e9ec!important;border-radius:11px!important;background:rgba(255,255,255,.75)!important
+  }
+  .admin-snapshot-icon{
+    width:26px!important;height:26px!important;display:grid!important;place-items:center!important;border-radius:8px!important;
+    background:#fff5d8!important;color:#b17d00!important;font-size:7px!important
+  }
+  #p-dashboard .admin-platform-snapshot .v1218-mini small{color:#8e97a1!important;font-size:5.4px!important}
+  #p-dashboard .admin-platform-snapshot .v1218-mini b{color:#272d35!important;font-size:10px!important;line-height:1!important;margin-top:2px!important}
+
+  .admin-dashboard-section-head{
+    display:flex!important;align-items:end!important;justify-content:space-between!important;gap:8px!important;margin:12px 2px 7px!important
+  }
+  .admin-dashboard-section-head>div{display:grid!important;gap:1px!important}
+  .admin-dashboard-section-head small{color:#9099a3!important;font-size:5.6px!important;font-weight:900!important;letter-spacing:.11em!important}
+  .admin-dashboard-section-head b{color:#242a32!important;font-size:12px!important}
+  .admin-dashboard-section-head>span{color:#8d96a0!important;font-size:5.8px!important}
+
+  /* KPI cards: 2-column, no giant full-width blocks */
+  #adminKpis.business-summary-grid,
+  #adminKpis.kpi-grid{
+    display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important;margin:0!important
+  }
+  #adminKpis .business-summary-card,
+  #adminKpis .app-kpi{
+    min-width:0!important;min-height:78px!important;padding:10px!important;
+    display:grid!important;grid-template-columns:30px minmax(0,1fr) 8px!important;align-items:center!important;gap:8px!important;
+    border:1px solid #e5e7eb!important;border-radius:14px!important;background:#fff!important;
+    box-shadow:0 5px 14px rgba(34,40,48,.025)!important;text-align:left!important
+  }
+  #adminKpis .business-summary-icon,
+  #adminKpis .app-kpi>i:first-child{
+    width:30px!important;height:30px!important;display:grid!important;place-items:center!important;border-radius:9px!important;
+    background:#fff5d8!important;color:#b17d00!important;font-size:8px!important
+  }
+  #adminKpis .business-summary-copy{min-width:0!important;display:grid!important;gap:2px!important}
+  #adminKpis .business-summary-copy b,
+  #adminKpis .app-kpi b{font-size:14px!important;color:#252b33!important;line-height:1!important}
+  #adminKpis .business-summary-copy small,
+  #adminKpis .app-kpi small{font-size:6.2px!important;color:#7f8994!important;line-height:1.2!important}
+  #adminKpis .business-summary-arrow,
+  #adminKpis .dashboard-nav-arrow{font-size:6px!important;color:#b18a16!important}
+
+  /* Quick actions */
+  .admin-dashboard-quick{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}
+  .admin-dashboard-quick button{
+    -webkit-appearance:none!important;appearance:none!important;min-width:0!important;min-height:60px!important;
+    display:grid!important;grid-template-columns:31px minmax(0,1fr) 7px!important;align-items:center!important;gap:7px!important;
+    padding:9px!important;border:1px solid #e5e7eb!important;border-radius:13px!important;background:#fff!important;color:#2b3139!important;font:inherit!important;text-align:left!important
+  }
+  .admin-dashboard-quick button>span{
+    width:31px!important;height:31px!important;display:grid!important;place-items:center!important;border-radius:10px!important;
+    background:#fff5d8!important;color:#b17d00!important;font-size:8px!important
+  }
+  .admin-dashboard-quick button>div{min-width:0!important;display:grid!important;gap:2px!important}
+  .admin-dashboard-quick button b{font-size:7.8px!important}
+  .admin-dashboard-quick button small{font-size:5.8px!important;color:#8d96a0!important}
+  .admin-dashboard-quick button>i{color:#a6adb5!important;font-size:5.5px!important}
+
+  /* Work cards */
+  .admin-dashboard-grid{display:grid!important;grid-template-columns:1fr!important;gap:8px!important}
+  #p-dashboard .admin-dashboard-card{
+    padding:11px!important;border-radius:15px!important;border:1px solid #e5e7eb!important;background:#fff!important;box-shadow:0 5px 15px rgba(34,40,48,.025)!important
+  }
+  #p-dashboard .admin-dashboard-card .app-card-head{align-items:center!important;margin-bottom:8px!important}
+  #p-dashboard .admin-dashboard-card .app-card-head small{font-size:5.5px!important;color:#929aa4!important;font-weight:900!important;letter-spacing:.10em!important}
+  #p-dashboard .admin-dashboard-card .app-card-head h3{font-size:12px!important;margin:1px 0 2px!important}
+  #p-dashboard .admin-dashboard-card .app-card-head p{font-size:6.5px!important;margin:0!important;color:#8b94a0!important}
+  #p-dashboard .admin-dashboard-card .app-btn{min-height:30px!important;padding:0 9px!important;font-size:6.4px!important;border-radius:9px!important}
+  #p-dashboard .activity-item{min-height:51px!important;padding:7px!important;border-radius:10px!important}
+  #p-dashboard .activity-icon{width:30px!important;height:30px!important;min-width:30px!important;border-radius:9px!important}
+  #p-dashboard .activity-item b{font-size:7.6px!important}
+  #p-dashboard .activity-item small{font-size:5.8px!important}
+
+  /* Analytics */
+  #p-dashboard .admin-dashboard-analytics{
+    display:grid!important;grid-template-columns:1fr!important;gap:8px!important
+  }
+  #p-dashboard .analytics-card{
+    padding:11px!important;border-radius:15px!important;border:1px solid #e5e7eb!important;background:#fff!important;box-shadow:none!important
+  }
+  #p-dashboard .v933-filter-row{overflow-x:auto!important;flex-wrap:nowrap!important;scrollbar-width:none!important}
+  #p-dashboard .v933-filter-row button{flex:0 0 auto!important}
+
+  /* dark parity */
+  html[data-theme="dark"] #p-dashboard .admin-dashboard-hero{
+    background:radial-gradient(240px 130px at 100% 0%,rgba(240,185,11,.055),transparent 72%),linear-gradient(145deg,#111820,#0d1319)!important;
+    border-color:#2a323c!important
+  }
+  html[data-theme="dark"] #p-dashboard .admin-dashboard-hero h1,
+  html[data-theme="dark"] .admin-dashboard-section-head b,
+  html[data-theme="dark"] #adminKpis .business-summary-copy b,
+  html[data-theme="dark"] #adminKpis .app-kpi b,
+  html[data-theme="dark"] .admin-dashboard-quick button b,
+  html[data-theme="dark"] #p-dashboard .admin-dashboard-card h3{color:#eef2f6!important}
+  html[data-theme="dark"] #p-dashboard .admin-platform-snapshot .v1218-mini,
+  html[data-theme="dark"] #adminKpis .business-summary-card,
+  html[data-theme="dark"] #adminKpis .app-kpi,
+  html[data-theme="dark"] .admin-dashboard-quick button,
+  html[data-theme="dark"] #p-dashboard .admin-dashboard-card,
+  html[data-theme="dark"] #p-dashboard .analytics-card{
+    background:#10161d!important;border-color:#2a323c!important;box-shadow:none!important
+  }
+  html[data-theme="dark"] .admin-dashboard-kicker,
+  html[data-theme="dark"] .admin-snapshot-icon,
+  html[data-theme="dark"] #adminKpis .business-summary-icon,
+  html[data-theme="dark"] #adminKpis .app-kpi>i:first-child,
+  html[data-theme="dark"] .admin-dashboard-quick button>span{
+    background:#171a14!important;border-color:#4e4523!important;color:#d8ad25!important
+  }
+  html[data-theme="dark"] .admin-live-pill{background:#0f1916!important;border-color:#214438!important}
+}
+
+@media(max-width:390px){
+  #adminKpis.business-summary-grid,#adminKpis.kpi-grid{gap:6px!important}
+  #adminKpis .business-summary-card,#adminKpis .app-kpi{min-height:72px!important;padding:9px!important}
+  .admin-dashboard-quick{gap:6px!important}
+}
+
+/* Desktop premium layout */
+@media(min-width:901px){
+  #p-dashboard.admin-dashboard-v2{max-width:1500px;margin:0 auto}
+  .admin-dashboard-hero{padding:22px;border:1px solid var(--v18-line);border-radius:18px;background:var(--v18-card)}
+  .admin-dashboard-hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}
+  .admin-platform-snapshot{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}
+  .admin-dashboard-section-head{display:flex;justify-content:space-between;align-items:end;margin:16px 2px 8px}
+  #adminKpis.business-summary-grid,#adminKpis.kpi-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:10px!important}
+  .admin-dashboard-quick{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+  .admin-dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .admin-dashboard-analytics{display:grid!important;grid-template-columns:1fr 1fr!important;gap:12px!important}
+}
