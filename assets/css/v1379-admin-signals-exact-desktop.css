@@ -11,8 +11,8 @@
   html[data-auth-scope="admin"][data-theme="light"] .app-shell,
   html[data-auth-scope="admin"][data-theme="light"] .app-main{
     background:
-      radial-gradient(780px 380px at 100% -6%,rgba(211,151,12,.10),transparent 70%),
-      linear-gradient(180deg,#fbf1df 0%,#f7e9d2 48%,#f3e1c5 100%)!important;
+      radial-gradient(780px 380px at 100% -6%,rgba(196,151,54,.055),transparent 70%),
+      linear-gradient(180deg,#fbf8f2 0%,#f7f3eb 48%,#f5f0e8 100%)!important;
   }
   html[data-auth-scope="admin"][data-theme="light"] .app-content{background:transparent!important}
 
