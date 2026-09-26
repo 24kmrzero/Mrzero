@@ -1,0 +1,63 @@
+/* 24K MR ZERO — mobile bottom-gap cleanup v13.40
+   Keep the floating nav fixed, but remove duplicate page/body spacers that
+   created a large scrollable empty area after the last content card. */
+
+@media(max-width:760px){
+  body.mentor-page{
+    padding-bottom:0!important;
+  }
+
+  .mentor-shell{
+    min-height:0!important;
+    height:auto!important;
+  }
+
+  .mentor-main{
+    min-height:0!important;
+    height:auto!important;
+  }
+
+  .mentor-content{
+    min-height:0!important;
+    height:auto!important;
+    padding-bottom:calc(72px + env(safe-area-inset-bottom))!important;
+  }
+
+  .mentor-view,
+  .mentor-view.active,
+  [data-mentor-panel]{
+    min-height:0!important;
+    height:auto!important;
+    margin-bottom:0!important;
+    padding-bottom:0!important;
+  }
+
+  .mentor-view.active > :last-child,
+  [data-mentor-panel="signals"] > :last-child,
+  [data-mentor-panel="charts"] > :last-child,
+  [data-mentor-panel="articles"] > :last-child,
+  [data-mentor-panel="more"] > :last-child{
+    margin-bottom:0!important;
+  }
+
+  #mentorSignals,
+  #mentorCharts,
+  #mentorArticles,
+  .mentor-chart-library,
+  .mentor-article-library,
+  .mentor-more-actions{
+    margin-bottom:0!important;
+    padding-bottom:0!important;
+  }
+
+  /* The nav already sits above the safe area; do not reserve that space twice. */
+  .mentor-mobile-nav{
+    margin-bottom:0!important;
+  }
+}
+
+@media(max-width:760px) and (max-height:760px){
+  .mentor-content{
+    padding-bottom:calc(68px + env(safe-area-inset-bottom))!important;
+  }
+}
