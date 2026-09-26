@@ -308,10 +308,135 @@ function renderOverview(){
   if(home){home.classList.remove('home-loading','home-ready');requestAnimationFrame(()=>home.classList.add('home-ready'))}
 }
 
-function clientMatches(c){const q=($('#clientSearch')?.value||'').toLowerCase(),f=$('#clientCourseFilter')?.value||'all',s=$('#clientStatusFilter')?.value||'all';const text=`${c.full_name||''} ${c.email||''} ${c.whatsapp||''} ${c.client_id||''}`.toLowerCase();if(q&&!text.includes(q))return false;const courses=(c.enrollments||[]).map(e=>String(e.course_title||'').toLowerCase()).join(' ');if(f==='level1'&&!/basic|level 1/.test(courses))return false;if(f==='level2'&&!/level 2|advanced/.test(courses))return false;if(f==='vip'&&String(c.vip_status||'')!=='approved')return false;if(s!=='all'&&clientStatus(c)!==s)return false;return true}
-function statusOptions(v){return['new','contacted','interested','follow_up','converted','inactive'].map(x=>`<option value="${x}" ${x===v?'selected':''}>${x==='inactive'?'not interested':x.replaceAll('_',' ')}</option>`).join('')}
+function clientMatches(c){
+  const q=($('#clientSearch')?.value||'').trim().toLowerCase(),
+    course=$('#clientCourseFilter')?.value||'all',
+    status=$('#clientStatusFilter')?.value||'all';
+  const text=`${c.full_name||''} ${c.email||''} ${c.whatsapp||''} ${c.client_id||''}`.toLowerCase();
+  if(q&&!text.includes(q))return false;
+  const courses=(c.enrollments||[]).map(e=>String(e.course_title||'').toLowerCase()).join(' ');
+  if(course==='level1'&&!/basic|level 1/.test(courses))return false;
+  if(course==='level2'&&!/level 2|advanced/.test(courses))return false;
+  if(course==='vip'&&String(c.vip_status||'')!=='approved')return false;
+  if(status!=='all'&&clientStatus(c)!==status)return false;
+  return true
+}
+function statusLabel(v){
+  const s=String(v||'new').toLowerCase();
+  return s==='inactive'?'Not Interested':s==='follow_up'?'Follow-up':s.charAt(0).toUpperCase()+s.slice(1).replaceAll('_',' ')
+}
+function statusOptions(v){return['new','contacted','interested','follow_up','converted','inactive'].map(x=>`<option value="${x}" ${x===v?'selected':''}>${statusLabel(x)}</option>`).join('')}
 function localInput(v){if(!v)return'';const d=new Date(v);if(Number.isNaN(d.getTime()))return'';const z=new Date(d.getTime()-d.getTimezoneOffset()*60000);return z.toISOString().slice(0,16)}
-function renderClients(){const rows=(payload.clients||[]).filter(clientMatches);$('#clientCountBadge').textContent=`${rows.length} client${rows.length===1?'':'s'}`;$('#clientsCards').innerHTML=rows.length?rows.map(c=>{const courses=(c.enrollments||[]).map(e=>e.course_title).filter(Boolean);return `<article class="client-work-card" data-client-card="${c.id}"><div class="main"><div class="avatar">${esc(initials(c.full_name))}</div><div><b>${esc(c.full_name||'Student')}</b><small>${esc(c.client_id||'')} · ${esc(c.email||'')}</small><small>${esc(c.whatsapp||'')}</small></div></div><div class="client-meta-cell"><span>Course / Source</span><strong>${esc(courses.join(', ')||'No course')}</strong><small>${esc(c.link_name||c.link_source||'Direct')}</small></div><div class="client-meta-cell"><span>Assigned</span><strong>${esc(dt(clientDate(c)))}</strong><small>${sameDay(clientDate(c))?'New / Auto':'Existing client'}</small></div><div class="client-meta-cell"><span>Status & Follow-up</span><select class="status-select" data-client-status="${c.id}">${statusOptions(clientStatus(c))}</select><input class="follow-input" data-client-follow="${c.id}" type="datetime-local" value="${esc(localInput(c.next_follow_up))}"></div><div class="client-actions">${c.whatsapp?`<a class="whatsapp" target="_blank" rel="noopener" href="${waLink(c.whatsapp,`Hello ${c.full_name||''},`)}"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>`:''}<button data-save-client="${c.id}">Save</button><button data-note-client="${c.id}">Note</button></div></article>`}).join(''):'<div class="panel-card chat-empty">No matching clients.</div>'}
+function clientFollowState(c){
+  if(!c.next_follow_up)return {label:'No follow-up set',tone:'neutral',when:'—'};
+  const d=new Date(c.next_follow_up),now=Date.now(),ms=d.getTime()-now;
+  if(Number.isNaN(d.getTime()))return {label:'No follow-up set',tone:'neutral',when:'—'};
+  if(ms<=0)return {label:'Follow-up overdue',tone:'danger',when:relativeAgo(c.next_follow_up)};
+  if(ms<=86400000)return {label:'Due within 24h',tone:'warning',when:relativeAgo(c.next_follow_up)};
+  return {label:'Follow-up scheduled',tone:'ok',when:relativeAgo(c.next_follow_up)}
+}
+function sortClientRows(rows){
+  const mode=$('#clientSort')?.value||'priority';
+  return rows.slice().sort((a,b)=>{
+    if(mode==='newest')return new Date(clientDate(b)||0)-new Date(clientDate(a)||0);
+    if(mode==='oldest')return new Date(clientDate(a)||0)-new Date(clientDate(b)||0);
+    if(mode==='name')return String(a.full_name||'').localeCompare(String(b.full_name||''));
+    return opportunityScore(b)-opportunityScore(a)||new Date(clientDate(b)||0)-new Date(clientDate(a)||0)
+  })
+}
+function renderClientSummary(all){
+  const now=Date.now(),
+    total=all.length,
+    fresh=all.filter(c=>clientStatus(c)==='new').length,
+    due=all.filter(c=>c.next_follow_up&&new Date(c.next_follow_up).getTime()<=now||clientStatus(c)==='follow_up').length,
+    converted=all.filter(c=>clientStatus(c)==='converted').length;
+  const box=$('#clientSummary');
+  if(box)box.innerHTML=[
+    ['Total',total,'fa-user-group','blue'],
+    ['New',fresh,'fa-user-plus','gold'],
+    ['Follow-up',due,'fa-bell','amber'],
+    ['Converted',converted,'fa-circle-check','green']
+  ].map(x=>`<div class="team-client-summary-card ${x[3]}"><span><i class="fa-solid ${x[2]}"></i></span><div><small>${x[0]}</small><b>${x[1]}</b></div></div>`).join('');
+}
+function updateClientFilterUi(rows){
+  const status=$('#clientStatusFilter')?.value||'all',
+    course=$('#clientCourseFilter')?.value||'all',
+    sort=$('#clientSort')?.value||'priority',
+    q=String($('#clientSearch')?.value||'').trim();
+  $$('#clientStatusTabs [data-client-status-chip]').forEach(b=>b.classList.toggle('active',b.dataset.clientStatusChip===status));
+  const filterCount=(course!=='all'?1:0)+(status!=='all'?1:0)+(sort!=='priority'?1:0);
+  const fc=$('#clientFilterCount');
+  if(fc){fc.hidden=!filterCount;fc.textContent=filterCount}
+  if($('#clientSearchClear'))$('#clientSearchClear').hidden=!q;
+  const title=status==='all'?'All Clients':statusLabel(status);
+  if($('#clientResultsTitle'))$('#clientResultsTitle').textContent=title;
+  if($('#clientResultsMeta'))$('#clientResultsMeta').textContent=`${rows.length} result${rows.length===1?'':'s'}`;
+}
+function renderClients(){
+  const all=payload?.clients||[];
+  renderClientSummary(all);
+  const rows=sortClientRows(all.filter(clientMatches));
+  if($('#clientCountBadge'))$('#clientCountBadge').textContent=all.length.toLocaleString();
+  updateClientFilterUi(rows);
+
+  const box=$('#clientsCards');if(!box)return;
+  if(!rows.length){
+    const hasAny=all.length>0;
+    box.innerHTML=`<article class="team-client-empty">
+      <span><i class="fa-solid ${hasAny?'fa-magnifying-glass':'fa-user-clock'}"></i></span>
+      <div><b>${hasAny?'No clients match these filters':'No clients assigned yet'}</b><small>${hasAny?'Try clearing search or filters to see more clients.':'New assigned leads will appear here automatically.'}</small></div>
+      ${hasAny?'<button type="button" data-client-reset-empty>Reset Filters</button>':''}
+    </article>`;
+    return
+  }
+
+  box.innerHTML=rows.map(c=>{
+    const courses=(c.enrollments||[]).map(e=>e.course_title).filter(Boolean),
+      status=clientStatus(c),
+      follow=clientFollowState(c),
+      assigned=clientDate(c),
+      source=c.link_name||c.link_source||'Direct',
+      vip=String(c.vip_status||'')==='approved';
+    return `<article class="client-work-card premium-client-card status-${status}" data-client-card="${c.id}">
+      <div class="premium-client-head">
+        <div class="premium-client-identity">
+          <span class="avatar">${esc(initials(c.full_name))}</span>
+          <div><b>${esc(c.full_name||'Student')}</b><small>${esc(c.client_id||'No Client ID')}</small></div>
+        </div>
+        <div class="premium-client-head-actions">
+          ${vip?'<span class="client-vip-badge"><i class="fa-solid fa-crown"></i> VIP</span>':''}
+          <span class="client-status-pill ${status}">${esc(statusLabel(status))}</span>
+          ${c.whatsapp?`<a class="client-wa-icon" target="_blank" rel="noopener" href="${waLink(c.whatsapp,`Hello ${c.full_name||''},`)}" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>`:''}
+        </div>
+      </div>
+
+      <div class="premium-client-contact">
+        <span><i class="fa-regular fa-envelope"></i>${esc(c.email||'No email')}</span>
+        <span><i class="fa-solid fa-phone"></i>${esc(c.whatsapp||'No WhatsApp')}</span>
+      </div>
+
+      <div class="premium-client-info-grid">
+        <div><span>COURSE</span><b>${esc(courses.join(', ')||'No course')}</b><small>${esc(source)}</small></div>
+        <div><span>ASSIGNED</span><b>${esc(assigned?relativeAgo(assigned):'—')}</b><small>${esc(assigned?dt(assigned):'No date')}</small></div>
+        <div class="follow-state ${follow.tone}"><span>FOLLOW-UP</span><b>${esc(follow.label)}</b><small>${esc(follow.when)}</small></div>
+      </div>
+
+      <div class="premium-client-controls">
+        <label><span>Status</span><select class="status-select" data-client-status="${c.id}">${statusOptions(status)}</select></label>
+        <label><span>Next Follow-up</span><input class="follow-input" data-client-follow="${c.id}" type="datetime-local" value="${esc(localInput(c.next_follow_up))}"></label>
+      </div>
+
+      <div class="premium-client-footer">
+        <span class="client-note-preview">${c.note?`<i class="fa-regular fa-note-sticky"></i> ${esc(c.note)}`:'No note added'}</span>
+        <div class="client-actions">
+          <button type="button" class="note" data-note-client="${c.id}"><i class="fa-regular fa-note-sticky"></i> Note</button>
+          <button type="button" class="save" data-save-client="${c.id}"><i class="fa-solid fa-check"></i> Save</button>
+        </div>
+      </div>
+    </article>`
+  }).join('')
+}
+
 async function saveClient(id,withNote=false){const c=(payload.clients||[]).find(x=>String(x.id)===String(id));if(!c)return;const status=$(`[data-client-status="${id}"]`)?.value||clientStatus(c),follow=$(`[data-client-follow="${id}"]`)?.value||null;let note=c.note||null;if(withNote){const v=prompt('Client note:',note||'');if(v===null)return;note=v.trim()||null}try{await rpc('team_update_client_status',{p_token:token(),p_student_id:id,p_status:status,p_next_follow_up:follow?new Date(follow).toISOString():null,p_note:note});toast('Client updated.');await load()}catch(e){toast(e.message||'Could not update client.','error')}}
 async function searchOwnership(){const q=String($('#ownershipSearch')?.value||'').trim(),box=$('#ownershipResult'),btn=$('#ownershipSearchBtn');if(q.length<2){toast('Enter at least 2 characters.','error');return}btn.disabled=true;box.innerHTML='<div class="panel-card chat-empty"><i class="fa-solid fa-spinner fa-spin"></i> Searching…</div>';try{const d=await rpc('team_search_client_v12_18',{p_token:token(),p_query:q});if(!d?.found){box.innerHTML='<div class="panel-card chat-empty">No matching client found.</div>';return}const c=d.client||{},m=d.manager||{},own=d.ownership||'unassigned';box.innerHTML=`<article class="ownership-card"><div><h3>${esc(c.name||'Student')} ${c.client_id?`· ${esc(c.client_id)}`:''}</h3><p>${own==='mine'?`${esc(c.email||'')} · ${esc(c.whatsapp||'')}`:own==='other'?`Assigned to ${esc(m.name||'another manager')}${m.whatsapp?` · ${esc(m.whatsapp)}`:''}`:'This client is not assigned to a manager.'}</p><p>${own==='mine'?`Status: ${esc(c.status||'new')} · Assigned: ${esc(dt(c.assigned_at))}`:own==='other'?'Please coordinate with the assigned manager. Team members cannot transfer ownership.':'Ask Admin to assign the client before working on it.'}</p>${own==='other'&&m.whatsapp?`<a class="wa-mini" target="_blank" rel="noopener" href="${waLink(m.whatsapp,`Hello ${m.name||''}, I searched client ${c.name||''} ${c.client_id||''}.`)}">Message Manager</a>`:''}</div><span class="ownership-state ${own}">${own==='mine'?'YOUR CLIENT':own==='other'?'OTHER MANAGER':'UNASSIGNED'}</span></article>`}catch(e){box.innerHTML=`<div class="panel-card chat-empty">${esc(e.message||'Could not search client.')}</div>`}finally{btn.disabled=false}}
 async function saveDaily(e){e.preventDefault();$('#dailyStatus').textContent='Saving…';const args={p_token:token(),p_report_date:$('#reportDate').value,p_leads_contacted:Number($('#leadsContacted').value||0),p_messages_sent:Number($('#messagesSent').value||0),p_calls_made:Number($('#callsMade').value||0),p_follow_ups:Number($('#followUps').value||0),p_new_broker_accounts:Number($('#newBrokerAccounts').value||0),p_ib_partner_shifts:Number($('#ibPartnerShifts').value||0),p_xm_weekly_lots:Number($('#xmWeeklyLots').value||0),p_dprime_weekly_lots:Number($('#dprimeWeeklyLots').value||0),p_exness_weekly_lots:Number($('#exnessWeeklyLots').value||0),p_notes:$('#reportNotes').value.trim()||null};try{try{await rpc('team_submit_daily_report_v12_18',args)}catch(x){if(!/function|schema cache|does not exist/i.test(x.message||''))throw x;await rpc('team_submit_daily_report',{p_token:args.p_token,p_report_date:args.p_report_date,p_new_broker_accounts:args.p_new_broker_accounts,p_ib_partner_shifts:args.p_ib_partner_shifts,p_xm_weekly_lots:args.p_xm_weekly_lots,p_dprime_weekly_lots:args.p_dprime_weekly_lots,p_exness_weekly_lots:args.p_exness_weekly_lots,p_notes:args.p_notes})}toast('Daily report submitted.');await load()}catch(x){$('#dailyStatus').textContent=x.message||'Could not save report.';toast(x.message||'Could not save report.','error')}}
@@ -360,6 +485,13 @@ $('#teamMoreRefresh')?.addEventListener('click',()=>$('#teamRefresh')?.click());
 $('#teamMoreTheme')?.addEventListener('click',()=>$('#teamTheme')?.click());
 $('#teamMoreLogout')?.addEventListener('click',()=>$('#teamLogout')?.click());
 window.addEventListener('online',updateSyncStatus);window.addEventListener('offline',updateSyncStatus);
-setInterval(updateSyncStatus,30000);$('#teamLoginForm')?.addEventListener('submit',login);$('#teamLogout').onclick=logout;$('#teamTheme').onclick=()=>applyTheme(currentTheme()==='dark'?'light':'dark');$('#teamThemeTop').onclick=()=>$('#teamTheme').click();$('#teamRefresh').onclick=load;$('#teamMonth').onchange=load;$$('[data-view]').forEach(b=>b.onclick=()=>setView(b.dataset.view));document.addEventListener('click',e=>{const jump=e.target.closest('[data-view-jump]');if(jump)setView(jump.dataset.viewJump);const hc=e.target.closest('[data-home-client]');if(hc){const c=(payload?.clients||[]).find(x=>String(x.id)===String(hc.dataset.homeClient));if(c){setView('clients');if($('#clientSearch'))$('#clientSearch').value=c.full_name||c.client_id||'';renderClients()}return}const hs=e.target.closest('[data-home-search-all]');if(hs){$('#teamHomeSearchAll')?.click();return}const col=e.target.closest('[data-home-collapse]');if(col){const target=$('#'+col.dataset.homeCollapse);if(target){const collapsed=target.classList.toggle('home-collapsed');col.classList.toggle('open',!collapsed);col.setAttribute('aria-expanded',String(!collapsed))}return}const s=e.target.closest('[data-save-client]');if(s)saveClient(s.dataset.saveClient);const n=e.target.closest('[data-note-client]');if(n)saveClient(n.dataset.noteClient,true);const th=e.target.closest('[data-thread]');if(th)openChat(th.dataset.thread).catch(x=>toast(x.message,'error'));const ac=e.target.closest('[data-chat-action]');if(ac)chatAction(ac.dataset.chatAction);const qr=e.target.closest('[data-quick-reply]');if(qr&&$('#chatReply'))$('#chatReply').value=qr.dataset.quickReply});$('#clientSearch').oninput=renderClients;$('#clientCourseFilter').onchange=renderClients;$('#clientStatusFilter').onchange=renderClients;$('#ownershipSearchBtn').onclick=searchOwnership;$('#ownershipSearch').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();searchOwnership()}});$('#dailyReportForm').onsubmit=saveDaily;$$('[data-range]').forEach(b=>b.onclick=()=>{if(b.dataset.range==='custom')$('#customRange').classList.remove('hidden');else{$('#customRange').classList.add('hidden');loadRange(b.dataset.range)}});$('#applyRange').onclick=()=>loadRange('custom',$('#rangeStart').value,$('#rangeEnd').value);$$('[data-chat-filter]').forEach(b=>b.onclick=()=>{chatFilter=b.dataset.chatFilter;$$('[data-chat-filter]').forEach(x=>x.classList.toggle('active',x===b));loadChat().catch(x=>toast(x.message,'error'))});let chatTimer;$('#chatSearch').oninput=()=>{clearTimeout(chatTimer);chatTimer=setTimeout(()=>{chatSearch=$('#chatSearch').value.trim();loadChat().catch(()=>{})},250)};$('#chatReplyForm').onsubmit=sendChat;window.addEventListener('hashchange',()=>setView(location.hash.replace('#','')||'overview'));window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;$('#teamInstallButton')?.classList.add('ready');$('#teamMobileInstall')?.classList.add('ready')});window.addEventListener('appinstalled',()=>{installPrompt=null;$('#teamInstallButton')?.classList.add('installed');$('#teamMobileInstall')?.classList.add('installed');toast('24K Team Panel installed successfully.','success')});$('#teamInstallButton').onclick=async()=>{if(window.matchMedia?.('(display-mode: standalone)').matches)return toast('Team Panel is already installed.','success');if(installPrompt){installPrompt.prompt();const choice=await installPrompt.userChoice;if(choice?.outcome==='accepted')toast('Installing Team Panel…','success');installPrompt=null}else toast('Install is not offered yet. Use your browser menu → Add to Home screen / Install app.')}}
+setInterval(updateSyncStatus,30000);$('#teamLoginForm')?.addEventListener('submit',login);$('#teamLogout').onclick=logout;$('#teamTheme').onclick=()=>applyTheme(currentTheme()==='dark'?'light':'dark');$('#teamThemeTop').onclick=()=>$('#teamTheme').click();$('#teamRefresh').onclick=load;$('#teamMonth').onchange=load;$$('[data-view]').forEach(b=>b.onclick=()=>setView(b.dataset.view));document.addEventListener('click',e=>{const jump=e.target.closest('[data-view-jump]');if(jump)setView(jump.dataset.viewJump);const hc=e.target.closest('[data-home-client]');if(hc){const c=(payload?.clients||[]).find(x=>String(x.id)===String(hc.dataset.homeClient));if(c){setView('clients');if($('#clientSearch'))$('#clientSearch').value=c.full_name||c.client_id||'';renderClients()}return}const hs=e.target.closest('[data-home-search-all]');if(hs){$('#teamHomeSearchAll')?.click();return}const cre=e.target.closest('[data-client-reset-empty]');if(cre){$('#clientResetFilters')?.click();return}const col=e.target.closest('[data-home-collapse]');if(col){const target=$('#'+col.dataset.homeCollapse);if(target){const collapsed=target.classList.toggle('home-collapsed');col.classList.toggle('open',!collapsed);col.setAttribute('aria-expanded',String(!collapsed))}return}const s=e.target.closest('[data-save-client]');if(s)saveClient(s.dataset.saveClient);const n=e.target.closest('[data-note-client]');if(n)saveClient(n.dataset.noteClient,true);const th=e.target.closest('[data-thread]');if(th)openChat(th.dataset.thread).catch(x=>toast(x.message,'error'));const ac=e.target.closest('[data-chat-action]');if(ac)chatAction(ac.dataset.chatAction);const qr=e.target.closest('[data-quick-reply]');if(qr&&$('#chatReply'))$('#chatReply').value=qr.dataset.quickReply});$('#clientSearch').oninput=renderClients;
+$('#clientCourseFilter').onchange=renderClients;
+$('#clientStatusFilter').onchange=renderClients;
+$('#clientSort').onchange=renderClients;
+$('#clientSearchClear')?.addEventListener('click',()=>{if($('#clientSearch'))$('#clientSearch').value='';renderClients();$('#clientSearch')?.focus()});
+$('#clientFilterToggle')?.addEventListener('click',()=>{const p=$('#clientFilterPanel'),b=$('#clientFilterToggle');if(!p)return;const open=p.hidden;p.hidden=!open;b?.setAttribute('aria-expanded',String(open))});
+$('#clientResetFilters')?.addEventListener('click',()=>{if($('#clientSearch'))$('#clientSearch').value='';if($('#clientCourseFilter'))$('#clientCourseFilter').value='all';if($('#clientStatusFilter'))$('#clientStatusFilter').value='all';if($('#clientSort'))$('#clientSort').value='priority';renderClients()});
+$('#clientStatusTabs')?.addEventListener('click',e=>{const b=e.target.closest('[data-client-status-chip]');if(!b)return;if($('#clientStatusFilter'))$('#clientStatusFilter').value=b.dataset.clientStatusChip;renderClients()});$('#ownershipSearchBtn').onclick=searchOwnership;$('#ownershipSearch').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();searchOwnership()}});$('#dailyReportForm').onsubmit=saveDaily;$$('[data-range]').forEach(b=>b.onclick=()=>{if(b.dataset.range==='custom')$('#customRange').classList.remove('hidden');else{$('#customRange').classList.add('hidden');loadRange(b.dataset.range)}});$('#applyRange').onclick=()=>loadRange('custom',$('#rangeStart').value,$('#rangeEnd').value);$$('[data-chat-filter]').forEach(b=>b.onclick=()=>{chatFilter=b.dataset.chatFilter;$$('[data-chat-filter]').forEach(x=>x.classList.toggle('active',x===b));loadChat().catch(x=>toast(x.message,'error'))});let chatTimer;$('#chatSearch').oninput=()=>{clearTimeout(chatTimer);chatTimer=setTimeout(()=>{chatSearch=$('#chatSearch').value.trim();loadChat().catch(()=>{})},250)};$('#chatReplyForm').onsubmit=sendChat;window.addEventListener('hashchange',()=>setView(location.hash.replace('#','')||'overview'));window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;$('#teamInstallButton')?.classList.add('ready');$('#teamMobileInstall')?.classList.add('ready')});window.addEventListener('appinstalled',()=>{installPrompt=null;$('#teamInstallButton')?.classList.add('installed');$('#teamMobileInstall')?.classList.add('installed');toast('24K Team Panel installed successfully.','success')});$('#teamInstallButton').onclick=async()=>{if(window.matchMedia?.('(display-mode: standalone)').matches)return toast('Team Panel is already installed.','success');if(installPrompt){installPrompt.prompt();const choice=await installPrompt.userChoice;if(choice?.outcome==='accepted')toast('Installing Team Panel…','success');installPrompt=null}else toast('Install is not offered yet. Use your browser menu → Add to Home screen / Install app.')}}
 bind();if(!supa)return loginView('Website connection is unavailable. Please contact support.');setView(location.hash.replace('#','')||'overview');if(token())load();
 })();
