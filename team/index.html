@@ -28,6 +28,7 @@
   <link rel="stylesheet" href="/assets/css/v1355-team-executive.css?v=13.55.1">
   <link rel="stylesheet" href="/assets/css/v1356-team-clients.css?v=13.56">
   <link rel="stylesheet" href="/assets/css/v1357-team-chat.css?v=13.57">
+  <link rel="stylesheet" href="/assets/css/v1358-team-earnings.css?v=13.58">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/assets/js/config.js?v=12.18"></script>
 </head>
@@ -377,12 +378,52 @@
         </div>
       </section>
 
-      <section class="view" data-view-panel="earnings">
-        <div class="section-head"><div><h2>Earnings</h2><p>Your Course, VIP and Broker Lot earnings. Figures are calculated automatically.</p></div><span class="section-badge">AUTO CALCULATED</span></div>
-        <div class="earnings-note">Earnings start from September 2026. Older client/history data stays visible, but pre-September Team earnings were manually settled. If an old client generates an approved earning now, it belongs to the month in which that earning is approved.</div>
-        <div id="earningsCards" class="team-earnings-top"></div>
-        <div id="earningsProgress" class="progress-grid"></div>
-        <div id="brokerGrid" class="broker-grid earnings-brokers"></div>
+      <section class="view team-earnings-v2" data-view-panel="earnings">
+        <article class="team-earnings-command">
+          <div class="team-earnings-command-top">
+            <div>
+              <span class="team-earnings-kicker"><i class="fa-solid fa-sack-dollar"></i> EARNINGS COMMAND</span>
+              <h2>Earnings Command Center</h2>
+              <p>Course, VIP and Broker Lot commissions — calculated automatically from approved activity.</p>
+            </div>
+            <span class="team-earnings-auto"><i class="fa-solid fa-bolt"></i><b>AUTO</b><small>Live calculation</small></span>
+          </div>
+
+          <div class="team-earnings-hero">
+            <div class="team-earnings-total">
+              <small>TOTAL EARNINGS</small>
+              <b id="earningsHeroTotal">$0.00</b>
+              <span id="earningsHeroMonth">Current Month</span>
+            </div>
+            <div class="team-earnings-hero-stat">
+              <span><i class="fa-solid fa-chart-line"></i></span>
+              <div><small>PROJECTED MONTH-END</small><b id="earningsProjected">$0.00</b><em>At current pace</em></div>
+            </div>
+            <div class="team-earnings-hero-stat">
+              <span><i class="fa-solid fa-ranking-star"></i></span>
+              <div><small>TEAM RANK</small><b id="earningsRank">—</b><em id="earningsRankMeta">Live team position</em></div>
+            </div>
+          </div>
+
+          <div id="earningsCards" class="team-earnings-top team-earnings-source-rail"></div>
+        </article>
+
+        <details class="team-earnings-policy">
+          <summary><span><i class="fa-solid fa-circle-info"></i><b>How earnings are calculated</b></span><i class="fa-solid fa-chevron-down"></i></summary>
+          <p>Earnings start from September 2026. Older client/history data stays visible, but pre-September Team earnings were manually settled. If an old client generates an approved earning now, it belongs to the month in which that earning is approved.</p>
+        </details>
+
+        <div class="team-earnings-section-head">
+          <div><small>COMMISSION LEVELS</small><b>Progress to Next Tier</b></div>
+          <span>Auto updated</span>
+        </div>
+        <div id="earningsProgress" class="progress-grid team-earnings-progress"></div>
+
+        <div class="team-earnings-section-head">
+          <div><small>BROKER PERFORMANCE</small><b>Lot Earnings</b></div>
+          <span id="earningsLotsTotal">0.0 lots</span>
+        </div>
+        <div id="brokerGrid" class="broker-grid earnings-brokers team-broker-grid"></div>
       </section>
 
       <section class="view" data-view-panel="performance">
@@ -442,7 +483,7 @@
   </div>
 
   <div id="teamToast" class="team-toast" aria-live="polite"></div>
-  <script src="/assets/js/v110-team-command-center.js?v=13.57"></script>
+  <script src="/assets/js/v110-team-command-center.js?v=13.58"></script>
   <script src="/assets/js/v1216-team-mobile.js?v=13.55"></script>
 </body>
 </html>
