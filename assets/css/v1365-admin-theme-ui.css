@@ -1,0 +1,271 @@
+/* 24K MR ZERO — Admin Dashboard Theme + UI Correction v13.65
+   Light mode is truly light/premium. Dark mode remains black/gold. */
+
+@media(max-width:900px){
+  /* Compact app rhythm */
+  .app-content{
+    padding:9px 11px calc(86px + env(safe-area-inset-bottom))!important;
+  }
+  #p-dashboard.admin-dashboard-v2{
+    display:grid!important;
+    gap:0!important;
+  }
+  .admin-dashboard-section-head{
+    margin:12px 2px 6px!important;
+  }
+
+  /* LIGHT THEME — remove black blocks entirely */
+  html[data-theme="light"] body.app-page{
+    background:
+      radial-gradient(420px 220px at 100% 0%,rgba(225,170,22,.08),transparent 70%),
+      linear-gradient(180deg,#fbfaf7 0%,#f7f3eb 45%,#f9f7f2 100%)!important;
+    color:#20252d!important;
+  }
+
+  html[data-theme="light"] .app-topbar{
+    height:60px!important;
+    padding:0 11px!important;
+    background:rgba(255,253,248,.96)!important;
+    border-bottom:1px solid #e7dfd1!important;
+    box-shadow:0 8px 22px rgba(55,47,31,.055)!important;
+    backdrop-filter:blur(18px)!important;
+  }
+  html[data-theme="light"] .app-title strong{color:#20252d!important}
+  html[data-theme="light"] .app-title small{color:#8b929b!important}
+
+  html[data-theme="light"] .app-burger,
+  html[data-theme="light"] .app-theme-toggle{
+    width:38px!important;height:38px!important;
+    border:1px solid #e6dbc0!important;
+    border-radius:11px!important;
+    background:#fffaf0!important;
+    color:#a77700!important;
+    box-shadow:none!important;
+  }
+
+  /* Hero becomes premium ivory instead of black */
+  html[data-theme="light"] #p-dashboard .admin-dashboard-hero{
+    padding:13px!important;
+    border:1px solid #dfd2b4!important;
+    border-radius:18px!important;
+    background:
+      radial-gradient(230px 140px at 100% 0%,rgba(232,183,50,.16),transparent 72%),
+      radial-gradient(170px 110px at 0% 100%,rgba(198,146,16,.06),transparent 72%),
+      linear-gradient(145deg,#fffefb 0%,#fbf6e9 100%)!important;
+    box-shadow:0 10px 28px rgba(71,56,26,.055)!important;
+  }
+  html[data-theme="light"] #p-dashboard .admin-dashboard-hero:before{
+    background:
+      repeating-linear-gradient(90deg,transparent 0 31px,rgba(137,105,29,.018) 32px),
+      repeating-linear-gradient(0deg,transparent 0 31px,rgba(137,105,29,.014) 32px)!important;
+  }
+  html[data-theme="light"] #p-dashboard .admin-dashboard-hero:after{
+    color:rgba(170,125,15,.035)!important;
+  }
+  html[data-theme="light"] .admin-dashboard-kicker{
+    border-color:#e8d6a4!important;
+    background:#fff7df!important;
+    color:#9a6c00!important;
+    box-shadow:none!important;
+  }
+  html[data-theme="light"] #p-dashboard .admin-dashboard-hero h1{
+    margin-top:8px!important;
+    color:#20252d!important;
+    font-size:22px!important;
+    text-shadow:none!important;
+  }
+  html[data-theme="light"] #p-dashboard .admin-dashboard-hero p{
+    color:#737d88!important;
+    font-size:7.9px!important;
+  }
+  html[data-theme="light"] .admin-live-pill{
+    min-width:61px!important;
+    border-color:#cfe9df!important;
+    background:#f3fbf8!important;
+    box-shadow:none!important;
+  }
+  html[data-theme="light"] .admin-live-pill>b{color:#188a64!important}
+  html[data-theme="light"] .admin-live-pill>small{color:#7a9188!important}
+
+  /* Light snapshot tiles */
+  html[data-theme="light"] #p-dashboard .admin-platform-snapshot .v1218-mini{
+    min-height:54px!important;
+    padding:7px!important;
+    border:1px solid #e6dfd2!important;
+    background:rgba(255,255,255,.86)!important;
+    box-shadow:none!important;
+  }
+  html[data-theme="light"] #p-dashboard .admin-platform-snapshot .v1218-mini:after{
+    height:1px!important;
+    background:linear-gradient(90deg,#d5a21a,rgba(213,162,26,.06))!important;
+  }
+  html[data-theme="light"] .admin-snapshot-icon{
+    width:25px!important;height:25px!important;
+    border:1px solid #ead9aa!important;
+    background:#fff6dc!important;
+    color:#aa7800!important;
+    box-shadow:none!important;
+  }
+  html[data-theme="light"] #p-dashboard .admin-platform-snapshot .v1218-mini small{color:#8b949e!important}
+  html[data-theme="light"] #p-dashboard .admin-platform-snapshot .v1218-mini b{color:#262c34!important}
+
+  /* Section headers */
+  html[data-theme="light"] .admin-dashboard-section-head small{color:#a47b12!important}
+  html[data-theme="light"] .admin-dashboard-section-head b{color:#252b33!important}
+  html[data-theme="light"] .admin-dashboard-section-head>span{color:#949ca5!important}
+
+  /* Key Numbers — clean light fintech cards */
+  html[data-theme="light"] #adminKpis .business-summary-card,
+  html[data-theme="light"] #adminKpis .app-kpi{
+    min-height:74px!important;
+    padding:9px!important;
+    border:1px solid #e3ddd1!important;
+    border-radius:13px!important;
+    background:
+      radial-gradient(95px 52px at 100% 100%,rgba(223,171,28,.06),transparent 72%),
+      linear-gradient(145deg,#fff,#fcfaf5)!important;
+    box-shadow:0 5px 15px rgba(58,50,34,.035)!important;
+  }
+  html[data-theme="light"] #adminKpis .business-summary-card:before,
+  html[data-theme="light"] #adminKpis .app-kpi:before{
+    width:2px!important;
+    background:linear-gradient(180deg,#d5a21a,rgba(213,162,26,.12))!important;
+  }
+  html[data-theme="light"] #adminKpis .business-summary-card:after,
+  html[data-theme="light"] #adminKpis .app-kpi:after{
+    opacity:.18!important;
+    border-bottom-color:#b98a0a!important;
+  }
+  html[data-theme="light"] #adminKpis .business-summary-icon,
+  html[data-theme="light"] #adminKpis .app-kpi>i:first-child{
+    width:29px!important;height:29px!important;
+    border:1px solid #ead9aa!important;
+    background:#fff5d8!important;
+    color:#a87700!important;
+    box-shadow:none!important;
+  }
+  html[data-theme="light"] #adminKpis .business-summary-copy b,
+  html[data-theme="light"] #adminKpis .app-kpi b{
+    color:#252b33!important;
+    font-size:13px!important;
+  }
+  html[data-theme="light"] #adminKpis .business-summary-copy small,
+  html[data-theme="light"] #adminKpis .app-kpi small{
+    color:#7f8994!important;
+  }
+  html[data-theme="light"] #adminKpis .business-summary-arrow,
+  html[data-theme="light"] #adminKpis .dashboard-nav-arrow{
+    color:#af8209!important;
+  }
+
+  /* Quick actions: cleaner and smaller */
+  html[data-theme="light"] .admin-dashboard-quick{
+    gap:6px!important;
+  }
+  html[data-theme="light"] .admin-dashboard-quick button{
+    min-height:57px!important;
+    padding:8px!important;
+    border:1px solid #e3ddd1!important;
+    border-radius:13px!important;
+    background:#fff!important;
+    box-shadow:0 5px 14px rgba(58,50,34,.028)!important;
+  }
+  html[data-theme="light"] .admin-dashboard-quick button:before{display:none!important}
+  html[data-theme="light"] .admin-dashboard-quick button>span{
+    width:29px!important;height:29px!important;
+    border:1px solid #ead9aa!important;
+    background:#fff6dd!important;
+    color:#aa7800!important;
+    box-shadow:none!important;
+  }
+  html[data-theme="light"] .admin-dashboard-quick button b{color:#2a3038!important}
+  html[data-theme="light"] .admin-dashboard-quick button small{color:#929aa4!important}
+
+  /* Main work cards / analytics */
+  html[data-theme="light"] #p-dashboard .admin-dashboard-card,
+  html[data-theme="light"] #p-dashboard .analytics-card{
+    border:1px solid #e3ddd1!important;
+    background:#fff!important;
+    box-shadow:0 6px 17px rgba(58,50,34,.03)!important;
+  }
+  html[data-theme="light"] #p-dashboard .admin-dashboard-card:before{
+    height:1px!important;
+    background:linear-gradient(90deg,#d4a01a,rgba(212,160,26,.03))!important;
+  }
+
+  /* LIGHT mobile nav must also be light */
+  html[data-theme="light"] .v1218-admin-mobile-nav,
+  html[data-theme="light"] .v1216-admin-mobile-nav{
+    left:11px!important;right:11px!important;
+    bottom:calc(7px + env(safe-area-inset-bottom))!important;
+    min-height:66px!important;
+    padding:6px!important;
+    border:1px solid #ded7ca!important;
+    border-radius:18px!important;
+    background:rgba(255,253,248,.97)!important;
+    box-shadow:0 17px 42px rgba(62,52,32,.13)!important;
+    backdrop-filter:blur(18px)!important;
+  }
+  html[data-theme="light"] .v1218-admin-mobile-nav button,
+  html[data-theme="light"] .v1216-admin-mobile-nav button{
+    color:#87919d!important;
+    border-radius:12px!important;
+  }
+  html[data-theme="light"] .v1218-admin-mobile-nav button.on,
+  html[data-theme="light"] .v1216-admin-mobile-nav button.on{
+    color:#9a6d00!important;
+    background:#fff5d6!important;
+    box-shadow:inset 0 0 0 1px #ead9a9!important;
+  }
+
+  /* DARK THEME — keep premium dark, but reduce excessive black */
+  html[data-theme="dark"] body.app-page{
+    background:#070a0e!important;
+  }
+  html[data-theme="dark"] .app-topbar{
+    background:rgba(10,14,19,.97)!important;
+    border-bottom-color:#262e37!important;
+  }
+  html[data-theme="dark"] #p-dashboard .admin-dashboard-hero{
+    border-color:#41391d!important;
+    background:
+      radial-gradient(230px 140px at 100% 0%,rgba(232,183,50,.075),transparent 72%),
+      linear-gradient(145deg,#111820,#0c1218)!important;
+    box-shadow:none!important;
+  }
+  html[data-theme="dark"] #adminKpis .business-summary-card,
+  html[data-theme="dark"] #adminKpis .app-kpi{
+    background:#10161d!important;
+    border-color:#2a323c!important;
+    box-shadow:none!important;
+  }
+  html[data-theme="dark"] .v1218-admin-mobile-nav,
+  html[data-theme="dark"] .v1216-admin-mobile-nav{
+    background:rgba(12,16,21,.97)!important;
+    border-color:#29313a!important;
+  }
+}
+
+@media(max-width:390px){
+  html[data-theme="light"] #adminKpis .business-summary-card,
+  html[data-theme="light"] #adminKpis .app-kpi{
+    min-height:70px!important;
+  }
+}
+
+/* Desktop theme parity */
+@media(min-width:901px){
+  html[data-theme="light"] #p-dashboard .admin-dashboard-hero{
+    background:
+      radial-gradient(360px 180px at 100% 0%,rgba(232,183,50,.12),transparent 72%),
+      linear-gradient(145deg,#fffefb,#fbf6e9)!important;
+    border-color:#dfd2b4!important;
+    color:#20252d!important;
+  }
+  html[data-theme="light"] #p-dashboard .admin-dashboard-hero h1{color:#20252d!important}
+  html[data-theme="light"] #p-dashboard .admin-dashboard-hero p{color:#737d88!important}
+  html[data-theme="light"] #p-dashboard .admin-platform-snapshot .v1218-mini{
+    background:#fff!important;border-color:#e3ddd1!important
+  }
+  html[data-theme="light"] #p-dashboard .admin-platform-snapshot .v1218-mini b{color:#262c34!important}
+}
