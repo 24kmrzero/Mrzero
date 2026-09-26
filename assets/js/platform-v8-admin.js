@@ -496,7 +496,8 @@
     const campaign = link?.campaign || profile.first_campaign || attribution?.campaign || '';
     const teamId = profile.assigned_team_id || clientAssignment?.team_id || null;
     const team = teamId ? state.teamAccounts.find(row => String(row.id) === String(teamId)) || null : null;
-    const direct = !linkId && !ref && !source && !campaign;
+    const normalizedSource = String(source || '').trim().toLowerCase();
+    const direct = !linkId && !ref && !campaign && (!normalizedSource || ['direct','organic','direct / organic','direct/organic'].includes(normalizedSource));
     return {
       direct,
       link,
