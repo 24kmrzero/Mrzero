@@ -5,7 +5,7 @@ let state=null;
 const $=s=>document.querySelector(s);
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const stamp=v=>{const d=v?new Date(v):null;if(!d||Number.isNaN(d.getTime()))return{date:'—',time:'—'};return{date:new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Karachi',day:'2-digit',month:'short',year:'numeric'}).format(d),time:new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Karachi',hour:'2-digit',minute:'2-digit',hour12:true}).format(d)}};
-const signalFinal=s=>Boolean(s?.closed_at)||['tp3_hit','tp4_hit','sl_hit','closed','cancelled'].includes(String(s?.status||''));
+const signalFinal=s=>{const st=String(s?.status||'');return Boolean(s?.closed_at)||['tp4_hit','sl_hit','closed','cancelled'].includes(st)||(st==='tp3_hit'&&(s?.take_profit_4===null||s?.take_profit_4===undefined||s?.take_profit_4===''))};
 const signed=n=>{const x=Number(n||0);return (x>0?'+':'')+x.toLocaleString('en-US',{maximumFractionDigits:1})};
 
 function ensureStats(panelId,id){
