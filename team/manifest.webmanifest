@@ -1,15 +1,23 @@
 {
   "name": "24K MR ZERO — Team Panel",
   "short_name": "24K Team",
-  "description": "24K MR ZERO Team Performance & Earnings Panel",
+  "description": "24K MR ZERO Team Performance, Clients & Earnings workspace",
   "id": "/team/",
-  "start_url": "/team/",
+  "start_url": "/team/#overview",
   "scope": "/team/",
   "display": "standalone",
-  "display_override": ["standalone", "minimal-ui"],
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
   "background_color": "#080b11",
   "theme_color": "#080b11",
-  "orientation": "any",
+  "orientation": "portrait-primary",
+  "categories": [
+    "business",
+    "finance",
+    "productivity"
+  ],
   "icons": [
     {
       "src": "/assets/logo.png",
@@ -22,6 +30,23 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "My Clients",
+      "short_name": "Clients",
+      "url": "/team/#clients"
+    },
+    {
+      "name": "Live Chat",
+      "short_name": "Chat",
+      "url": "/team/#chat"
+    },
+    {
+      "name": "Earnings",
+      "short_name": "Earnings",
+      "url": "/team/#earnings"
     }
   ]
 }
