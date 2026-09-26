@@ -29,7 +29,7 @@
   let calendarCursor = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
   const state = {
     profiles: [], courses: [], modules: [], lessons: [], sessions: [], resources: [], links: [],
-    attributions: [], emailQueue: [], enrollments: [], signals: [], payments: [], support: [],
+    attributions: [], clientAttributions: [], emailQueue: [], enrollments: [], signals: [], payments: [], support: [],
     notifications: [], activities: [], auditLogs: [], teamAccounts: [], overview: null
   };
 
@@ -155,7 +155,7 @@
         <div class="filter-row student-main-filters"><input id="userSearchV9" type="search" placeholder="Search name, email or WhatsApp..."><select id="userCourseFilter"><option value="all">All Courses</option></select><select id="userStatusFilter"><option value="all">All Access</option><option value="active">Active</option><option value="grace">Grace Active</option><option value="pending">Pending</option><option value="locked">Locked</option><option value="expired">Expired</option><option value="suspended">Suspended</option><option value="lifetime">Lifetime</option></select><select id="userVerifiedFilter"><option value="all">All Email Status</option><option value="verified">Verified</option><option value="unverified">Unverified</option></select></div>
       </div>
       <div class="app-card bulk-bar"><div><b>Bulk Actions</b><small>Optional actions for selected users.</small></div><select id="bulkUserAction"><option value="extend_days">Extend Access</option><option value="lock">Lock Selected</option><option value="unlock">Unlock Selected</option><option value="resend_verification">Resend Verification</option></select><input id="bulkAccessDays" type="number" min="1" placeholder="Days"><button class="app-btn outline" id="notifySelectedUsers"><i class="fa-solid fa-bullhorn"></i> Notify</button><button class="app-btn gold" id="applyBulkUsers">Apply</button></div>
-      <div class="table-scroll"><table class="admin-table student-management-table"><thead><tr><th><input type="checkbox" id="selectAllUsers"></th><th>Student</th><th>WhatsApp</th><th>Registered</th><th>Course</th><th>Enrollment</th><th>Payment</th><th>Access / Expiry</th><th>Actions</th></tr></thead><tbody id="studentsBodyV9"></tbody></table></div>`;
+      <div class="table-scroll"><table class="admin-table student-management-table"><thead><tr><th><input type="checkbox" id="selectAllUsers"></th><th>Student</th><th>WhatsApp</th><th>Registered</th><th class="student-attribution-col">Signup Source / Link</th><th class="student-attribution-col">Team / Assigned</th><th>Course</th><th>Enrollment</th><th>Payment</th><th>Access / Expiry</th><th>Actions</th></tr></thead><tbody id="studentsBodyV9"></tbody></table></div>`;
   }
 
   function installModals() {
@@ -294,6 +294,7 @@
       ['lessons', A.supabase.from('course_lessons').select('*').order('lesson_number')],
       ['links', A.supabase.rpc('admin_get_link_performance')],
       ['attributions', A.supabase.from('user_attributions').select('*')],
+      ['clientAttributions', A.supabase.from('team_client_attribution').select('*').order('assigned_at', { ascending: false })],
       ['emailQueue', A.supabase.from('email_queue').select('*').order('created_at', { ascending: false }).limit(500)],
       ['enrollments', A.supabase.from('enrollments').select('*').order('created_at', { ascending: false })],
       ['notifications', A.supabase.from('admin_notifications').select('*').order('created_at', { ascending: false }).limit(300)],
@@ -482,6 +483,45 @@
   async function toggleTeamAccount(id){const row=state.teamAccounts.find(x=>x.id===id);if(!row)return;const {error}=await A.supabase.rpc('admin_set_team_account_active',{p_team_id:id,p_is_active:!row.is_active});if(error)return A.toast(A.friendlyError(error),'error');await refresh();A.toast(`Team account ${row.is_active?'disabled':'enabled'}.`,'success');}
 
   function effective(profile) { return A.effectiveAccessStatus(profile); }
+
+  function studentAttribution(profile) {
+    const attribution = state.attributions.find(row => String(row.user_id) === String(profile.id)) || null;
+    const clientAssignment = state.clientAttributions.find(row => String(row.student_id) === String(profile.id) && row.is_current !== false)
+      || state.clientAttributions.find(row => String(row.student_id) === String(profile.id))
+      || null;
+    const linkId = profile.first_link_id || attribution?.link_id || clientAssignment?.link_id || null;
+    const link = linkId ? state.links.find(row => String(row.id) === String(linkId)) || null : null;
+    const ref = profile.first_ref || attribution?.ref_code || link?.ref_code || '';
+    const source = link?.source || profile.first_source || attribution?.source || '';
+    const campaign = link?.campaign || profile.first_campaign || attribution?.campaign || '';
+    const teamId = profile.assigned_team_id || clientAssignment?.team_id || null;
+    const team = teamId ? state.teamAccounts.find(row => String(row.id) === String(teamId)) || null : null;
+    const direct = !linkId && !ref && !source && !campaign;
+    return {
+      direct,
+      link,
+      linkId,
+      linkName: link?.name || (ref ? 'Tracked Signup' : 'Direct / Organic'),
+      ref: ref || '',
+      source: direct ? 'Direct / Organic' : (source || 'Tracked Link'),
+      campaign: campaign || '',
+      team,
+      teamName: team?.display_name || team?.username || (teamId ? 'Assigned Team' : (direct ? 'Organic' : 'Unassigned')),
+      assignedAt: clientAssignment?.assigned_at || null
+    };
+  }
+
+  function studentAttributionHtml(profile) {
+    const a = studentAttribution(profile);
+    const sourceHtml = a.direct
+      ? '<span class="student-origin direct"><i class="fa-solid fa-globe"></i> Direct / Organic</span><small>No tracked signup link</small>'
+      : '<b class="student-origin-link">'+esc(a.linkName)+'</b><small>'+esc(a.source)+(a.ref?' · '+esc(a.ref):'')+(a.campaign?' · '+esc(a.campaign):'')+'</small>';
+    const teamHtml = a.team
+      ? '<b class="student-team-name">'+esc(a.teamName)+'</b><small>'+(a.assignedAt?'Assigned '+A.formatDateTime(a.assignedAt):'Assignment time unavailable')+'</small>'
+      : '<span class="student-team-empty">'+(a.direct?'Organic / No team':'Unassigned')+'</span><small>'+(a.direct?'Direct signup':'No team assignment yet')+'</small>';
+    return { sourceHtml, teamHtml, data:a };
+  }
+
   function filteredUsers() {
     const query = document.getElementById('userSearchV9')?.value.toLowerCase().trim() || '';
     const dateFilter = document.getElementById('userDateFilter')?.value || 'all';
@@ -490,7 +530,8 @@
     const courseFilter = document.getElementById('userCourseFilter')?.value || 'all';
     const now = new Date(); const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     return state.profiles.filter(profile => profile.role === 'student').filter(profile => {
-      const haystack = `${profile.full_name || ''} ${profile.email || ''} ${profile.whatsapp || ''}`.toLowerCase();
+      const attr = studentAttribution(profile);
+      const haystack = `${profile.full_name || ''} ${profile.email || ''} ${profile.whatsapp || ''} ${attr.linkName || ''} ${attr.ref || ''} ${attr.source || ''} ${attr.campaign || ''} ${attr.teamName || ''}`.toLowerCase();
       if (query && !haystack.includes(query)) return false;
       const created = new Date(profile.created_at);
       if (dateFilter === 'today' && (created < today || created >= addDays(today, 1))) return false;
@@ -674,8 +715,9 @@
       const payment = active ? state.payments.find(row => row.id === active.payment_id) || state.payments.find(row => row.student_id === profile.id && row.course_id === active.course_id && row.status === 'approved') : null;
       const enrollmentLabel = active ? A.statusLabel(active.status) : 'Not Enrolled';
       const paymentHtml = active ? (payment ? `<span class="status-pill ${A.statusClass(payment.status)}">${A.statusLabel(payment.status)}</span>` : (course && isFreeCourse(course.id) ? '<span class="status-pill ok">Free</span>' : '<span class="status-pill warn">No Payment</span>')) : '—';
-      return `<tr><td><input type="checkbox" data-user-select value="${profile.id}"></td><td><button class="text-link" data-user-details="${profile.id}"><b>${esc(profile.full_name || 'Student')}</b></button><small>${esc(profile.email || '')}</small></td><td>${esc(profile.whatsapp || '—')}</td><td>${A.formatDateTime(profile.created_at)}</td><td>${course ? `<b>${esc(course.title)}</b><small>${enrollments.length > 1 ? `${enrollments.length} enrollments` : (isFreeCourse(course.id) ? 'Free Course' : 'Paid Course')}</small>` : '<span class="muted">No course</span>'}</td><td><span class="status-pill ${A.statusClass(active?.status || 'pending')}">${enrollmentLabel}</span></td><td>${paymentHtml}</td><td><span class="status-pill ${A.statusClass(access)}">${profile.lifetime_access ? 'Lifetime' : A.statusLabel(access)}</span><small>${profile.lifetime_access ? 'No expiry' : (profile.access_expires_at ? A.formatDateTime(profile.access_expires_at) : 'No expiry set')}</small></td><td><div class="table-actions"><button class="app-btn small outline" data-user-details="${profile.id}">View</button><button class="app-btn small gold" data-manage-enrollment="${profile.id}">Enrollment</button><button class="app-btn small outline" data-manage-access="${profile.id}">Access</button></div></td></tr>`;
-    }).join('') : `<tr><td colspan="9">${empty('No users match the selected filters.', 'fa-users')}</td></tr>`;
+      const attrHtml = studentAttributionHtml(profile);
+      return `<tr><td><input type="checkbox" data-user-select value="${profile.id}"></td><td><button class="text-link" data-user-details="${profile.id}"><b>${esc(profile.full_name || 'Student')}</b></button><small>${esc(profile.email || '')}</small></td><td>${esc(profile.whatsapp || '—')}</td><td>${A.formatDateTime(profile.created_at)}</td><td class="student-attribution-col student-source-cell">${attrHtml.sourceHtml}</td><td class="student-attribution-col student-team-cell">${attrHtml.teamHtml}</td><td>${course ? `<b>${esc(course.title)}</b><small>${enrollments.length > 1 ? `${enrollments.length} enrollments` : (isFreeCourse(course.id) ? 'Free Course' : 'Paid Course')}</small>` : '<span class="muted">No course</span>'}</td><td><span class="status-pill ${A.statusClass(active?.status || 'pending')}">${enrollmentLabel}</span></td><td>${paymentHtml}</td><td><span class="status-pill ${A.statusClass(access)}">${profile.lifetime_access ? 'Lifetime' : A.statusLabel(access)}</span><small>${profile.lifetime_access ? 'No expiry' : (profile.access_expires_at ? A.formatDateTime(profile.access_expires_at) : 'No expiry set')}</small></td><td><div class="table-actions"><button class="app-btn small outline" data-user-details="${profile.id}">View</button><button class="app-btn small gold" data-manage-enrollment="${profile.id}">Enrollment</button><button class="app-btn small outline" data-manage-access="${profile.id}">Access</button></div></td></tr>`;
+    }).join('') : `<tr><td colspan="11">${empty('No users match the selected filters.', 'fa-users')}</td></tr>`;
   }
 
 
@@ -690,7 +732,7 @@
     finally { A.setLoading(button, false); }
   }
 
-  async function openUserDetails(id) { const profile = profileById(id); if (!profile) return; const enrollments = state.enrollments.filter(row => row.student_id === id); const payments = state.payments.filter(row => row.student_id === id); const activities = state.activities.filter(row => row.user_id === id).slice(0, 50); const supportRows = state.support.filter(row => row.student_id === id); const attribution = state.attributions.find(row => row.user_id === id); document.getElementById('userDetailsTitle').textContent = profile.full_name || 'Student'; document.getElementById('userDetailsSubtitle').textContent = profile.email; document.getElementById('userDetailsContent').innerHTML = `<div class="user-detail-grid"><div class="detail-card"><small>WhatsApp</small><b>${esc(profile.whatsapp || '—')}</b></div><div class="detail-card"><small>Email</small><b>${profile.email_verified ? 'Verified' : 'Unverified'}</b></div><div class="detail-card"><small>Access</small><b>${profile.lifetime_access ? 'Lifetime' : A.statusLabel(effective(profile))}</b></div><div class="detail-card"><small>Expiry</small><b>${profile.lifetime_access ? 'Never' : A.formatDateTime(profile.access_expires_at)}</b></div><div class="detail-card"><small>Source</small><b>${esc(profile.first_source || attribution?.source || 'Direct')}</b></div><div class="detail-card"><small>Reference</small><b>${esc(profile.first_ref || attribution?.ref_code || '—')}</b></div></div><div class="app-grid cols-2"><div class="app-card"><h3>Course Access</h3>${enrollments.map(row => `<div class="metric-row"><span>${esc(courseById(row.course_id)?.title || 'Course')}</span><span class="status-pill ${A.statusClass(row.status)}">${A.statusLabel(row.status)}</span></div>`).join('') || empty('No course enrollment.', 'fa-graduation-cap')}</div><div class="app-card"><h3>Payment History</h3>${payments.map(row => `<div class="metric-row"><span>${esc(courseById(row.course_id)?.title || 'Course')}<small>${esc(row.transaction_reference)}</small></span><span class="status-pill ${A.statusClass(row.status)}">${A.statusLabel(row.status)}</span></div>`).join('') || empty('No payment history.', 'fa-receipt')}</div></div><div class="app-card"><h3>Support Requests</h3>${supportRows.map(row => `<div class="metric-row"><span>${esc(row.subject)}<small>${A.formatDateTime(row.created_at)}</small></span><span class="status-pill ${A.statusClass(row.status)}">${A.statusLabel(row.status)}</span></div>`).join('') || empty('No support requests.', 'fa-headset')}</div><div class="app-card"><div class="app-card-head"><h3>Recent Activity</h3>${profile.email_verified ? '' : `<button class="app-btn small outline" data-resend-verification="${id}">Resend Verification</button>`}<button class="app-btn small gold" data-manage-access="${id}">Manage Access</button></div>${activities.map(row => `<div class="activity-item"><div class="activity-icon"><i class="fa-solid fa-clock-rotate-left"></i></div><div><b>${esc(row.description)}</b><small>${A.formatDateTime(row.created_at)}</small></div></div>`).join('') || empty('No activity recorded yet.', 'fa-clock')}</div>`; A.openModal('userDetailsModal'); }
+  async function openUserDetails(id) { const profile = profileById(id); if (!profile) return; const enrollments = state.enrollments.filter(row => row.student_id === id); const payments = state.payments.filter(row => row.student_id === id); const activities = state.activities.filter(row => row.user_id === id).slice(0, 50); const supportRows = state.support.filter(row => row.student_id === id); const attribution = state.attributions.find(row => row.user_id === id); const attrInfo = studentAttribution(profile); document.getElementById('userDetailsTitle').textContent = profile.full_name || 'Student'; document.getElementById('userDetailsSubtitle').textContent = profile.email; document.getElementById('userDetailsContent').innerHTML = `<div class="user-detail-grid"><div class="detail-card"><small>WhatsApp</small><b>${esc(profile.whatsapp || '—')}</b></div><div class="detail-card"><small>Email</small><b>${profile.email_verified ? 'Verified' : 'Unverified'}</b></div><div class="detail-card"><small>Access</small><b>${profile.lifetime_access ? 'Lifetime' : A.statusLabel(effective(profile))}</b></div><div class="detail-card"><small>Expiry</small><b>${profile.lifetime_access ? 'Never' : A.formatDateTime(profile.access_expires_at)}</b></div><div class="detail-card"><small>Signup Source</small><b>${esc(attrInfo.source)}</b></div><div class="detail-card"><small>Signup Link</small><b>${esc(attrInfo.linkName)}</b><em>${esc(attrInfo.ref || 'No tracked ref')}</em></div><div class="detail-card"><small>Campaign</small><b>${esc(attrInfo.campaign || '—')}</b></div><div class="detail-card"><small>Assigned Team</small><b>${esc(attrInfo.teamName)}</b><em>${attrInfo.assignedAt ? esc(A.formatDateTime(attrInfo.assignedAt)) : '—'}</em></div></div><div class="app-grid cols-2"><div class="app-card"><h3>Course Access</h3>${enrollments.map(row => `<div class="metric-row"><span>${esc(courseById(row.course_id)?.title || 'Course')}</span><span class="status-pill ${A.statusClass(row.status)}">${A.statusLabel(row.status)}</span></div>`).join('') || empty('No course enrollment.', 'fa-graduation-cap')}</div><div class="app-card"><h3>Payment History</h3>${payments.map(row => `<div class="metric-row"><span>${esc(courseById(row.course_id)?.title || 'Course')}<small>${esc(row.transaction_reference)}</small></span><span class="status-pill ${A.statusClass(row.status)}">${A.statusLabel(row.status)}</span></div>`).join('') || empty('No payment history.', 'fa-receipt')}</div></div><div class="app-card"><h3>Support Requests</h3>${supportRows.map(row => `<div class="metric-row"><span>${esc(row.subject)}<small>${A.formatDateTime(row.created_at)}</small></span><span class="status-pill ${A.statusClass(row.status)}">${A.statusLabel(row.status)}</span></div>`).join('') || empty('No support requests.', 'fa-headset')}</div><div class="app-card"><div class="app-card-head"><h3>Recent Activity</h3>${profile.email_verified ? '' : `<button class="app-btn small outline" data-resend-verification="${id}">Resend Verification</button>`}<button class="app-btn small gold" data-manage-access="${id}">Manage Access</button></div>${activities.map(row => `<div class="activity-item"><div class="activity-icon"><i class="fa-solid fa-clock-rotate-left"></i></div><div><b>${esc(row.description)}</b><small>${A.formatDateTime(row.created_at)}</small></div></div>`).join('') || empty('No activity recorded yet.', 'fa-clock')}</div>`; A.openModal('userDetailsModal'); }
 
   function renderAdminNotifications() { const filter = document.getElementById('adminNotificationFilter')?.value || 'all'; const rows = state.notifications.filter(row => filter === 'all' || (filter === 'unread' ? !row.is_read : row.type === filter)); const unread = state.notifications.filter(row => !row.is_read).length; ['adminNotificationCount', 'topAdminNotificationCount'].forEach(id => { const element = document.getElementById(id); if (element) element.textContent = unread; }); const list = document.getElementById('adminNotificationsList'); if (!list) return; list.innerHTML = rows.length ? rows.map(row => `<button class="notification-item admin-notification ${row.is_read ? '' : 'unread'} priority-${row.priority}" data-admin-notification="${row.id}"><span class="notification-icon"><i class="fa-solid ${row.type === 'payment' ? 'fa-receipt' : row.type === 'signup' ? 'fa-user-plus' : 'fa-headset'}"></i></span><span><b>${esc(row.title)}</b><small>${esc(row.message)} · ${A.formatDateTime(row.created_at)}</small></span>${row.is_read ? '' : '<i class="fa-solid fa-circle unread-dot"></i>'}</button>`).join('') : empty('No admin notifications in this view.', 'fa-bell'); }
   async function markAdminNotification(id, all = false) { const response = await A.supabase.rpc('admin_mark_notification_read', { p_id: id, p_all: all }); if (response.error) return A.toast(A.friendlyError(response.error), 'error'); await refresh(); }
@@ -1067,7 +1109,7 @@
   function handleGlobalResult(button) { const root = document.getElementById('globalSearchResults'); const row = root?._results?.[Number(button.dataset.globalResult)]; if (!row) return; root.classList.add('hidden'); document.getElementById('adminSearch').value = ''; if (row.action === 'user') openUserDetails(row.id); else document.querySelector(`[data-goto="${row.panel}"]`)?.click(); }
 
   function exportCsv(name, headers, rows) { downloadText(name, [headers.map(csvCell).join(','), ...rows.map(row => row.map(csvCell).join(','))].join('\n'), 'text/csv'); }
-  function exportUsers() { const rows = filteredUsers(); exportCsv('24k-users.csv', ['Name', 'Email', 'WhatsApp', 'Registered', 'Verified', 'Access', 'Expiry', 'Source', 'Reference'], rows.map(profile => [profile.full_name, profile.email, profile.whatsapp, profile.created_at, profile.email_verified, profile.lifetime_access ? 'Lifetime' : effective(profile), profile.access_expires_at, profile.first_source, profile.first_ref])); }
+  function exportUsers() { const rows = filteredUsers(); exportCsv('24k-users.csv', ['Name','Email','WhatsApp','Registered','Verified','Access','Expiry','Signup Source','Signup Link','Reference','Campaign','Assigned Team','Assigned At'], rows.map(profile => { const a=studentAttribution(profile); return [profile.full_name,profile.email,profile.whatsapp,profile.created_at,profile.email_verified,profile.lifetime_access?'Lifetime':effective(profile),profile.access_expires_at,a.source,a.linkName,a.ref,a.campaign,a.teamName,a.assignedAt]; })); }
   function exportEnrollments() { exportCsv('24k-enrollments.csv', ['Student', 'Email', 'Course', 'Status', 'Started', 'Expires'], enrollmentRows().map(row => [profileById(row.student_id)?.full_name, profileById(row.student_id)?.email, courseById(row.course_id)?.title, row.status, row.access_started_at, row.access_expires_at])); }
   function exportEnquiries() { exportCsv('24k-enquiries.csv', ['Name','Email','WhatsApp','Service','Source','Reference','Status','Created','Message'], filteredEnquiries().map(row => [row.full_name,row.email,row.whatsapp,row.service,row.source,row.ref_code,row.status,row.created_at,row.message])); }
   function exportLinks() { exportCsv('24k-links.csv', ['Name', 'Reference', 'Source', 'Campaign', 'Clicks', 'Unique', 'Signups', 'Enrollments', 'Conversion'], state.links.map(row => [row.name, row.ref_code, row.source, row.campaign, row.total_clicks, row.unique_visitors, row.signups, row.enrollments, row.conversion_rate])); }
