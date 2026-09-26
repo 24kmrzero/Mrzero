@@ -183,22 +183,56 @@
     }
   }
 
+  let modalHistoryPop = false;
+
+  function syncModalHistoryOpen(id) {
+    if (!id || id === 'appConfirmModal') return;
+    try {
+      const current = history.state || {};
+      if (current.__24kModal && current.__24kModalId === id) return;
+      if (current.__24kModal) {
+        history.replaceState({ ...current, __24kModal: true, __24kModalId: id }, '', location.href);
+      } else {
+        history.pushState({ ...current, __24kModal: true, __24kModalId: id }, '', location.href);
+      }
+    } catch (_) {}
+  }
+
   function openModal(id) {
     const modal = document.getElementById(id);
     if (!modal) return;
+    const wasOpen = modal.classList.contains('open');
+    if (!wasOpen) syncModalHistoryOpen(id);
     modal.classList.add('open');
     modal.setAttribute('aria-hidden', 'false');
     document.body.classList.add('modal-open');
     setTimeout(() => modal.querySelector('input:not([type="hidden"]),select,textarea,button')?.focus(), 40);
   }
 
-  function closeModal(id) {
+  function closeModal(id, options = {}) {
     const modal = document.getElementById(id);
     if (!modal) return;
+    const wasOpen = modal.classList.contains('open');
     modal.classList.remove('open');
     modal.setAttribute('aria-hidden', 'true');
     if (!document.querySelector('.app-modal.open')) document.body.classList.remove('modal-open');
+
+    if (!wasOpen || options.skipHistory || modalHistoryPop || id === 'appConfirmModal') return;
+    if (history.state?.__24kModal && history.state?.__24kModalId === id) {
+      setTimeout(() => {
+        if (document.querySelector('.app-modal.open')) return;
+        try { history.back(); } catch (_) {}
+      }, 0);
+    }
   }
+
+  window.addEventListener('popstate', () => {
+    const open = [...document.querySelectorAll('.app-modal.open')].reverse().find(m => m.id !== 'appConfirmModal');
+    if (!open) return;
+    modalHistoryPop = true;
+    closeModal(open.id, { skipHistory: true });
+    modalHistoryPop = false;
+  });
 
   function ensureConfirmModal() {
     if (document.getElementById('appConfirmModal')) return;
