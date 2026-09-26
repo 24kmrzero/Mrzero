@@ -1,0 +1,228 @@
+/* 24K MR ZERO — Team login final polish v13.47
+   Login must feel like an auth screen, not an authenticated app page. */
+
+.team-login-wrap{
+  min-height:100dvh!important;
+  padding:24px 18px!important;
+  display:grid!important;
+  place-items:center!important;
+  background:
+    radial-gradient(520px 300px at 50% 28%,rgba(240,185,11,.09),transparent 72%),
+    var(--r18-bg,#f5efe5)!important;
+}
+
+.team-login-card{
+  width:min(430px,100%)!important;
+  padding:26px 24px 24px!important;
+  border-radius:22px!important;
+  border:1px solid rgba(240,185,11,.22)!important;
+  background:
+    radial-gradient(260px 120px at 50% 0%,rgba(240,185,11,.045),transparent 74%),
+    var(--r18-surface,#fffdf8)!important;
+  box-shadow:0 18px 48px rgba(52,39,10,.10)!important;
+  text-align:center!important;
+}
+
+.team-login-logo{
+  width:142px!important;
+  max-height:68px!important;
+  object-fit:contain!important;
+  margin:0 auto 12px!important;
+  display:block!important;
+  filter:drop-shadow(0 7px 18px rgba(203,153,8,.12));
+}
+
+.team-login-card>.eyebrow{
+  margin:0!important;
+  color:#b78200!important;
+  font-size:8.5px!important;
+  font-weight:900!important;
+  letter-spacing:.16em!important;
+}
+
+.team-login-card h1{
+  margin:9px 0 7px!important;
+  color:var(--r18-text,#17181b)!important;
+  font-size:26px!important;
+  line-height:1.08!important;
+  letter-spacing:-.035em!important;
+}
+
+.team-login-card>p{
+  max-width:345px!important;
+  margin:0 auto!important;
+  color:var(--r18-muted,#596371)!important;
+  font-size:11px!important;
+  line-height:1.5!important;
+}
+
+.team-login-form{
+  display:grid!important;
+  gap:11px!important;
+  margin-top:19px!important;
+  text-align:left!important;
+}
+
+.team-login-form label{
+  display:grid!important;
+  gap:6px!important;
+  color:var(--r18-muted,#596371)!important;
+  font-size:10.5px!important;
+  font-weight:800!important;
+}
+
+.team-login-form input{
+  width:100%!important;
+  min-height:48px!important;
+  padding:0 13px!important;
+  border:1px solid #e0e4e8!important;
+  border-radius:12px!important;
+  outline:0!important;
+  background:#f7f9fc!important;
+  color:var(--r18-text,#17181b)!important;
+  font-size:15px!important;
+  font-weight:650!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.85)!important;
+}
+
+.team-login-form input:focus{
+  border-color:#d6b642!important;
+  box-shadow:0 0 0 3px rgba(240,185,11,.08)!important;
+}
+
+.team-login-form>.gold-btn{
+  min-height:49px!important;
+  margin-top:2px!important;
+  border-radius:12px!important;
+  font-size:12px!important;
+  font-weight:900!important;
+  box-shadow:0 9px 24px rgba(240,185,11,.15)!important;
+}
+
+.team-forgot-link{
+  width:max-content!important;
+  margin:2px auto 0!important;
+  padding:5px 8px!important;
+  border:0!important;
+  background:transparent!important;
+  color:#a77b00!important;
+  font-size:11.5px!important;
+  font-weight:850!important;
+  cursor:pointer!important;
+}
+
+.team-forgot-box{
+  margin-top:1px!important;
+  padding:10px!important;
+  border:1px solid rgba(240,185,11,.18)!important;
+  border-radius:11px!important;
+  background:rgba(240,185,11,.035)!important;
+}
+
+.team-login-card .login-error{
+  min-height:0!important;
+  margin:10px 0 0!important;
+  color:#d84d5d!important;
+  font-size:10.5px!important;
+  line-height:1.35!important;
+}
+
+.team-login-card .login-error:empty{
+  display:none!important;
+}
+
+/* Nothing from the authenticated app should leak into the login view. */
+#teamLogin:not(.hidden) ~ .team-mobile-nav,
+body:has(#teamLogin:not(.hidden)) .team-mobile-nav,
+body:has(#teamLogin:not(.hidden)) .team-profile-sheet{
+  display:none!important;
+}
+
+html[data-theme="dark"] .team-login-wrap{
+  background:
+    radial-gradient(520px 300px at 50% 28%,rgba(240,185,11,.07),transparent 72%),
+    #08090b!important;
+}
+html[data-theme="dark"] .team-login-card{
+  border-color:#292d35!important;
+  background:
+    radial-gradient(260px 120px at 50% 0%,rgba(240,185,11,.05),transparent 74%),
+    #111318!important;
+  box-shadow:0 24px 65px rgba(0,0,0,.34)!important;
+}
+html[data-theme="dark"] .team-login-card h1{color:#f4f5f7!important}
+html[data-theme="dark"] .team-login-card>p,
+html[data-theme="dark"] .team-login-form label{color:#929baa!important}
+html[data-theme="dark"] .team-login-form input{
+  border-color:#2a3039!important;
+  background:#151920!important;
+  color:#f4f5f7!important;
+  box-shadow:none!important;
+}
+html[data-theme="dark"] .team-forgot-box{
+  border-color:#2c3138!important;
+  background:#15191e!important;
+}
+
+@media(max-width:760px){
+  body:has(#teamLogin:not(.hidden)){
+    padding-bottom:0!important;
+  }
+
+  .team-login-wrap{
+    min-height:100dvh!important;
+    padding:18px!important;
+  }
+
+  .team-login-card{
+    width:100%!important;
+    max-width:410px!important;
+    padding:24px 20px 22px!important;
+    border-radius:20px!important;
+  }
+
+  .team-login-logo{
+    width:132px!important;
+    max-height:62px!important;
+    margin-bottom:10px!important;
+  }
+
+  .team-login-card>.eyebrow{
+    font-size:7.7px!important;
+  }
+
+  .team-login-card h1{
+    margin-top:8px!important;
+    font-size:24px!important;
+  }
+
+  .team-login-card>p{
+    max-width:310px!important;
+    font-size:10.5px!important;
+  }
+
+  .team-login-form{
+    gap:10px!important;
+    margin-top:17px!important;
+  }
+
+  .team-login-form input{
+    min-height:47px!important;
+    font-size:16px!important;
+  }
+
+  .team-login-form>.gold-btn{
+    min-height:48px!important;
+  }
+
+  .team-forgot-link{
+    font-size:11px!important;
+  }
+}
+
+@media(max-width:380px){
+  .team-login-wrap{padding:12px!important}
+  .team-login-card{padding:20px 16px!important}
+  .team-login-card h1{font-size:22px!important}
+  .team-login-card>p{font-size:10px!important}
+}
