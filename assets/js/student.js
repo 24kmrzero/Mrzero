@@ -1893,7 +1893,7 @@
       ${article.cover_url?`<img src="${attr(article.cover_url)}" alt="${attr(article.title)}" class="detail-image" loading="lazy" decoding="async">`:''}
       <div class="article-reader-top">
         <div class="course-meta"><span>${A.escapeHtml(article.category||'Education')}</span><span>${A.formatDate(article.published_at)}</span></div>
-        ${hasRoman?`<button type="button" class="article-translate-btn ${roman?'roman-active':''}" data-article-translate="${article.id}" data-language="${roman?'roman':'english'}"><i class="fa-solid fa-language"></i><span>${roman?'Read in English':'Roman English'}</span></button>`:''}
+        ${hasRoman?`<button type="button" class="article-translate-btn ${roman?'roman-active':''}" data-article-translate="${article.id}" data-language="${roman?'roman':'english'}"><i class="fa-solid fa-language"></i><span>${roman?'Show English':'Translate to Roman English'}</span></button>`:''}
       </div>
       <div class="article-reader-language"><i class="fa-solid fa-circle"></i> ${roman?'Roman English':'English'}</div>
       <div class="article-reader-body">${A.escapeHtml(body).replace(/\n/g,'<br>')}</div>`;
