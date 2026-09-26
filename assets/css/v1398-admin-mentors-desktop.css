@@ -271,3 +271,159 @@
     margin-bottom:10px!important;
   }
 }
+
+
+/* v14.00 — Mentor Accounts is now a dedicated page */
+@media (min-width:901px){
+  html[data-auth-scope="admin"] body #p-v1216-center.mentor-accounts-only{
+    max-width:1450px!important;
+    margin:0 auto!important;
+    padding:0 0 12px!important;
+  }
+
+  html[data-auth-scope="admin"] body #p-v1216-center.mentor-accounts-only .v1216-mentor-only{
+    display:block!important;
+  }
+
+  html[data-auth-scope="admin"] body #p-v1216-center.mentor-accounts-only .v1216-mentor-command{
+    position:relative!important;
+    isolation:isolate!important;
+    overflow:hidden!important;
+    min-height:118px!important;
+    display:flex!important;
+    align-items:flex-start!important;
+    justify-content:space-between!important;
+    gap:20px!important;
+    padding:18px 20px!important;
+    margin:0 0 10px!important;
+    border:1px solid #e0e3e7!important;
+    border-left:3px solid #d8a20a!important;
+    border-radius:17px!important;
+    background:
+      radial-gradient(390px 165px at 94% 0%,rgba(216,162,10,.05),transparent 72%),
+      #fff!important;
+    box-shadow:0 9px 25px rgba(18,24,32,.04)!important;
+  }
+
+  html[data-auth-scope="admin"] body #p-v1216-center.mentor-accounts-only .v1216-mentor-command:after{
+    content:"24K"!important;
+    position:absolute!important;
+    right:16px!important;
+    top:-35px!important;
+    z-index:-1!important;
+    color:rgba(190,139,0,.025)!important;
+    font-size:118px!important;
+    font-weight:950!important;
+    letter-spacing:-.08em!important;
+  }
+
+  html[data-auth-scope="admin"] body #p-v1216-center.mentor-accounts-only .v1216-mentor-command>div:first-child{
+    min-width:0!important;
+  }
+
+  html[data-auth-scope="admin"] body #p-v1216-center.mentor-accounts-only .v1216-mentor-kicker{
+    min-height:22px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    gap:6px!important;
+    padding:0 8px!important;
+    margin-bottom:9px!important;
+    border:1px solid #e7d89f!important;
+    border-radius:999px!important;
+    background:#fffaf0!important;
+    color:#8c6700!important;
+    font-size:6.8px!important;
+    font-weight:950!important;
+    letter-spacing:.11em!important;
+  }
+
+  html[data-auth-scope="admin"] body #p-v1216-center.mentor-accounts-only .v1216-mentor-command h2{
+    margin:0 0 5px!important;
+    color:#191d23!important;
+    font-size:27px!important;
+    line-height:1!important;
+    letter-spacing:-.04em!important;
+  }
+
+  html[data-auth-scope="admin"] body #p-v1216-center.mentor-accounts-only .v1216-mentor-command p{
+    margin:0!important;
+    color:#737d89!important;
+    font-size:9px!important;
+    line-height:1.5!important;
+  }
+
+  html[data-auth-scope="admin"] body #p-v1216-center.mentor-accounts-only #v1216AddMentor{
+    position:relative!important;
+    z-index:2!important;
+    min-height:38px!important;
+    height:38px!important;
+    padding:0 13px!important;
+    border-radius:9px!important;
+    font-size:8px!important;
+    box-shadow:0 8px 18px rgba(181,127,0,.12)!important;
+  }
+
+  html[data-auth-scope="admin"] body #p-v1216-center.mentor-accounts-only .v1216-mentor-overview{
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:8px!important;
+    margin:0 0 12px!important;
+  }
+
+  html[data-auth-scope="admin"] body #p-v1216-center.mentor-accounts-only .v1216-mentor-overview>div{
+    min-height:72px!important;
+    display:grid!important;
+    grid-template-columns:34px minmax(0,1fr)!important;
+    align-items:center!important;
+    gap:10px!important;
+    padding:10px 12px!important;
+    border:1px solid #e3e6e9!important;
+    border-radius:12px!important;
+    background:#fff!important;
+    box-shadow:0 6px 18px rgba(18,24,32,.025)!important;
+  }
+
+  html[data-auth-scope="admin"] body #p-v1216-center.mentor-accounts-only .v1216-mentor-overview-icon{
+    width:34px!important;
+    height:34px!important;
+    display:grid!important;
+    place-items:center!important;
+    border:1px solid #e6d7a2!important;
+    border-radius:10px!important;
+    background:linear-gradient(145deg,#fff9e8,#fff1c4)!important;
+    color:#9a7100!important;
+    font-size:11px!important;
+  }
+
+  html[data-auth-scope="admin"] body #p-v1216-center.mentor-accounts-only .v1216-mentor-overview small{
+    display:block!important;
+    margin-bottom:3px!important;
+    color:#8d96a0!important;
+    font-size:6.2px!important;
+    font-weight:950!important;
+    letter-spacing:.08em!important;
+  }
+
+  html[data-auth-scope="admin"] body #p-v1216-center.mentor-accounts-only .v1216-mentor-overview b{
+    display:block!important;
+    color:#1c2229!important;
+    font-size:18px!important;
+    line-height:1!important;
+  }
+
+  html[data-auth-scope="admin"] body #p-v1216-center.mentor-accounts-only .v1216-mentor-grid{
+    margin-top:0!important;
+  }
+
+  html[data-theme="dark"][data-auth-scope="admin"] body #p-v1216-center.mentor-accounts-only .v1216-mentor-command,
+  html[data-theme="dark"][data-auth-scope="admin"] body #p-v1216-center.mentor-accounts-only .v1216-mentor-overview>div{
+    background:#101319!important;
+    border-color:#252b35!important;
+    box-shadow:none!important;
+  }
+
+  html[data-theme="dark"][data-auth-scope="admin"] body #p-v1216-center.mentor-accounts-only .v1216-mentor-command h2,
+  html[data-theme="dark"][data-auth-scope="admin"] body #p-v1216-center.mentor-accounts-only .v1216-mentor-overview b{
+    color:#f5f7fa!important;
+  }
+}
