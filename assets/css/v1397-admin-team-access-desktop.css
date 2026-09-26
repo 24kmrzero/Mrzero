@@ -1,0 +1,488 @@
+/* 24K MR ZERO — Team Panel Access premium desktop v13.97
+   Desktop only. Mobile remains unchanged. */
+@media (min-width:901px){
+
+  #p-team-access-ref{
+    max-width:1450px!important;
+    margin:0 auto!important;
+    padding-bottom:8px!important;
+  }
+
+  /* Command hero */
+  #p-team-access-ref>.panel-heading{
+    position:relative!important;
+    isolation:isolate!important;
+    overflow:hidden!important;
+    min-height:132px!important;
+    display:flex!important;
+    align-items:flex-start!important;
+    justify-content:space-between!important;
+    gap:22px!important;
+    padding:20px 21px!important;
+    margin:0 0 10px!important;
+    border:1px solid #e0e3e7!important;
+    border-left:3px solid #d8a20a!important;
+    border-radius:18px!important;
+    background:
+      radial-gradient(430px 185px at 94% 0%,rgba(216,162,10,.05),transparent 70%),
+      #fff!important;
+    box-shadow:0 9px 26px rgba(18,24,32,.045)!important;
+  }
+
+  #p-team-access-ref>.panel-heading:before{
+    content:"TEAM ACCESS CONTROL"!important;
+    position:absolute!important;
+    left:20px!important;
+    top:17px!important;
+    min-height:23px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    padding:0 9px!important;
+    border:1px solid #e8d99f!important;
+    border-radius:999px!important;
+    background:#fffaf0!important;
+    color:#8d6800!important;
+    font-size:7.2px!important;
+    font-weight:950!important;
+    letter-spacing:.13em!important;
+  }
+
+  #p-team-access-ref>.panel-heading:after{
+    content:"24K"!important;
+    position:absolute!important;
+    right:16px!important;
+    top:-34px!important;
+    z-index:-1!important;
+    font-size:124px!important;
+    font-weight:950!important;
+    letter-spacing:-.08em!important;
+    color:rgba(190,139,0,.028)!important;
+    pointer-events:none!important;
+  }
+
+  #p-team-access-ref>.panel-heading>div:first-child{
+    padding-top:31px!important;
+  }
+
+  #p-team-access-ref>.panel-heading h2{
+    margin:0 0 5px!important;
+    color:#181a20!important;
+    font-size:28px!important;
+    line-height:1!important;
+    letter-spacing:-.04em!important;
+  }
+
+  #p-team-access-ref>.panel-heading p{
+    margin:0!important;
+    max-width:680px!important;
+    color:#707b88!important;
+    font-size:10.5px!important;
+    line-height:1.5!important;
+  }
+
+  #p-team-access-ref>[data-v18-new-team],
+  #p-team-access-ref>.panel-heading .app-btn{
+    position:relative!important;
+    z-index:2!important;
+    min-width:142px!important;
+    min-height:39px!important;
+    height:39px!important;
+    justify-content:center!important;
+    padding:0 14px!important;
+    border:1px solid #d6a109!important;
+    border-radius:10px!important;
+    background:linear-gradient(180deg,#f4bc1b,#dda305)!important;
+    color:#221900!important;
+    font-size:8px!important;
+    font-weight:900!important;
+    box-shadow:0 8px 18px rgba(181,127,0,.13)!important;
+  }
+
+  /* KPI rail */
+  #p-team-access-ref #v18TeamKpis.v1218-kpis{
+    display:grid!important;
+    grid-template-columns:repeat(6,minmax(0,1fr))!important;
+    gap:8px!important;
+    margin:0 0 12px!important;
+  }
+
+  #p-team-access-ref #v18TeamKpis .v1218-kpi{
+    position:relative!important;
+    overflow:hidden!important;
+    min-height:82px!important;
+    display:grid!important;
+    align-content:center!important;
+    gap:4px!important;
+    padding:12px 12px 12px 50px!important;
+    border:1px solid #e3e6e9!important;
+    border-radius:13px!important;
+    background:#fff!important;
+    box-shadow:0 7px 20px rgba(18,24,32,.03)!important;
+  }
+
+  #p-team-access-ref #v18TeamKpis .v1218-kpi:before{
+    content:""!important;
+    position:absolute!important;
+    left:12px!important;
+    top:50%!important;
+    width:29px!important;
+    height:29px!important;
+    transform:translateY(-50%)!important;
+    border:1px solid rgba(216,162,10,.14)!important;
+    border-radius:9px!important;
+    background:linear-gradient(145deg,#fff9e8,#fff2c8)!important;
+    box-shadow:inset 0 0 0 5px rgba(216,162,10,.03)!important;
+  }
+
+  #p-team-access-ref #v18TeamKpis .v1218-kpi:after{
+    content:""!important;
+    position:absolute!important;
+    right:-22px!important;
+    bottom:-27px!important;
+    width:75px!important;
+    height:75px!important;
+    border:1px solid rgba(196,151,20,.055)!important;
+    border-radius:50%!important;
+  }
+
+  #p-team-access-ref #v18TeamKpis .v1218-kpi small{
+    color:#7b8591!important;
+    font-size:6.8px!important;
+    font-weight:950!important;
+    letter-spacing:.08em!important;
+  }
+
+  #p-team-access-ref #v18TeamKpis .v1218-kpi b{
+    color:#181a20!important;
+    font-size:21px!important;
+    line-height:1!important;
+    letter-spacing:-.03em!important;
+  }
+
+  /* Convert the flat table into compact premium account cards */
+  #p-team-access-ref>.table-scroll{
+    overflow:visible!important;
+    padding:0!important;
+    border:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+  }
+
+  #p-team-access-ref>.table-scroll>.admin-table{
+    display:block!important;
+    width:100%!important;
+    min-width:0!important;
+    border:0!important;
+    background:transparent!important;
+  }
+
+  #p-team-access-ref>.table-scroll>.admin-table thead{
+    display:none!important;
+  }
+
+  #p-team-access-ref>.table-scroll>.admin-table tbody{
+    display:grid!important;
+    grid-template-columns:repeat(auto-fill,minmax(340px,380px))!important;
+    gap:14px!important;
+    align-items:start!important;
+    justify-content:start!important;
+    width:100%!important;
+  }
+
+  #p-team-access-ref>.table-scroll>.admin-table tbody tr{
+    position:relative!important;
+    width:100%!important;
+    max-width:380px!important;
+    min-height:260px!important;
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:0 8px!important;
+    align-content:start!important;
+    padding:14px!important;
+    border:1px solid #e1e4e8!important;
+    border-top:3px solid #d8a20a!important;
+    border-radius:16px!important;
+    background:
+      radial-gradient(180px 90px at 100% 0%,rgba(216,162,10,.04),transparent 72%),
+      #fff!important;
+    box-shadow:0 10px 26px rgba(18,24,32,.045)!important;
+    transition:transform .15s ease,border-color .15s ease,box-shadow .15s ease!important;
+  }
+
+  #p-team-access-ref>.table-scroll>.admin-table tbody tr:hover{
+    transform:translateY(-2px)!important;
+    border-color:#d9c273!important;
+    box-shadow:0 14px 30px rgba(18,24,32,.065)!important;
+  }
+
+  #p-team-access-ref>.table-scroll>.admin-table tbody td{
+    min-width:0!important;
+    min-height:0!important;
+    margin:0!important;
+    padding:9px!important;
+    border:0!important;
+    background:transparent!important;
+    color:#333b45!important;
+    font-size:8.5px!important;
+    vertical-align:top!important;
+  }
+
+  /* name */
+  #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(1){
+    grid-column:1/-1!important;
+    position:relative!important;
+    min-height:55px!important;
+    display:flex!important;
+    align-items:center!important;
+    padding:2px 85px 11px 54px!important;
+    border-bottom:1px solid #edf0f2!important;
+  }
+
+  #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(1):before{
+    content:""!important;
+    position:absolute!important;
+    left:0!important;
+    top:2px!important;
+    width:42px!important;
+    height:42px!important;
+    border:1px solid #e5d5a0!important;
+    border-radius:12px!important;
+    background:linear-gradient(145deg,#fff9e8,#fff1c3)!important;
+  }
+
+  #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(1):after{
+    content:"TEAM MEMBER"!important;
+    position:absolute!important;
+    left:54px!important;
+    top:4px!important;
+    color:#9a7100!important;
+    font-size:5.8px!important;
+    font-weight:950!important;
+    letter-spacing:.1em!important;
+  }
+
+  #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(1) b{
+    display:block!important;
+    margin-top:12px!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+    color:#1d232b!important;
+    font-size:14px!important;
+    line-height:1.1!important;
+  }
+
+  /* username + whatsapp */
+  #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(2),
+  #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(3){
+    min-height:57px!important;
+    display:grid!important;
+    align-content:center!important;
+    gap:3px!important;
+    border:1px solid #eceef0!important;
+    border-radius:9px!important;
+    background:#fafbfc!important;
+  }
+
+  #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(2):before{
+    content:"USERNAME"!important;
+  }
+  #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(3):before{
+    content:"WHATSAPP"!important;
+  }
+
+  #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(2):before,
+  #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(3):before,
+  #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(4):before,
+  #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(5):before,
+  #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(6):before,
+  #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(7):before{
+    display:block!important;
+    margin-bottom:3px!important;
+    color:#9aa1aa!important;
+    font-size:5.8px!important;
+    font-weight:950!important;
+    letter-spacing:.08em!important;
+  }
+
+  /* 4 metrics */
+  #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(4),
+  #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(5),
+  #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(6),
+  #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(7){
+    min-height:58px!important;
+    display:grid!important;
+    align-content:center!important;
+    gap:3px!important;
+    margin-top:7px!important;
+    border:1px solid #eceef0!important;
+    border-radius:9px!important;
+    background:#fafbfc!important;
+  }
+
+  #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(4):before{content:"LEADS"!important}
+  #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(5):before{content:"ASSIGNED LINKS"!important}
+  #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(6):before{content:"LAST LOGIN"!important}
+  #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(7):before{content:"ACCOUNT"!important}
+
+  #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(4) .v1218-badge,
+  #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(7) .v1218-badge{
+    width:max-content!important;
+    min-height:22px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    padding:0 7px!important;
+    border-radius:999px!important;
+    font-size:6.5px!important;
+    font-weight:900!important;
+  }
+
+  /* actions */
+  #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(8){
+    grid-column:1/-1!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-end!important;
+    gap:6px!important;
+    margin-top:9px!important;
+    padding:9px 0 0!important;
+    border-top:1px solid #edf0f2!important;
+  }
+
+  #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(8) .app-btn{
+    min-height:32px!important;
+    height:32px!important;
+    padding:0 10px!important;
+    border-radius:8px!important;
+    font-size:7px!important;
+    font-weight:850!important;
+    box-shadow:none!important;
+  }
+
+  #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(8) .app-btn:not(.danger){
+    border-color:#e1d2a4!important;
+    background:#fffaf0!important;
+    color:#856100!important;
+  }
+
+  #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(8) .danger{
+    border-color:rgba(213,76,91,.2)!important;
+    background:rgba(213,76,91,.05)!important;
+    color:#d14d5e!important;
+  }
+
+  /* Empty state remains wide */
+  #p-team-access-ref>.table-scroll>.admin-table tbody tr:has(td[colspan]){
+    grid-column:1/-1!important;
+    max-width:none!important;
+    min-height:150px!important;
+    place-items:center!important;
+  }
+
+  /* modal polish for the direct manage flow */
+  #v14TeamModal .app-modal-card{
+    width:min(720px,92vw)!important;
+    max-height:88vh!important;
+    border:1px solid #e0e3e7!important;
+    border-radius:18px!important;
+    background:#fff!important;
+    box-shadow:0 28px 80px rgba(31,37,44,.2)!important;
+  }
+
+  #v14TeamModal .app-modal-head{
+    padding:16px 18px!important;
+    border-bottom:1px solid #e8eaed!important;
+    background:
+      radial-gradient(220px 90px at 100% 0%,rgba(216,162,10,.05),transparent 70%),
+      #fff!important;
+  }
+
+  #v14TeamModal .app-modal-head h3{
+    color:#181d24!important;
+    font-size:18px!important;
+    letter-spacing:-.025em!important;
+  }
+
+  #v14TeamModal .app-modal-head small{
+    display:block!important;
+    margin-top:4px!important;
+    color:#7b8591!important;
+    font-size:8.5px!important;
+  }
+
+  #v14TeamModal .app-modal-body{
+    padding:16px 18px!important;
+    background:#fff!important;
+  }
+
+  #v14TeamModal .form-grid{
+    gap:11px!important;
+  }
+
+  #v14TeamModal .form-field label{
+    color:#626d79!important;
+    font-size:8.5px!important;
+    font-weight:850!important;
+  }
+
+  #v14TeamModal :is(input,select){
+    min-height:39px!important;
+    height:39px!important;
+    border:1px solid #dfe3e7!important;
+    border-radius:9px!important;
+    background:#fafbfc!important;
+    color:#20252d!important;
+    font-size:9px!important;
+    box-shadow:none!important;
+  }
+
+  #v14TeamModal .v14-advanced{
+    border:1px solid #e5e7ea!important;
+    border-radius:10px!important;
+    background:#fafbfc!important;
+  }
+
+  #v14TeamModal .v14-advanced summary{
+    min-height:38px!important;
+    display:flex!important;
+    align-items:center!important;
+    padding:0 11px!important;
+    color:#68727e!important;
+    font-size:8px!important;
+  }
+
+  #v14TeamModal .app-modal-foot{
+    min-height:64px!important;
+    padding:12px 18px!important;
+    border-top:1px solid #e8eaed!important;
+    background:#fcfcfb!important;
+  }
+
+  #v14TeamModal .app-modal-foot .app-btn{
+    min-height:37px!important;
+    height:37px!important;
+    padding:0 13px!important;
+    border-radius:9px!important;
+    font-size:8px!important;
+  }
+
+  /* dark desktop parity */
+  html[data-theme="dark"] #p-team-access-ref>.panel-heading,
+  html[data-theme="dark"] #p-team-access-ref #v18TeamKpis .v1218-kpi,
+  html[data-theme="dark"] #p-team-access-ref>.table-scroll>.admin-table tbody tr{
+    background:#101319!important;
+    border-color:#252b35!important;
+    box-shadow:none!important;
+  }
+
+  html[data-theme="dark"] #p-team-access-ref>.panel-heading h2,
+  html[data-theme="dark"] #p-team-access-ref #v18TeamKpis .v1218-kpi b,
+  html[data-theme="dark"] #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(1) b{
+    color:#f5f7fa!important;
+  }
+
+  html[data-theme="dark"] #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(n+2):nth-child(-n+7){
+    background:#151a21!important;
+    border-color:#2a313a!important;
+  }
+}
