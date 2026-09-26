@@ -466,13 +466,180 @@ function renderHistory(h){const clients=payload.clients||[],p=payload.performanc
 function siteRoot(){return(location.origin+(cfg.SITE_BASE_PATH||'/')).replace(/\/$/,'')}
 function trackedUrl(l){const dest=l.destination_path==='/'?'':String(l.destination_path||'').replace(/\/$/,'');const q=new URLSearchParams();if(l.ref_code)q.set('ref',l.ref_code);if(l.source)q.set('source',l.source);if(l.campaign)q.set('campaign',l.campaign);return `${siteRoot()}${dest}/?${q}`}
 function renderLinks(links){const metrics=rangeData?.links||[];$('#linksGrid').innerHTML=links.length?links.map(l=>{const lm=metrics.find(x=>x.link_id===l.id)||{},url=trackedUrl(l);return `<article class="link-card"><div class="link-head"><div><b>${esc(l.name||'Tracked Link')}</b><small>${esc(l.source||'Direct')} · ${esc(l.ref_code||'')}</small></div><span class="status">${l.is_active===false?'Disabled':'Active'}</span></div><div class="tracked-url"><input readonly value="${esc(url)}"><button class="icon-btn" data-copy="${esc(url)}"><i class="fa-solid fa-copy"></i></button></div><div class="mini-metrics"><div><b>${num(lm.clicks)}</b><span>Clicks</span></div><div><b>${num(lm.unique)}</b><span>Unique</span></div><div><b>${num(lm.signups)}</b><span>Signups</span></div><div><b>${num(lm.enrollments)}</b><span>Enrollments</span></div></div></article>`}).join(''):'<article class="panel-card">No assigned links yet.</article>';$$('[data-copy]').forEach(b=>b.onclick=()=>navigator.clipboard.writeText(b.dataset.copy||'').then(()=>toast('Link copied.')))}
-async function loadChat(){if(!token())return;try{const [summary,list]=await Promise.all([rpc('team_live_desk_summary_v12_18',{p_token:token()}),rpc('team_live_desk_list_v12_18',{p_token:token(),p_filter:chatFilter,p_search:chatSearch||null})]);chatList=list||[];$('#chatKpis').innerHTML=[['AI Active',summary.ai_active||0],['Human Requests',summary.human_requests||0],['Waiting',summary.waiting||0],['My Chats',summary.my_chats||0]].map(x=>`<div class="chat-kpi"><span>${x[0]}</span><b>${x[1]}</b></div>`).join('');const attention=(summary.human_requests||0)+(summary.waiting||0);homeChatAttention=attention;$('#teamChatBadge').hidden=!attention;$('#teamChatBadge').textContent=attention;setMobileBadge('#teamMobileChatBadge',attention);renderChatList();if(activeThread&&chatList.some(x=>x.id===activeThread))await openChat(activeThread,false);else if(chatList[0])await openChat(chatList[0].id,false);else clearChat()}catch(e){if(/function|does not exist|schema cache/i.test(e.message||'')){$('#chatKpis').innerHTML='<div class="panel-card chat-empty" style="grid-column:1/-1">Live Desk update requires V12.18 SQL.</div>';return}throw e}}
-function renderChatList(){const box=$('#chatThreads');box.innerHTML=chatList.length?chatList.map(t=>`<button type="button" class="chat-thread ${t.id===activeThread?'active':''}" data-thread="${t.id}"><span class="chat-avatar">${esc(initials(t.name))}</span><span><b>${esc(t.name||'Visitor')}</b> <em class="chat-mode ${t.mode==='human'?'human':''}">${t.mode==='human'?'HUMAN':'AI'}</em><p>${esc(t.last_message||'No message')}</p></span><small>${esc(date(t.last_message_at))}</small></button>`).join(''):'<div class="chat-empty">No conversations in this filter.</div>'}
-function clearChat(){activeThread=null;$('#chatConversationHead').innerHTML='<div><b>Select a conversation</b><small>Live Desk</small></div>';$('#chatMessages').innerHTML='<div class="chat-empty">Choose a conversation from the left.</div>';$('#chatProfile').innerHTML='<div class="chat-empty">Lead profile will appear here.</div>'}
-async function openChat(id,rerender=true){activeThread=id;const d=await rpc('team_live_desk_get_v12_18',{p_token:token(),p_thread_id:id}),t=d.thread||{},msgs=d.messages||[];if(rerender)renderChatList();$('#chatConversationHead').innerHTML=`<div><b>${esc(t.name||'Visitor')}</b><small>${esc(t.whatsapp||t.email||'')} · ${t.assigned_team_id?'Human handling':'AI / Unassigned'}</small></div><div class="conversation-actions">${!t.assigned_team_id?'<button class="primary" data-chat-action="takeover">Take Over</button>':'<button data-chat-action="waiting">Waiting</button><button data-chat-action="release">Release</button>'}<button class="danger" data-chat-action="close">Close</button></div>`;$('#chatMessages').innerHTML=msgs.length?msgs.map(m=>`<div class="desk-msg ${esc(m.sender_type||'visitor')}">${esc(m.message||'')}<small>${esc(m.sender_type||'')} · ${esc(dt(m.created_at))}</small></div>`).join(''):'<div class="chat-empty">No messages yet.</div>';$('#chatMessages').scrollTop=$('#chatMessages').scrollHeight;$('#chatProfile').innerHTML=`<div class="profile-avatar">${esc(initials(t.name))}</div><div class="profile-name"><b>${esc(t.name||'Visitor')}</b><small style="display:block;color:var(--r18-muted);margin-top:3px">${t.user_id?'Existing 24K User':'Website Lead'}</small></div><div class="profile-section"><h4>Lead Profile</h4><div class="profile-line"><span>WhatsApp</span><b>${esc(t.whatsapp||'—')}</b></div><div class="profile-line"><span>Email</span><b>${esc(t.email||'—')}</b></div><div class="profile-line"><span>Started</span><b>${esc(dt(t.created_at))}</b></div><div class="profile-line"><span>Status</span><b>${esc(t.status||'open')}</b></div></div><div class="profile-section"><h4>Sales / Support Stage</h4><select id="chatStage"><option ${t.sales_stage==='new'?'selected':''}>new</option><option ${t.sales_stage==='contacted'?'selected':''}>contacted</option><option ${t.sales_stage==='interested'?'selected':''}>interested</option><option ${t.sales_stage==='follow_up'?'selected':''}>follow_up</option><option ${t.sales_stage==='converted'?'selected':''}>converted</option><option ${t.sales_stage==='support'?'selected':''}>support</option></select><select id="chatPriority"><option ${t.priority==='normal'?'selected':''}>normal</option><option ${t.priority==='high'?'selected':''}>high</option><option ${t.priority==='urgent'?'selected':''}>urgent</option></select><input id="chatTags" value="${esc(t.tags||'')}" placeholder="Tags: course, broker, VIP"><button type="button" class="tiny-btn" style="margin-top:7px;width:100%" id="saveChatMeta">Save Stage</button></div>`;$('#saveChatMeta')?.addEventListener('click',saveChatMeta)}
-async function chatAction(action){if(!activeThread)return;try{await rpc('team_live_desk_action_v12_18',{p_token:token(),p_thread_id:activeThread,p_action:action,p_stage:null,p_priority:null,p_tags:null});toast('Conversation updated.');await loadChat()}catch(e){toast(e.message||'Could not update conversation.','error')}}
-async function saveChatMeta(){if(!activeThread)return;try{await rpc('team_live_desk_action_v12_18',{p_token:token(),p_thread_id:activeThread,p_action:'meta',p_stage:$('#chatStage')?.value||'new',p_priority:$('#chatPriority')?.value||'normal',p_tags:$('#chatTags')?.value||''});toast('Chat stage saved.');await openChat(activeThread,false)}catch(e){toast(e.message||'Could not save chat stage.','error')}}
-async function sendChat(e){e.preventDefault();if(!activeThread)return toast('Select a conversation.','error');const input=$('#chatReply'),msg=input.value.trim();if(!msg)return;try{await rpc('team_live_desk_send_v12_18',{p_token:token(),p_thread_id:activeThread,p_message:msg});input.value='';await openChat(activeThread,false);await loadChat()}catch(e){toast(e.message||'Take over the chat before replying.','error')}}
+function renderChatSummary(summary={}){
+  const cards=[
+    {label:'AI Active',value:Number(summary.ai_active||0),icon:'fa-robot',tone:'blue',sub:'Handled by AI'},
+    {label:'Human Requests',value:Number(summary.human_requests||0),icon:'fa-hand',tone:'amber',sub:'Needs takeover'},
+    {label:'Waiting',value:Number(summary.waiting||0),icon:'fa-clock',tone:'red',sub:'Needs reply'},
+    {label:'My Chats',value:Number(summary.my_chats||0),icon:'fa-comments',tone:'green',sub:'Assigned to you'}
+  ];
+  const box=$('#chatKpis');
+  if(box)box.innerHTML=cards.map(x=>`<article class="chat-kpi premium-chat-kpi ${x.tone}"><span class="chat-kpi-icon"><i class="fa-solid ${x.icon}"></i></span><div><small>${x.label}</small><b>${x.value}</b><em>${x.sub}</em></div></article>`).join('');
+  const attention=Number(summary.human_requests||0)+Number(summary.waiting||0);
+  const label=$('#chatAttentionLabel');
+  if(label)label.textContent=attention?`${attention} need attention`:'All clear';
+  if($('#chatFilterMine'))$('#chatFilterMine').textContent=Number(summary.my_chats||0);
+  if($('#chatFilterWaiting'))$('#chatFilterWaiting').textContent=Number(summary.human_requests||0)+Number(summary.waiting||0)
+}
+function setChatShellState(state='list'){
+  const shell=$('#teamChatShell');if(!shell)return;
+  shell.classList.toggle('chat-open',state==='chat');
+  shell.classList.toggle('profile-open',state==='profile');
+  shell.classList.toggle('no-active',!activeThread)
+}
+async function loadChat(){
+  if(!token())return;
+  try{
+    const [summary,list]=await Promise.all([
+      rpc('team_live_desk_summary_v12_18',{p_token:token()}),
+      rpc('team_live_desk_list_v12_18',{p_token:token(),p_filter:chatFilter,p_search:chatSearch||null})
+    ]);
+    chatList=list||[];
+    renderChatSummary(summary||{});
+    const attention=Number(summary?.human_requests||0)+Number(summary?.waiting||0);
+    homeChatAttention=attention;
+    $('#teamChatBadge').hidden=!attention;$('#teamChatBadge').textContent=attention;
+    setMobileBadge('#teamMobileChatBadge',attention);
+    if($('#chatInboxMeta'))$('#chatInboxMeta').textContent=`${chatList.length} conversation${chatList.length===1?'':'s'}`;
+    if($('#chatFilterAll')&&chatFilter==='all')$('#chatFilterAll').textContent=chatList.length;
+    if($('#chatSearchClear'))$('#chatSearchClear').hidden=!String(chatSearch||'').trim();
+    renderChatList();
+
+    const mobile=window.matchMedia?.('(max-width:900px)').matches;
+    if(activeThread&&chatList.some(x=>String(x.id)===String(activeThread))){
+      await openChat(activeThread,false);
+      if(mobile)setChatShellState('chat')
+    }else if(chatList[0]&&!mobile){
+      await openChat(chatList[0].id,false)
+    }else{
+      clearChat()
+    }
+  }catch(e){
+    if(/function|does not exist|schema cache/i.test(e.message||'')){
+      if($('#chatKpis'))$('#chatKpis').innerHTML='<div class="team-chat-service-error"><i class="fa-solid fa-triangle-exclamation"></i><div><b>Live Desk unavailable</b><small>Chat service needs the latest database update.</small></div></div>';
+      return
+    }
+    throw e
+  }
+}
+function renderChatList(){
+  const box=$('#chatThreads');if(!box)return;
+  if(!chatList.length){
+    box.innerHTML=`<div class="team-chat-list-empty"><span><i class="fa-regular fa-comments"></i></span><div><b>No conversations here</b><small>${chatSearch?'Try another search or clear filters.':'New support conversations will appear automatically.'}</small></div></div>`;
+    return
+  }
+  box.innerHTML=chatList.map(t=>{
+    const waiting=String(t.status||'').toLowerCase()==='waiting',
+      closed=['closed','resolved'].includes(String(t.status||'').toLowerCase()),
+      priority=String(t.priority||'normal').toLowerCase(),
+      mode=t.mode==='human'?'HUMAN':'AI';
+    return `<button type="button" class="chat-thread premium-chat-thread ${String(t.id)===String(activeThread)?'active':''} ${waiting?'waiting':''}" data-thread="${t.id}">
+      <span class="chat-avatar">${esc(initials(t.name))}<i class="${t.mode==='human'?'human':'ai'}"></i></span>
+      <span class="chat-thread-copy">
+        <span class="chat-thread-title"><b>${esc(t.name||'Visitor')}</b><em class="chat-mode ${t.mode==='human'?'human':''}">${mode}</em></span>
+        <p>${esc(t.last_message||'No message yet')}</p>
+        <span class="chat-thread-meta">${esc(t.whatsapp||t.email||'Website visitor')}${priority!=='normal'?` · ${esc(priority)} priority`:''}</span>
+      </span>
+      <span class="chat-thread-side"><small>${esc(relativeAgo(t.last_message_at)||'—')}</small>${waiting?'<em class="waiting-dot">WAITING</em>':closed?'<em class="closed-dot">CLOSED</em>':''}</span>
+    </button>`
+  }).join('')
+}
+function clearChat(){
+  activeThread=null;
+  setChatShellState('list');
+  const head=$('#chatConversationHead');
+  if(head)head.innerHTML=`<button type="button" class="chat-mobile-back" data-chat-mobile-back aria-label="Back to inbox"><i class="fa-solid fa-arrow-left"></i></button><div class="chat-conversation-placeholder-title"><b>Select a conversation</b><small>Live Desk</small></div>`;
+  const messages=$('#chatMessages');
+  if(messages)messages.innerHTML=`<div class="team-chat-empty-state"><span><i class="fa-regular fa-comments"></i></span><div><b>No conversation selected</b><small>Choose a conversation from your inbox to start working.</small></div></div>`;
+  const profile=$('#chatProfile');
+  if(profile)profile.innerHTML=`<button type="button" class="team-chat-profile-close" data-chat-profile-close aria-label="Close lead profile"><i class="fa-solid fa-xmark"></i></button><div class="team-chat-empty-state profile-empty"><span><i class="fa-regular fa-address-card"></i></span><div><b>Lead profile</b><small>Select a conversation to see contact and sales-stage details.</small></div></div>`;
+  if($('#chatReply')){$('#chatReply').value='';$('#chatReply').disabled=true}
+  const send=$('#chatReplyForm button[type=submit]');if(send)send.disabled=true
+}
+async function openChat(id,rerender=true){
+  activeThread=id;
+  const d=await rpc('team_live_desk_get_v12_18',{p_token:token(),p_thread_id:id}),t=d.thread||{},msgs=d.messages||[];
+  if(rerender)renderChatList();
+  setChatShellState('chat');
+  if($('#chatReply'))$('#chatReply').disabled=false;
+  const send=$('#chatReplyForm button[type=submit]');if(send)send.disabled=false;
+
+  $('#chatConversationHead').innerHTML=`
+    <button type="button" class="chat-mobile-back" data-chat-mobile-back aria-label="Back to inbox"><i class="fa-solid fa-arrow-left"></i></button>
+    <div class="team-chat-person">
+      <span class="team-chat-person-avatar">${esc(initials(t.name))}</span>
+      <div><b>${esc(t.name||'Visitor')}</b><small>${esc(t.whatsapp||t.email||'Website visitor')} · ${t.assigned_team_id?'Human handling':'AI / Unassigned'}</small></div>
+    </div>
+    <div class="conversation-actions">
+      <button type="button" class="profile" data-chat-profile-toggle><i class="fa-regular fa-address-card"></i></button>
+      ${!t.assigned_team_id?'<button class="primary" data-chat-action="takeover">Take Over</button>':'<button data-chat-action="waiting">Waiting</button><button data-chat-action="release">Release</button>'}
+      <button class="danger" data-chat-action="close"><i class="fa-solid fa-xmark"></i><span>Close</span></button>
+    </div>`;
+
+  $('#chatMessages').innerHTML=msgs.length?msgs.map(m=>{
+    const sender=String(m.sender_type||'visitor').toLowerCase(),
+      mine=['team','admin'].includes(sender),
+      ai=sender==='ai';
+    return `<div class="desk-msg premium-desk-msg ${esc(sender)}">
+      <div>${esc(m.message||'')}</div>
+      <small><span>${mine?'You':ai?'24K AI':'Visitor'}</span><em>${esc(relativeAgo(m.created_at)||dt(m.created_at))}</em></small>
+    </div>`
+  }).join(''):`<div class="team-chat-empty-state messages-empty"><span><i class="fa-regular fa-message"></i></span><div><b>No messages yet</b><small>This conversation has no message history yet.</small></div></div>`;
+  $('#chatMessages').scrollTop=$('#chatMessages').scrollHeight;
+
+  const stage=String(t.sales_stage||'new'),priority=String(t.priority||'normal');
+  $('#chatProfile').innerHTML=`
+    <button type="button" class="team-chat-profile-close" data-chat-profile-close aria-label="Close lead profile"><i class="fa-solid fa-xmark"></i></button>
+    <div class="team-chat-profile-hero">
+      <span class="profile-avatar">${esc(initials(t.name))}</span>
+      <div class="profile-name"><b>${esc(t.name||'Visitor')}</b><small>${t.user_id?'Existing 24K User':'Website Lead'}</small></div>
+      <span class="team-chat-profile-status"><i></i>${esc(t.status||'open')}</span>
+    </div>
+    <div class="profile-section team-chat-contact-section">
+      <h4>Lead Profile</h4>
+      <div class="profile-line"><span><i class="fa-brands fa-whatsapp"></i> WhatsApp</span><b>${esc(t.whatsapp||'—')}</b></div>
+      <div class="profile-line"><span><i class="fa-regular fa-envelope"></i> Email</span><b>${esc(t.email||'—')}</b></div>
+      <div class="profile-line"><span><i class="fa-regular fa-clock"></i> Started</span><b>${esc(relativeAgo(t.created_at)||dt(t.created_at))}</b></div>
+    </div>
+    <div class="profile-section team-chat-stage-section">
+      <h4>Sales / Support Stage</h4>
+      <label><span>Stage</span><select id="chatStage"><option ${stage==='new'?'selected':''}>new</option><option ${stage==='contacted'?'selected':''}>contacted</option><option ${stage==='interested'?'selected':''}>interested</option><option ${stage==='follow_up'?'selected':''}>follow_up</option><option ${stage==='converted'?'selected':''}>converted</option><option ${stage==='support'?'selected':''}>support</option></select></label>
+      <label><span>Priority</span><select id="chatPriority"><option ${priority==='normal'?'selected':''}>normal</option><option ${priority==='high'?'selected':''}>high</option><option ${priority==='urgent'?'selected':''}>urgent</option></select></label>
+      <label><span>Tags</span><input id="chatTags" value="${esc(t.tags||'')}" placeholder="course, broker, VIP"></label>
+      <button type="button" class="team-chat-save-meta" id="saveChatMeta"><i class="fa-solid fa-check"></i> Save Stage</button>
+    </div>`;
+  $('#saveChatMeta')?.addEventListener('click',saveChatMeta)
+}
+async function chatAction(action){
+  if(!activeThread)return;
+  try{
+    await rpc('team_live_desk_action_v12_18',{p_token:token(),p_thread_id:activeThread,p_action:action,p_stage:null,p_priority:null,p_tags:null});
+    toast('Conversation updated.');
+    await loadChat()
+  }catch(e){toast(e.message||'Could not update conversation.','error')}
+}
+async function saveChatMeta(){
+  if(!activeThread)return;
+  try{
+    await rpc('team_live_desk_action_v12_18',{p_token:token(),p_thread_id:activeThread,p_action:'meta',p_stage:$('#chatStage')?.value||'new',p_priority:$('#chatPriority')?.value||'normal',p_tags:$('#chatTags')?.value||''});
+    toast('Chat stage saved.');
+    await openChat(activeThread,false)
+  }catch(e){toast(e.message||'Could not save chat stage.','error')}
+}
+async function sendChat(e){
+  e.preventDefault();
+  if(!activeThread)return toast('Select a conversation.','error');
+  const input=$('#chatReply'),msg=input.value.trim();if(!msg)return;
+  const btn=e.currentTarget.querySelector('button[type=submit]');if(btn)btn.disabled=true;
+  try{
+    await rpc('team_live_desk_send_v12_18',{p_token:token(),p_thread_id:activeThread,p_message:msg});
+    input.value='';
+    await openChat(activeThread,false);
+    await loadChat()
+  }catch(e){toast(e.message||'Take over the chat before replying.','error')}
+  finally{if(btn)btn.disabled=false}
+}
+
 function bind(){monthOptions();applyTheme(currentTheme());
 const homeSearch=$('#teamHomeSearch');
 if(homeSearch){
@@ -485,13 +652,18 @@ $('#teamMoreRefresh')?.addEventListener('click',()=>$('#teamRefresh')?.click());
 $('#teamMoreTheme')?.addEventListener('click',()=>$('#teamTheme')?.click());
 $('#teamMoreLogout')?.addEventListener('click',()=>$('#teamLogout')?.click());
 window.addEventListener('online',updateSyncStatus);window.addEventListener('offline',updateSyncStatus);
-setInterval(updateSyncStatus,30000);$('#teamLoginForm')?.addEventListener('submit',login);$('#teamLogout').onclick=logout;$('#teamTheme').onclick=()=>applyTheme(currentTheme()==='dark'?'light':'dark');$('#teamThemeTop').onclick=()=>$('#teamTheme').click();$('#teamRefresh').onclick=load;$('#teamMonth').onchange=load;$$('[data-view]').forEach(b=>b.onclick=()=>setView(b.dataset.view));document.addEventListener('click',e=>{const jump=e.target.closest('[data-view-jump]');if(jump)setView(jump.dataset.viewJump);const hc=e.target.closest('[data-home-client]');if(hc){const c=(payload?.clients||[]).find(x=>String(x.id)===String(hc.dataset.homeClient));if(c){setView('clients');if($('#clientSearch'))$('#clientSearch').value=c.full_name||c.client_id||'';renderClients()}return}const hs=e.target.closest('[data-home-search-all]');if(hs){$('#teamHomeSearchAll')?.click();return}const cre=e.target.closest('[data-client-reset-empty]');if(cre){$('#clientResetFilters')?.click();return}const col=e.target.closest('[data-home-collapse]');if(col){const target=$('#'+col.dataset.homeCollapse);if(target){const collapsed=target.classList.toggle('home-collapsed');col.classList.toggle('open',!collapsed);col.setAttribute('aria-expanded',String(!collapsed))}return}const s=e.target.closest('[data-save-client]');if(s)saveClient(s.dataset.saveClient);const n=e.target.closest('[data-note-client]');if(n)saveClient(n.dataset.noteClient,true);const th=e.target.closest('[data-thread]');if(th)openChat(th.dataset.thread).catch(x=>toast(x.message,'error'));const ac=e.target.closest('[data-chat-action]');if(ac)chatAction(ac.dataset.chatAction);const qr=e.target.closest('[data-quick-reply]');if(qr&&$('#chatReply'))$('#chatReply').value=qr.dataset.quickReply});$('#clientSearch').oninput=renderClients;
+setInterval(updateSyncStatus,30000);$('#teamLoginForm')?.addEventListener('submit',login);$('#teamLogout').onclick=logout;$('#teamTheme').onclick=()=>applyTheme(currentTheme()==='dark'?'light':'dark');$('#teamThemeTop').onclick=()=>$('#teamTheme').click();$('#teamRefresh').onclick=load;$('#teamMonth').onchange=load;$$('[data-view]').forEach(b=>b.onclick=()=>setView(b.dataset.view));document.addEventListener('click',e=>{const jump=e.target.closest('[data-view-jump]');if(jump)setView(jump.dataset.viewJump);const hc=e.target.closest('[data-home-client]');if(hc){const c=(payload?.clients||[]).find(x=>String(x.id)===String(hc.dataset.homeClient));if(c){setView('clients');if($('#clientSearch'))$('#clientSearch').value=c.full_name||c.client_id||'';renderClients()}return}const hs=e.target.closest('[data-home-search-all]');if(hs){$('#teamHomeSearchAll')?.click();return}const cre=e.target.closest('[data-client-reset-empty]');if(cre){$('#clientResetFilters')?.click();return}const col=e.target.closest('[data-home-collapse]');if(col){const target=$('#'+col.dataset.homeCollapse);if(target){const collapsed=target.classList.toggle('home-collapsed');col.classList.toggle('open',!collapsed);col.setAttribute('aria-expanded',String(!collapsed))}return}const s=e.target.closest('[data-save-client]');if(s)saveClient(s.dataset.saveClient);const n=e.target.closest('[data-note-client]');if(n)saveClient(n.dataset.noteClient,true);const th=e.target.closest('[data-thread]');if(th)openChat(th.dataset.thread).catch(x=>toast(x.message,'error'));const ac=e.target.closest('[data-chat-action]');if(ac)chatAction(ac.dataset.chatAction);
+const cb=e.target.closest('[data-chat-mobile-back]');if(cb){setChatShellState('list');return}
+const pt=e.target.closest('[data-chat-profile-toggle]');if(pt){setChatShellState('profile');return}
+const pc=e.target.closest('[data-chat-profile-close]');if(pc){setChatShellState(activeThread?'chat':'list');return}const qr=e.target.closest('[data-quick-reply]');if(qr&&$('#chatReply'))$('#chatReply').value=qr.dataset.quickReply});$('#clientSearch').oninput=renderClients;
 $('#clientCourseFilter').onchange=renderClients;
 $('#clientStatusFilter').onchange=renderClients;
 $('#clientSort').onchange=renderClients;
 $('#clientSearchClear')?.addEventListener('click',()=>{if($('#clientSearch'))$('#clientSearch').value='';renderClients();$('#clientSearch')?.focus()});
 $('#clientFilterToggle')?.addEventListener('click',()=>{const p=$('#clientFilterPanel'),b=$('#clientFilterToggle');if(!p)return;const open=p.hidden;p.hidden=!open;b?.setAttribute('aria-expanded',String(open))});
 $('#clientResetFilters')?.addEventListener('click',()=>{if($('#clientSearch'))$('#clientSearch').value='';if($('#clientCourseFilter'))$('#clientCourseFilter').value='all';if($('#clientStatusFilter'))$('#clientStatusFilter').value='all';if($('#clientSort'))$('#clientSort').value='priority';renderClients()});
-$('#clientStatusTabs')?.addEventListener('click',e=>{const b=e.target.closest('[data-client-status-chip]');if(!b)return;if($('#clientStatusFilter'))$('#clientStatusFilter').value=b.dataset.clientStatusChip;renderClients()});$('#ownershipSearchBtn').onclick=searchOwnership;$('#ownershipSearch').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();searchOwnership()}});$('#dailyReportForm').onsubmit=saveDaily;$$('[data-range]').forEach(b=>b.onclick=()=>{if(b.dataset.range==='custom')$('#customRange').classList.remove('hidden');else{$('#customRange').classList.add('hidden');loadRange(b.dataset.range)}});$('#applyRange').onclick=()=>loadRange('custom',$('#rangeStart').value,$('#rangeEnd').value);$$('[data-chat-filter]').forEach(b=>b.onclick=()=>{chatFilter=b.dataset.chatFilter;$$('[data-chat-filter]').forEach(x=>x.classList.toggle('active',x===b));loadChat().catch(x=>toast(x.message,'error'))});let chatTimer;$('#chatSearch').oninput=()=>{clearTimeout(chatTimer);chatTimer=setTimeout(()=>{chatSearch=$('#chatSearch').value.trim();loadChat().catch(()=>{})},250)};$('#chatReplyForm').onsubmit=sendChat;window.addEventListener('hashchange',()=>setView(location.hash.replace('#','')||'overview'));window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;$('#teamInstallButton')?.classList.add('ready');$('#teamMobileInstall')?.classList.add('ready')});window.addEventListener('appinstalled',()=>{installPrompt=null;$('#teamInstallButton')?.classList.add('installed');$('#teamMobileInstall')?.classList.add('installed');toast('24K Team Panel installed successfully.','success')});$('#teamInstallButton').onclick=async()=>{if(window.matchMedia?.('(display-mode: standalone)').matches)return toast('Team Panel is already installed.','success');if(installPrompt){installPrompt.prompt();const choice=await installPrompt.userChoice;if(choice?.outcome==='accepted')toast('Installing Team Panel…','success');installPrompt=null}else toast('Install is not offered yet. Use your browser menu → Add to Home screen / Install app.')}}
+$('#clientStatusTabs')?.addEventListener('click',e=>{const b=e.target.closest('[data-client-status-chip]');if(!b)return;if($('#clientStatusFilter'))$('#clientStatusFilter').value=b.dataset.clientStatusChip;renderClients()});$('#ownershipSearchBtn').onclick=searchOwnership;$('#ownershipSearch').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();searchOwnership()}});$('#dailyReportForm').onsubmit=saveDaily;$$('[data-range]').forEach(b=>b.onclick=()=>{if(b.dataset.range==='custom')$('#customRange').classList.remove('hidden');else{$('#customRange').classList.add('hidden');loadRange(b.dataset.range)}});$('#applyRange').onclick=()=>loadRange('custom',$('#rangeStart').value,$('#rangeEnd').value);$$('[data-chat-filter]').forEach(b=>b.onclick=()=>{chatFilter=b.dataset.chatFilter;$$('[data-chat-filter]').forEach(x=>x.classList.toggle('active',x===b));loadChat().catch(x=>toast(x.message,'error'))});let chatTimer;$('#chatSearch').oninput=()=>{if($('#chatSearchClear'))$('#chatSearchClear').hidden=!$('#chatSearch').value.trim();clearTimeout(chatTimer);chatTimer=setTimeout(()=>{chatSearch=$('#chatSearch').value.trim();loadChat().catch(()=>{})},250)};$('#chatReplyForm').onsubmit=sendChat;
+$('#chatInboxRefresh')?.addEventListener('click',()=>loadChat().catch(e=>toast(e.message||'Could not refresh chat.','error')));
+$('#chatSearchClear')?.addEventListener('click',()=>{chatSearch='';if($('#chatSearch'))$('#chatSearch').value='';loadChat().catch(()=>{})});window.addEventListener('hashchange',()=>setView(location.hash.replace('#','')||'overview'));window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;$('#teamInstallButton')?.classList.add('ready');$('#teamMobileInstall')?.classList.add('ready')});window.addEventListener('appinstalled',()=>{installPrompt=null;$('#teamInstallButton')?.classList.add('installed');$('#teamMobileInstall')?.classList.add('installed');toast('24K Team Panel installed successfully.','success')});$('#teamInstallButton').onclick=async()=>{if(window.matchMedia?.('(display-mode: standalone)').matches)return toast('Team Panel is already installed.','success');if(installPrompt){installPrompt.prompt();const choice=await installPrompt.userChoice;if(choice?.outcome==='accepted')toast('Installing Team Panel…','success');installPrompt=null}else toast('Install is not offered yet. Use your browser menu → Add to Home screen / Install app.')}}
 bind();if(!supa)return loginView('Website connection is unavailable. Please contact support.');setView(location.hash.replace('#','')||'overview');if(token())load();
 })();
