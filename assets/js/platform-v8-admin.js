@@ -155,7 +155,7 @@
         <div class="filter-row student-main-filters"><input id="userSearchV9" type="search" placeholder="Search name, email or WhatsApp..."><select id="userCourseFilter"><option value="all">All Courses</option></select><select id="userStatusFilter"><option value="all">All Access</option><option value="active">Active</option><option value="grace">Grace Active</option><option value="pending">Pending</option><option value="locked">Locked</option><option value="expired">Expired</option><option value="suspended">Suspended</option><option value="lifetime">Lifetime</option></select><select id="userVerifiedFilter"><option value="all">All Email Status</option><option value="verified">Verified</option><option value="unverified">Unverified</option></select></div>
       </div>
       <div class="app-card bulk-bar"><div><b>Bulk Actions</b><small>Optional actions for selected users.</small></div><select id="bulkUserAction"><option value="extend_days">Extend Access</option><option value="lock">Lock Selected</option><option value="unlock">Unlock Selected</option><option value="resend_verification">Resend Verification</option></select><input id="bulkAccessDays" type="number" min="1" placeholder="Days"><button class="app-btn outline" id="notifySelectedUsers"><i class="fa-solid fa-bullhorn"></i> Notify</button><button class="app-btn gold" id="applyBulkUsers">Apply</button></div>
-      <div class="table-scroll"><table class="admin-table student-management-table"><thead><tr><th><input type="checkbox" id="selectAllUsers"></th><th>Student</th><th>WhatsApp</th><th>Registered</th><th>Course</th><th>Enrollment</th><th>Payment</th><th>Access / Expiry</th><th>Actions</th></tr></thead><tbody id="studentsBodyV9"></tbody></table></div>`;
+      <div class="table-scroll"><table class="admin-table student-management-table"><thead><tr><th class="student-serial-col">#</th><th><input type="checkbox" id="selectAllUsers"></th><th>Student</th><th>WhatsApp</th><th>Registered</th><th class="student-attribution-col">Signup Source / Link</th><th class="student-attribution-col">Team / Assigned</th><th>Course</th><th>Enrollment</th><th>Payment</th><th>Access / Expiry</th><th>Actions</th></tr></thead><tbody id="studentsBodyV9"></tbody></table></div>`;
   }
 
   function installModals() {
@@ -514,23 +514,13 @@
 
   function studentAttributionHtml(profile) {
     const a = studentAttribution(profile);
-    const linkValue = a.direct ? 'No tracked link' : a.linkName;
-    const refCampaign = a.direct
-      ? '—'
-      : [a.ref || 'No ref', a.campaign || 'No campaign'].join(' · ');
-    const teamValue = a.team ? a.teamName : (a.direct ? 'Organic / No team' : 'Unassigned');
-    const assignedValue = a.assignedAt ? A.formatDateTime(a.assignedAt) : '—';
-    return {
-      data:a,
-      strip:
-        '<div class="student-attribution-strip">'+
-          '<div class="student-attribution-item source"><span>01</span><small>SOURCE</small><b>'+esc(a.source)+'</b></div>'+
-          '<div class="student-attribution-item"><span>02</span><small>LINK</small><b>'+esc(linkValue)+'</b></div>'+
-          '<div class="student-attribution-item"><span>03</span><small>REF / CAMPAIGN</small><b>'+esc(refCampaign)+'</b></div>'+
-          '<div class="student-attribution-item"><span>04</span><small>TEAM MEMBER</small><b>'+esc(teamValue)+'</b></div>'+
-          '<div class="student-attribution-item"><span>05</span><small>ASSIGNED AT</small><b>'+esc(assignedValue)+'</b></div>'+
-        '</div>'
-    };
+    const sourceHtml = a.direct
+      ? '<span class="student-origin direct"><i class="fa-solid fa-globe"></i> Direct / Organic</span><small>No tracked signup link</small>'
+      : '<b class="student-origin-link">'+esc(a.linkName)+'</b><small>'+esc(a.source)+(a.ref?' · '+esc(a.ref):'')+(a.campaign?' · '+esc(a.campaign):'')+'</small>';
+    const teamHtml = a.team
+      ? '<b class="student-team-name">'+esc(a.teamName)+'</b><small>'+(a.assignedAt?'Assigned '+A.formatDateTime(a.assignedAt):'Assignment time unavailable')+'</small>'
+      : '<span class="student-team-empty">'+(a.direct?'Organic / No team':'Unassigned')+'</span><small>'+(a.direct?'Direct signup':'No team assignment yet')+'</small>';
+    return { sourceHtml, teamHtml, data:a };
   }
 
   function filteredUsers() {
@@ -718,7 +708,7 @@
         ['fa-crown', paid, 'Paid Enrollments', 'blue']
       ].map(([icon,value,labelText,tone]) => `<div class="student-summary-card ${tone}"><span><i class="fa-solid ${icon}"></i></span><div><b>${value}</b><small>${labelText}</small></div></div>`).join('');
     }
-    body.innerHTML = rows.length ? rows.map(profile => {
+    body.innerHTML = rows.length ? rows.map((profile, index) => {
       const access = effective(profile);
       const enrollments = state.enrollments.filter(row => row.student_id === profile.id).sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0));
       const active = enrollments.find(row => row.status === 'active') || enrollments[0];
@@ -727,8 +717,8 @@
       const enrollmentLabel = active ? A.statusLabel(active.status) : 'Not Enrolled';
       const paymentHtml = active ? (payment ? `<span class="status-pill ${A.statusClass(payment.status)}">${A.statusLabel(payment.status)}</span>` : (course && isFreeCourse(course.id) ? '<span class="status-pill ok">Free</span>' : '<span class="status-pill warn">No Payment</span>')) : '—';
       const attrHtml = studentAttributionHtml(profile);
-      return `<tr class="student-record-main"><td><input type="checkbox" data-user-select value="${profile.id}"></td><td><button class="text-link" data-user-details="${profile.id}"><b>${esc(profile.full_name || 'Student')}</b></button><small>${esc(profile.email || '')}</small></td><td>${esc(profile.whatsapp || '—')}</td><td>${A.formatDateTime(profile.created_at)}</td><td>${course ? `<b>${esc(course.title)}</b><small>${enrollments.length > 1 ? `${enrollments.length} enrollments` : (isFreeCourse(course.id) ? 'Free Course' : 'Paid Course')}</small>` : '<span class="muted">No course</span>'}</td><td><span class="status-pill ${A.statusClass(active?.status || 'pending')}">${enrollmentLabel}</span></td><td>${paymentHtml}</td><td><span class="status-pill ${A.statusClass(access)}">${profile.lifetime_access ? 'Lifetime' : A.statusLabel(access)}</span><small>${profile.lifetime_access ? 'No expiry' : (profile.access_expires_at ? A.formatDateTime(profile.access_expires_at) : 'No expiry set')}</small></td><td><div class="table-actions"><button class="app-btn small outline" data-user-details="${profile.id}">View</button><button class="app-btn small gold" data-manage-enrollment="${profile.id}">Enrollment</button><button class="app-btn small outline" data-manage-access="${profile.id}">Access</button></div></td></tr><tr class="student-attribution-row"><td colspan="9">${attrHtml.strip}</td></tr>`;
-    }).join('') : `<tr><td colspan="9">${empty('No users match the selected filters.', 'fa-users')}</td></tr>`;
+      return `<tr class="student-record-main"><td class="student-serial-col"><span class="student-serial-number">${index + 1}</span></td><td><input type="checkbox" data-user-select value="${profile.id}"></td><td><button class="text-link" data-user-details="${profile.id}"><b>${esc(profile.full_name || 'Student')}</b></button><small>${esc(profile.email || '')}</small></td><td>${esc(profile.whatsapp || '—')}</td><td>${A.formatDateTime(profile.created_at)}</td><td class="student-attribution-col student-source-cell">${attrHtml.sourceHtml}</td><td class="student-attribution-col student-team-cell">${attrHtml.teamHtml}</td><td>${course ? `<b>${esc(course.title)}</b><small>${enrollments.length > 1 ? `${enrollments.length} enrollments` : (isFreeCourse(course.id) ? 'Free Course' : 'Paid Course')}</small>` : '<span class="muted">No course</span>'}</td><td><span class="status-pill ${A.statusClass(active?.status || 'pending')}">${enrollmentLabel}</span></td><td>${paymentHtml}</td><td><span class="status-pill ${A.statusClass(access)}">${profile.lifetime_access ? 'Lifetime' : A.statusLabel(access)}</span><small>${profile.lifetime_access ? 'No expiry' : (profile.access_expires_at ? A.formatDateTime(profile.access_expires_at) : 'No expiry set')}</small></td><td><div class="table-actions"><button class="app-btn small outline" data-user-details="${profile.id}">View</button><button class="app-btn small gold" data-manage-enrollment="${profile.id}">Enrollment</button><button class="app-btn small outline" data-manage-access="${profile.id}">Access</button></div></td></tr>`;
+    }).join('') : `<tr><td colspan="12">${empty('No users match the selected filters.', 'fa-users')}</td></tr>`;
   }
 
 
