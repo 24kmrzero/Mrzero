@@ -114,7 +114,19 @@
       </section>
 
       <section class="panel admin-mentor-grade admin-signals-v2" id="p-signals">
-        <div class="panel-heading admin-official-signal-head admin-content-command"><div><span class="admin-content-kicker"><i class="fa-solid fa-bolt"></i> SIGNAL COMMAND CENTER</span><h2>Official Signals</h2><p>Create, manage and review signals from one focused 24K workspace.</p></div><div class="admin-signal-head-actions"><button type="button" class="app-btn gold active" data-admin-signal-view="active"><i class="fa-solid fa-bolt"></i> Active <span id="adminActiveSignalCount">0</span></button><button type="button" class="app-btn outline" data-admin-signal-view="history"><i class="fa-regular fa-rectangle-list"></i> History <span id="adminHistorySignalCount">0</span></button><button type="button" class="app-btn outline" data-admin-signal-view="report"><i class="fa-regular fa-square-poll-vertical"></i> Report</button><button class="app-btn gold" data-toggle-form="signalFormBox"><i class="fa-solid fa-plus"></i> Create Signal</button></div></div>
+        <div class="panel-heading admin-official-signal-head admin-content-command">
+          <div><span class="admin-content-kicker"><i class="fa-solid fa-bolt"></i> 24K MR ZERO · SIGNAL DESK</span><h2>Signal Command Center</h2><p>Create, monitor and manage every trade signal from one execution workspace.</p></div>
+          <div class="admin-signal-head-actions"><button type="button" class="app-btn gold active" data-admin-signal-view="active"><i class="fa-solid fa-bolt"></i> Active <span id="adminActiveSignalCount">0</span></button><button type="button" class="app-btn outline" data-admin-signal-view="history"><i class="fa-regular fa-rectangle-list"></i> History <span id="adminHistorySignalCount">0</span></button><button type="button" class="app-btn outline" data-admin-signal-view="report"><i class="fa-solid fa-chart-pie"></i> Report</button><button class="app-btn gold" data-toggle-form="signalFormBox"><i class="fa-solid fa-plus"></i> <span class="admin-create-signal-label">New Signal</span></button></div>
+          <div id="adminSignalStatsDesktop" class="admin-signal-desktop-stats admin-signal-desktop-only" aria-label="Signal performance summary"></div>
+        </div>
+        <div class="admin-signal-tabs-desktop admin-signal-desktop-only" aria-label="Signal views">
+          <div class="admin-signal-segments-desktop">
+            <button type="button" class="active" data-admin-signal-view="active"><i class="fa-solid fa-bolt"></i><span>Active</span><b id="adminDesktopActiveSignalCount">0</b></button>
+            <button type="button" data-admin-signal-view="history"><i class="fa-regular fa-rectangle-list"></i><span>History</span><b id="adminDesktopHistorySignalCount">0</b></button>
+            <button type="button" data-admin-signal-view="report"><i class="fa-solid fa-chart-pie"></i><span>Report</span></button>
+          </div>
+          <small id="adminSignalDesktopMeta">Live trading workspace</small>
+        </div>
         <div class="performance-grid signal-admin-performance hidden" id="adminSignalStats"></div>
 
         <div class="app-modal signal-create-modal" id="signalFormBox" aria-hidden="true">
@@ -158,8 +170,33 @@
         </div>
 
         <input type="hidden" id="adminSignalView" value="active">
-        <div class="filter-row"><input id="adminSignalSearch" type="search" placeholder="Search pair or note..."></div>
-        <div class="table-scroll"><table class="admin-table signal-admin-table admin-signal-user-style"><thead><tr><th>Time</th><th>Date</th><th>Instrument</th><th>Type</th><th>Entry</th><th>SL</th><th>TP1</th><th>TP2</th><th>TP3</th><th>Current Pips</th><th>Status</th><th>Actions</th></tr></thead><tbody id="signalsBody"></tbody></table></div>
+        <div class="admin-signal-quick-wrap-desktop admin-signal-desktop-only">
+          <div class="admin-signal-quick-filters-desktop" aria-label="Signal filters">
+            <button type="button" class="active" data-admin-signal-period="all">All</button>
+            <button type="button" data-admin-signal-period="daily">Daily</button>
+            <button type="button" data-admin-signal-period="weekly">Weekly</button>
+            <button type="button" data-admin-signal-period="monthly">Monthly</button>
+            <label><select id="adminSignalPairFilterDesktop" aria-label="Pair filter"><option value="all">Pair</option></select></label>
+            <label><select id="adminSignalTypeFilterDesktop" aria-label="Type filter"><option value="all">Type</option><option value="BUY">BUY</option><option value="SELL">SELL</option><option value="BUY STOP">BUY STOP</option><option value="SELL STOP">SELL STOP</option><option value="BUY LIMIT">BUY LIMIT</option><option value="SELL LIMIT">SELL LIMIT</option></select></label>
+            <label><select id="adminSignalStatusFilterDesktop" aria-label="Status filter"><option value="all">Status</option><option value="active">Active</option><option value="pending">Pending</option><option value="tp1_hit">TP1 Hit</option><option value="tp2_hit">TP2 Hit</option><option value="tp3_hit">TP3 Hit</option><option value="tp4_hit">TP4 Hit</option><option value="breakeven_hit">BE</option><option value="sl_hit">SL</option><option value="manually_closed">Closed</option><option value="cancelled">Cancelled</option></select></label>
+            <button type="button" data-admin-signal-period="custom"><i class="fa-regular fa-calendar"></i> Custom Date</button>
+          </div>
+          <div class="admin-signal-custom-date-desktop" id="adminSignalCustomDateDesktop" hidden>
+            <label><span>From</span><input id="adminSignalFromDesktop" type="date"></label>
+            <span>—</span>
+            <label><span>To</span><input id="adminSignalToDesktop" type="date"></label>
+            <button type="button" id="adminSignalApplyDateDesktop">Apply Date</button>
+          </div>
+        </div>
+        <div class="filter-row"><input id="adminSignalSearch" type="search" placeholder="Search pair, type or note..."></div>
+        <div class="table-scroll admin-signal-mobile-source"><table class="admin-table signal-admin-table admin-signal-user-style"><thead><tr><th>Time</th><th>Date</th><th>Instrument</th><th>Type</th><th>Entry</th><th>SL</th><th>TP1</th><th>TP2</th><th>TP3</th><th>Current Pips</th><th>Status</th><th>Actions</th></tr></thead><tbody id="signalsBody"></tbody></table></div>
+        <div class="admin-signal-desktop-table-wrap admin-signal-desktop-only" id="adminSignalDesktopTableWrap">
+          <table class="admin-signal-desktop-table">
+            <thead><tr><th>DATE</th><th>PAIR</th><th>TYPE</th><th>ENTRY</th><th>SL</th><th>TP1</th><th>TP2</th><th>TP3</th><th>TP4</th><th>STATUS</th><th>PIPS</th><th>NOTE</th><th>MANAGE</th></tr></thead>
+            <tbody id="adminSignalsDesktopBody"></tbody>
+          </table>
+        </div>
+        <div id="adminSignalReportDesktop" class="admin-signal-report-desktop admin-signal-desktop-only hidden"></div>
       </section>
 
       <section class="panel admin-mentor-grade admin-charts-v2" id="p-charts">
