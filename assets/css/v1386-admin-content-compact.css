@@ -2,6 +2,44 @@
    Desktop only. Mobile remains exactly as-is. */
 @media (min-width:901px){
 
+  /* Date timeline headings: Today → Yesterday → older dates */
+  #p-charts .admin-content-date-group,
+  #p-articles .admin-content-date-group{
+    grid-column:1/-1!important;
+    width:100%!important;
+    display:grid!important;
+    grid-template-columns:auto 1fr!important;
+    align-items:center!important;
+    gap:12px!important;
+    margin:4px 0 -2px!important;
+  }
+  #p-charts .admin-content-date-group>div,
+  #p-articles .admin-content-date-group>div{
+    display:flex!important;
+    align-items:baseline!important;
+    gap:8px!important;
+    min-width:max-content!important;
+  }
+  #p-charts .admin-content-date-group span,
+  #p-articles .admin-content-date-group span{
+    color:#20252d!important;
+    font-size:13px!important;
+    font-weight:950!important;
+    letter-spacing:-.02em!important;
+  }
+  #p-charts .admin-content-date-group small,
+  #p-articles .admin-content-date-group small{
+    color:#929aa4!important;
+    font-size:8px!important;
+    font-weight:750!important;
+  }
+  #p-charts .admin-content-date-group i,
+  #p-articles .admin-content-date-group i{
+    height:1px!important;
+    width:100%!important;
+    background:linear-gradient(90deg,rgba(190,153,55,.28),rgba(160,166,174,.12),transparent)!important;
+  }
+
   /* Exact Student/User desktop card footprint */
   #p-charts .admin-research-history,
   #p-articles .admin-research-history{
