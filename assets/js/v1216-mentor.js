@@ -1,6 +1,6 @@
 (function(){
 'use strict';
-/* mentor build 13.34 */
+/* mentor build 13.35 */
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js',{scope:'/'}).catch(e=>console.warn('[24K Mentor PWA]',e?.message||e)));
 }
@@ -9,13 +9,26 @@ const mentorStandalone=()=>window.matchMedia?.('(display-mode: standalone)').mat
 function updateMentorInstall(){
   const b=document.getElementById('mentorInstallButton');
   if(!b)return;
+  const icon=b.querySelector('.mentor-profile-install-icon i'),
+    title=b.querySelector('span:nth-child(2) b'),
+    sub=b.querySelector('span:nth-child(2) small'),
+    arrow=b.querySelector(':scope > i:last-child');
   if(mentorStandalone()){
-    b.innerHTML='<i class="fa-solid fa-circle-check"></i> Installed';
+    if(icon)icon.className='fa-solid fa-circle-check';
+    if(title)title.textContent='Mentor App Installed';
+    if(sub)sub.textContent='24K Mentor is ready on this device';
+    if(arrow)arrow.className='fa-solid fa-check';
     b.disabled=true;
     b.dataset.installed='1';
+    b.classList.add('installed');
   }else{
+    if(icon)icon.className='fa-solid fa-download';
+    if(title)title.textContent='Install Mentor App';
+    if(sub)sub.textContent='Add 24K Mentor to your home screen';
+    if(arrow)arrow.className='fa-solid fa-chevron-right';
     b.disabled=false;
     b.dataset.installed='0';
+    b.classList.remove('installed');
   }
 }
 window.addEventListener('beforeinstallprompt',e=>{
@@ -850,7 +863,43 @@ function editBanner(id){const x=state.banners.find(v=>v.id===id);if(!x)return;co
 async function saveBanner(e){e.preventDefault();const f=e.currentTarget,b=f.querySelector('button[type=submit]'),d=Object.fromEntries(new FormData(f)),published=f.elements.is_published.checked,oldImage=String(d.existing_image||'');let image=null,saved=false;b.disabled=true;try{image=await upload(f.elements.image.files[0],'banners');const row={title:String(d.title||'').trim(),image_url:image||oldImage||null,target_url:String(d.target_url||'').trim()||null,is_published:published,updated_at:new Date().toISOString()};if(!row.title)throw new Error('Banner title is required.');if(!row.image_url)throw new Error('Banner image is required.');let r;if(d.id)r=await sb.from('mentor_banners').update(row).eq('id',d.id).eq('created_by',state.user.id);else r=await sb.from('mentor_banners').insert({...row,created_by:state.user.id});if(r.error)throw r.error;saved=true;if(image&&oldImage&&image!==oldImage)await removeContentAsset(oldImage);f.reset();f.elements.id.value='';f.elements.existing_image.value='';f.elements.is_published.checked=true;$('#mentorBannerModalTitle').textContent='New Banner';closeModals();toast(d.id?'Banner updated.':'Banner saved.');await load()}catch(err){if(image&&!saved)await removeContentAsset(image);toast(err.message||'Could not save banner.')}finally{b.disabled=false}}
 function renderCourses(){const b=$('#mentorCourses');if(!b)return;b.innerHTML=state.courses.length?state.courses.map(c=>`<article class="mentor-card">${c.thumbnail_url?`<img src="${esc(c.thumbnail_url)}" style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:12px">`:''}<div class="mentor-meta"><span class="mentor-chip gold">${Number((c.discount_price ?? c.price) || 0)<=0?'FREE':esc(c.currency||'USD')+' '+esc(c.discount_price??c.price)}</span><span class="mentor-chip">${esc(c.status||'active')}</span></div><h3>${esc(c.title)}</h3><p>${esc(c.short_description||c.description||'')}</p><small>${esc(c.instructor_name||'24K MR ZERO')}</small></article>`).join(''):'<div class="mentor-empty">No published courses.</div>'}
 function renderNews(){const b=$('#mentorNews');if(!b)return;b.innerHTML=state.news.length?state.news.map(n=>`<article class="mentor-card"><span class="mentor-chip gold">${esc(String(n.priority||'normal').toUpperCase())}</span><h3>${esc(n.title)}</h3><p>${esc(n.message)}</p><small>${dt(n.published_at||n.created_at)}</small></article>`).join(''):'<div class="mentor-empty">No announcements.</div>'}
-function renderSettings(){const name=state.profile?.full_name||'Mentor',enabled=Object.entries(state.perms).filter(x=>x[1]).map(x=>x[0]);const html=`<article class="mentor-card"><span class="eyebrow">ACTIVE MENTOR</span><h3>${esc(name)}</h3><p>${esc(state.profile?.email||'')}</p><div class="mentor-meta">${enabled.map(x=>`<span class="mentor-chip gold">${esc(x.toUpperCase())}</span>`).join('')||'<span class="mentor-chip">No creation permissions</span>'}</div><p>Permissions are controlled by Admin.</p></article>`;$('#mentorSettings').innerHTML=html;$('#mentorProfileContent').innerHTML=html}
+function renderSettings(){
+  const name=state.profile?.full_name||'Mentor',
+    email=state.profile?.email||state.user?.email||'',
+    enabled=Object.entries(state.perms).filter(x=>x[1]).map(x=>x[0]),
+    initials=String(name).trim().split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase()||'M',
+    accessCount=enabled.length,
+    accessTotal=Object.keys(state.perms).length,
+    accessPct=accessTotal?Math.round(accessCount/accessTotal*100):0;
+
+  const settingsHtml=`<article class="mentor-card"><span class="eyebrow">ACTIVE MENTOR</span><h3>${esc(name)}</h3><p>${esc(email)}</p><div class="mentor-meta">${enabled.map(x=>`<span class="mentor-chip gold">${esc(x.toUpperCase())}</span>`).join('')||'<span class="mentor-chip">No creation permissions</span>'}</div><p>Permissions are controlled by Admin.</p></article>`;
+  const profileHtml=`
+    <div class="mentor-profile-account-hero">
+      <div class="mentor-profile-avatar"><span>${esc(initials)}</span><i class="fa-solid fa-circle-check"></i></div>
+      <div class="mentor-profile-identity">
+        <span class="mentor-profile-status"><i></i> ACTIVE MENTOR</span>
+        <h3>${esc(name)}</h3>
+        <p><i class="fa-regular fa-envelope"></i> ${esc(email)}</p>
+      </div>
+      <span class="mentor-profile-role"><i class="fa-solid fa-shield-halved"></i> Mentor</span>
+    </div>
+    <div class="mentor-profile-access">
+      <div class="mentor-profile-access-top">
+        <div><small>CONTENT ACCESS</small><b>${accessCount} of ${accessTotal} enabled</b></div>
+        <strong>${accessPct}%</strong>
+      </div>
+      <div class="mentor-profile-access-bar"><i style="width:${accessPct}%"></i></div>
+      <div class="mentor-profile-permissions">
+        ${Object.keys(state.perms).map(k=>`<span class="${state.perms[k]?'on':'off'}"><i class="fa-solid ${state.perms[k]?'fa-check':'fa-lock'}"></i>${esc(k.charAt(0).toUpperCase()+k.slice(1))}</span>`).join('')}
+      </div>
+    </div>
+    <div class="mentor-profile-admin-note"><span><i class="fa-solid fa-shield"></i></span><div><b>Admin Managed Access</b><small>Creation permissions and workspace access are controlled by Admin.</small></div></div>`;
+
+  const settings=$('#mentorSettings'),profile=$('#mentorProfileContent');
+  if(settings)settings.innerHTML=settingsHtml;
+  if(profile)profile.innerHTML=profileHtml;
+  updateMentorInstall()
+}
 function mentorPipSize(symbol){const s=String(symbol||'').replace('/','').toUpperCase();if(s.startsWith('BTC'))return 10;if(s==='XAUUSD')return .1;if(s==='XAGUSD')return .001;if(s.endsWith('JPY'))return .01;return .0001}
 function projectedSignalPips(signal,price){
   const p=Number(price),a=Number(signal?.entry_from),b=signal?.entry_to==null||signal?.entry_to===''?a:Number(signal.entry_to);
