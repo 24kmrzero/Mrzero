@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f7f1e7"><link rel="manifest" href="/mentor/manifest.webmanifest?v=12.73"><link rel="apple-touch-icon" href="/assets/logo.png">
 <title>Mentor Panel | 24K MR ZERO</title>
 <link rel="icon" href="/assets/logo.png"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<link rel="stylesheet" href="/assets/css/v1216-mentor.css?v=12.18"><link rel="stylesheet" href="/assets/css/v1218-mentor-reference.css?v=13.14"><link rel="stylesheet" href="/assets/css/v1315-mentor-performance.css?v=13.19"><link rel="stylesheet" href="/assets/css/v1320-mentor-signals.css?v=13.32"><link rel="stylesheet" href="/assets/css/v1333-mentor-charts.css?v=13.33"><link rel="stylesheet" href="/assets/css/v1334-mentor-articles.css?v=13.34"><link rel="stylesheet" href="/assets/css/v1335-mentor-profile.css?v=13.39.1"><link rel="stylesheet" href="/assets/css/v1340-mentor-mobile-gap.css?v=13.40"><link rel="stylesheet" href="/assets/css/v1341-mentor-editors.css?v=13.41">
+<link rel="stylesheet" href="/assets/css/v1216-mentor.css?v=12.18"><link rel="stylesheet" href="/assets/css/v1218-mentor-reference.css?v=13.14"><link rel="stylesheet" href="/assets/css/v1315-mentor-performance.css?v=13.19"><link rel="stylesheet" href="/assets/css/v1320-mentor-signals.css?v=13.32"><link rel="stylesheet" href="/assets/css/v1333-mentor-charts.css?v=13.33"><link rel="stylesheet" href="/assets/css/v1334-mentor-articles.css?v=13.34"><link rel="stylesheet" href="/assets/css/v1335-mentor-profile.css?v=13.39.1"><link rel="stylesheet" href="/assets/css/v1340-mentor-mobile-gap.css?v=13.40"><link rel="stylesheet" href="/assets/css/v1341-mentor-editors.css?v=13.42">
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script defer src="/assets/js/config.js?v=13.08"></script>
 </head>
 <body class="mentor-page mentor-booting">
@@ -381,29 +381,18 @@
       <input type="hidden" name="existing_cover">
       <div class="mentor-modal-body mentor-form premium-editor-body">
         <section class="premium-editor-intro article-intro">
-          <span class="premium-editor-intro-icon"><i class="fa-solid fa-pen-nib"></i></span>
-          <div><b>Create Premium Article</b><small>Choose the writing language, then add your title, preview and full content.</small></div>
+          <span class="premium-editor-intro-icon"><i class="fa-solid fa-language"></i></span>
+          <div><b>One Article · Two Languages</b><small>Use one shared heading, then add both English and Roman English content for readers.</small></div>
           <span class="premium-required-note">* Required</span>
         </section>
 
         <section class="premium-editor-section full">
           <div class="premium-editor-section-head">
             <span class="num">01</span>
-            <div><small>LANGUAGE</small><b>Writing Style</b></div>
-          </div>
-          <div class="premium-language-switch" role="radiogroup" aria-label="Article language">
-            <label><input type="radio" name="content_language" value="english" checked><span><b>English</b><small>Write the article in English</small></span></label>
-            <label><input type="radio" name="content_language" value="roman_english"><span><b>Roman English</b><small>Roman Urdu / easy English style</small></span></label>
-          </div>
-        </section>
-
-        <section class="premium-editor-section full">
-          <div class="premium-editor-section-head">
-            <span class="num">02</span>
-            <div><small>ARTICLE SETUP</small><b>Basic Information</b></div>
+            <div><small>ARTICLE SETUP</small><b>Shared Information</b></div>
           </div>
           <div class="premium-editor-grid">
-            <label class="full">Article Title <strong>*</strong><input name="title" required placeholder="How to build a high-probability trading bias"></label>
+            <label class="full">Article Title <strong>*</strong><input name="title" required placeholder="How to build a high-probability trading bias"><small class="field-help">This same heading is shown in both languages.</small></label>
             <label>Category<input name="category" list="mentorArticleCategoryList" placeholder="Education"><datalist id="mentorArticleCategoryList"><option value="Education"><option value="Technical Analysis"><option value="Fundamental Analysis"><option value="Trading Psychology"><option value="Risk Management"><option value="Market Update"></datalist></label>
             <label class="premium-upload compact">
               <input name="cover" type="file" accept="image/png,image/jpeg,image/webp">
@@ -416,25 +405,35 @@
 
         <section class="premium-editor-section full">
           <div class="premium-editor-section-head">
-            <span class="num">03</span>
+            <span class="num">02</span>
             <div><small>PREVIEW</small><b>Short Excerpt</b></div>
           </div>
-          <label class="full"><textarea name="excerpt" rows="3" placeholder="A short preview shown on the article card..."></textarea><small class="field-help">Keep it short and clear for the article card.</small></label>
+          <label class="full"><textarea name="excerpt" rows="3" placeholder="A short preview shown on the article card..."></textarea><small class="field-help">This preview stays common on the article card.</small></label>
         </section>
 
-        <section class="premium-editor-section full">
+        <section class="premium-editor-section premium-bilingual-section full">
           <div class="premium-editor-section-head">
-            <span class="num">04</span>
-            <div><small>CONTENT</small><b>Full Article</b></div>
+            <span class="num">03</span>
+            <div><small>BILINGUAL CONTENT</small><b>Article Content</b></div>
+            <span class="premium-two-language-badge"><i class="fa-solid fa-language"></i> 2 Languages</span>
           </div>
-          <label class="full"><textarea name="content" required rows="9" placeholder="Write the complete article here..."></textarea></label>
+          <div class="premium-bilingual-grid">
+            <label class="premium-language-editor english">
+              <span class="premium-language-label"><i class="fa-solid fa-e"></i><span><b>English</b><small>Primary article content</small></span></span>
+              <textarea name="content" required rows="9" placeholder="Write the complete article in English..."></textarea>
+            </label>
+            <label class="premium-language-editor roman">
+              <span class="premium-language-label"><i class="fa-solid fa-r"></i><span><b>Roman English</b><small>Same article in Roman Urdu / Roman English</small></span></span>
+              <textarea name="content_roman" required rows="9" placeholder="Isi article ka Roman English version yahan likhein..."></textarea>
+            </label>
+          </div>
         </section>
 
         <section class="premium-publish-row full">
           <label class="premium-publish-toggle">
             <input type="checkbox" name="is_published" checked>
             <span class="toggle-ui"></span>
-            <span><b>Publish now</b><small>Turn off to save this article as a draft.</small></span>
+            <span><b>Publish now</b><small>Turn off to save this bilingual article as a draft.</small></span>
           </label>
           <span class="premium-publish-state" data-publish-state><i class="fa-solid fa-circle-check"></i> Ready to publish</span>
         </section>
@@ -447,5 +446,5 @@
   </div>
 </div>
 <div class="mentor-modal" id="mentorBannerModal"><div class="mentor-modal-card"><div class="mentor-modal-head"><div><b id="mentorBannerModalTitle">New Banner</b><small class="eyebrow">WEBSITE CAMPAIGN</small></div><button class="mentor-close" data-close-mentor-modal><i class="fa-solid fa-xmark"></i></button></div><form id="mentorBannerForm"><input type="hidden" name="id"><input type="hidden" name="existing_image"><div class="mentor-modal-body mentor-form"><label class="full">Title<input name="title" required></label><label>Banner Image<input name="image" type="file" accept="image/png,image/jpeg,image/webp"></label><label>Target URL <small>(optional)</small><input name="target_url" placeholder="/courses/"></label><label class="mentor-check"><input type="checkbox" name="is_published" checked> Published</label></div><div class="mentor-modal-foot"><button type="button" class="mentor-btn" data-close-mentor-modal>Cancel</button><button class="mentor-btn gold" type="submit">Save Banner</button></div></form></div></div>
-<div id="mentorToast" class="mentor-toast"></div><script defer src="/assets/js/v1216-mentor.js?v=13.41"></script>
+<div id="mentorToast" class="mentor-toast"></div><script defer src="/assets/js/v1216-mentor.js?v=13.42"></script>
 </body></html>
