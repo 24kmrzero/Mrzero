@@ -56,7 +56,11 @@
     installCloseButton();
     const s=side();if(!s)return;
     const mo=new MutationObserver(()=>{
-      if(isOpen())onDrawerOpened(); else syncDrawer();
+      if(isOpen())onDrawerOpened();
+      else{
+        if(!history.state?.adminDrawer)drawerHistory=false;
+        syncDrawer();
+      }
     });
     mo.observe(s,{attributes:true,attributeFilter:['class']});
     backdrop()?.addEventListener('click',()=>closeDrawer());
