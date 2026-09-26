@@ -327,8 +327,18 @@
     window.dispatchEvent(new CustomEvent('24k:student-base-updated',{detail:state}));
   }
 
+  function getActiveSignals(){
+    return (state.signals||[]).filter(signal=>!signalIsFinal(signal));
+  }
+
+  function getLatestActiveSignal(){
+    return getActiveSignals()
+      .slice()
+      .sort((a,b)=>new Date(b.published_at||b.created_at||0)-new Date(a.published_at||a.created_at||0))[0]||null;
+  }
+
   function renderKpis() {
-    const activeSignals = state.signals.filter(s => !signalIsFinal(s)).length;
+    const activeSignals = getActiveSignals().length;
     const approvedCourses = TEMP_OPEN_ACCESS ? state.courses.length : state.enrollments.filter(isEnrollmentActive).length;
     const todayKey = dateKey(new Date());
     const todayCharts = state.charts.filter(c => dateKey(new Date(c.published_at || c.created_at || Date.now())) === todayKey).length;
@@ -346,7 +356,7 @@
     const alert = document.getElementById('dashboardAlert');
     if (alert) alert.innerHTML = '';
 
-    const latest = state.signals.find(s => !signalIsFinal(s)) || state.signals[0];
+    const latest = getLatestActiveSignal() || (state.signals||[])[0] || null;
     document.getElementById('latestSignal').innerHTML = latest
       ? `<div class="dashboard-latest-signal-mobile mobile-signal-list">${dashboardSignalMobile(latest)}</div><div class="dashboard-latest-signal-desktop">${dashboardSignalSnapshot(latest)}</div>`
       : `<div class="dashboard-empty-compact"><span><i class="fa-solid fa-bolt"></i></span><b>No active market signal right now.</b><small>Fresh setups will appear here automatically.</small><button type="button" class="text-link-btn" data-refresh-dashboard>Refresh <i class="fa-solid fa-rotate"></i></button></div>`;
@@ -1292,6 +1302,35 @@
     const heroJoined=document.getElementById('profileHeroJoined'); if(heroJoined)heroJoined.textContent=`Joined ${joinedText}`;
   }
 
+  async function saveProfile(event) {
+    event.preventDefault();
+    const form=event.currentTarget;
+    const button=form?.querySelector('button[type="submit"]');
+    const values=Object.fromEntries(new FormData(form));
+    A.setLoading(button,true,'Saving...');
+    try{
+      const changes={
+        full_name:String(values.full_name||'').trim(),
+        whatsapp:String(values.whatsapp||'').trim(),
+        country:String(values.country||'').trim(),
+        experience:String(values.experience||'').trim()
+      };
+      const {data,error}=await A.supabase.from('profiles').update(changes).eq('id',state.user.id).select('*').maybeSingle();
+      if(error)throw error;
+      state.profile=data||{...(state.profile||{}),...changes};
+      const welcome=document.getElementById('dashboardWelcomeName')||document.getElementById('welcomeName');
+      if(welcome)welcome.textContent=`${state.profile.full_name||'24K Member'} 👋`;
+      renderProfile();
+      renderDashboard();
+      window.dispatchEvent(new CustomEvent('24k:student-base-updated',{detail:state}));
+      A.toast('Profile updated successfully.','success');
+    }catch(error){
+      A.toast(A.friendlyError(error,'Could not update profile.'),'error');
+    }finally{
+      A.setLoading(button,false);
+    }
+  }
+
   function renderEmailVerification() {
     const verified = Boolean(state.profile?.email_verified);
     const banner = document.getElementById('emailVerificationBanner');
@@ -1455,7 +1494,7 @@
     document.getElementById('ibCopyPartnerLink')?.addEventListener('click',event=>{if(!window.__24K_ACCESS_V1224_READY__)copyIbPartnerLink(event);});
     ['chartSearch','chartTimeframeFilter'].forEach(id => document.getElementById(id)?.addEventListener('input', renderCharts));
     document.getElementById('articleSearch')?.addEventListener('input', renderArticles);
-    document.getElementById('closeSessions').addEventListener('click', resetCourseView);
+    document.getElementById('closeSessions')?.addEventListener('click', resetCourseView);
 
     document.body.addEventListener('click', async event => {
       const profileEdit=event.target.closest('[data-profile-edit]');
@@ -1575,12 +1614,12 @@
     });
 
     updateAlertButton();
-    document.getElementById('paymentForm').addEventListener('submit', submitPayment);
+    document.getElementById('paymentForm')?.addEventListener('submit', submitPayment);
     document.getElementById('bankPaymentForm')?.addEventListener('submit', submitBankPayment);
-    document.getElementById('profileForm').addEventListener('submit', saveProfile);
+    document.getElementById('profileForm')?.addEventListener('submit', saveProfile);
     document.getElementById('premiumUsdtForm')?.addEventListener('submit',event=>{if(!window.__24K_ACCESS_V1224_READY__)submitPremiumUsdt(event);});
     document.getElementById('premiumBankForm')?.addEventListener('submit',event=>{if(!window.__24K_ACCESS_V1224_READY__)submitPremiumBank(event);});
-    document.getElementById('globalSearch').addEventListener('keydown', event => {
+    document.getElementById('globalSearch')?.addEventListener('keydown', event => {
       if (event.key !== 'Enter') return;
       const q = event.currentTarget.value.trim().toLowerCase();
       if (!q) return;
@@ -2035,7 +2074,12 @@
     }
   }
 
-  function signalIsFinal(s){const st=String(s?.status||'');return Boolean(s?.closed_at)||['tp4_hit','sl_hit','breakeven_hit','manually_closed','cancelled'].includes(st)||(st==='tp3_hit'&&(s?.take_profit_4===null||s?.take_profit_4===undefined||s?.take_profit_4===''));}
+  function signalIsFinal(s){
+    const st=String(s?.status||'').trim().toLowerCase();
+    return Boolean(s?.closed_at)
+      || ['tp4_hit','sl_hit','breakeven_hit','manually_closed','cancelled','closed'].includes(st)
+      || (st==='tp3_hit'&&(s?.take_profit_4===null||s?.take_profit_4===undefined||s?.take_profit_4===''));
+  }
   function resultUnit(){return 'pips';}
   function displaySymbol(symbol){const x=String(symbol||'').replace('/','').toUpperCase();return x.length===6?`${x.slice(0,3)}/${x.slice(3)}`:x;}
   function entryText(s){return `${num(s.entry_from)}${s.entry_to!=null?` – ${num(s.entry_to)}`:''}`;}
