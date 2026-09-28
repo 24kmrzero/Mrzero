@@ -1,0 +1,240 @@
+/* 24K MR ZERO — Admin readability pass v14.20
+   Desktop typography only: increase legibility without changing information architecture. */
+@media (min-width:901px){
+
+  /* Sidebar and shared admin copy */
+  html[data-auth-scope="admin"] .app-nav a{
+    font-size:11px!important;
+    line-height:1.25!important;
+  }
+  html[data-auth-scope="admin"] .v1218-nav-group{
+    font-size:7.8px!important;
+  }
+
+  /* ================= LINK MANAGER ================= */
+  #p-link-manager-ref>.link-manager-hero p{font-size:11.5px!important}
+  #p-link-manager-ref .link-manager-kicker{font-size:8.2px!important}
+  #p-link-manager-ref>.link-manager-hero>div:first-child>small{font-size:7.6px!important}
+  #p-link-manager-ref .link-manager-create{font-size:9.3px!important}
+
+  #p-link-manager-ref .link-manager-kpi small{
+    font-size:8.2px!important;
+    letter-spacing:.045em!important;
+  }
+  #p-link-manager-ref .link-manager-kpi b{font-size:21px!important}
+
+  #p-link-manager-ref .link-manager-search input,
+  #p-link-manager-ref .link-manager-filter-shell>select{
+    font-size:9.6px!important;
+  }
+  #p-link-manager-ref .link-manager-filter-shell>.app-btn{
+    font-size:8.5px!important;
+  }
+
+  #p-link-manager-ref .link-manager-table thead th{
+    font-size:8px!important;
+    letter-spacing:.055em!important;
+  }
+  #p-link-manager-ref .link-manager-table tbody td{
+    font-size:9.7px!important;
+    line-height:1.4!important;
+  }
+  #p-link-manager-ref .link-manager-name b{
+    font-size:10.5px!important;
+  }
+  #p-link-manager-ref .v1218-link-url{
+    max-width:350px!important;
+    font-size:8.2px!important;
+    line-height:1.45!important;
+  }
+  #p-link-manager-ref .link-manager-source,
+  #p-link-manager-ref .link-manager-destination{
+    font-size:9.5px!important;
+  }
+  #p-link-manager-ref td small{
+    font-size:8.1px!important;
+  }
+  #p-link-manager-ref .link-manager-metric,
+  #p-link-manager-ref .link-manager-conversion{
+    font-size:10px!important;
+  }
+  #p-link-manager-ref .v1218-badge{
+    font-size:8.2px!important;
+  }
+  #p-link-manager-ref .link-manager-actions .app-btn{
+    font-size:8px!important;
+  }
+
+  /* ================= CREATE / EDIT LINK MODAL ================= */
+  #v14LinkModal .premium-link-kicker{font-size:7.8px!important}
+  #v14LinkModal .premium-link-head h3{font-size:24px!important}
+  #v14LinkModal .premium-link-head .muted{
+    font-size:10.2px!important;
+    line-height:1.5!important;
+  }
+  #v14LinkModal .premium-link-section-head>span{font-size:8px!important}
+  #v14LinkModal .premium-link-section-head h4{font-size:13.5px!important}
+  #v14LinkModal .premium-link-section-head p{font-size:9px!important}
+  #v14LinkModal .v14-choice b{font-size:11px!important}
+  #v14LinkModal .v14-choice small{font-size:8.8px!important}
+  #v14LinkModal .form-field label{font-size:9.5px!important}
+  #v14LinkModal .form-field :is(input,select,textarea){font-size:10.3px!important}
+  #v14LinkModal .premium-field-help{font-size:8.2px!important}
+  #v14LinkModal .premium-link-advanced summary{font-size:9.3px!important}
+  #v14LinkModal .premium-toggle-row b{font-size:9.5px!important}
+  #v14LinkModal .premium-toggle-row small{font-size:8px!important}
+  #v14LinkModal .premium-link-preview-label{font-size:7.7px!important}
+  #v14LinkModal .premium-link-preview-top span{font-size:7.2px!important}
+  #v14LinkModal .premium-link-preview-card>p{font-size:9.3px!important}
+  #v14LinkModal .premium-link-preview-meta span{font-size:8px!important}
+  #v14LinkModal .premium-link-preview-meta b{font-size:8.7px!important}
+  #v14LinkModal .premium-link-preview-url small{font-size:7.2px!important}
+  #v14LinkModal .premium-link-preview-url code{font-size:7.7px!important}
+  #v14LinkModal .premium-link-preview-note{font-size:8px!important}
+  #v14LinkModal .premium-link-foot-note{font-size:8.5px!important}
+  #v14LinkModal .premium-link-foot .app-btn{font-size:8.8px!important}
+
+  /* ================= TEAM ACCOUNTS ================= */
+  #p-team-access-ref .v18-team-kicker{font-size:7.8px!important}
+  #p-team-access-ref>.panel-heading p{font-size:11.5px!important}
+  #p-team-access-ref>.panel-heading .app-btn{font-size:9px!important}
+
+  #p-team-access-ref #v18TeamKpis .v1218-kpi small{
+    font-size:8px!important;
+    letter-spacing:.05em!important;
+  }
+  #p-team-access-ref #v18TeamKpis .v1218-kpi b{font-size:22px!important}
+
+  #p-team-access-ref>.table-scroll>.admin-table tbody td{
+    font-size:9.6px!important;
+    line-height:1.4!important;
+  }
+  #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(1):after{
+    font-size:7px!important;
+  }
+  #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(1) b{
+    font-size:15px!important;
+  }
+  #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(n+2):nth-child(-n+7):before{
+    font-size:7px!important;
+    letter-spacing:.055em!important;
+  }
+  #p-team-access-ref .v18-team-toggle b{font-size:8px!important}
+  #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(8) .app-btn{
+    font-size:8px!important;
+  }
+
+  /* ================= MENTOR ACCOUNTS ================= */
+  #p-v1216-center.mentor-accounts-only .v1216-mentor-kicker{
+    font-size:7.8px!important;
+  }
+  #p-v1216-center.mentor-accounts-only .v1216-mentor-command p{
+    font-size:11px!important;
+    line-height:1.5!important;
+  }
+  #p-v1216-center.mentor-accounts-only #v1216AddMentor{
+    font-size:9px!important;
+  }
+  #p-v1216-center.mentor-accounts-only .v1216-mentor-overview small{
+    font-size:8.2px!important;
+    letter-spacing:.055em!important;
+  }
+  #p-v1216-center.mentor-accounts-only .v1216-mentor-overview b{
+    font-size:20px!important;
+  }
+  #p-v1216-center .v1216-mentor-head>div>small{
+    font-size:7.2px!important;
+  }
+  #p-v1216-center .v1216-mentor-head h3{
+    font-size:15px!important;
+  }
+  #p-v1216-center .v1216-mentor-head p{
+    font-size:8.7px!important;
+  }
+  #p-v1216-center .v1216-mentor-state{
+    font-size:7.8px!important;
+  }
+  #p-v1216-center .v1216-mentor-email{
+    min-height:39px!important;
+    font-size:9.3px!important;
+  }
+  #p-v1216-center .v1216-mentor-access>small{
+    font-size:7.3px!important;
+  }
+  #p-v1216-center .v1216-mentor-access span{
+    font-size:7.9px!important;
+  }
+  #p-v1216-center .v1216-mentor-access em{
+    font-size:8.2px!important;
+  }
+  #p-v1216-center .v1216-mentor-foot .app-btn{
+    font-size:8.2px!important;
+  }
+
+  /* ================= STUDENT MANAGEMENT ================= */
+  #p-students>.panel-heading p{font-size:11.5px!important}
+  #p-students .student-summary-card small{font-size:9px!important}
+  #p-students .student-date-btn{font-size:9.5px!important}
+  #p-students .student-main-filters :is(input,select){font-size:10.2px!important}
+  #p-students .bulk-bar>div small{font-size:9.4px!important}
+  #p-students .bulk-bar :is(select,input){font-size:9.8px!important}
+  #p-students .bulk-bar .app-btn{font-size:9px!important}
+
+  #p-students>.table-scroll{
+    overflow-x:auto!important;
+  }
+  #p-students .student-management-table{
+    min-width:1460px!important;
+  }
+  #p-students .student-management-table thead th{
+    font-size:8px!important;
+    letter-spacing:.05em!important;
+  }
+  #p-students .student-management-table tbody tr.student-record-main td{
+    font-size:9.5px!important;
+    line-height:1.4!important;
+  }
+  #p-students .student-management-table .text-link b{
+    font-size:10.4px!important;
+  }
+  #p-students .student-management-table td small{
+    font-size:8.3px!important;
+    line-height:1.45!important;
+  }
+  #p-students .student-origin,
+  #p-students .student-team-empty{
+    font-size:7.8px!important;
+  }
+  #p-students .student-origin-link,
+  #p-students .student-team-name{
+    font-size:8.8px!important;
+  }
+  #p-students .student-management-table tbody td:nth-child(8)>b{
+    font-size:9.3px!important;
+  }
+  #p-students .student-management-table .status-pill{
+    font-size:7.7px!important;
+  }
+  #p-students .student-management-table .table-actions .app-btn{
+    font-size:7.8px!important;
+  }
+
+  /* Shared form readability */
+  #v14TeamModal .form-field label,
+  #v1216MentorModal .v1216-form label{
+    font-size:9.3px!important;
+  }
+  #v14TeamModal :is(input,select),
+  #v1216MentorModal .v1216-form input{
+    font-size:10px!important;
+  }
+  #v14TeamModal .app-modal-head small{
+    font-size:9.5px!important;
+  }
+}
+
+/* Keep desktop readability gains from collapsing on medium screens */
+@media (min-width:901px) and (max-width:1200px){
+  #p-link-manager-ref .link-manager-table{min-width:1260px!important}
+  #p-students .student-management-table{min-width:1460px!important}
+}
