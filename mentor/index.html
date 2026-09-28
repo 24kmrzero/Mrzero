@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f7f1e7"><link rel="manifest" href="/mentor/manifest.webmanifest?v=12.73"><link rel="apple-touch-icon" href="/assets/logo.png">
 <title>Mentor Panel | 24K MR ZERO</title>
 <link rel="icon" href="/assets/logo.png"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<link rel="stylesheet" href="/assets/css/v1216-mentor.css?v=12.18"><link rel="stylesheet" href="/assets/css/v1218-mentor-reference.css?v=13.14"><link rel="stylesheet" href="/assets/css/v1315-mentor-performance.css?v=13.19"><link rel="stylesheet" href="/assets/css/v1320-mentor-signals.css?v=13.32"><link rel="stylesheet" href="/assets/css/v1333-mentor-charts.css?v=13.33"><link rel="stylesheet" href="/assets/css/v1334-mentor-articles.css?v=13.46"><link rel="stylesheet" href="/assets/css/v1335-mentor-profile.css?v=13.39.1"><link rel="stylesheet" href="/assets/css/v1340-mentor-mobile-gap.css?v=13.40"><link rel="stylesheet" href="/assets/css/v1341-mentor-editors.css?v=13.42"><link rel="stylesheet" href="/assets/css/v1343-mentor-theme-parity.css?v=13.43"><link rel="stylesheet" href="/assets/css/v1344-mentor-performance-parity.css?v=13.45"><link rel="stylesheet" href="/assets/css/v1346-mentor-final.css?v=13.46.1"><link rel="stylesheet" href="/assets/css/v1435-mentor-desktop-parity.css?v=14.35"><link rel="stylesheet" href="/assets/css/v1436-mentor-final-desktop.css?v=14.36"><link rel="stylesheet" href="/assets/css/v1437-mentor-signals-admin-parity.css?v=14.37"><link rel="stylesheet" href="/assets/css/v1438-mentor-chart-admin-exact.css?v=14.38">
+<link rel="stylesheet" href="/assets/css/v1216-mentor.css?v=12.18"><link rel="stylesheet" href="/assets/css/v1218-mentor-reference.css?v=13.14"><link rel="stylesheet" href="/assets/css/v1315-mentor-performance.css?v=13.19"><link rel="stylesheet" href="/assets/css/v1320-mentor-signals.css?v=13.32"><link rel="stylesheet" href="/assets/css/v1333-mentor-charts.css?v=13.33"><link rel="stylesheet" href="/assets/css/v1334-mentor-articles.css?v=13.46"><link rel="stylesheet" href="/assets/css/v1335-mentor-profile.css?v=13.39.1"><link rel="stylesheet" href="/assets/css/v1340-mentor-mobile-gap.css?v=13.40"><link rel="stylesheet" href="/assets/css/v1341-mentor-editors.css?v=13.42"><link rel="stylesheet" href="/assets/css/v1343-mentor-theme-parity.css?v=13.43"><link rel="stylesheet" href="/assets/css/v1344-mentor-performance-parity.css?v=13.45"><link rel="stylesheet" href="/assets/css/v1346-mentor-final.css?v=13.46.1"><link rel="stylesheet" href="/assets/css/v1435-mentor-desktop-parity.css?v=14.35"><link rel="stylesheet" href="/assets/css/v1436-mentor-final-desktop.css?v=14.36"><link rel="stylesheet" href="/assets/css/v1437-mentor-signals-admin-parity.css?v=14.37"><link rel="stylesheet" href="/assets/css/v1438-mentor-chart-admin-exact.css?v=14.38"><link rel="stylesheet" href="/assets/css/v1439-mentor-article-admin-exact.css?v=14.39">
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script defer src="/assets/js/config.js?v=13.08"></script>
 </head>
 <body class="mentor-page mentor-booting">
@@ -229,17 +229,19 @@
         <div id="mentorCharts" class="mentor-chart-library admin-research-history"></div>
       </section>
 
-      <section class="mentor-view" data-mentor-panel="articles">
-        <div class="mentor-article-command">
+      <section class="mentor-view mentor-article-admin-parity" data-mentor-panel="articles">
+        <div class="mentor-article-command admin-content-command">
           <div class="mentor-article-command-top">
             <div class="mentor-article-command-copy">
-              <span class="mentor-article-kicker"><i class="fa-solid fa-newspaper"></i> 24K MR ZERO · EDITORIAL DESK</span>
+              <span class="mentor-article-kicker admin-content-kicker"><i class="fa-solid fa-newspaper"></i> 24K MR ZERO · EDITORIAL DESK</span>
               <h2>Professional Articles <em>& Insights</em></h2>
               <p>Create, organise and publish premium educational research, strategy notes and market insights.</p>
+              <small class="mentor-article-workspace-badge">PREMIUM EDITORIAL WORKSPACE</small>
             </div>
             <button class="mentor-btn gold mentor-article-create" data-open-mentor-modal="article"><i class="fa-solid fa-plus"></i><span>New Article</span></button>
           </div>
-          <div class="mentor-article-stats">
+
+          <div class="mentor-article-stats mentor-article-mobile-stats">
             <article><span class="icon gold"><i class="fa-solid fa-layer-group"></i></span><div><small>TOTAL ARTICLES</small><b id="mentorArticleStatTotal">0</b><em>Editorial library</em></div></article>
             <article><span class="icon green"><i class="fa-solid fa-circle-check"></i></span><div><small>PUBLISHED</small><b id="mentorArticleStatPublished">0</b><em>Live content</em></div></article>
             <article><span class="icon blue"><i class="fa-regular fa-pen-to-square"></i></span><div><small>DRAFTS</small><b id="mentorArticleStatDrafts">0</b><em>Work in progress</em></div></article>
@@ -247,7 +249,14 @@
           </div>
         </div>
 
-        <div class="mentor-article-controls">
+        <div class="mentor-article-desktop-stats admin-mentor-stats" id="mentorArticleAdminStats">
+          <article class="admin-mentor-stat"><i class="fa-solid fa-newspaper"></i><div><small>TOTAL ARTICLES</small><b id="mentorArticleAdminStatTotal">0</b><em>Editorial library</em></div></article>
+          <article class="admin-mentor-stat"><i class="fa-solid fa-circle-check"></i><div><small>PUBLISHED</small><b id="mentorArticleAdminStatPublished">0</b><em>Visible to users</em></div></article>
+          <article class="admin-mentor-stat"><i class="fa-solid fa-pen"></i><div><small>DRAFTS</small><b id="mentorArticleAdminStatDrafts">0</b><em>Work in progress</em></div></article>
+          <article class="admin-mentor-stat"><i class="fa-solid fa-calendar-week"></i><div><small>THIS WEEK</small><b id="mentorArticleAdminStatWeek">0</b><em>Last 7 days</em></div></article>
+        </div>
+
+        <div class="mentor-article-controls admin-research-filter admin-article-filter">
           <div class="mentor-article-periods" aria-label="Article filters">
             <button type="button" class="active" data-article-period="all">All</button>
             <button type="button" data-article-period="today">Today</button>
@@ -270,7 +279,7 @@
           <div><span>EDITORIAL LIBRARY</span><b id="mentorArticleResultTitle">All Articles</b></div>
           <small id="mentorArticleResultCount">0 results</small>
         </div>
-        <div id="mentorArticles" class="mentor-article-library"></div>
+        <div id="mentorArticles" class="mentor-article-library admin-research-history"></div>
       </section>
 
       <section class="mentor-view" data-mentor-panel="banners">
@@ -435,7 +444,30 @@
 </div>
 
 <div class="mentor-modal mentor-article-modal premium-editor-modal" id="mentorArticleModal">
-  <div class="mentor-modal-card">
+  <div class="mentor-modal-card mentor-article-admin-modal-card">
+    <div class="mentor-modal-head">
+      <div><b id="mentorArticleDesktopModalTitle">Add Article</b><small class="muted">Create and publish educational content.</small></div>
+      <button class="mentor-close" data-close-mentor-modal aria-label="Close Add Article"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <form id="mentorArticleDesktopForm">
+      <input type="hidden" name="id">
+      <input type="hidden" name="existing_cover">
+      <div class="mentor-modal-body mentor-article-admin-form-body">
+        <div class="mentor-admin-article-form-grid">
+          <div class="mentor-admin-article-field"><label>Article Title</label><input name="title" required></div>
+          <div class="mentor-admin-article-field"><label>Article Slug</label><input name="slug" placeholder="market-structure-guide"></div>
+          <div class="mentor-admin-article-field"><label>Category</label><input name="category" placeholder="Education, Fundamentals..."></div>
+          <div class="mentor-admin-article-field full"><label>Short Excerpt</label><textarea name="excerpt" required></textarea></div>
+          <div class="mentor-admin-article-field full"><label>Full Article</label><textarea name="content" required style="min-height:220px"></textarea></div>
+          <div class="mentor-admin-article-field"><label>Cover Image <span class="muted">(optional)</span></label><input type="file" name="cover" accept="image/png,image/jpeg,image/webp"></div>
+          <label class="mentor-admin-article-check-row"><input type="checkbox" name="is_published" checked> Publish to students</label>
+        </div>
+      </div>
+      <div class="mentor-modal-foot mentor-article-admin-foot"><button type="button" class="mentor-btn" data-close-mentor-modal>Cancel</button><button class="mentor-btn gold" type="submit">Save Article</button></div>
+    </form>
+  </div>
+
+  <div class="mentor-modal-card mentor-article-mobile-modal-card">
     <div class="mentor-modal-head premium-editor-head">
       <div>
         <b id="mentorArticleModalTitle">New Article</b>
