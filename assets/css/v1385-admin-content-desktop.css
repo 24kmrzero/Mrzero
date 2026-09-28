@@ -243,35 +243,43 @@
   #articleFormBox .content-create-card{
     width:min(760px,94vw)!important;
     max-height:88vh!important;
-    border:1px solid #e0e3e7!important;
+    border:1px solid #dddfe3!important;
     border-radius:18px!important;
-    background:#fff!important;
-    box-shadow:0 28px 80px rgba(31,37,44,.18)!important;
+    background:#fffdf9!important;
+    box-shadow:0 30px 88px rgba(25,29,35,.24)!important;
     overflow:hidden!important;
   }
   #chartFormBox .app-modal-head,
   #articleFormBox .app-modal-head{
     min-height:70px!important;
     padding:15px 18px!important;
-    border-bottom:1px solid #e8eaed!important;
+    border-bottom:1px solid #eadfbe!important;
     background:
-      radial-gradient(220px 90px at 100% 0%,rgba(216,162,10,.055),transparent 70%),
-      #fff!important;
+      radial-gradient(260px 110px at 100% 0%,rgba(216,162,10,.10),transparent 72%),
+      linear-gradient(180deg,#fffdf8,#fffaf0)!important;
   }
   #chartFormBox .app-modal-head h3,
   #articleFormBox .app-modal-head h3{
-    margin:0!important;color:#181d24!important;
-    font-size:18px!important;letter-spacing:-.025em!important;
+    margin:0!important;color:#171b21!important;
+    font-size:18px!important;font-weight:900!important;letter-spacing:-.025em!important;
   }
   #chartFormBox .app-modal-head small,
   #articleFormBox .app-modal-head small{
     display:block!important;margin-top:4px!important;
-    color:#78828e!important;font-size:8.5px!important;
+    color:#6f7884!important;font-size:8.5px!important;font-weight:650!important;
+  }
+  #chartFormBox .modal-close,
+  #articleFormBox .modal-close{
+    width:36px!important;height:36px!important;
+    display:grid!important;place-items:center!important;
+    border:1px solid #e6ca74!important;border-radius:10px!important;
+    background:#fff8e4!important;color:#7e5c00!important;
+    box-shadow:0 5px 14px rgba(177,128,0,.08)!important;
   }
   #chartFormBox .app-modal-body,
   #articleFormBox .app-modal-body{
     padding:16px 18px!important;
-    background:#fff!important;
+    background:#fffdf9!important;
   }
   #chartFormBox .form-grid,
   #articleFormBox .form-grid{
@@ -279,14 +287,24 @@
   }
   #chartFormBox .form-field label,
   #articleFormBox .form-field label{
-    color:#626d79!important;font-size:8.5px!important;font-weight:850!important;
+    color:#3f4853!important;font-size:8.5px!important;font-weight:900!important;
   }
   #chartFormBox :is(input,select,textarea),
   #articleFormBox :is(input,select,textarea){
-    border:1px solid #dfe3e7!important;
+    border:1px solid #d9dee5!important;
     border-radius:9px!important;
-    background:#fafbfc!important;color:#20252d!important;
-    box-shadow:none!important;
+    background:#fff!important;color:#1f252d!important;
+    box-shadow:0 1px 0 rgba(31,37,45,.02)!important;
+  }
+  #chartFormBox :is(input,select,textarea)::placeholder,
+  #articleFormBox :is(input,select,textarea)::placeholder{
+    color:#98a1ad!important;opacity:1!important;
+  }
+  #chartFormBox :is(input,select,textarea):focus,
+  #articleFormBox :is(input,select,textarea):focus{
+    border-color:#d7b94d!important;
+    box-shadow:0 0 0 3px rgba(216,162,10,.10)!important;
+    outline:none!important;
   }
   #chartFormBox :is(input,select){min-height:40px!important}
   #articleFormBox :is(input,select){min-height:40px!important}
@@ -328,8 +346,8 @@
   #articleFormBox .app-modal-foot{
     min-height:64px!important;
     padding:12px 18px!important;
-    border-top:1px solid #e8eaed!important;
-    background:#fcfcfb!important;
+    border-top:1px solid #eadfbe!important;
+    background:#fffaf2!important;
   }
   #chartFormBox .app-modal-foot .app-btn,
   #articleFormBox .app-modal-foot .app-btn{
@@ -354,6 +372,45 @@
   html[data-theme="dark"] #p-articles .admin-mentor-stat b,
   html[data-theme="dark"] #p-charts .admin-mentor-card-body h3,
   html[data-theme="dark"] #p-articles .admin-mentor-card-body h3{color:#f5f7fa!important}
+  html[data-theme="dark"] #chartFormBox .content-create-card,
+  html[data-theme="dark"] #articleFormBox .content-create-card{
+    background:#101319!important;
+    border-color:#2a313b!important;
+    box-shadow:0 30px 90px rgba(0,0,0,.48)!important;
+  }
+  html[data-theme="dark"] #chartFormBox .app-modal-head,
+  html[data-theme="dark"] #articleFormBox .app-modal-head{
+    background:
+      radial-gradient(260px 110px at 100% 0%,rgba(216,162,10,.10),transparent 72%),
+      linear-gradient(180deg,#15191f,#11151a)!important;
+    border-bottom-color:#2a313b!important;
+  }
+  html[data-theme="dark"] #chartFormBox .app-modal-head h3,
+  html[data-theme="dark"] #articleFormBox .app-modal-head h3{color:#f5f7fa!important}
+  html[data-theme="dark"] #chartFormBox .app-modal-head small,
+  html[data-theme="dark"] #articleFormBox .app-modal-head small{color:#929ba7!important}
+  html[data-theme="dark"] #chartFormBox .modal-close,
+  html[data-theme="dark"] #articleFormBox .modal-close{
+    background:#171b21!important;border-color:#4d4122!important;color:#e7b91f!important;
+  }
+  html[data-theme="dark"] #chartFormBox .app-modal-body,
+  html[data-theme="dark"] #articleFormBox .app-modal-body{background:#101319!important}
+  html[data-theme="dark"] #chartFormBox .form-field label,
+  html[data-theme="dark"] #articleFormBox .form-field label{color:#d7dce2!important}
+  html[data-theme="dark"] #chartFormBox :is(input,select,textarea),
+  html[data-theme="dark"] #articleFormBox :is(input,select,textarea){
+    background:#0c0f13!important;border-color:#303741!important;color:#f2f4f6!important;
+  }
+  html[data-theme="dark"] #chartFormBox :is(input,select,textarea)::placeholder,
+  html[data-theme="dark"] #articleFormBox :is(input,select,textarea)::placeholder{color:#747e8a!important}
+  html[data-theme="dark"] #chartFormBox .check-row:has(input[name="is_published"]),
+  html[data-theme="dark"] #articleFormBox .check-row:has(input[name="is_published"]){
+    background:#0c0f13!important;border-color:#303741!important;color:#d6dbe1!important;
+  }
+  html[data-theme="dark"] #chartFormBox .app-modal-foot,
+  html[data-theme="dark"] #articleFormBox .app-modal-foot{
+    background:#11151a!important;border-top-color:#2a313b!important;
+  }
 }
 
 /* Explicitly keep all mobile rules out of this file. */
