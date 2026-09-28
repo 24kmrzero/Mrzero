@@ -1,6 +1,6 @@
 (function(){
 'use strict';
-/* mentor build 14.51 */
+/* mentor build 14.52 */
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js',{scope:'/'}).catch(e=>console.warn('[24K Mentor PWA]',e?.message||e)));
 }
@@ -45,7 +45,7 @@ window.addEventListener('appinstalled',()=>{
 window.addEventListener('load',updateMentorInstall);
 const cfg=window.APP_CONFIG||{},sb=(window.supabase&&cfg.SUPABASE_URL&&cfg.SUPABASE_ANON_KEY)?window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true}}):null;
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-const state={user:null,profile:null,perms:{signals:false,charts:false,articles:false,banners:false,announcements:false},signals:[],charts:[],articles:[],banners:[],courses:[],courseSessions:[],news:[],signalTab:'active',signalPeriod:'all',signalFilters:{q:'',pair:'all',type:'all',status:'all',from:'',to:''},chartPeriod:'all',articlePeriod:'all',performanceMonth:null,performanceMonthKeys:[]};
+const state={user:null,profile:null,perms:{signals:false,charts:false,articles:false,announcements:false},signals:[],charts:[],articles:[],banners:[],courses:[],courseSessions:[],news:[],signalTab:'active',signalPeriod:'all',signalFilters:{q:'',pair:'all',type:'all',status:'all',from:'',to:''},chartPeriod:'all',articlePeriod:'all',performanceMonth:null,performanceMonthKeys:[]};
 const CLOSED=new Set(['sl_hit','breakeven_hit','manually_closed','closed','cancelled','tp4_hit']);
 function signalIsClosed(s){const st=String(s?.status||'');return Boolean(s?.closed_at)||CLOSED.has(st)||(st==='tp3_hit'&&(s?.take_profit_4===null||s?.take_profit_4===undefined||s?.take_profit_4===''))}
 function applyMentorTheme(v){
@@ -66,7 +66,7 @@ function byDate(items,key='created_at'){return items.reduce((a,x)=>{const d=new 
 function contentAssetPath(url){if(!url)return null;try{const p=new URL(url,location.origin).pathname,marker='/storage/v1/object/public/content-assets/';const i=p.indexOf(marker);return i>=0?decodeURIComponent(p.slice(i+marker.length)):null}catch{return null}}
 async function removeContentAsset(url){const path=contentAssetPath(url);if(!path)return;const r=await sb.storage.from('content-assets').remove([path]);if(r.error)console.warn('Mentor asset cleanup failed:',r.error)}
 async function upload(file,folder){if(!file)return null;if(!['image/png','image/jpeg','image/webp'].includes(file.type))throw new Error('Use PNG, JPG or WEBP images only.');if(file.size>8*1024*1024)throw new Error('Image must be 8 MB or smaller.');const ext=(file.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'');const path=`mentor/${state.user.id}/${folder}/${crypto.randomUUID()}.${ext}`;const r=await sb.storage.from('content-assets').upload(path,file,{upsert:false,contentType:file.type||undefined});if(r.error)throw r.error;return sb.storage.from('content-assets').getPublicUrl(path).data.publicUrl}
-function titleFor(k){return({performance:['Performance','Live overview and results'],signals:['Signals','Smart signal creation and management'],charts:['Charts','VIP chart research & analysis'],articles:['Articles','Professional research & insights'],banners:['Banners','Website campaign banners'],courses:['Courses','Current course catalogue'],news:['News','Latest platform updates'],settings:['Settings','Mentor account & permissions']})[k]||['Mentor Panel','']}
+function titleFor(k){return({performance:['Performance','Live overview and results'],signals:['Signals','Smart signal creation and management'],charts:['Charts','VIP chart research & analysis'],articles:['Articles','Professional research & insights'],courses:['Courses','Current course catalogue'],news:['News','Latest platform updates'],settings:['Settings','Mentor account & permissions']})[k]||['Mentor Panel','']}
 function openMentorMenu(){
   document.body.classList.add('mentor-menu-open');
   const b=$('#mentorMenuToggle');if(b)b.setAttribute('aria-expanded','true');
@@ -77,7 +77,8 @@ function closeMentorMenu(){
 }
 function showView(k){
   if(k==='more')k='settings';
-  if(['signals','charts','articles','banners'].includes(k)&&!state.perms[k])return toast('Admin has not enabled this section.');
+  if(k==='banners')k='performance';
+  if(['signals','charts','articles'].includes(k)&&!state.perms[k])return toast('Admin has not enabled this section.');
   $$('[data-mentor-panel]').forEach(x=>x.classList.toggle('active',x.dataset.mentorPanel===k));
   $$('[data-mentor-view]').forEach(x=>x.classList.toggle('active',x.dataset.mentorView===k));
   let [t,s]=titleFor(k);
@@ -186,7 +187,6 @@ function resetMentorEditor(kind){if(kind==='signal'){const f=$('#mentorSignalFor
   syncArticleEditorUI();syncEditorFileLabel('article',null);
   const mt=$('#mentorArticleModalTitle');if(mt)mt.textContent='New Article';
   const dt=$('#mentorArticleDesktopModalTitle');if(dt)dt.textContent='Add Article'
-}else if(kind==='banner'){const f=$('#mentorBannerForm');f?.reset();if(f?.elements.id)f.elements.id.value='';if(f?.elements.existing_image)f.elements.existing_image.value='';if(f?.elements.is_published)f.elements.is_published.checked=true;const t=$('#mentorBannerModalTitle');if(t)t.textContent='New Banner'
 }else if(kind==='announcement'){
   const f=$('#mentorAnnouncementForm');f?.reset();
   if(f?.elements.id)f.elements.id.value='';
@@ -234,14 +234,14 @@ function revealMentorApp(){
 }
 async function loadSecondaryMentorData(){
   const tasks=[];
-  for(const key of ['charts','articles','banners']){
+  for(const key of ['charts','articles']){
     if(!state.perms[key]){state[key]=[];continue}
-    const table=key==='banners'?'mentor_banners':key;
+    const table=key;
     const base=sb.from(table).select('*').order('created_at',{ascending:false}).limit(500);
     const query=base;
     tasks.push(
       safeLoad(table,query)
-        .then(data=>{state[key]=data;if(key==='charts')renderCharts();else if(key==='articles')renderArticles();else renderBanners()})
+        .then(data=>{state[key]=data;if(key==='charts')renderCharts();else renderArticles()})
     );
   }
   tasks.push(
@@ -290,11 +290,6 @@ function subscribeMentorRealtime(){
     state.articles=await safeLoad('articles',sb.from('articles').select('*').order('created_at',{ascending:false}).limit(500));
     safeMentorRender('articles',renderArticles)
   });
-  const refreshBanners=()=>debounce('banners',async()=>{
-    if(!state.perms.banners)return;
-    state.banners=await safeLoad('mentor_banners',sb.from('mentor_banners').select('*').order('created_at',{ascending:false}).limit(500));
-    safeMentorRender('banners',renderBanners)
-  });
   const refreshCourses=()=>debounce('courses',async()=>{
     const pair=await Promise.all([
       safeLoad('courses',sb.from('courses').select('id,title,slug,short_description,description,instructor_name,price,discount_price,currency,status,thumbnail_url,is_published,enrollment_open,start_date,display_order').order('display_order',{ascending:true}).limit(100)),
@@ -313,7 +308,6 @@ function subscribeMentorRealtime(){
     .on('postgres_changes',{event:'*',schema:'public',table:'signal_updates'},refreshSignals)
     .on('postgres_changes',{event:'*',schema:'public',table:'charts'},refreshCharts)
     .on('postgres_changes',{event:'*',schema:'public',table:'articles'},refreshArticles)
-    .on('postgres_changes',{event:'*',schema:'public',table:'mentor_banners'},refreshBanners)
     .on('postgres_changes',{event:'*',schema:'public',table:'courses'},refreshCourses)
     .on('postgres_changes',{event:'*',schema:'public',table:'course_sessions'},refreshCourses)
     .on('postgres_changes',{event:'*',schema:'public',table:'announcements'},refreshAnnouncements)
@@ -328,14 +322,13 @@ async function load(){
 function render(){
   const name=state.profile?.full_name||'Mentor';
   const mentorName=$('#mentorName');if(mentorName)mentorName.textContent=name;
-  const enabled=Object.entries(state.perms).filter(x=>x[1]).map(x=>x[0][0].toUpperCase()+x[0].slice(1));
+  const enabled=Object.entries(state.perms).filter(x=>x[1]&&x[0]!=='banners').map(x=>x[0]==='announcements'?'News':x[0][0].toUpperCase()+x[0].slice(1));
   const access=$('#mentorAccessSummary');if(access)access.textContent=enabled.length?enabled.join(' · '):'Read-only content';
   $$('[data-perm]').forEach(x=>x.classList.toggle('hidden',!state.perms[x.dataset.perm]));
   safeMentorRender('performance',renderPerformance);
   safeMentorRender('signals',renderSignals);
   safeMentorRender('charts',renderCharts);
   safeMentorRender('articles',renderArticles);
-  safeMentorRender('banners',renderBanners);
   safeMentorRender('courses',renderCourses);
   safeMentorRender('news',renderNews);
   safeMentorRender('settings',renderSettings)
@@ -1307,7 +1300,7 @@ function renderSettings(){
     <div class="mentor-profile-access-simple">
       <div class="mentor-profile-access-title"><span><i class="fa-solid fa-shield-halved"></i> Workspace Access</span><small>Admin managed</small></div>
       <div class="mentor-profile-permissions-simple">
-        ${Object.keys(state.perms).map(k=>`<span class="${state.perms[k]?'on':'off'}"><i class="fa-solid ${state.perms[k]?'fa-check':'fa-lock'}"></i>${esc(k==='announcements'?'News / Announcements':k.charAt(0).toUpperCase()+k.slice(1))}</span>`).join('')}
+        ${Object.keys(state.perms).filter(k=>k!=='banners').map(k=>`<span class="${state.perms[k]?'on':'off'}"><i class="fa-solid ${state.perms[k]?'fa-check':'fa-lock'}"></i>${esc(k==='announcements'?'News / Announcements':k.charAt(0).toUpperCase()+k.slice(1))}</span>`).join('')}
       </div>
     </div>`;
 
