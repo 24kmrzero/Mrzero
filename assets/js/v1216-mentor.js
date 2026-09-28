@@ -66,7 +66,7 @@ function byDate(items,key='created_at'){return items.reduce((a,x)=>{const d=new 
 function contentAssetPath(url){if(!url)return null;try{const p=new URL(url,location.origin).pathname,marker='/storage/v1/object/public/content-assets/';const i=p.indexOf(marker);return i>=0?decodeURIComponent(p.slice(i+marker.length)):null}catch{return null}}
 async function removeContentAsset(url){const path=contentAssetPath(url);if(!path)return;const r=await sb.storage.from('content-assets').remove([path]);if(r.error)console.warn('Mentor asset cleanup failed:',r.error)}
 async function upload(file,folder){if(!file)return null;if(!['image/png','image/jpeg','image/webp'].includes(file.type))throw new Error('Use PNG, JPG or WEBP images only.');if(file.size>8*1024*1024)throw new Error('Image must be 8 MB or smaller.');const ext=(file.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'');const path=`mentor/${state.user.id}/${folder}/${crypto.randomUUID()}.${ext}`;const r=await sb.storage.from('content-assets').upload(path,file,{upsert:false,contentType:file.type||undefined});if(r.error)throw r.error;return sb.storage.from('content-assets').getPublicUrl(path).data.publicUrl}
-function titleFor(k){return({performance:['Performance','Live overview and results'],signals:['Signals','Smart signal creation and management'],charts:['Charts','VIP chart research & analysis'],articles:['Articles','Professional research & insights'],banners:['Banners','Website campaign banners'],courses:['Courses','Current course catalogue'],news:['News','Latest platform updates'],settings:['Settings','Mentor account & permissions'],more:['More','Account, access & workspace']})[k]||['Mentor Panel','']}
+function titleFor(k){return({performance:['Performance','Live overview and results'],signals:['Signals','Smart signal creation and management'],charts:['Charts','VIP chart research & analysis'],articles:['Articles','Professional research & insights'],banners:['Banners','Website campaign banners'],courses:['Courses','Current course catalogue'],news:['News','Latest platform updates'],settings:['Settings','Mentor account & permissions']})[k]||['Mentor Panel','']}
 function openMentorMenu(){
   document.body.classList.add('mentor-menu-open');
   const b=$('#mentorMenuToggle');if(b)b.setAttribute('aria-expanded','true');
@@ -76,10 +76,13 @@ function closeMentorMenu(){
   const b=$('#mentorMenuToggle');if(b)b.setAttribute('aria-expanded','false');
 }
 function showView(k){
+  if(k==='more')k='settings';
   if(['signals','charts','articles','banners'].includes(k)&&!state.perms[k])return toast('Admin has not enabled this section.');
-  $$('[data-mentor-panel]').forEach(x=>x.classList.toggle('active',x.dataset.mentorPanel===k));
-  $$('[data-mentor-view]').forEach(x=>x.classList.toggle('active',x.dataset.mentorView===k));
-  const [t,s]=titleFor(k);if($('#mentorPageTitle'))$('#mentorPageTitle').textContent=t;if($('#mentorPageSubtitle'))$('#mentorPageSubtitle').textContent=s;
+  $('[data-mentor-panel]').forEach(x=>x.classList.toggle('active',x.dataset.mentorPanel===k));
+  $('[data-mentor-view]').forEach(x=>x.classList.toggle('active',x.dataset.mentorView===k));
+  let [t,s]=titleFor(k);
+  if(k==='settings'&&window.innerWidth<=760){t='More';s='Account, access & workspace'}
+  if($('#mentorPageTitle'))$('#mentorPageTitle').textContent=t;if($('#mentorPageSubtitle'))$('#mentorPageSubtitle').textContent=s;
   history.replaceState(null,'',`#${k}`);
   closeMentorMenu();
   if(window.innerWidth<=760)window.scrollTo({top:0,behavior:'smooth'});
@@ -736,6 +739,16 @@ async function shareChart(id){
   await navigator.clipboard?.writeText(`${text}\n${url}`);
   toast('Chart link copied.')
 }
+function mentorContentDayKey(v){
+  const d=new Date(v||0);if(Number.isNaN(d.getTime()))return'unknown';
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`
+}
+function mentorContentDayLabel(v){
+  const d=new Date(v||0),now=new Date(),today=new Date(now.getFullYear(),now.getMonth(),now.getDate()),yesterday=new Date(today);yesterday.setDate(yesterday.getDate()-1);
+  if(d>=today)return'Today';
+  if(d>=yesterday)return'Yesterday';
+  return d.toLocaleDateString(undefined,{day:'2-digit',month:'short',year:'numeric'})
+}
 function renderCharts(){
   const box=$('#mentorCharts');if(!box)return;
   const all=[...(state.charts||[])],now=new Date();
@@ -793,9 +806,13 @@ function renderCharts(){
     return
   }
 
+  let lastChartDay='';
+  const mentorChartDesktop=window.innerWidth>900;
   box.innerHTML=`<div class="mentor-chart-grid">${items.map((x,index)=>{
-    const stamp=mentorSignalStamp(x.published_at||x.created_at),symbol=mentorDisplaySymbol(x.symbol||'CHART');
-    return `<article class="mentor-chart-card ${index%2?'cream':'white'}">
+    const rawDate=x.published_at||x.created_at,stamp=mentorSignalStamp(rawDate),symbol=mentorDisplaySymbol(x.symbol||'CHART'),dayKey=mentorContentDayKey(rawDate);
+    const groupHead=mentorChartDesktop&&dayKey!==lastChartDay?`<div class="mentor-admin-date-group"><div><span>${esc(mentorContentDayLabel(rawDate))}</span><small>${esc(stamp.date)}</small></div><i></i></div>`:'';
+    lastChartDay=dayKey;
+    return groupHead+`<article class="mentor-chart-card ${index%2?'cream':'white'}">
       <div class="mentor-chart-media">
         ${x.image_url?`<img src="${esc(x.image_url)}" alt="${esc(x.title||symbol)}" loading="lazy">`:`<div class="mentor-chart-placeholder"><i class="fa-solid fa-chart-line"></i><span>24K RESEARCH</span></div>`}
         <div class="mentor-chart-media-top"><span class="pair">${esc(symbol)}</span>${x.timeframe?`<span class="tf">${esc(x.timeframe)}</span>`:''}</div>
@@ -904,11 +921,16 @@ function renderArticles(){
     return
   }
 
+  let lastArticleDay='';
+  const mentorArticleDesktop=window.innerWidth>900;
   box.innerHTML=`<div class="mentor-article-grid">${items.map((x,index)=>{
-    const stamp=mentorSignalStamp(x.published_at||x.created_at);
+    const rawDate=x.published_at||x.created_at,stamp=mentorSignalStamp(rawDate);
     const category=String(x.category||'General');
     const excerpt=x.excerpt||String(x.content||'').slice(0,180)||'No excerpt added.';
-    return `<article class="mentor-article-card ${index%2?'cream':'white'}">
+    const dayKey=mentorContentDayKey(rawDate);
+    const groupHead=mentorArticleDesktop&&dayKey!==lastArticleDay?`<div class="mentor-admin-date-group"><div><span>${esc(mentorContentDayLabel(rawDate))}</span><small>${esc(stamp.date)}</small></div><i></i></div>`:'';
+    lastArticleDay=dayKey;
+    return groupHead+`<article class="mentor-article-card ${index%2?'cream':'white'}">
       <div class="mentor-article-media">
         ${x.cover_url?`<img src="${esc(x.cover_url)}" alt="${esc(x.title||category)}" loading="lazy">`:`<div class="mentor-article-placeholder"><i class="fa-solid fa-newspaper"></i><span>24K EDITORIAL</span></div>`}
         <div class="mentor-article-media-top">
@@ -964,10 +986,7 @@ function renderCourses(){const b=$('#mentorCourses');if(!b)return;b.innerHTML=st
 function renderNews(){const b=$('#mentorNews');if(!b)return;b.innerHTML=state.news.length?state.news.map(n=>`<article class="mentor-card"><span class="mentor-chip gold">${esc(String(n.priority||'normal').toUpperCase())}</span><h3>${esc(n.title)}</h3><p>${esc(n.message)}</p><small>${dt(n.published_at||n.created_at)}</small></article>`).join(''):'<div class="mentor-empty">No announcements.</div>'}
 function renderSettings(){
   const name=state.profile?.full_name||'Mentor',
-    email=state.profile?.email||state.user?.email||'',
-    enabled=Object.entries(state.perms).filter(x=>x[1]).map(x=>x[0]);
-
-  const settingsHtml=`<article class="mentor-card"><span class="eyebrow">ACTIVE MENTOR</span><h3>${esc(name)}</h3><p>${esc(email)}</p><div class="mentor-meta">${enabled.map(x=>`<span class="mentor-chip gold">${esc(x.toUpperCase())}</span>`).join('')||'<span class="mentor-chip">No creation permissions</span>'}</div><p>Permissions are controlled by Admin.</p></article>`;
+    email=state.profile?.email||state.user?.email||'';
 
   const profileHtml=`
     <div class="mentor-profile-account-hero clean">
@@ -987,8 +1006,7 @@ function renderSettings(){
       </div>
     </div>`;
 
-  const settings=$('#mentorSettings'),profile=$('#mentorProfileContent');
-  if(settings)settings.innerHTML=settingsHtml;
+  const profile=$('#mentorProfileContent');
   if(profile)profile.innerHTML=profileHtml;
   updateMentorInstall()
 }
@@ -1103,5 +1121,5 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMentorMenu()});
 window.addEventListener('resize',()=>{if(window.innerWidth>760)closeMentorMenu()});
 if(localStorage.getItem('mentor-theme-v1220')!=='1'){localStorage.setItem('mentor-theme','light');localStorage.setItem('mentor-theme-v1220','1')}
 const theme=localStorage.getItem('mentor-theme');applyMentorTheme(theme||'light');
-load().then(()=>{let h=(location.hash||'#performance').slice(1);if(!document.querySelector(`[data-mentor-panel="${CSS.escape(h)}"]`))h='performance';showView(h)}).catch(err=>{console.error(err);toast(err.message||'Could not load Mentor Panel.');$('#mentorLoading').innerHTML='<div class="mentor-login-card"><h2>Could not load Mentor Panel</h2><p>Please refresh or sign in again.</p><a class="mentor-btn gold" href="/mentor-login.html" style="display:grid;place-items:center;text-decoration:none">Mentor Login</a></div>'});
+load().then(()=>{let h=(location.hash||'#performance').slice(1);if(h==='more')h='settings';if(!document.querySelector(`[data-mentor-panel="${CSS.escape(h)}"]`))h='performance';showView(h)}).catch(err=>{console.error(err);toast(err.message||'Could not load Mentor Panel.');$('#mentorLoading').innerHTML='<div class="mentor-login-card"><h2>Could not load Mentor Panel</h2><p>Please refresh or sign in again.</p><a class="mentor-btn gold" href="/mentor-login.html" style="display:grid;place-items:center;text-decoration:none">Mentor Login</a></div>'});
 })();
