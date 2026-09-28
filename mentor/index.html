@@ -191,12 +191,19 @@
             <button class="mentor-btn gold mentor-chart-create" data-open-mentor-modal="chart"><i class="fa-solid fa-plus"></i><span>New Chart Analysis</span></button>
           </div>
 
-          <div class="mentor-chart-stats admin-mentor-stats" id="mentorChartAdminStats">
-            <article class="admin-mentor-stat"><i class="fa-solid fa-layer-group"></i><div><small>TOTAL ANALYSIS</small><b id="mentorChartStatTotal">0</b><em>Research library</em></div></article>
-            <article class="admin-mentor-stat"><i class="fa-solid fa-calendar-week"></i><div><small>THIS WEEK</small><b id="mentorChartStatWeek">0</b><em>Last 7 days</em></div></article>
-            <article class="admin-mentor-stat"><i class="fa-solid fa-calendar-day"></i><div><small>TODAY</small><b id="mentorChartStatToday">0</b><em>Published today</em></div></article>
-            <article class="admin-mentor-stat"><i class="fa-solid fa-chart-line"></i><div><small>TOP PAIR</small><b id="mentorChartStatPair">—</b><em>Most covered</em></div></article>
+          <div class="mentor-chart-stats mentor-chart-mobile-stats">
+            <article><span class="icon gold"><i class="fa-solid fa-layer-group"></i></span><div><small>TOTAL CHARTS</small><b id="mentorChartStatTotal">0</b><em>Published research</em></div></article>
+            <article><span class="icon blue"><i class="fa-regular fa-calendar"></i></span><div><small>THIS WEEK</small><b id="mentorChartStatWeek">0</b><em>Recent analysis</em></div></article>
+            <article><span class="icon green"><i class="fa-solid fa-bolt"></i></span><div><small>TODAY</small><b id="mentorChartStatToday">0</b><em>Fresh updates</em></div></article>
+            <article><span class="icon gold"><i class="fa-solid fa-crosshairs"></i></span><div><small>TOP PAIR</small><b id="mentorChartStatPair">—</b><em>Most analysed</em></div></article>
           </div>
+        </div>
+
+        <div class="mentor-chart-desktop-stats admin-mentor-stats" id="mentorChartAdminStats">
+          <article class="admin-mentor-stat"><i class="fa-solid fa-layer-group"></i><div><small>TOTAL ANALYSIS</small><b id="mentorChartAdminStatTotal">0</b><em>Research library</em></div></article>
+          <article class="admin-mentor-stat"><i class="fa-solid fa-calendar-week"></i><div><small>THIS WEEK</small><b id="mentorChartAdminStatWeek">0</b><em>Last 7 days</em></div></article>
+          <article class="admin-mentor-stat"><i class="fa-solid fa-calendar-day"></i><div><small>TODAY</small><b id="mentorChartAdminStatToday">0</b><em>Published today</em></div></article>
+          <article class="admin-mentor-stat"><i class="fa-solid fa-chart-line"></i><div><small>TOP PAIR</small><b id="mentorChartAdminStatPair">—</b><em>Most covered</em></div></article>
         </div>
 
         <div class="mentor-chart-controls admin-research-filter admin-chart-filter">
