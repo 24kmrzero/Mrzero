@@ -24,7 +24,7 @@
     if(!button)return;
     button.disabled=on||!linkReady;
     button.innerHTML=on
-      ? '<i class="fa-solid fa-spinner fa-spin"></i><span>Creating Account & Enrollment...</span>'
+      ? '<i class="fa-solid fa-spinner fa-spin"></i><span>Completing Registration...</span>'
       : '<span>Complete Registration</span><i class="fa-solid fa-arrow-right"></i>';
   }
 
@@ -44,6 +44,42 @@
     if(/^(sir|miss|ms\.?|mrs\.?)\s+/i.test(raw))return raw;
     const salutation=String(manager?.salutation||'').trim();
     return salutation?`${salutation} ${raw}`:raw;
+  }
+
+  function buildWhatsAppLink(payload){
+    const manager=payload?.manager||{};
+    const greeting=managerGreeting(manager);
+    const clientId=String(payload?.client_id||'').trim();
+    const course=String(payload?.course_title||'the course').trim();
+    const lines=[
+      manager?.display_name?`Hello ${greeting},`:'Hello,',
+      `I have completed enrollment in ${course}.`,
+      clientId?`Client ID: ${clientId}`:'',
+      'Kindly verify and share the next step.'
+    ].filter(Boolean);
+    const text=encodeURIComponent(lines.join('\n'));
+    const number=String(manager?.whatsapp||payload?.fallback_whatsapp||'').replace(/\D/g,'');
+    return {
+      href:number?`https://wa.me/${number}?text=${text}`:`https://api.whatsapp.com/send?text=${text}`,
+      direct:Boolean(number),
+      greeting,
+      clientId
+    };
+  }
+
+  function scheduleWhatsAppRedirect(target){
+    if(!target?.href)return;
+    const note=document.getElementById('whatsappRedirectNote');
+    let seconds=3;
+    if(note)note.textContent=target.direct?`Opening your manager on WhatsApp in ${seconds}s…`:`Opening WhatsApp in ${seconds}s…`;
+    const timer=setInterval(()=>{
+      seconds-=1;
+      if(note&&seconds>0)note.textContent=target.direct?`Opening your manager on WhatsApp in ${seconds}s…`:`Opening WhatsApp in ${seconds}s…`;
+      if(seconds<=0){
+        clearInterval(timer);
+        location.href=target.href;
+      }
+    },1000);
   }
 
   async function recordFormOpened(link){
@@ -167,19 +203,27 @@
           : 'Your existing 24K MR ZERO account was used. Sign in with your current password.';
 
         const manager=payload.manager||{};
-        if(manager.whatsapp){
-          const greeting=managerGreeting(manager);
-          const clientId=String(payload.client_id||'').trim();
-          const lines=[
-            `Hello ${greeting},`,
-            `I have completed enrollment in ${payload.course_title||'the course'}.`,
-            clientId?`Client ID: ${clientId}`:'',
-            'Kindly confirm the next step.'
-          ].filter(Boolean);
-          const digits=String(manager.whatsapp).replace(/\D/g,'');
-          const href=`https://wa.me/${digits}?text=${encodeURIComponent(lines.join('\n'))}`;
-          success.insertAdjacentHTML('beforeend',`<div class="manager-connect"><p>Your manager has been assigned.</p><div class="manager-details"><div><small>Client ID</small><b>${clientId||'Generated'}</b></div><div><small>Assigned Manager</small><b>${greeting}</b></div></div><a class="manager-whatsapp" href="${href}" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Open WhatsApp</a></div>`);
-        }
+        const whatsApp=buildWhatsAppLink(payload);
+        success.insertAdjacentHTML('beforeend',`
+          <div class="manager-connect">
+            <div class="manager-connect-head">
+              <span><i class="fa-brands fa-whatsapp"></i></span>
+              <div>
+                <b>Continue on WhatsApp</b>
+                <small id="whatsappRedirectNote">${whatsApp.direct?'Connecting you to your assigned manager…':'Opening WhatsApp with your enrollment message…'}</small>
+              </div>
+            </div>
+            <div class="manager-details">
+              <div><small>Client ID</small><b>${whatsApp.clientId||'Generated'}</b></div>
+              <div><small>Assigned Manager</small><b>${manager?.display_name?whatsApp.greeting:'24K Team'}</b></div>
+            </div>
+            <a class="manager-whatsapp" href="${whatsApp.href}">
+              <i class="fa-brands fa-whatsapp"></i>
+              <span>${whatsApp.direct?'Chat with Manager':'Open WhatsApp'}</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </a>
+          </div>`);
+        scheduleWhatsAppRedirect(whatsApp);
       }
 
       await window.Tracking?.record?.('signup',{
@@ -189,7 +233,7 @@
       },context.ref).catch(()=>{});
 
       toast(payload.account_created?'Registration complete. Your password has been emailed.':'Enrollment complete. Use your existing account password.','success');
-      history.replaceState(null,'','/enroll/');
+      // Keep the tracked enrollment URL until the WhatsApp handoff completes.
     }catch(error){
       console.error(error);
       toast(error?.message||'Could not complete enrollment. Please try again.','error');
