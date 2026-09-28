@@ -1307,7 +1307,7 @@ function renderSettings(){
     <div class="mentor-profile-access-simple">
       <div class="mentor-profile-access-title"><span><i class="fa-solid fa-shield-halved"></i> Workspace Access</span><small>Admin managed</small></div>
       <div class="mentor-profile-permissions-simple">
-        ${Object.keys(state.perms).filter(k=>k!=='banners').map(k=>`<span class="${state.perms[k]?'on':'off'}"><i class="fa-solid ${state.perms[k]?'fa-check':'fa-lock'}"></i>${esc(k.charAt(0).toUpperCase()+k.slice(1))}</span>`).join('')}
+        ${Object.keys(state.perms).map(k=>`<span class="${state.perms[k]?'on':'off'}"><i class="fa-solid ${state.perms[k]?'fa-check':'fa-lock'}"></i>${esc(k==='announcements'?'News / Announcements':k.charAt(0).toUpperCase()+k.slice(1))}</span>`).join('')}
       </div>
     </div>`;
 
