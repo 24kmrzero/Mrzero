@@ -1,0 +1,143 @@
+/* 24K MR ZERO — Team Tracking Links Premium Desktop v13.71 */
+@media (min-width:901px){
+  #teamApp:not(.hidden) [data-view-panel="links"]{max-width:1460px!important;margin:0 auto!important;padding:18px 18px 30px!important}
+  #teamApp:not(.hidden) [data-view-panel="links"] *{box-sizing:border-box}
+  #teamApp:not(.hidden) [data-view-panel="links"] .team-tool-command{
+    position:relative!important;overflow:hidden!important;padding:20px!important;
+    border:1px solid #e1e3e6!important;border-left:3px solid #d8a20a!important;border-radius:19px!important;
+    background:radial-gradient(520px 210px at 94% -10%,rgba(216,162,10,.10),transparent 66%),linear-gradient(135deg,#fffefa,#fffaf0)!important;
+    box-shadow:0 13px 34px rgba(65,52,16,.055)!important
+  }
+  #teamApp:not(.hidden) [data-view-panel="links"] .team-tool-command:after{
+    content:"LINKS"!important;position:absolute!important;right:22px!important;top:-25px!important;
+    color:rgba(172,123,0,.034)!important;font-size:100px!important;font-weight:950!important;letter-spacing:-.06em!important;pointer-events:none!important
+  }
+  #teamApp:not(.hidden) [data-view-panel="links"] .team-tool-command-top{
+    position:relative!important;z-index:2!important;display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:18px!important
+  }
+  #teamApp:not(.hidden) [data-view-panel="links"] .team-tool-kicker{
+    min-height:25px!important;display:inline-flex!important;align-items:center!important;gap:7px!important;padding:0 10px!important;
+    border:1px solid #e7d69d!important;border-radius:999px!important;background:#fff9e9!important;color:#8f6900!important;
+    font-size:7.2px!important;font-weight:950!important;letter-spacing:.12em!important
+  }
+  #teamApp:not(.hidden) [data-view-panel="links"] .team-tool-command h2{
+    margin:11px 0 5px!important;color:#1d2229!important;font-size:28px!important;line-height:1!important;font-weight:950!important;letter-spacing:-.04em!important
+  }
+  #teamApp:not(.hidden) [data-view-panel="links"] .team-tool-command p{margin:0!important;color:#6e7883!important;font-size:10px!important;line-height:1.5!important}
+  #teamApp:not(.hidden) [data-view-panel="links"] .team-tool-status{
+    position:relative!important;z-index:2!important;min-width:144px!important;display:grid!important;
+    grid-template-columns:34px minmax(0,1fr)!important;grid-template-rows:auto auto!important;align-items:center!important;gap:2px 8px!important;
+    padding:8px 10px!important;border:1px solid #e5d8af!important;border-radius:12px!important;background:rgba(255,255,255,.82)!important
+  }
+  #teamApp:not(.hidden) [data-view-panel="links"] .team-tool-status>i{
+    grid-row:1/3!important;width:34px!important;height:34px!important;display:grid!important;place-items:center!important;
+    border-radius:10px!important;background:#fff4d8!important;color:#a87700!important
+  }
+  #teamApp:not(.hidden) [data-view-panel="links"] .team-tool-status>b{color:#7d5c05!important;font-size:8px!important;font-weight:950!important}
+  #teamApp:not(.hidden) [data-view-panel="links"] .team-tool-status>small{color:#8a939d!important;font-size:6.5px!important}
+
+  #teamApp:not(.hidden) .team-links-summary{
+    position:relative!important;z-index:2!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    gap:9px!important;margin-top:16px!important
+  }
+  #teamApp:not(.hidden) .team-links-summary-card{
+    min-height:74px!important;display:grid!important;grid-template-columns:36px minmax(0,1fr)!important;align-items:center!important;gap:10px!important;
+    padding:10px 11px!important;border:1px solid #e3e6e9!important;border-radius:12px!important;background:rgba(255,255,255,.8)!important
+  }
+  #teamApp:not(.hidden) .team-links-summary-card>span{
+    width:36px!important;height:36px!important;display:grid!important;place-items:center!important;border-radius:10px!important;background:#f2f4f6!important;color:#74808c!important
+  }
+  #teamApp:not(.hidden) .team-links-summary-card.gold>span{background:#fff4d7!important;color:#a97700!important}
+  #teamApp:not(.hidden) .team-links-summary-card.blue>span{background:#eef4fb!important;color:#5b7fc1!important}
+  #teamApp:not(.hidden) .team-links-summary-card.green>span{background:#edf9f4!important;color:#168b62!important}
+  #teamApp:not(.hidden) .team-links-summary-card.purple>span{background:#f4effb!important;color:#805fb8!important}
+  #teamApp:not(.hidden) .team-links-summary-card>div{display:grid!important;gap:2px!important}
+  #teamApp:not(.hidden) .team-links-summary-card small{
+    color:#7e8893!important;font-size:6.4px!important;font-weight:900!important;letter-spacing:.06em!important;text-transform:uppercase!important
+  }
+  #teamApp:not(.hidden) .team-links-summary-card b{color:#232930!important;font-size:17px!important;line-height:1!important;font-weight:950!important}
+
+  #teamApp:not(.hidden) [data-view-panel="links"] .team-tool-section-head{
+    min-height:48px!important;display:flex!important;align-items:flex-end!important;justify-content:space-between!important;gap:10px!important;
+    padding:0 2px 9px!important;margin-top:10px!important;border-bottom:1px solid #e4e1d9!important
+  }
+  #teamApp:not(.hidden) [data-view-panel="links"] .team-tool-section-head>div{display:grid!important;gap:1px!important}
+  #teamApp:not(.hidden) [data-view-panel="links"] .team-tool-section-head small{color:#a0780b!important;font-size:6.2px!important;font-weight:950!important;letter-spacing:.11em!important}
+  #teamApp:not(.hidden) [data-view-panel="links"] .team-tool-section-head b{color:#252b32!important;font-size:13px!important;font-weight:950!important}
+  #teamApp:not(.hidden) [data-view-panel="links"] .team-tool-section-head>span{color:#858f9a!important;font-size:7px!important}
+
+  #teamApp:not(.hidden) .team-links-grid{
+    display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:11px!important;margin-top:10px!important
+  }
+  #teamApp:not(.hidden) .premium-link-card{
+    min-width:0!important;padding:14px!important;border:1px solid #e2e5e8!important;border-radius:15px!important;
+    background:#fff!important;box-shadow:0 9px 24px rgba(18,24,32,.04)!important
+  }
+  #teamApp:not(.hidden) .premium-link-card .link-head{
+    min-height:48px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;
+    padding-bottom:10px!important;border-bottom:1px solid #eceef0!important
+  }
+  #teamApp:not(.hidden) .premium-link-title{
+    min-width:0!important;display:grid!important;grid-template-columns:38px minmax(0,1fr)!important;align-items:center!important;gap:9px!important
+  }
+  #teamApp:not(.hidden) .premium-link-title>span{
+    width:38px!important;height:38px!important;display:grid!important;place-items:center!important;border-radius:10px!important;
+    background:#fff5da!important;color:#a77900!important
+  }
+  #teamApp:not(.hidden) .premium-link-title>div{min-width:0!important;display:grid!important;gap:2px!important}
+  #teamApp:not(.hidden) .premium-link-title b{
+    overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;color:#252b32!important;font-size:10px!important;font-weight:950!important
+  }
+  #teamApp:not(.hidden) .premium-link-title small{
+    overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;color:#8b949f!important;font-size:6.2px!important
+  }
+  #teamApp:not(.hidden) .premium-link-card .status{
+    min-height:22px!important;display:inline-flex!important;align-items:center!important;padding:0 7px!important;border-radius:999px!important;
+    background:#edf9f4!important;color:#16865f!important;font-size:5.8px!important;font-weight:900!important
+  }
+
+  #teamApp:not(.hidden) .premium-tracked-url{
+    display:grid!important;grid-template-columns:minmax(0,1fr) 36px!important;gap:7px!important;margin-top:11px!important
+  }
+  #teamApp:not(.hidden) .premium-tracked-url input{
+    width:100%!important;height:38px!important;padding:0 10px!important;border:1px solid #e1e4e7!important;border-radius:9px!important;
+    background:#fafbfc!important;color:#6b7580!important;font:inherit!important;font-size:6.6px!important
+  }
+  #teamApp:not(.hidden) .premium-tracked-url button{
+    width:36px!important;height:38px!important;display:grid!important;place-items:center!important;border:1px solid #e2d19d!important;border-radius:9px!important;
+    background:#fff8e5!important;color:#946c00!important
+  }
+
+  #teamApp:not(.hidden) .premium-link-metrics{
+    display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:7px!important;margin-top:10px!important
+  }
+  #teamApp:not(.hidden) .premium-link-metrics>div{
+    min-height:64px!important;display:grid!important;align-content:center!important;gap:3px!important;padding:8px 9px!important;
+    border:1px solid #eceef0!important;border-radius:9px!important;background:#fbfbfa!important
+  }
+  #teamApp:not(.hidden) .premium-link-metrics b{color:#252b32!important;font-size:14px!important;line-height:1!important;font-weight:950!important}
+  #teamApp:not(.hidden) .premium-link-metrics span{color:#87919c!important;font-size:6px!important}
+  #teamApp:not(.hidden) .team-links-grid .team-tool-empty{
+    grid-column:1/-1!important;min-height:210px!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:11px!important;
+    border:1px dashed #ded9cc!important;border-radius:15px!important;background:#fff!important
+  }
+
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="links"] .team-tool-command{
+    background:radial-gradient(500px 200px at 94% -8%,rgba(216,162,10,.07),transparent 66%),#101319!important;
+    border-color:#33311f!important;border-left-color:#d8a20a!important;box-shadow:none!important
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="links"] .team-tool-command h2,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-links-summary-card b,
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="links"] .team-tool-section-head b,
+  html[data-theme="dark"] #teamApp:not(.hidden) .premium-link-title b,
+  html[data-theme="dark"] #teamApp:not(.hidden) .premium-link-metrics b{color:#f2f4f6!important}
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-links-summary-card,
+  html[data-theme="dark"] #teamApp:not(.hidden) .premium-link-card,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-links-grid .team-tool-empty{
+    background:#101319!important;border-color:#292f37!important;box-shadow:none!important
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .premium-tracked-url input,
+  html[data-theme="dark"] #teamApp:not(.hidden) .premium-link-metrics>div{
+    background:#13171c!important;border-color:#292f37!important;color:#e9ecef!important
+  }
+}
