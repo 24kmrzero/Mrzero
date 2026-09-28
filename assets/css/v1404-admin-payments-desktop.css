@@ -763,3 +763,111 @@
   #p-payments .payment-command-kicker{display:inline-flex!important}
   #p-payments .payment-command h2{margin-top:8px!important}
 }
+
+
+/* v14.13 — payment typography readability pass */
+@media (min-width:901px){
+  #p-payments .payment-command-kicker{
+    font-size:7.8px!important;
+  }
+
+  #p-payments .payment-command h2{
+    font-size:30px!important;
+  }
+
+  #p-payments .payment-command p{
+    font-size:11px!important;
+    line-height:1.55!important;
+  }
+
+  #p-payments .payment-command>div:first-child>small{
+    font-size:7px!important;
+  }
+
+  #p-payments .payment-command-status>span{
+    font-size:7.8px!important;
+  }
+
+  #p-payments .payment-command-status small{
+    font-size:7.8px!important;
+  }
+
+  #p-payments .payment-review-filters>select,
+  #p-payments .payment-review-filters>input,
+  #p-payments .payment-date-filter>input{
+    font-size:9.8px!important;
+  }
+
+  #p-payments .payment-date-filter>span{
+    font-size:7.6px!important;
+  }
+
+  #p-payments .payment-filter-reset{
+    font-size:8.2px!important;
+  }
+
+  #p-payments .payment-quick-card span,
+  #p-payments .payment-date-card span{
+    font-size:7.8px!important;
+  }
+
+  #p-payments .payment-quick-card b{
+    font-size:8.6px!important;
+  }
+
+  #p-payments .payment-review-table thead th{
+    font-size:7.4px!important;
+  }
+
+  #p-payments .payment-review-table tbody td{
+    font-size:8.8px!important;
+  }
+
+  #p-payments .payment-review-table tbody td:first-child b{
+    font-size:9px!important;
+  }
+
+  #p-payments .payment-review-table tbody td:nth-child(2){
+    font-size:8.9px!important;
+  }
+
+  #p-payments .payment-review-table tbody td:nth-child(2) small{
+    font-size:7.6px!important;
+  }
+
+  #p-payments .payment-demo-badge{
+    font-size:7px!important;
+  }
+
+  #p-payments .payment-review-table .status-pill{
+    font-size:7.8px!important;
+  }
+
+  #p-payments .payment-review-table .table-actions .app-btn{
+    font-size:7.8px!important;
+  }
+}
+
+@media (max-width:900px){
+  #p-payments .payment-command h2{
+    font-size:24px!important;
+  }
+
+  #p-payments .payment-command p{
+    font-size:11px!important;
+  }
+
+  #p-payments .payment-review-filters :is(select,input,button),
+  #p-payments .payment-quick-card,
+  #p-payments .payment-date-card{
+    font-size:10px!important;
+  }
+
+  #p-payments .payment-review-table thead th{
+    font-size:8px!important;
+  }
+
+  #p-payments .payment-review-table tbody td{
+    font-size:9px!important;
+  }
+}
