@@ -753,13 +753,13 @@ function mentorContentDayLabel(v){
 }
 function renderCharts(){
   const box=$('#mentorCharts');if(!box)return;
-  const all=[...(state.charts||[])],now=new Date();
+  const all=[...(state.charts||[])],now=new Date(),desktop=window.innerWidth>900;
 
   const pairs=[...new Set(all.map(x=>String(x.symbol||'').toUpperCase()).filter(Boolean))].sort();
   const pairSelect=$('#mentorChartPair');
   if(pairSelect){
     const current=pairSelect.value||'all';
-    pairSelect.innerHTML='<option value="all">Pair</option>'+pairs.map(x=>`<option value="${esc(x)}">${esc(mentorDisplaySymbol(x))}</option>`).join('');
+    pairSelect.innerHTML=`<option value="all">${desktop?'All Pairs':'Pair'}</option>`+pairs.map(x=>`<option value="${esc(x)}">${esc(mentorDisplaySymbol(x))}</option>`).join('');
     pairSelect.value=pairs.includes(current)?current:'all'
   }
 
@@ -769,52 +769,85 @@ function renderCharts(){
   const weekCount=all.filter(x=>mentorChartDate(x)>=startWeek).length;
   const pairCounts={};all.forEach(x=>{const k=mentorDisplaySymbol(x.symbol||'');if(k)pairCounts[k]=(pairCounts[k]||0)+1});
   const topPair=Object.entries(pairCounts).sort((a,b)=>b[1]-a[1])[0]?.[0]||'—';
-  const totalEl=$('#mentorChartStatTotal'),weekEl=$('#mentorChartStatWeek'),todayEl=$('#mentorChartStatToday'),pairEl=$('#mentorChartStatPair');
-  if(totalEl)totalEl.textContent=String(all.length);
-  if(weekEl)weekEl.textContent=String(weekCount);
-  if(todayEl)todayEl.textContent=String(todayCount);
-  if(pairEl)pairEl.textContent=topPair;
+
+  for(const [id,value] of [
+    ['mentorChartStatTotal',all.length],['mentorChartStatWeek',weekCount],['mentorChartStatToday',todayCount],['mentorChartStatPair',topPair],
+    ['mentorChartAdminStatTotal',all.length],['mentorChartAdminStatWeek',weekCount],['mentorChartAdminStatToday',todayCount],['mentorChartAdminStatPair',topPair]
+  ]){const el=$('#'+id);if(el)el.textContent=String(value)}
 
   let items=[...all];
   const q=String($('#mentorChartSearch')?.value||'').trim().toLowerCase();
   const pair=pairSelect?.value||'all';
   const sort=$('#mentorChartSort')?.value||'new';
 
-  if(state.chartPeriod==='today')items=items.filter(x=>mentorChartDate(x)>=startToday);
-  if(state.chartPeriod==='weekly')items=items.filter(x=>mentorChartDate(x)>=startWeek);
-  if(state.chartPeriod==='monthly'){
-    const monthStart=new Date(now.getFullYear(),now.getMonth(),1);
-    items=items.filter(x=>mentorChartDate(x)>=monthStart)
+  /* Admin desktop uses only Search + Pair + Sort. Keep Mentor mobile periods untouched. */
+  if(!desktop){
+    if(state.chartPeriod==='today')items=items.filter(x=>mentorChartDate(x)>=startToday);
+    if(state.chartPeriod==='weekly')items=items.filter(x=>mentorChartDate(x)>=startWeek);
+    if(state.chartPeriod==='monthly'){
+      const monthStart=new Date(now.getFullYear(),now.getMonth(),1);
+      items=items.filter(x=>mentorChartDate(x)>=monthStart)
+    }
   }
   if(q)items=items.filter(x=>`${x.title||''} ${x.symbol||''} ${x.timeframe||''} ${x.summary||''} ${x.details||''}`.toLowerCase().includes(q));
   if(pair!=='all')items=items.filter(x=>String(x.symbol||'').toUpperCase()===pair);
   items.sort((a,b)=>(mentorChartDate(a)-mentorChartDate(b))*(sort==='old'?1:-1));
 
   syncChartControls();
-  const periodName={all:'All Analysis',today:"Today's Analysis",weekly:'This Week',monthly:'This Month'}[state.chartPeriod]||'All Analysis';
+  const periodName=desktop?'All Analysis':({all:'All Analysis',today:"Today's Analysis",weekly:'This Week',monthly:'This Month'}[state.chartPeriod]||'All Analysis');
   const resultTitle=$('#mentorChartResultTitle'),resultCount=$('#mentorChartResultCount');
   if(resultTitle)resultTitle.textContent=pair!=='all'?`${mentorDisplaySymbol(pair)} · ${periodName}`:periodName;
   if(resultCount)resultCount.textContent=`${items.length} result${items.length===1?'':'s'}`;
 
   if(!items.length){
-    const noLibrary=all.length===0;
-    box.innerHTML=`<div class="mentor-chart-empty">
-      <span class="mentor-chart-empty-icon"><i class="fa-solid ${noLibrary?'fa-chart-line':'fa-magnifying-glass'}"></i></span>
-      <small>${noLibrary?'RESEARCH DESK READY':'NO MATCHING ANALYSIS'}</small>
-      <b>${noLibrary?'Publish your first chart analysis':'No charts match these filters'}</b>
-      <p>${noLibrary?'Build your research library with a clear chart, timeframe and market view.':'Change the period, pair or search to see more analysis.'}</p>
-      <button type="button" class="mentor-btn gold" ${noLibrary?'data-open-mentor-modal="chart"':'data-clear-chart-filters'}><i class="fa-solid ${noLibrary?'fa-plus':'fa-arrow-rotate-left'}"></i> ${noLibrary?'Create First Analysis':'Clear Filters'}</button>
-    </div>`;
+    if(desktop){
+      box.innerHTML='<div class="mentor-chart-admin-empty"><i class="fa-solid fa-chart-line"></i><h3>No chart analysis found</h3><p>Change the filters or publish a new analysis.</p></div>';
+    }else{
+      const noLibrary=all.length===0;
+      box.innerHTML=`<div class="mentor-chart-empty">
+        <span class="mentor-chart-empty-icon"><i class="fa-solid ${noLibrary?'fa-chart-line':'fa-magnifying-glass'}"></i></span>
+        <small>${noLibrary?'RESEARCH DESK READY':'NO MATCHING ANALYSIS'}</small>
+        <b>${noLibrary?'Publish your first chart analysis':'No charts match these filters'}</b>
+        <p>${noLibrary?'Build your research library with a clear chart, timeframe and market view.':'Change the period, pair or search to see more analysis.'}</p>
+        <button type="button" class="mentor-btn gold" ${noLibrary?'data-open-mentor-modal="chart"':'data-clear-chart-filters'}><i class="fa-solid ${noLibrary?'fa-plus':'fa-arrow-rotate-left'}"></i> ${noLibrary?'Create First Analysis':'Clear Filters'}</button>
+      </div>`;
+    }
     return
   }
 
   let lastChartDay='';
-  const mentorChartDesktop=window.innerWidth>900;
+  if(desktop){
+    box.innerHTML=items.map((x,index)=>{
+      const rawDate=x.published_at||x.created_at,stamp=mentorSignalStamp(rawDate),symbol=String(x.symbol||'CHART').toUpperCase(),dayKey=mentorContentDayKey(rawDate),live=Boolean(x.is_published);
+      const groupHead=dayKey!==lastChartDay?`<div class="admin-content-date-group"><div><span>${esc(mentorContentDayLabel(rawDate))}</span><small>${esc(stamp.date)}</small></div><i></i></div>`:'';
+      lastChartDay=dayKey;
+      return groupHead+`<article class="admin-mentor-content-card ${index%2?'cream':'white'}">
+        <div class="admin-mentor-media">
+          ${x.image_url?`<img src="${esc(x.image_url)}" alt="${esc(x.title||symbol)}" loading="lazy">`:`<div class="admin-mentor-placeholder"><i class="fa-solid fa-chart-line"></i><span>24K RESEARCH</span></div>`}
+          <div class="admin-mentor-media-top"><span class="gold">${esc(symbol)}</span>${x.timeframe?`<span>${esc(x.timeframe)}</span>`:''}<span class="${live?'live':'draft'}">${live?'Published':'Draft'}</span></div>
+          <span class="admin-mentor-index">${String(index+1).padStart(2,'0')}</span>
+        </div>
+        <div class="admin-mentor-card-body">
+          <div class="admin-mentor-card-meta"><span><i class="fa-regular fa-calendar"></i> ${esc(stamp.date)}</span><span><i class="fa-regular fa-clock"></i> ${esc(stamp.time)}</span></div>
+          <h3>${esc(x.title||symbol+' Analysis')}</h3>
+          <p>${esc(x.summary||'Market analysis update.')}</p>
+          <div class="admin-mentor-card-foot">
+            <span class="admin-mentor-state ${live?'live':'draft'}"><i class="fa-solid ${live?'fa-circle-check':'fa-pen'}"></i> ${live?'Live':'Draft'}</span>
+            <div class="admin-mentor-actions">
+              ${x.image_url?`<a href="${esc(x.image_url)}" target="_blank" rel="noopener" title="View chart"><i class="fa-solid fa-expand"></i><span>View</span></a>`:''}
+              <button type="button" data-edit-chart="${x.id}"><i class="fa-solid fa-pen"></i><span>Edit</span></button>
+              <button type="button" class="danger" data-delete-chart="${x.id}" title="Delete"><i class="fa-regular fa-trash-can"></i></button>
+            </div>
+          </div>
+        </div>
+      </article>`
+    }).join('');
+    return
+  }
+
   box.innerHTML=`<div class="mentor-chart-grid">${items.map((x,index)=>{
-    const rawDate=x.published_at||x.created_at,stamp=mentorSignalStamp(rawDate),symbol=mentorDisplaySymbol(x.symbol||'CHART'),dayKey=mentorContentDayKey(rawDate);
-    const groupHead=mentorChartDesktop&&dayKey!==lastChartDay?`<div class="mentor-admin-date-group"><div><span>${esc(mentorContentDayLabel(rawDate))}</span><small>${esc(stamp.date)}</small></div><i></i></div>`:'';
-    lastChartDay=dayKey;
-    return groupHead+`<article class="mentor-chart-card ${index%2?'cream':'white'}">
+    const rawDate=x.published_at||x.created_at,stamp=mentorSignalStamp(rawDate),symbol=mentorDisplaySymbol(x.symbol||'CHART');
+    return `<article class="mentor-chart-card ${index%2?'cream':'white'}">
       <div class="mentor-chart-media">
         ${x.image_url?`<img src="${esc(x.image_url)}" alt="${esc(x.title||symbol)}" loading="lazy">`:`<div class="mentor-chart-placeholder"><i class="fa-solid fa-chart-line"></i><span>24K RESEARCH</span></div>`}
         <div class="mentor-chart-media-top"><span class="pair">${esc(symbol)}</span>${x.timeframe?`<span class="tf">${esc(x.timeframe)}</span>`:''}</div>
@@ -837,7 +870,6 @@ function renderCharts(){
     </article>`
   }).join('')}</div>`
 }
-
 function mentorArticleDate(x){
   const d=new Date(x?.published_at||x?.created_at||0);
   return Number.isNaN(d.getTime())?new Date(0):d
