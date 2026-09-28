@@ -1,4 +1,4 @@
-/* 24K MR ZERO — Mentor Article final QA polish v14.40
+/* 24K MR ZERO — Mentor shared content final QA polish v14.43
    Desktop-only refinements after shared Admin/Mentor article sync. */
 @media (min-width:901px){
   [data-mentor-panel="articles"] .mentor-article-create{
@@ -19,5 +19,21 @@
   }
   [data-mentor-panel="articles"] .mentor-article-controls{
     align-items:center!important;
+  }
+
+  /* Full-width desktop empty states for shared Chart/Article libraries.
+     Card grids keep their compact Admin footprint when content exists. */
+  [data-mentor-panel="charts"] #mentorCharts.mentor-full-empty,
+  [data-mentor-panel="articles"] #mentorArticles.mentor-full-empty{
+    grid-template-columns:minmax(0,1fr)!important;
+    justify-content:stretch!important;
+    width:100%!important;
+  }
+  [data-mentor-panel="charts"] #mentorCharts.mentor-full-empty>.mentor-chart-admin-empty,
+  [data-mentor-panel="articles"] #mentorArticles.mentor-full-empty>.mentor-article-admin-empty{
+    grid-column:1/-1!important;
+    width:100%!important;
+    max-width:none!important;
+    justify-self:stretch!important;
   }
 }
