@@ -324,7 +324,65 @@
 
   async function saveChart(e){e.preventDefault();const f=e.currentTarget,v=formValues(f),id=v.id||A.uid(),isEdit=Boolean(v.id),button=f.querySelector('button[type=submit]'),file=f.elements.image.files?.[0]||null;const picker=document.getElementById('chartInstrumentPicker');if(!v.symbol){picker?.classList.add('invalid');document.getElementById('chartInstrumentSearch')?.focus();return A.toast('Select a trading instrument from the dropdown.','error');}if(!String(v.title||'').trim())return A.toast('Chart title is required.','error');if(!String(v.summary||'').trim())return A.toast('Analysis summary is required.','error');if(!isEdit&&!file&&!v.existing_image_url)return A.toast('Choose a chart image before saving.','error');let uploaded=null,saved=false;A.setLoading(button,true,isEdit?'Updating chart...':'Uploading chart...');try{let image=String(v.existing_image_url||'');if(file){uploaded=await uploadPublicAsset(file,`charts/${id}`);image=uploaded.url;}const row={id,title:String(v.title).trim(),symbol:String(v.symbol).toUpperCase(),timeframe:v.timeframe,summary:String(v.summary).trim(),details:String(v.details||'').trim()||null,category:v.category||chartCategory(v.symbol),image_url:image,is_published:checked(f,'is_published'),featured:checked(f,'featured'),publish_at:v.publish_at?new Date(v.publish_at).toISOString():null,unpublish_at:v.unpublish_at?new Date(v.unpublish_at).toISOString():null,published_at:isEdit?undefined:new Date().toISOString(),created_by:state.profile.id};const clean=Object.fromEntries(Object.entries(row).filter(([,value])=>value!==undefined));const {error}=isEdit?await A.supabase.from('charts').update(omit(clean,'id','created_by')).eq('id',id):await A.supabase.from('charts').insert(clean);if(error)throw error;saved=true;if(uploaded&&v.existing_image_url&&v.existing_image_url!==uploaded.url){const oldPath=publicStoragePath(v.existing_image_url,'content-assets');if(oldPath)await A.supabase.storage.from('content-assets').remove([oldPath]);}await loadAll();renderAll();resetChartForm();const chartBox=document.getElementById('chartFormBox');chartBox?.classList.remove('open');chartBox?.setAttribute('aria-hidden','true');A.toast(isEdit?'Chart updated successfully.':'Chart uploaded and published successfully.','success');}catch(error){if(uploaded&&!saved)await A.supabase.storage.from('content-assets').remove([uploaded.path]);console.error('Chart save failed:',error);A.toast(A.friendlyError(error,'Could not save chart. Check image permissions and try again.'),'error');}finally{A.setLoading(button,false);}}
 
-  async function saveArticle(e){e.preventDefault();const f=e.currentTarget,v=formValues(f),id=v.id||A.uid(),isEdit=Boolean(v.id),button=f.querySelector('button[type=submit]'),file=f.elements.cover.files?.[0]||null;const oldCover=String(v.existing_cover_url||'');if(!String(v.title||'').trim())return A.toast('Article title is required.','error');if(!String(v.excerpt||'').trim())return A.toast('Article excerpt is required.','error');if(!String(v.content||'').trim())return A.toast('Article content is required.','error');if(file)validatePublicImage(file,'Article cover',f.elements.cover);let uploaded=null,saved=false;A.setLoading(button,true,isEdit?'Updating article...':'Saving article...');try{let cover=oldCover;if(file){uploaded=await uploadPublicAsset(file,`articles/${id}`);cover=uploaded.url;}const row={id,title:String(v.title).trim(),slug:String(v.slug||slugify(v.title)).toLowerCase().trim().replace(/[^a-z0-9-]+/g,'-'),excerpt:String(v.excerpt).trim(),content:String(v.content).trim(),category:String(v.category||'').trim()||null,cover_url:cover||null,is_published:checked(f,'is_published'),featured:checked(f,'featured'),publish_at:v.publish_at?new Date(v.publish_at).toISOString():null,unpublish_at:v.unpublish_at?new Date(v.unpublish_at).toISOString():null,published_at:isEdit?undefined:new Date().toISOString(),created_by:state.profile.id};const clean=Object.fromEntries(Object.entries(row).filter(([,value])=>value!==undefined));const {error}=isEdit?await A.supabase.from('articles').update(omit(clean,'id','created_by')).eq('id',id):await A.supabase.from('articles').insert(clean);if(error)throw error;saved=true;if(uploaded&&oldCover&&oldCover!==uploaded.url){const oldPath=publicStoragePath(oldCover,'content-assets');if(oldPath){const cleanup=await A.supabase.storage.from('content-assets').remove([oldPath]);if(cleanup.error)console.warn('Old article cover cleanup failed:',cleanup.error);}}await loadAll();renderAll();f.reset();f.elements.id.value='';f.elements.existing_cover_url.value='';const box=document.getElementById('articleFormBox');box?.classList.remove('open');box?.setAttribute('aria-hidden','true');const title=document.getElementById('articleFormTitle');if(title)title.textContent='Add Article';A.toast(isEdit?'Article updated successfully.':'Article saved successfully.','success');}catch(error){if(uploaded&&!saved)await A.supabase.storage.from('content-assets').remove([uploaded.path]);A.toast(A.friendlyError(error,'Could not save article.'),'error');}finally{A.setLoading(button,false);}}
+  async function saveArticle(e){
+    e.preventDefault();
+    const f=e.currentTarget,v=formValues(f),id=v.id||A.uid(),isEdit=Boolean(v.id),button=f.querySelector('button[type=submit]'),file=f.elements.cover.files?.[0]||null;
+    const oldCover=String(v.existing_cover_url||''),existing=state.articles.find(x=>String(x.id)===String(v.id));
+    const title=String(v.title||'').trim(),content=String(v.content||'').trim(),contentRoman=String(v.content_roman||'').trim();
+    if(!title)return A.toast('Article title is required.','error');
+    if(!content)return A.toast('English content is required.','error');
+    if(!contentRoman)return A.toast('Roman English content is required.','error');
+    if(file)validatePublicImage(file,'Article cover',f.elements.cover);
+    let uploaded=null,saved=false;
+    A.setLoading(button,true,isEdit?'Updating article...':'Saving article...');
+    try{
+      let cover=oldCover;
+      if(file){uploaded=await uploadPublicAsset(file,`articles/${id}`);cover=uploaded.url;}
+      const cleanText=content.replace(/\s+/g,' ').trim();
+      const autoExcerpt=cleanText.length>180?`${cleanText.slice(0,177).trim()}...`:cleanText;
+      const row={
+        id,
+        title,
+        slug:existing?.slug||slugify(title),
+        excerpt:autoExcerpt,
+        content,
+        content_roman:contentRoman,
+        category:existing?.category||'General',
+        cover_url:cover||null,
+        is_published:checked(f,'is_published'),
+        featured:existing?.featured??false,
+        publish_at:existing?.publish_at??null,
+        unpublish_at:existing?.unpublish_at??null,
+        published_at:isEdit?undefined:new Date().toISOString(),
+        created_by:state.profile.id
+      };
+      const clean=Object.fromEntries(Object.entries(row).filter(([,value])=>value!==undefined));
+      const {error}=isEdit?await A.supabase.from('articles').update(omit(clean,'id','created_by')).eq('id',id):await A.supabase.from('articles').insert(clean);
+      if(error)throw error;
+      saved=true;
+      if(uploaded&&oldCover&&oldCover!==uploaded.url){
+        const oldPath=publicStoragePath(oldCover,'content-assets');
+        if(oldPath){
+          const cleanup=await A.supabase.storage.from('content-assets').remove([oldPath]);
+          if(cleanup.error)console.warn('Old article cover cleanup failed:',cleanup.error);
+        }
+      }
+      await loadAll();
+      renderAll();
+      f.reset();
+      f.elements.id.value='';
+      f.elements.existing_cover_url.value='';
+      const box=document.getElementById('articleFormBox');
+      box?.classList.remove('open');
+      box?.setAttribute('aria-hidden','true');
+      const formTitle=document.getElementById('articleFormTitle');
+      if(formTitle)formTitle.textContent='Add Article';
+      A.toast(isEdit?'Article updated successfully.':'Article saved successfully.','success');
+    }catch(error){
+      if(uploaded&&!saved)await A.supabase.storage.from('content-assets').remove([uploaded.path]);
+      A.toast(A.friendlyError(error,'Could not save article.'),'error');
+    }finally{A.setLoading(button,false);}
+  }
 
   async function saveAnnouncement(e){e.preventDefault();const f=e.currentTarget,v=formValues(f),id=v.id||A.uid();const demo=demoAnnouncements.find(x=>x.id===v.id);if(demo){demo.title=String(v.title||'').trim();demo.message=String(v.message||'').trim();demo.priority=v.priority||'normal';demo.is_published=checked(f,'is_published');demo.published_at=new Date().toISOString();f.reset();f.elements.id.value='';document.getElementById('announcementFormBox')?.classList.remove('open');document.getElementById('announcementFormBox')?.setAttribute('aria-hidden','true');document.getElementById('announcementFormTitle').textContent='Create Announcement';renderAnnouncements();A.toast('Demo announcement updated for preview only. No live data was changed.','success');return;}if(v.audience==='course_students'&&!v.course_id)return A.toast('Select a course for this audience.','error');const shouldEmail=checked(f,'send_email');const ok=await save('announcements',{id,title:v.title,message:v.message,priority:v.priority,audience:v.audience||'all_students',course_id:v.audience==='course_students'?v.course_id:null,send_email:shouldEmail,send_browser:checked(f,'send_browser'),publish_at:v.publish_at?new Date(v.publish_at).toISOString():null,expires_at:v.expires_at?new Date(v.expires_at).toISOString():null,is_published:checked(f,'is_published'),published_at:v.id?undefined:new Date().toISOString(),created_by:state.profile.id},v.id,f,'Announcement saved.');if(ok&&shouldEmail)await flushEmailQueueQuiet();}
   function courseSessionTemplate(session={},index=0){
