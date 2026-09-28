@@ -4,42 +4,33 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <title>Opening 24K MR ZERO</title>
+  <title>24K MR ZERO</title>
   <style>
     html,body{margin:0;min-height:100%;background:#0b0b0b;color:#d9b64d;font-family:Arial,sans-serif}
     body{display:grid;place-items:center}
-    .loader{display:grid;gap:14px;place-items:center;font-size:13px;font-weight:700}
+    .loader{display:grid;gap:14px;place-items:center;font-size:13px;font-weight:800}
     .loader:before{content:"";width:30px;height:30px;border:3px solid rgba(217,182,77,.22);border-top-color:#d9b64d;border-radius:50%;animation:r .7s linear infinite}
+    .error{max-width:360px;text-align:center;color:#eee;line-height:1.55}
+    .error b{display:block;color:#d9b64d;margin-bottom:6px}
     @keyframes r{to{transform:rotate(360deg)}}
   </style>
 </head>
 <body>
   <div class="loader" id="status">Opening secure link...</div>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/assets/js/config.js?v=11.11"></script>
   <script>
-  (async function(){
+  (function(){
     const status=document.getElementById('status');
-    const p=new URLSearchParams(location.search);
-    const ref=String(p.get('r')||p.get('ref')||'').trim().toLowerCase();
-    if(!ref){status.textContent='Invalid link.';return}
+    const fail=(msg)=>{status.className='error';status.innerHTML='<b>Link unavailable</b>'+msg};
+    let ref='';
     try{
-      const cfg=window.APP_CONFIG||{};
-      if(!window.supabase?.createClient||!cfg.SUPABASE_URL||!cfg.SUPABASE_ANON_KEY)throw new Error('Service unavailable');
-      const sb=window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY,{auth:{persistSession:false,autoRefreshToken:false}});
-      const {data,error}=await sb.rpc('resolve_tracking_link',{p_ref_code:ref});
-      if(error)throw error;
-      if(!data)throw new Error('Link not found');
-      let path=String(data.destination_path||'').trim();
-      if(!path)path=(data.is_ad_link||data.course_id)?'/enroll/':'/sign-up/';
-      if(!path.startsWith('/'))path='/'+path;
-      const u=new URL(path,location.origin);
-      u.searchParams.set('ref',ref);
-      location.replace(u.toString());
-    }catch(e){
-      console.error(e);
-      status.textContent='This link is unavailable.';
-    }
+      const p=new URLSearchParams(location.search);ref=String(p.get('r')||p.get('ref')||'').trim().toLowerCase();
+    }catch(_){}
+    if(!ref){fail('This link is invalid.');return}
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),8000);
+    fetch('https://jsmthmmkafgvzzcjjihp.supabase.co/functions/v1/resolve-short-link?ref='+encodeURIComponent(ref),{method:'GET',cache:'no-store',signal:controller.signal})
+      .then(async res=>{clearTimeout(timer);const data=await res.json().catch(()=>({}));if(!res.ok||!data?.target)throw new Error(data?.error||'Link not found');location.replace(data.target)})
+      .catch(err=>{clearTimeout(timer);console.error(err);fail('Please check the link or try again.')});
   })();
   </script>
 </body>
