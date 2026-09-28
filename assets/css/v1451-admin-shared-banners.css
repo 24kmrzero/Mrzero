@@ -1,0 +1,203 @@
+/* 24K MR ZERO — Admin shared Banners v14.51 */
+
+#p-banners .admin-banner-command{
+  position:relative;
+  overflow:hidden;
+  min-height:132px;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:20px;
+  padding:20px 21px;
+  margin-bottom:10px;
+  border:1px solid #e0e3e7;
+  border-left:3px solid #d8a20a;
+  border-radius:18px;
+  background:radial-gradient(420px 180px at 94% 0%,rgba(216,162,10,.055),transparent 70%),#fff;
+  box-shadow:0 9px 26px rgba(18,24,32,.045);
+}
+#p-banners .admin-banner-command:after{
+  content:"24K";
+  position:absolute;
+  right:16px;
+  top:-28px;
+  font-size:124px;
+  font-weight:950;
+  letter-spacing:-.08em;
+  color:rgba(190,139,0,.03);
+  pointer-events:none;
+}
+#p-banners .admin-banner-command>div,
+#p-banners .admin-banner-command>button{position:relative;z-index:2}
+#p-banners .admin-banner-kicker{
+  min-height:24px;
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:0 9px;
+  border:1px solid #e8d99f;
+  border-radius:999px;
+  background:#fffaf0;
+  color:#8d6800;
+  font-size:7.4px;
+  font-weight:950;
+  letter-spacing:.13em;
+}
+#p-banners .admin-banner-command h2{
+  margin:10px 0 5px;
+  color:#181a20;
+  font-size:28px;
+  line-height:1;
+  letter-spacing:-.04em;
+}
+#p-banners .admin-banner-command p{
+  margin:0;
+  color:#707b88;
+  font-size:10.5px;
+}
+#p-banners .admin-banner-command small{
+  display:block;
+  margin-top:8px;
+  color:#a27a0a;
+  font-size:6.8px;
+  font-weight:900;
+  letter-spacing:.09em;
+}
+#p-banners .admin-banner-stats{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+  margin-bottom:10px;
+}
+#p-banners .admin-banner-stat{
+  min-height:74px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:11px 12px;
+  border:1px solid #e3e6e9;
+  border-radius:13px;
+  background:#fff;
+}
+#p-banners .admin-banner-stat i{
+  width:34px;height:34px;display:grid;place-items:center;
+  border-radius:10px;
+  background:rgba(216,162,10,.08);
+  border:1px solid rgba(216,162,10,.12);
+  color:#c48f00;
+}
+#p-banners .admin-banner-stat small{
+  display:block;
+  color:#747f8d;
+  font-size:7px;
+  font-weight:950;
+  letter-spacing:.1em;
+}
+#p-banners .admin-banner-stat b{
+  display:block;
+  margin-top:3px;
+  color:#181a20;
+  font-size:20px;
+}
+#p-banners .admin-banner-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(320px,360px));
+  gap:14px;
+  align-items:start;
+}
+#p-banners .admin-banner-card{
+  overflow:hidden;
+  border:1px solid #e2e5e8;
+  border-radius:16px;
+  background:#fff;
+  box-shadow:0 9px 24px rgba(18,24,32,.04);
+}
+#p-banners .admin-banner-card img{
+  width:100%;
+  aspect-ratio:16/7.5;
+  object-fit:cover;
+  display:block;
+  background:#111;
+}
+#p-banners .admin-banner-card-body{
+  display:grid;
+  gap:9px;
+  padding:13px;
+}
+#p-banners .admin-banner-meta{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+#p-banners .admin-banner-status{
+  min-height:21px;
+  display:inline-flex;
+  align-items:center;
+  padding:0 7px;
+  border-radius:999px;
+  border:1px solid rgba(22,168,114,.18);
+  background:rgba(22,168,114,.06);
+  color:#16835f;
+  font-size:6.7px;
+  font-weight:900;
+}
+#p-banners .admin-banner-status.draft{
+  border-color:#e1e4e7;
+  background:#f3f4f5;
+  color:#7b8590;
+}
+#p-banners .admin-banner-card h3{
+  margin:0;
+  color:#1b2027;
+  font-size:15px;
+  line-height:1.25;
+}
+#p-banners .admin-banner-card p{
+  margin:0;
+  color:#737d89;
+  font-size:8.5px;
+  line-height:1.45;
+  overflow-wrap:anywhere;
+}
+#p-banners .admin-banner-card-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:6px;
+  padding-top:8px;
+  border-top:1px solid #eceef0;
+}
+#p-banners .admin-banner-card-actions .app-btn{min-height:30px}
+#p-banners .admin-banner-empty{
+  grid-column:1/-1;
+  min-height:200px;
+  display:grid;
+  place-items:center;
+  align-content:center;
+  gap:7px;
+  border:1px dashed #ded8cb;
+  border-radius:14px;
+  background:#fff;
+  color:#7c8590;
+}
+#p-banners .admin-banner-empty i{font-size:24px;color:#b48300}
+#p-banners .admin-banner-empty b{font-size:13px;color:#222830}
+#p-banners .admin-banner-modal-card{width:min(640px,94vw)!important}
+html[data-theme="dark"] #p-banners .admin-banner-command,
+html[data-theme="dark"] #p-banners .admin-banner-stat,
+html[data-theme="dark"] #p-banners .admin-banner-card,
+html[data-theme="dark"] #p-banners .admin-banner-empty{
+  background:#101319;
+  border-color:#282f38;
+  box-shadow:none;
+}
+html[data-theme="dark"] #p-banners .admin-banner-command h2,
+html[data-theme="dark"] #p-banners .admin-banner-stat b,
+html[data-theme="dark"] #p-banners .admin-banner-card h3,
+html[data-theme="dark"] #p-banners .admin-banner-empty b{color:#f2f4f6}
+html[data-theme="dark"] #p-banners .admin-banner-command p,
+html[data-theme="dark"] #p-banners .admin-banner-card p{color:#929ca7}
+@media(max-width:900px){
+  #p-banners .admin-banner-stats{grid-template-columns:1fr}
+  #p-banners .admin-banner-grid{grid-template-columns:1fr}
+}
