@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Opening 24K MR ZERO</title>
+  <style>
+    html,body{margin:0;min-height:100%;background:#0b0b0b;color:#d9b64d;font-family:Arial,sans-serif}
+    body{display:grid;place-items:center}
+    .loader{display:grid;gap:14px;place-items:center;font-size:13px;font-weight:700}
+    .loader:before{content:"";width:30px;height:30px;border:3px solid rgba(217,182,77,.22);border-top-color:#d9b64d;border-radius:50%;animation:r .7s linear infinite}
+    @keyframes r{to{transform:rotate(360deg)}}
+  </style>
+</head>
+<body>
+  <div class="loader" id="status">Opening secure link...</div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/assets/js/config.js?v=11.11"></script>
+  <script>
+  (async function(){
+    const status=document.getElementById('status');
+    const p=new URLSearchParams(location.search);
+    const ref=String(p.get('r')||p.get('ref')||'').trim().toLowerCase();
+    if(!ref){status.textContent='Invalid link.';return}
+    try{
+      const cfg=window.APP_CONFIG||{};
+      if(!window.supabase?.createClient||!cfg.SUPABASE_URL||!cfg.SUPABASE_ANON_KEY)throw new Error('Service unavailable');
+      const sb=window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY,{auth:{persistSession:false,autoRefreshToken:false}});
+      const {data,error}=await sb.rpc('resolve_tracking_link',{p_ref_code:ref});
+      if(error)throw error;
+      if(!data)throw new Error('Link not found');
+      let path=String(data.destination_path||'').trim();
+      if(!path)path=(data.is_ad_link||data.course_id)?'/enroll/':'/sign-up/';
+      if(!path.startsWith('/'))path='/'+path;
+      const u=new URL(path,location.origin);
+      u.searchParams.set('ref',ref);
+      location.replace(u.toString());
+    }catch(e){
+      console.error(e);
+      status.textContent='This link is unavailable.';
+    }
+  })();
+  </script>
+</body>
+</html>
