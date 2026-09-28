@@ -1,6 +1,6 @@
 (function(){
 'use strict';
-/* mentor build 14.50 */
+/* mentor build 14.51 */
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js',{scope:'/'}).catch(e=>console.warn('[24K Mentor PWA]',e?.message||e)));
 }
@@ -238,7 +238,7 @@ async function loadSecondaryMentorData(){
     if(!state.perms[key]){state[key]=[];continue}
     const table=key==='banners'?'mentor_banners':key;
     const base=sb.from(table).select('*').order('created_at',{ascending:false}).limit(500);
-    const query=key==='banners'?base.eq('created_by',state.user.id):base;
+    const query=base;
     tasks.push(
       safeLoad(table,query)
         .then(data=>{state[key]=data;if(key==='charts')renderCharts();else if(key==='articles')renderArticles();else renderBanners()})
@@ -290,6 +290,11 @@ function subscribeMentorRealtime(){
     state.articles=await safeLoad('articles',sb.from('articles').select('*').order('created_at',{ascending:false}).limit(500));
     safeMentorRender('articles',renderArticles)
   });
+  const refreshBanners=()=>debounce('banners',async()=>{
+    if(!state.perms.banners)return;
+    state.banners=await safeLoad('mentor_banners',sb.from('mentor_banners').select('*').order('created_at',{ascending:false}).limit(500));
+    safeMentorRender('banners',renderBanners)
+  });
   const refreshCourses=()=>debounce('courses',async()=>{
     const pair=await Promise.all([
       safeLoad('courses',sb.from('courses').select('id,title,slug,short_description,description,instructor_name,price,discount_price,currency,status,thumbnail_url,is_published,enrollment_open,start_date,display_order').order('display_order',{ascending:true}).limit(100)),
@@ -308,6 +313,7 @@ function subscribeMentorRealtime(){
     .on('postgres_changes',{event:'*',schema:'public',table:'signal_updates'},refreshSignals)
     .on('postgres_changes',{event:'*',schema:'public',table:'charts'},refreshCharts)
     .on('postgres_changes',{event:'*',schema:'public',table:'articles'},refreshArticles)
+    .on('postgres_changes',{event:'*',schema:'public',table:'mentor_banners'},refreshBanners)
     .on('postgres_changes',{event:'*',schema:'public',table:'courses'},refreshCourses)
     .on('postgres_changes',{event:'*',schema:'public',table:'course_sessions'},refreshCourses)
     .on('postgres_changes',{event:'*',schema:'public',table:'announcements'},refreshAnnouncements)
@@ -1552,7 +1558,7 @@ async function saveArticle(e){
     b.disabled=false;b.innerHTML=oldButton
   }
 }
-async function del(table,id,label){const ok=await mentorAskAction({title:`Delete ${label}?`,eyebrow:'CONFIRM DELETE',message:`Delete this ${label} permanently?`,hint:'This action cannot be undone.',confirmText:'Delete',danger:true});if(!ok)return;const source=table==='charts'?state.charts:table==='articles'?state.articles:table==='mentor_banners'?state.banners:[],item=source.find(x=>String(x.id)===String(id)),media=item?.image_url||item?.cover_url||null;let query=sb.from(table).delete().eq('id',id);if(table==='mentor_banners')query=query.eq('created_by',state.user.id);const r=await query;if(r.error)throw r.error;if(media)await removeContentAsset(media);toast(`${label} deleted.`);await load()}
+async function del(table,id,label){const ok=await mentorAskAction({title:`Delete ${label}?`,eyebrow:'CONFIRM DELETE',message:`Delete this ${label} permanently?`,hint:'This action cannot be undone.',confirmText:'Delete',danger:true});if(!ok)return;const source=table==='charts'?state.charts:table==='articles'?state.articles:table==='mentor_banners'?state.banners:[],item=source.find(x=>String(x.id)===String(id)),media=item?.image_url||item?.cover_url||null;let query=sb.from(table).delete().eq('id',id);const r=await query;if(r.error)throw r.error;if(media)await removeContentAsset(media);toast(`${label} deleted.`);await load()}
 async function logout(){await auditMentor('mentor_logout','success',{view:(location.hash||'#performance').slice(1)});await sb?.auth.signOut();location.href='/mentor-login.html'}
 document.addEventListener('change',e=>{
   if(e.target.matches('#mentorChartForm input[name="image"]')){syncEditorFileLabel('chart',e.target.files?.[0]||null);return}
