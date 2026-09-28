@@ -794,7 +794,14 @@ function renderCharts(){
   let items=[...all];
   const q=String($('#mentorChartSearch')?.value||'').trim().toLowerCase();
   const pair=pairSelect?.value||'all';
-  const sort=$('#mentorChartSort')?.value||'new';
+  const sortSelect=$('#mentorChartSort'),sort=sortSelect?.value||'new';
+  if(sortSelect){
+    const n=sortSelect.querySelector('option[value="new"]'),o=sortSelect.querySelector('option[value="old"]');
+    if(n)n.textContent=desktop?'Newest First':'Newest';
+    if(o)o.textContent=desktop?'Oldest First':'Oldest'
+  }
+  const searchInput=$('#mentorChartSearch');
+  if(searchInput)searchInput.placeholder=desktop?'Search chart analysis...':'Search chart, pair or summary...';
 
   /* Admin desktop uses only Search + Pair + Sort. Keep Mentor mobile periods untouched. */
   if(!desktop){
