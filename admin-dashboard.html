@@ -42,6 +42,7 @@
 <link rel="stylesheet" href="assets/css/v1403-admin-students-table-hardfix.css?v=14.03">
 <link rel="stylesheet" href="assets/css/v1404-admin-payments-desktop.css?v=14.06">
 <link rel="stylesheet" href="assets/css/v1407-admin-announcements-premium.css?v=14.07">
+<link rel="stylesheet" href="assets/css/v1408-admin-announcement-modal.css?v=14.08">
 <style id="v1383-admin-desktop-canvas-fix">
 @media (min-width:901px){
   html[data-auth-scope="admin"][data-theme="light"]{
@@ -298,20 +299,74 @@
         <div class="admin-announcement-command"><div><span class="admin-announcement-kicker"><i class="fa-solid fa-bullhorn"></i> STUDENT COMMUNICATIONS</span><h2>Student Announcements</h2><p>Publish course, payment and platform updates from one premium communication desk.</p><small>LIVE STUDENT COMMUNICATION CENTER</small></div><button class="app-btn gold" data-toggle-form="announcementFormBox"><i class="fa-solid fa-plus"></i> New Announcement</button></div>
         <div id="adminAnnouncementStats" class="admin-announcement-stats" aria-label="Announcement overview"></div>
         <div class="admin-announcement-toolbar"><input id="adminAnnouncementSearch" type="search" placeholder="Search announcements..."><select id="adminAnnouncementPriority"><option value="all">All Priority</option><option value="important">Important</option><option value="normal">Normal</option></select><select id="adminAnnouncementStatus"><option value="all">All Status</option><option value="published">Published</option><option value="draft">Draft</option></select><select id="adminAnnouncementSort"><option value="new">Newest First</option><option value="old">Oldest First</option></select></div>
-        <div class="app-modal content-create-modal" id="announcementFormBox" aria-hidden="true">
-          <div class="app-modal-card content-create-card">
-            <div class="app-modal-head"><div><h3 id="announcementFormTitle">New Announcement</h3><small class="muted">Publish a clear update for students.</small></div><button type="button" class="modal-close" data-cancel-form="announcementFormBox" aria-label="Close Announcement"><i class="fa-solid fa-xmark"></i></button></div>
+        <div class="app-modal content-create-modal premium-announcement-modal" id="announcementFormBox" aria-hidden="true">
+          <div class="app-modal-card content-create-card premium-announcement-card">
+            <div class="app-modal-head premium-announcement-head">
+              <div>
+                <span class="premium-announcement-kicker"><i class="fa-solid fa-bullhorn"></i> STUDENT COMMUNICATION</span>
+                <h3 id="announcementFormTitle">Create Announcement</h3>
+                <small>Send a polished platform, course or payment update to students.</small>
+              </div>
+              <button type="button" class="modal-close premium-modal-close" data-cancel-form="announcementFormBox" aria-label="Close Announcement"><i class="fa-solid fa-xmark"></i></button>
+            </div>
             <form id="announcementForm">
-              <div class="app-modal-body">
-                <input type="hidden" name="id">
-                <div class="form-grid">
-                  <div class="form-field"><label>Title</label><input name="title" required></div>
-                  <div class="form-field"><label>Priority</label><select name="priority"><option value="normal">Normal</option><option value="important">Important</option></select></div>
-                  <div class="form-field full"><label>Message</label><textarea name="message" required></textarea></div>
-                  <label class="check-row"><input type="checkbox" name="is_published" checked> Publish now</label>
+              <input type="hidden" name="id">
+              <div class="app-modal-body premium-announcement-body">
+                <div class="premium-announcement-layout">
+                  <div class="premium-announcement-main">
+                    <section class="premium-announcement-section">
+                      <div class="premium-section-heading"><span class="premium-section-icon"><i class="fa-solid fa-pen-nib"></i></span><div><h4>Announcement Details</h4><p>Write the update students will see.</p></div></div>
+                      <div class="form-grid">
+                        <div class="form-field full"><label>Title</label><input name="title" maxlength="150" required placeholder="e.g. Level 2 course schedule update"></div>
+                        <div class="form-field full"><label>Message</label><textarea name="message" maxlength="2000" required placeholder="Write a clear, short and actionable update..."></textarea><div class="premium-field-foot"><small>Keep the announcement easy to scan.</small><span id="announcementMessageCount">0 / 2000</span></div></div>
+                        <div class="form-field full"><label>Priority</label><div class="premium-priority-switch"><label><input type="radio" name="priority_ui" value="normal" checked><span><i class="fa-regular fa-circle-check"></i> Normal</span></label><label><input type="radio" name="priority_ui" value="important"><span><i class="fa-solid fa-triangle-exclamation"></i> Important</span></label></div><select name="priority" class="premium-hidden-select" aria-hidden="true" tabindex="-1"><option value="normal">Normal</option><option value="important">Important</option></select></div>
+                      </div>
+                    </section>
+
+                    <section class="premium-announcement-section">
+                      <div class="premium-section-heading"><span class="premium-section-icon"><i class="fa-solid fa-users"></i></span><div><h4>Audience & Schedule</h4><p>Choose who receives it and when it goes live.</p></div></div>
+                      <div class="form-grid">
+                        <div class="form-field"><label>Audience</label><select name="audience"><option value="all_students">All Students</option><option value="active_users">Active Users</option><option value="paid_students">Paid Students</option><option value="course_students">Specific Course Students</option></select></div>
+                        <div class="form-field"><label>Course <span class="muted">(when required)</span></label><select name="course_id" id="announcementCourse"><option value="">Select course</option></select></div>
+                        <div class="form-field"><label>Publish At <span class="muted">(optional)</span></label><input type="datetime-local" name="publish_at"></div>
+                        <div class="form-field"><label>Expire At <span class="muted">(optional)</span></label><input type="datetime-local" name="expires_at"></div>
+                      </div>
+                    </section>
+
+                    <section class="premium-announcement-section premium-delivery-section">
+                      <div class="premium-section-heading"><span class="premium-section-icon"><i class="fa-solid fa-paper-plane"></i></span><div><h4>Delivery Options</h4><p>Control publishing and notification delivery.</p></div></div>
+                      <div class="premium-toggle-list">
+                        <label class="premium-toggle-row"><div><b>Publish now</b><small>Make this announcement visible in the student panel.</small></div><span class="premium-switch"><input type="checkbox" name="is_published" checked><span></span></span></label>
+                        <label class="premium-toggle-row"><div><b>Browser / in-app notification</b><small>Notify students inside the platform.</small></div><span class="premium-switch"><input type="checkbox" name="send_browser" checked><span></span></span></label>
+                        <label class="premium-toggle-row"><div><b>Queue email delivery</b><small>Also send this update through the email queue.</small></div><span class="premium-switch"><input type="checkbox" name="send_email"><span></span></span></label>
+                      </div>
+                    </section>
+                  </div>
+
+                  <aside class="premium-announcement-preview">
+                    <div class="premium-preview-label"><span>LIVE PREVIEW</span><i class="fa-solid fa-eye"></i></div>
+                    <div class="premium-preview-card">
+                      <div class="premium-preview-brand"><span class="premium-preview-logo">24K</span><div><b>MR ZERO</b><small>Student Announcement</small></div></div>
+                      <div class="premium-preview-badges"><span id="announcementPreviewPriority" class="normal">NORMAL</span><span id="announcementPreviewStatus" class="published">PUBLISHED</span></div>
+                      <h5 id="announcementPreviewTitle">Announcement title will appear here</h5>
+                      <p id="announcementPreviewMessage">Your announcement message will update here as you type.</p>
+                      <div class="premium-preview-meta">
+                        <span><i class="fa-solid fa-users"></i><b id="announcementPreviewAudience">All Students</b></span>
+                        <span><i class="fa-regular fa-clock"></i><b id="announcementPreviewTiming">Publish now</b></span>
+                      </div>
+                      <div class="premium-preview-delivery">
+                        <span id="announcementPreviewBrowser" class="on"><i class="fa-regular fa-bell"></i> In-app</span>
+                        <span id="announcementPreviewEmail"><i class="fa-regular fa-envelope"></i> Email</span>
+                      </div>
+                    </div>
+                    <div class="premium-preview-note"><i class="fa-solid fa-shield-halved"></i><span>Preview only. The selected audience and delivery options are applied when you save.</span></div>
+                  </aside>
                 </div>
               </div>
-              <div class="app-modal-foot"><button type="button" class="app-btn outline" data-cancel-form="announcementFormBox">Cancel</button><button class="app-btn gold" type="submit">Save Announcement</button></div>
+              <div class="app-modal-foot premium-announcement-foot">
+                <div class="premium-announcement-foot-note"><i class="fa-solid fa-circle-info"></i><span>Review the preview before publishing.</span></div>
+                <div class="premium-announcement-foot-actions"><button type="button" class="app-btn outline" data-cancel-form="announcementFormBox">Cancel</button><button class="app-btn gold" type="submit"><i class="fa-solid fa-paper-plane"></i> Save Announcement</button></div>
+              </div>
             </form>
           </div>
         </div>
@@ -408,7 +463,7 @@
 
 <div class="app-modal" id="receiptPreviewModal"><div class="app-modal-card receipt-preview-card"><div class="app-modal-head"><div><h3>Payment Receipt</h3><small id="receiptPreviewSubtitle" class="muted">Secure temporary preview</small></div><button class="modal-close" data-close-modal="receiptPreviewModal"><i class="fa-solid fa-xmark"></i></button></div><div class="app-modal-body"><div id="receiptPreviewContent" class="receipt-preview-content"></div></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="receiptPreviewModal">Close</button><a id="receiptOpenExternal" class="app-btn gold" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Full Size</a></div></div></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js?v=11.11"></script><script src="assets/js/core.js?v=14.02"></script><script src="assets/js/admin.js?v=14.07"></script><script src="assets/js/platform-v8-admin.js?v=13.93"></script><script src="assets/js/platform-v962-admin.js?v=11.13"></script><script src="assets/js/dashboard-analytics-recovery.js?v=11.11"></script><script src="assets/js/v972-admin-course-actions.js?v=12.32"></script><script src="assets/js/v990-admin-ui.js?v=12.69"></script><script src="assets/js/v120-feature-flags.js?v=12.00"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js?v=11.11"></script><script src="assets/js/core.js?v=14.02"></script><script src="assets/js/admin.js?v=14.08"></script><script src="assets/js/platform-v8-admin.js?v=13.93"></script><script src="assets/js/platform-v962-admin.js?v=11.13"></script><script src="assets/js/dashboard-analytics-recovery.js?v=11.11"></script><script src="assets/js/v972-admin-course-actions.js?v=12.32"></script><script src="assets/js/v990-admin-ui.js?v=12.69"></script><script src="assets/js/v120-feature-flags.js?v=12.00"></script>
 
 <script src="assets/js/v1214-admin-unified.js?v=13.96"></script>
 <script src="assets/js/v1216-admin-final.js?v=14.00"></script>
