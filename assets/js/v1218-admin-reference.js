@@ -2,7 +2,7 @@
 'use strict';
 const A=window.App;if(!A?.supabase)return;const sb=A.supabase,$=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)],esc=v=>A.escapeHtml?A.escapeHtml(v??''):String(v??'');
 const state={links:[],team:[],courses:[],adLink:null};
-async function rpc(n,a={}){const r=await sb.rpc(n,a);if(r.error)throw r.error;return r.data}async function one(q){const r=await q;if(r.error)throw r.error;return r.data}function toast(m,t='info'){A.toast?.(m,t)}function fmt(v){return v?new Date(v).toLocaleString():'—'}function fmtN(v){return Number(v||0).toLocaleString()}function linkUrl(l){const u=new URL('/r/',location.origin);u.searchParams.set('r',l.ref_code);return u.toString()}
+async function rpc(n,a={}){const r=await sb.rpc(n,a);if(r.error)throw r.error;return r.data}async function one(q){const r=await q;if(r.error)throw r.error;return r.data}function toast(m,t='info'){A.toast?.(m,t)}function fmt(v){return v?new Date(v).toLocaleString():'—'}function fmtN(v){return Number(v||0).toLocaleString()}function linkUrl(l){return new URL('/r/'+encodeURIComponent(String(l.ref_code||'').trim()),location.origin).toString()}
 function installCss(){if(!document.querySelector('link[href*="v1218-admin-reference.css"]')){const l=document.createElement('link');l.rel='stylesheet';l.href='assets/css/v1218-admin-reference.css?v=12.18';document.head.appendChild(l)}}
 function installNav(){const nav=$('.app-nav');if(!nav)return;nav.innerHTML=`
 <span class="v1218-nav-group">Overview</span>
