@@ -158,7 +158,23 @@ function settleMentorAction(value,fromPop=false){
   if(resolve)resolve(value)
 }
 
-function resetMentorEditor(kind){if(kind==='signal'){const f=$('#mentorSignalForm');f?.reset();if(f?.elements.id)f.elements.id.value='';$$('[data-note-preset]').forEach(x=>x.classList.remove('active'));const t=$('#mentorSignalModalTitle');if(t)t.textContent='New Signal';renderMentorPipPreview()}else if(kind==='chart'){const f=$('#mentorChartForm');f?.reset();if(f?.elements.id)f.elements.id.value='';if(f?.elements.existing_image)f.elements.existing_image.value='';syncEditorFileLabel('chart',null);const t=$('#mentorChartModalTitle');if(t)t.textContent='New Chart'}else if(kind==='article'){const f=$('#mentorArticleForm');f?.reset();if(f?.elements.id)f.elements.id.value='';if(f?.elements.existing_cover)f.elements.existing_cover.value='';if(f?.elements.is_published)f.elements.is_published.checked=true;syncArticleEditorUI();syncEditorFileLabel('article',null);const t=$('#mentorArticleModalTitle');if(t)t.textContent='New Article'}else if(kind==='banner'){const f=$('#mentorBannerForm');f?.reset();if(f?.elements.id)f.elements.id.value='';if(f?.elements.existing_image)f.elements.existing_image.value='';if(f?.elements.is_published)f.elements.is_published.checked=true;const t=$('#mentorBannerModalTitle');if(t)t.textContent='New Banner'}}
+function resetMentorEditor(kind){if(kind==='signal'){const f=$('#mentorSignalForm');f?.reset();if(f?.elements.id)f.elements.id.value='';$$('[data-note-preset]').forEach(x=>x.classList.remove('active'));const t=$('#mentorSignalModalTitle');if(t)t.textContent='New Signal';renderMentorPipPreview()}else if(kind==='chart'){
+  const mobile=$('#mentorChartForm'),desktop=$('#mentorChartDesktopForm');
+  mobile?.reset();desktop?.reset();
+  if(mobile?.elements.id)mobile.elements.id.value='';
+  if(mobile?.elements.existing_image)mobile.elements.existing_image.value='';
+  if(desktop?.elements.id)desktop.elements.id.value='';
+  if(desktop?.elements.existing_image)desktop.elements.existing_image.value='';
+  if(desktop?.elements.symbol)desktop.elements.symbol.value='';
+  if(desktop?.elements.category)desktop.elements.category.value='';
+  if(desktop?.elements.is_published)desktop.elements.is_published.checked=true;
+  const search=$('#mentorChartInstrumentSearch');if(search)search.value='';
+  $('#mentorChartInstrumentPicker')?.classList.remove('open','invalid');
+  clearMentorChartPreview();
+  syncEditorFileLabel('chart',null);
+  const mt=$('#mentorChartModalTitle');if(mt)mt.textContent='New Chart';
+  const dt=$('#mentorChartDesktopModalTitle');if(dt)dt.textContent='Add Chart'
+}else if(kind==='article'){const f=$('#mentorArticleForm');f?.reset();if(f?.elements.id)f.elements.id.value='';if(f?.elements.existing_cover)f.elements.existing_cover.value='';if(f?.elements.is_published)f.elements.is_published.checked=true;syncArticleEditorUI();syncEditorFileLabel('article',null);const t=$('#mentorArticleModalTitle');if(t)t.textContent='New Article'}else if(kind==='banner'){const f=$('#mentorBannerForm');f?.reset();if(f?.elements.id)f.elements.id.value='';if(f?.elements.existing_image)f.elements.existing_image.value='';if(f?.elements.is_published)f.elements.is_published.checked=true;const t=$('#mentorBannerModalTitle');if(t)t.textContent='New Banner'}}
 async function requireMentor(){
   if(!sb)throw new Error('Supabase configuration is missing.');
   let user=null;
@@ -1078,8 +1094,145 @@ function syncArticleEditorUI(){
     stateEl.innerHTML=published?'<i class="fa-solid fa-circle-check"></i> Ready to publish':'<i class="fa-solid fa-pen"></i> Saving as draft'
   }
 }
-function editChart(id){const x=state.charts.find(v=>v.id===id);if(!x)return;const f=$('#mentorChartForm');f.elements.id.value=x.id;f.elements.existing_image.value=x.image_url||'';f.elements.title.value=x.title||'';f.elements.symbol.value=x.symbol||'';f.elements.timeframe.value=x.timeframe||'';f.elements.summary.value=x.summary||'';f.elements.details.value=x.details||'';syncEditorFileLabel('chart',x.image_url?{name:'Current chart image retained'}:null);$('#mentorChartModalTitle').textContent='Edit Chart';openModal('chart')}
-async function saveChart(e){e.preventDefault();const f=e.currentTarget,b=f.querySelector('button[type=submit]'),d=Object.fromEntries(new FormData(f)),oldImage=String(d.existing_image||'');let image=null,saved=false;b.disabled=true;try{image=await upload(f.elements.image.files[0],'charts');const row={title:String(d.title||'').trim(),symbol:String(d.symbol||'').trim().toUpperCase(),timeframe:String(d.timeframe||'').trim()||null,summary:String(d.summary||'').trim(),details:String(d.details||'').trim()||null,image_url:image||oldImage||null,is_published:true};if(!row.title||!row.symbol||!row.summary)throw new Error('Title, symbol and summary are required.');let r;if(d.id)r=await sb.from('charts').update(row).eq('id',d.id).eq('created_by',state.user.id);else r=await sb.from('charts').insert({...row,published_at:new Date().toISOString(),created_by:state.user.id});if(r.error)throw r.error;saved=true;if(image&&oldImage&&image!==oldImage)await removeContentAsset(oldImage);f.reset();f.elements.id.value='';f.elements.existing_image.value='';$('#mentorChartModalTitle').textContent='New Chart';closeModals();toast(d.id?'Chart updated.':'Chart published.');await load()}catch(err){if(image&&!saved)await removeContentAsset(image);toast(err.message||'Could not save chart.')}finally{b.disabled=false}}
+const mentorChartInstruments=[
+  {group:'Top Markets',symbol:'XAUUSD',label:'GOLD — XAU/USD'},
+  {group:'Top Markets',symbol:'XAGUSD',label:'SILVER — XAG/USD'},
+  {group:'Top Markets',symbol:'BTCUSD',label:'BTC — BTC/USD'},
+  {group:'USD Pairs',symbol:'EURUSD',label:'EUR/USD'},
+  {group:'USD Pairs',symbol:'GBPUSD',label:'GBP/USD'},
+  {group:'USD Pairs',symbol:'USDJPY',label:'USD/JPY'},
+  {group:'USD Pairs',symbol:'USDCHF',label:'USD/CHF'},
+  {group:'USD Pairs',symbol:'AUDUSD',label:'AUD/USD'},
+  {group:'USD Pairs',symbol:'NZDUSD',label:'NZD/USD'},
+  {group:'USD Pairs',symbol:'USDCAD',label:'USD/CAD'},
+  ...['EURGBP','EURJPY','GBPJPY','AUDJPY','CADJPY','CHFJPY','EURAUD','EURNZD','EURCAD','EURCHF','GBPAUD','GBPNZD','GBPCAD','GBPCHF','AUDCAD','AUDCHF','AUDNZD','NZDCAD','NZDCHF','NZDJPY','CADCHF'].map(symbol=>({group:'Cross Pairs',symbol,label:`${symbol.slice(0,3)}/${symbol.slice(3)}`}))
+];
+let mentorChartPreviewObjectUrl='';
+function mentorChartCategory(symbol){
+  const value=String(symbol||'').toUpperCase();
+  if(value==='XAUUSD')return'Gold';
+  if(value==='XAGUSD')return'Silver';
+  if(value==='BTCUSD')return'Crypto';
+  return'Forex'
+}
+function mentorChartInstrumentMeta(symbol){
+  const key=String(symbol||'').replace('/','').toUpperCase();
+  return mentorChartInstruments.find(i=>i.symbol===key)||{symbol:key,label:mentorDisplaySymbol(key)}
+}
+function clearMentorChartPreview(){
+  if(mentorChartPreviewObjectUrl){URL.revokeObjectURL(mentorChartPreviewObjectUrl);mentorChartPreviewObjectUrl=''}
+  const preview=$('#mentorChartImagePreview');
+  if(preview){preview.className='mentor-chart-upload-preview empty';preview.innerHTML='<i class="fa-solid fa-image"></i><span>Selected chart image preview will appear here.</span>'}
+}
+function renderMentorChartPreview(file,url=''){
+  const preview=$('#mentorChartImagePreview');if(!preview)return;
+  if(mentorChartPreviewObjectUrl){URL.revokeObjectURL(mentorChartPreviewObjectUrl);mentorChartPreviewObjectUrl=''}
+  let source=url;
+  if(file){mentorChartPreviewObjectUrl=URL.createObjectURL(file);source=mentorChartPreviewObjectUrl}
+  if(!source)return clearMentorChartPreview();
+  preview.className='mentor-chart-upload-preview';
+  preview.innerHTML=`<img src="${esc(source)}" alt="Chart image preview">`
+}
+function selectMentorChartInstrument(symbol,autoTitle=true){
+  const form=$('#mentorChartDesktopForm');if(!form)return;
+  const meta=mentorChartInstrumentMeta(symbol);
+  form.elements.symbol.value=meta.symbol;
+  const search=$('#mentorChartInstrumentSearch');if(search)search.value=meta.label;
+  if(form.elements.category)form.elements.category.value=mentorChartCategory(meta.symbol);
+  $('#mentorChartInstrumentPicker')?.classList.remove('invalid','open');
+  if(autoTitle&&!String(form.elements.title.value||'').trim()){
+    form.elements.title.value=`${meta.label} ${form.elements.timeframe.value||''} Market Analysis`.replace(/\s+/g,' ').trim()
+  }
+}
+function bindMentorChartInstrumentPicker(){
+  const picker=$('#mentorChartInstrumentPicker'),search=$('#mentorChartInstrumentSearch'),menu=$('#mentorChartInstrumentMenu'),form=$('#mentorChartDesktopForm');
+  if(!picker||!search||!menu||!form||picker.dataset.bound==='1')return;
+  picker.dataset.bound='1';
+  const draw=()=>{
+    const q=search.value.trim().toLowerCase();
+    const filtered=mentorChartInstruments.filter(i=>!q||`${i.symbol} ${i.label}`.toLowerCase().includes(q));
+    let group='';
+    menu.innerHTML=filtered.map(i=>{
+      const head=i.group!==group?(group=i.group,`<div class="instrument-group">${esc(group)}</div>`):'';
+      return `${head}<button type="button" data-mentor-chart-pair="${esc(i.symbol)}"><b>${esc(i.label)}</b><small>${esc(mentorChartCategory(i.symbol))}</small></button>`
+    }).join('')||'<div class="instrument-empty">No instrument found</div>'
+  };
+  search.addEventListener('focus',()=>{draw();picker.classList.add('open');picker.classList.remove('invalid')});
+  search.addEventListener('input',()=>{form.elements.symbol.value='';if(form.elements.category)form.elements.category.value='';draw();picker.classList.add('open')});
+  picker.querySelector('.mentor-admin-instrument-toggle')?.addEventListener('click',()=>{draw();picker.classList.toggle('open');search.focus()});
+  menu.addEventListener('click',e=>{const b=e.target.closest('[data-mentor-chart-pair]');if(!b)return;selectMentorChartInstrument(b.dataset.mentorChartPair);picker.classList.remove('open')});
+  document.addEventListener('click',e=>{if(!picker.contains(e.target))picker.classList.remove('open')});
+  draw()
+}
+function fillMentorChartForm(form,x){
+  if(!form)return;
+  form.elements.id.value=x.id;
+  form.elements.existing_image.value=x.image_url||'';
+  form.elements.title.value=x.title||'';
+  form.elements.symbol.value=x.symbol||'';
+  if(form.elements.timeframe)form.elements.timeframe.value=x.timeframe||'M15';
+  if(form.elements.category)form.elements.category.value=x.category||mentorChartCategory(x.symbol);
+  form.elements.summary.value=x.summary||'';
+  form.elements.details.value=x.details||'';
+  if(form.elements.is_published)form.elements.is_published.checked=Boolean(x.is_published)
+}
+function editChart(id){
+  const x=state.charts.find(v=>v.id===id);if(!x)return;
+  const mobile=$('#mentorChartForm'),desktop=$('#mentorChartDesktopForm');
+  fillMentorChartForm(mobile,x);fillMentorChartForm(desktop,x);
+  const meta=mentorChartInstrumentMeta(x.symbol);
+  const search=$('#mentorChartInstrumentSearch');if(search)search.value=meta.label;
+  renderMentorChartPreview(null,x.image_url||'');
+  syncEditorFileLabel('chart',x.image_url?{name:'Current chart image retained'}:null);
+  const mt=$('#mentorChartModalTitle');if(mt)mt.textContent='Edit Chart';
+  const dt=$('#mentorChartDesktopModalTitle');if(dt)dt.textContent='Edit Chart';
+  openModal('chart')
+}
+async function saveChart(e){
+  e.preventDefault();
+  const f=e.currentTarget,b=f.querySelector('button[type=submit]'),d=Object.fromEntries(new FormData(f)),oldImage=String(d.existing_image||''),desktop=f.id==='mentorChartDesktopForm';
+  let image=null,saved=false;b.disabled=true;
+  const oldButton=b.innerHTML;
+  b.innerHTML=`<i class="fa-solid fa-spinner fa-spin"></i> ${d.id?'Updating chart...':'Uploading chart...'}`;
+  try{
+    if(desktop&&!String(d.symbol||'').trim()){
+      $('#mentorChartInstrumentPicker')?.classList.add('invalid');
+      $('#mentorChartInstrumentSearch')?.focus();
+      throw new Error('Select a trading instrument from the dropdown.')
+    }
+    if(!String(d.title||'').trim())throw new Error('Chart title is required.');
+    if(!String(d.summary||'').trim())throw new Error('Analysis summary is required.');
+    const file=f.elements.image.files?.[0]||null;
+    if(desktop&&!d.id&&!file&&!oldImage)throw new Error('Choose a chart image before saving.');
+    image=await upload(file,'charts');
+    const row={
+      title:String(d.title||'').trim(),
+      symbol:String(d.symbol||'').trim().toUpperCase(),
+      timeframe:String(d.timeframe||'').trim()||null,
+      summary:String(d.summary||'').trim(),
+      details:String(d.details||'').trim()||null,
+      category:String(d.category||mentorChartCategory(d.symbol)||'').trim()||null,
+      image_url:image||oldImage||null,
+      is_published:desktop?Boolean(f.elements.is_published?.checked):true
+    };
+    if(!row.title||!row.symbol||!row.summary)throw new Error('Title, symbol and summary are required.');
+    let r;
+    if(d.id)r=await sb.from('charts').update(row).eq('id',d.id).eq('created_by',state.user.id);
+    else r=await sb.from('charts').insert({...row,published_at:new Date().toISOString(),created_by:state.user.id});
+    if(r.error)throw r.error;
+    saved=true;
+    if(image&&oldImage&&image!==oldImage)await removeContentAsset(oldImage);
+    resetMentorEditor('chart');
+    closeModals();
+    toast(d.id?'Chart updated successfully.':'Chart uploaded and published successfully.');
+    await load()
+  }catch(err){
+    if(image&&!saved)await removeContentAsset(image);
+    toast(err.message||'Could not save chart. Check image permissions and try again.')
+  }finally{
+    b.disabled=false;b.innerHTML=oldButton
+  }
+}
 function editArticle(id){
   const x=state.articles.find(v=>v.id===id);if(!x)return;
   const f=$('#mentorArticleForm');
@@ -1138,6 +1291,7 @@ async function del(table,id,label){const ok=await mentorAskAction({title:`Delete
 async function logout(){await auditMentor('mentor_logout','success',{view:(location.hash||'#performance').slice(1)});await sb?.auth.signOut();location.href='/mentor-login.html'}
 document.addEventListener('change',e=>{
   if(e.target.matches('#mentorChartForm input[name="image"]')){syncEditorFileLabel('chart',e.target.files?.[0]||null);return}
+  if(e.target.matches('#mentorChartDesktopForm input[name="image"]')){renderMentorChartPreview(e.target.files?.[0]||null);return}
   if(e.target.matches('#mentorArticleForm input[name="cover"]')){syncEditorFileLabel('article',e.target.files?.[0]||null);return}
   if(e.target.matches('#mentorArticleForm input[name="is_published"]')){syncArticleEditorUI();return}
 });
@@ -1148,7 +1302,7 @@ if(!window.__24K_MENTOR_MODAL_BACK__){
   });
 }
 document.addEventListener('click',e=>{const actionCancel=e.target.closest('[data-mentor-action-cancel]');if(actionCancel){e.preventDefault();settleMentorAction(null);return}const actionConfirm=e.target.closest('[data-mentor-action-confirm]');if(actionConfirm){e.preventDefault();const wrap=$('#mentorActionInputWrap'),input=$('#mentorActionInput');if(wrap&&!wrap.hidden){const value=String(input?.value||'').trim();if(!value)return toast('Enter a value.');settleMentorAction(value)}else settleMentorAction(true);return}const install=e.target.closest('#mentorInstallButton');if(install){e.preventDefault();(async()=>{if(mentorStandalone())return toast('Mentor App is already installed.','success');if(mentorInstallPrompt){mentorInstallPrompt.prompt();const choice=await mentorInstallPrompt.userChoice;if(choice?.outcome==='accepted')toast('Installing 24K Mentor App…','success');mentorInstallPrompt=null;updateMentorInstall();return}const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);toast(ios?'Use Share → Add to Home Screen to install the app.':'Use your browser menu → Install app / Add to Home screen.','info')})().catch(()=>{});return}const preset=e.target.closest('[data-note-preset]');if(preset){const f=$('#mentorSignalForm'),ta=f?.elements.notes;if(!ta)return;$$('[data-note-preset]').forEach(x=>x.classList.toggle('active',x===preset));if(preset.dataset.notePreset==='custom'){ta.value='';ta.focus()}else{ta.value=preset.dataset.notePreset}return}const copySignal=e.target.closest('[data-copy-signal]');if(copySignal){const s=(state.signals||[]).find(x=>String(x.id)===String(copySignal.dataset.copySignal));if(s){const text=[`${s.symbol} — ${signalTypeLabel(s)}`,`Entry: ${s.entry_from}${s.entry_to!=null?' - '+s.entry_to:''}`,`SL: ${s.stop_loss}`,`TP1: ${s.take_profit_1??'—'}`,`TP2: ${s.take_profit_2??'—'}`,`TP3: ${s.take_profit_3??'—'}`,`TP4: ${s.take_profit_4??'—'}`,s.notes?`Note: ${s.notes}`:''].filter(Boolean).join('\n');navigator.clipboard?.writeText(text).then(()=>toast('Signal copied.')).catch(()=>toast('Could not copy signal.'))}return}const noteSignal=e.target.closest('[data-note-signal]');if(noteSignal){const s=(state.signals||[]).find(x=>String(x.id)===String(noteSignal.dataset.noteSignal));toast(s?.notes||'No note added.');return}const toggleSignalRow=e.target.closest('[data-toggle-signal-row]');if(toggleSignalRow){const card=toggleSignalRow.closest('.mentor-signal-mobile-card');if(!card)return;const wasOpen=card.classList.contains('is-open');document.querySelectorAll('.mentor-signal-mobile-card.is-open').forEach(x=>{x.classList.remove('is-open');x.querySelector('[data-toggle-signal-row]')?.setAttribute('aria-expanded','false');x.querySelector('.mentor-signal-row-dropdown')?.setAttribute('aria-hidden','true')});if(!wasOpen){card.classList.add('is-open');toggleSignalRow.setAttribute('aria-expanded','true');card.querySelector('.mentor-signal-row-dropdown')?.setAttribute('aria-hidden','false')}return}const viewSignal=e.target.closest('[data-view-signal]');if(viewSignal){renderSignalDetail(viewSignal.dataset.viewSignal);return}const openFilters=e.target.closest('[data-open-signal-filters]');if(openFilters){const ids=[['mentorMobileSignalPair','mentorSignalPairFilter'],['mentorMobileSignalType','mentorSignalTypeFilter'],['mentorMobileSignalStatus','mentorSignalStatusFilter'],['mentorMobileSignalFrom','mentorSignalFrom'],['mentorMobileSignalTo','mentorSignalTo']];ids.forEach(([a,b])=>{const A=$('#'+a),B=$('#'+b);if(A&&B)A.value=B.value});openModal('signalFilter');return}const applyFilters=e.target.closest('[data-apply-signal-filters]');if(applyFilters){state.signalPeriod='custom';const ids=[['mentorSignalPairFilter','mentorMobileSignalPair'],['mentorSignalTypeFilter','mentorMobileSignalType'],['mentorSignalStatusFilter','mentorMobileSignalStatus'],['mentorSignalFrom','mentorMobileSignalFrom'],['mentorSignalTo','mentorMobileSignalTo']];ids.forEach(([a,b])=>{const A=$('#'+a),B=$('#'+b);if(A&&B)A.value=B.value});closeModals();renderSignals();syncSignalPeriodButtons();focusFilteredSignalResults();return}const resetFilters=e.target.closest('[data-reset-signal-filters]');if(resetFilters){for(const id of ['mentorSignalSearch','mentorSignalFrom','mentorSignalTo','mentorMobileSignalFrom','mentorMobileSignalTo']){const el=$('#'+id);if(el)el.value=''}for(const id of ['mentorSignalPairFilter','mentorSignalTypeFilter','mentorSignalStatusFilter','mentorMobileSignalPair','mentorMobileSignalType','mentorMobileSignalStatus']){const el=$('#'+id);if(el)el.value='all'}state.signalFilters={q:'',pair:'all',type:'all',status:'all',from:'',to:''};state.signalPeriod='all';renderSignals();syncSignalPeriodButtons();focusFilteredSignalResults();return}const quickDate=e.target.closest('[data-apply-quick-date]');if(quickDate){state.signalPeriod='custom';syncSignalPeriodButtons();toggleSignalCustomDate(false);renderSignals();focusFilteredSignalResults();return}const period=e.target.closest('[data-signal-period]');if(period){setSignalPeriod(period.dataset.signalPeriod);return}const cp=e.target.closest('[data-chart-period]');if(cp){setChartPeriod(cp.dataset.chartPeriod);return}const ccf=e.target.closest('[data-clear-chart-filters]');if(ccf){clearChartFilters();return}const sc=e.target.closest('[data-share-chart]');if(sc){shareChart(sc.dataset.shareChart).catch(x=>toast(x.message||'Could not share chart.'));return}const ap=e.target.closest('[data-article-period]');if(ap){setArticlePeriod(ap.dataset.articlePeriod);return}const caf=e.target.closest('[data-clear-article-filters]');if(caf){clearArticleFilters();return}const v=e.target.closest('[data-mentor-view]');if(v){e.preventDefault();closeModals();showView(v.dataset.mentorView);return}const o=e.target.closest('[data-open-mentor-modal]');if(o){resetMentorEditor(o.dataset.openMentorModal);openModal(o.dataset.openMentorModal);return}if(e.target.closest('[data-close-mentor-modal]'))return closeModals();const sa=e.target.closest('[data-signal-action]');if(sa)signalAction(sa.dataset.id,sa.dataset.signalAction).catch(x=>toast(x.message));const es=e.target.closest('[data-edit-signal]');if(es)editSignal(es.dataset.editSignal);const st=e.target.closest('[data-signal-tab]');if(st){state.signalTab=st.dataset.signalTab;$('[data-signal-tab]').forEach(x=>x.classList.toggle('active',x.dataset.signalTab===state.signalTab));renderSignals()}const ec=e.target.closest('[data-edit-chart]');if(ec)editChart(ec.dataset.editChart);const dc=e.target.closest('[data-delete-chart]');if(dc)del('charts',dc.dataset.deleteChart,'chart').catch(x=>toast(x.message));const ea=e.target.closest('[data-edit-article]');if(ea)editArticle(ea.dataset.editArticle);const da=e.target.closest('[data-delete-article]');if(da)del('articles',da.dataset.deleteArticle,'article').catch(x=>toast(x.message));const eb=e.target.closest('[data-edit-banner]');if(eb)editBanner(eb.dataset.editBanner);const db=e.target.closest('[data-delete-banner]');if(db)del('mentor_banners',db.dataset.deleteBanner,'banner').catch(x=>toast(x.message));const pv=e.target.closest('[data-article-preview-lang]');if(pv){renderMentorArticlePreview(pv.dataset.articlePreviewLang||'english');return}const va=e.target.closest('[data-view-article]');if(va){openMentorArticlePreview(va.dataset.viewArticle);return}});
-$('#mentorSignalForm')?.addEventListener('submit',saveSignal);$('#mentorSignalForm')?.addEventListener('input',renderMentorPipPreview);$('#mentorSignalForm')?.addEventListener('change',renderMentorPipPreview);$('#mentorChartForm')?.addEventListener('submit',saveChart);$('#mentorArticleForm')?.addEventListener('submit',saveArticle);$('#mentorBannerForm')?.addEventListener('submit',saveBanner);$('#mentorLogout')?.addEventListener('click',logout);$('#mentorProfileLogout')?.addEventListener('click',logout);function mentorRefresh(btn){if(btn?.classList.contains('is-loading'))return;btn?.classList.add('is-loading');document.body.classList.add('mentor-refreshing');auditMentor('mentor_refresh','success',{view:(location.hash||'#performance').slice(1)});load().then(()=>toast('Updated')).catch(e=>toast(e.message)).finally(()=>{btn?.classList.remove('is-loading');document.body.classList.remove('mentor-refreshing')})}
+$('#mentorSignalForm')?.addEventListener('submit',saveSignal);$('#mentorSignalForm')?.addEventListener('input',renderMentorPipPreview);$('#mentorSignalForm')?.addEventListener('change',renderMentorPipPreview);$('#mentorChartForm')?.addEventListener('submit',saveChart);$('#mentorChartDesktopForm')?.addEventListener('submit',saveChart);bindMentorChartInstrumentPicker();$('#mentorArticleForm')?.addEventListener('submit',saveArticle);$('#mentorBannerForm')?.addEventListener('submit',saveBanner);$('#mentorLogout')?.addEventListener('click',logout);$('#mentorProfileLogout')?.addEventListener('click',logout);function mentorRefresh(btn){if(btn?.classList.contains('is-loading'))return;btn?.classList.add('is-loading');document.body.classList.add('mentor-refreshing');auditMentor('mentor_refresh','success',{view:(location.hash||'#performance').slice(1)});load().then(()=>toast('Updated')).catch(e=>toast(e.message)).finally(()=>{btn?.classList.remove('is-loading');document.body.classList.remove('mentor-refreshing')})}
 $('#mentorMenuToggle')?.addEventListener('click',openMentorMenu);$('#mentorMenuClose')?.addEventListener('click',closeMentorMenu);$('#mentorSidebarOverlay')?.addEventListener('click',closeMentorMenu);
 $('#mentorRefresh')?.addEventListener('click',e=>mentorRefresh(e.currentTarget));$('#mentorTopRefresh')?.addEventListener('click',e=>mentorRefresh(e.currentTarget));$('#mentorMonthSelect')?.addEventListener('change',e=>setPerformanceMonth(e.currentTarget.value));$('#mentorMonthPrev')?.addEventListener('click',()=>shiftPerformanceMonth(-1));$('#mentorMonthNext')?.addEventListener('click',()=>shiftPerformanceMonth(1));$('#mentorThisMonth')?.addEventListener('click',()=>setPerformanceMonth(performanceMonthKey(new Date())));$('#mentorTheme')?.addEventListener('click',()=>applyMentorTheme(document.documentElement.dataset.theme==='light'?'dark':'light'));['#mentorSignalSearch','#mentorSignalPairFilter','#mentorSignalTypeFilter','#mentorSignalStatusFilter','#mentorSignalFrom','#mentorSignalTo'].forEach(s=>$(s)?.addEventListener('input',()=>{if(s==='#mentorSignalFrom'||s==='#mentorSignalTo'){state.signalPeriod='custom'}renderSignals();syncSignalPeriodButtons()}));['#mentorSignalPairFilter','#mentorSignalTypeFilter','#mentorSignalStatusFilter'].forEach(s=>$(s)?.addEventListener('change',()=>{renderSignals();syncSignalPeriodButtons();focusFilteredSignalResults()}));['#mentorSignalFrom','#mentorSignalTo'].forEach(s=>$(s)?.addEventListener('change',()=>{state.signalPeriod='custom';renderSignals();syncSignalPeriodButtons()}));$('#mentorChartSearch')?.addEventListener('input',renderCharts);['#mentorChartPair','#mentorChartSort'].forEach(s=>$(s)?.addEventListener('change',()=>{renderCharts();syncChartControls()}));$('#mentorArticleSearch')?.addEventListener('input',renderArticles);['#mentorArticleCategory','#mentorArticleStatus','#mentorArticleSort'].forEach(s=>$(s)?.addEventListener('change',()=>{renderArticles();syncArticleControls()}));$$('.mentor-modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeModals()}));
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMentorMenu()});
