@@ -23,6 +23,22 @@ const monthNow=()=>new Date().toISOString().slice(0,7);
 const today=()=>new Date().toISOString().slice(0,10);
 let payload=null,rangeData=null,chatFilter='all',chatSearch='',activeThread=null,chatList=[],installPrompt=null,homeRank=null,homeChatAttention=0,lastSyncedAt=null;
 function token(){return localStorage.getItem(TOKEN_KEY)||sessionStorage.getItem('24k_team_session')||''}
+async function auditTeam(action,status='success',details={},entityType=null,entityId=null){
+  try{
+    await fetch(`${cfg.SUPABASE_URL}/functions/v1/audit-event`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':cfg.SUPABASE_ANON_KEY},
+      body:JSON.stringify({
+        action,status,
+        team_token:token()||null,
+        actor_name:details?.username||payload?.account?.display_name||payload?.account?.username||null,
+        entity_type:entityType,
+        entity_id:entityId,
+        details:{scope:'team',...details}
+      })
+    });
+  }catch(_){}
+}
 async function rpc(name,args={}){const {data,error}=await supa.rpc(name,args);if(error)throw error;return data}
 function initials(v){return String(v||'TM').split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase()||'TM'}
 function monthLabel(v){const d=new Date((v||monthNow())+'-01T00:00:00');return d.toLocaleDateString('en-US',{month:'long',year:'numeric'})}
@@ -56,8 +72,8 @@ function tierVip(v){v=Number(v||0);if(v<=20)return{rate:3,next:20,nextRate:4,pre
 function tierLots(v){v=Number(v||0);if(v<200)return{std:.3,ex:.3,next:200,nextStd:.5,nextEx:.5,prev:0};if(v<400)return{std:.5,ex:.5,next:400,nextStd:.7,nextEx:.7,prev:200};if(v<600)return{std:.7,ex:.7,next:600,nextStd:1,nextEx:1,prev:400};return{std:1,ex:1,next:null,nextStd:null,nextEx:null,prev:600}}
 function progressPct(v,next,prev=0){if(!next)return 100;return Math.max(0,Math.min(100,((Number(v||0)-prev)/(next-prev))*100))}
 function waLink(v,text='Hello'){const d=String(v||'').replace(/\D/g,'');return d?`https://wa.me/${d}?text=${encodeURIComponent(text)}`:'#'}
-async function login(e){e.preventDefault();const f=e.currentTarget,b=f.querySelector('button[type=submit]');b.disabled=true;$('#teamLoginError').textContent='';try{const v=Object.fromEntries(new FormData(f));const d=await rpc('team_login',{p_username:String(v.username||'').trim(),p_password:String(v.password||'')});if(!d?.token)throw new Error('Invalid username or password.');localStorage.setItem(TOKEN_KEY,d.token);await load()}catch(err){$('#teamLoginError').textContent=err.message||'Could not sign in.'}finally{b.disabled=false}}
-async function logout(){try{if(token())await rpc('team_logout',{p_token:token()})}catch(_){}localStorage.removeItem(TOKEN_KEY);sessionStorage.removeItem('24k_team_session');payload=null;loginView()}
+async function login(e){e.preventDefault();const f=e.currentTarget,b=f.querySelector('button[type=submit]');b.disabled=true;$('#teamLoginError').textContent='';const v=Object.fromEntries(new FormData(f)),username=String(v.username||'').trim();try{const d=await rpc('team_login',{p_username:username,p_password:String(v.password||'')});if(!d?.token)throw new Error('Invalid username or password.');localStorage.setItem(TOKEN_KEY,d.token);await auditTeam('team_login','success',{username});await load()}catch(err){await auditTeam('login_failed','failed',{username,scope:'team'});$('#teamLoginError').textContent=err.message||'Could not sign in.'}finally{b.disabled=false}}
+async function logout(){try{if(token()){await auditTeam('team_logout','success',{view:location.hash.replace('#','')||'overview'});await rpc('team_logout',{p_token:token()})}}catch(_){}localStorage.removeItem(TOKEN_KEY);sessionStorage.removeItem('24k_team_session');payload=null;loginView()}
 async function commandCenter(month){try{return await rpc('team_get_command_center_v12_18',{p_token:token(),p_month:month+'-01'})}catch(e){if(/function|schema cache|does not exist/i.test(e.message||''))return await rpc('team_get_command_center',{p_token:token(),p_month:month+'-01'});throw e}}
 async function load(){if(!token())return loginView();const alreadyOpen=document.body.classList.contains('team-authenticated');if(alreadyOpen)setHomeLoading(true);try{const month=$('#teamMonth')?.value||monthNow();const [center,rank]=await Promise.all([commandCenter(month),rpc('team_home_rank_v13_55',{p_token:token(),p_month:month+'-01'}).catch(()=>null)]);payload=center;homeRank=rank;lastSyncedAt=new Date();appView();renderAll();updateSyncStatus();await loadRange('today')}catch(err){console.error(err);if(/session|expired|invalid/i.test(err.message||'')){localStorage.removeItem(TOKEN_KEY);loginView('Your Team session expired. Please sign in again.')}else loginView('Could not load Team Panel: '+(err.message||'Unknown error'))}finally{setHomeLoading(false)}}
 function renderAll(){const a=payload.account||{},p=payload.performance||{};const name=a.display_name||a.username||'Team Member';$('#teamMemberName').textContent=name;$('#heroName').textContent=name;$('#teamAvatar').textContent=initials(name);if($('#teamHomeAvatar'))$('#teamHomeAvatar').textContent=initials(name);if($('#teamMoreAvatar'))$('#teamMoreAvatar').textContent=initials(name);if($('#teamMoreName'))$('#teamMoreName').textContent=name;if($('#teamMoreUser'))$('#teamMoreUser').textContent='@'+(a.username||'team');if($('#teamGreeting')){const hr=new Date().getHours();$('#teamGreeting').textContent=hr<12?'Good morning':hr<17?'Good afternoon':'Good evening'}$('#teamUsername').textContent='@'+(a.username||'team');$('#teamMonthLabel').textContent=monthLabel($('#teamMonth').value);renderOverview();renderClients();renderDaily();renderEarnings(p);renderHistory(payload.history||[]);renderLinks(payload.links||[]);refreshHomeChatState().catch(()=>{})}
@@ -437,7 +453,7 @@ function renderClients(){
   }).join('')
 }
 
-async function saveClient(id,withNote=false){const c=(payload.clients||[]).find(x=>String(x.id)===String(id));if(!c)return;const status=$(`[data-client-status="${id}"]`)?.value||clientStatus(c),follow=$(`[data-client-follow="${id}"]`)?.value||null;let note=c.note||null;if(withNote){const v=prompt('Client note:',note||'');if(v===null)return;note=v.trim()||null}try{await rpc('team_update_client_status',{p_token:token(),p_student_id:id,p_status:status,p_next_follow_up:follow?new Date(follow).toISOString():null,p_note:note});toast('Client updated.');await load()}catch(e){toast(e.message||'Could not update client.','error')}}
+async function saveClient(id,withNote=false){const c=(payload.clients||[]).find(x=>String(x.id)===String(id));if(!c)return;const beforeStatus=clientStatus(c),beforeFollow=c.next_follow_up||null,beforeNote=String(c.note||''),status=$(`[data-client-status="${id}"]`)?.value||beforeStatus,follow=$(`[data-client-follow="${id}"]`)?.value||null;let note=c.note||null;if(withNote){const v=prompt('Client note:',note||'');if(v===null)return;note=v.trim()||null}try{await rpc('team_update_client_status',{p_token:token(),p_student_id:id,p_status:status,p_next_follow_up:follow?new Date(follow).toISOString():null,p_note:note});await auditTeam('team_update_client','success',{client_name:c.full_name||'Student',client_id:c.client_id||null,status_before:beforeStatus,status_after:status,follow_up_before:beforeFollow,follow_up_after:follow?new Date(follow).toISOString():null,note_changed:String(note||'')!==beforeNote},'student',id);toast('Client updated.');await load()}catch(e){await auditTeam('team_update_client','failed',{client_id:c.client_id||null,error:String(e.message||'Could not update client.')},'student',id);toast(e.message||'Could not update client.','error')}}
 async function searchOwnership(){
   const q=String($('#ownershipSearch')?.value||'').trim(),box=$('#ownershipResult'),btn=$('#ownershipSearchBtn');
   if(q.length<2){toast('Enter at least 2 characters.','error');return}
@@ -445,6 +461,7 @@ async function searchOwnership(){
   box.innerHTML='<div class="team-tool-loading"><i class="fa-solid fa-spinner fa-spin"></i><span>Searching client ownership…</span></div>';
   try{
     const d=await rpc('team_search_client_v12_18',{p_token:token(),p_query:q});
+    await auditTeam('team_search_client','success',{query:q,result_found:!!d?.found,client_id:d?.client?.client_id||null,ownership:d?.ownership||null},'student',d?.client?.id||null);
     if(!d?.found){
       box.innerHTML='<div class="team-tool-empty"><span><i class="fa-solid fa-magnifying-glass"></i></span><div><b>No matching client found</b><small>Try another Name, WhatsApp, Email or Client ID.</small></div></div>';
       return
@@ -464,11 +481,12 @@ async function searchOwnership(){
       ${own==='other'&&m.whatsapp?`<a class="premium-manager-wa" target="_blank" rel="noopener" href="${waLink(m.whatsapp,`Hello ${m.name||''}, I searched client ${c.name||''} ${c.client_id||''}.`)}"><i class="fa-brands fa-whatsapp"></i> Message Manager</a>`:''}
     </article>`
   }catch(e){
+    await auditTeam('team_search_client','failed',{query:q,error:String(e.message||'Search failed')});
     box.innerHTML=`<div class="team-tool-empty error"><span><i class="fa-solid fa-triangle-exclamation"></i></span><div><b>Search failed</b><small>${esc(e.message||'Could not search client.')}</small></div></div>`
   }finally{btn.disabled=false}
 }
 
-async function saveDaily(e){e.preventDefault();$('#dailyStatus').textContent='Saving…';const args={p_token:token(),p_report_date:$('#reportDate').value,p_leads_contacted:Number($('#leadsContacted').value||0),p_messages_sent:Number($('#messagesSent').value||0),p_calls_made:Number($('#callsMade').value||0),p_follow_ups:Number($('#followUps').value||0),p_new_broker_accounts:Number($('#newBrokerAccounts').value||0),p_ib_partner_shifts:Number($('#ibPartnerShifts').value||0),p_xm_weekly_lots:Number($('#xmWeeklyLots').value||0),p_dprime_weekly_lots:Number($('#dprimeWeeklyLots').value||0),p_exness_weekly_lots:Number($('#exnessWeeklyLots').value||0),p_notes:$('#reportNotes').value.trim()||null};try{try{await rpc('team_submit_daily_report_v12_18',args)}catch(x){if(!/function|schema cache|does not exist/i.test(x.message||''))throw x;await rpc('team_submit_daily_report',{p_token:args.p_token,p_report_date:args.p_report_date,p_new_broker_accounts:args.p_new_broker_accounts,p_ib_partner_shifts:args.p_ib_partner_shifts,p_xm_weekly_lots:args.p_xm_weekly_lots,p_dprime_weekly_lots:args.p_dprime_weekly_lots,p_exness_weekly_lots:args.p_exness_weekly_lots,p_notes:args.p_notes})}toast('Daily report submitted.');await load()}catch(x){$('#dailyStatus').textContent=x.message||'Could not save report.';toast(x.message||'Could not save report.','error')}}
+async function saveDaily(e){e.preventDefault();$('#dailyStatus').textContent='Saving…';const args={p_token:token(),p_report_date:$('#reportDate').value,p_leads_contacted:Number($('#leadsContacted').value||0),p_messages_sent:Number($('#messagesSent').value||0),p_calls_made:Number($('#callsMade').value||0),p_follow_ups:Number($('#followUps').value||0),p_new_broker_accounts:Number($('#newBrokerAccounts').value||0),p_ib_partner_shifts:Number($('#ibPartnerShifts').value||0),p_xm_weekly_lots:Number($('#xmWeeklyLots').value||0),p_dprime_weekly_lots:Number($('#dprimeWeeklyLots').value||0),p_exness_weekly_lots:Number($('#exnessWeeklyLots').value||0),p_notes:$('#reportNotes').value.trim()||null};try{try{await rpc('team_submit_daily_report_v12_18',args)}catch(x){if(!/function|schema cache|does not exist/i.test(x.message||''))throw x;await rpc('team_submit_daily_report',{p_token:args.p_token,p_report_date:args.p_report_date,p_new_broker_accounts:args.p_new_broker_accounts,p_ib_partner_shifts:args.p_ib_partner_shifts,p_xm_weekly_lots:args.p_xm_weekly_lots,p_dprime_weekly_lots:args.p_dprime_weekly_lots,p_exness_weekly_lots:args.p_exness_weekly_lots,p_notes:args.p_notes})}await auditTeam('team_submit_daily_report','success',{report_date:args.p_report_date,leads_contacted:args.p_leads_contacted,messages_sent:args.p_messages_sent,calls_made:args.p_calls_made,follow_ups:args.p_follow_ups,new_broker_accounts:args.p_new_broker_accounts,ib_partner_shifts:args.p_ib_partner_shifts,xm_lots:args.p_xm_weekly_lots,dprime_lots:args.p_dprime_weekly_lots,exness_lots:args.p_exness_weekly_lots,notes_added:!!args.p_notes},'team_daily_report',args.p_report_date);toast('Daily report submitted.');await load()}catch(x){await auditTeam('team_submit_daily_report','failed',{report_date:args.p_report_date,error:String(x.message||'Could not save report.')},'team_daily_report',args.p_report_date);$('#dailyStatus').textContent=x.message||'Could not save report.';toast(x.message||'Could not save report.','error')}}
 function renderDaily(){
   const reports=payload?.daily_reports||[], td=today(), r=reports.find(x=>x.date===td)||{};
   const dailySummary=$('#teamDailySummary');
@@ -780,6 +798,7 @@ async function chatAction(action){
   if(!activeThread)return;
   try{
     await rpc('team_live_desk_action_v12_18',{p_token:token(),p_thread_id:activeThread,p_action:action,p_stage:null,p_priority:null,p_tags:null});
+    await auditTeam('team_chat_action','success',{action,thread_id:activeThread},'chat_thread',activeThread);
     toast('Conversation updated.');
     await loadChat()
   }catch(e){toast(e.message||'Could not update conversation.','error')}
@@ -787,7 +806,9 @@ async function chatAction(action){
 async function saveChatMeta(){
   if(!activeThread)return;
   try{
-    await rpc('team_live_desk_action_v12_18',{p_token:token(),p_thread_id:activeThread,p_action:'meta',p_stage:$('#chatStage')?.value||'new',p_priority:$('#chatPriority')?.value||'normal',p_tags:$('#chatTags')?.value||''});
+    const stage=$('#chatStage')?.value||'new',priority=$('#chatPriority')?.value||'normal',tags=$('#chatTags')?.value||'';
+    await rpc('team_live_desk_action_v12_18',{p_token:token(),p_thread_id:activeThread,p_action:'meta',p_stage:stage,p_priority:priority,p_tags:tags});
+    await auditTeam('team_chat_meta','success',{thread_id:activeThread,stage,priority,tags},'chat_thread',activeThread);
     toast('Chat stage saved.');
     await openChat(activeThread,false)
   }catch(e){toast(e.message||'Could not save chat stage.','error')}
@@ -799,6 +820,7 @@ async function sendChat(e){
   const btn=e.currentTarget.querySelector('button[type=submit]');if(btn)btn.disabled=true;
   try{
     await rpc('team_live_desk_send_v12_18',{p_token:token(),p_thread_id:activeThread,p_message:msg});
+    await auditTeam('team_chat_reply','success',{thread_id:activeThread,message_length:msg.length},'chat_thread',activeThread);
     input.value='';
     await openChat(activeThread,false);
     await loadChat()
@@ -818,7 +840,7 @@ $('#teamMoreRefresh')?.addEventListener('click',()=>$('#teamRefresh')?.click());
 $('#teamMoreTheme')?.addEventListener('click',()=>$('#teamTheme')?.click());
 $('#teamMoreLogout')?.addEventListener('click',()=>$('#teamLogout')?.click());
 window.addEventListener('online',updateSyncStatus);window.addEventListener('offline',updateSyncStatus);
-setInterval(updateSyncStatus,30000);$('#teamLoginForm')?.addEventListener('submit',login);$('#teamLogout').onclick=logout;$('#teamTheme').onclick=()=>applyTheme(currentTheme()==='dark'?'light':'dark');$('#teamThemeTop').onclick=()=>$('#teamTheme').click();$('#teamRefresh').onclick=load;$('#teamMonth').onchange=load;$$('[data-view]').forEach(b=>b.onclick=()=>setView(b.dataset.view));document.addEventListener('click',e=>{const jump=e.target.closest('[data-view-jump]');if(jump)setView(jump.dataset.viewJump);const hc=e.target.closest('[data-home-client]');if(hc){const c=(payload?.clients||[]).find(x=>String(x.id)===String(hc.dataset.homeClient));if(c){setView('clients');if($('#clientSearch'))$('#clientSearch').value=c.full_name||c.client_id||'';renderClients()}return}const hs=e.target.closest('[data-home-search-all]');if(hs){$('#teamHomeSearchAll')?.click();return}const cre=e.target.closest('[data-client-reset-empty]');if(cre){$('#clientResetFilters')?.click();return}const col=e.target.closest('[data-home-collapse]');if(col){const target=$('#'+col.dataset.homeCollapse);if(target){const collapsed=target.classList.toggle('home-collapsed');col.classList.toggle('open',!collapsed);col.setAttribute('aria-expanded',String(!collapsed))}return}const s=e.target.closest('[data-save-client]');if(s)saveClient(s.dataset.saveClient);const n=e.target.closest('[data-note-client]');if(n)saveClient(n.dataset.noteClient,true);const th=e.target.closest('[data-thread]');if(th)openChat(th.dataset.thread).catch(x=>toast(x.message,'error'));const ac=e.target.closest('[data-chat-action]');if(ac)chatAction(ac.dataset.chatAction);
+setInterval(updateSyncStatus,30000);$('#teamLoginForm')?.addEventListener('submit',login);$('#teamLogout').onclick=logout;$('#teamTheme').onclick=()=>applyTheme(currentTheme()==='dark'?'light':'dark');$('#teamThemeTop').onclick=()=>$('#teamTheme').click();$('#teamRefresh').onclick=async()=>{await auditTeam('team_refresh','success',{view:location.hash.replace('#','')||'overview'});await load()};$('#teamMonth').onchange=load;$$('[data-view]').forEach(b=>b.onclick=()=>setView(b.dataset.view));document.addEventListener('click',e=>{const jump=e.target.closest('[data-view-jump]');if(jump)setView(jump.dataset.viewJump);const hc=e.target.closest('[data-home-client]');if(hc){const c=(payload?.clients||[]).find(x=>String(x.id)===String(hc.dataset.homeClient));if(c){setView('clients');if($('#clientSearch'))$('#clientSearch').value=c.full_name||c.client_id||'';renderClients()}return}const hs=e.target.closest('[data-home-search-all]');if(hs){$('#teamHomeSearchAll')?.click();return}const cre=e.target.closest('[data-client-reset-empty]');if(cre){$('#clientResetFilters')?.click();return}const col=e.target.closest('[data-home-collapse]');if(col){const target=$('#'+col.dataset.homeCollapse);if(target){const collapsed=target.classList.toggle('home-collapsed');col.classList.toggle('open',!collapsed);col.setAttribute('aria-expanded',String(!collapsed))}return}const s=e.target.closest('[data-save-client]');if(s)saveClient(s.dataset.saveClient);const n=e.target.closest('[data-note-client]');if(n)saveClient(n.dataset.noteClient,true);const th=e.target.closest('[data-thread]');if(th)openChat(th.dataset.thread).catch(x=>toast(x.message,'error'));const ac=e.target.closest('[data-chat-action]');if(ac)chatAction(ac.dataset.chatAction);
 const cb=e.target.closest('[data-chat-mobile-back]');if(cb){setChatShellState('list');return}
 const pt=e.target.closest('[data-chat-profile-toggle]');if(pt){setChatShellState('profile');return}
 const pc=e.target.closest('[data-chat-profile-close]');if(pc){setChatShellState(activeThread?'chat':'list');return}const qr=e.target.closest('[data-quick-reply]');if(qr&&$('#chatReply'))$('#chatReply').value=qr.dataset.quickReply});$('#clientSearch').oninput=renderClients;
