@@ -70,7 +70,7 @@
   function scheduleWhatsAppRedirect(target){
     if(!target?.href)return;
     const note=document.getElementById('whatsappRedirectNote');
-    let seconds=3;
+    let seconds=2;
     if(note)note.textContent=target.direct?`Opening your manager on WhatsApp in ${seconds}s…`:`Opening WhatsApp in ${seconds}s…`;
     const timer=setInterval(()=>{
       seconds-=1;
@@ -199,7 +199,11 @@
           ? `You are enrolled in ${payload.course_title||'the course'}. Course access will unlock after payment approval.`
           : `You are enrolled in ${payload.course_title||'the course'} and your access is active.`;
         if(emailCopy)emailCopy.textContent=payload.account_created
-          ? (payload.credentials_sent?'Your login email and password have been sent to your email address.':'Your account was created. Please contact support if the password email does not arrive.')
+          ? (payload.credentials_sent
+              ? 'Your login email and password have been sent to your email address.'
+              : payload.credentials_queued
+                ? 'Your login email and password are being sent now. Please check your inbox shortly.'
+                : 'Your account was created. Please contact support if the password email does not arrive.')
           : 'Your existing 24K MR ZERO account was used. Sign in with your current password.';
 
         const manager=payload.manager||{};
@@ -232,7 +236,7 @@
         flow:'tracked_course_enrollment'
       },context.ref).catch(()=>{});
 
-      toast(payload.account_created?'Registration complete. Your password has been emailed.':'Enrollment complete. Use your existing account password.','success');
+      toast(payload.account_created?'Registration complete. Password email is on the way.':'Enrollment complete. Use your existing account password.','success');
       // Keep the tracked enrollment URL until the WhatsApp handoff completes.
     }catch(error){
       console.error(error);
