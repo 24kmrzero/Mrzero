@@ -18,7 +18,7 @@
   #p-link-manager-ref .link-manager-create{font-size:9.3px!important}
 
   #p-link-manager-ref .link-manager-kpi small{
-    font-size:8.2px!important;
+    font-size:8.8px!important;
     letter-spacing:.045em!important;
   }
   #p-link-manager-ref .link-manager-kpi b{font-size:21px!important}
@@ -36,23 +36,23 @@
     letter-spacing:.055em!important;
   }
   #p-link-manager-ref .link-manager-table tbody td{
-    font-size:9.7px!important;
-    line-height:1.4!important;
+    font-size:10.3px!important;
+    line-height:1.45!important;
   }
   #p-link-manager-ref .link-manager-name b{
-    font-size:10.5px!important;
+    font-size:11px!important;
   }
   #p-link-manager-ref .v1218-link-url{
     max-width:350px!important;
-    font-size:8.2px!important;
+    font-size:8.9px!important;
     line-height:1.45!important;
   }
   #p-link-manager-ref .link-manager-source,
   #p-link-manager-ref .link-manager-destination{
-    font-size:9.5px!important;
+    font-size:10px!important;
   }
   #p-link-manager-ref td small{
-    font-size:8.1px!important;
+    font-size:8.8px!important;
   }
   #p-link-manager-ref .link-manager-metric,
   #p-link-manager-ref .link-manager-conversion{
@@ -100,26 +100,26 @@
   #p-team-access-ref>.panel-heading .app-btn{font-size:9px!important}
 
   #p-team-access-ref #v18TeamKpis .v1218-kpi small{
-    font-size:8px!important;
+    font-size:8.7px!important;
     letter-spacing:.05em!important;
   }
   #p-team-access-ref #v18TeamKpis .v1218-kpi b{font-size:22px!important}
 
   #p-team-access-ref>.table-scroll>.admin-table tbody td{
-    font-size:9.6px!important;
-    line-height:1.4!important;
+    font-size:10.3px!important;
+    line-height:1.45!important;
   }
   #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(1):after{
-    font-size:7px!important;
+    font-size:7.8px!important;
   }
   #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(1) b{
     font-size:15px!important;
   }
   #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(n+2):nth-child(-n+7):before{
-    font-size:7px!important;
+    font-size:7.8px!important;
     letter-spacing:.055em!important;
   }
-  #p-team-access-ref .v18-team-toggle b{font-size:8px!important}
+  #p-team-access-ref .v18-team-toggle b{font-size:8.6px!important}
   #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(8) .app-btn{
     font-size:8px!important;
   }
@@ -156,13 +156,13 @@
   }
   #p-v1216-center .v1216-mentor-email{
     min-height:39px!important;
-    font-size:9.3px!important;
+    font-size:10.2px!important;
   }
   #p-v1216-center .v1216-mentor-access>small{
-    font-size:7.3px!important;
+    font-size:8px!important;
   }
   #p-v1216-center .v1216-mentor-access span{
-    font-size:7.9px!important;
+    font-size:8.5px!important;
   }
   #p-v1216-center .v1216-mentor-access em{
     font-size:8.2px!important;
@@ -173,7 +173,7 @@
 
   /* ================= STUDENT MANAGEMENT ================= */
   #p-students>.panel-heading p{font-size:11.5px!important}
-  #p-students .student-summary-card small{font-size:9px!important}
+  #p-students .student-summary-card small{font-size:9.5px!important}
   #p-students .student-date-btn{font-size:9.5px!important}
   #p-students .student-main-filters :is(input,select){font-size:10.2px!important}
   #p-students .bulk-bar>div small{font-size:9.4px!important}
@@ -191,23 +191,23 @@
     letter-spacing:.05em!important;
   }
   #p-students .student-management-table tbody tr.student-record-main td{
-    font-size:9.5px!important;
-    line-height:1.4!important;
+    font-size:10.2px!important;
+    line-height:1.45!important;
   }
   #p-students .student-management-table .text-link b{
-    font-size:10.4px!important;
+    font-size:11px!important;
   }
   #p-students .student-management-table td small{
-    font-size:8.3px!important;
+    font-size:9.2px!important;
     line-height:1.45!important;
   }
   #p-students .student-origin,
   #p-students .student-team-empty{
-    font-size:7.8px!important;
+    font-size:8.5px!important;
   }
   #p-students .student-origin-link,
   #p-students .student-team-name{
-    font-size:8.8px!important;
+    font-size:9.4px!important;
   }
   #p-students .student-management-table tbody td:nth-child(8)>b{
     font-size:9.3px!important;
