@@ -774,3 +774,71 @@
     overflow:hidden!important;
   }
 }
+
+
+/* v14.11 — one announcement per row */
+@media (min-width:901px){
+  #p-announcements .admin-announcement-grid{
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:10px!important;
+  }
+
+  #p-announcements .admin-announcement-card{
+    width:100%!important;
+    min-height:0!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) auto!important;
+    grid-template-areas:
+      "head actions"
+      "message actions"
+      "delivery actions"!important;
+    column-gap:18px!important;
+    row-gap:7px!important;
+    align-items:start!important;
+    padding:13px 14px!important;
+  }
+
+  #p-announcements .admin-announcement-card-head{
+    grid-area:head!important;
+    min-width:0!important;
+  }
+
+  #p-announcements .admin-announcement-card>p{
+    grid-area:message!important;
+    max-height:40px!important;
+    min-height:0!important;
+    margin:0!important;
+    padding-left:48px!important;
+    -webkit-line-clamp:2!important;
+  }
+
+  #p-announcements .admin-announcement-card-foot{
+    grid-area:delivery!important;
+    min-height:28px!important;
+    margin:0!important;
+    padding:7px 0 0 48px!important;
+    border-top:1px solid #e9e4d8!important;
+    justify-content:flex-start!important;
+  }
+
+  #p-announcements .admin-announcement-actions{
+    grid-area:actions!important;
+    align-self:center!important;
+    margin:0!important;
+    padding-left:6px!important;
+  }
+
+  #p-announcements .admin-announcement-actions .app-btn{
+    min-width:78px!important;
+  }
+
+  html[data-theme="dark"] #p-announcements .admin-announcement-card-foot{
+    border-color:#252b33!important;
+  }
+}
+
+@media (max-width:900px){
+  #p-announcements .admin-announcement-grid{
+    grid-template-columns:1fr!important;
+  }
+}
