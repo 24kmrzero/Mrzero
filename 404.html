@@ -10,8 +10,6 @@
     body{display:grid;place-items:center}
     .loader{display:grid;gap:14px;place-items:center;font-size:13px;font-weight:800}
     .loader:before{content:"";width:30px;height:30px;border:3px solid rgba(217,182,77,.22);border-top-color:#d9b64d;border-radius:50%;animation:r .7s linear infinite}
-    .error{max-width:360px;text-align:center;color:#eee;line-height:1.55}
-    .error b{display:block;color:#d9b64d;margin-bottom:6px}
     @keyframes r{to{transform:rotate(360deg)}}
   </style>
 </head>
@@ -19,18 +17,16 @@
   <div class="loader" id="status">Opening secure link...</div>
   <script>
   (function(){
-    const status=document.getElementById('status');
-    const fail=(msg)=>{status.className='error';status.innerHTML='<b>Link unavailable</b>'+msg};
-    let ref='';
-    try{
-      const path=location.pathname.replace(/\/+$/,'');const m=path.match(/^\/r\/([^/]+)$/i);ref=m?decodeURIComponent(m[1]||'').trim().toLowerCase():'';
-    }catch(_){}
-    if(!ref){fail('This link is invalid.');return}
-    const controller=new AbortController();
-    const timer=setTimeout(()=>controller.abort(),8000);
-    fetch('https://jsmthmmkafgvzzcjjihp.supabase.co/functions/v1/resolve-short-link?ref='+encodeURIComponent(ref),{method:'GET',cache:'no-store',signal:controller.signal})
-      .then(async res=>{clearTimeout(timer);const data=await res.json().catch(()=>({}));if(!res.ok||!data?.target)throw new Error(data?.error||'Link not found');location.replace(data.target)})
-      .catch(err=>{clearTimeout(timer);console.error(err);fail('Please check the link or try again.')});
+    const path=location.pathname.replace(/\/+$/,'');
+    if(path==='/index'||path==='/index.html'){location.replace('/'+location.search+location.hash);return}
+    if(path==='/student'){location.replace('/student/'+location.search+location.hash);return}
+    if(path==='/admin'){location.replace('/admin/'+location.search+location.hash);return}
+    const m=path.match(/^\/r\/([^/]+)$/i);
+    if(m){
+      const ref=decodeURIComponent(m[1]||'').trim().toLowerCase();
+      if(ref){location.replace('https://jsmthmmkafgvzzcjjihp.supabase.co/functions/v1/resolve-short-link?go=1&ref='+encodeURIComponent(ref));return}
+    }
+    document.body.innerHTML='<div style="font-family:Arial,sans-serif;padding:40px;text-align:center;color:#222;background:#fff;min-height:100vh;box-sizing:border-box"><h2>Page not found</h2><a href="/">Go Home</a></div>';
   })();
   </script>
 </body>
