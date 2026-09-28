@@ -923,3 +923,147 @@
     gap:10px!important;
   }
 }
+
+
+/* v14.17 — premium course filter buttons */
+@media (min-width:901px){
+  #p-premium-access .premium-course-filter-shell{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:14px!important;
+    margin:0 0 9px!important;
+    padding:9px 10px!important;
+    border:1px solid #e1e5e9!important;
+    border-radius:13px!important;
+    background:#fff!important;
+    box-shadow:0 6px 16px rgba(18,24,32,.025)!important;
+  }
+  #p-premium-access .premium-course-filter-copy{
+    min-width:150px!important;
+  }
+  #p-premium-access .premium-course-filter-copy b{
+    display:block!important;
+    color:#20262e!important;
+    font-size:10.5px!important;
+    font-weight:950!important;
+  }
+  #p-premium-access .premium-course-filter-copy small{
+    display:block!important;
+    margin-top:3px!important;
+    color:#7b8591!important;
+    font-size:7.6px!important;
+    font-weight:650!important;
+  }
+  #p-premium-access .premium-course-filters{
+    flex:1!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-end!important;
+    gap:7px!important;
+    flex-wrap:wrap!important;
+  }
+  #p-premium-access .premium-course-filters button{
+    min-height:36px!important;
+    height:36px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:8px!important;
+    padding:0 10px!important;
+    border:1px solid #dde2e6!important;
+    border-radius:9px!important;
+    background:#fafbfc!important;
+    color:#596470!important;
+    font-size:8px!important;
+    font-weight:950!important;
+    cursor:pointer!important;
+    transition:.16s ease!important;
+  }
+  #p-premium-access .premium-course-filters button:hover{
+    border-color:#d7bd69!important;
+    background:#fff9e8!important;
+    color:#7d5c00!important;
+  }
+  #p-premium-access .premium-course-filters button.on{
+    border-color:#d5a20a!important;
+    background:linear-gradient(180deg,#f5be20,#dba205)!important;
+    color:#211800!important;
+    box-shadow:0 7px 16px rgba(181,127,0,.11)!important;
+  }
+  #p-premium-access .premium-course-filters button b{
+    min-width:21px!important;
+    height:21px!important;
+    display:grid!important;
+    place-items:center!important;
+    padding:0 5px!important;
+    border-radius:999px!important;
+    background:#eef0f2!important;
+    color:#4f5964!important;
+    font-size:6.8px!important;
+    font-weight:950!important;
+  }
+  #p-premium-access .premium-course-filters button.on b{
+    background:rgba(255,255,255,.5)!important;
+    color:#352600!important;
+  }
+
+  html[data-theme="dark"] #p-premium-access .premium-course-filter-shell{
+    background:#101319!important;
+    border-color:#292f38!important;
+    box-shadow:none!important;
+  }
+  html[data-theme="dark"] #p-premium-access .premium-course-filter-copy b{
+    color:#f0f3f6!important;
+  }
+  html[data-theme="dark"] #p-premium-access .premium-course-filter-copy small{
+    color:#9ca6b1!important;
+  }
+  html[data-theme="dark"] #p-premium-access .premium-course-filters button{
+    background:#151a21!important;
+    border-color:#2e353f!important;
+    color:#d8dde3!important;
+  }
+  html[data-theme="dark"] #p-premium-access .premium-course-filters button.on{
+    border-color:#d5a20a!important;
+    background:linear-gradient(180deg,#f5be20,#dba205)!important;
+    color:#211800!important;
+  }
+}
+
+@media (max-width:900px){
+  #p-premium-access .premium-course-filter-shell{
+    display:grid!important;
+    gap:9px!important;
+    margin:0 0 9px!important;
+    padding:9px!important;
+    border:1px solid #e1e5e9!important;
+    border-radius:12px!important;
+    background:#fff!important;
+  }
+  #p-premium-access .premium-course-filters{
+    display:flex!important;
+    gap:7px!important;
+    overflow-x:auto!important;
+    padding-bottom:2px!important;
+    -webkit-overflow-scrolling:touch!important;
+  }
+  #p-premium-access .premium-course-filters button{
+    flex:0 0 auto!important;
+    min-height:36px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    gap:7px!important;
+    padding:0 10px!important;
+    border:1px solid #dde2e6!important;
+    border-radius:9px!important;
+    background:#fafbfc!important;
+    font-size:9px!important;
+    font-weight:900!important;
+  }
+  #p-premium-access .premium-course-filters button.on{
+    border-color:#d5a20a!important;
+    background:#f1b915!important;
+    color:#211800!important;
+  }
+}
