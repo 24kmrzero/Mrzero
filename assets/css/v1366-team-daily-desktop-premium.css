@@ -1,0 +1,85 @@
+/* 24K MR ZERO — Team Daily Report Premium Desktop v13.66 */
+@media (min-width:901px){
+  #teamApp:not(.hidden) [data-view-panel="daily"]{max-width:1460px!important;margin:0 auto!important;padding:18px 18px 30px!important}
+  #teamApp:not(.hidden) [data-view-panel="daily"] *{box-sizing:border-box}
+
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-command{
+    position:relative!important;overflow:hidden!important;padding:20px!important;
+    border:1px solid #e1e3e6!important;border-left:3px solid #d8a20a!important;border-radius:19px!important;
+    background:radial-gradient(520px 210px at 94% -10%,rgba(216,162,10,.10),transparent 66%),linear-gradient(135deg,#fffefa,#fffaf0)!important;
+    box-shadow:0 13px 34px rgba(65,52,16,.055)!important
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-command:after{content:"DAILY"!important;position:absolute!important;right:22px!important;top:-28px!important;color:rgba(172,123,0,.035)!important;font-size:110px!important;font-weight:950!important;letter-spacing:-.07em!important;pointer-events:none!important}
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-command-top{position:relative!important;z-index:2!important;display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:18px!important}
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-kicker{min-height:25px!important;display:inline-flex!important;align-items:center!important;gap:7px!important;padding:0 10px!important;border:1px solid #e7d69d!important;border-radius:999px!important;background:#fff9e9!important;color:#8f6900!important;font-size:7.2px!important;font-weight:950!important;letter-spacing:.12em!important}
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-command h2{margin:11px 0 5px!important;color:#1d2229!important;font-size:28px!important;line-height:1!important;font-weight:950!important;letter-spacing:-.04em!important}
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-command p{margin:0!important;color:#6e7883!important;font-size:10px!important;line-height:1.5!important}
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-status{position:relative!important;z-index:2!important;min-width:136px!important;display:grid!important;grid-template-columns:34px minmax(0,1fr)!important;grid-template-rows:auto auto!important;align-items:center!important;gap:2px 8px!important;padding:8px 10px!important;border:1px solid #e5d8af!important;border-radius:12px!important;background:rgba(255,255,255,.82)!important}
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-status>i{grid-row:1/3!important;width:34px!important;height:34px!important;display:grid!important;place-items:center!important;border-radius:10px!important;background:#fff4d8!important;color:#a87700!important}
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-status>b{color:#7d5c05!important;font-size:8px!important;font-weight:950!important}
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-status>small{color:#8a939d!important;font-size:6.5px!important}
+
+  #teamApp:not(.hidden) .team-daily-summary{position:relative!important;z-index:2!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:9px!important;margin-top:16px!important}
+  #teamApp:not(.hidden) .team-daily-summary-card{min-height:70px!important;display:grid!important;grid-template-columns:36px minmax(0,1fr)!important;align-items:center!important;gap:10px!important;padding:10px 11px!important;border:1px solid #e3e6e9!important;border-radius:12px!important;background:rgba(255,255,255,.8)!important}
+  #teamApp:not(.hidden) .team-daily-summary-card>span{width:36px!important;height:36px!important;display:grid!important;place-items:center!important;border-radius:10px!important;background:#f2f4f6!important;color:#74808c!important}
+  #teamApp:not(.hidden) .team-daily-summary-card.gold>span,#teamApp:not(.hidden) .team-daily-summary-card.amber>span{background:#fff4d7!important;color:#a97700!important}
+  #teamApp:not(.hidden) .team-daily-summary-card.blue>span{background:#eef4fb!important;color:#5b7fc1!important}
+  #teamApp:not(.hidden) .team-daily-summary-card.green>span{background:#edf9f4!important;color:#168b62!important}
+  #teamApp:not(.hidden) .team-daily-summary-card>div{display:grid!important;gap:2px!important}
+  #teamApp:not(.hidden) .team-daily-summary-card small{color:#7e8893!important;font-size:6.6px!important;font-weight:900!important;letter-spacing:.07em!important;text-transform:uppercase!important}
+  #teamApp:not(.hidden) .team-daily-summary-card b{color:#232930!important;font-size:16px!important;line-height:1!important;font-weight:950!important}
+
+  #teamApp:not(.hidden) .team-tool-section-head{min-height:46px!important;display:flex!important;align-items:flex-end!important;justify-content:space-between!important;gap:10px!important;padding:0 2px 9px!important;margin:10px 0 0!important;border-bottom:1px solid #e4e1d9!important}
+  #teamApp:not(.hidden) .team-tool-section-head>div{display:grid!important;gap:1px!important}
+  #teamApp:not(.hidden) .team-tool-section-head small{color:#a0780b!important;font-size:6.2px!important;font-weight:950!important;letter-spacing:.11em!important}
+  #teamApp:not(.hidden) .team-tool-section-head b{color:#252b32!important;font-size:13px!important;font-weight:950!important}
+  #teamApp:not(.hidden) .team-tool-section-head>span{color:#858f9a!important;font-size:7px!important}
+
+  #teamApp:not(.hidden) .team-daily-form{margin-top:10px!important;padding:15px!important;border:1px solid #e1e4e7!important;border-radius:16px!important;background:#fff!important;box-shadow:0 9px 24px rgba(18,24,32,.04)!important}
+  #teamApp:not(.hidden) .team-daily-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:9px!important}
+  #teamApp:not(.hidden) .team-daily-grid.broker-lots{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  #teamApp:not(.hidden) .team-daily-grid label,#teamApp:not(.hidden) .team-daily-note{min-width:0!important;display:grid!important;gap:5px!important}
+  #teamApp:not(.hidden) .team-daily-grid label>span,#teamApp:not(.hidden) .team-daily-note>span{display:flex!important;align-items:center!important;gap:5px!important;color:#707b86!important;font-size:7px!important;font-weight:850!important}
+  #teamApp:not(.hidden) .team-daily-grid label>span i{width:14px!important;color:#a87a00!important}
+  #teamApp:not(.hidden) .team-daily-grid input,#teamApp:not(.hidden) .team-daily-note textarea{width:100%!important;min-width:0!important;border:1px solid #dfe3e7!important;border-radius:10px!important;background:#fafbfc!important;color:#303740!important;font:inherit!important;font-size:8px!important;font-weight:700!important;outline:0!important;box-shadow:none!important}
+  #teamApp:not(.hidden) .team-daily-grid input{height:40px!important;padding:0 10px!important}
+  #teamApp:not(.hidden) .team-daily-note textarea{min-height:92px!important;padding:10px!important;resize:vertical!important}
+  #teamApp:not(.hidden) .team-daily-grid input:focus,#teamApp:not(.hidden) .team-daily-note textarea:focus{border-color:#d7bd6b!important;background:#fff!important;box-shadow:0 0 0 3px rgba(216,162,10,.07)!important}
+  #teamApp:not(.hidden) .team-daily-grid input:disabled{background:#f1f3f4!important;color:#9aa2aa!important}
+
+  #teamApp:not(.hidden) .team-daily-subhead{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important;margin:14px 0 9px!important;padding-top:12px!important;border-top:1px solid #eceef0!important}
+  #teamApp:not(.hidden) .team-daily-subhead>span{color:#7a8490!important;font-size:6.6px!important;font-weight:950!important;letter-spacing:.09em!important}
+  #teamApp:not(.hidden) .team-daily-subhead>small{color:#9aa2ab!important;font-size:6.2px!important}
+  #teamApp:not(.hidden) .team-daily-note{margin-top:12px!important}
+  #teamApp:not(.hidden) .team-daily-submit{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;margin-top:12px!important;padding-top:11px!important;border-top:1px solid #eceef0!important}
+  #teamApp:not(.hidden) .team-daily-submit>span{display:flex!important;align-items:center!important;gap:6px!important;color:#7f8994!important;font-size:6.8px!important}
+  #teamApp:not(.hidden) .team-daily-submit>span i{color:#a67a00!important}
+  #teamApp:not(.hidden) .team-daily-submit button{min-height:36px!important;display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 12px!important;border:1px solid #d7a30b!important;border-radius:9px!important;background:linear-gradient(180deg,#ffd65b,#efbd22)!important;color:#2b2100!important;font:inherit!important;font-size:7.2px!important;font-weight:950!important}
+
+  #teamApp:not(.hidden) .team-auto-activity,#teamApp:not(.hidden) .team-daily-history{margin-top:10px!important;padding:14px!important;border:1px solid #e1e4e7!important;border-radius:15px!important;background:#fff!important;box-shadow:0 8px 22px rgba(18,24,32,.035)!important}
+  #teamApp:not(.hidden) .auto-activity-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:9px!important;margin:0!important}
+  #teamApp:not(.hidden) .auto-activity-grid>div{min-height:76px!important;display:grid!important;align-content:center!important;gap:4px!important;padding:10px 11px!important;border:1px solid #e8eaed!important;border-radius:11px!important;background:#fafbfc!important}
+  #teamApp:not(.hidden) .auto-activity-grid span{color:#818b96!important;font-size:6.5px!important}
+  #teamApp:not(.hidden) .auto-activity-grid b{color:#252b32!important;font-size:17px!important;line-height:1!important;font-weight:950!important}
+
+  #teamApp:not(.hidden) .team-daily-history .table-wrap{overflow:auto!important;border:1px solid #eceef0!important;border-radius:11px!important}
+  #teamApp:not(.hidden) .team-daily-history table{width:100%!important;border-collapse:collapse!important;background:#fff!important}
+  #teamApp:not(.hidden) .team-daily-history th{height:36px!important;padding:0 9px!important;border-bottom:1px solid #e4dfd3!important;background:#faf8f3!important;color:#7f7357!important;font-size:6px!important;font-weight:950!important;letter-spacing:.07em!important;text-align:left!important;white-space:nowrap!important}
+  #teamApp:not(.hidden) .team-daily-history td{height:42px!important;padding:0 9px!important;border-bottom:1px solid #eef0f2!important;color:#4d5660!important;font-size:6.8px!important;white-space:nowrap!important}
+
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-command{background:radial-gradient(500px 200px at 94% -8%,rgba(216,162,10,.07),transparent 66%),#101319!important;border-color:#33311f!important;border-left-color:#d8a20a!important;box-shadow:none!important}
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-command h2,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-daily-summary-card b,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-tool-section-head b,
+  html[data-theme="dark"] #teamApp:not(.hidden) .auto-activity-grid b{color:#f2f4f6!important}
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-daily-form,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-auto-activity,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-daily-history,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-daily-summary-card{background:#101319!important;border-color:#292f37!important;box-shadow:none!important}
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-daily-grid input,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-daily-note textarea,
+  html[data-theme="dark"] #teamApp:not(.hidden) .auto-activity-grid>div{background:#13171c!important;border-color:#292f37!important;color:#e9ecef!important}
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-daily-history table{background:#101319!important}
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-daily-history th{background:#151811!important;color:#cbbd91!important;border-color:#2d3028!important}
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-daily-history td{color:#c4cbd2!important;border-color:#292f37!important}
+}
