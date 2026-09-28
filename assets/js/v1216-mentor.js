@@ -1,6 +1,6 @@
 (function(){
 'use strict';
-/* mentor build 14.42 */
+/* mentor build 14.43 */
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js',{scope:'/'}).catch(e=>console.warn('[24K Mentor PWA]',e?.message||e)));
 }
@@ -864,6 +864,7 @@ function renderCharts(){
   const resultTitle=$('#mentorChartResultTitle'),resultCount=$('#mentorChartResultCount');
   if(resultTitle)resultTitle.textContent=pair!=='all'?`${mentorDisplaySymbol(pair)} · ${periodName}`:periodName;
   if(resultCount)resultCount.textContent=`${items.length} result${items.length===1?'':'s'}`;
+  box.classList.toggle('mentor-full-empty',desktop&&items.length===0);
 
   if(!items.length){
     if(desktop){
@@ -1024,6 +1025,7 @@ function renderArticles(){
   const resultTitle=$('#mentorArticleResultTitle'),resultCount=$('#mentorArticleResultCount');
   if(resultTitle)resultTitle.textContent=cat!=='all'?`${cat} · ${periodName}`:periodName;
   if(resultCount)resultCount.textContent=`${items.length} result${items.length===1?'':'s'}`;
+  box.classList.toggle('mentor-full-empty',desktop&&items.length===0);
 
   if(!items.length){
     if(desktop){
