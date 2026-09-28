@@ -1349,7 +1349,7 @@ async function saveArticle(e){
 
     const row={
       title,
-      slug:desktop?String(d.slug||slug(title)).toLowerCase().trim().replace(/[^a-z0-9-]+/g,'-'):(existing?.slug||`${slug(title)}-${Date.now().toString(36)}`),
+      slug:desktop?String(d.slug||`${slug(title)}-${Date.now().toString().slice(-5)}`).toLowerCase().trim().replace(/[^a-z0-9-]+/g,'-'):(existing?.slug||`${slug(title)}-${Date.now().toString(36)}`),
       category:String(d.category||'').trim()||'General',
       excerpt:String(d.excerpt||'').trim()||null,
       content,
