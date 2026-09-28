@@ -1,6 +1,6 @@
 (function(){
 'use strict';
-/* mentor build 14.43 */
+/* mentor build 14.48 */
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js',{scope:'/'}).catch(e=>console.warn('[24K Mentor PWA]',e?.message||e)));
 }
@@ -45,7 +45,7 @@ window.addEventListener('appinstalled',()=>{
 window.addEventListener('load',updateMentorInstall);
 const cfg=window.APP_CONFIG||{},sb=(window.supabase&&cfg.SUPABASE_URL&&cfg.SUPABASE_ANON_KEY)?window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true}}):null;
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-const state={user:null,profile:null,perms:{signals:false,charts:false,articles:false,banners:false},signals:[],charts:[],articles:[],banners:[],courses:[],news:[],signalTab:'active',signalPeriod:'all',signalFilters:{q:'',pair:'all',type:'all',status:'all',from:'',to:''},chartPeriod:'all',articlePeriod:'all',performanceMonth:null,performanceMonthKeys:[]};
+const state={user:null,profile:null,perms:{signals:false,charts:false,articles:false,banners:false},signals:[],charts:[],articles:[],banners:[],courses:[],courseSessions:[],news:[],signalTab:'active',signalPeriod:'all',signalFilters:{q:'',pair:'all',type:'all',status:'all',from:'',to:''},chartPeriod:'all',articlePeriod:'all',performanceMonth:null,performanceMonthKeys:[]};
 const CLOSED=new Set(['sl_hit','breakeven_hit','manually_closed','closed','cancelled','tp4_hit']);
 function signalIsClosed(s){const st=String(s?.status||'');return Boolean(s?.closed_at)||CLOSED.has(st)||(st==='tp3_hit'&&(s?.take_profit_4===null||s?.take_profit_4===undefined||s?.take_profit_4===''))}
 function applyMentorTheme(v){
@@ -238,8 +238,12 @@ async function loadSecondaryMentorData(){
     );
   }
   tasks.push(
-    safeLoad('courses',sb.from('courses').select('id,title,slug,short_description,description,instructor_name,price,discount_price,currency,status,thumbnail_url,is_published,enrollment_open,start_date').eq('is_published',true).order('display_order',{ascending:true}).limit(100))
+    safeLoad('courses',sb.from('courses').select('id,title,slug,short_description,description,instructor_name,price,discount_price,currency,status,thumbnail_url,is_published,enrollment_open,start_date,display_order').eq('is_published',true).order('display_order',{ascending:true}).limit(100))
       .then(data=>{state.courses=data;renderCourses()})
+  );
+  tasks.push(
+    safeLoad('course_sessions',sb.from('course_sessions').select('id,course_id,session_number,title,starts_at,duration_minutes,status').order('starts_at',{ascending:true}).limit(500))
+      .then(data=>{state.courseSessions=data;renderCourses()})
   );
   tasks.push(
     safeLoad('announcements',sb.from('announcements').select('id,title,message,priority,published_at,created_at').eq('is_published',true).order('published_at',{ascending:false}).limit(50))
@@ -279,11 +283,22 @@ function subscribeMentorRealtime(){
     state.articles=await safeLoad('articles',sb.from('articles').select('*').order('created_at',{ascending:false}).limit(500));
     safeMentorRender('articles',renderArticles)
   });
+  const refreshCourses=()=>debounce('courses',async()=>{
+    const pair=await Promise.all([
+      safeLoad('courses',sb.from('courses').select('id,title,slug,short_description,description,instructor_name,price,discount_price,currency,status,thumbnail_url,is_published,enrollment_open,start_date,display_order').eq('is_published',true).order('display_order',{ascending:true}).limit(100)),
+      safeLoad('course_sessions',sb.from('course_sessions').select('id,course_id,session_number,title,starts_at,duration_minutes,status').order('starts_at',{ascending:true}).limit(500))
+    ]);
+    state.courses=pair[0];
+    state.courseSessions=pair[1];
+    safeMentorRender('courses',renderCourses)
+  });
   sb.channel('mentor-live-content')
     .on('postgres_changes',{event:'*',schema:'public',table:'signals'},refreshSignals)
     .on('postgres_changes',{event:'*',schema:'public',table:'signal_updates'},refreshSignals)
     .on('postgres_changes',{event:'*',schema:'public',table:'charts'},refreshCharts)
     .on('postgres_changes',{event:'*',schema:'public',table:'articles'},refreshArticles)
+    .on('postgres_changes',{event:'*',schema:'public',table:'courses'},refreshCourses)
+    .on('postgres_changes',{event:'*',schema:'public',table:'course_sessions'},refreshCourses)
     .subscribe()
 }
 async function load(){
@@ -1125,7 +1140,75 @@ function renderHistoryGroups(items,type){if(!items.length)return'<div class="men
 function renderBanners(){const box=$('#mentorBanners');if(!box)return;const items=state.banners||[];box.innerHTML=items.length?Object.entries(byDate(items)).map(([d,rows])=>`<section class="mentor-date-group"><h3>${esc(d)}</h3><div class="mentor-history-cards">${rows.map(x=>`<article class="mentor-history-card"><img src="${esc(x.image_url)}" alt="Banner"><div class="body"><div class="mentor-meta"><span class="mentor-chip gold">${x.is_published?'PUBLISHED':'DRAFT'}</span></div><h3>${esc(x.title)}</h3><p>${esc(x.target_url||'No target URL')}</p><div class="mentor-actions"><a class="mentor-btn small" href="${esc(x.image_url)}" target="_blank" rel="noopener">View</a><button class="mentor-btn small" data-edit-banner="${x.id}">Edit</button><button class="mentor-btn small danger" data-delete-banner="${x.id}">Delete</button></div></div></article>`).join('')}</div></section>`).join(''):'<div class="mentor-empty">No banners yet.</div>'}
 function editBanner(id){const x=state.banners.find(v=>v.id===id);if(!x)return;const f=$('#mentorBannerForm');f.elements.id.value=x.id;f.elements.existing_image.value=x.image_url||'';f.elements.title.value=x.title||'';f.elements.target_url.value=x.target_url||'';f.elements.is_published.checked=Boolean(x.is_published);$('#mentorBannerModalTitle').textContent='Edit Banner';openModal('banner')}
 async function saveBanner(e){e.preventDefault();const f=e.currentTarget,b=f.querySelector('button[type=submit]'),d=Object.fromEntries(new FormData(f)),published=f.elements.is_published.checked,oldImage=String(d.existing_image||'');let image=null,saved=false;b.disabled=true;try{image=await upload(f.elements.image.files[0],'banners');const row={title:String(d.title||'').trim(),image_url:image||oldImage||null,target_url:String(d.target_url||'').trim()||null,is_published:published,updated_at:new Date().toISOString()};if(!row.title)throw new Error('Banner title is required.');if(!row.image_url)throw new Error('Banner image is required.');let r;if(d.id)r=await sb.from('mentor_banners').update(row).eq('id',d.id).eq('created_by',state.user.id);else r=await sb.from('mentor_banners').insert({...row,created_by:state.user.id});if(r.error)throw r.error;saved=true;if(image&&oldImage&&image!==oldImage)await removeContentAsset(oldImage);f.reset();f.elements.id.value='';f.elements.existing_image.value='';f.elements.is_published.checked=true;$('#mentorBannerModalTitle').textContent='New Banner';closeModals();toast(d.id?'Banner updated.':'Banner saved.');await load()}catch(err){if(image&&!saved)await removeContentAsset(image);toast(err.message||'Could not save banner.')}finally{b.disabled=false}}
-function renderCourses(){const b=$('#mentorCourses');if(!b)return;b.innerHTML=state.courses.length?state.courses.map(c=>`<article class="mentor-card">${c.thumbnail_url?`<img src="${esc(c.thumbnail_url)}" style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:12px">`:''}<div class="mentor-meta"><span class="mentor-chip gold">${Number((c.discount_price ?? c.price) || 0)<=0?'FREE':esc(c.currency||'USD')+' '+esc(c.discount_price??c.price)}</span><span class="mentor-chip">${esc(c.status||'active')}</span></div><h3>${esc(c.title)}</h3><p>${esc(c.short_description||c.description||'')}</p><small>${esc(c.instructor_name||'24K MR ZERO')}</small></article>`).join(''):'<div class="mentor-empty">No published courses.</div>'}
+function mentorCourseMoney(v,currency='USD'){
+  const n=Number(v||0);
+  if(!Number.isFinite(n))return '—';
+  if(n===0)return 'FREE';
+  const code=String(currency||'USD').toUpperCase();
+  const prefix=code==='USD'?'$':code==='PKR'?'Rs ':code==='USDT'?'USDT ':'';
+  return prefix+n.toLocaleString('en-US',{maximumFractionDigits:2})
+}
+function mentorCourseDate(v){
+  const d=v?new Date(v):null;
+  if(!d||Number.isNaN(d.getTime()))return '';
+  return new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Karachi',day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:true}).format(d)
+}
+function mentorCourseStatus(v){
+  return String(v||'active').split('_').map(x=>x?x.charAt(0).toUpperCase()+x.slice(1):'').join(' ')
+}
+function mentorNextCourseSession(courseId){
+  const now=Date.now()-5*60*1000;
+  return (state.courseSessions||[])
+    .filter(s=>String(s?.course_id)===String(courseId)&&!['cancelled','completed'].includes(String(s?.status||'').toLowerCase())&&new Date(s?.starts_at||0).getTime()>=now)
+    .sort((a,b)=>new Date(a.starts_at)-new Date(b.starts_at))[0]||null
+}
+function renderCourses(){
+  const courses=state.courses||[],sessions=state.courseSessions||[];
+  const mobile=$('#mentorCourses'),stats=$('#mentorCourseStatsDesktop'),cards=$('#mentorCourseCardsDesktop');
+
+  if(mobile){
+    mobile.innerHTML=courses.length?courses.map(c=>'<article class="mentor-card">'+(c.thumbnail_url?'<img src="'+esc(c.thumbnail_url)+'" style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:12px">':'')+'<div class="mentor-meta"><span class="mentor-chip gold">'+(Number((c.discount_price ?? c.price)||0)<=0?'FREE':esc(c.currency||'USD')+' '+esc(c.discount_price??c.price))+'</span><span class="mentor-chip">'+esc(c.status||'active')+'</span></div><h3>'+esc(c.title)+'</h3><p>'+esc(c.short_description||c.description||'')+'</p><small>'+esc(c.instructor_name||'24K MR ZERO')+'</small></article>').join(''):'<div class="mentor-empty">No published courses.</div>'
+  }
+
+  if(!stats||!cards)return;
+
+  const now=Date.now()-5*60*1000;
+  const published=courses.filter(c=>c?.is_published!==false).length;
+  const enrollment=courses.filter(c=>c?.enrollment_open!==false).length;
+  const upcoming=sessions.filter(s=>{
+    const t=new Date(s?.starts_at||0).getTime(),status=String(s?.status||'').toLowerCase();
+    return Number.isFinite(t)&&t>=now&&!['cancelled','completed'].includes(status)
+  }).length;
+
+  const statRows=[
+    ['fa-layer-group','TOTAL COURSES',courses.length,'Course library','gold'],
+    ['fa-circle-check','PUBLISHED',published,'Visible to students','green'],
+    ['fa-door-open','ENROLLMENT OPEN',enrollment,'Accepting students','blue'],
+    ['fa-video','UPCOMING CLASSES',upcoming,'Scheduled live sessions','violet']
+  ];
+  stats.innerHTML=statRows.map(row=>'<article class="admin-course-stat '+row[4]+'"><span><i class="fa-solid '+row[0]+'"></i></span><div><small>'+esc(row[1])+'</small><b>'+esc(row[2])+'</b><em>'+esc(row[3])+'</em></div></article>').join('');
+
+  cards.innerHTML=courses.length?courses.map(course=>{
+    const next=mentorNextCourseSession(course.id);
+    const currentPrice=Number(course.discount_price||0)>0?course.discount_price:course.price;
+    const price=mentorCourseMoney(currentPrice,course.currency);
+    const regular=Number(course.discount_price||0)>0&&Number(course.price||0)>Number(course.discount_price||0)?mentorCourseMoney(course.price,course.currency):'';
+    const free=Number(currentPrice||0)===0;
+    const publishedState=course.is_published!==false;
+    const thumb=course.thumbnail_url
+      ?'<div class="admin-course-card-media"><img src="'+esc(course.thumbnail_url)+'" alt="'+esc(course.title||'Course')+'" loading="lazy" decoding="async"></div>'
+      :'<div class="admin-course-card-media placeholder"><i class="fa-solid fa-graduation-cap"></i></div>';
+    return '<article class="admin-course-card '+(free?'free':'paid')+'">'+thumb+
+      '<div class="admin-course-card-body">'+
+        '<div class="admin-course-card-top"><div><span class="admin-course-card-type">'+(free?'FREE COURSE':'PAID COURSE')+'</span><h3>'+esc(course.title||'Untitled Course')+'</h3></div><span class="admin-course-card-status">'+esc(mentorCourseStatus(course.status))+'</span></div>'+
+        '<p>'+esc(course.short_description||course.description||'No course description added.')+'</p>'+
+        '<div class="admin-course-card-metrics"><div><small>PRICE</small><b>'+esc(price)+'</b>'+(regular?'<em>'+esc(regular)+'</em>':'')+'</div><div><small>NEXT CLASS</small><b>'+(next?esc(next.title||'Upcoming Class'):'No upcoming class')+'</b><em>'+(next?esc(mentorCourseDate(next.starts_at)):'Schedule not added')+'</em></div></div>'+
+        '<div class="admin-course-card-meta"><span><i class="fa-brands fa-whatsapp"></i> WhatsApp Community</span><span class="'+(publishedState?'ok':'muted')+'"><i class="fa-solid '+(publishedState?'fa-circle-check':'fa-circle-minus')+'"></i> '+(publishedState?'Published':'Hidden')+'</span></div>'+
+        '<div class="mentor-course-admin-footer"><i class="fa-solid fa-shield-halved"></i> Course settings managed by Admin</div>'+
+      '</div>'+
+    '</article>'
+  }).join(''):'<div class="admin-course-card-empty"><i class="fa-solid fa-graduation-cap"></i><b>No courses created</b><small>Add a course from the Admin panel to begin.</small></div>'
+}
 function renderNews(){const b=$('#mentorNews');if(!b)return;b.innerHTML=state.news.length?state.news.map(n=>`<article class="mentor-card"><span class="mentor-chip gold">${esc(String(n.priority||'normal').toUpperCase())}</span><h3>${esc(n.title)}</h3><p>${esc(n.message)}</p><small>${dt(n.published_at||n.created_at)}</small></article>`).join(''):'<div class="mentor-empty">No announcements.</div>'}
 function renderSettings(){
   const name=state.profile?.full_name||'Mentor',
