@@ -1362,7 +1362,7 @@ async function saveArticle(e){
     else if(!desktop)row.published_at=published?new Date().toISOString():null;
 
     let r;
-    if(d.id)r=await sb.from('articles').update(row).eq('id',d.id).eq('created_by',state.user.id);
+    if(d.id)r=await sb.from('articles').update(row).eq('id',d.id);
     else r=await sb.from('articles').insert({...row,created_by:state.user.id});
     if(r.error)throw r.error;
     saved=true;
@@ -1378,7 +1378,7 @@ async function saveArticle(e){
     b.disabled=false;b.innerHTML=oldButton
   }
 }
-async function del(table,id,label){const ok=await mentorAskAction({title:`Delete ${label}?`,eyebrow:'CONFIRM DELETE',message:`Delete this ${label} permanently?`,hint:'This action cannot be undone.',confirmText:'Delete',danger:true});if(!ok)return;const source=table==='charts'?state.charts:table==='articles'?state.articles:table==='mentor_banners'?state.banners:[],item=source.find(x=>String(x.id)===String(id)),media=item?.image_url||item?.cover_url||null;const r=await sb.from(table).delete().eq('id',id).eq('created_by',state.user.id);if(r.error)throw r.error;if(media)await removeContentAsset(media);toast(`${label} deleted.`);await load()}
+async function del(table,id,label){const ok=await mentorAskAction({title:`Delete ${label}?`,eyebrow:'CONFIRM DELETE',message:`Delete this ${label} permanently?`,hint:'This action cannot be undone.',confirmText:'Delete',danger:true});if(!ok)return;const source=table==='charts'?state.charts:table==='articles'?state.articles:table==='mentor_banners'?state.banners:[],item=source.find(x=>String(x.id)===String(id)),media=item?.image_url||item?.cover_url||null;let query=sb.from(table).delete().eq('id',id);if(table!=='articles')query=query.eq('created_by',state.user.id);const r=await query;if(r.error)throw r.error;if(media)await removeContentAsset(media);toast(`${label} deleted.`);await load()}
 async function logout(){await auditMentor('mentor_logout','success',{view:(location.hash||'#performance').slice(1)});await sb?.auth.signOut();location.href='/mentor-login.html'}
 document.addEventListener('change',e=>{
   if(e.target.matches('#mentorChartForm input[name="image"]')){syncEditorFileLabel('chart',e.target.files?.[0]||null);return}
