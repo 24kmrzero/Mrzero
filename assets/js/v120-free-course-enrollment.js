@@ -206,7 +206,7 @@
           }, 1400);
         }
       }
-      toast('Enrollment completed. Check your email to set your password.', 'success');
+      toast(payload.account_created ? 'Enrollment completed. Your password has been emailed.' : 'Enrollment completed. Use your existing account password.', 'success');
       history.replaceState(null, '', '/free-course/');
     } catch (error) {
       console.error(error);
