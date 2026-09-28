@@ -1,0 +1,607 @@
+/* 24K MR ZERO — Mentor desktop parity v14.35
+   DESKTOP ONLY. Mobile <=900px is intentionally untouched. */
+@media (min-width:901px){
+
+  /* Warm premium desktop canvas */
+  html[data-theme="light"] .mentor-main,
+  html[data-theme="light"] .mentor-content{
+    background:#f6f2e9!important;
+  }
+  html[data-theme="light"] .mentor-top{
+    background:#fffdf9!important;
+    border-color:#e5dfd3!important;
+  }
+  html[data-theme="light"] .mentor-side{
+    background:#fffdf9!important;
+    border-color:#e5dfd3!important;
+  }
+
+  /* ===== Performance + Signals: keep layout, warm the page ===== */
+  html[data-theme="light"] [data-mentor-panel="performance"],
+  html[data-theme="light"] [data-mentor-panel="signals"]{
+    background:transparent!important;
+  }
+
+  /* ===== Charts + Articles: Admin exact desktop language ===== */
+  [data-mentor-panel="charts"],
+  [data-mentor-panel="articles"]{
+    max-width:1450px!important;
+    margin:0 auto!important;
+    padding-bottom:4px!important;
+  }
+
+  .mentor-chart-command,
+  .mentor-article-command{
+    display:block!important;
+    margin:0!important;
+    padding:0!important;
+    border:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+  }
+
+  .mentor-chart-command-top,
+  .mentor-article-command-top{
+    position:relative!important;
+    isolation:isolate!important;
+    overflow:hidden!important;
+    min-height:142px!important;
+    display:flex!important;
+    align-items:flex-start!important;
+    justify-content:space-between!important;
+    gap:22px!important;
+    padding:20px 21px!important;
+    margin:0 0 9px!important;
+    border:1px solid #e0e3e7!important;
+    border-left:3px solid #d8a20a!important;
+    border-radius:18px!important;
+    background:
+      radial-gradient(430px 190px at 94% 0%,rgba(216,162,10,.055),transparent 70%),
+      #fff!important;
+    box-shadow:0 9px 26px rgba(18,24,32,.05)!important;
+  }
+  .mentor-chart-command-top:after,
+  .mentor-article-command-top:after{
+    content:"24K"!important;
+    position:absolute!important;
+    right:14px!important;
+    top:-31px!important;
+    z-index:0!important;
+    pointer-events:none!important;
+    font-size:124px!important;
+    line-height:1!important;
+    font-weight:950!important;
+    letter-spacing:-.08em!important;
+    color:rgba(190,139,0,.032)!important;
+  }
+  .mentor-chart-command-copy,
+  .mentor-article-command-copy{
+    position:relative!important;
+    z-index:2!important;
+    min-width:0!important;
+  }
+  .mentor-chart-kicker,
+  .mentor-article-kicker{
+    min-height:24px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    gap:7px!important;
+    padding:0 9px!important;
+    border:1px solid #e8d99f!important;
+    border-radius:999px!important;
+    background:#fffaf0!important;
+    color:#8d6800!important;
+    font-size:0!important;
+    font-weight:950!important;
+    letter-spacing:.13em!important;
+  }
+  .mentor-chart-kicker i,
+  .mentor-article-kicker i{font-size:8px!important}
+  .mentor-chart-kicker:after{
+    content:"CHART COMMAND CENTER";
+    font-size:7.4px!important;
+  }
+  .mentor-article-kicker:after{
+    content:"EDITORIAL DESK";
+    font-size:7.4px!important;
+  }
+
+  .mentor-chart-command-copy h2,
+  .mentor-article-command-copy h2{
+    margin:10px 0 5px!important;
+    color:#181a20!important;
+    font-size:0!important;
+    line-height:1!important;
+    letter-spacing:-.04em!important;
+  }
+  .mentor-chart-command-copy h2:after{
+    content:"Professional Chart Analysis";
+    font-size:28px!important;
+  }
+  .mentor-article-command-copy h2:after{
+    content:"Professional Articles & Insights";
+    font-size:28px!important;
+  }
+
+  .mentor-chart-command-copy p,
+  .mentor-article-command-copy p{
+    max-width:650px!important;
+    margin:0!important;
+    color:#707b88!important;
+    font-size:0!important;
+    line-height:1.5!important;
+  }
+  .mentor-chart-command-copy p:after{
+    content:"Publish, review and manage high-quality market analysis from one focused research workspace.";
+    font-size:10.5px!important;
+  }
+  .mentor-article-command-copy p:after{
+    content:"Create structured educational research, strategy notes and market insights in a premium editorial workspace.";
+    font-size:10.5px!important;
+  }
+  .mentor-chart-command-copy:after,
+  .mentor-article-command-copy:after{
+    display:inline-flex!important;
+    margin-top:10px!important;
+    padding:4px 7px!important;
+    border:1px solid #ebdfb6!important;
+    border-radius:999px!important;
+    background:#fffdf7!important;
+    color:#a17704!important;
+    font-size:6.4px!important;
+    font-weight:900!important;
+    letter-spacing:.09em!important;
+  }
+  .mentor-chart-command-copy:after{content:"PREMIUM RESEARCH WORKSPACE"}
+  .mentor-article-command-copy:after{content:"PREMIUM EDITORIAL WORKSPACE"}
+
+  .mentor-chart-create,
+  .mentor-article-create{
+    position:relative!important;
+    z-index:3!important;
+    min-width:132px!important;
+    min-height:39px!important;
+    height:39px!important;
+    padding:0 13px!important;
+    border:1px solid #d7a109!important;
+    border-radius:10px!important;
+    background:linear-gradient(180deg,#f5bf20,#dfa407)!important;
+    color:#211800!important;
+    box-shadow:0 8px 18px rgba(181,127,0,.13)!important;
+    font-size:8.5px!important;
+    font-weight:900!important;
+  }
+  .mentor-chart-create span{font-size:0!important}
+  .mentor-chart-create span:after{content:"New Chart Analysis";font-size:8.5px!important}
+
+  /* KPI row same hierarchy as Admin */
+  .mentor-chart-stats,
+  .mentor-article-stats{
+    display:grid!important;
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    gap:8px!important;
+    margin:0 0 9px!important;
+  }
+  .mentor-chart-stats article,
+  .mentor-article-stats article{
+    min-height:73px!important;
+    display:flex!important;
+    align-items:center!important;
+    gap:10px!important;
+    padding:10px 11px!important;
+    border:1px solid #e4e7ea!important;
+    border-radius:12px!important;
+    background:#fff!important;
+    box-shadow:0 7px 20px rgba(18,24,32,.03)!important;
+  }
+  .mentor-chart-stats .icon,
+  .mentor-chart-stats .mentor-chart-stat-icon,
+  .mentor-article-stats .icon{
+    width:31px!important;
+    height:31px!important;
+    flex:0 0 31px!important;
+    display:grid!important;
+    place-items:center!important;
+    border:1px solid rgba(216,162,10,.12)!important;
+    border-radius:9px!important;
+    background:rgba(216,162,10,.08)!important;
+    color:#c48f00!important;
+    font-size:10px!important;
+  }
+  .mentor-chart-stats article small,
+  .mentor-article-stats article small{
+    color:#747f8d!important;
+    font-size:0!important;
+    font-weight:950!important;
+    letter-spacing:.1em!important;
+  }
+  .mentor-chart-stats article:nth-child(1) small:after{content:"TOTAL ANALYSIS";font-size:7px}
+  .mentor-chart-stats article:nth-child(2) small:after{content:"THIS WEEK";font-size:7px}
+  .mentor-chart-stats article:nth-child(3) small:after{content:"TODAY";font-size:7px}
+  .mentor-chart-stats article:nth-child(4) small:after{content:"TOP PAIR";font-size:7px}
+  .mentor-article-stats article:nth-child(1) small:after{content:"TOTAL ARTICLES";font-size:7px}
+  .mentor-article-stats article:nth-child(2) small:after{content:"PUBLISHED";font-size:7px}
+  .mentor-article-stats article:nth-child(3) small:after{content:"DRAFTS";font-size:7px}
+  .mentor-article-stats article:nth-child(4) small:after{content:"THIS WEEK";font-size:7px}
+  .mentor-chart-stats article b,
+  .mentor-article-stats article b{
+    margin-top:2px!important;
+    color:#181a20!important;
+    font-size:19px!important;
+    line-height:1!important;
+  }
+  .mentor-chart-stats article em,
+  .mentor-article-stats article em{
+    margin-top:4px!important;
+    color:#7c8693!important;
+    font-size:0!important;
+    font-style:normal!important;
+  }
+  .mentor-chart-stats article:nth-child(1) em:after{content:"Research library";font-size:7.2px}
+  .mentor-chart-stats article:nth-child(2) em:after{content:"Last 7 days";font-size:7.2px}
+  .mentor-chart-stats article:nth-child(3) em:after{content:"Published today";font-size:7.2px}
+  .mentor-chart-stats article:nth-child(4) em:after{content:"Most covered";font-size:7.2px}
+  .mentor-article-stats article:nth-child(1) em:after{content:"Editorial library";font-size:7.2px}
+  .mentor-article-stats article:nth-child(2) em:after{content:"Visible to users";font-size:7.2px}
+  .mentor-article-stats article:nth-child(3) em:after{content:"Work in progress";font-size:7.2px}
+  .mentor-article-stats article:nth-child(4) em:after{content:"Last 7 days";font-size:7.2px}
+
+  /* Admin-equivalent filter rail: Search + selects only */
+  .mentor-chart-controls,
+  .mentor-article-controls{
+    min-height:48px!important;
+    display:grid!important;
+    gap:6px!important;
+    padding:6px!important;
+    margin:0 0 9px!important;
+    border:1px solid #e1e4e8!important;
+    border-radius:13px!important;
+    background:#fff!important;
+    box-shadow:0 6px 17px rgba(18,24,32,.025)!important;
+  }
+  .mentor-chart-controls{grid-template-columns:minmax(0,1fr) 170px 150px!important}
+  .mentor-article-controls{grid-template-columns:minmax(0,1fr) 170px 150px 150px!important}
+  .mentor-chart-periods,
+  .mentor-article-periods{display:contents!important}
+  .mentor-chart-periods>button,
+  .mentor-article-periods>button{display:none!important}
+  .mentor-chart-search,
+  .mentor-article-search{
+    grid-column:1!important;
+    grid-row:1!important;
+    min-width:0!important;
+    height:35px!important;
+    min-height:35px!important;
+    display:flex!important;
+    align-items:center!important;
+    gap:7px!important;
+    padding:0 10px!important;
+    border:1px solid #e3e6e9!important;
+    border-radius:9px!important;
+    background:#fafbfc!important;
+    color:#555f6b!important;
+  }
+  .mentor-chart-search i,
+  .mentor-article-search i{color:#8b95a0!important;font-size:8px!important}
+  .mentor-chart-search input,
+  .mentor-article-search input{
+    width:100%!important;
+    min-width:0!important;
+    height:31px!important;
+    padding:0!important;
+    border:0!important;
+    outline:0!important;
+    background:transparent!important;
+    color:#555f6b!important;
+    font-size:9px!important;
+    box-shadow:none!important;
+  }
+  .mentor-chart-select,
+  .mentor-article-select{
+    min-width:0!important;
+    height:35px!important;
+    display:block!important;
+  }
+  .mentor-chart-select select,
+  .mentor-article-select select{
+    width:100%!important;
+    min-width:0!important;
+    height:35px!important;
+    min-height:35px!important;
+    padding:0 10px!important;
+    border:1px solid #e3e6e9!important;
+    border-radius:9px!important;
+    background:#fafbfc!important;
+    color:#555f6b!important;
+    font-size:9px!important;
+    box-shadow:none!important;
+  }
+  .mentor-chart-select:nth-of-type(1){grid-column:2!important;grid-row:1!important}
+  .mentor-chart-select:nth-of-type(2){grid-column:3!important;grid-row:1!important}
+  .mentor-article-select:nth-of-type(1){grid-column:2!important;grid-row:1!important}
+  .mentor-article-select:nth-of-type(2){grid-column:3!important;grid-row:1!important}
+  .mentor-article-select:nth-of-type(3){grid-column:4!important;grid-row:1!important}
+
+  .mentor-chart-results-head,
+  .mentor-article-results-head{display:none!important}
+
+  /* Admin exact compact content card footprint */
+  .mentor-chart-grid,
+  .mentor-article-grid{
+    display:grid!important;
+    grid-template-columns:repeat(auto-fill,minmax(340px,360px))!important;
+    gap:20px!important;
+    align-items:start!important;
+    justify-content:start!important;
+    width:100%!important;
+  }
+  .mentor-admin-date-group{
+    grid-column:1/-1!important;
+    width:100%!important;
+    display:grid!important;
+    grid-template-columns:auto 1fr!important;
+    align-items:center!important;
+    gap:12px!important;
+    margin:4px 0 -2px!important;
+  }
+  .mentor-admin-date-group>div{
+    display:flex!important;
+    align-items:baseline!important;
+    gap:8px!important;
+    min-width:max-content!important;
+  }
+  .mentor-admin-date-group span{
+    color:#20252d!important;
+    font-size:13px!important;
+    font-weight:950!important;
+    letter-spacing:-.02em!important;
+  }
+  .mentor-admin-date-group small{
+    color:#929aa4!important;
+    font-size:8px!important;
+    font-weight:750!important;
+  }
+  .mentor-admin-date-group i{
+    height:1px!important;
+    width:100%!important;
+    background:linear-gradient(90deg,rgba(190,153,55,.28),rgba(160,166,174,.12),transparent)!important;
+  }
+
+  .mentor-chart-card,
+  .mentor-article-card{
+    width:100%!important;
+    max-width:360px!important;
+    min-width:0!important;
+    overflow:hidden!important;
+    align-self:start!important;
+    border:1px solid #e0e4e8!important;
+    border-radius:18px!important;
+    background:#fff!important;
+    box-shadow:0 8px 22px rgba(18,24,32,.045)!important;
+    transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease!important;
+  }
+  .mentor-chart-card.cream,
+  .mentor-article-card.cream{background:#fff!important;border-color:#e5e1d7!important}
+  .mentor-chart-card:hover,
+  .mentor-article-card:hover{
+    transform:translateY(-2px)!important;
+    border-color:#dbc36f!important;
+    box-shadow:0 13px 30px rgba(18,24,32,.07)!important;
+  }
+  .mentor-chart-media,
+  .mentor-article-media{
+    width:100%!important;
+    aspect-ratio:16/9!important;
+    min-height:0!important;
+    height:auto!important;
+    max-height:none!important;
+    background:#0e1318!important;
+  }
+  .mentor-chart-media img,
+  .mentor-article-media img{
+    width:100%!important;
+    height:100%!important;
+    min-height:0!important;
+    object-fit:cover!important;
+    display:block!important;
+  }
+  .mentor-chart-card-body,
+  .mentor-article-card-body{
+    padding:15px!important;
+    gap:8px!important;
+  }
+  .mentor-chart-card-meta,
+  .mentor-article-card-meta{
+    display:flex!important;
+    flex-wrap:wrap!important;
+    gap:7px 10px!important;
+    margin:0!important;
+    color:#7a8492!important;
+    font-size:9px!important;
+    line-height:1.25!important;
+  }
+  .mentor-chart-card-body h3,
+  .mentor-article-card-body h3{
+    margin:0!important;
+    color:#181d24!important;
+    font-size:16px!important;
+    line-height:1.22!important;
+    letter-spacing:-.02em!important;
+  }
+  .mentor-chart-card-body p,
+  .mentor-article-card-body p{
+    min-height:36px!important;
+    margin:0!important;
+    display:-webkit-box!important;
+    -webkit-line-clamp:2!important;
+    -webkit-box-orient:vertical!important;
+    overflow:hidden!important;
+    color:#737e8b!important;
+    font-size:10.5px!important;
+    line-height:1.5!important;
+  }
+  .mentor-chart-card-foot,
+  .mentor-article-card-foot{
+    min-height:40px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:8px!important;
+    padding-top:8px!important;
+    border-top:1px solid #edf0f2!important;
+  }
+  .mentor-chart-actions,
+  .mentor-article-actions{
+    display:flex!important;
+    align-items:center!important;
+    gap:5px!important;
+  }
+  .mentor-chart-actions :is(button,a),
+  .mentor-article-actions :is(button,a){
+    min-height:31px!important;
+    height:31px!important;
+    padding:0 9px!important;
+    border:1px solid #e0e4e8!important;
+    border-radius:8px!important;
+    background:#fafbfc!important;
+    color:#66717e!important;
+    font-size:8.5px!important;
+  }
+  .mentor-chart-actions .danger,
+  .mentor-article-actions .danger{
+    width:31px!important;
+    min-width:31px!important;
+    padding:0!important;
+    color:#df5268!important;
+  }
+  .mentor-chart-actions [data-share-chart],
+  .mentor-article-actions [data-view-article]{
+    display:none!important;
+  }
+
+  /* ===== Merged premium Settings ===== */
+  [data-mentor-panel="settings"]{
+    max-width:1450px!important;
+    margin:0 auto!important;
+  }
+  .mentor-settings-desktop-head{
+    position:relative!important;
+    isolation:isolate!important;
+    overflow:hidden!important;
+    min-height:142px!important;
+    display:flex!important;
+    align-items:flex-start!important;
+    justify-content:space-between!important;
+    gap:22px!important;
+    padding:20px 21px!important;
+    margin:0 0 9px!important;
+    border:1px solid #e0e3e7!important;
+    border-left:3px solid #d8a20a!important;
+    border-radius:18px!important;
+    background:
+      radial-gradient(430px 190px at 94% 0%,rgba(216,162,10,.055),transparent 70%),
+      #fff!important;
+    box-shadow:0 9px 26px rgba(18,24,32,.05)!important;
+  }
+  .mentor-settings-desktop-head:after{
+    content:"24K"!important;
+    position:absolute!important;
+    right:14px!important;
+    top:-31px!important;
+    z-index:0!important;
+    font-size:124px!important;
+    line-height:1!important;
+    font-weight:950!important;
+    letter-spacing:-.08em!important;
+    color:rgba(190,139,0,.032)!important;
+  }
+  .mentor-settings-desktop-head>div{position:relative!important;z-index:2!important}
+  .mentor-settings-desktop-head .kicker{
+    min-height:24px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    gap:7px!important;
+    padding:0 9px!important;
+    border:1px solid #e8d99f!important;
+    border-radius:999px!important;
+    background:#fffaf0!important;
+    color:#8d6800!important;
+    font-size:7.4px!important;
+    font-weight:950!important;
+    letter-spacing:.13em!important;
+  }
+  .mentor-settings-desktop-head h2{
+    margin:10px 0 5px!important;
+    color:#181a20!important;
+    font-size:28px!important;
+    line-height:1!important;
+    letter-spacing:-.04em!important;
+  }
+  .mentor-settings-desktop-head p{
+    margin:0!important;
+    color:#707b88!important;
+    font-size:10.5px!important;
+    line-height:1.5!important;
+  }
+  .mentor-settings-desktop-head small{
+    display:inline-flex!important;
+    margin-top:10px!important;
+    padding:4px 7px!important;
+    border:1px solid #ebdfb6!important;
+    border-radius:999px!important;
+    background:#fffdf7!important;
+    color:#a17704!important;
+    font-size:6.4px!important;
+    font-weight:900!important;
+    letter-spacing:.09em!important;
+  }
+  [data-mentor-panel="settings"] .mentor-more-profile{
+    margin-top:0!important;
+  }
+  [data-mentor-panel="settings"] .mentor-more-actions{
+    margin-top:8px!important;
+  }
+  [data-mentor-panel="settings"] .mentor-more-section-head{
+    margin-top:9px!important;
+  }
+
+  /* Dark desktop parity */
+  html[data-theme="dark"] .mentor-main,
+  html[data-theme="dark"] .mentor-content{background:#0c1015!important}
+  html[data-theme="dark"] .mentor-chart-command-top,
+  html[data-theme="dark"] .mentor-article-command-top,
+  html[data-theme="dark"] .mentor-chart-stats article,
+  html[data-theme="dark"] .mentor-article-stats article,
+  html[data-theme="dark"] .mentor-chart-controls,
+  html[data-theme="dark"] .mentor-article-controls,
+  html[data-theme="dark"] .mentor-chart-card,
+  html[data-theme="dark"] .mentor-article-card,
+  html[data-theme="dark"] .mentor-settings-desktop-head{
+    background:#101319!important;
+    border-color:#252b35!important;
+    box-shadow:none!important;
+  }
+  html[data-theme="dark"] .mentor-chart-command-copy h2:after,
+  html[data-theme="dark"] .mentor-article-command-copy h2:after,
+  html[data-theme="dark"] .mentor-chart-stats article b,
+  html[data-theme="dark"] .mentor-article-stats article b,
+  html[data-theme="dark"] .mentor-chart-card-body h3,
+  html[data-theme="dark"] .mentor-article-card-body h3,
+  html[data-theme="dark"] .mentor-settings-desktop-head h2{
+    color:#f5f7fa!important;
+  }
+  html[data-theme="dark"] .mentor-admin-date-group span{color:#f0f3f6!important}
+  html[data-theme="dark"] .mentor-chart-search,
+  html[data-theme="dark"] .mentor-article-search,
+  html[data-theme="dark"] .mentor-chart-select select,
+  html[data-theme="dark"] .mentor-article-select select{
+    background:#151a20!important;
+    border-color:#2a313a!important;
+    color:#d9dfe5!important;
+  }
+}
+
+/* Mobile/touch: preserve the existing UI exactly. */
+@media (max-width:900px){
+  .mentor-settings-desktop-head{display:none!important}
+}
