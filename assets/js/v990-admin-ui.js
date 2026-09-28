@@ -355,6 +355,10 @@
       if(modalEntries.some(x=>x.kind===spec.kind && x.source?.isConnected)) return;
       const panel=findPanel(spec.head); if(!panel) return;
       const source=findEditorSource(panel,spec.kind); if(!source) return;
+      // Charts and Articles already use the current native Admin app-modal.
+      // Never wrap those forms in the legacy v980 overlay: doing so creates
+      // two stacked backdrops and makes Close appear to require two clicks.
+      if((spec.kind==='chart'||spec.kind==='article') && source.closest('.app-modal,.content-create-modal')) return;
       if(spec.kind==='announcement' && (source.closest('#announcementFormBox') || source.closest('.premium-announcement-modal'))) return;
       const entry=makeModal(spec.kind,panel,source); if(!entry) return;
       if(spec.kind==='link') ensureLinkAddButton(entry);
