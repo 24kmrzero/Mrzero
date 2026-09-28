@@ -174,7 +174,19 @@ function resetMentorEditor(kind){if(kind==='signal'){const f=$('#mentorSignalFor
   syncEditorFileLabel('chart',null);
   const mt=$('#mentorChartModalTitle');if(mt)mt.textContent='New Chart';
   const dt=$('#mentorChartDesktopModalTitle');if(dt)dt.textContent='Add Chart'
-}else if(kind==='article'){const f=$('#mentorArticleForm');f?.reset();if(f?.elements.id)f.elements.id.value='';if(f?.elements.existing_cover)f.elements.existing_cover.value='';if(f?.elements.is_published)f.elements.is_published.checked=true;syncArticleEditorUI();syncEditorFileLabel('article',null);const t=$('#mentorArticleModalTitle');if(t)t.textContent='New Article'}else if(kind==='banner'){const f=$('#mentorBannerForm');f?.reset();if(f?.elements.id)f.elements.id.value='';if(f?.elements.existing_image)f.elements.existing_image.value='';if(f?.elements.is_published)f.elements.is_published.checked=true;const t=$('#mentorBannerModalTitle');if(t)t.textContent='New Banner'}}
+}else if(kind==='article'){
+  const mobile=$('#mentorArticleForm'),desktop=$('#mentorArticleDesktopForm');
+  mobile?.reset();desktop?.reset();
+  if(mobile?.elements.id)mobile.elements.id.value='';
+  if(mobile?.elements.existing_cover)mobile.elements.existing_cover.value='';
+  if(mobile?.elements.is_published)mobile.elements.is_published.checked=true;
+  if(desktop?.elements.id)desktop.elements.id.value='';
+  if(desktop?.elements.existing_cover)desktop.elements.existing_cover.value='';
+  if(desktop?.elements.is_published)desktop.elements.is_published.checked=true;
+  syncArticleEditorUI();syncEditorFileLabel('article',null);
+  const mt=$('#mentorArticleModalTitle');if(mt)mt.textContent='New Article';
+  const dt=$('#mentorArticleDesktopModalTitle');if(dt)dt.textContent='Add Article'
+}else if(kind==='banner'){const f=$('#mentorBannerForm');f?.reset();if(f?.elements.id)f.elements.id.value='';if(f?.elements.existing_image)f.elements.existing_image.value='';if(f?.elements.is_published)f.elements.is_published.checked=true;const t=$('#mentorBannerModalTitle');if(t)t.textContent='New Banner'}}
 async function requireMentor(){
   if(!sb)throw new Error('Supabase configuration is missing.');
   let user=null;
@@ -920,39 +932,55 @@ function clearArticleFilters(){
 }
 function renderArticles(){
   const box=$('#mentorArticles');if(!box)return;
-  const all=[...(state.articles||[])],now=new Date();
+  const all=[...(state.articles||[])],now=new Date(),desktop=window.innerWidth>900;
 
   const cats=[...new Set(all.map(x=>String(x.category||'General')).filter(Boolean))].sort();
   const catSelect=$('#mentorArticleCategory');
   if(catSelect){
     const current=catSelect.value||'all';
-    catSelect.innerHTML='<option value="all">Category</option>'+cats.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');
+    catSelect.innerHTML=`<option value="all">${desktop?'All Categories':'Category'}</option>`+cats.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');
     catSelect.value=cats.includes(current)?current:'all'
   }
 
+  const statusSelect=$('#mentorArticleStatus');
+  if(statusSelect){
+    const current=statusSelect.value||'all';
+    const first=statusSelect.querySelector('option[value="all"]');if(first)first.textContent=desktop?'All Status':'Status';
+    statusSelect.value=current
+  }
+  const sortSelect=$('#mentorArticleSort');
+  if(sortSelect){
+    const current=sortSelect.value||'new',n=sortSelect.querySelector('option[value="new"]'),o=sortSelect.querySelector('option[value="old"]');
+    if(n)n.textContent=desktop?'Newest First':'Newest';
+    if(o)o.textContent=desktop?'Oldest First':'Oldest';
+    sortSelect.value=current
+  }
+  const searchInput=$('#mentorArticleSearch');
+  if(searchInput)searchInput.placeholder=desktop?'Search articles...':'Search title, category or content...';
+
   const startToday=new Date(now.getFullYear(),now.getMonth(),now.getDate());
   const startWeek=new Date(startToday);startWeek.setDate(startWeek.getDate()-6);
-  const total=all.length;
-  const published=all.filter(x=>Boolean(x.is_published)).length;
-  const drafts=total-published;
-  const week=all.filter(x=>mentorArticleDate(x)>=startWeek).length;
-  const totalEl=$('#mentorArticleStatTotal'),pubEl=$('#mentorArticleStatPublished'),draftEl=$('#mentorArticleStatDrafts'),weekEl=$('#mentorArticleStatWeek');
-  if(totalEl)totalEl.textContent=String(total);
-  if(pubEl)pubEl.textContent=String(published);
-  if(draftEl)draftEl.textContent=String(drafts);
-  if(weekEl)weekEl.textContent=String(week);
+  const total=all.length,published=all.filter(x=>Boolean(x.is_published)).length,drafts=total-published,week=all.filter(x=>mentorArticleDate(x)>=startWeek).length;
+
+  for(const [id,value] of [
+    ['mentorArticleStatTotal',total],['mentorArticleStatPublished',published],['mentorArticleStatDrafts',drafts],['mentorArticleStatWeek',week],
+    ['mentorArticleAdminStatTotal',total],['mentorArticleAdminStatPublished',published],['mentorArticleAdminStatDrafts',drafts],['mentorArticleAdminStatWeek',week]
+  ]){const el=$('#'+id);if(el)el.textContent=String(value)}
 
   let items=[...all];
-  const q=String($('#mentorArticleSearch')?.value||'').trim().toLowerCase();
+  const q=String(searchInput?.value||'').trim().toLowerCase();
   const cat=catSelect?.value||'all';
-  const st=$('#mentorArticleStatus')?.value||'all';
-  const sort=$('#mentorArticleSort')?.value||'new';
+  const st=statusSelect?.value||'all';
+  const sort=sortSelect?.value||'new';
 
-  if(state.articlePeriod==='today')items=items.filter(x=>mentorArticleDate(x)>=startToday);
-  if(state.articlePeriod==='weekly')items=items.filter(x=>mentorArticleDate(x)>=startWeek);
-  if(state.articlePeriod==='monthly'){
-    const monthStart=new Date(now.getFullYear(),now.getMonth(),1);
-    items=items.filter(x=>mentorArticleDate(x)>=monthStart)
+  /* Admin desktop uses Search + Category + Status + Sort only. Mobile keeps period filters. */
+  if(!desktop){
+    if(state.articlePeriod==='today')items=items.filter(x=>mentorArticleDate(x)>=startToday);
+    if(state.articlePeriod==='weekly')items=items.filter(x=>mentorArticleDate(x)>=startWeek);
+    if(state.articlePeriod==='monthly'){
+      const monthStart=new Date(now.getFullYear(),now.getMonth(),1);
+      items=items.filter(x=>mentorArticleDate(x)>=monthStart)
+    }
   }
   if(q)items=items.filter(x=>`${x.title||''} ${x.category||''} ${x.excerpt||''} ${x.content||''} ${x.content_roman||''}`.toLowerCase().includes(q));
   if(cat!=='all')items=items.filter(x=>String(x.category||'General')===cat);
@@ -961,33 +989,59 @@ function renderArticles(){
   items.sort((a,b)=>(mentorArticleDate(a)-mentorArticleDate(b))*(sort==='old'?1:-1));
 
   syncArticleControls();
-  const periodName={all:'All Articles',today:"Today's Articles",weekly:'This Week',monthly:'This Month'}[state.articlePeriod]||'All Articles';
+  const periodName=desktop?'All Articles':({all:'All Articles',today:"Today's Articles",weekly:'This Week',monthly:'This Month'}[state.articlePeriod]||'All Articles');
   const resultTitle=$('#mentorArticleResultTitle'),resultCount=$('#mentorArticleResultCount');
   if(resultTitle)resultTitle.textContent=cat!=='all'?`${cat} · ${periodName}`:periodName;
   if(resultCount)resultCount.textContent=`${items.length} result${items.length===1?'':'s'}`;
 
   if(!items.length){
-    const noLibrary=all.length===0;
-    box.innerHTML=`<div class="mentor-article-empty">
-      <span class="mentor-article-empty-icon"><i class="fa-solid ${noLibrary?'fa-pen-nib':'fa-magnifying-glass'}"></i></span>
-      <small>${noLibrary?'EDITORIAL DESK READY':'NO MATCHING ARTICLES'}</small>
-      <b>${noLibrary?'Write your first premium article':'No articles match these filters'}</b>
-      <p>${noLibrary?'Build your editorial library with educational research, strategy notes and market insight.':'Change the period, category, status or search to see more content.'}</p>
-      <button type="button" class="mentor-btn gold" ${noLibrary?'data-open-mentor-modal="article"':'data-clear-article-filters'}><i class="fa-solid ${noLibrary?'fa-plus':'fa-arrow-rotate-left'}"></i> ${noLibrary?'Create First Article':'Clear Filters'}</button>
-    </div>`;
+    if(desktop){
+      box.innerHTML='<div class="mentor-article-admin-empty"><i class="fa-solid fa-newspaper"></i><h3>No articles found</h3><p>Change the filters or create a new article.</p></div>';
+    }else{
+      const noLibrary=all.length===0;
+      box.innerHTML=`<div class="mentor-article-empty">
+        <span class="mentor-article-empty-icon"><i class="fa-solid ${noLibrary?'fa-pen-nib':'fa-magnifying-glass'}"></i></span>
+        <small>${noLibrary?'EDITORIAL DESK READY':'NO MATCHING ARTICLES'}</small>
+        <b>${noLibrary?'Write your first premium article':'No articles match these filters'}</b>
+        <p>${noLibrary?'Build your editorial library with educational research, strategy notes and market insight.':'Change the period, category, status or search to see more content.'}</p>
+        <button type="button" class="mentor-btn gold" ${noLibrary?'data-open-mentor-modal="article"':'data-clear-article-filters'}><i class="fa-solid ${noLibrary?'fa-plus':'fa-arrow-rotate-left'}"></i> ${noLibrary?'Create First Article':'Clear Filters'}</button>
+      </div>`
+    }
     return
   }
 
   let lastArticleDay='';
-  const mentorArticleDesktop=window.innerWidth>900;
+  if(desktop){
+    box.innerHTML=items.map((x,index)=>{
+      const rawDate=x.published_at||x.created_at,stamp=mentorSignalStamp(rawDate),category=String(x.category||'General'),live=Boolean(x.is_published),excerpt=x.excerpt||String(x.content||'').slice(0,180)||'No excerpt added.',dayKey=mentorContentDayKey(rawDate);
+      const groupHead=dayKey!==lastArticleDay?`<div class="admin-content-date-group"><div><span>${esc(mentorContentDayLabel(rawDate))}</span><small>${esc(stamp.date)}</small></div><i></i></div>`:'';
+      lastArticleDay=dayKey;
+      return groupHead+`<article class="admin-mentor-content-card ${index%2?'cream':'white'}">
+        <div class="admin-mentor-media">
+          ${x.cover_url?`<img src="${esc(x.cover_url)}" alt="${esc(x.title||category)}" loading="lazy">`:`<div class="admin-mentor-placeholder"><i class="fa-solid fa-newspaper"></i><span>24K EDITORIAL</span></div>`}
+          <div class="admin-mentor-media-top"><span class="gold">${esc(category)}</span><span class="${live?'live':'draft'}">${live?'Published':'Draft'}</span></div>
+          <span class="admin-mentor-index">${String(index+1).padStart(2,'0')}</span>
+        </div>
+        <div class="admin-mentor-card-body">
+          <div class="admin-mentor-card-meta"><span><i class="fa-regular fa-calendar"></i> ${esc(stamp.date)}</span><span><i class="fa-regular fa-clock"></i> ${esc(stamp.time)}</span></div>
+          <h3>${esc(x.title||'Untitled Article')}</h3>
+          <p>${esc(excerpt)}</p>
+          <div class="admin-mentor-card-foot">
+            <span class="admin-mentor-state ${live?'live':'draft'}"><i class="fa-solid ${live?'fa-circle-check':'fa-pen'}"></i> ${live?'Live':'Draft'}</span>
+            <div class="admin-mentor-actions">
+              <button type="button" data-edit-article="${x.id}"><i class="fa-solid fa-pen"></i><span>Edit</span></button>
+              <button type="button" class="danger" data-delete-article="${x.id}" title="Delete"><i class="fa-regular fa-trash-can"></i></button>
+            </div>
+          </div>
+        </div>
+      </article>`
+    }).join('');
+    return
+  }
+
   box.innerHTML=`<div class="mentor-article-grid">${items.map((x,index)=>{
-    const rawDate=x.published_at||x.created_at,stamp=mentorSignalStamp(rawDate);
-    const category=String(x.category||'General');
-    const excerpt=x.excerpt||String(x.content||'').slice(0,180)||'No excerpt added.';
-    const dayKey=mentorContentDayKey(rawDate);
-    const groupHead=mentorArticleDesktop&&dayKey!==lastArticleDay?`<div class="mentor-admin-date-group"><div><span>${esc(mentorContentDayLabel(rawDate))}</span><small>${esc(stamp.date)}</small></div><i></i></div>`:'';
-    lastArticleDay=dayKey;
-    return groupHead+`<article class="mentor-article-card ${index%2?'cream':'white'}">
+    const rawDate=x.published_at||x.created_at,stamp=mentorSignalStamp(rawDate),category=String(x.category||'General'),excerpt=x.excerpt||String(x.content||'').slice(0,180)||'No excerpt added.';
+    return `<article class="mentor-article-card ${index%2?'cream':'white'}">
       <div class="mentor-article-media">
         ${x.cover_url?`<img src="${esc(x.cover_url)}" alt="${esc(x.title||category)}" loading="lazy">`:`<div class="mentor-article-placeholder"><i class="fa-solid fa-newspaper"></i><span>24K EDITORIAL</span></div>`}
         <div class="mentor-article-media-top">
@@ -1013,7 +1067,6 @@ function renderArticles(){
     </article>`
   }).join('')}</div>`
 }
-
 function renderMentorArticlePreview(language='english'){
   const id=$('#mentorArticlePreviewModal')?.dataset.articleId;
   const a=(state.articles||[]).find(x=>String(x.id)===String(id));if(!a)return;
@@ -1240,59 +1293,74 @@ async function saveChart(e){
     b.disabled=false;b.innerHTML=oldButton
   }
 }
+function fillMentorArticleForm(form,x,desktop=false){
+  if(!form)return;
+  form.elements.id.value=x.id;
+  form.elements.existing_cover.value=x.cover_url||'';
+  form.elements.title.value=x.title||'';
+  if(form.elements.slug)form.elements.slug.value=x.slug||'';
+  if(form.elements.category)form.elements.category.value=x.category||'';
+  if(form.elements.excerpt)form.elements.excerpt.value=x.excerpt||'';
+  if(form.elements.content)form.elements.content.value=x.content||'';
+  if(!desktop&&form.elements.content_roman)form.elements.content_roman.value=x.content_roman||'';
+  if(form.elements.is_published)form.elements.is_published.checked=Boolean(x.is_published)
+}
 function editArticle(id){
   const x=state.articles.find(v=>v.id===id);if(!x)return;
-  const f=$('#mentorArticleForm');
-  f.elements.id.value=x.id;
-  f.elements.existing_cover.value=x.cover_url||'';
-  f.elements.title.value=x.title||'';
-  if(f.elements.category)f.elements.category.value=x.category||'';
-  f.elements.excerpt.value=x.excerpt||'';
-  f.elements.content.value=x.content||'';
-  if(f.elements.content_roman)f.elements.content_roman.value=x.content_roman||'';
-  f.elements.is_published.checked=Boolean(x.is_published);
+  const mobile=$('#mentorArticleForm'),desktop=$('#mentorArticleDesktopForm');
+  fillMentorArticleForm(mobile,x,false);fillMentorArticleForm(desktop,x,true);
   syncArticleEditorUI();
   syncEditorFileLabel('article',x.cover_url?{name:'Current cover image retained'}:null);
-  $('#mentorArticleModalTitle').textContent='Edit Article';
+  const mt=$('#mentorArticleModalTitle');if(mt)mt.textContent='Edit Article';
+  const dt=$('#mentorArticleDesktopModalTitle');if(dt)dt.textContent='Edit Article';
   openModal('article')
 }
 async function saveArticle(e){
   e.preventDefault();
-  const f=e.currentTarget,b=f.querySelector('button[type=submit]'),d=Object.fromEntries(new FormData(f)),published=f.elements.is_published.checked,oldCover=String(d.existing_cover||'');
+  const f=e.currentTarget,b=f.querySelector('button[type=submit]'),d=Object.fromEntries(new FormData(f)),desktop=f.id==='mentorArticleDesktopForm',published=Boolean(f.elements.is_published?.checked),oldCover=String(d.existing_cover||'');
+  const existing=state.articles.find(x=>String(x.id)===String(d.id));
   let cover=null,saved=false;
   b.disabled=true;
+  const oldButton=b.innerHTML;
+  b.innerHTML=desktop?`<i class="fa-solid fa-spinner fa-spin"></i> ${d.id?'Updating article...':'Saving article...'}`:oldButton;
   try{
-    cover=await upload(f.elements.cover.files[0],'articles');
-    const title=String(d.title||'').trim(),
-      content=String(d.content||'').trim(),
-      contentRoman=String(d.content_roman||'').trim();
+    cover=await upload(f.elements.cover.files?.[0]||null,'articles');
+    const title=String(d.title||'').trim(),content=String(d.content||'').trim(),contentRoman=String(d.content_roman||'').trim();
+    if(!title)throw new Error('Article title is required.');
+    if(desktop&&!String(d.excerpt||'').trim())throw new Error('Article excerpt is required.');
+    if(!content)throw new Error('Article content is required.');
+    if(!desktop&&!contentRoman)throw new Error('Title, English content and Roman English content are required.');
+
     const row={
       title,
+      slug:desktop?String(d.slug||slug(title)).toLowerCase().trim().replace(/[^a-z0-9-]+/g,'-'):(existing?.slug||`${slug(title)}-${Date.now().toString(36)}`),
       category:String(d.category||'').trim()||'General',
       excerpt:String(d.excerpt||'').trim()||null,
       content,
-      content_roman:contentRoman,
       content_language:'english',
       cover_url:cover||oldCover||null,
-      is_published:published,
-      published_at:published?new Date().toISOString():null
+      is_published:published
     };
-    if(!title||!content||!contentRoman)throw new Error('Title, English content and Roman English content are required.');
+    if(!desktop)row.content_roman=contentRoman;
+    if(!d.id)row.published_at=desktop?new Date().toISOString():(published?new Date().toISOString():null);
+    else if(!desktop)row.published_at=published?new Date().toISOString():null;
+
     let r;
     if(d.id)r=await sb.from('articles').update(row).eq('id',d.id).eq('created_by',state.user.id);
-    else r=await sb.from('articles').insert({...row,slug:`${slug(title)}-${Date.now().toString(36)}`,created_by:state.user.id});
+    else r=await sb.from('articles').insert({...row,created_by:state.user.id});
     if(r.error)throw r.error;
     saved=true;
     if(cover&&oldCover&&cover!==oldCover)await removeContentAsset(oldCover);
-    f.reset();f.elements.id.value='';f.elements.existing_cover.value='';f.elements.is_published.checked=true;
-    syncArticleEditorUI();syncEditorFileLabel('article',null);
-    $('#mentorArticleModalTitle').textContent='New Article';closeModals();
-    toast(d.id?'Article updated.':published?'Bilingual article published.':'Bilingual article saved as draft.');
+    resetMentorEditor('article');
+    closeModals();
+    toast(d.id?'Article updated successfully.':desktop?'Article saved successfully.':published?'Bilingual article published.':'Bilingual article saved as draft.');
     await load()
   }catch(err){
     if(cover&&!saved)await removeContentAsset(cover);
     toast(err.message||'Could not save article.')
-  }finally{b.disabled=false}
+  }finally{
+    b.disabled=false;b.innerHTML=oldButton
+  }
 }
 async function del(table,id,label){const ok=await mentorAskAction({title:`Delete ${label}?`,eyebrow:'CONFIRM DELETE',message:`Delete this ${label} permanently?`,hint:'This action cannot be undone.',confirmText:'Delete',danger:true});if(!ok)return;const source=table==='charts'?state.charts:table==='articles'?state.articles:table==='mentor_banners'?state.banners:[],item=source.find(x=>String(x.id)===String(id)),media=item?.image_url||item?.cover_url||null;const r=await sb.from(table).delete().eq('id',id).eq('created_by',state.user.id);if(r.error)throw r.error;if(media)await removeContentAsset(media);toast(`${label} deleted.`);await load()}
 async function logout(){await auditMentor('mentor_logout','success',{view:(location.hash||'#performance').slice(1)});await sb?.auth.signOut();location.href='/mentor-login.html'}
@@ -1309,7 +1377,7 @@ if(!window.__24K_MENTOR_MODAL_BACK__){
   });
 }
 document.addEventListener('click',e=>{const actionCancel=e.target.closest('[data-mentor-action-cancel]');if(actionCancel){e.preventDefault();settleMentorAction(null);return}const actionConfirm=e.target.closest('[data-mentor-action-confirm]');if(actionConfirm){e.preventDefault();const wrap=$('#mentorActionInputWrap'),input=$('#mentorActionInput');if(wrap&&!wrap.hidden){const value=String(input?.value||'').trim();if(!value)return toast('Enter a value.');settleMentorAction(value)}else settleMentorAction(true);return}const install=e.target.closest('#mentorInstallButton');if(install){e.preventDefault();(async()=>{if(mentorStandalone())return toast('Mentor App is already installed.','success');if(mentorInstallPrompt){mentorInstallPrompt.prompt();const choice=await mentorInstallPrompt.userChoice;if(choice?.outcome==='accepted')toast('Installing 24K Mentor App…','success');mentorInstallPrompt=null;updateMentorInstall();return}const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);toast(ios?'Use Share → Add to Home Screen to install the app.':'Use your browser menu → Install app / Add to Home screen.','info')})().catch(()=>{});return}const preset=e.target.closest('[data-note-preset]');if(preset){const f=$('#mentorSignalForm'),ta=f?.elements.notes;if(!ta)return;$$('[data-note-preset]').forEach(x=>x.classList.toggle('active',x===preset));if(preset.dataset.notePreset==='custom'){ta.value='';ta.focus()}else{ta.value=preset.dataset.notePreset}return}const copySignal=e.target.closest('[data-copy-signal]');if(copySignal){const s=(state.signals||[]).find(x=>String(x.id)===String(copySignal.dataset.copySignal));if(s){const text=[`${s.symbol} — ${signalTypeLabel(s)}`,`Entry: ${s.entry_from}${s.entry_to!=null?' - '+s.entry_to:''}`,`SL: ${s.stop_loss}`,`TP1: ${s.take_profit_1??'—'}`,`TP2: ${s.take_profit_2??'—'}`,`TP3: ${s.take_profit_3??'—'}`,`TP4: ${s.take_profit_4??'—'}`,s.notes?`Note: ${s.notes}`:''].filter(Boolean).join('\n');navigator.clipboard?.writeText(text).then(()=>toast('Signal copied.')).catch(()=>toast('Could not copy signal.'))}return}const noteSignal=e.target.closest('[data-note-signal]');if(noteSignal){const s=(state.signals||[]).find(x=>String(x.id)===String(noteSignal.dataset.noteSignal));toast(s?.notes||'No note added.');return}const toggleSignalRow=e.target.closest('[data-toggle-signal-row]');if(toggleSignalRow){const card=toggleSignalRow.closest('.mentor-signal-mobile-card');if(!card)return;const wasOpen=card.classList.contains('is-open');document.querySelectorAll('.mentor-signal-mobile-card.is-open').forEach(x=>{x.classList.remove('is-open');x.querySelector('[data-toggle-signal-row]')?.setAttribute('aria-expanded','false');x.querySelector('.mentor-signal-row-dropdown')?.setAttribute('aria-hidden','true')});if(!wasOpen){card.classList.add('is-open');toggleSignalRow.setAttribute('aria-expanded','true');card.querySelector('.mentor-signal-row-dropdown')?.setAttribute('aria-hidden','false')}return}const viewSignal=e.target.closest('[data-view-signal]');if(viewSignal){renderSignalDetail(viewSignal.dataset.viewSignal);return}const openFilters=e.target.closest('[data-open-signal-filters]');if(openFilters){const ids=[['mentorMobileSignalPair','mentorSignalPairFilter'],['mentorMobileSignalType','mentorSignalTypeFilter'],['mentorMobileSignalStatus','mentorSignalStatusFilter'],['mentorMobileSignalFrom','mentorSignalFrom'],['mentorMobileSignalTo','mentorSignalTo']];ids.forEach(([a,b])=>{const A=$('#'+a),B=$('#'+b);if(A&&B)A.value=B.value});openModal('signalFilter');return}const applyFilters=e.target.closest('[data-apply-signal-filters]');if(applyFilters){state.signalPeriod='custom';const ids=[['mentorSignalPairFilter','mentorMobileSignalPair'],['mentorSignalTypeFilter','mentorMobileSignalType'],['mentorSignalStatusFilter','mentorMobileSignalStatus'],['mentorSignalFrom','mentorMobileSignalFrom'],['mentorSignalTo','mentorMobileSignalTo']];ids.forEach(([a,b])=>{const A=$('#'+a),B=$('#'+b);if(A&&B)A.value=B.value});closeModals();renderSignals();syncSignalPeriodButtons();focusFilteredSignalResults();return}const resetFilters=e.target.closest('[data-reset-signal-filters]');if(resetFilters){for(const id of ['mentorSignalSearch','mentorSignalFrom','mentorSignalTo','mentorMobileSignalFrom','mentorMobileSignalTo']){const el=$('#'+id);if(el)el.value=''}for(const id of ['mentorSignalPairFilter','mentorSignalTypeFilter','mentorSignalStatusFilter','mentorMobileSignalPair','mentorMobileSignalType','mentorMobileSignalStatus']){const el=$('#'+id);if(el)el.value='all'}state.signalFilters={q:'',pair:'all',type:'all',status:'all',from:'',to:''};state.signalPeriod='all';renderSignals();syncSignalPeriodButtons();focusFilteredSignalResults();return}const quickDate=e.target.closest('[data-apply-quick-date]');if(quickDate){state.signalPeriod='custom';syncSignalPeriodButtons();toggleSignalCustomDate(false);renderSignals();focusFilteredSignalResults();return}const period=e.target.closest('[data-signal-period]');if(period){setSignalPeriod(period.dataset.signalPeriod);return}const cp=e.target.closest('[data-chart-period]');if(cp){setChartPeriod(cp.dataset.chartPeriod);return}const ccf=e.target.closest('[data-clear-chart-filters]');if(ccf){clearChartFilters();return}const sc=e.target.closest('[data-share-chart]');if(sc){shareChart(sc.dataset.shareChart).catch(x=>toast(x.message||'Could not share chart.'));return}const ap=e.target.closest('[data-article-period]');if(ap){setArticlePeriod(ap.dataset.articlePeriod);return}const caf=e.target.closest('[data-clear-article-filters]');if(caf){clearArticleFilters();return}const v=e.target.closest('[data-mentor-view]');if(v){e.preventDefault();closeModals();showView(v.dataset.mentorView);return}const o=e.target.closest('[data-open-mentor-modal]');if(o){resetMentorEditor(o.dataset.openMentorModal);openModal(o.dataset.openMentorModal);return}if(e.target.closest('[data-close-mentor-modal]'))return closeModals();const sa=e.target.closest('[data-signal-action]');if(sa)signalAction(sa.dataset.id,sa.dataset.signalAction).catch(x=>toast(x.message));const es=e.target.closest('[data-edit-signal]');if(es)editSignal(es.dataset.editSignal);const st=e.target.closest('[data-signal-tab]');if(st){state.signalTab=st.dataset.signalTab;$('[data-signal-tab]').forEach(x=>x.classList.toggle('active',x.dataset.signalTab===state.signalTab));renderSignals()}const ec=e.target.closest('[data-edit-chart]');if(ec)editChart(ec.dataset.editChart);const dc=e.target.closest('[data-delete-chart]');if(dc)del('charts',dc.dataset.deleteChart,'chart').catch(x=>toast(x.message));const ea=e.target.closest('[data-edit-article]');if(ea)editArticle(ea.dataset.editArticle);const da=e.target.closest('[data-delete-article]');if(da)del('articles',da.dataset.deleteArticle,'article').catch(x=>toast(x.message));const eb=e.target.closest('[data-edit-banner]');if(eb)editBanner(eb.dataset.editBanner);const db=e.target.closest('[data-delete-banner]');if(db)del('mentor_banners',db.dataset.deleteBanner,'banner').catch(x=>toast(x.message));const pv=e.target.closest('[data-article-preview-lang]');if(pv){renderMentorArticlePreview(pv.dataset.articlePreviewLang||'english');return}const va=e.target.closest('[data-view-article]');if(va){openMentorArticlePreview(va.dataset.viewArticle);return}});
-$('#mentorSignalForm')?.addEventListener('submit',saveSignal);$('#mentorSignalForm')?.addEventListener('input',renderMentorPipPreview);$('#mentorSignalForm')?.addEventListener('change',renderMentorPipPreview);$('#mentorChartForm')?.addEventListener('submit',saveChart);$('#mentorChartDesktopForm')?.addEventListener('submit',saveChart);bindMentorChartInstrumentPicker();$('#mentorArticleForm')?.addEventListener('submit',saveArticle);$('#mentorBannerForm')?.addEventListener('submit',saveBanner);$('#mentorLogout')?.addEventListener('click',logout);$('#mentorProfileLogout')?.addEventListener('click',logout);function mentorRefresh(btn){if(btn?.classList.contains('is-loading'))return;btn?.classList.add('is-loading');document.body.classList.add('mentor-refreshing');auditMentor('mentor_refresh','success',{view:(location.hash||'#performance').slice(1)});load().then(()=>toast('Updated')).catch(e=>toast(e.message)).finally(()=>{btn?.classList.remove('is-loading');document.body.classList.remove('mentor-refreshing')})}
+$('#mentorSignalForm')?.addEventListener('submit',saveSignal);$('#mentorSignalForm')?.addEventListener('input',renderMentorPipPreview);$('#mentorSignalForm')?.addEventListener('change',renderMentorPipPreview);$('#mentorChartForm')?.addEventListener('submit',saveChart);$('#mentorChartDesktopForm')?.addEventListener('submit',saveChart);bindMentorChartInstrumentPicker();$('#mentorArticleForm')?.addEventListener('submit',saveArticle);$('#mentorArticleDesktopForm')?.addEventListener('submit',saveArticle);$('#mentorBannerForm')?.addEventListener('submit',saveBanner);$('#mentorLogout')?.addEventListener('click',logout);$('#mentorProfileLogout')?.addEventListener('click',logout);function mentorRefresh(btn){if(btn?.classList.contains('is-loading'))return;btn?.classList.add('is-loading');document.body.classList.add('mentor-refreshing');auditMentor('mentor_refresh','success',{view:(location.hash||'#performance').slice(1)});load().then(()=>toast('Updated')).catch(e=>toast(e.message)).finally(()=>{btn?.classList.remove('is-loading');document.body.classList.remove('mentor-refreshing')})}
 $('#mentorMenuToggle')?.addEventListener('click',openMentorMenu);$('#mentorMenuClose')?.addEventListener('click',closeMentorMenu);$('#mentorSidebarOverlay')?.addEventListener('click',closeMentorMenu);
 $('#mentorRefresh')?.addEventListener('click',e=>mentorRefresh(e.currentTarget));$('#mentorTopRefresh')?.addEventListener('click',e=>mentorRefresh(e.currentTarget));$('#mentorMonthSelect')?.addEventListener('change',e=>setPerformanceMonth(e.currentTarget.value));$('#mentorMonthPrev')?.addEventListener('click',()=>shiftPerformanceMonth(-1));$('#mentorMonthNext')?.addEventListener('click',()=>shiftPerformanceMonth(1));$('#mentorThisMonth')?.addEventListener('click',()=>setPerformanceMonth(performanceMonthKey(new Date())));$('#mentorTheme')?.addEventListener('click',()=>applyMentorTheme(document.documentElement.dataset.theme==='light'?'dark':'light'));['#mentorSignalSearch','#mentorSignalPairFilter','#mentorSignalTypeFilter','#mentorSignalStatusFilter','#mentorSignalFrom','#mentorSignalTo'].forEach(s=>$(s)?.addEventListener('input',()=>{if(s==='#mentorSignalFrom'||s==='#mentorSignalTo'){state.signalPeriod='custom'}renderSignals();syncSignalPeriodButtons()}));['#mentorSignalPairFilter','#mentorSignalTypeFilter','#mentorSignalStatusFilter'].forEach(s=>$(s)?.addEventListener('change',()=>{renderSignals();syncSignalPeriodButtons();focusFilteredSignalResults()}));['#mentorSignalFrom','#mentorSignalTo'].forEach(s=>$(s)?.addEventListener('change',()=>{state.signalPeriod='custom';renderSignals();syncSignalPeriodButtons()}));$('#mentorChartSearch')?.addEventListener('input',renderCharts);['#mentorChartPair','#mentorChartSort'].forEach(s=>$(s)?.addEventListener('change',()=>{renderCharts();syncChartControls()}));$('#mentorArticleSearch')?.addEventListener('input',renderArticles);['#mentorArticleCategory','#mentorArticleStatus','#mentorArticleSort'].forEach(s=>$(s)?.addEventListener('change',()=>{renderArticles();syncArticleControls()}));$$('.mentor-modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeModals()}));
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMentorMenu()});
