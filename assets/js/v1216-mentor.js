@@ -78,8 +78,8 @@ function closeMentorMenu(){
 function showView(k){
   if(k==='more')k='settings';
   if(['signals','charts','articles','banners'].includes(k)&&!state.perms[k])return toast('Admin has not enabled this section.');
-  $('[data-mentor-panel]').forEach(x=>x.classList.toggle('active',x.dataset.mentorPanel===k));
-  $('[data-mentor-view]').forEach(x=>x.classList.toggle('active',x.dataset.mentorView===k));
+  $$('[data-mentor-panel]').forEach(x=>x.classList.toggle('active',x.dataset.mentorPanel===k));
+  $$('[data-mentor-view]').forEach(x=>x.classList.toggle('active',x.dataset.mentorView===k));
   let [t,s]=titleFor(k);
   if(k==='settings'&&window.innerWidth<=760){t='More';s='Account, access & workspace'}
   if($('#mentorPageTitle'))$('#mentorPageTitle').textContent=t;if($('#mentorPageSubtitle'))$('#mentorPageSubtitle').textContent=s;
