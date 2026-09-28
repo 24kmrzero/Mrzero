@@ -62,23 +62,25 @@
     font-weight:950!important;
     letter-spacing:.13em!important;
   }
-  [data-mentor-panel="charts"] .mentor-chart-kicker:after{display:none!important}
+  [data-mentor-panel="charts"] .mentor-chart-kicker{font-size:0!important}
+  [data-mentor-panel="charts"] .mentor-chart-kicker i{font-size:8px!important}
+  [data-mentor-panel="charts"] .mentor-chart-kicker:after{content:"CHART COMMAND CENTER";display:inline!important;font-size:7.4px!important}
   [data-mentor-panel="charts"] .mentor-chart-command-copy h2{
     margin:10px 0 5px!important;
     color:#181a20!important;
-    font-size:28px!important;
+    font-size:0!important;
     line-height:1!important;
     letter-spacing:-.04em!important;
   }
-  [data-mentor-panel="charts"] .mentor-chart-command-copy h2:after{display:none!important}
+  [data-mentor-panel="charts"] .mentor-chart-command-copy h2:after{content:"Professional Chart Analysis";display:inline!important;font-size:28px!important}
   [data-mentor-panel="charts"] .mentor-chart-command-copy p{
     max-width:650px!important;
     margin:0!important;
     color:#707b88!important;
-    font-size:10.5px!important;
+    font-size:0!important;
     line-height:1.5!important;
   }
-  [data-mentor-panel="charts"] .mentor-chart-command-copy p:after{display:none!important}
+  [data-mentor-panel="charts"] .mentor-chart-command-copy p:after{content:"Publish, review and manage high-quality market analysis from one focused research workspace.";display:inline!important;font-size:10.5px!important}
   [data-mentor-panel="charts"] .mentor-chart-command-copy:after{display:none!important}
   [data-mentor-panel="charts"] .mentor-chart-workspace-badge{
     display:inline-flex!important;
@@ -107,10 +109,8 @@
     font-size:8.5px!important;
     font-weight:900!important;
   }
-  [data-mentor-panel="charts"] .mentor-chart-create span{
-    font-size:8.5px!important;
-  }
-  [data-mentor-panel="charts"] .mentor-chart-create span:after{display:none!important}
+  [data-mentor-panel="charts"] .mentor-chart-create span{font-size:0!important}
+  [data-mentor-panel="charts"] .mentor-chart-create span:after{content:"New Chart Analysis";display:inline!important;font-size:8.5px!important}
 
   /* Keep original mobile KPI strip untouched; desktop gets Admin KPI strip */
   [data-mentor-panel="charts"] .mentor-chart-mobile-stats{display:none!important}
