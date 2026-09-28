@@ -123,7 +123,7 @@ function installModals(){if($('#v14TeamModal'))return;document.body.insertAdjace
 
        <section class="premium-link-section">
         <div class="premium-link-section-head"><span>03</span><div><h4>Destination & Source</h4><p>Choose where the visitor lands and where traffic comes from.</p></div></div>
-        <div data-v14-normal-fields class="form-field full"><div class="form-grid"><div class="form-field"><label>Send Visitor To</label><select name="normal_destination"><option value="/sign-up/">Sign Up</option><option value="/">Home</option><option value="/courses/">Courses</option><option value="/free-course/">Free Course Form</option></select></div><div class="form-field"><label>Shared On</label><select name="normal_source"><option>WhatsApp</option><option>Instagram</option><option>Facebook</option><option>TikTok</option><option>YouTube</option><option>Direct</option><option>Other</option></select></div></div></div>
+        <div data-v14-normal-fields class="form-field full"><div class="form-grid"><div class="form-field"><label>Send Visitor To</label><select name="normal_destination" id="v14NormalDestination"><option value="/sign-up/">Sign Up Only</option><option value="/">Home</option><option value="/courses/">Courses</option><option value="/free-course/">Legacy Free Course Form</option></select></div><div class="form-field"><label>Shared On</label><select name="normal_source"><option>WhatsApp</option><option>Instagram</option><option>Facebook</option><option>TikTok</option><option>YouTube</option><option>Direct</option><option>Other</option></select></div></div></div>
         <div data-v14-ad-fields class="form-field full" style="display:none"><div class="form-grid"><div class="form-field"><label>Select Course</label><select name="course_id" id="v14LinkCourse"><option value="">Select Course</option></select></div><div class="form-field"><label>Ad Platform</label><select name="ad_source"><option>Meta Ads</option><option>TikTok Ads</option><option>YouTube Ads</option><option>Google Ads</option><option>Other</option></select></div><div class="form-field full"><label>Campaign Name</label><input name="campaign" placeholder="e.g. Pakistan Level 1 Campaign"><small class="premium-field-help">This appears in analytics and attribution.</small></div></div></div>
        </section>
 
@@ -131,7 +131,7 @@ function installModals(){if($('#v14TeamModal'))return;document.body.insertAdjace
         <div class="premium-link-section-head"><span>04</span><div><h4>Lead Routing</h4><p>Choose who receives leads generated from this link.</p></div></div>
         <div class="form-grid">
          <div class="form-field full"><label>Lead Goes To</label><select name="lead_to" id="v14LeadTo"><option value="auto">Auto Distribute Between Active Team</option></select><small class="premium-field-help">Auto distribute rotates leads across Team members who have Leads ON.</small></div>
-         <div class="form-field full"><details class="v14-advanced premium-link-advanced"><summary><span><i class="fa-solid fa-sliders"></i> Advanced</span><i class="fa-solid fa-chevron-down"></i></summary><div><label class="premium-toggle-row"><div><b>Link Active</b><small>Turn this off to stop new traffic without deleting the link.</small></div><span class="premium-switch"><input name="is_active" type="checkbox" checked><span></span></span></label></div></details></div>
+         <div class="form-field full"><label class="premium-toggle-row premium-link-status-row"><div><b>Link Status</b><small>Keep this ON to accept clicks and new registrations. Turn it OFF to pause this link.</small></div><span class="premium-switch"><input name="is_active" type="checkbox" checked><span></span></span></label></div>
         </div>
        </section>
       </div>
@@ -195,6 +195,7 @@ function renderLinks(){
 }
 function fillLinkSelects(){
  const c=$('#v14LinkCourse');if(c){const cur=c.value;c.innerHTML='<option value="">Select Course</option>'+state.courses.map(x=>`<option value="${x.id}">${esc(x.title)} — ${x.course_type==='free'?'FREE':`${x.currency||'USD'} ${Number(x.discount_price??x.price??0).toLocaleString()}`}</option>`).join('');if(cur&&state.courses.some(x=>String(x.id)===String(cur)))c.value=cur}
+ const dest=$('#v14NormalDestination');if(dest){const cur=dest.value;const base='<option value="/sign-up/">Sign Up Only</option><option value="/">Home</option><option value="/courses/">Courses</option><option value="/free-course/">Legacy Free Course Form</option>';const enrollment=state.courses.filter(x=>x.is_published!==false&&x.enrollment_open!==false).map(x=>`<option value="enroll:${x.id}">Sign Up + Enroll — ${esc(x.title)}</option>`).join('');dest.innerHTML=base+(enrollment?'<optgroup label="SIGN UP + ENROLLMENT">'+enrollment+'</optgroup>':'');if(cur&&[...dest.options].some(o=>o.value===cur))dest.value=cur}
  const lead=$('#v14LeadTo');if(lead){const cur=lead.value;lead.innerHTML='<option value="auto">Auto Distribute Between Active Team</option>'+state.team.filter(a=>a.is_active!==false&&a.receive_leads!==false).map(a=>`<option value="${a.id}">${esc(a.display_name||a.username)}</option>`).join('');if(cur&&[...lead.options].some(o=>o.value===cur))lead.value=cur}
  const source=$('#v14LinkSource');if(source){const cur=source.value;const values=[...new Set(state.links.map(x=>String(x.source||'Direct')).filter(Boolean))].sort();source.innerHTML='<option value="all">All Sources</option>'+values.map(x=>`<option value="${attr(x)}">${esc(x)}</option>`).join('');source.value=values.includes(cur)?cur:'all'}
  const courseFilter=$('#v14LinkCourseFilter');if(courseFilter){const cur=courseFilter.value;courseFilter.innerHTML='<option value="all">All Courses / Pages</option><option value="none">Normal / No Course</option>'+state.courses.map(x=>`<option value="${x.id}">${esc(x.title)}</option>`).join('');courseFilter.value=(cur==='none'||state.courses.some(x=>String(x.id)===String(cur)))?cur:'all'}
@@ -204,18 +205,27 @@ function updateLinkPreview(){
   const type=String(f.elements.link_type?.value||linkType||'normal');
   const name=String(f.elements.name?.value||'').trim()||'New tracked link';
   const active=!!f.elements.is_active?.checked;
-  let destination='/sign-up/',destinationLabel='Sign Up',source='WhatsApp',campaign=name,courseSlug='';
+  let destination='/sign-up/',destinationLabel='Sign Up Only',source='WhatsApp',campaign=name,courseSlug='',course=null;
   if(type==='ad'){
-    const course=state.courses.find(x=>String(x.id)===String(f.elements.course_id?.value||''));
+    course=state.courses.find(x=>String(x.id)===String(f.elements.course_id?.value||''));
     source=String(f.elements.ad_source?.value||'Meta Ads');
     campaign=String(f.elements.campaign?.value||'').trim()||name;
-    destination=course&&isFreeCourse(course)?'/free-course/':'/sign-up/';
-    destinationLabel=course?.title||'Select a course';
+    destination='/enroll/';
+    destinationLabel=course?`Sign Up + Enroll — ${course.title}`:'Select a course';
     courseSlug=course?.slug||'';
   }else{
-    destination=normPath(f.elements.normal_destination?.value||'/sign-up/');
-    const opt=f.elements.normal_destination?.selectedOptions?.[0];
-    destinationLabel=opt?.textContent?.trim()||destination;
+    const raw=String(f.elements.normal_destination?.value||'/sign-up/');
+    if(raw.startsWith('enroll:')){
+      const courseId=raw.slice(7);
+      course=state.courses.find(x=>String(x.id)===String(courseId));
+      destination='/enroll/';
+      destinationLabel=course?`Sign Up + Enroll — ${course.title}`:'Sign Up + Enrollment';
+      courseSlug=course?.slug||'';
+    }else{
+      destination=normPath(raw);
+      const opt=f.elements.normal_destination?.selectedOptions?.[0];
+      destinationLabel=opt?.textContent?.trim()||destination;
+    }
     source=String(f.elements.normal_source?.value||'WhatsApp');
   }
   const lead=String(f.elements.lead_to?.value||'auto');
@@ -255,8 +265,38 @@ window.AdminUnifiedEditLink=async(id)=>{try{await loadTeamLinks();editLink(id)}c
 async function saveTeam(e){e.preventDefault();const f=e.currentTarget,d=Object.fromEntries(new FormData(f));try{await rpc('admin_upsert_team_account_v12_15',{p_team_id:d.team_id||null,p_display_name:String(d.display_name||'').trim(),p_username:String(d.username||'').trim(),p_email:String(d.email||'').trim(),p_whatsapp:String(d.whatsapp||'').trim(),p_password:String(d.password||''),p_is_active:f.elements.is_active.checked,p_receive_leads:f.elements.receive_leads.checked,p_salutation:String(d.salutation||'').trim()||null});closeModal('v14TeamModal');toast('Team member saved.','success');await loadTeamLinks()}catch(x){toast(A.friendlyError(x,'Could not save Team member.'),'error')}}
 function setLinkType(t){linkType=t;const f=$('#v14LinkForm');if(!f)return;f.elements.link_type.value=t;$$('[data-v14-link-type]').forEach(b=>b.classList.toggle('on',b.dataset.v14LinkType===t));$('[data-v14-normal-fields]').style.display=t==='normal'?'block':'none';$('[data-v14-ad-fields]').style.display=t==='ad'?'block':'none';$('#v14LinkModalTitle').textContent=f.elements.id.value?(t==='ad'?'Edit Ad Link':'Edit Normal Link'):(t==='ad'?'Create Ad Link':'Create Normal Link');updateLinkPreview()}
 function newLink(ad=false){const f=$('#v14LinkForm');f.reset();f.elements.id.value='';f.elements.ref_code.value='';f.elements.is_active.checked=true;fillLinkSelects();f.elements.lead_to.value='auto';setLinkType(ad?'ad':'normal');updateLinkPreview();openModal('v14LinkModal')}
-function editLink(id){const l=state.links.find(x=>x.id===id);if(!l)return;const f=$('#v14LinkForm');f.reset();fillLinkSelects();f.elements.id.value=l.id;f.elements.ref_code.value=l.ref_code||'';f.elements.name.value=l.name||'';f.elements.is_active.checked=!!l.is_active;setLinkType(l.is_ad_link?'ad':'normal');if(l.is_ad_link){f.elements.course_id.value=l.course_id||'';f.elements.ad_source.value=l.source||'Meta Ads';f.elements.campaign.value=l.campaign||''}else{f.elements.normal_destination.value=normPath(l.destination_path||'/sign-up/');f.elements.normal_source.value=l.source||'WhatsApp'}const teams=Array.isArray(l.assigned_teams)?l.assigned_teams:[];f.elements.lead_to.value=l.round_robin?'auto':(teams[0]?.team_id||'auto');updateLinkPreview();openModal('v14LinkModal')}
-async function saveLink(e){e.preventDefault();const f=e.currentTarget,d=Object.fromEntries(new FormData(f)),id=String(d.id||''),name=String(d.name||'').trim(),type=String(d.link_type||'normal'),lead=String(d.lead_to||'auto');if(!name)return toast('Link name is required.','error');let course=null,source='',campaign=null,destination='';if(type==='ad'){course=state.courses.find(c=>String(c.id)===String(d.course_id||''));if(!course)return toast('Select a course for the Ad Link.','error');source=String(d.ad_source||'Meta Ads');campaign=String(d.campaign||'').trim()||name;destination=isFreeCourse(course)?'/free-course/':'/sign-up/'}else{source=String(d.normal_source||'WhatsApp');campaign=name;destination=normPath(d.normal_destination||'/sign-up/')}const row={name,ref_code:String(d.ref_code||'').trim()||refCode(name),source,campaign,destination_path:destination,course_id:type==='ad'?course.id:null,is_ad_link:type==='ad',round_robin:lead==='auto',referral_whatsapp:null,is_active:f.elements.is_active.checked,updated_at:new Date().toISOString()};try{let linkId=id;if(id){await one(sb.from('tracking_links').update(row).eq('id',id))}else{const u=await A.getCurrentUser();row.created_by=u.id;const x=await one(sb.from('tracking_links').insert(row).select('id').single());linkId=x.id}const ids=lead==='auto'?state.team.filter(a=>a.is_active!==false&&a.receive_leads!==false).map(a=>a.id):[lead];await rpc('admin_set_link_team_assignments',{p_link_id:linkId,p_team_ids:ids});closeModal('v14LinkModal');toast(id?'Link updated.':'New link created.','success');await loadTeamLinks();if(typeof window.AdminReferenceRefreshLinks==='function')await window.AdminReferenceRefreshLinks()}catch(x){toast(A.friendlyError(x,'Could not save link.'),'error')}}
+function editLink(id){const l=state.links.find(x=>x.id===id);if(!l)return;const f=$('#v14LinkForm');f.reset();fillLinkSelects();f.elements.id.value=l.id;f.elements.ref_code.value=l.ref_code||'';f.elements.name.value=l.name||'';f.elements.is_active.checked=!!l.is_active;setLinkType(l.is_ad_link?'ad':'normal');if(l.is_ad_link){f.elements.course_id.value=l.course_id||'';f.elements.ad_source.value=l.source||'Meta Ads';f.elements.campaign.value=l.campaign||''}else{const isEnrollment=normPath(l.destination_path||'/sign-up/')==='/enroll/'&&l.course_id;f.elements.normal_destination.value=isEnrollment?`enroll:${l.course_id}`:normPath(l.destination_path||'/sign-up/');f.elements.normal_source.value=l.source||'WhatsApp'}const teams=Array.isArray(l.assigned_teams)?l.assigned_teams:[];f.elements.lead_to.value=l.round_robin?'auto':(teams[0]?.team_id||'auto');updateLinkPreview();openModal('v14LinkModal')}
+async function saveLink(e){
+ e.preventDefault();
+ const f=e.currentTarget,d=Object.fromEntries(new FormData(f)),id=String(d.id||''),name=String(d.name||'').trim(),type=String(d.link_type||'normal'),lead=String(d.lead_to||'auto');
+ if(!name)return toast('Link name is required.','error');
+ let course=null,source='',campaign=null,destination='',courseId=null;
+ if(type==='ad'){
+   course=state.courses.find(c=>String(c.id)===String(d.course_id||''));
+   if(!course)return toast('Select a course for the Ad Link.','error');
+   source=String(d.ad_source||'Meta Ads');campaign=String(d.campaign||'').trim()||name;destination='/enroll/';courseId=course.id;
+ }else{
+   source=String(d.normal_source||'WhatsApp');campaign=name;
+   const raw=String(d.normal_destination||'/sign-up/');
+   if(raw.startsWith('enroll:')){
+     courseId=raw.slice(7);
+     course=state.courses.find(c=>String(c.id)===String(courseId));
+     if(!course)return toast('Select a valid course for enrollment.','error');
+     destination='/enroll/';
+   }else destination=normPath(raw);
+ }
+ const row={name,ref_code:String(d.ref_code||'').trim()||refCode(name),source,campaign,destination_path:destination,course_id:courseId,is_ad_link:type==='ad',round_robin:lead==='auto',referral_whatsapp:null,is_active:f.elements.is_active.checked,updated_at:new Date().toISOString()};
+ try{
+   let linkId=id;
+   if(id){await one(sb.from('tracking_links').update(row).eq('id',id))}
+   else{const u=await A.getCurrentUser();row.created_by=u.id;const x=await one(sb.from('tracking_links').insert(row).select('id').single());linkId=x.id}
+   const ids=lead==='auto'?state.team.filter(a=>a.is_active!==false&&a.receive_leads!==false).map(a=>a.id):[lead];
+   await rpc('admin_set_link_team_assignments',{p_link_id:linkId,p_team_ids:ids});
+   closeModal('v14LinkModal');toast(id?'Link updated.':'New link created.','success');
+   await loadTeamLinks();
+   if(typeof window.AdminReferenceRefreshLinks==='function')await window.AdminReferenceRefreshLinks();
+ }catch(x){toast(A.friendlyError(x,'Could not save link.'),'error')}
+}
 function leadRange(){const v=$('#v14LeadRange').value,now=new Date();let s=null,e=null;if(v==='today'){s=new Date(now.getFullYear(),now.getMonth(),now.getDate());e=new Date(s);e.setDate(e.getDate()+1)}else if(v==='yesterday'){e=new Date(now.getFullYear(),now.getMonth(),now.getDate());s=new Date(e);s.setDate(s.getDate()-1)}else if(v==='7d'){e=new Date();s=new Date();s.setDate(s.getDate()-7)}else if(v==='custom'){const sv=$('#v14LeadStart').value,ev=$('#v14LeadEnd').value;if(sv)s=new Date(`${sv}T00:00:00`);if(ev){e=new Date(`${ev}T00:00:00`);e.setDate(e.getDate()+1)}}return{start:s?s.toISOString():null,end:e?e.toISOString():null}}
 async function openLeadDetails(id){state.activeLink=state.links.find(x=>x.id===id);if(!state.activeLink)return;$('#v14LeadTitle').textContent=state.activeLink.name;$('#v14LeadSubtitle').textContent=`${state.activeLink.is_ad_link?'Ad Link':'Normal Link'} · ${linkUrl(state.activeLink)}`;$('#v14LeadRange').value='all';$('#v14LeadStart').style.display='none';$('#v14LeadEnd').style.display='none';$('#v14LeadTeam').innerHTML='<option value="">All Team</option>'+state.team.map(a=>`<option value="${a.id}">${esc(a.display_name||a.username)}</option>`).join('');$('#v14LeadCourse').innerHTML='<option value="">All Courses</option>'+state.courses.map(c=>`<option value="${c.id}">${esc(c.title)}</option>`).join('');const sources=[...new Set(state.links.map(x=>x.source).filter(Boolean))];$('#v14LeadSource').innerHTML='<option value="">All Sources</option>'+sources.map(x=>`<option value="${attr(x)}">${esc(x)}</option>`).join('');openModal('v14LeadModal');await loadLeadRows()}
 window.AdminUnifiedOpenLeadDetails=openLeadDetails;
