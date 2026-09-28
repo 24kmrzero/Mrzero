@@ -199,6 +199,44 @@ function fillLinkSelects(){
  const source=$('#v14LinkSource');if(source){const cur=source.value;const values=[...new Set(state.links.map(x=>String(x.source||'Direct')).filter(Boolean))].sort();source.innerHTML='<option value="all">All Sources</option>'+values.map(x=>`<option value="${attr(x)}">${esc(x)}</option>`).join('');source.value=values.includes(cur)?cur:'all'}
  const courseFilter=$('#v14LinkCourseFilter');if(courseFilter){const cur=courseFilter.value;courseFilter.innerHTML='<option value="all">All Courses / Pages</option><option value="none">Normal / No Course</option>'+state.courses.map(x=>`<option value="${x.id}">${esc(x.title)}</option>`).join('');courseFilter.value=(cur==='none'||state.courses.some(x=>String(x.id)===String(cur)))?cur:'all'}
 }
+function updateLinkPreview(){
+  const f=$('#v14LinkForm');if(!f)return;
+  const type=String(f.elements.link_type?.value||linkType||'normal');
+  const name=String(f.elements.name?.value||'').trim()||'New tracked link';
+  const active=!!f.elements.is_active?.checked;
+  let destination='/sign-up/',destinationLabel='Sign Up',source='WhatsApp',campaign=name,courseSlug='';
+  if(type==='ad'){
+    const course=state.courses.find(x=>String(x.id)===String(f.elements.course_id?.value||''));
+    source=String(f.elements.ad_source?.value||'Meta Ads');
+    campaign=String(f.elements.campaign?.value||'').trim()||name;
+    destination=course&&isFreeCourse(course)?'/free-course/':'/sign-up/';
+    destinationLabel=course?.title||'Select a course';
+    courseSlug=course?.slug||'';
+  }else{
+    destination=normPath(f.elements.normal_destination?.value||'/sign-up/');
+    const opt=f.elements.normal_destination?.selectedOptions?.[0];
+    destinationLabel=opt?.textContent?.trim()||destination;
+    source=String(f.elements.normal_source?.value||'WhatsApp');
+  }
+  const lead=String(f.elements.lead_to?.value||'auto');
+  const leadOpt=f.elements.lead_to?.selectedOptions?.[0];
+  const routing=lead==='auto'?'Auto Distribute':(leadOpt?.textContent?.trim()||'Selected Team');
+  const ref=String(f.elements.ref_code?.value||'').trim()||'preview-link';
+  const u=new URL(destination,location.origin);
+  u.searchParams.set('ref',ref);
+  if(source)u.searchParams.set('source',source);
+  if(campaign)u.searchParams.set('campaign',campaign);
+  if(courseSlug)u.searchParams.set('course',courseSlug);
+  const typeEl=$('#v14PreviewType'),statusEl=$('#v14PreviewStatus');
+  if(typeEl){typeEl.textContent=type==='ad'?'AD LINK':'NORMAL LINK';typeEl.classList.toggle('ad',type==='ad');typeEl.classList.toggle('normal',type!=='ad')}
+  if(statusEl){statusEl.textContent=active?'ACTIVE':'OFF';statusEl.classList.toggle('off',!active);statusEl.classList.toggle('active',active)}
+  const nameEl=$('#v14PreviewName');if(nameEl)nameEl.textContent=name;
+  const summaryEl=$('#v14PreviewSummary');if(summaryEl)summaryEl.textContent=`${destinationLabel} · ${source}`;
+  const destEl=$('#v14PreviewDestination');if(destEl)destEl.textContent=destinationLabel;
+  const sourceEl=$('#v14PreviewSource');if(sourceEl)sourceEl.textContent=source;
+  const routeEl=$('#v14PreviewRouting');if(routeEl)routeEl.textContent=routing;
+  const urlEl=$('#v14PreviewUrl');if(urlEl)urlEl.textContent=u.toString();
+}
 function teamTab(k='team'){$$('[data-v14-team-tab]').forEach(b=>b.classList.toggle('on',b.dataset.v14TeamTab===k));$$('[data-v14-team-panel]').forEach(p=>p.classList.toggle('on',p.dataset.v14TeamPanel==='team'))}
 function newTeam(){const f=$('#v14TeamForm');f.reset();f.elements.team_id.value='';f.elements.receive_leads.checked=true;f.elements.is_active.checked=true;f.elements.password.required=true;$('#v14TeamModalTitle').textContent='Add Team Member';openModal('v14TeamModal')}
 function editTeam(id){const a=state.team.find(x=>x.id===id);if(!a)return;const f=$('#v14TeamForm');f.reset();f.elements.team_id.value=a.id;f.elements.display_name.value=a.display_name||'';f.elements.username.value=a.username||'';f.elements.whatsapp.value=a.whatsapp||'';f.elements.email.value=a.email||'';if(f.elements.salutation){const n=String(a.display_name||'').trim();f.elements.salutation.value=a.salutation||(/^miss\b|^ms\.?\b/i.test(n)?'Miss':/^sir\b/i.test(n)?'Sir':'');}f.elements.receive_leads.checked=a.receive_leads!==false;f.elements.is_active.checked=a.is_active!==false;f.elements.password.required=false;$('#v14TeamModalTitle').textContent='Edit Team Member';openModal('v14TeamModal')}
