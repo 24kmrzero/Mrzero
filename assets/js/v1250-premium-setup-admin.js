@@ -28,30 +28,50 @@
   }
 
   function ensureModal(){
-    if($('#v1250BrokerModal'))return;
-    document.body.insertAdjacentHTML('beforeend',`
-      <div class="app-modal" id="v1250BrokerModal" aria-hidden="true">
-        <div class="app-modal-card">
-          <div class="app-modal-head"><div><h3>Edit Broker Access</h3><small class="muted">Change partner link and Student instructions.</small></div><button class="modal-close" type="button" data-v1250-close><i class="fa-solid fa-xmark"></i></button></div>
-          <form id="v1250BrokerForm">
-            <div class="app-modal-body">
-              <div class="form-grid">
-                <div class="form-field"><label>Broker</label><input name="broker" readonly></div>
-                <div class="form-field"><label>Sort Order</label><input name="sort_order" type="number" min="0"></div>
-                <div class="form-field full"><label>Official Partner Link</label><input name="partner_url" type="url" required placeholder="https://..."></div>
-                <div class="form-field full"><label>New Account Instructions</label><textarea name="new_guide" required></textarea></div>
-                <div class="form-field full"><label>Existing Account / IB Shift Instructions</label><textarea name="existing_guide" required></textarea></div>
-                <label class="check-row"><input name="is_active" type="checkbox" checked> Active in Student Premium tab</label>
+    if(!$('#v1250BrokerListModal')){
+      document.body.insertAdjacentHTML('beforeend',`
+        <div class="app-modal premium-broker-list-modal" id="v1250BrokerListModal" aria-hidden="true">
+          <div class="app-modal-card premium-broker-list-card">
+            <div class="app-modal-head"><div><span class="premium-setup-kicker"><i class="fa-solid fa-link"></i> BROKER ACCESS SETUP</span><h3>Broker Partner Links</h3><small class="muted">Manage partner links and student instructions from one place.</small></div><button class="modal-close" type="button" data-v1250-close-list aria-label="Close Broker Partner Links"><i class="fa-solid fa-xmark"></i></button></div>
+            <div class="app-modal-body"><div id="v1250BrokerList" class="premium-broker-list"></div></div>
+            <div class="app-modal-foot"><span class="premium-broker-list-note"><i class="fa-solid fa-circle-info"></i> These links are used in the Student Premium access flow.</span><button type="button" class="app-btn outline" data-v1250-close-list>Close</button></div>
+          </div>
+        </div>`);
+      document.querySelectorAll('[data-v1250-close-list]').forEach(b=>b.addEventListener('click',closeBrokerList));
+    }
+    if(!$('#v1250BrokerModal')){
+      document.body.insertAdjacentHTML('beforeend',`
+        <div class="app-modal" id="v1250BrokerModal" aria-hidden="true">
+          <div class="app-modal-card">
+            <div class="app-modal-head"><div><h3>Edit Broker Access</h3><small class="muted">Change partner link and Student instructions.</small></div><button class="modal-close" type="button" data-v1250-close><i class="fa-solid fa-xmark"></i></button></div>
+            <form id="v1250BrokerForm">
+              <div class="app-modal-body">
+                <div class="form-grid">
+                  <div class="form-field"><label>Broker</label><input name="broker" readonly></div>
+                  <div class="form-field"><label>Sort Order</label><input name="sort_order" type="number" min="0"></div>
+                  <div class="form-field full"><label>Official Partner Link</label><input name="partner_url" type="url" required placeholder="https://..."></div>
+                  <div class="form-field full"><label>New Account Instructions</label><textarea name="new_guide" required></textarea></div>
+                  <div class="form-field full"><label>Existing Account / IB Shift Instructions</label><textarea name="existing_guide" required></textarea></div>
+                  <label class="check-row"><input name="is_active" type="checkbox" checked> Active in Student Premium tab</label>
+                </div>
               </div>
-            </div>
-            <div class="app-modal-foot"><button type="button" class="app-btn outline" data-v1250-close>Cancel</button><button type="submit" class="app-btn gold">Save Broker Setup</button></div>
-          </form>
-        </div>
-      </div>`);
-    document.querySelectorAll('[data-v1250-close]').forEach(b=>b.addEventListener('click',closeModal));
-    $('#v1250BrokerForm')?.addEventListener('submit',saveBroker);
+              <div class="app-modal-foot"><button type="button" class="app-btn outline" data-v1250-close>Cancel</button><button type="submit" class="app-btn gold">Save Broker Setup</button></div>
+            </form>
+          </div>
+        </div>`);
+      document.querySelectorAll('[data-v1250-close]').forEach(b=>b.addEventListener('click',closeModal));
+      $('#v1250BrokerForm')?.addEventListener('submit',saveBroker);
+    }
   }
 
+  function renderBrokerList(){
+    const list=$('#v1250BrokerList');if(!list)return;
+    list.innerHTML=brokerRows.length?brokerRows.map(r=>`<div class="premium-broker-list-row"><span class="premium-broker-list-icon"><i class="fa-solid fa-building-columns"></i></span><div class="premium-broker-list-main"><div><b>${esc(r.broker)}</b><span class="${r.is_active?'v1250-live':'v1250-test'}">${r.is_active?'ACTIVE':'OFF'}</span></div><small>${esc(r.partner_url||'No partner link')}</small></div><button type="button" class="app-btn small outline" data-v1250-edit-broker="${esc(r.broker)}"><i class="fa-solid fa-pen"></i> Edit</button></div>`).join(''):'<div class="v1250-empty">No broker partner links configured.</div>';
+    list.querySelectorAll('[data-v1250-edit-broker]').forEach(b=>b.addEventListener('click',()=>editBroker(b.dataset.v1250EditBroker)));
+  }
+
+  function openBrokerList(){ensureModal();renderBrokerList();const m=$('#v1250BrokerListModal');if(!m)return;m.classList.add('open');m.setAttribute('aria-hidden','false');document.body.classList.add('modal-open')}
+  function closeBrokerList(){const m=$('#v1250BrokerListModal');if(!m)return;m.classList.remove('open');m.setAttribute('aria-hidden','true');if(!document.querySelector('.app-modal.open'))document.body.classList.remove('modal-open')}
   function openModal(){const m=$('#v1250BrokerModal');if(!m)return;m.classList.add('open');m.setAttribute('aria-hidden','false');document.body.classList.add('modal-open')}
   function closeModal(){const m=$('#v1250BrokerModal');if(!m)return;m.classList.remove('open');m.setAttribute('aria-hidden','true');if(!document.querySelector('.app-modal.open'))document.body.classList.remove('modal-open')}
 
@@ -81,16 +101,15 @@
       if(heading)heading.insertAdjacentElement('afterend',host);else panel.prepend(host);
     }
     host.innerHTML=`
-      <div class="v1250-setup-head">
-        <div><span class="premium-setup-kicker"><i class="fa-solid fa-link"></i> BROKER ACCESS SETUP</span><h3>Broker Partner Links</h3><p>Manage broker partner links and student instructions here. Payment destinations are managed from the main Payment Methods page.</p></div>
-        <a class="app-btn outline premium-payment-methods-link" href="/admin/payment-methods/"><i class="fa-solid fa-credit-card"></i> Payment Methods</a>
-      </div>
-      <div class="v1250-setup-grid premium-broker-grid-single">
-        <div class="v1250-setup-box premium-broker-box"><h4>Broker Partner Links & Instructions</h4>
-          ${brokerRows.map(r=>`<div class="v1250-broker"><div><b>${esc(r.broker)} <span class="${r.is_active?'v1250-live':'v1250-test'}">${r.is_active?'ACTIVE':'OFF'}</span></b><small>${esc(r.partner_url||'No link')}</small></div><button type="button" class="app-btn small outline" data-v1250-edit-broker="${esc(r.broker)}"><i class="fa-solid fa-pen"></i> Edit</button></div>`).join('')||'<div class="v1250-empty">No broker partner links configured.</div>'}
+      <div class="v1250-setup-head premium-setup-launcher">
+        <div><span class="premium-setup-kicker"><i class="fa-solid fa-sliders"></i> PREMIUM SETUP</span><h3>Payment & Broker Setup</h3><p>Open only the setup you need. Payment destinations and broker links stay hidden from the main page.</p></div>
+        <div class="premium-setup-actions">
+          <a class="app-btn outline premium-payment-methods-link" href="/admin/payment-methods/"><i class="fa-solid fa-credit-card"></i> Payment Methods</a>
+          <button type="button" class="app-btn outline premium-broker-links-open" id="v1250OpenBrokerLinks"><i class="fa-solid fa-link"></i> Broker Partner Links <span>${brokerRows.length}</span></button>
         </div>
       </div>`;
-    host.querySelectorAll('[data-v1250-edit-broker]').forEach(b=>b.addEventListener('click',()=>editBroker(b.dataset.v1250EditBroker)));
+    $('#v1250OpenBrokerLinks')?.addEventListener('click',openBrokerList);
+    renderBrokerList();
   }
 
   function editBroker(name){
@@ -123,6 +142,7 @@
       closeModal();
       A.toast?.('Broker access setup saved.','success');
       await load();
+      if($('#v1250BrokerListModal')?.classList.contains('open'))renderBrokerList();
     }catch(err){A.toast?.(A.friendlyError?.(err,'Could not save broker setup.')||err.message,'error')}
     finally{A.setLoading?.(b,false)}
   }
