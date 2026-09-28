@@ -1,0 +1,78 @@
+/* 24K MR ZERO — Team Performance Premium Desktop v13.69 */
+@media (min-width:901px){
+  #teamApp:not(.hidden) [data-view-panel="performance"]{max-width:1460px!important;margin:0 auto!important;padding:18px 18px 30px!important}
+  #teamApp:not(.hidden) [data-view-panel="performance"] *{box-sizing:border-box}
+  #teamApp:not(.hidden) [data-view-panel="performance"] .team-tool-command{
+    position:relative!important;overflow:hidden!important;padding:20px!important;
+    border:1px solid #e1e3e6!important;border-left:3px solid #d8a20a!important;border-radius:19px!important;
+    background:radial-gradient(520px 210px at 94% -10%,rgba(216,162,10,.10),transparent 66%),linear-gradient(135deg,#fffefa,#fffaf0)!important;
+    box-shadow:0 13px 34px rgba(65,52,16,.055)!important
+  }
+  #teamApp:not(.hidden) [data-view-panel="performance"] .team-tool-command:after{content:"DATA"!important;position:absolute!important;right:24px!important;top:-28px!important;color:rgba(172,123,0,.035)!important;font-size:106px!important;font-weight:950!important;letter-spacing:-.06em!important;pointer-events:none!important}
+  #teamApp:not(.hidden) [data-view-panel="performance"] .team-tool-command-top{position:relative!important;z-index:2!important;display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:18px!important}
+  #teamApp:not(.hidden) [data-view-panel="performance"] .team-tool-kicker{min-height:25px!important;display:inline-flex!important;align-items:center!important;gap:7px!important;padding:0 10px!important;border:1px solid #e7d69d!important;border-radius:999px!important;background:#fff9e9!important;color:#8f6900!important;font-size:7.2px!important;font-weight:950!important;letter-spacing:.12em!important}
+  #teamApp:not(.hidden) [data-view-panel="performance"] .team-tool-command h2{margin:11px 0 5px!important;color:#1d2229!important;font-size:28px!important;line-height:1!important;font-weight:950!important;letter-spacing:-.04em!important}
+  #teamApp:not(.hidden) [data-view-panel="performance"] .team-tool-command p{margin:0!important;color:#6e7883!important;font-size:10px!important;line-height:1.5!important}
+  #teamApp:not(.hidden) [data-view-panel="performance"] .team-tool-status{position:relative!important;z-index:2!important;min-width:135px!important;display:grid!important;grid-template-columns:34px minmax(0,1fr)!important;grid-template-rows:auto auto!important;align-items:center!important;gap:2px 8px!important;padding:8px 10px!important;border:1px solid #e5d8af!important;border-radius:12px!important;background:rgba(255,255,255,.82)!important}
+  #teamApp:not(.hidden) [data-view-panel="performance"] .team-tool-status>i{grid-row:1/3!important;width:34px!important;height:34px!important;display:grid!important;place-items:center!important;border-radius:10px!important;background:#fff4d8!important;color:#a87700!important}
+  #teamApp:not(.hidden) [data-view-panel="performance"] .team-tool-status>b{color:#7d5c05!important;font-size:8px!important;font-weight:950!important}
+  #teamApp:not(.hidden) [data-view-panel="performance"] .team-tool-status>small{color:#8a939d!important;font-size:6.5px!important}
+
+  #teamApp:not(.hidden) .team-performance-range{position:relative!important;z-index:2!important;margin-top:16px!important}
+  #teamApp:not(.hidden) .team-performance-range .preset-row{display:flex!important;gap:6px!important;flex-wrap:wrap!important}
+  #teamApp:not(.hidden) .team-performance-range .preset-row button{min-height:32px!important;padding:0 11px!important;border:1px solid #e1e4e7!important;border-radius:9px!important;background:#fff!important;color:#727d88!important;font:inherit!important;font-size:6.8px!important;font-weight:850!important}
+  #teamApp:not(.hidden) .team-performance-range .preset-row button.active{border-color:#d9b83f!important;background:linear-gradient(180deg,#ffd65b,#efbd22)!important;color:#332600!important}
+  #teamApp:not(.hidden) .team-performance-range .custom-range{display:grid!important;grid-template-columns:180px 180px auto!important;gap:7px!important;margin-top:8px!important}
+  #teamApp:not(.hidden) .team-performance-range .custom-range.hidden{display:none!important}
+  #teamApp:not(.hidden) .team-performance-range input{height:34px!important;padding:0 9px!important;border:1px solid #dfe3e7!important;border-radius:9px!important;background:#fff!important;color:#303740!important;font:inherit!important;font-size:7px!important}
+  #teamApp:not(.hidden) .team-performance-range .gold-btn{height:34px!important;padding:0 12px!important;border:1px solid #d7a30b!important;border-radius:9px!important;background:linear-gradient(180deg,#ffd65b,#efbd22)!important;color:#2b2100!important;font:inherit!important;font-size:7px!important;font-weight:950!important}
+
+  #teamApp:not(.hidden) .team-performance-kpis{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:9px!important;margin:11px 0!important;overflow:visible!important}
+  #teamApp:not(.hidden) .team-performance-kpis .kpi-card{min-width:0!important;min-height:88px!important;display:grid!important;align-content:center!important;gap:7px!important;padding:11px 12px!important;border:1px solid #e2e5e8!important;border-radius:13px!important;background:#fff!important;box-shadow:0 7px 20px rgba(18,24,32,.03)!important}
+  #teamApp:not(.hidden) .team-performance-kpis .kpi-card span{color:#7d8792!important;font-size:6.4px!important;font-weight:850!important}
+  #teamApp:not(.hidden) .team-performance-kpis .kpi-card b{color:#22282f!important;font-size:20px!important;line-height:1!important;font-weight:950!important}
+
+  #teamApp:not(.hidden) .team-performance-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+  #teamApp:not(.hidden) .team-performance-card{min-height:255px!important;margin:0!important;padding:14px!important;border:1px solid #e2e5e8!important;border-radius:15px!important;background:#fff!important;box-shadow:0 9px 24px rgba(18,24,32,.035)!important}
+  #teamApp:not(.hidden) .team-performance-card .card-head{min-height:42px!important;display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:8px!important;padding-bottom:10px!important;margin-bottom:10px!important;border-bottom:1px solid #eceef0!important}
+  #teamApp:not(.hidden) .team-performance-card .card-head>div{display:grid!important;gap:2px!important}
+  #teamApp:not(.hidden) .team-performance-card .card-head small{color:#a0780b!important;font-size:6px!important;font-weight:950!important;letter-spacing:.1em!important}
+  #teamApp:not(.hidden) .team-performance-card .card-head h3{margin:0!important;color:#252b32!important;font-size:12px!important;font-weight:950!important}
+
+  #teamApp:not(.hidden) .reference-funnel{display:grid!important;gap:7px!important}
+  #teamApp:not(.hidden) .reference-funnel-row{min-height:35px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;padding:0 10px!important;border:1px solid #e9e6dd!important;border-radius:9px!important;background:#faf9f5!important}
+  #teamApp:not(.hidden) .reference-funnel-row span{color:#66717c!important;font-size:6.7px!important}
+  #teamApp:not(.hidden) .reference-funnel-row b{color:#252b32!important;font-size:9px!important;font-weight:950!important}
+
+  #teamApp:not(.hidden) .course-performance-grid,#teamApp:not(.hidden) .metric-box-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+  #teamApp:not(.hidden) .course-performance-grid>div,#teamApp:not(.hidden) .metric-box-grid>div{min-height:72px!important;display:grid!important;align-content:center!important;gap:4px!important;padding:10px!important;border:1px solid #e7e9ec!important;border-radius:10px!important;background:#fbfbfa!important}
+  #teamApp:not(.hidden) .course-performance-grid span,#teamApp:not(.hidden) .metric-box-grid span{color:#7f8994!important;font-size:6.3px!important}
+  #teamApp:not(.hidden) .course-performance-grid b,#teamApp:not(.hidden) .metric-box-grid b{color:#252b32!important;font-size:14px!important;line-height:1!important;font-weight:950!important}
+
+  #teamApp:not(.hidden) .team-source-performance{min-height:0!important;margin-top:10px!important}
+  #teamApp:not(.hidden) .team-source-performance .table-wrap{overflow:auto!important;border:1px solid #eceef0!important;border-radius:11px!important}
+  #teamApp:not(.hidden) .team-source-performance table{width:100%!important;border-collapse:collapse!important;background:#fff!important}
+  #teamApp:not(.hidden) .team-source-performance th{height:38px!important;padding:0 10px!important;border-bottom:1px solid #e4dfd3!important;background:#faf8f3!important;color:#7f7357!important;font-size:6px!important;font-weight:950!important;letter-spacing:.07em!important;text-align:left!important;white-space:nowrap!important}
+  #teamApp:not(.hidden) .team-source-performance td{height:44px!important;padding:0 10px!important;border-bottom:1px solid #eef0f2!important;color:#4d5660!important;font-size:6.8px!important;white-space:nowrap!important}
+  #teamApp:not(.hidden) .team-source-performance td:first-child{display:grid!important;align-content:center!important;gap:1px!important}
+  #teamApp:not(.hidden) .team-source-performance td b{color:#2d343c!important;font-size:7px!important}
+  #teamApp:not(.hidden) .team-source-performance td small{color:#929ba5!important;font-size:5.8px!important}
+
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="performance"] .team-tool-command{background:radial-gradient(500px 200px at 94% -8%,rgba(216,162,10,.07),transparent 66%),#101319!important;border-color:#33311f!important;border-left-color:#d8a20a!important;box-shadow:none!important}
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="performance"] .team-tool-command h2,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-performance-kpis .kpi-card b,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-performance-card .card-head h3,
+  html[data-theme="dark"] #teamApp:not(.hidden) .reference-funnel-row b,
+  html[data-theme="dark"] #teamApp:not(.hidden) .course-performance-grid b,
+  html[data-theme="dark"] #teamApp:not(.hidden) .metric-box-grid b{color:#f2f4f6!important}
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-performance-kpis .kpi-card,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-performance-card,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-performance-range .preset-row button,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-performance-range input{background:#101319!important;border-color:#292f37!important;box-shadow:none!important;color:#e9ecef!important}
+  html[data-theme="dark"] #teamApp:not(.hidden) .reference-funnel-row,
+  html[data-theme="dark"] #teamApp:not(.hidden) .course-performance-grid>div,
+  html[data-theme="dark"] #teamApp:not(.hidden) .metric-box-grid>div{background:#13171c!important;border-color:#292f37!important}
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-source-performance table{background:#101319!important}
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-source-performance th{background:#151811!important;color:#cbbd91!important;border-color:#2d3028!important}
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-source-performance td{color:#c4cbd2!important;border-color:#292f37!important}
+}
