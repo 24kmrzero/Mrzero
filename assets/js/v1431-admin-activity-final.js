@@ -72,7 +72,7 @@ function shell(){
 }
 function render(){
   const b=$('#auditFinalBody');if(!b)return;
-  const rows=filtered(),today=new Date();today.setHours(0,0,0,0),k=$('#auditFinalKpis');
+  const rows=filtered(),today=new Date(),k=$('#auditFinalKpis');today.setHours(0,0,0,0);
   if(k){const all=state.rows;k.innerHTML=[
     ['fa-wave-square','Today',all.filter(r=>new Date(r.created_at)>=today).length],
     ['fa-user-shield','Admin',all.filter(r=>r.actor_role==='admin').length],
