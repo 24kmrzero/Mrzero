@@ -1,0 +1,277 @@
+/* 24K MR ZERO — Team Desktop Final QA / Shell Polish v13.72
+   Desktop only. No mobile overrides. */
+@media (min-width:901px){
+  #teamApp:not(.hidden){
+    background:#f5f3ee!important;
+    color:#1f242b!important;
+  }
+  #teamApp:not(.hidden) :is(button,input,select,textarea){font-family:inherit!important}
+  #teamApp:not(.hidden) button{cursor:pointer}
+  #teamApp:not(.hidden) .view{min-width:0!important}
+  #teamApp:not(.hidden) .view:not(.active){display:none!important}
+  #teamApp:not(.hidden) .view.active{display:block!important}
+  #teamApp:not(.hidden) .team-main{
+    min-width:0!important;
+    background:
+      radial-gradient(700px 260px at 85% -80px,rgba(216,162,10,.035),transparent 72%),
+      #f5f3ee!important;
+  }
+
+  /* Desktop shell parity with Admin / Mentor */
+  #teamApp:not(.hidden) .team-side{
+    border-right:1px solid #ddd7c7!important;
+    background:linear-gradient(180deg,#fffefa 0%,#fbf7ed 100%)!important;
+    box-shadow:8px 0 28px rgba(45,38,19,.025)!important;
+  }
+  #teamApp:not(.hidden) .team-side .brand{
+    min-height:92px!important;
+    display:grid!important;
+    place-items:center!important;
+    border-bottom:1px solid #e8e2d3!important;
+  }
+  #teamApp:not(.hidden) .team-side .brand img{max-width:132px!important;max-height:66px!important}
+  #teamApp:not(.hidden) .team-nav-label{
+    display:block!important;
+    margin:16px 14px 8px!important;
+    color:#8f7b4c!important;
+    font-size:6.5px!important;
+    font-weight:950!important;
+    letter-spacing:.14em!important;
+  }
+  #teamApp:not(.hidden) .team-side nav{display:grid!important;gap:3px!important;padding:0 9px!important}
+  #teamApp:not(.hidden) .team-side .nav-btn{
+    position:relative!important;
+    min-height:42px!important;
+    display:grid!important;
+    grid-template-columns:28px minmax(0,1fr) auto!important;
+    align-items:center!important;
+    gap:7px!important;
+    width:100%!important;
+    padding:0 10px!important;
+    border:1px solid transparent!important;
+    border-radius:10px!important;
+    background:transparent!important;
+    color:#4b5661!important;
+    font:inherit!important;
+    text-align:left!important;
+  }
+  #teamApp:not(.hidden) .team-side .nav-btn>i:first-child{
+    width:28px!important;
+    height:28px!important;
+    display:grid!important;
+    place-items:center!important;
+    border-radius:8px!important;
+    color:#7f8a95!important;
+  }
+  #teamApp:not(.hidden) .team-side .nav-btn span{font-size:8px!important;font-weight:850!important}
+  #teamApp:not(.hidden) .team-side .nav-btn:hover{
+    border-color:#e7e1d3!important;
+    background:#fff!important;
+  }
+  #teamApp:not(.hidden) .team-side .nav-btn.active{
+    border-color:#e1bf50!important;
+    background:linear-gradient(180deg,#f7ca42,#edb82c)!important;
+    color:#2b2100!important;
+    box-shadow:0 7px 18px rgba(165,114,0,.10)!important;
+  }
+  #teamApp:not(.hidden) .team-side .nav-btn.active>i:first-child{color:#2b2100!important}
+  #teamApp:not(.hidden) .nav-badge{
+    min-width:20px!important;
+    height:20px!important;
+    display:grid!important;
+    place-items:center!important;
+    padding:0 5px!important;
+    border-radius:999px!important;
+    background:#ed5d6d!important;
+    color:#fff!important;
+    font-size:6px!important;
+    font-style:normal!important;
+    font-weight:950!important;
+  }
+
+  #teamApp:not(.hidden) .team-install-card{
+    width:calc(100% - 18px)!important;
+    min-height:64px!important;
+    display:grid!important;
+    grid-template-columns:38px minmax(0,1fr)!important;
+    grid-template-rows:auto auto!important;
+    align-items:center!important;
+    gap:2px 9px!important;
+    margin:14px 9px 0!important;
+    padding:9px!important;
+    border:1px solid #dfc980!important;
+    border-radius:12px!important;
+    background:linear-gradient(145deg,#fffaf0,#fff4d7)!important;
+    color:#302800!important;
+    text-align:left!important;
+  }
+  #teamApp:not(.hidden) .team-install-card>span{
+    grid-row:1/3!important;
+    width:38px!important;
+    height:38px!important;
+    display:grid!important;
+    place-items:center!important;
+    border-radius:10px!important;
+    background:#d69b00!important;
+    color:#17130a!important;
+  }
+  #teamApp:not(.hidden) .team-install-card>b{font-size:7.4px!important;font-weight:950!important}
+  #teamApp:not(.hidden) .team-install-card>small{color:#8d8166!important;font-size:5.8px!important}
+  #teamApp:not(.hidden) .team-flow-note{
+    margin:14px 9px 0!important;
+    padding:11px!important;
+    border:1px solid #e5d7ab!important;
+    border-radius:12px!important;
+    background:#fffaf0!important;
+  }
+  #teamApp:not(.hidden) .team-flow-note b{
+    color:#a17708!important;
+    font-size:5.8px!important;
+    font-weight:950!important;
+    letter-spacing:.09em!important;
+  }
+  #teamApp:not(.hidden) .team-flow-note p{
+    margin:6px 0 0!important;
+    color:#786f5c!important;
+    font-size:5.9px!important;
+    line-height:1.5!important;
+  }
+  #teamApp:not(.hidden) .side-bottom{
+    display:grid!important;
+    gap:3px!important;
+    padding:10px 9px 14px!important;
+    border-top:1px solid #e8e2d3!important;
+  }
+
+  #teamApp:not(.hidden) .team-topbar{
+    min-height:74px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:18px!important;
+    padding:0 18px!important;
+    border-bottom:1px solid #ddd7c7!important;
+    background:rgba(255,254,250,.94)!important;
+    backdrop-filter:blur(12px)!important;
+    box-shadow:0 6px 20px rgba(35,40,48,.025)!important;
+  }
+  #teamApp:not(.hidden) .team-page-title{display:grid!important;gap:3px!important;min-width:0!important}
+  #teamApp:not(.hidden) .team-page-title h1{
+    margin:0!important;
+    color:#1f242b!important;
+    font-size:15px!important;
+    line-height:1!important;
+    font-weight:950!important;
+    letter-spacing:-.025em!important;
+  }
+  #teamApp:not(.hidden) .team-page-title p{
+    margin:0!important;
+    color:#7c8691!important;
+    font-size:6.8px!important;
+  }
+  #teamApp:not(.hidden) .top-actions{display:flex!important;align-items:center!important;gap:7px!important}
+  #teamApp:not(.hidden) #teamMonth{
+    height:40px!important;
+    min-width:150px!important;
+    padding:0 35px 0 12px!important;
+    border:1px solid #e3dcc8!important;
+    border-radius:11px!important;
+    background:#faf7ef!important;
+    color:#3b4148!important;
+    font:inherit!important;
+    font-size:7px!important;
+    font-weight:750!important;
+    outline:0!important;
+  }
+  #teamApp:not(.hidden) .top-actions .icon-btn{
+    width:40px!important;
+    height:40px!important;
+    display:grid!important;
+    place-items:center!important;
+    padding:0!important;
+    border:1px solid #e3d7b4!important;
+    border-radius:11px!important;
+    background:#fff!important;
+    color:#b47f00!important;
+  }
+  #teamApp:not(.hidden) .team-user-chip{
+    min-height:40px!important;
+    display:grid!important;
+    grid-template-columns:30px minmax(0,1fr)!important;
+    align-items:center!important;
+    gap:8px!important;
+    padding:5px 9px!important;
+    border:1px solid #e3d7b4!important;
+    border-radius:11px!important;
+    background:#fff!important;
+  }
+  #teamApp:not(.hidden) .team-user-chip>span{
+    width:30px!important;
+    height:30px!important;
+    display:grid!important;
+    place-items:center!important;
+    border-radius:50%!important;
+    background:linear-gradient(145deg,#e1a20a,#c98b00)!important;
+    color:#201700!important;
+    font-size:7px!important;
+    font-weight:950!important;
+  }
+  #teamApp:not(.hidden) .team-user-chip>div{display:grid!important;gap:1px!important}
+  #teamApp:not(.hidden) .team-user-chip b{color:#2d333a!important;font-size:7px!important;font-weight:900!important}
+  #teamApp:not(.hidden) .team-user-chip small{color:#929aa3!important;font-size:5.6px!important}
+
+  /* Kill remaining browser-default visual noise */
+  #teamApp:not(.hidden) details>summary{list-style:none!important}
+  #teamApp:not(.hidden) details>summary::-webkit-details-marker{display:none!important}
+  #teamApp:not(.hidden) table{border-spacing:0!important}
+  #teamApp:not(.hidden) :is(input,select,textarea,button):focus-visible{
+    outline:2px solid rgba(216,162,10,.30)!important;
+    outline-offset:2px!important;
+  }
+  #teamApp:not(.hidden) .panel-card{box-sizing:border-box!important}
+  #teamApp:not(.hidden) .muted{color:#8a939d!important;font-size:7px!important}
+
+  html[data-theme="dark"] #teamApp:not(.hidden){
+    background:#0d1014!important;
+    color:#eef1f4!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-main{
+    background:radial-gradient(700px 260px at 85% -80px,rgba(216,162,10,.03),transparent 72%),#0d1014!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-side{
+    background:linear-gradient(180deg,#101319,#0f1216)!important;
+    border-right-color:#292f37!important;
+    box-shadow:none!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-side .brand,
+  html[data-theme="dark"] #teamApp:not(.hidden) .side-bottom{border-color:#292f37!important}
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-side .nav-btn{color:#aeb6bf!important}
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-side .nav-btn>i:first-child{color:#8f99a3!important}
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-side .nav-btn:hover{background:#15191f!important;border-color:#2d343c!important}
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-side .nav-btn.active{
+    background:linear-gradient(180deg,#e2aa16,#c99100)!important;
+    border-color:#e1af28!important;
+    color:#17120a!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-install-card,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-flow-note{
+    background:#17160f!important;
+    border-color:#40371c!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-install-card>b{color:#f0e7cb!important}
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-flow-note p{color:#9f967e!important}
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-topbar{
+    background:rgba(15,18,22,.95)!important;
+    border-bottom-color:#292f37!important;
+    box-shadow:none!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-page-title h1{color:#f2f4f6!important}
+  html[data-theme="dark"] #teamApp:not(.hidden) #teamMonth,
+  html[data-theme="dark"] #teamApp:not(.hidden) .top-actions .icon-btn,
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-user-chip{
+    background:#12161b!important;
+    border-color:#303640!important;
+    color:#e7eaed!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-user-chip b{color:#eef1f4!important}
+}
