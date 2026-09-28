@@ -76,25 +76,20 @@
     if(!host){
       host=document.createElement('section');
       host.id='v1250PremiumSetup';
-      host.className='v1250-setup';
+      host.className='v1250-setup premium-broker-setup';
       const heading=panel.querySelector('.panel-heading');
       if(heading)heading.insertAdjacentElement('afterend',host);else panel.prepend(host);
     }
-    const methods=methodRows.filter(x=>/local bank|usdt|trc/i.test(String(x.name||'')));
     host.innerHTML=`
       <div class="v1250-setup-head">
-        <div><h3>Premium Payment & Broker Setup</h3><p>Demo payment details and broker partner links can be edited here from Admin before going live.</p></div>
-        <button type="button" class="app-btn outline" data-v1250-methods><i class="fa-solid fa-credit-card"></i> Payment Methods</button>
+        <div><span class="premium-setup-kicker"><i class="fa-solid fa-link"></i> BROKER ACCESS SETUP</span><h3>Broker Partner Links</h3><p>Manage broker partner links and student instructions here. Payment destinations are managed from the main Payment Methods page.</p></div>
+        <a class="app-btn outline premium-payment-methods-link" href="/admin/payment-methods/"><i class="fa-solid fa-credit-card"></i> Payment Methods</a>
       </div>
-      <div class="v1250-setup-grid">
-        <div class="v1250-setup-box"><h4>Payment Destinations</h4>
-          ${methods.map(m=>{const test=/^TEST/i.test(String(m.account_number||''))||/^TEST/i.test(String(m.account_title||''));return `<div class="v1250-method"><div><b>${esc(m.name)} <span class="${test?'v1250-test':'v1250-live'}">${test?'TEST':'LIVE'}</span></b><small>${esc(m.account_title||'')} · ${esc(m.account_number||'')}</small></div><button type="button" class="app-btn small outline" data-v1250-methods>Edit</button></div>`}).join('')||'<small>No Premium payment destinations configured.</small>'}
-        </div>
-        <div class="v1250-setup-box"><h4>Broker Partner Links & Instructions</h4>
-          ${brokerRows.map(r=>`<div class="v1250-broker"><div><b>${esc(r.broker)} <span class="${r.is_active?'v1250-live':'v1250-test'}">${r.is_active?'ACTIVE':'OFF'}</span></b><small>${esc(r.partner_url||'No link')}</small></div><button type="button" class="app-btn small outline" data-v1250-edit-broker="${esc(r.broker)}"><i class="fa-solid fa-pen"></i> Edit</button></div>`).join('')}
+      <div class="v1250-setup-grid premium-broker-grid-single">
+        <div class="v1250-setup-box premium-broker-box"><h4>Broker Partner Links & Instructions</h4>
+          ${brokerRows.map(r=>`<div class="v1250-broker"><div><b>${esc(r.broker)} <span class="${r.is_active?'v1250-live':'v1250-test'}">${r.is_active?'ACTIVE':'OFF'}</span></b><small>${esc(r.partner_url||'No link')}</small></div><button type="button" class="app-btn small outline" data-v1250-edit-broker="${esc(r.broker)}"><i class="fa-solid fa-pen"></i> Edit</button></div>`).join('')||'<div class="v1250-empty">No broker partner links configured.</div>'}
         </div>
       </div>`;
-    host.querySelectorAll('[data-v1250-methods]').forEach(b=>b.addEventListener('click',()=>{location.href='/admin/payment-methods/'}));
     host.querySelectorAll('[data-v1250-edit-broker]').forEach(b=>b.addEventListener('click',()=>editBroker(b.dataset.v1250EditBroker)));
   }
 
