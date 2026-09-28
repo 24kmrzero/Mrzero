@@ -1335,7 +1335,7 @@ function fillMentorArticleForm(form,x,desktop=false){
   if(form.elements.category)form.elements.category.value=x.category||'';
   if(form.elements.excerpt)form.elements.excerpt.value=x.excerpt||'';
   if(form.elements.content)form.elements.content.value=x.content||'';
-  if(!desktop&&form.elements.content_roman)form.elements.content_roman.value=x.content_roman||'';
+  if(form.elements.content_roman)form.elements.content_roman.value=x.content_roman||'';
   if(form.elements.is_published)form.elements.is_published.checked=Boolean(x.is_published)
 }
 function editArticle(id){
@@ -1360,23 +1360,24 @@ async function saveArticle(e){
     cover=await upload(f.elements.cover.files?.[0]||null,'articles');
     const title=String(d.title||'').trim(),content=String(d.content||'').trim(),contentRoman=String(d.content_roman||'').trim();
     if(!title)throw new Error('Article title is required.');
-    if(desktop&&!String(d.excerpt||'').trim())throw new Error('Article excerpt is required.');
-    if(!content)throw new Error('Article content is required.');
-    if(!desktop&&!contentRoman)throw new Error('Title, English content and Roman English content are required.');
+    if(!content)throw new Error('English content is required.');
+    if(!contentRoman)throw new Error('Roman English content is required.');
 
+    const cleanText=content.replace(/\s+/g,' ').trim();
+    const autoExcerpt=cleanText.length>180?`${cleanText.slice(0,177).trim()}...`:cleanText;
     const row={
       title,
-      slug:desktop?String(d.slug||`${slug(title)}-${Date.now().toString().slice(-5)}`).toLowerCase().trim().replace(/[^a-z0-9-]+/g,'-'):(existing?.slug||`${slug(title)}-${Date.now().toString(36)}`),
-      category:String(d.category||'').trim()||'General',
-      excerpt:String(d.excerpt||'').trim()||null,
+      slug:existing?.slug||`${slug(title)}-${Date.now().toString().slice(-5)}`,
+      category:existing?.category||'General',
+      excerpt:autoExcerpt||null,
       content,
+      content_roman:contentRoman,
       content_language:'english',
       cover_url:cover||oldCover||null,
       is_published:published
     };
-    if(!desktop)row.content_roman=contentRoman;
-    if(!d.id)row.published_at=desktop?new Date().toISOString():(published?new Date().toISOString():null);
-    else if(!desktop)row.published_at=published?new Date().toISOString():null;
+    if(!d.id)row.published_at=published?new Date().toISOString():null;
+    else row.published_at=published?(existing?.published_at||new Date().toISOString()):null;
 
     let r;
     if(d.id)r=await sb.from('articles').update(row).eq('id',d.id);
@@ -1386,7 +1387,7 @@ async function saveArticle(e){
     if(cover&&oldCover&&cover!==oldCover)await removeContentAsset(oldCover);
     resetMentorEditor('article');
     closeModals();
-    toast(d.id?'Article updated successfully.':desktop?'Article saved successfully.':published?'Bilingual article published.':'Bilingual article saved as draft.');
+    toast(d.id?'Article updated successfully.':published?'Article published successfully.':'Article saved as draft.');
     await load()
   }catch(err){
     if(cover&&!saved)await removeContentAsset(cover);
