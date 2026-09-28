@@ -1,0 +1,23 @@
+/* 24K MR ZERO — Mentor Article final QA polish v14.40
+   Desktop-only refinements after shared Admin/Mentor article sync. */
+@media (min-width:901px){
+  [data-mentor-panel="articles"] .mentor-article-create{
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:6px!important;
+  }
+  [data-mentor-panel="articles"] .mentor-article-create i{
+    flex:0 0 auto!important;
+    margin:0!important;
+  }
+  [data-mentor-panel="articles"] .mentor-article-command-copy h2 em{
+    font-style:normal!important;
+  }
+  [data-mentor-panel="articles"] #mentorArticles>.mentor-article-admin-empty{
+    min-height:190px!important;
+  }
+  [data-mentor-panel="articles"] .mentor-article-controls{
+    align-items:center!important;
+  }
+}
