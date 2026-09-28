@@ -1,6 +1,6 @@
 (function(){
 'use strict';
-/* mentor build 13.46.1 */
+/* mentor build 14.42 */
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js',{scope:'/'}).catch(e=>console.warn('[24K Mentor PWA]',e?.message||e)));
 }
@@ -202,7 +202,7 @@ async function requireMentor(){
 
   const profileQuery=sb.from('profiles').select('id,full_name,email,role,status').eq('id',user.id).maybeSingle();
   const permissionQuery=sb.from('mentor_permissions').select('feature_key,enabled').eq('mentor_id',user.id);
-  const signalQuery=sb.from('signals').select('*').eq('created_by',user.id).order('created_at',{ascending:false}).limit(500);
+  const signalQuery=sb.from('signals').select('*').order('created_at',{ascending:false}).limit(500);
   const [p,pm,signals]=await Promise.all([profileQuery,permissionQuery,signalQuery]);
 
   if(p.error||!p.data||p.data.role!=='mentor'||String(p.data.status||'active')!=='active'){
@@ -231,7 +231,7 @@ async function loadSecondaryMentorData(){
     if(!state.perms[key]){state[key]=[];continue}
     const table=key==='banners'?'mentor_banners':key;
     const base=sb.from(table).select('*').order('created_at',{ascending:false}).limit(500);
-    const query=key==='articles'?base:base.eq('created_by',state.user.id);
+    const query=key==='banners'?base.eq('created_by',state.user.id):base;
     tasks.push(
       safeLoad(table,query)
         .then(data=>{state[key]=data;if(key==='charts')renderCharts();else if(key==='articles')renderArticles();else renderBanners()})
@@ -261,13 +261,28 @@ let mentorRealtimeBound=false;
 function subscribeMentorRealtime(){
   if(mentorRealtimeBound||!sb)return;
   mentorRealtimeBound=true;
-  let timer;
-  const refreshArticles=()=>{clearTimeout(timer);timer=setTimeout(async()=>{
+  const timers={};
+  const debounce=(key,fn)=>{clearTimeout(timers[key]);timers[key]=setTimeout(()=>void fn(),220)};
+  const refreshSignals=()=>debounce('signals',async()=>{
+    if(!state.perms.signals)return;
+    state.signals=await safeLoad('signals',sb.from('signals').select('*').order('created_at',{ascending:false}).limit(500));
+    safeMentorRender('signals',renderSignals);
+    safeMentorRender('performance',renderPerformance)
+  });
+  const refreshCharts=()=>debounce('charts',async()=>{
+    if(!state.perms.charts)return;
+    state.charts=await safeLoad('charts',sb.from('charts').select('*').order('created_at',{ascending:false}).limit(500));
+    safeMentorRender('charts',renderCharts)
+  });
+  const refreshArticles=()=>debounce('articles',async()=>{
     if(!state.perms.articles)return;
-    const data=await safeLoad('articles',sb.from('articles').select('*').order('created_at',{ascending:false}).limit(500));
-    state.articles=data;renderArticles()
-  },250)};
+    state.articles=await safeLoad('articles',sb.from('articles').select('*').order('created_at',{ascending:false}).limit(500));
+    safeMentorRender('articles',renderArticles)
+  });
   sb.channel('mentor-live-content')
+    .on('postgres_changes',{event:'*',schema:'public',table:'signals'},refreshSignals)
+    .on('postgres_changes',{event:'*',schema:'public',table:'signal_updates'},refreshSignals)
+    .on('postgres_changes',{event:'*',schema:'public',table:'charts'},refreshCharts)
     .on('postgres_changes',{event:'*',schema:'public',table:'articles'},refreshArticles)
     .subscribe()
 }
@@ -1154,7 +1169,7 @@ function renderMentorPipPreview(){
 }
 function mentorSignalResult(signal,row){const status=String(signal.status||'');if(status==='cancelled')return{result_pips:null,close_price:null};const entry=(Number(row.entry_from||0)+Number(row.entry_to??row.entry_from??0))/2;let price=null,outcome='manual';if(status==='breakeven_hit'){price=entry;outcome='be'}else if(status==='tp1_hit'){price=row.take_profit_1;outcome='tp'}else if(status==='tp2_hit'){price=row.take_profit_2;outcome='tp'}else if(status==='tp3_hit'){price=row.take_profit_3;outcome='tp'}else if(status==='tp4_hit'){price=row.take_profit_4;outcome='tp'}else if(status==='sl_hit'){price=row.stop_loss;outcome='sl'}else if(status==='manually_closed')price=signal.close_price;if(price===null||price===undefined||!Number.isFinite(Number(price)))return{result_pips:signal.result_pips??null,close_price:signal.close_price??null};const result=mentorOutcomePips({...signal,...row},price,outcome);return{result_pips:result,close_price:signalIsClosed({...signal,...row,status})?Number(price):(signal.close_price??null)}}
 function editSignal(id){const x=state.signals.find(v=>v.id===id);if(!x)return;closeModals();const f=$('#mentorSignalForm');f.elements.id.value=x.id;f.elements.symbol.value=x.symbol||'XAUUSD';f.elements.signal_type.value=signalTypeLabel(x);f.elements.entry_from.value=x.entry_from??'';f.elements.entry_to.value=x.entry_to??'';f.elements.stop_loss.value=x.stop_loss??'';f.elements.take_profit_1.value=x.take_profit_1??'';f.elements.take_profit_2.value=x.take_profit_2??'';f.elements.take_profit_3.value=x.take_profit_3??'';f.elements.take_profit_4.value=x.take_profit_4??'';f.elements.notes.value=x.notes||'';const t=$('#mentorSignalModalTitle');if(t)t.textContent=signalIsClosed(x)?'Edit Signal History':'Edit Signal';openModal('signal');renderMentorPipPreview()}
-async function saveSignal(e){e.preventDefault();const f=e.currentTarget,b=f.querySelector('button[type=submit]'),d=Object.fromEntries(new FormData(f)),kind=String(d.signal_type||'BUY').trim().toUpperCase(),direction=kind.startsWith('SELL')?'SELL':'BUY',orderType=kind.includes('STOP')?'stop':kind.includes('LIMIT')?'limit':'market',original=b.innerHTML;b.disabled=true;b.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Publishing...';try{const row={symbol:String(d.symbol||'').trim().toUpperCase(),direction,order_type:orderType,entry_from:num(d.entry_from),entry_to:num(d.entry_to),stop_loss:num(d.stop_loss),take_profit_1:num(d.take_profit_1),take_profit_2:num(d.take_profit_2),take_profit_3:num(d.take_profit_3),take_profit_4:num(d.take_profit_4),notes:String(d.notes||'').trim()||null};if(!row.symbol||row.entry_from===null||row.stop_loss===null||row.take_profit_1===null){const name=row.entry_from===null?'entry_from':row.stop_loss===null?'stop_loss':row.take_profit_1===null?'take_profit_1':'symbol';f.elements[name]?.focus();throw new Error('Entry From, Stop Loss and TP1 are required.');}let r;if(d.id){const existing=state.signals.find(x=>x.id===d.id);if(!existing)throw new Error('Signal not found.');const calc=mentorSignalResult(existing,row);r=await sb.from('signals').update({...row,...calc,updated_at:new Date().toISOString()}).eq('id',d.id).eq('created_by',state.user.id);if(r.error)throw r.error;toast('Signal updated.')}else{r=await sb.from('signals').insert({...row,status:row.order_type==='market'?'active':'pending',audience_access:'all_students',is_published:true,published_at:new Date().toISOString(),created_by:state.user.id});if(r.error)throw r.error;toast('Signal published.')}f.reset();f.elements.id.value='';const t=$('#mentorSignalModalTitle');if(t)t.textContent='New Signal';closeModals();await load()}catch(err){toast(err.message||'Could not save signal.')}finally{b.disabled=false;b.innerHTML=original}}
+async function saveSignal(e){e.preventDefault();const f=e.currentTarget,b=f.querySelector('button[type=submit]'),d=Object.fromEntries(new FormData(f)),kind=String(d.signal_type||'BUY').trim().toUpperCase(),direction=kind.startsWith('SELL')?'SELL':'BUY',orderType=kind.includes('STOP')?'stop':kind.includes('LIMIT')?'limit':'market',original=b.innerHTML;b.disabled=true;b.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Publishing...';try{const row={symbol:String(d.symbol||'').trim().toUpperCase(),direction,order_type:orderType,entry_from:num(d.entry_from),entry_to:num(d.entry_to),stop_loss:num(d.stop_loss),take_profit_1:num(d.take_profit_1),take_profit_2:num(d.take_profit_2),take_profit_3:num(d.take_profit_3),take_profit_4:num(d.take_profit_4),notes:String(d.notes||'').trim()||null};if(!row.symbol||row.entry_from===null||row.stop_loss===null||row.take_profit_1===null){const name=row.entry_from===null?'entry_from':row.stop_loss===null?'stop_loss':row.take_profit_1===null?'take_profit_1':'symbol';f.elements[name]?.focus();throw new Error('Entry From, Stop Loss and TP1 are required.');}let r;if(d.id){const existing=state.signals.find(x=>x.id===d.id);if(!existing)throw new Error('Signal not found.');const calc=mentorSignalResult(existing,row);r=await sb.from('signals').update({...row,...calc,updated_at:new Date().toISOString()}).eq('id',d.id);if(r.error)throw r.error;toast('Signal updated.')}else{r=await sb.from('signals').insert({...row,status:row.order_type==='market'?'active':'pending',audience_access:'all_students',is_published:true,published_at:new Date().toISOString(),created_by:state.user.id});if(r.error)throw r.error;toast('Signal published.')}f.reset();f.elements.id.value='';const t=$('#mentorSignalModalTitle');if(t)t.textContent='New Signal';closeModals();await load()}catch(err){toast(err.message||'Could not save signal.')}finally{b.disabled=false;b.innerHTML=original}}
 async function signalAction(id,action){let close=null;if(action==='manually_closed'){const v=await mentorAskAction({title:'Close Signal',eyebrow:'TRADE MANAGEMENT',message:'Enter the final close price.',hint:'The result pips will be calculated from this price.',confirmText:'Close Signal',icon:'fa-chart-line',input:true,inputLabel:'Close Price',inputPlaceholder:'e.g. 4012.50'});if(v===null)return;close=Number(v);if(!Number.isFinite(close))return toast('Enter a valid close price.')}const r=await sb.rpc('mentor_update_signal_status_v12_16',{p_signal_id:id,p_action:action,p_close_price:close,p_note:null,p_notify_users:true});if(r.error)throw r.error;const p=r.data?.result_pips;toast(p==null?'Signal updated.':`Signal updated · ${pipText(Number(p))}`);closeModals();await load()}
 function syncEditorFileLabel(kind,file){
   const el=document.querySelector(`[data-file-label="${kind}"]`);
@@ -1293,7 +1308,7 @@ async function saveChart(e){
     };
     if(!row.title||!row.symbol||!row.summary)throw new Error('Title, symbol and summary are required.');
     let r;
-    if(d.id)r=await sb.from('charts').update(row).eq('id',d.id).eq('created_by',state.user.id);
+    if(d.id)r=await sb.from('charts').update(row).eq('id',d.id);
     else r=await sb.from('charts').insert({...row,published_at:new Date().toISOString(),created_by:state.user.id});
     if(r.error)throw r.error;
     saved=true;
@@ -1378,7 +1393,7 @@ async function saveArticle(e){
     b.disabled=false;b.innerHTML=oldButton
   }
 }
-async function del(table,id,label){const ok=await mentorAskAction({title:`Delete ${label}?`,eyebrow:'CONFIRM DELETE',message:`Delete this ${label} permanently?`,hint:'This action cannot be undone.',confirmText:'Delete',danger:true});if(!ok)return;const source=table==='charts'?state.charts:table==='articles'?state.articles:table==='mentor_banners'?state.banners:[],item=source.find(x=>String(x.id)===String(id)),media=item?.image_url||item?.cover_url||null;let query=sb.from(table).delete().eq('id',id);if(table!=='articles')query=query.eq('created_by',state.user.id);const r=await query;if(r.error)throw r.error;if(media)await removeContentAsset(media);toast(`${label} deleted.`);await load()}
+async function del(table,id,label){const ok=await mentorAskAction({title:`Delete ${label}?`,eyebrow:'CONFIRM DELETE',message:`Delete this ${label} permanently?`,hint:'This action cannot be undone.',confirmText:'Delete',danger:true});if(!ok)return;const source=table==='charts'?state.charts:table==='articles'?state.articles:table==='mentor_banners'?state.banners:[],item=source.find(x=>String(x.id)===String(id)),media=item?.image_url||item?.cover_url||null;let query=sb.from(table).delete().eq('id',id);if(table==='mentor_banners')query=query.eq('created_by',state.user.id);const r=await query;if(r.error)throw r.error;if(media)await removeContentAsset(media);toast(`${label} deleted.`);await load()}
 async function logout(){await auditMentor('mentor_logout','success',{view:(location.hash||'#performance').slice(1)});await sb?.auth.signOut();location.href='/mentor-login.html'}
 document.addEventListener('change',e=>{
   if(e.target.matches('#mentorChartForm input[name="image"]')){syncEditorFileLabel('chart',e.target.files?.[0]||null);return}
