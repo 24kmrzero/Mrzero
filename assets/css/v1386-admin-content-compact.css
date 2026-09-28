@@ -183,10 +183,17 @@
   }
 
   /* Empty result should span the available desktop row instead of becoming a 360px card */
-  #p-charts .admin-research-history>.empty-state,
-  #p-articles .admin-research-history>.empty-state{
+  #p-charts .admin-research-history.admin-content-full-empty,
+  #p-articles .admin-research-history.admin-content-full-empty{
+    grid-template-columns:minmax(0,1fr)!important;
+    justify-content:stretch!important;
+    width:100%!important;
+  }
+  #p-charts .admin-research-history.admin-content-full-empty>.empty-state,
+  #p-articles .admin-research-history.admin-content-full-empty>.empty-state{
     grid-column:1/-1!important;
     width:100%!important;
     max-width:none!important;
+    justify-self:stretch!important;
   }
 }
