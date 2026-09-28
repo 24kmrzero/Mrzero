@@ -1,0 +1,21 @@
+/* 24K MR ZERO — tracked course enrollment v14.24 */
+.tracked-enroll-page .enroll-card{
+  box-shadow:0 30px 80px rgba(0,0,0,.16);
+}
+.tracked-enroll-page .intro{
+  max-width:660px;
+}
+.tracked-enroll-page #enrollSubmit{
+  min-height:54px;
+}
+.tracked-enroll-page .secure-note{
+  font-weight:700;
+}
+.tracked-enroll-page .success-panel #successCopy{
+  max-width:600px;
+  margin-left:auto;
+  margin-right:auto;
+}
+@media (max-width:700px){
+  .tracked-enroll-page .enroll-card{border-radius:20px}
+}
