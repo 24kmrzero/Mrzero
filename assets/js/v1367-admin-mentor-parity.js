@@ -63,6 +63,7 @@ function renderCharts(){
     stat('fa-chart-line','Top Pair',top,'Most covered')
   ].join('');
   const items=chartFilters(all);
+  box.classList.toggle('admin-content-full-empty',items.length===0);
   if(!items.length){box.innerHTML='<div class="empty-state"><i class="fa-solid fa-chart-line"></i><h3>No chart analysis found</h3><p>Change the filters or publish a new analysis.</p></div>';return}
   let lastChartDay='';
   box.innerHTML=items.map((x,i)=>{const rawDate=x.published_at||x.created_at,t=stamp(rawDate),symbol=String(x.symbol||'CHART').toUpperCase(),live=Boolean(x.is_published),dayKey=contentDayKey(rawDate),groupHead=adminContentDesktop()&&dayKey!==lastChartDay?'<div class="admin-content-date-group"><div><span>'+esc(contentDayLabel(rawDate))+'</span><small>'+esc(t.date)+'</small></div><i></i></div>':'';lastChartDay=dayKey;
@@ -110,6 +111,7 @@ function renderArticles(){
     stat('fa-calendar-week','This Week',all.filter(x=>new Date(x.published_at||x.created_at||0)>=week).length,'Last 7 days')
   ].join('');
   const items=articleFilters(all);
+  box.classList.toggle('admin-content-full-empty',items.length===0);
   if(!items.length){box.innerHTML='<div class="empty-state"><i class="fa-solid fa-newspaper"></i><h3>No articles found</h3><p>Change the filters or create a new article.</p></div>';return}
   let lastArticleDay='';
   box.innerHTML=items.map((x,i)=>{const rawDate=x.published_at||x.created_at,t=stamp(rawDate),category=String(x.category||'General'),live=Boolean(x.is_published),excerpt=x.excerpt||String(x.content||'').slice(0,180)||'No excerpt added.',dayKey=contentDayKey(rawDate),groupHead=adminContentDesktop()&&dayKey!==lastArticleDay?'<div class="admin-content-date-group"><div><span>'+esc(contentDayLabel(rawDate))+'</span><small>'+esc(t.date)+'</small></div><i></i></div>':'';lastArticleDay=dayKey;
