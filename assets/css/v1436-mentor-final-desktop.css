@@ -1,0 +1,620 @@
+/* 24K MR ZERO — Mentor final desktop polish v14.36
+   Desktop only. Mobile/touch layout is intentionally not changed. */
+@media (min-width:901px){
+
+  /* Final warm desktop canvas */
+  html[data-theme="light"] body.mentor-page,
+  html[data-theme="light"] .mentor-shell,
+  html[data-theme="light"] .mentor-main,
+  html[data-theme="light"] .mentor-content{
+    background:#F4F3F0!important;
+    background-image:none!important;
+  }
+  html[data-theme="light"] .mentor-top,
+  html[data-theme="light"] .mentor-side{
+    background:#fffdf9!important;
+    border-color:#e4ddd1!important;
+  }
+  html[data-theme="light"] [data-mentor-panel="performance"],
+  html[data-theme="light"] [data-mentor-panel="signals"],
+  html[data-theme="light"] [data-mentor-panel="charts"],
+  html[data-theme="light"] [data-mentor-panel="articles"],
+  html[data-theme="light"] [data-mentor-panel="settings"]{
+    background:transparent!important;
+    background-image:none!important;
+  }
+
+  /* ======================================================
+     Charts — exact Admin desktop structure
+     Hero + filter rail + 3-column research cards
+     ====================================================== */
+  [data-mentor-panel="charts"]{
+    max-width:1450px!important;
+    margin:0 auto!important;
+  }
+  .mentor-chart-command{
+    display:block!important;
+    margin:0!important;
+    padding:0!important;
+    border:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+  }
+  .mentor-chart-command-top{
+    min-height:124px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:16px!important;
+    padding:20px!important;
+    margin:0 0 12px!important;
+    border:1px solid #e3c184!important;
+    border-radius:16px!important;
+    background:
+      radial-gradient(circle at 88% 20%,rgba(227,154,24,.12),transparent 25%),
+      linear-gradient(135deg,#fff7e8,#fffdf9)!important;
+    box-shadow:none!important;
+  }
+  .mentor-chart-command-top:after{display:none!important}
+  .mentor-chart-kicker{
+    min-height:0!important;
+    padding:0!important;
+    border:0!important;
+    border-radius:0!important;
+    background:transparent!important;
+    color:#c69200!important;
+    font-size:0!important;
+    font-weight:900!important;
+    letter-spacing:.13em!important;
+  }
+  .mentor-chart-kicker i{font-size:8px!important;margin-right:5px!important}
+  .mentor-chart-kicker:after{content:"CHART COMMAND CENTER";font-size:8px!important}
+  .mentor-chart-command-copy h2{
+    margin:6px 0 4px!important;
+    color:#20242a!important;
+    font-size:0!important;
+    line-height:1.15!important;
+    letter-spacing:-.025em!important;
+  }
+  .mentor-chart-command-copy h2:after{
+    content:"Professional Chart Analysis";
+    font-size:24px!important;
+  }
+  .mentor-chart-command-copy p{
+    margin:0!important;
+    color:#4f5968!important;
+    font-size:0!important;
+    line-height:1.5!important;
+  }
+  .mentor-chart-command-copy p:after{
+    content:"Publish, review and manage high-quality market analysis from one focused research workspace.";
+    font-size:10px!important;
+  }
+  .mentor-chart-command-copy:after{
+    content:"PREMIUM RESEARCH WORKSPACE"!important;
+    display:inline-flex!important;
+    margin-top:9px!important;
+    padding:4px 8px!important;
+    border:1px solid rgba(198,146,0,.35)!important;
+    border-radius:999px!important;
+    background:transparent!important;
+    color:#c69200!important;
+    font-size:7px!important;
+    font-weight:900!important;
+    letter-spacing:.08em!important;
+  }
+  .mentor-chart-create{
+    min-height:36px!important;
+    height:36px!important;
+    padding:7px 11px!important;
+    border:1px solid #d4a22c!important;
+    border-radius:9px!important;
+    background:linear-gradient(180deg,#f6c740,#e3ad22)!important;
+    color:#17130a!important;
+    font-size:10px!important;
+    font-weight:900!important;
+    box-shadow:none!important;
+  }
+  .mentor-chart-create span{font-size:0!important}
+  .mentor-chart-create span:after{content:"New Chart Analysis";font-size:10px!important}
+
+  /* Admin Charts has no KPI row */
+  .mentor-chart-stats{display:none!important}
+
+  .mentor-chart-controls{
+    display:grid!important;
+    grid-template-columns:minmax(220px,1fr) 150px 145px!important;
+    gap:8px!important;
+    min-height:0!important;
+    padding:9px!important;
+    margin:0 0 12px!important;
+    border:1px solid #e2e5e8!important;
+    border-radius:12px!important;
+    background:#fff!important;
+    box-shadow:none!important;
+  }
+  .mentor-chart-periods{display:contents!important}
+  .mentor-chart-periods>button{display:none!important}
+  .mentor-chart-search{
+    grid-column:1!important;
+    grid-row:1!important;
+    min-width:0!important;
+    min-height:40px!important;
+    height:40px!important;
+    padding:0 10px!important;
+    border:1px solid #e2e5e8!important;
+    border-radius:9px!important;
+    background:#fffdf8!important;
+  }
+  .mentor-chart-search i{font-size:9px!important;color:#7b8490!important}
+  .mentor-chart-search input{
+    height:38px!important;
+    padding:0!important;
+    border:0!important;
+    background:transparent!important;
+    font-size:10px!important;
+    box-shadow:none!important;
+  }
+  .mentor-chart-select{height:40px!important}
+  .mentor-chart-select select{
+    width:100%!important;
+    height:40px!important;
+    min-height:40px!important;
+    padding:0 10px!important;
+    border:1px solid #e2e5e8!important;
+    border-radius:9px!important;
+    background:#fffdf8!important;
+    color:#4f5968!important;
+    font-size:10px!important;
+  }
+  .mentor-chart-select:nth-of-type(1){grid-column:2!important;grid-row:1!important}
+  .mentor-chart-select:nth-of-type(2){grid-column:3!important;grid-row:1!important}
+  .mentor-chart-results-head{display:none!important}
+
+  .mentor-chart-library,
+  .mentor-chart-grid{
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:12px!important;
+    width:100%!important;
+    align-items:start!important;
+  }
+  .mentor-admin-date-group{
+    grid-column:1/-1!important;
+    display:block!important;
+    margin:0!important;
+  }
+  .mentor-admin-date-group>div{
+    display:flex!important;
+    align-items:baseline!important;
+    gap:8px!important;
+    min-width:0!important;
+    margin:10px 0 9px!important;
+    padding-bottom:8px!important;
+    border-bottom:1px solid #e3e6e9!important;
+  }
+  .mentor-admin-date-group span{
+    color:#20252d!important;
+    font-size:13px!important;
+    font-weight:900!important;
+  }
+  .mentor-admin-date-group small{font-size:7.5px!important;color:#8a949f!important}
+  .mentor-admin-date-group i{display:none!important}
+
+  .mentor-chart-card{
+    width:100%!important;
+    max-width:none!important;
+    overflow:hidden!important;
+    border:1px solid #e2e5e8!important;
+    border-radius:14px!important;
+    background:#fff!important;
+    box-shadow:0 10px 24px rgba(83,60,17,.06)!important;
+    transition:.18s ease!important;
+  }
+  .mentor-chart-card:hover{
+    transform:translateY(-2px)!important;
+    border-color:rgba(198,146,0,.42)!important;
+  }
+  .mentor-chart-media{
+    width:100%!important;
+    aspect-ratio:16/9!important;
+    min-height:0!important;
+    background:#0b111a!important;
+  }
+  .mentor-chart-card-body{padding:10px!important;gap:0!important}
+  .mentor-chart-card-meta{
+    display:flex!important;
+    align-items:center!important;
+    gap:6px!important;
+    flex-wrap:wrap!important;
+    margin:0!important;
+    color:#7a8492!important;
+    font-size:8px!important;
+  }
+  .mentor-chart-card-body h3{
+    margin:8px 0 5px!important;
+    color:#20242a!important;
+    font-size:13px!important;
+    line-height:1.35!important;
+  }
+  .mentor-chart-card-body p{
+    min-height:28px!important;
+    margin:0!important;
+    color:#737e8b!important;
+    font-size:9.5px!important;
+    line-height:1.45!important;
+    -webkit-line-clamp:2!important;
+  }
+  .mentor-chart-card-foot{
+    min-height:0!important;
+    margin-top:9px!important;
+    padding-top:0!important;
+    border-top:0!important;
+  }
+  .mentor-chart-actions{
+    display:grid!important;
+    grid-template-columns:1fr 1fr auto!important;
+    gap:6px!important;
+    width:100%!important;
+  }
+  .mentor-chart-actions :is(button,a){
+    min-height:31px!important;
+    height:31px!important;
+    padding:0 8px!important;
+    border:1px solid #e1e4e7!important;
+    border-radius:8px!important;
+    background:#fafbfc!important;
+    color:#606b77!important;
+    font-size:9px!important;
+  }
+  .mentor-chart-actions .danger{width:34px!important;min-width:34px!important;padding:0!important}
+  .mentor-chart-actions [data-share-chart]{display:inline-flex!important}
+
+  /* ======================================================
+     Articles — exact Admin desktop structure
+     ====================================================== */
+  [data-mentor-panel="articles"]{
+    max-width:1450px!important;
+    margin:0 auto!important;
+  }
+  .mentor-article-command{
+    display:block!important;
+    margin:0!important;
+    padding:0!important;
+    border:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+  }
+  .mentor-article-command-top{
+    min-height:124px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:16px!important;
+    padding:20px!important;
+    margin:0 0 12px!important;
+    border:1px solid #e3c184!important;
+    border-radius:16px!important;
+    background:
+      radial-gradient(circle at 88% 20%,rgba(227,154,24,.12),transparent 25%),
+      linear-gradient(135deg,#fff7e8,#fffdf9)!important;
+    box-shadow:none!important;
+  }
+  .mentor-article-command-top:after{display:none!important}
+  .mentor-article-kicker{
+    min-height:0!important;
+    padding:0!important;
+    border:0!important;
+    background:transparent!important;
+    color:#c69200!important;
+    font-size:0!important;
+    font-weight:900!important;
+    letter-spacing:.13em!important;
+  }
+  .mentor-article-kicker i{font-size:8px!important;margin-right:5px!important}
+  .mentor-article-kicker:after{content:"EDITORIAL DESK";font-size:8px!important}
+  .mentor-article-command-copy h2{
+    margin:6px 0 4px!important;
+    color:#20242a!important;
+    font-size:0!important;
+    line-height:1.15!important;
+    letter-spacing:-.025em!important;
+  }
+  .mentor-article-command-copy h2:after{
+    content:"Professional Articles & Insights";
+    font-size:24px!important;
+  }
+  .mentor-article-command-copy p{
+    margin:0!important;
+    color:#4f5968!important;
+    font-size:0!important;
+    line-height:1.5!important;
+  }
+  .mentor-article-command-copy p:after{
+    content:"Create structured educational research, strategy notes and market insights in a premium editorial workspace.";
+    font-size:10px!important;
+  }
+  .mentor-article-command-copy:after{
+    content:"PREMIUM EDITORIAL WORKSPACE"!important;
+    display:inline-flex!important;
+    margin-top:9px!important;
+    padding:4px 8px!important;
+    border:1px solid rgba(198,146,0,.35)!important;
+    border-radius:999px!important;
+    background:transparent!important;
+    color:#c69200!important;
+    font-size:7px!important;
+    font-weight:900!important;
+    letter-spacing:.08em!important;
+  }
+  .mentor-article-create{
+    min-height:36px!important;
+    height:36px!important;
+    padding:7px 11px!important;
+    border:1px solid #d4a22c!important;
+    border-radius:9px!important;
+    background:linear-gradient(180deg,#f6c740,#e3ad22)!important;
+    color:#17130a!important;
+    font-size:10px!important;
+    font-weight:900!important;
+    box-shadow:none!important;
+  }
+
+  .mentor-article-stats{display:none!important}
+
+  .mentor-article-controls{
+    display:grid!important;
+    grid-template-columns:minmax(220px,1fr) 145px 130px 145px!important;
+    gap:8px!important;
+    min-height:0!important;
+    padding:9px!important;
+    margin:0 0 12px!important;
+    border:1px solid #e2e5e8!important;
+    border-radius:12px!important;
+    background:#fff!important;
+    box-shadow:none!important;
+  }
+  .mentor-article-periods{display:contents!important}
+  .mentor-article-periods>button{display:none!important}
+  .mentor-article-search{
+    grid-column:1!important;
+    grid-row:1!important;
+    min-width:0!important;
+    min-height:40px!important;
+    height:40px!important;
+    padding:0 10px!important;
+    border:1px solid #e2e5e8!important;
+    border-radius:9px!important;
+    background:#fffdf8!important;
+  }
+  .mentor-article-search i{font-size:9px!important;color:#7b8490!important}
+  .mentor-article-search input{
+    height:38px!important;
+    padding:0!important;
+    border:0!important;
+    background:transparent!important;
+    font-size:10px!important;
+    box-shadow:none!important;
+  }
+  .mentor-article-select{height:40px!important}
+  .mentor-article-select select{
+    width:100%!important;
+    height:40px!important;
+    min-height:40px!important;
+    padding:0 10px!important;
+    border:1px solid #e2e5e8!important;
+    border-radius:9px!important;
+    background:#fffdf8!important;
+    color:#4f5968!important;
+    font-size:10px!important;
+  }
+  .mentor-article-select:nth-of-type(1){grid-column:2!important;grid-row:1!important}
+  .mentor-article-select:nth-of-type(2){grid-column:3!important;grid-row:1!important}
+  .mentor-article-select:nth-of-type(3){grid-column:4!important;grid-row:1!important}
+  .mentor-article-results-head{display:none!important}
+
+  .mentor-article-library,
+  .mentor-article-grid{
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:12px!important;
+    width:100%!important;
+    align-items:start!important;
+  }
+  .mentor-article-card{
+    width:100%!important;
+    max-width:none!important;
+    overflow:hidden!important;
+    border:1px solid #e2e5e8!important;
+    border-radius:14px!important;
+    background:#fff!important;
+    box-shadow:0 10px 24px rgba(83,60,17,.06)!important;
+    transition:.18s ease!important;
+  }
+  .mentor-article-card:hover{
+    transform:translateY(-2px)!important;
+    border-color:rgba(198,146,0,.42)!important;
+  }
+  .mentor-article-media{
+    width:100%!important;
+    aspect-ratio:16/9!important;
+    min-height:0!important;
+    background:#0b111a!important;
+  }
+  .mentor-article-card-body{padding:10px!important;gap:0!important}
+  .mentor-article-card-meta{
+    display:flex!important;
+    align-items:center!important;
+    gap:6px!important;
+    flex-wrap:wrap!important;
+    margin:0!important;
+    color:#7a8492!important;
+    font-size:8px!important;
+  }
+  .mentor-article-card-body h3{
+    margin:8px 0 5px!important;
+    color:#20242a!important;
+    font-size:13px!important;
+    line-height:1.35!important;
+  }
+  .mentor-article-card-body p{
+    min-height:28px!important;
+    margin:0!important;
+    color:#737e8b!important;
+    font-size:9.5px!important;
+    line-height:1.45!important;
+    -webkit-line-clamp:2!important;
+  }
+  .mentor-article-card-foot{
+    min-height:0!important;
+    margin-top:9px!important;
+    padding-top:0!important;
+    border-top:0!important;
+  }
+  .mentor-article-actions{
+    display:grid!important;
+    grid-template-columns:1fr 1fr auto!important;
+    gap:6px!important;
+    width:100%!important;
+  }
+  .mentor-article-actions :is(button,a){
+    min-height:31px!important;
+    height:31px!important;
+    padding:0 8px!important;
+    border:1px solid #e1e4e7!important;
+    border-radius:8px!important;
+    background:#fafbfc!important;
+    color:#606b77!important;
+    font-size:9px!important;
+  }
+  .mentor-article-actions .danger{width:34px!important;min-width:34px!important;padding:0!important}
+  .mentor-article-actions [data-view-article]{display:inline-flex!important}
+
+  /* ======================================================
+     Settings — More merged into one premium desktop page
+     ====================================================== */
+  [data-mentor-panel="settings"]{
+    max-width:1450px!important;
+    margin:0 auto!important;
+  }
+  .mentor-settings-desktop-head{
+    min-height:124px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    padding:20px!important;
+    margin:0 0 12px!important;
+    border:1px solid #e3c184!important;
+    border-radius:16px!important;
+    background:
+      radial-gradient(circle at 88% 20%,rgba(227,154,24,.12),transparent 25%),
+      linear-gradient(135deg,#fff7e8,#fffdf9)!important;
+    box-shadow:none!important;
+  }
+  .mentor-settings-desktop-head:after{display:none!important}
+  .mentor-settings-desktop-head .kicker{
+    min-height:0!important;
+    padding:0!important;
+    border:0!important;
+    background:transparent!important;
+    color:#c69200!important;
+    font-size:8px!important;
+    font-weight:900!important;
+    letter-spacing:.13em!important;
+  }
+  .mentor-settings-desktop-head h2{
+    margin:6px 0 4px!important;
+    color:#20242a!important;
+    font-size:24px!important;
+    line-height:1.15!important;
+  }
+  .mentor-settings-desktop-head p{
+    margin:0!important;
+    color:#4f5968!important;
+    font-size:10px!important;
+    line-height:1.5!important;
+  }
+  .mentor-settings-desktop-head small{
+    display:inline-flex!important;
+    margin-top:9px!important;
+    padding:4px 8px!important;
+    border:1px solid rgba(198,146,0,.35)!important;
+    border-radius:999px!important;
+    background:transparent!important;
+    color:#c69200!important;
+    font-size:7px!important;
+    font-weight:900!important;
+    letter-spacing:.08em!important;
+  }
+  [data-mentor-panel="settings"] .mentor-more-profile{
+    grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr)!important;
+    gap:12px!important;
+    margin:0!important;
+  }
+  [data-mentor-panel="settings"] .mentor-profile-account-hero.clean,
+  [data-mentor-panel="settings"] .mentor-profile-access-simple{
+    min-height:132px!important;
+    height:100%!important;
+    border:1px solid #e1e4e7!important;
+    border-radius:14px!important;
+    background:#fff!important;
+    box-shadow:0 10px 24px rgba(83,60,17,.04)!important;
+  }
+  [data-mentor-panel="settings"] .mentor-more-section-head{
+    min-height:44px!important;
+    margin-top:12px!important;
+    border-color:#e0e3e7!important;
+  }
+  [data-mentor-panel="settings"] .mentor-more-actions{
+    grid-template-columns:1fr 1fr!important;
+    gap:12px!important;
+    margin-top:8px!important;
+  }
+  [data-mentor-panel="settings"] .mentor-profile-install,
+  [data-mentor-panel="settings"] .mentor-more-logout{
+    min-height:62px!important;
+    border-radius:12px!important;
+    background:#fff!important;
+    box-shadow:0 8px 20px rgba(83,60,17,.035)!important;
+  }
+
+  /* Keep existing desktop sidebar clean: Settings only, no duplicate More. */
+  .mentor-side [data-mentor-view="more"]{display:none!important}
+
+  /* Dark desktop keeps current premium dark theme */
+  html[data-theme="dark"] .mentor-chart-command-top,
+  html[data-theme="dark"] .mentor-article-command-top,
+  html[data-theme="dark"] .mentor-chart-controls,
+  html[data-theme="dark"] .mentor-article-controls,
+  html[data-theme="dark"] .mentor-chart-card,
+  html[data-theme="dark"] .mentor-article-card,
+  html[data-theme="dark"] .mentor-settings-desktop-head,
+  html[data-theme="dark"] [data-mentor-panel="settings"] .mentor-profile-account-hero.clean,
+  html[data-theme="dark"] [data-mentor-panel="settings"] .mentor-profile-access-simple,
+  html[data-theme="dark"] [data-mentor-panel="settings"] .mentor-profile-install,
+  html[data-theme="dark"] [data-mentor-panel="settings"] .mentor-more-logout{
+    background:#101319!important;
+    border-color:#282f38!important;
+    box-shadow:none!important;
+  }
+  html[data-theme="dark"] .mentor-chart-command-copy h2:after,
+  html[data-theme="dark"] .mentor-article-command-copy h2:after,
+  html[data-theme="dark"] .mentor-settings-desktop-head h2,
+  html[data-theme="dark"] .mentor-chart-card-body h3,
+  html[data-theme="dark"] .mentor-article-card-body h3{
+    color:#f4f6f8!important;
+  }
+  html[data-theme="dark"] .mentor-chart-search,
+  html[data-theme="dark"] .mentor-article-search,
+  html[data-theme="dark"] .mentor-chart-select select,
+  html[data-theme="dark"] .mentor-article-select select{
+    background:#151a20!important;
+    border-color:#2b323c!important;
+    color:#dce2e7!important;
+  }
+}
+
+/* Explicit mobile guard: no desktop override below 901px. */
+@media (max-width:900px){
+  .mentor-settings-desktop-head{display:none!important}
+}
