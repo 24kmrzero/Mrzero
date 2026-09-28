@@ -355,6 +355,7 @@
       if(modalEntries.some(x=>x.kind===spec.kind && x.source?.isConnected)) return;
       const panel=findPanel(spec.head); if(!panel) return;
       const source=findEditorSource(panel,spec.kind); if(!source) return;
+      if(spec.kind==='announcement' && (source.closest('#announcementFormBox') || source.closest('.premium-announcement-modal'))) return;
       const entry=makeModal(spec.kind,panel,source); if(!entry) return;
       if(spec.kind==='link') ensureLinkAddButton(entry);
     });
