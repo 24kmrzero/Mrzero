@@ -14,11 +14,11 @@ async function rpc(name,args={}){const r=await sb.rpc(name,args);if(r.error)thro
 async function one(q){const r=await q;if(r.error)throw r.error;return r.data}
 function openModal(id){A.openModal?.(id)}function closeModal(id){A.closeModal?.(id)}
 function normPath(v){const s=String(v||'/').trim()||'/';return s==='/'?'/':`/${s.replace(/^\/+|\/+$/g,'')}/`}
-function refCode(name){return `${String(name||'link').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,28)||'link'}-${Date.now().toString(36).slice(-5)}`}
+function refCode(){const a=new Uint32Array(2);crypto.getRandomValues(a);return `24k-${(a[0].toString(36)+a[1].toString(36)).slice(0,7)}`}
 function initials(v){return String(v||'?').trim().split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase()}
 function fmtDateTime(v){return v?new Date(v).toLocaleString(undefined,{year:'numeric',month:'short',day:'2-digit',hour:'2-digit',minute:'2-digit'}):'—'}
 function isFreeCourse(c){return String(c?.course_type||'').toLowerCase()==='free'||Number(c?.discount_price??c?.price??0)===0}
-function linkUrl(l){const u=new URL(normPath(l.destination_path||'/'),location.origin);u.searchParams.set('ref',l.ref_code);if(l.source)u.searchParams.set('source',l.source);if(l.campaign)u.searchParams.set('campaign',l.campaign);if(l.course_slug)u.searchParams.set('course',l.course_slug);return u.toString()}
+function linkUrl(l){const u=new URL('/r/',location.origin);u.searchParams.set('ref',l.ref_code);return u.toString()}
 function leadOwner(l){const teams=Array.isArray(l.assigned_teams)?l.assigned_teams:[];if(l.round_robin)return 'Auto Distribute';return teams[0]?.display_name||'Auto Distribute'}
 
 function installContentHub(){
@@ -232,11 +232,8 @@ function updateLinkPreview(){
   const leadOpt=f.elements.lead_to?.selectedOptions?.[0];
   const routing=lead==='auto'?'Auto Distribute':(leadOpt?.textContent?.trim()||'Selected Team');
   const ref=String(f.elements.ref_code?.value||'').trim()||'preview-link';
-  const u=new URL(destination,location.origin);
+  const u=new URL('/r/',location.origin);
   u.searchParams.set('ref',ref);
-  if(source)u.searchParams.set('source',source);
-  if(campaign)u.searchParams.set('campaign',campaign);
-  if(courseSlug)u.searchParams.set('course',courseSlug);
   const typeEl=$('#v14PreviewType'),statusEl=$('#v14PreviewStatus');
   if(typeEl){typeEl.textContent=type==='ad'?'AD LINK':'NORMAL LINK';typeEl.classList.toggle('ad',type==='ad');typeEl.classList.toggle('normal',type!=='ad')}
   if(statusEl){statusEl.textContent=active?'ACTIVE':'OFF';statusEl.classList.toggle('off',!active);statusEl.classList.toggle('active',active)}
