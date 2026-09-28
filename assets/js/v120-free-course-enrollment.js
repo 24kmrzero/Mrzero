@@ -147,7 +147,8 @@
           course_slug: context.course_slug || null,
           accepted_terms: true,
           terms_version: cfg.TERMS_VERSION || '2026-08-03',
-          risk_version: cfg.RISK_VERSION || '2026-08-03'
+          risk_version: cfg.RISK_VERSION || '2026-08-03',
+          flow_path: '/free-course/'
         })
       });
 
@@ -157,6 +158,10 @@
       form.hidden = true;
       if (success) {
         success.hidden = false;
+        const emailCopy = success.querySelector('.email-box span');
+        if (emailCopy) emailCopy.textContent = payload.account_created
+          ? (payload.credentials_sent ? 'We sent your login email and password to your email address.' : 'Your account was created. Use Forgot Password if the password email does not arrive.')
+          : 'Your existing 24K MR ZERO account was used. Sign in with your current password.';
         const manager = payload.manager || {};
         if (manager.whatsapp) {
           const managerName = String(manager.display_name || 'your manager');
