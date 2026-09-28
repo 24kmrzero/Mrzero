@@ -238,7 +238,7 @@ async function loadSecondaryMentorData(){
     );
   }
   tasks.push(
-    safeLoad('courses',sb.from('courses').select('id,title,slug,short_description,description,instructor_name,price,discount_price,currency,status,thumbnail_url,is_published,enrollment_open,start_date,display_order').eq('is_published',true).order('display_order',{ascending:true}).limit(100))
+    safeLoad('courses',sb.from('courses').select('id,title,slug,short_description,description,instructor_name,price,discount_price,currency,status,thumbnail_url,is_published,enrollment_open,start_date,display_order').order('display_order',{ascending:true}).limit(100))
       .then(data=>{state.courses=data;renderCourses()})
   );
   tasks.push(
@@ -285,7 +285,7 @@ function subscribeMentorRealtime(){
   });
   const refreshCourses=()=>debounce('courses',async()=>{
     const pair=await Promise.all([
-      safeLoad('courses',sb.from('courses').select('id,title,slug,short_description,description,instructor_name,price,discount_price,currency,status,thumbnail_url,is_published,enrollment_open,start_date,display_order').eq('is_published',true).order('display_order',{ascending:true}).limit(100)),
+      safeLoad('courses',sb.from('courses').select('id,title,slug,short_description,description,instructor_name,price,discount_price,currency,status,thumbnail_url,is_published,enrollment_open,start_date,display_order').order('display_order',{ascending:true}).limit(100)),
       safeLoad('course_sessions',sb.from('course_sessions').select('id,course_id,session_number,title,starts_at,duration_minutes,status').order('starts_at',{ascending:true}).limit(500))
     ]);
     state.courses=pair[0];
