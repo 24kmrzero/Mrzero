@@ -230,8 +230,10 @@ async function loadSecondaryMentorData(){
   for(const key of ['charts','articles','banners']){
     if(!state.perms[key]){state[key]=[];continue}
     const table=key==='banners'?'mentor_banners':key;
+    const base=sb.from(table).select('*').order('created_at',{ascending:false}).limit(500);
+    const query=key==='articles'?base:base.eq('created_by',state.user.id);
     tasks.push(
-      safeLoad(table,sb.from(table).select('*').eq('created_by',state.user.id).order('created_at',{ascending:false}).limit(500))
+      safeLoad(table,query)
         .then(data=>{state[key]=data;if(key==='charts')renderCharts();else if(key==='articles')renderArticles();else renderBanners()})
     );
   }
@@ -254,6 +256,20 @@ function safeMentorRender(name,fn){
       if(box)box.innerHTML='<div class="mentor-signal-empty"><span><i class="fa-solid fa-rotate"></i></span><b>Signals are refreshing</b><small>Please tap refresh once.</small></div>'
     }
   }
+}
+let mentorRealtimeBound=false;
+function subscribeMentorRealtime(){
+  if(mentorRealtimeBound||!sb)return;
+  mentorRealtimeBound=true;
+  let timer;
+  const refreshArticles=()=>{clearTimeout(timer);timer=setTimeout(async()=>{
+    if(!state.perms.articles)return;
+    const data=await safeLoad('articles',sb.from('articles').select('*').order('created_at',{ascending:false}).limit(500));
+    state.articles=data;renderArticles()
+  },250)};
+  sb.channel('mentor-live-content')
+    .on('postgres_changes',{event:'*',schema:'public',table:'articles'},refreshArticles)
+    .subscribe()
 }
 async function load(){
   if(!await requireMentor())return;
@@ -1384,5 +1400,5 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMentorMenu()});
 window.addEventListener('resize',()=>{if(window.innerWidth>760)closeMentorMenu()});
 if(localStorage.getItem('mentor-theme-v1220')!=='1'){localStorage.setItem('mentor-theme','light');localStorage.setItem('mentor-theme-v1220','1')}
 const theme=localStorage.getItem('mentor-theme');applyMentorTheme(theme||'light');
-load().then(()=>{let h=(location.hash||'#performance').slice(1);if(h==='more')h='settings';if(!document.querySelector(`[data-mentor-panel="${CSS.escape(h)}"]`))h='performance';showView(h)}).catch(err=>{console.error(err);toast(err.message||'Could not load Mentor Panel.');$('#mentorLoading').innerHTML='<div class="mentor-login-card"><h2>Could not load Mentor Panel</h2><p>Please refresh or sign in again.</p><a class="mentor-btn gold" href="/mentor-login.html" style="display:grid;place-items:center;text-decoration:none">Mentor Login</a></div>'});
+load().then(()=>{subscribeMentorRealtime();let h=(location.hash||'#performance').slice(1);if(h==='more')h='settings';if(!document.querySelector(`[data-mentor-panel="${CSS.escape(h)}"]`))h='performance';showView(h)}).catch(err=>{console.error(err);toast(err.message||'Could not load Mentor Panel.');$('#mentorLoading').innerHTML='<div class="mentor-login-card"><h2>Could not load Mentor Panel</h2><p>Please refresh or sign in again.</p><a class="mentor-btn gold" href="/mentor-login.html" style="display:grid;place-items:center;text-decoration:none">Mentor Login</a></div>'});
 })();
