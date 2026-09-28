@@ -130,3 +130,202 @@
     margin-left:5px!important;
   }
 }
+
+
+/* v14.06 — quick status + date filter cards */
+@media (min-width:901px){
+  #p-payments .payment-review-quickbar{
+    display:flex!important;
+    align-items:stretch!important;
+    justify-content:space-between!important;
+    gap:18px!important;
+    padding:0 20px 10px!important;
+    margin-top:-2px!important;
+  }
+
+  #p-payments .payment-status-cards,
+  #p-payments .payment-date-cards{
+    display:flex!important;
+    align-items:stretch!important;
+    gap:10px!important;
+  }
+
+  #p-payments .payment-quick-card,
+  #p-payments .payment-date-card{
+    appearance:none!important;
+    -webkit-appearance:none!important;
+    min-height:35px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:10px!important;
+    padding:7px 11px!important;
+    border:1px solid #dfe3e7!important;
+    border-radius:10px!important;
+    background:#fff!important;
+    color:#49515b!important;
+    cursor:pointer!important;
+    box-shadow:0 3px 12px rgba(18,24,32,.025)!important;
+    transition:border-color .15s ease,background .15s ease,box-shadow .15s ease,transform .15s ease!important;
+  }
+
+  #p-payments .payment-quick-card{
+    min-width:104px!important;
+  }
+
+  #p-payments .payment-date-card{
+    min-width:100px!important;
+    justify-content:center!important;
+  }
+
+  #p-payments .payment-quick-card span,
+  #p-payments .payment-date-card span{
+    font-size:7.5px!important;
+    font-weight:900!important;
+    letter-spacing:.035em!important;
+    text-transform:uppercase!important;
+  }
+
+  #p-payments .payment-quick-card b{
+    min-width:22px!important;
+    height:22px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    padding:0 6px!important;
+    border-radius:999px!important;
+    background:#f4f5f7!important;
+    color:#4d5660!important;
+    font-size:8px!important;
+    font-weight:950!important;
+  }
+
+  #p-payments .payment-quick-card:hover,
+  #p-payments .payment-date-card:hover{
+    transform:translateY(-1px)!important;
+    border-color:#d7be6c!important;
+  }
+
+  #p-payments .payment-quick-card.pending.on,
+  #p-payments .payment-quick-card.review.on{
+    border-color:#dca400!important;
+    background:#fff9e8!important;
+    color:#846000!important;
+    box-shadow:0 5px 16px rgba(202,151,0,.09)!important;
+  }
+
+  #p-payments .payment-quick-card.approved.on{
+    border-color:#8fd0a9!important;
+    background:#eef9f2!important;
+    color:#187847!important;
+  }
+
+  #p-payments .payment-quick-card.rejected.on{
+    border-color:#efb4b4!important;
+    background:#fff2f2!important;
+    color:#b43f46!important;
+  }
+
+  #p-payments .payment-date-card.on{
+    border-color:#dca400!important;
+    background:#fff9e8!important;
+    color:#846000!important;
+    box-shadow:0 5px 16px rgba(202,151,0,.09)!important;
+  }
+
+  #p-payments .payment-quick-card.pending.on b,
+  #p-payments .payment-quick-card.review.on b{
+    background:#e2ab0b!important;
+    color:#171100!important;
+  }
+
+  #p-payments .payment-quick-card.approved.on b{
+    background:#2cab6b!important;
+    color:#fff!important;
+  }
+
+  #p-payments .payment-quick-card.rejected.on b{
+    background:#dc5d64!important;
+    color:#fff!important;
+  }
+
+  html[data-theme="dark"] #p-payments .payment-quick-card,
+  html[data-theme="dark"] #p-payments .payment-date-card{
+    border-color:#2d343e!important;
+    background:#151a21!important;
+    color:#aeb5bf!important;
+    box-shadow:none!important;
+  }
+
+  html[data-theme="dark"] #p-payments .payment-quick-card b{
+    background:#222832!important;
+    color:#d4d8de!important;
+  }
+
+  html[data-theme="dark"] #p-payments .payment-quick-card.pending.on,
+  html[data-theme="dark"] #p-payments .payment-quick-card.review.on,
+  html[data-theme="dark"] #p-payments .payment-date-card.on{
+    border-color:rgba(229,177,32,.45)!important;
+    background:rgba(229,177,32,.09)!important;
+    color:#e8c75f!important;
+  }
+
+  html[data-theme="dark"] #p-payments .payment-quick-card.approved.on{
+    border-color:rgba(54,190,126,.4)!important;
+    background:rgba(54,190,126,.1)!important;
+    color:#64dca6!important;
+  }
+
+  html[data-theme="dark"] #p-payments .payment-quick-card.rejected.on{
+    border-color:rgba(222,88,96,.4)!important;
+    background:rgba(222,88,96,.1)!important;
+    color:#ff8d93!important;
+  }
+}
+
+@media (max-width:900px){
+  #p-payments .payment-review-quickbar{
+    display:grid!important;
+    gap:9px!important;
+    margin-top:8px!important;
+  }
+
+  #p-payments .payment-status-cards{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:7px!important;
+  }
+
+  #p-payments .payment-date-cards{
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:7px!important;
+  }
+
+  #p-payments .payment-quick-card,
+  #p-payments .payment-date-card{
+    min-height:38px!important;
+    border:1px solid var(--app-border,rgba(255,255,255,.12))!important;
+    border-radius:10px!important;
+    background:var(--app-card,#141414)!important;
+    color:inherit!important;
+  }
+
+  #p-payments .payment-quick-card{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:8px!important;
+    padding:0 10px!important;
+  }
+
+  #p-payments .payment-date-card{
+    padding:0 6px!important;
+  }
+
+  #p-payments .payment-quick-card.on,
+  #p-payments .payment-date-card.on{
+    border-color:#dca400!important;
+    background:rgba(220,164,0,.09)!important;
+  }
+}
