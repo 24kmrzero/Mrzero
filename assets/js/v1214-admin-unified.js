@@ -18,7 +18,7 @@ function refCode(){const a=new Uint32Array(2);crypto.getRandomValues(a);return `
 function initials(v){return String(v||'?').trim().split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase()}
 function fmtDateTime(v){return v?new Date(v).toLocaleString(undefined,{year:'numeric',month:'short',day:'2-digit',hour:'2-digit',minute:'2-digit'}):'—'}
 function isFreeCourse(c){return String(c?.course_type||'').toLowerCase()==='free'||Number(c?.discount_price??c?.price??0)===0}
-function linkUrl(l){const u=new URL('/r/',location.origin);u.searchParams.set('ref',l.ref_code);return u.toString()}
+function linkUrl(l){const u=new URL('/r/',location.origin);u.searchParams.set('r',l.ref_code);return u.toString()}
 function leadOwner(l){const teams=Array.isArray(l.assigned_teams)?l.assigned_teams:[];if(l.round_robin)return 'Auto Distribute';return teams[0]?.display_name||'Auto Distribute'}
 
 function installContentHub(){
@@ -233,7 +233,7 @@ function updateLinkPreview(){
   const routing=lead==='auto'?'Auto Distribute':(leadOpt?.textContent?.trim()||'Selected Team');
   const ref=String(f.elements.ref_code?.value||'').trim()||'preview-link';
   const u=new URL('/r/',location.origin);
-  u.searchParams.set('ref',ref);
+  u.searchParams.set('r',ref);
   const typeEl=$('#v14PreviewType'),statusEl=$('#v14PreviewStatus');
   if(typeEl){typeEl.textContent=type==='ad'?'AD LINK':'NORMAL LINK';typeEl.classList.toggle('ad',type==='ad');typeEl.classList.toggle('normal',type!=='ad')}
   if(statusEl){statusEl.textContent=active?'ACTIVE':'OFF';statusEl.classList.toggle('off',!active);statusEl.classList.toggle('active',active)}
