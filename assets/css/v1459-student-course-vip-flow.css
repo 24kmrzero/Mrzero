@@ -1,0 +1,1453 @@
+/* 24K MR ZERO — Student Course VIP Flow v14.59
+   Desktop-only premium treatment for Course Sessions + every course payment/details modal.
+   Existing mobile course flow remains untouched. */
+
+@media (min-width:901px){
+
+  /* ------------------------------------------------------------
+     Shared modal stage
+     ------------------------------------------------------------ */
+  .student-page #courseDetailsModal,
+  .student-page #paymentMethodChoiceModal,
+  .student-page #paymentModal,
+  .student-page #bankPaymentModal,
+  .student-page #coursePaymentSuccessModal{
+    padding:28px!important;
+    background:rgba(11,15,20,.54)!important;
+    backdrop-filter:blur(7px)!important;
+    -webkit-backdrop-filter:blur(7px)!important;
+  }
+
+  .student-page #courseDetailsModal .app-modal-card,
+  .student-page #paymentMethodChoiceModal .app-modal-card,
+  .student-page #paymentModal .app-modal-card,
+  .student-page #bankPaymentModal .app-modal-card,
+  .student-page #coursePaymentSuccessModal .app-modal-card{
+    position:relative!important;
+    display:grid!important;
+    grid-template-rows:auto minmax(0,1fr) auto!important;
+    overflow:hidden!important;
+    width:min(760px,92vw)!important;
+    max-width:760px!important;
+    max-height:88vh!important;
+    border:1px solid #dedfdf!important;
+    border-radius:20px!important;
+    background:#fff!important;
+    box-shadow:0 30px 90px rgba(19,24,31,.24)!important;
+  }
+
+  .student-page #courseDetailsModal .app-modal-card{
+    width:min(1040px,94vw)!important;
+    max-width:1040px!important;
+  }
+
+  .student-page #coursePaymentSuccessModal .app-modal-card{
+    width:min(560px,90vw)!important;
+    max-width:560px!important;
+  }
+
+  .student-page #courseDetailsModal .app-modal-card::before,
+  .student-page #paymentMethodChoiceModal .app-modal-card::before,
+  .student-page #paymentModal .app-modal-card::before,
+  .student-page #bankPaymentModal .app-modal-card::before,
+  .student-page #coursePaymentSuccessModal .app-modal-card::before{
+    content:""!important;
+    position:absolute!important;
+    top:0!important;
+    left:0!important;
+    right:0!important;
+    height:3px!important;
+    z-index:8!important;
+    background:linear-gradient(90deg,#b98400,#f3c63d 48%,#9f7300)!important;
+  }
+
+  /* ------------------------------------------------------------
+     VIP modal header / footer
+     ------------------------------------------------------------ */
+  .student-page #courseDetailsModal .app-modal-head,
+  .student-page #paymentMethodChoiceModal .app-modal-head,
+  .student-page #paymentModal .app-modal-head,
+  .student-page #bankPaymentModal .app-modal-head,
+  .student-page #coursePaymentSuccessModal .app-modal-head{
+    position:relative!important;
+    z-index:3!important;
+    min-height:76px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:18px!important;
+    padding:16px 19px!important;
+    border-bottom:1px solid #e8eaed!important;
+    background:
+      radial-gradient(260px 90px at 100% 0%,rgba(216,162,10,.065),transparent 72%),
+      linear-gradient(180deg,#fff,#fdfdfb)!important;
+  }
+
+  .student-page #courseDetailsModal .app-modal-head::after,
+  .student-page #paymentMethodChoiceModal .app-modal-head::after,
+  .student-page #paymentModal .app-modal-head::after,
+  .student-page #bankPaymentModal .app-modal-head::after,
+  .student-page #coursePaymentSuccessModal .app-modal-head::after{
+    content:"24K"!important;
+    position:absolute!important;
+    right:66px!important;
+    top:-13px!important;
+    color:rgba(160,114,0,.035)!important;
+    font-size:72px!important;
+    line-height:1!important;
+    font-weight:950!important;
+    letter-spacing:-.08em!important;
+    pointer-events:none!important;
+  }
+
+  .student-page #courseDetailsModal .app-modal-head>div,
+  .student-page #paymentMethodChoiceModal .app-modal-head>div,
+  .student-page #bankPaymentModal .app-modal-head>div,
+  .student-page #coursePaymentSuccessModal .app-modal-head>div{
+    position:relative!important;
+    z-index:2!important;
+    min-width:0!important;
+  }
+
+  .student-page #courseDetailsModal .app-modal-head h3,
+  .student-page #paymentMethodChoiceModal .app-modal-head h3,
+  .student-page #paymentModal .app-modal-head h3,
+  .student-page #bankPaymentModal .app-modal-head h3,
+  .student-page #coursePaymentSuccessModal .app-modal-head h3{
+    margin:0!important;
+    color:#181d24!important;
+    font-size:18px!important;
+    line-height:1.15!important;
+    font-weight:900!important;
+    letter-spacing:-.025em!important;
+  }
+
+  .student-page #courseDetailsModal .app-modal-head small,
+  .student-page #paymentMethodChoiceModal .app-modal-head small,
+  .student-page #bankPaymentModal .app-modal-head small,
+  .student-page #coursePaymentSuccessModal .app-modal-head small{
+    display:block!important;
+    margin-top:4px!important;
+    color:#7b8591!important;
+    font-size:9px!important;
+    line-height:1.35!important;
+  }
+
+  .student-page #courseDetailsModal .modal-close,
+  .student-page #paymentMethodChoiceModal .modal-close,
+  .student-page #paymentModal .modal-close,
+  .student-page #bankPaymentModal .modal-close,
+  .student-page #coursePaymentSuccessModal .modal-close{
+    position:relative!important;
+    z-index:4!important;
+    width:38px!important;
+    height:38px!important;
+    min-width:38px!important;
+    display:grid!important;
+    place-items:center!important;
+    border:1px solid #e0d8c7!important;
+    border-radius:11px!important;
+    background:#faf6ed!important;
+    color:#5e574e!important;
+    box-shadow:none!important;
+    font-size:12px!important;
+    transition:.15s ease!important;
+  }
+  .student-page #courseDetailsModal .modal-close:hover,
+  .student-page #paymentMethodChoiceModal .modal-close:hover,
+  .student-page #paymentModal .modal-close:hover,
+  .student-page #bankPaymentModal .modal-close:hover,
+  .student-page #coursePaymentSuccessModal .modal-close:hover{
+    transform:translateY(-1px)!important;
+    border-color:#d7bd69!important;
+    color:#8e6800!important;
+    background:#fff9e9!important;
+  }
+
+  .student-page #courseDetailsModal .app-modal-body,
+  .student-page #paymentMethodChoiceModal .app-modal-body,
+  .student-page #paymentModal .app-modal-body,
+  .student-page #bankPaymentModal .app-modal-body,
+  .student-page #coursePaymentSuccessModal .app-modal-body{
+    min-height:0!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    padding:17px 19px 19px!important;
+    background:#fff!important;
+    scrollbar-width:thin!important;
+    scrollbar-color:#d3b75d transparent!important;
+  }
+
+  .student-page #courseDetailsModal .app-modal-foot,
+  .student-page #paymentMethodChoiceModal .app-modal-foot,
+  .student-page #paymentModal .app-modal-foot,
+  .student-page #bankPaymentModal .app-modal-foot,
+  .student-page #coursePaymentSuccessModal .app-modal-foot{
+    min-height:66px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-end!important;
+    gap:8px!important;
+    padding:11px 18px!important;
+    border-top:1px solid #e8eaed!important;
+    background:#fbfbfa!important;
+    box-shadow:0 -8px 20px rgba(18,24,32,.025)!important;
+  }
+
+  .student-page #courseDetailsModal .app-modal-foot .app-btn,
+  .student-page #paymentMethodChoiceModal .app-modal-foot .app-btn,
+  .student-page #paymentModal .app-modal-foot .app-btn,
+  .student-page #bankPaymentModal .app-modal-foot .app-btn,
+  .student-page #coursePaymentSuccessModal .app-modal-foot .app-btn{
+    min-height:38px!important;
+    height:38px!important;
+    min-width:110px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:6px!important;
+    padding:0 13px!important;
+    border-radius:9px!important;
+    font-size:8.5px!important;
+    line-height:1!important;
+    font-weight:900!important;
+  }
+
+  .student-page #courseDetailsModal .app-modal-foot .app-btn.outline,
+  .student-page #paymentMethodChoiceModal .app-modal-foot .app-btn.outline,
+  .student-page #paymentModal .app-modal-foot .app-btn.outline,
+  .student-page #bankPaymentModal .app-modal-foot .app-btn.outline{
+    border:1px solid #dfd6c4!important;
+    background:#fffaf0!important;
+    color:#7b620f!important;
+    box-shadow:none!important;
+  }
+
+  .student-page #courseDetailsModal .app-modal-foot .app-btn.gold,
+  .student-page #paymentMethodChoiceModal .app-modal-foot .app-btn.gold,
+  .student-page #paymentModal .app-modal-foot .app-btn.gold,
+  .student-page #bankPaymentModal .app-modal-foot .app-btn.gold,
+  .student-page #coursePaymentSuccessModal .app-modal-foot .app-btn.gold{
+    border:1px solid #d3a10d!important;
+    background:linear-gradient(180deg,#f6c834,#dfa407)!important;
+    color:#241b03!important;
+    box-shadow:0 7px 16px rgba(181,127,0,.11)!important;
+  }
+
+  /* ------------------------------------------------------------
+     Payment stepper — fixes Method2Details3Submitted collision
+     ------------------------------------------------------------ */
+  .student-page .course-payment-steps{
+    display:grid!important;
+    grid-template-columns:auto minmax(38px,1fr) auto minmax(38px,1fr) auto!important;
+    align-items:center!important;
+    gap:8px!important;
+    margin:0 0 12px!important;
+    padding:10px 12px!important;
+    border:1px solid #e3e6e9!important;
+    border-radius:12px!important;
+    background:#f8f9fa!important;
+  }
+
+  .student-page .course-payment-steps>span{
+    min-width:80px!important;
+    display:flex!important;
+    align-items:center!important;
+    gap:7px!important;
+    color:#89929d!important;
+    font-size:8px!important;
+    line-height:1!important;
+    font-weight:900!important;
+    white-space:nowrap!important;
+  }
+
+  .student-page .course-payment-steps>span>b{
+    width:25px!important;
+    height:25px!important;
+    flex:0 0 25px!important;
+    display:grid!important;
+    place-items:center!important;
+    border:1px solid #dfe3e7!important;
+    border-radius:8px!important;
+    background:#fff!important;
+    color:#8a929c!important;
+    font-size:8px!important;
+  }
+
+  .student-page .course-payment-steps>span.active{
+    color:#926b00!important;
+  }
+  .student-page .course-payment-steps>span.active>b{
+    border-color:#d9aa1c!important;
+    background:#f4c331!important;
+    color:#201803!important;
+  }
+
+  .student-page .course-payment-steps>span.done{
+    color:#16835f!important;
+  }
+  .student-page .course-payment-steps>span.done>b{
+    border-color:rgba(22,168,114,.18)!important;
+    background:rgba(22,168,114,.09)!important;
+    color:#16835f!important;
+  }
+
+  .student-page .course-payment-steps>i{
+    height:1px!important;
+    min-width:38px!important;
+    display:block!important;
+    background:linear-gradient(90deg,#e3e5e8,#d9d2c1)!important;
+  }
+
+  /* ------------------------------------------------------------
+     Shared payment summary / notice
+     ------------------------------------------------------------ */
+  .student-page #paymentChoiceCourseSummary,
+  .student-page #paymentCourseSummary,
+  .student-page #bankPaymentCourseSummary{
+    margin:0 0 12px!important;
+    padding:12px 13px!important;
+    border:1px solid #d9e0eb!important;
+    border-left:3px solid #6f9bd8!important;
+    border-radius:11px!important;
+    background:#f4f8fd!important;
+    color:#46515f!important;
+    font-size:9px!important;
+    line-height:1.45!important;
+  }
+  .student-page #paymentChoiceCourseSummary b,
+  .student-page #paymentCourseSummary b,
+  .student-page #bankPaymentCourseSummary b{
+    color:#252b33!important;
+    font-size:10px!important;
+  }
+  .student-page #paymentChoiceCourseSummary small,
+  .student-page #paymentCourseSummary small,
+  .student-page #bankPaymentCourseSummary small{
+    color:#75808c!important;
+    font-size:8px!important;
+  }
+
+  /* ------------------------------------------------------------
+     Payment method selection cards
+     ------------------------------------------------------------ */
+  .student-page #paymentMethodChoiceModal .app-grid.cols-2{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:10px!important;
+    margin:0!important;
+  }
+
+  .student-page #paymentMethodChoiceModal [data-payment-choice]{
+    position:relative!important;
+    min-height:126px!important;
+    display:grid!important;
+    grid-template-columns:42px minmax(0,1fr)!important;
+    grid-template-rows:auto 1fr!important;
+    align-items:start!important;
+    gap:4px 11px!important;
+    padding:14px!important;
+    border:1px solid #e1e4e7!important;
+    border-radius:14px!important;
+    background:#fff!important;
+    color:#303741!important;
+    text-align:left!important;
+    box-shadow:0 7px 20px rgba(18,24,32,.025)!important;
+    cursor:pointer!important;
+    transition:.16s ease!important;
+  }
+  .student-page #paymentMethodChoiceModal [data-payment-choice]:hover{
+    transform:translateY(-2px)!important;
+    border-color:#dfc468!important;
+    box-shadow:0 12px 24px rgba(18,24,32,.055)!important;
+  }
+  .student-page #paymentMethodChoiceModal [data-payment-choice]>div{
+    grid-row:1/3!important;
+    width:42px!important;
+    height:42px!important;
+    margin:0!important;
+    display:grid!important;
+    place-items:center!important;
+    border:1px solid rgba(216,162,10,.14)!important;
+    border-radius:12px!important;
+    background:rgba(216,162,10,.085)!important;
+    color:#b37f00!important;
+    font-size:15px!important;
+  }
+  .student-page #paymentMethodChoiceModal [data-payment-choice] h3{
+    margin:1px 0 3px!important;
+    color:#1d232a!important;
+    font-size:12px!important;
+    line-height:1.2!important;
+  }
+  .student-page #paymentMethodChoiceModal [data-payment-choice] p{
+    margin:0!important;
+    color:#79838f!important;
+    font-size:8.5px!important;
+    line-height:1.45!important;
+  }
+  .student-page #paymentMethodChoiceModal [data-payment-choice].is-selected{
+    border-color:#d7b440!important;
+    background:
+      radial-gradient(180px 90px at 100% 0%,rgba(216,162,10,.06),transparent 72%),
+      #fffdf6!important;
+    box-shadow:0 0 0 1px rgba(216,162,10,.06),0 10px 24px rgba(126,93,0,.05)!important;
+  }
+  .student-page #paymentMethodChoiceModal [data-payment-choice].is-selected>div{
+    border-color:#d8a20a!important;
+    background:linear-gradient(145deg,#f7ca3b,#dba105)!important;
+    color:#211900!important;
+  }
+  .student-page #paymentMethodChoiceModal [data-payment-choice].is-selected::after{
+    content:"SELECTED"!important;
+    position:absolute!important;
+    right:10px!important;
+    top:10px!important;
+    min-height:21px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    padding:0 7px!important;
+    border-radius:999px!important;
+    background:rgba(22,168,114,.075)!important;
+    color:#16835f!important;
+    font-size:6px!important;
+    font-weight:950!important;
+    letter-spacing:.06em!important;
+  }
+  .student-page #paymentMethodChoiceModal [data-payment-choice].method-disabled{
+    opacity:.44!important;
+    filter:grayscale(.18)!important;
+    cursor:not-allowed!important;
+  }
+  .student-page #paymentMethodChoiceModal .notice.warn{
+    margin:12px 0 0!important;
+    padding:10px 11px!important;
+    border:1px solid #e8dcae!important;
+    border-radius:10px!important;
+    background:#fffaf0!important;
+    color:#756a50!important;
+    font-size:8px!important;
+    line-height:1.4!important;
+  }
+
+  /* ------------------------------------------------------------
+     Course details modal
+     ------------------------------------------------------------ */
+  .student-page #courseDetailsBody{
+    display:grid!important;
+    gap:12px!important;
+  }
+
+  .student-page #courseDetailsModal .course-detail-hero{
+    position:relative!important;
+    overflow:hidden!important;
+    min-height:112px!important;
+    display:grid!important;
+    grid-template-columns:52px minmax(0,1fr) auto!important;
+    align-items:center!important;
+    gap:14px!important;
+    padding:17px!important;
+    border:1px solid #e3dfd3!important;
+    border-left:3px solid #d8a20a!important;
+    border-radius:15px!important;
+    background:
+      radial-gradient(260px 110px at 100% 0%,rgba(216,162,10,.065),transparent 72%),
+      #fffdf8!important;
+  }
+
+  .student-page #courseDetailsModal .course-detail-icon{
+    width:50px!important;
+    height:50px!important;
+    display:grid!important;
+    place-items:center!important;
+    border:1px solid #dec46f!important;
+    border-radius:14px!important;
+    background:linear-gradient(145deg,#f7cd47,#dca206)!important;
+    color:#211900!important;
+    font-size:17px!important;
+    box-shadow:0 7px 18px rgba(181,127,0,.10)!important;
+  }
+
+  .student-page #courseDetailsModal .course-detail-hero>div{
+    min-width:0!important;
+  }
+  .student-page #courseDetailsModal .course-detail-hero small{
+    display:block!important;
+    margin:0 0 4px!important;
+    color:#9d7609!important;
+    font-size:7px!important;
+    font-weight:950!important;
+    letter-spacing:.11em!important;
+  }
+  .student-page #courseDetailsModal .course-detail-hero h3{
+    margin:0!important;
+    color:#181d24!important;
+    font-size:20px!important;
+    line-height:1.15!important;
+    letter-spacing:-.025em!important;
+  }
+  .student-page #courseDetailsModal .course-detail-hero p{
+    max-width:650px!important;
+    margin:5px 0 0!important;
+    color:#737d89!important;
+    font-size:9px!important;
+    line-height:1.45!important;
+  }
+
+  .student-page #courseDetailsModal .course-detail-state{
+    min-height:27px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    padding:0 9px!important;
+    border:1px solid #e1e4e7!important;
+    border-radius:999px!important;
+    background:#f7f8fa!important;
+    color:#737d88!important;
+    font-size:6.8px!important;
+    font-weight:950!important;
+    letter-spacing:.04em!important;
+    white-space:nowrap!important;
+  }
+  .student-page #courseDetailsModal .course-detail-state.ok,
+  .student-page #courseDetailsModal .course-detail-state.free{
+    border-color:rgba(22,168,114,.16)!important;
+    background:rgba(22,168,114,.065)!important;
+    color:#16835f!important;
+  }
+  .student-page #courseDetailsModal .course-detail-state.pending{
+    border-color:rgba(216,162,10,.18)!important;
+    background:rgba(216,162,10,.07)!important;
+    color:#956d00!important;
+  }
+  .student-page #courseDetailsModal .course-detail-state.locked{
+    border-color:rgba(233,77,101,.16)!important;
+    background:rgba(233,77,101,.06)!important;
+    color:#dc5268!important;
+  }
+
+  .student-page #courseDetailsModal .course-detail-stats{
+    display:grid!important;
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    gap:8px!important;
+  }
+  .student-page #courseDetailsModal .course-detail-stats>span{
+    min-height:64px!important;
+    display:grid!important;
+    align-content:center!important;
+    gap:4px!important;
+    padding:10px 11px!important;
+    border:1px solid #e5e7e9!important;
+    border-radius:11px!important;
+    background:#fafbfc!important;
+  }
+  .student-page #courseDetailsModal .course-detail-stats small{
+    color:#8b949f!important;
+    font-size:6.3px!important;
+    font-weight:950!important;
+    letter-spacing:.08em!important;
+  }
+  .student-page #courseDetailsModal .course-detail-stats b{
+    overflow:hidden!important;
+    color:#2a3038!important;
+    font-size:9.3px!important;
+    line-height:1.25!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+  }
+
+  .student-page #courseDetailsModal .course-detail-section-head{
+    min-height:46px!important;
+    display:flex!important;
+    align-items:flex-end!important;
+    justify-content:space-between!important;
+    gap:12px!important;
+    padding:4px 2px 0!important;
+  }
+  .student-page #courseDetailsModal .course-detail-section-head small{
+    display:block!important;
+    color:#9e770a!important;
+    font-size:6.5px!important;
+    font-weight:950!important;
+    letter-spacing:.10em!important;
+  }
+  .student-page #courseDetailsModal .course-detail-section-head h4{
+    margin:3px 0 0!important;
+    color:#1d232a!important;
+    font-size:15px!important;
+    line-height:1.2!important;
+  }
+  .student-page #courseDetailsModal .course-detail-section-head>span{
+    min-height:23px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    padding:0 8px!important;
+    border-radius:999px!important;
+    background:#f3f5f7!important;
+    color:#7d8691!important;
+    font-size:6.8px!important;
+    font-weight:850!important;
+  }
+
+  .student-page #courseDetailsModal .course-detail-sessions{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:8px!important;
+  }
+  .student-page #courseDetailsModal .course-detail-session{
+    min-height:82px!important;
+    display:grid!important;
+    grid-template-columns:36px minmax(0,1fr) auto 18px!important;
+    align-items:center!important;
+    gap:10px!important;
+    padding:10px!important;
+    border:1px solid #e4e7e9!important;
+    border-radius:12px!important;
+    background:#fff!important;
+    box-shadow:0 5px 15px rgba(18,24,32,.02)!important;
+  }
+  .student-page #courseDetailsModal .course-detail-session:nth-child(even){
+    background:#fffdf7!important;
+    border-color:#e8dfc9!important;
+  }
+  .student-page #courseDetailsModal .cds-number{
+    width:34px!important;
+    height:34px!important;
+    display:grid!important;
+    place-items:center!important;
+    border:1px solid rgba(216,162,10,.13)!important;
+    border-radius:9px!important;
+    background:rgba(216,162,10,.075)!important;
+    color:#9c7300!important;
+    font-size:8px!important;
+    font-weight:950!important;
+  }
+  .student-page #courseDetailsModal .cds-copy{
+    min-width:0!important;
+  }
+  .student-page #courseDetailsModal .cds-copy small{
+    display:block!important;
+    margin-bottom:3px!important;
+    color:#9c760c!important;
+    font-size:6.3px!important;
+    font-weight:900!important;
+  }
+  .student-page #courseDetailsModal .cds-copy b{
+    display:block!important;
+    overflow:hidden!important;
+    color:#252b32!important;
+    font-size:9.3px!important;
+    line-height:1.25!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+  }
+  .student-page #courseDetailsModal .cds-copy p{
+    margin:3px 0 0!important;
+    overflow:hidden!important;
+    color:#7a8490!important;
+    font-size:7.2px!important;
+    line-height:1.3!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+  }
+  .student-page #courseDetailsModal .cds-time{
+    display:grid!important;
+    justify-items:end!important;
+    gap:2px!important;
+  }
+  .student-page #courseDetailsModal .cds-time b{
+    color:#313841!important;
+    font-size:7.8px!important;
+    white-space:nowrap!important;
+  }
+  .student-page #courseDetailsModal .cds-time small{
+    color:#929aa4!important;
+    font-size:6.3px!important;
+  }
+  .student-page #courseDetailsModal .cds-lock{
+    color:#b68200!important;
+    font-size:9px!important;
+  }
+
+  .student-page #courseDetailsModal .course-detail-empty{
+    grid-column:1/-1!important;
+    min-height:150px!important;
+    display:grid!important;
+    place-items:center!important;
+    align-content:center!important;
+    gap:5px!important;
+    border:1px dashed #ded8ca!important;
+    border-radius:12px!important;
+    background:#fbfbfa!important;
+    color:#818a95!important;
+  }
+  .student-page #courseDetailsModal .course-detail-empty i{
+    color:#ae8107!important;
+    font-size:20px!important;
+  }
+  .student-page #courseDetailsModal .course-detail-empty b{
+    color:#2a3038!important;
+    font-size:10px!important;
+  }
+  .student-page #courseDetailsModal .course-detail-empty span{
+    font-size:8px!important;
+  }
+
+  .student-page #courseDetailsModal .course-detail-note{
+    min-height:62px!important;
+    display:grid!important;
+    grid-template-columns:34px minmax(0,1fr)!important;
+    align-items:center!important;
+    gap:9px!important;
+    padding:10px 11px!important;
+    border:1px solid rgba(22,168,114,.14)!important;
+    border-radius:11px!important;
+    background:rgba(22,168,114,.045)!important;
+  }
+  .student-page #courseDetailsModal .course-detail-note>i{
+    width:32px!important;
+    height:32px!important;
+    display:grid!important;
+    place-items:center!important;
+    border-radius:9px!important;
+    background:rgba(22,168,114,.09)!important;
+    color:#16835f!important;
+    font-size:12px!important;
+  }
+  .student-page #courseDetailsModal .course-detail-note b{
+    display:block!important;
+    color:#283039!important;
+    font-size:9px!important;
+  }
+  .student-page #courseDetailsModal .course-detail-note span{
+    display:block!important;
+    margin-top:2px!important;
+    color:#74808b!important;
+    font-size:7.6px!important;
+    line-height:1.35!important;
+  }
+
+  .student-page #courseDetailsModal .course-details-foot{
+    display:flex!important;
+    grid-template-columns:none!important;
+  }
+
+  /* ------------------------------------------------------------
+     Payment form controls
+     ------------------------------------------------------------ */
+  .student-page #paymentModal .form-grid,
+  .student-page #bankPaymentModal .form-grid{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:10px!important;
+    margin-top:12px!important;
+  }
+
+  .student-page #paymentModal .form-field,
+  .student-page #bankPaymentModal .form-field{
+    display:grid!important;
+    gap:6px!important;
+  }
+  .student-page #paymentModal .form-field.full,
+  .student-page #bankPaymentModal .form-field.full{
+    grid-column:1/-1!important;
+  }
+
+  .student-page #paymentModal .form-field label,
+  .student-page #bankPaymentModal .form-field label{
+    color:#707b87!important;
+    font-size:7.5px!important;
+    line-height:1!important;
+    font-weight:900!important;
+    letter-spacing:.015em!important;
+  }
+
+  .student-page #paymentModal :is(input,select,textarea),
+  .student-page #bankPaymentModal :is(input,select,textarea){
+    width:100%!important;
+    border:1px solid #dfe3e7!important;
+    border-radius:10px!important;
+    background:#fbfbfa!important;
+    color:#252b32!important;
+    box-shadow:none!important;
+    font:inherit!important;
+    font-size:9.5px!important;
+    transition:border-color .15s ease,background .15s ease,box-shadow .15s ease!important;
+  }
+  .student-page #paymentModal :is(input,select),
+  .student-page #bankPaymentModal :is(input,select){
+    min-height:41px!important;
+    height:41px!important;
+    padding:0 11px!important;
+  }
+  .student-page #paymentModal textarea,
+  .student-page #bankPaymentModal textarea{
+    min-height:88px!important;
+    padding:10px 11px!important;
+    line-height:1.45!important;
+    resize:vertical!important;
+  }
+  .student-page #paymentModal :is(input,select,textarea):focus,
+  .student-page #bankPaymentModal :is(input,select,textarea):focus{
+    outline:none!important;
+    border-color:#d2ad37!important;
+    background:#fff!important;
+    box-shadow:0 0 0 3px rgba(216,162,10,.08)!important;
+  }
+
+  .student-page #paymentModal input[type="file"],
+  .student-page #bankPaymentModal input[type="file"]{
+    min-height:52px!important;
+    height:auto!important;
+    padding:6px!important;
+    cursor:pointer!important;
+  }
+  .student-page #paymentModal input[type="file"]::file-selector-button,
+  .student-page #bankPaymentModal input[type="file"]::file-selector-button{
+    min-height:38px!important;
+    margin-right:10px!important;
+    padding:0 12px!important;
+    border:1px solid #d7a913!important;
+    border-radius:8px!important;
+    background:linear-gradient(180deg,#f5c632,#dfa407)!important;
+    color:#251b02!important;
+    font-weight:900!important;
+    font-size:8px!important;
+    cursor:pointer!important;
+  }
+  .student-page #paymentModal .form-field small,
+  .student-page #bankPaymentModal .form-field small{
+    color:#858e99!important;
+    font-size:7px!important;
+  }
+
+  .student-page #paymentModal .check-row,
+  .student-page #bankPaymentModal .check-row{
+    min-height:42px!important;
+    display:flex!important;
+    align-items:center!important;
+    gap:8px!important;
+    margin:12px 0 0!important;
+    padding:9px 10px!important;
+    border:1px solid #e6e7e9!important;
+    border-radius:10px!important;
+    background:#fafbfc!important;
+    color:#727b86!important;
+    font-size:7.7px!important;
+    line-height:1.35!important;
+  }
+  .student-page #paymentModal .check-row input,
+  .student-page #bankPaymentModal .check-row input{
+    width:15px!important;
+    height:15px!important;
+    min-height:15px!important;
+    flex:0 0 15px!important;
+    accent-color:#d8a20a!important;
+  }
+
+  /* ------------------------------------------------------------
+     USDT wallet card
+     ------------------------------------------------------------ */
+  .student-page #paymentModal .usdt-wallet-card{
+    margin:0 0 12px!important;
+    padding:13px!important;
+    display:grid!important;
+    gap:10px!important;
+    border:1px solid #dfd4ae!important;
+    border-radius:13px!important;
+    background:
+      radial-gradient(220px 100px at 100% 0%,rgba(216,162,10,.075),transparent 72%),
+      #fffdf8!important;
+    box-shadow:0 7px 20px rgba(108,82,10,.035)!important;
+  }
+
+  .student-page #paymentModal .usdt-wallet-top{
+    display:grid!important;
+    grid-template-columns:38px minmax(0,1fr) auto!important;
+    align-items:center!important;
+    gap:9px!important;
+  }
+  .student-page #paymentModal .usdt-wallet-icon{
+    width:38px!important;
+    height:38px!important;
+    display:grid!important;
+    place-items:center!important;
+    border:1px solid #dec165!important;
+    border-radius:10px!important;
+    background:linear-gradient(145deg,#f6ca3c,#dda306)!important;
+    color:#211900!important;
+    font-size:13px!important;
+  }
+  .student-page #paymentModal .usdt-wallet-top>div{
+    display:grid!important;
+    gap:2px!important;
+  }
+  .student-page #paymentModal .usdt-wallet-top small{
+    color:#949ca6!important;
+    font-size:6.3px!important;
+    font-weight:950!important;
+    letter-spacing:.09em!important;
+  }
+  .student-page #paymentModal .usdt-wallet-top b{
+    color:#252b32!important;
+    font-size:10.5px!important;
+  }
+  .student-page #paymentModal .usdt-network-badge{
+    min-height:24px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    padding:0 8px!important;
+    border:1px solid rgba(22,168,114,.14)!important;
+    border-radius:999px!important;
+    background:rgba(22,168,114,.07)!important;
+    color:#16835f!important;
+    font-size:6.5px!important;
+    font-weight:950!important;
+  }
+  .student-page #paymentModal .usdt-network-badge.test{
+    border-color:rgba(233,77,101,.15)!important;
+    background:rgba(233,77,101,.06)!important;
+    color:#df5268!important;
+  }
+  .student-page #paymentModal .usdt-wallet-address{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) auto!important;
+    align-items:center!important;
+    gap:5px 9px!important;
+    padding:10px!important;
+    border:1px solid #e1e4e7!important;
+    border-radius:10px!important;
+    background:#f8f9fa!important;
+  }
+  .student-page #paymentModal .usdt-wallet-address small{
+    grid-column:1/-1!important;
+    color:#8b949f!important;
+    font-size:6.2px!important;
+    font-weight:950!important;
+    letter-spacing:.08em!important;
+  }
+  .student-page #paymentModal .usdt-wallet-address code{
+    min-width:0!important;
+    display:block!important;
+    color:#2b323a!important;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace!important;
+    font-size:8.7px!important;
+    line-height:1.35!important;
+    font-weight:800!important;
+    word-break:break-all!important;
+    user-select:all!important;
+  }
+  .student-page #paymentModal .usdt-wallet-address button{
+    min-height:34px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:5px!important;
+    padding:0 10px!important;
+    border:1px solid #d5aa21!important;
+    border-radius:8px!important;
+    background:#fff4cc!important;
+    color:#805f00!important;
+    font-size:7.4px!important;
+    font-weight:900!important;
+    cursor:pointer!important;
+  }
+  .student-page #paymentModal .usdt-wallet-note{
+    min-height:36px!important;
+    display:grid!important;
+    grid-template-columns:25px minmax(0,1fr)!important;
+    align-items:center!important;
+    gap:7px!important;
+    color:#727c88!important;
+  }
+  .student-page #paymentModal .usdt-wallet-note>i{
+    width:24px!important;
+    height:24px!important;
+    display:grid!important;
+    place-items:center!important;
+    border-radius:7px!important;
+    background:rgba(216,162,10,.09)!important;
+    color:#a77a00!important;
+    font-size:8px!important;
+  }
+  .student-page #paymentModal .usdt-wallet-note span{
+    font-size:7.7px!important;
+    line-height:1.4!important;
+  }
+  .student-page #paymentModal .usdt-wallet-note b{
+    color:#303741!important;
+  }
+  .student-page #paymentModal .usdt-wallet-note.danger{
+    color:#a44d5d!important;
+  }
+  .student-page #paymentModal .usdt-wallet-note.danger>i{
+    background:rgba(233,77,101,.07)!important;
+    color:#df5268!important;
+  }
+
+  /* ------------------------------------------------------------
+     Bank destination info
+     ------------------------------------------------------------ */
+  .student-page #bankPaymentMethodInfo .notice{
+    margin:0 0 12px!important;
+    padding:12px 13px!important;
+    border:1px solid #e5d9b6!important;
+    border-left:3px solid #d8a20a!important;
+    border-radius:11px!important;
+    background:#fffaf0!important;
+    color:#665f54!important;
+    font-size:8.7px!important;
+    line-height:1.55!important;
+  }
+  .student-page #bankPaymentMethodInfo .notice b{
+    color:#292f36!important;
+    font-size:9.5px!important;
+  }
+
+  /* ------------------------------------------------------------
+     Success modal
+     ------------------------------------------------------------ */
+  .student-page #coursePaymentSuccessBody{
+    display:grid!important;
+    justify-items:center!important;
+    text-align:center!important;
+    padding:28px 28px 26px!important;
+  }
+  .student-page #coursePaymentSuccessBody .payment-success-icon{
+    width:64px!important;
+    height:64px!important;
+    display:grid!important;
+    place-items:center!important;
+    margin:0 0 12px!important;
+    border:1px solid rgba(22,168,114,.17)!important;
+    border-radius:20px!important;
+    background:rgba(22,168,114,.075)!important;
+    color:#16835f!important;
+    font-size:21px!important;
+    box-shadow:0 8px 22px rgba(22,168,114,.07)!important;
+  }
+  .student-page #coursePaymentSuccessBody>small{
+    color:#16835f!important;
+    font-size:6.8px!important;
+    font-weight:950!important;
+    letter-spacing:.13em!important;
+  }
+  .student-page #coursePaymentSuccessBody>h3{
+    margin:6px 0 5px!important;
+    color:#1e242b!important;
+    font-size:20px!important;
+    line-height:1.2!important;
+    letter-spacing:-.025em!important;
+  }
+  .student-page #coursePaymentSuccessBody>p{
+    max-width:400px!important;
+    margin:0 0 14px!important;
+    color:#77818d!important;
+    font-size:9px!important;
+    line-height:1.45!important;
+  }
+  .student-page #coursePaymentSuccessBody .payment-success-state{
+    width:100%!important;
+    min-height:68px!important;
+    display:grid!important;
+    grid-template-columns:36px minmax(0,1fr)!important;
+    align-items:center!important;
+    gap:10px!important;
+    padding:11px 12px!important;
+    border:1px solid #e5d8ae!important;
+    border-radius:12px!important;
+    background:#fffaf0!important;
+    text-align:left!important;
+  }
+  .student-page #coursePaymentSuccessBody .payment-success-state>i{
+    width:34px!important;
+    height:34px!important;
+    display:grid!important;
+    place-items:center!important;
+    border-radius:9px!important;
+    background:rgba(216,162,10,.09)!important;
+    color:#a57900!important;
+    font-size:10px!important;
+  }
+  .student-page #coursePaymentSuccessBody .payment-success-state b{
+    display:block!important;
+    color:#2b3139!important;
+    font-size:9.5px!important;
+  }
+  .student-page #coursePaymentSuccessBody .payment-success-state span{
+    display:block!important;
+    margin-top:3px!important;
+    color:#78828e!important;
+    font-size:7.7px!important;
+    line-height:1.35!important;
+  }
+
+  /* ------------------------------------------------------------
+     Course Sessions page after "View Class Details"
+     ------------------------------------------------------------ */
+  .student-page #p-courses #sessionsArea{
+    display:block!important;
+    margin-top:12px!important;
+  }
+  .student-page #p-courses #sessionsArea.hidden{
+    display:none!important;
+  }
+  .student-page #p-courses #sessionsArea>.panel-heading{
+    min-height:82px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:14px!important;
+    padding:14px 16px!important;
+    border:1px solid #e1e4e7!important;
+    border-left:3px solid #d8a20a!important;
+    border-radius:14px!important;
+    background:
+      radial-gradient(260px 90px at 100% 0%,rgba(216,162,10,.055),transparent 70%),
+      #fff!important;
+    box-shadow:0 7px 20px rgba(18,24,32,.035)!important;
+  }
+  .student-page #p-courses #sessionsArea>.panel-heading h2{
+    margin:0!important;
+    color:#1d232a!important;
+    font-size:20px!important;
+    letter-spacing:-.025em!important;
+  }
+  .student-page #p-courses #sessionsArea>.panel-heading p{
+    margin:4px 0 0!important;
+    color:#78828e!important;
+    font-size:9px!important;
+  }
+  .student-page #p-courses #closeSessions{
+    min-height:36px!important;
+    height:36px!important;
+    padding:0 11px!important;
+    border:1px solid #e0d3aa!important;
+    border-radius:9px!important;
+    background:#fffaf0!important;
+    color:#856300!important;
+    font-size:8px!important;
+    font-weight:900!important;
+    box-shadow:none!important;
+  }
+
+  .student-page #p-courses #sessionsGrid{
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:12px!important;
+    margin-top:12px!important;
+  }
+  .student-page #p-courses #sessionsGrid .session-card{
+    overflow:hidden!important;
+    border:1px solid #e2e5e8!important;
+    border-radius:14px!important;
+    background:#fff!important;
+    box-shadow:0 8px 22px rgba(18,24,32,.035)!important;
+  }
+  .student-page #p-courses #sessionsGrid .session-top{
+    min-height:40px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    padding:8px 10px!important;
+    border-bottom:1px solid #e9ebed!important;
+    background:#fafbfc!important;
+  }
+  .student-page #p-courses #sessionsGrid .session-number{
+    min-height:22px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    padding:0 7px!important;
+    border-radius:999px!important;
+    background:rgba(216,162,10,.075)!important;
+    color:#987000!important;
+    font-size:6.8px!important;
+    font-weight:950!important;
+  }
+  .student-page #p-courses #sessionsGrid .session-lock{
+    width:27px!important;
+    height:27px!important;
+    display:grid!important;
+    place-items:center!important;
+    border-radius:8px!important;
+    background:rgba(22,168,114,.07)!important;
+    color:#16835f!important;
+    font-size:8px!important;
+  }
+  .student-page #p-courses #sessionsGrid .session-body{
+    padding:12px!important;
+  }
+  .student-page #p-courses #sessionsGrid .signal-head{
+    display:flex!important;
+    align-items:flex-start!important;
+    justify-content:space-between!important;
+    gap:8px!important;
+  }
+  .student-page #p-courses #sessionsGrid .session-body h3{
+    margin:0!important;
+    color:#242a31!important;
+    font-size:12px!important;
+    line-height:1.25!important;
+  }
+  .student-page #p-courses #sessionsGrid .session-body>p{
+    min-height:34px!important;
+    margin:6px 0 10px!important;
+    color:#77818d!important;
+    font-size:8.5px!important;
+    line-height:1.45!important;
+  }
+  .student-page #p-courses #sessionsGrid .status-pill{
+    min-height:22px!important;
+    padding:0 7px!important;
+    border-radius:999px!important;
+    font-size:6.4px!important;
+    font-weight:950!important;
+  }
+  .student-page #p-courses #sessionsGrid .session-date{
+    display:grid!important;
+    gap:6px!important;
+    padding:9px!important;
+    border:1px solid #e7e8ea!important;
+    border-radius:9px!important;
+    background:#fafbfc!important;
+  }
+  .student-page #p-courses #sessionsGrid .session-date span{
+    display:flex!important;
+    align-items:center!important;
+    gap:6px!important;
+    color:#65707c!important;
+    font-size:7.4px!important;
+    line-height:1.25!important;
+  }
+  .student-page #p-courses #sessionsGrid .session-date i{
+    width:14px!important;
+    color:#a87900!important;
+    text-align:center!important;
+  }
+  .student-page #p-courses #sessionsGrid .session-community-note{
+    min-height:38px!important;
+    display:grid!important;
+    grid-template-columns:25px minmax(0,1fr)!important;
+    align-items:center!important;
+    gap:7px!important;
+    margin-top:8px!important;
+    padding:7px 8px!important;
+    border:1px solid rgba(22,168,114,.13)!important;
+    border-radius:9px!important;
+    background:rgba(22,168,114,.045)!important;
+  }
+  .student-page #p-courses #sessionsGrid .session-community-note i{
+    color:#16835f!important;
+    font-size:12px!important;
+  }
+  .student-page #p-courses #sessionsGrid .session-community-note span{
+    color:#68747f!important;
+    font-size:7.3px!important;
+    line-height:1.35!important;
+  }
+  .student-page #p-courses #sessionsGrid .session-body>.muted{
+    margin-top:8px!important;
+    color:#858e98!important;
+    font-size:7px!important;
+  }
+
+  .student-page #p-courses #resourcesArea{
+    margin-top:12px!important;
+    padding:13px!important;
+    border:1px solid #e2e4e7!important;
+    border-radius:13px!important;
+    background:#fff!important;
+    box-shadow:0 7px 20px rgba(18,24,32,.03)!important;
+  }
+  .student-page #p-courses #resourcesArea .app-card-head h3{
+    color:#22282f!important;
+    font-size:13px!important;
+  }
+  .student-page #p-courses #resourcesArea .app-card-head p{
+    color:#7d8792!important;
+    font-size:8px!important;
+  }
+  .student-page #p-courses #resourcesList{
+    display:grid!important;
+    gap:7px!important;
+    margin-top:10px!important;
+  }
+  .student-page #p-courses #resourcesList .resource-row{
+    min-height:52px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:10px!important;
+    padding:8px 10px!important;
+    border:1px solid #e6e8ea!important;
+    border-radius:9px!important;
+    background:#fafbfc!important;
+  }
+  .student-page #p-courses #resourcesList .resource-row b{
+    color:#2b3138!important;
+    font-size:9px!important;
+  }
+  .student-page #p-courses #resourcesList .resource-row small{
+    margin-top:2px!important;
+    color:#828c96!important;
+    font-size:7px!important;
+  }
+  .student-page #p-courses #resourcesList .resource-row .app-btn{
+    min-height:31px!important;
+    height:31px!important;
+    padding:0 9px!important;
+    border-radius:8px!important;
+    font-size:7px!important;
+  }
+
+  /* ------------------------------------------------------------
+     Dark mode parity
+     ------------------------------------------------------------ */
+  html[data-theme="dark"] .student-page #courseDetailsModal .app-modal-card,
+  html[data-theme="dark"] .student-page #paymentMethodChoiceModal .app-modal-card,
+  html[data-theme="dark"] .student-page #paymentModal .app-modal-card,
+  html[data-theme="dark"] .student-page #bankPaymentModal .app-modal-card,
+  html[data-theme="dark"] .student-page #coursePaymentSuccessModal .app-modal-card{
+    border-color:#252b35!important;
+    background:#101319!important;
+    box-shadow:0 30px 90px rgba(0,0,0,.48)!important;
+  }
+
+  html[data-theme="dark"] .student-page #courseDetailsModal .app-modal-head,
+  html[data-theme="dark"] .student-page #paymentMethodChoiceModal .app-modal-head,
+  html[data-theme="dark"] .student-page #paymentModal .app-modal-head,
+  html[data-theme="dark"] .student-page #bankPaymentModal .app-modal-head,
+  html[data-theme="dark"] .student-page #coursePaymentSuccessModal .app-modal-head{
+    border-bottom-color:#252b35!important;
+    background:
+      radial-gradient(260px 90px at 100% 0%,rgba(216,162,10,.07),transparent 72%),
+      #101319!important;
+  }
+
+  html[data-theme="dark"] .student-page #courseDetailsModal .app-modal-head h3,
+  html[data-theme="dark"] .student-page #paymentMethodChoiceModal .app-modal-head h3,
+  html[data-theme="dark"] .student-page #paymentModal .app-modal-head h3,
+  html[data-theme="dark"] .student-page #bankPaymentModal .app-modal-head h3,
+  html[data-theme="dark"] .student-page #coursePaymentSuccessModal .app-modal-head h3{
+    color:#f4f6f8!important;
+  }
+
+  html[data-theme="dark"] .student-page #courseDetailsModal .modal-close,
+  html[data-theme="dark"] .student-page #paymentMethodChoiceModal .modal-close,
+  html[data-theme="dark"] .student-page #paymentModal .modal-close,
+  html[data-theme="dark"] .student-page #bankPaymentModal .modal-close,
+  html[data-theme="dark"] .student-page #coursePaymentSuccessModal .modal-close{
+    border-color:#3a321c!important;
+    background:#1c190f!important;
+    color:#d9b444!important;
+  }
+
+  html[data-theme="dark"] .student-page #courseDetailsModal .app-modal-body,
+  html[data-theme="dark"] .student-page #paymentMethodChoiceModal .app-modal-body,
+  html[data-theme="dark"] .student-page #paymentModal .app-modal-body,
+  html[data-theme="dark"] .student-page #bankPaymentModal .app-modal-body,
+  html[data-theme="dark"] .student-page #coursePaymentSuccessModal .app-modal-body,
+  html[data-theme="dark"] .student-page #courseDetailsModal .app-modal-foot,
+  html[data-theme="dark"] .student-page #paymentMethodChoiceModal .app-modal-foot,
+  html[data-theme="dark"] .student-page #paymentModal .app-modal-foot,
+  html[data-theme="dark"] .student-page #bankPaymentModal .app-modal-foot,
+  html[data-theme="dark"] .student-page #coursePaymentSuccessModal .app-modal-foot{
+    background:#101319!important;
+    border-color:#252b35!important;
+  }
+
+  html[data-theme="dark"] .student-page .course-payment-steps,
+  html[data-theme="dark"] .student-page #paymentMethodChoiceModal [data-payment-choice],
+  html[data-theme="dark"] .student-page #courseDetailsModal .course-detail-session,
+  html[data-theme="dark"] .student-page #courseDetailsModal .course-detail-stats>span,
+  html[data-theme="dark"] .student-page #paymentModal :is(input,select,textarea),
+  html[data-theme="dark"] .student-page #bankPaymentModal :is(input,select,textarea),
+  html[data-theme="dark"] .student-page #paymentModal .check-row,
+  html[data-theme="dark"] .student-page #bankPaymentModal .check-row,
+  html[data-theme="dark"] .student-page #p-courses #sessionsGrid .session-card,
+  html[data-theme="dark"] .student-page #p-courses #sessionsGrid .session-date,
+  html[data-theme="dark"] .student-page #p-courses #resourcesArea,
+  html[data-theme="dark"] .student-page #p-courses #resourcesList .resource-row{
+    border-color:#272d36!important;
+    background:#15191f!important;
+    box-shadow:none!important;
+  }
+
+  html[data-theme="dark"] .student-page #courseDetailsModal .course-detail-hero{
+    border-color:#3d351f!important;
+    border-left-color:#d8a20a!important;
+    background:
+      radial-gradient(260px 110px at 100% 0%,rgba(216,162,10,.075),transparent 72%),
+      #14171b!important;
+  }
+
+  html[data-theme="dark"] .student-page #courseDetailsModal .course-detail-hero h3,
+  html[data-theme="dark"] .student-page #courseDetailsModal .course-detail-stats b,
+  html[data-theme="dark"] .student-page #courseDetailsModal .course-detail-section-head h4,
+  html[data-theme="dark"] .student-page #courseDetailsModal .cds-copy b,
+  html[data-theme="dark"] .student-page #courseDetailsModal .cds-time b,
+  html[data-theme="dark"] .student-page #courseDetailsModal .course-detail-note b,
+  html[data-theme="dark"] .student-page #paymentMethodChoiceModal [data-payment-choice] h3,
+  html[data-theme="dark"] .student-page #paymentModal :is(input,select,textarea),
+  html[data-theme="dark"] .student-page #bankPaymentModal :is(input,select,textarea),
+  html[data-theme="dark"] .student-page #coursePaymentSuccessBody>h3,
+  html[data-theme="dark"] .student-page #coursePaymentSuccessBody .payment-success-state b,
+  html[data-theme="dark"] .student-page #p-courses #sessionsArea>.panel-heading h2,
+  html[data-theme="dark"] .student-page #p-courses #sessionsGrid .session-body h3,
+  html[data-theme="dark"] .student-page #p-courses #resourcesList .resource-row b{
+    color:#f1f4f6!important;
+  }
+
+  html[data-theme="dark"] .student-page #paymentChoiceCourseSummary,
+  html[data-theme="dark"] .student-page #paymentCourseSummary,
+  html[data-theme="dark"] .student-page #bankPaymentCourseSummary{
+    border-color:#29394e!important;
+    border-left-color:#6596dd!important;
+    background:#141b24!important;
+    color:#aeb8c3!important;
+  }
+
+  html[data-theme="dark"] .student-page #paymentModal .usdt-wallet-card,
+  html[data-theme="dark"] .student-page #bankPaymentMethodInfo .notice,
+  html[data-theme="dark"] .student-page #coursePaymentSuccessBody .payment-success-state{
+    border-color:#3b321d!important;
+    background:#17160f!important;
+  }
+
+  html[data-theme="dark"] .student-page #paymentModal .usdt-wallet-address{
+    border-color:#2d333c!important;
+    background:#11151a!important;
+  }
+
+  html[data-theme="dark"] .student-page #paymentModal .usdt-wallet-address code,
+  html[data-theme="dark"] .student-page #paymentModal .usdt-wallet-note b,
+  html[data-theme="dark"] .student-page #bankPaymentMethodInfo .notice b{
+    color:#eef1f4!important;
+  }
+
+  html[data-theme="dark"] .student-page #p-courses #sessionsArea>.panel-heading{
+    border-color:#252b35!important;
+    border-left-color:#d8a20a!important;
+    background:
+      radial-gradient(260px 90px at 100% 0%,rgba(216,162,10,.07),transparent 70%),
+      #101319!important;
+    box-shadow:none!important;
+  }
+  html[data-theme="dark"] .student-page #p-courses #sessionsGrid .session-top{
+    border-bottom-color:#272d36!important;
+    background:#10151b!important;
+  }
+  html[data-theme="dark"] .student-page #p-courses #sessionsGrid .session-community-note{
+    border-color:rgba(22,168,114,.12)!important;
+    background:rgba(22,168,114,.055)!important;
+  }
+
+  /* Responsive desktop / small laptops, still above mobile breakpoint */
+  @media (max-width:1180px){
+    .student-page #p-courses #sessionsGrid{
+      grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    }
+    .student-page #courseDetailsModal .course-detail-sessions{
+      grid-template-columns:1fr!important;
+    }
+  }
+}
