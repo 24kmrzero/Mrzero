@@ -492,3 +492,46 @@ html[data-theme="dark"] .student-push-footnote{color:#7f8a95}
     padding:10px 12px!important;
   }
 }
+
+
+/* v14.96 — Install app row above notification subscription */
+.student-page .app-side .premium-side-nav .student-install-nav{
+  margin-top:6px!important;
+}
+.student-page .app-side .premium-side-nav .student-install-nav>i{
+  color:#f1bd20!important;
+}
+.student-page .app-side .premium-side-nav .student-install-nav .student-push-nav-copy b{
+  color:#f5f7fa!important;
+  opacity:1!important;
+}
+.student-page .app-side .premium-side-nav .student-install-nav .student-push-nav-copy small{
+  color:#9ca6b2!important;
+  opacity:1!important;
+}
+.student-page .student-install-nav-action{
+  width:24px;
+  height:24px;
+  display:grid;
+  place-items:center;
+  border-radius:8px;
+  color:#d5dbe2;
+  background:#171d28;
+  border:1px solid rgba(255,255,255,.04);
+  font-size:9px;
+}
+.student-page .student-install-nav.is-installed{
+  background:rgba(201,154,5,.035)!important;
+  border-color:rgba(201,154,5,.13)!important;
+}
+.student-page .student-install-nav.is-installed .student-push-nav-copy small{
+  color:#e7b82d!important;
+  font-weight:800!important;
+}
+.student-page .student-install-nav.is-installed .student-install-nav-action{
+  color:#f1bd20;
+}
+.student-page .student-install-nav:disabled{
+  cursor:default!important;
+  opacity:1!important;
+}
