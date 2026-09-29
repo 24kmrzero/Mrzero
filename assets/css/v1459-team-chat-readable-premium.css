@@ -1,0 +1,473 @@
+/* 24K MR ZERO — Team Live Chat Readable Premium v14.59
+   Desktop only. Fixes tiny typography and upgrades CRM/chat workspace without touching mobile. */
+@media (min-width:901px){
+
+  /* ===== Page density ===== */
+  #teamApp:not(.hidden) [data-view-panel="chat"]{
+    max-width:1400px!important;
+    margin:0 auto!important;
+    padding:14px 16px 26px!important;
+  }
+
+  /* ===== Hero / KPI rail ===== */
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-command{
+    padding:15px 16px 13px!important;
+    border-radius:16px!important;
+    box-shadow:0 13px 32px rgba(55,43,12,.045)!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-command:after{
+    top:-38px!important;
+    right:20px!important;
+    font-size:96px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-kicker{
+    min-height:22px!important;
+    padding:0 9px!important;
+    font-size:8px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-command h2{
+    margin:7px 0 3px!important;
+    font-size:25px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-command p{
+    font-size:10px!important;
+    line-height:1.4!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-online{
+    min-width:120px!important;
+    padding:7px 9px!important;
+    border-radius:10px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-online>b{
+    font-size:9px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-online>small{
+    font-size:7.5px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-kpi-rail{
+    gap:7px!important;
+    margin-top:11px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .premium-chat-kpi{
+    min-height:58px!important;
+    grid-template-columns:31px minmax(0,1fr)!important;
+    gap:8px!important;
+    padding:7px 9px!important;
+    border-radius:10px!important;
+    box-shadow:0 4px 12px rgba(20,26,32,.02)!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .chat-kpi-icon{
+    width:31px!important;
+    height:31px!important;
+    border-radius:9px!important;
+    font-size:9px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .premium-chat-kpi small{
+    font-size:8px!important;
+    letter-spacing:.045em!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .premium-chat-kpi b{
+    font-size:16px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .premium-chat-kpi em{
+    font-size:7.5px!important;
+  }
+
+  /* ===== Inbox section heading ===== */
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-section-head{
+    min-height:40px!important;
+    margin-top:8px!important;
+    padding:0 2px 6px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-section-head small{
+    font-size:7.8px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-section-head b{
+    font-size:14px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-section-head>span{
+    font-size:8px!important;
+  }
+
+  /* ===== Main CRM shell ===== */
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-shell{
+    grid-template-columns:300px minmax(0,1fr) 270px!important;
+    min-height:560px!important;
+    max-height:690px!important;
+    margin-top:7px!important;
+    border-radius:15px!important;
+    border-color:#dfe3e6!important;
+    box-shadow:0 12px 30px rgba(20,26,32,.045)!important;
+  }
+
+  /* ===== Inbox ===== */
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-inbox{
+    background:linear-gradient(180deg,#fcfcfb 0%,#f8f8f6 100%)!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-inbox-head{
+    min-height:48px!important;
+    padding:8px 10px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-inbox-head b{
+    font-size:11px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-inbox-head small{
+    display:inline-flex!important;
+    align-items:center!important;
+    gap:4px!important;
+    font-size:8px!important;
+    font-weight:800!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-inbox-head small i{
+    width:6px!important;
+    height:6px!important;
+    border-radius:50%!important;
+    background:#24a979!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] #chatInboxRefresh{
+    width:29px!important;
+    height:29px!important;
+    font-size:9px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-search{
+    height:38px!important;
+    grid-template-columns:20px minmax(0,1fr) 24px!important;
+    margin:8px 9px!important;
+    padding:0 6px 0 8px!important;
+    border-radius:9px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-search>i{
+    font-size:8.5px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-search input{
+    height:34px!important;
+    font-size:9.5px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-search button{
+    width:22px!important;
+    height:22px!important;
+    font-size:8px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-filter-row{
+    gap:4px!important;
+    padding:0 9px 8px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-filter-row button{
+    min-height:29px!important;
+    padding:0 6px!important;
+    border-radius:8px!important;
+    font-size:8px!important;
+    font-weight:850!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-filter-row em{
+    min-width:15px!important;
+    height:15px!important;
+    display:grid!important;
+    place-items:center!important;
+    padding:0 3px!important;
+    border-radius:999px!important;
+    background:#f0f2f4!important;
+    font-size:7px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-filter-row button.active em{
+    background:#fff!important;
+    color:#8e6800!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-thread-list{
+    padding:6px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .premium-chat-thread{
+    min-height:66px!important;
+    grid-template-columns:34px minmax(0,1fr) auto!important;
+    gap:8px!important;
+    margin-bottom:5px!important;
+    padding:7px!important;
+    border-radius:9px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .chat-avatar{
+    width:34px!important;
+    height:34px!important;
+    border-radius:10px!important;
+    font-size:9px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .chat-thread-title b{
+    font-size:9.5px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .chat-mode,
+  #teamApp:not(.hidden) [data-view-panel="chat"] .waiting-dot,
+  #teamApp:not(.hidden) [data-view-panel="chat"] .closed-dot{
+    min-height:18px!important;
+    padding:0 5px!important;
+    font-size:7px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .chat-thread-copy p{
+    font-size:8px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .chat-thread-meta,
+  #teamApp:not(.hidden) [data-view-panel="chat"] .chat-thread-side small{
+    font-size:7.5px!important;
+  }
+
+  /* ===== Conversation workspace ===== */
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-conversation{
+    background:#fff!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-conversation-head{
+    min-height:52px!important;
+    padding:8px 10px!important;
+    background:linear-gradient(180deg,#fff 0%,#fdfdfc 100%)!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .chat-conversation-placeholder-title b,
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-person b{
+    font-size:10.5px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .chat-conversation-placeholder-title small,
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-person small{
+    font-size:8px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-person-avatar{
+    width:34px!important;
+    height:34px!important;
+    font-size:9px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .conversation-actions{
+    gap:4px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .conversation-actions button{
+    min-height:29px!important;
+    padding:0 8px!important;
+    font-size:8px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-messages{
+    padding:14px!important;
+    background:
+      radial-gradient(520px 180px at 50% 0%,rgba(216,162,10,.025),transparent 72%),
+      linear-gradient(180deg,#fbfbf9,#f7f6f2)!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .premium-desk-msg{
+    max-width:76%!important;
+    gap:4px!important;
+    margin-bottom:8px!important;
+    padding:8px 10px!important;
+    border-radius:11px 11px 11px 4px!important;
+    font-size:9.2px!important;
+    line-height:1.45!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .premium-desk-msg small{
+    font-size:7.2px!important;
+  }
+
+  /* Better empty state instead of giant blank canvas */
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-messages>.team-chat-empty-state{
+    width:min(390px,86%)!important;
+    min-height:100px!important;
+    margin:120px auto 0!important;
+    justify-content:flex-start!important;
+    padding:15px 16px!important;
+    border:1px dashed #e3d9bb!important;
+    border-radius:14px!important;
+    background:rgba(255,253,247,.9)!important;
+    box-shadow:0 8px 22px rgba(41,34,16,.025)!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-empty-state>span,
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-list-empty>span{
+    width:36px!important;
+    height:36px!important;
+    flex:0 0 36px!important;
+    border-radius:10px!important;
+    font-size:11px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-empty-state b,
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-list-empty b{
+    font-size:9.5px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-empty-state small,
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-list-empty small{
+    font-size:8px!important;
+    line-height:1.4!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-list-empty{
+    min-height:130px!important;
+    padding:12px!important;
+  }
+
+  /* ===== AI tools + composer ===== */
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-quick-tools{
+    min-height:40px!important;
+    gap:5px!important;
+    padding:6px 9px!important;
+    background:#fffdf8!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-quick-tools>span{
+    font-size:8px!important;
+    letter-spacing:.055em!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-quick-tools button{
+    min-height:28px!important;
+    padding:0 8px!important;
+    border-radius:8px!important;
+    background:#fff!important;
+    border-color:#e4dfd1!important;
+    font-size:8px!important;
+    font-weight:800!important;
+    transition:.16s ease!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-quick-tools button:hover{
+    border-color:#dcc477!important;
+    background:#fff8e7!important;
+    color:#896300!important;
+    transform:translateY(-1px)!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-reply-form{
+    min-height:62px!important;
+    grid-template-columns:minmax(0,1fr) 40px!important;
+    gap:7px!important;
+    padding:8px 9px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-reply-form textarea{
+    min-height:42px!important;
+    height:42px!important;
+    max-height:96px!important;
+    padding:10px 11px!important;
+    border-radius:10px!important;
+    background:#fafbfc!important;
+    font-size:10px!important;
+    line-height:1.35!important;
+    resize:none!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-reply-form textarea:focus{
+    border-color:#d7bd6b!important;
+    background:#fff!important;
+    box-shadow:0 0 0 3px rgba(216,162,10,.08)!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-reply-form button{
+    width:40px!important;
+    height:40px!important;
+    border-radius:10px!important;
+    box-shadow:0 5px 12px rgba(183,129,0,.12)!important;
+  }
+
+  /* ===== Lead profile ===== */
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-profile{
+    padding:11px!important;
+    background:linear-gradient(180deg,#fcfcfb 0%,#f8f8f6 100%)!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-profile .profile-empty{
+    min-height:112px!important;
+    margin:6px 0!important;
+    padding:13px!important;
+    justify-content:flex-start!important;
+    border:1px dashed #e2ddcf!important;
+    border-radius:11px!important;
+    background:#fffdf8!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-profile-hero{
+    grid-template-columns:38px minmax(0,1fr) auto!important;
+    gap:8px!important;
+    padding-bottom:10px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .profile-avatar{
+    width:38px!important;
+    height:38px!important;
+    border-radius:10px!important;
+    font-size:10px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .profile-name b{
+    font-size:10.5px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .profile-name small{
+    font-size:8px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-profile-status{
+    min-height:21px!important;
+    padding:0 6px!important;
+    font-size:7.5px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .profile-section{
+    padding:10px 0!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .profile-section h4{
+    margin-bottom:6px!important;
+    font-size:8px!important;
+    letter-spacing:.07em!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .profile-line{
+    min-height:31px!important;
+    gap:7px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .profile-line span{
+    font-size:8px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .profile-line b{
+    font-size:8.8px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-stage-section label{
+    gap:4px!important;
+    margin-bottom:6px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-stage-section label>span{
+    font-size:8px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-stage-section :is(select,input){
+    height:34px!important;
+    font-size:9.5px!important;
+    padding:0 8px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-save-meta{
+    height:34px!important;
+    font-size:8.5px!important;
+  }
+
+  /* ===== Dark parity ===== */
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-inbox,
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-profile{
+    background:#101319!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-inbox-head,
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-conversation-head,
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-quick-tools,
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-reply-form{
+    background:#11151a!important;
+    border-color:#292f37!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-messages{
+    background:#0f1216!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-messages>.team-chat-empty-state,
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-profile .profile-empty{
+    background:#14171c!important;
+    border-color:#343028!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-quick-tools button{
+    background:#15191f!important;
+    border-color:#303640!important;
+    color:#bbc2ca!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-reply-form textarea{
+    background:#0f1318!important;
+    border-color:#303740!important;
+    color:#eef1f4!important;
+  }
+
+  /* Standard laptop width */
+  @media (max-width:1180px){
+    #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-shell{
+      grid-template-columns:270px minmax(0,1fr) 245px!important;
+    }
+    #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-filter-row button{
+      font-size:7.5px!important;
+      padding:0 4px!important;
+    }
+    #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-quick-tools button{
+      padding:0 6px!important;
+      font-size:7.5px!important;
+    }
+  }
+}
+/* Mobile <=900px intentionally untouched. */
