@@ -230,21 +230,16 @@ function resetMentorEditor(kind){if(kind==='signal'){const f=$('#mentorSignalFor
 }}
 async function requireMentor(){
   if(!sb)throw new Error('Supabase configuration is missing.');
-  let user=null;
   const local=await sb.auth.getSession();
   if(local.error)throw local.error;
-  user=local.data?.session?.user||null;
-  if(!user){
-    const remote=await sb.auth.getUser();
-    if(remote.error||!remote.data?.user){location.href='/mentor-login.html';return false}
-    user=remote.data.user;
-  }
+  const user=local.data?.session?.user||null;
+  if(!user){location.href='/mentor-login.html';return false}
   state.user=user;
 
+  // Only role/profile + permission checks block first paint.
   const profileQuery=sb.from('profiles').select('id,full_name,email,role,status').eq('id',user.id).maybeSingle();
   const permissionQuery=sb.from('mentor_permissions').select('feature_key,enabled').eq('mentor_id',user.id);
-  const signalQuery=sb.from('signals').select('*').order('created_at',{ascending:false}).limit(500);
-  const [p,pm,signals]=await Promise.all([profileQuery,permissionQuery,signalQuery]);
+  const [p,pm]=await Promise.all([profileQuery,permissionQuery]);
 
   if(p.error||!p.data||p.data.role!=='mentor'||String(p.data.status||'active')!=='active'){
     await sb.auth.signOut();location.href='/mentor-login.html';return false
@@ -252,12 +247,6 @@ async function requireMentor(){
   state.profile=p.data;
   if(pm.error)throw pm.error;
   for(const k of Object.keys(state.perms))state.perms[k]=Boolean((pm.data||[]).find(x=>x.feature_key===k)?.enabled);
-  if(state.perms.signals){
-    if(signals.error){
-      console.warn('mentor signals load',signals.error);
-      state.signals=[];
-    }else state.signals=signals.data||[];
-  }else state.signals=[];
   return true
 }
 async function safeLoad(table,query){try{const r=await query;if(r.error)throw r.error;return r.data||[]}catch(e){console.warn('mentor optional load',table,e);return[]}}
@@ -268,6 +257,12 @@ function revealMentorApp(){
 }
 async function loadSecondaryMentorData(){
   const tasks=[];
+  if(state.perms.signals){
+    tasks.push(
+      safeLoad('signals',sb.from('signals').select('*').order('created_at',{ascending:false}).limit(500))
+        .then(data=>{state.signals=data;safeMentorRender('signals',renderSignals);safeMentorRender('performance',renderPerformance)})
+    );
+  }else state.signals=[];
   for(const key of ['charts','articles']){
     if(!state.perms[key]){state[key]=[];continue}
     const table=key;
