@@ -1437,7 +1437,7 @@
       : `<span class="account-check pending"><i class="fa-solid fa-envelope"></i></span><span><b>Verify Email</b><small>Recommended for account security</small></span><button type="button" data-request-email-verification>Verify</button>`;
     if (card) card.innerHTML = verified
       ? `<span class="account-row-icon"><i class="fa-solid fa-circle-check"></i></span><div class="account-row-copy"><h3>Email Verified</h3><p>${A.escapeHtml(state.profile.email || '')}</p></div><div class="account-row-side"><span class="status-pill ok">Verified</span></div>`
-      : `<span class="account-row-icon"><i class="fa-solid fa-envelope"></i></span><div class="account-row-copy"><h3>Email Verification</h3><p>Verify ${A.escapeHtml(state.profile.email || '')} to secure your account.</p></div><div class="account-row-side"><button type="button" class="app-btn gold" data-request-email-verification><i class="fa-solid fa-paper-plane"></i> Verify Email</button></div>`;
+      : `<span class="account-row-icon"><i class="fa-solid fa-envelope"></i></span><div class="account-row-copy"><h3>Email Verification</h3><p>Verify ${A.escapeHtml(state.profile.email || '')} to secure your account.</p></div><div class="account-row-side"><button type="button" class="app-btn gold" data-request-email-verification><i class="fa-solid fa-paper-plane"></i> Send Verification Email</button></div>`;
   }
 
   async function requestEmailVerification(button) {
@@ -1446,7 +1446,7 @@
     if(!email)return A.toast('Your account email is missing. Please contact Admin.','error');
     A.setLoading(button, true, 'Sending...');
     try {
-      const response = await A.supabase.functions.invoke('auth-email', { body:{ action:'resend_verification', email } });
+      const response = await A.supabase.functions.invoke('auth-email', { body:{ action:'request_email_verification', email } });
       if (response.error) throw response.error;
       if (response.data?.error) throw new Error(response.data.error);
       A.toast(response.data?.already_verified ? 'Your email is already verified.' : 'Verification email sent. Check Inbox and Spam.', 'success');
