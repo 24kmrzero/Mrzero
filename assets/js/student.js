@@ -1446,13 +1446,29 @@
     if(!email)return A.toast('Your account email is missing. Please contact Admin.','error');
     A.setLoading(button, true, 'Sending...');
     try {
-      const response = await A.supabase.functions.invoke('auth-email', { body:{ action:'request_email_verification', email } });
-      if (response.error) throw response.error;
+      const {data:sessionData}=await A.supabase.auth.getSession();
+      const accessToken=sessionData?.session?.access_token||'';
+      if(!accessToken)throw new Error('Your session has expired. Please sign in again.');
+      const response = await A.supabase.functions.invoke('auth-email', {
+        headers:{Authorization:`Bearer ${accessToken}`},
+        body:{action:'request_email_verification',email}
+      });
+      if (response.error) {
+        let detail='';
+        try{
+          const payload=await response.error.context?.clone?.().json?.();
+          detail=String(payload?.error||payload?.message||'');
+        }catch{}
+        throw new Error(detail||'Could not send verification email.');
+      }
       if (response.data?.error) throw new Error(response.data.error);
       A.toast(response.data?.already_verified ? 'Your email is already verified.' : 'Verification email sent. Check Inbox and Spam.', 'success');
     } catch (error) {
       console.error('Verification email failed:', error);
-      A.toast(A.friendlyError(error, 'Could not send verification email.'), 'error');
+      const message=/session.*expired|invalid session/i.test(String(error?.message||''))
+        ? 'Your session has expired. Please sign in again.'
+        : 'Could not send verification email. Please try again.';
+      A.toast(message, 'error');
     } finally { A.setLoading(button, false); }
   }
 
