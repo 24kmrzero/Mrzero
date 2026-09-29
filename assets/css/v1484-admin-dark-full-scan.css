@@ -688,3 +688,25 @@
     color:#201800!important;
   }
 }
+
+
+/* v14.85 — third scan: remaining white chart actions + student serial */
+@media (min-width:901px){
+  html[data-auth-scope="admin"][data-theme="dark"] #p-charts .admin-mentor-actions :is(button,a):not(.danger){
+    border-color:#e2ad12!important;
+    background:linear-gradient(145deg,#f4ca3b,#d59d04)!important;
+    color:#201800!important;
+    box-shadow:none!important;
+  }
+  html[data-auth-scope="admin"][data-theme="dark"] #p-charts .admin-mentor-actions .danger{
+    border-color:#6a303a!important;
+    background:#26161a!important;
+    color:#ff8190!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-students .student-serial-number{
+    border-color:#e2ad12!important;
+    background:linear-gradient(145deg,#f4ca3b,#d59d04)!important;
+    color:#201800!important;
+  }
+}
