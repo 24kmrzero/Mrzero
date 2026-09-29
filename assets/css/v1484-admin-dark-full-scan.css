@@ -650,3 +650,41 @@
     color:#201800!important;
   }
 }
+
+
+/* v14.84b — remaining neutral-white pills / badges found on second scan */
+@media (min-width:901px){
+  /* Student registration source + assignment chips */
+  html[data-auth-scope="admin"][data-theme="dark"] #p-students :is(.student-origin,.student-team-empty){
+    border-color:#6a5317!important;
+    background:linear-gradient(145deg,#f4ca3b,#d59d04)!important;
+    color:#201800!important;
+  }
+  html[data-auth-scope="admin"][data-theme="dark"] #p-students :is(.student-origin-link,.student-team-name){
+    color:#efc43a!important;
+  }
+
+  /* Activity role pills were still pale/white in dark mode. Make every role tile 24K gold.
+     Success / Failed status pills remain semantic green/red. */
+  html[data-auth-scope="admin"][data-theme="dark"] #p-audit .audit-role,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-audit .audit-role.role-admin,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-audit .audit-role.role-mentor,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-audit .audit-role.role-team,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-audit .audit-role.role-student{
+    border-color:#e2ad12!important;
+    background:linear-gradient(145deg,#f4ca3b,#d59d04)!important;
+    color:#201800!important;
+  }
+
+  /* Premium Access neutral count bubbles */
+  html[data-auth-scope="admin"][data-theme="dark"] #p-premium-access .premium-course-filters button b{
+    border:1px solid #5b4916!important;
+    background:#211c0d!important;
+    color:#efc43a!important;
+  }
+  html[data-auth-scope="admin"][data-theme="dark"] #p-premium-access .premium-course-filters button.on b{
+    border-color:#b98500!important;
+    background:#ffe178!important;
+    color:#201800!important;
+  }
+}
