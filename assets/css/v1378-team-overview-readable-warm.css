@@ -1,0 +1,355 @@
+/* 24K MR ZERO — Team Overview Readability + Warm Surface v13.78
+   Desktop only. Stronger typography and subtle warm premium background. */
+@media (min-width:901px){
+
+  /* =========================
+     WARM PREMIUM SURFACE
+     ========================= */
+  #teamApp:not(.hidden){
+    background:#f7f3eb!important;
+  }
+
+  #teamApp:not(.hidden) .team-main:has([data-view-panel="overview"].active){
+    background:
+      radial-gradient(760px 270px at 82% -85px,rgba(216,162,10,.045),transparent 72%),
+      linear-gradient(180deg,#f8f5ee 0%,#f5f1e8 100%)!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"]{
+    color:#20262d!important;
+  }
+
+  /* =========================
+     SIDEBAR / TOPBAR READABILITY
+     ========================= */
+  #teamApp:not(.hidden) .team-nav-label{
+    font-size:8px!important;
+  }
+
+  #teamApp:not(.hidden) .team-side .nav-btn span{
+    font-size:9.6px!important;
+  }
+
+  #teamApp:not(.hidden) .nav-badge{
+    font-size:7.4px!important;
+  }
+
+  #teamApp:not(.hidden) .team-install-card>b{
+    font-size:9px!important;
+  }
+
+  #teamApp:not(.hidden) .team-install-card>small{
+    font-size:7.4px!important;
+  }
+
+  #teamApp:not(.hidden) .team-flow-note b{
+    font-size:7.5px!important;
+  }
+
+  #teamApp:not(.hidden) .team-flow-note p{
+    font-size:8px!important;
+    line-height:1.5!important;
+  }
+
+  #teamApp:not(.hidden) .team-page-title h1{
+    font-size:16.5px!important;
+  }
+
+  #teamApp:not(.hidden) .team-page-title p{
+    font-size:8.6px!important;
+  }
+
+  #teamApp:not(.hidden) #teamMonth{
+    font-size:9px!important;
+  }
+
+  #teamApp:not(.hidden) .team-user-chip b{
+    font-size:9px!important;
+  }
+
+  #teamApp:not(.hidden) .team-user-chip small{
+    font-size:7.2px!important;
+  }
+
+  /* =========================
+     HERO
+     ========================= */
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-kicker{
+    font-size:8.3px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-hero p{
+    font-size:10.5px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-profile-copy small{
+    font-size:7.6px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-profile-copy b{
+    font-size:9.8px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-health-meter small,
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-attention-copy small{
+    font-size:8.2px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-health-meter b{
+    font-size:11.5px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-health-meter em,
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-attention-copy em{
+    font-size:9px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-smart-summary b{
+    font-size:9.5px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-sync-chip{
+    font-size:7.6px!important;
+  }
+
+  /* =========================
+     SECTION HEADS
+     ========================= */
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-section-head small{
+    font-size:7.8px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-section-head b{
+    font-size:14.5px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-section-head>span{
+    font-size:7.6px!important;
+  }
+
+  /* =========================
+     PRIORITY CENTER
+     ========================= */
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-priority-card small{
+    font-size:8px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-priority-card b{
+    font-size:14px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-priority-card em{
+    font-size:8.5px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-searchbox input{
+    font-size:10px!important;
+  }
+
+  /* =========================
+     KEY NUMBERS
+     ========================= */
+  #teamApp:not(.hidden) [data-view-panel="overview"] .overview-kpi-head span{
+    font-size:8.2px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .overview-kpi-chip{
+    font-size:7.4px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .overview-kpi-foot>small{
+    font-size:8px!important;
+  }
+
+  /* =========================
+     PERFORMANCE INSIGHTS
+     ========================= */
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-insight-head small{
+    font-size:7.8px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-insight-head b{
+    font-size:12.5px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-insight-head>span{
+    font-size:7.4px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-goal-row span{
+    font-size:8.2px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-goal-row b{
+    font-size:10px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-goal-row em{
+    font-size:7.5px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-projection-row span{
+    font-size:8px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-projection-row b{
+    font-size:10.5px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-pipeline-step>div span{
+    font-size:8.2px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-pipeline-step>div b{
+    font-size:9.2px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-pipeline-step>i{
+    font-size:7.5px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-trend-labels{
+    font-size:7.5px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-opportunity-main b{
+    font-size:12.5px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-opportunity-main small{
+    font-size:8.5px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-opportunity-main em{
+    font-size:7.4px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-opportunity-actions :is(a,button){
+    font-size:8.3px!important;
+  }
+
+  /* =========================
+     QUICK ACTIONS
+     ========================= */
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-quick-actions button b{
+    font-size:9.8px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-quick-actions button small{
+    font-size:8px!important;
+  }
+
+  /* =========================
+     RECENT ASSIGNED / ACTION CENTER
+     ========================= */
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-card-head small{
+    font-size:7.8px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-card-head h3{
+    font-size:13.5px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-card-head button{
+    font-size:8px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .recent-client b{
+    font-size:9.8px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .recent-client small{
+    font-size:8.2px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .recent-client>div:last-child>span{
+    font-size:7.4px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .wa-mini{
+    font-size:7.8px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .today-work-label{
+    font-size:9px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .today-work-label>i{
+    font-size:8px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .today-work-value{
+    font-size:9px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .today-work-value button{
+    font-size:7.8px!important;
+  }
+
+  /* =========================
+     ACTIVITY / LINKS
+     ========================= */
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-activity-item b{
+    font-size:9.5px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-activity-item small{
+    font-size:8px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-activity-item em{
+    font-size:7.5px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .overview-link-chip b{
+    font-size:9.5px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .overview-link-chip small{
+    font-size:8px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-empty b{
+    font-size:10px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-empty small{
+    font-size:8px!important;
+  }
+
+  /* Warm supporting surfaces */
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-hero,
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-attention,
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-projection-row,
+  #teamApp:not(.hidden) [data-view-panel="overview"] .overview-link-chip{
+    --warm-card:#fffdf8;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-hero{
+    background:
+      radial-gradient(460px 180px at 92% -12%,rgba(216,162,10,.085),transparent 70%),
+      linear-gradient(135deg,#fffefa 0%,#fffaf1 100%)!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-attention,
+  #teamApp:not(.hidden) [data-view-panel="overview"] .team-projection-row,
+  #teamApp:not(.hidden) [data-view-panel="overview"] .overview-link-chip{
+    background:#fffaf0!important;
+  }
+
+  /* Keep white cards crisp against warm page */
+  #teamApp:not(.hidden) [data-view-panel="overview"] :is(
+    .team-priority-card,.team-home-searchbox,.overview-kpi,.team-insight-card,
+    .team-home-quick-actions button,.team-home-card,.team-home-links
+  ){
+    background:#fff!important;
+  }
+
+  /* Dark mode unchanged except readability */
+  html[data-theme="dark"] #teamApp:not(.hidden) .team-main:has([data-view-panel="overview"].active){
+    background:
+      radial-gradient(740px 250px at 80% -85px,rgba(216,162,10,.03),transparent 74%),
+      #0d1014!important;
+  }
+}
+/* Desktop only. */
