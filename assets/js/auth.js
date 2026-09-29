@@ -184,7 +184,22 @@
           }
         }
       });
-      if (response.error) throw response.error;
+      if (response.error) {
+        let detail = '';
+        try {
+          const body = await response.error.context?.clone?.().json?.();
+          detail = String(body?.error || body?.message || '');
+        } catch {}
+        throw new Error(detail || response.error.message || 'Could not create student account.');
+      }
+      if (response.data?.code === 'account_exists') {
+        const loginForm = document.getElementById('studentLoginForm');
+        if (loginForm?.elements?.email) loginForm.elements.email.value = email;
+        switchStudentTab('student-login');
+        toast('An account with this email already exists. Please sign in or use Forgot password.', 'info');
+        setLoading(button, false);
+        return;
+      }
       if (response.data?.error) throw new Error(response.data.error);
 
       await audit('student_signup','success',{email});
