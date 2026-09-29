@@ -423,29 +423,25 @@
   async function getCurrentUser() {
     if (!configured || !supabase) throw new Error('Website connection is unavailable. Please contact support.');
 
-    // Read the persisted local session first. This prevents a normal page refresh
-    // from being treated as a logout while Supabase is restoring/refreshing tokens.
+    // Supabase restores and refreshes the persisted session locally. Avoid an extra
+    // auth.getUser() round-trip on every panel boot; the first protected profile/data
+    // query still validates the JWT server-side.
     const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
     if (sessionError && !/session.*missing/i.test(sessionError.message || '')) throw sessionError;
-    if (!sessionData?.session?.user) return null;
-
-    // Validate with the server when possible. If the network/token refresh is briefly
-    // unavailable, keep the valid persisted user instead of forcing a logout.
-    const { data, error } = await supabase.auth.getUser();
-    if (error) {
-      const message = String(error.message || '');
-      if (/session.*missing|refresh token.*not found|invalid refresh token/i.test(message)) return null;
-      console.warn('Session validation temporarily unavailable; using persisted session:', message);
-      return sessionData.session.user;
-    }
-    return data?.user || sessionData.session.user;
+    return sessionData?.session?.user || null;
   }
 
   async function getProfile(userId) {
     if (!configured || !supabase) throw new Error('Website connection is unavailable. Please contact support.');
-    try { await supabase.rpc('sync_current_access_status'); } catch (error) { console.warn('Access status sync skipped:', error?.message || error); }
     const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single();
     if (error) throw error;
+
+    // Access-status maintenance is useful but must not block the first authenticated
+    // paint. Run it quietly after the role/profile check has completed.
+    void supabase.rpc('sync_current_access_status').then(({error})=>{
+      if(error) console.warn('Access status sync skipped:', error?.message || error);
+    }).catch(error=>console.warn('Access status sync skipped:', error?.message || error));
+
     return data;
   }
 
