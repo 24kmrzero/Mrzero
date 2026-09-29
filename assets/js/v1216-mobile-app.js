@@ -3,11 +3,44 @@
   if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js',{scope:'/'}).catch(e=>console.warn('[24K Student PWA]',e?.message||e)))}
   let installPrompt=null;
   const isStandalone=()=>window.matchMedia?.('(display-mode: standalone)').matches||window.navigator.standalone===true;
-  const installButton=()=>document.getElementById('studentInstallButton');
-  const updateInstallButton=()=>{const b=installButton();if(!b)return;if(isStandalone()){b.innerHTML='<i class="fa-solid fa-circle-check"></i> Installed';b.disabled=true;b.dataset.installed='1'}else{b.disabled=false;b.dataset.installed='0'}};
-  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;updateInstallButton();installButton()?.classList.add('ready')});
+  const installButtons=()=>Array.from(document.querySelectorAll('[data-student-install],#studentInstallButton'));
+  const updateInstallButton=()=>{
+    const installed=isStandalone();
+    installButtons().forEach(b=>{
+      b.dataset.installed=installed?'1':'0';
+      if(b.classList.contains('student-install-nav')){
+        b.classList.toggle('is-installed',installed);
+        const title=b.querySelector('.student-push-nav-copy b');
+        const status=b.querySelector('[data-install-status]');
+        const action=b.querySelector('[data-install-action] i');
+        if(title)title.textContent=installed?'24K App Installed':'Install 24K App';
+        if(status)status.textContent=installed?'Ready on this device':'Install app on this device';
+        if(action)action.className=installed?'fa-solid fa-circle-check':'fa-solid fa-chevron-right';
+        b.disabled=installed;
+      }else{
+        b.innerHTML=installed?'<i class="fa-solid fa-circle-check"></i> Installed':'<i class="fa-solid fa-download"></i> Install App';
+        b.disabled=installed;
+      }
+    });
+  };
+  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;updateInstallButton();installButtons().forEach(b=>b.classList.add('ready'))});
   window.addEventListener('appinstalled',()=>{installPrompt=null;updateInstallButton();window.App?.toast?.('24K Student App installed successfully.','success')});
-  document.addEventListener('click',async e=>{const b=e.target.closest('#studentInstallButton');if(!b)return;e.preventDefault();if(isStandalone())return window.App?.toast?.('Student App is already installed.','success');if(installPrompt){installPrompt.prompt();const choice=await installPrompt.userChoice;if(choice?.outcome==='accepted')window.App?.toast?.('Installing 24K Student App…','success');installPrompt=null;updateInstallButton();return}const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);window.App?.toast?.(ios?'Use Share → Add to Home Screen to install the app.':'Use your browser menu → Install app / Add to Home screen.','info')});
+  document.addEventListener('click',async e=>{
+    const b=e.target.closest('[data-student-install],#studentInstallButton');
+    if(!b)return;
+    e.preventDefault();
+    if(isStandalone())return window.App?.toast?.('Student App is already installed.','success');
+    if(installPrompt){
+      installPrompt.prompt();
+      const choice=await installPrompt.userChoice;
+      if(choice?.outcome==='accepted')window.App?.toast?.('Installing 24K Student App…','success');
+      installPrompt=null;
+      updateInstallButton();
+      return;
+    }
+    const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
+    window.App?.toast?.(ios?'Use Share → Add to Home Screen to install the app.':'Use your browser menu → Install app / Add to Home screen.','info')
+  });
   window.addEventListener('load',updateInstallButton);
   const premium=()=>{
     const modal=document.getElementById('premiumAccessModal');
