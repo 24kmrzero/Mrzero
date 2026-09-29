@@ -158,6 +158,11 @@
         <a href="/student/articles/" data-panel="articles"><i class="fa-solid fa-newspaper"></i><span>Articles</span></a>
         <a href="/student/premium/" data-panel="premium"><i class="fa-solid fa-crown"></i><span>Premium Access</span></a>
         <a href="/student/updates/" data-panel="announcements"><i class="fa-solid fa-bell"></i><span>Updates</span><span class="nav-count" id="announcementCount">0</span></a>
+        <button type="button" class="student-push-nav" id="studentPushNavButton" aria-haspopup="dialog" aria-controls="studentPushSheet">
+          <i class="fa-solid fa-bell-concierge"></i>
+          <span class="student-push-nav-copy"><b>Subscribe for Notifications</b><small id="studentPushNavStatus">Get signal & update alerts</small></span>
+          <span class="student-push-nav-state" id="studentPushNavState"><i></i></span>
+        </button>
         <a href="/student/profile/" data-panel="profile"><i class="fa-regular fa-circle-user"></i><span>Profile</span></a>
               </nav>
 
@@ -510,6 +515,39 @@
     <div class="app-modal-foot"><button type="button" class="app-btn gold" data-close-modal="premiumPaymentSuccessModal">Done</button></div>
   </div>
 </div>
+<div class="student-push-sheet" id="studentPushSheet" aria-hidden="true">
+  <button type="button" class="student-push-sheet-backdrop" data-close-student-push aria-label="Close notification settings"></button>
+  <section class="student-push-sheet-card" role="dialog" aria-modal="true" aria-labelledby="studentPushSheetTitle">
+    <div class="student-push-sheet-handle" aria-hidden="true"></div>
+    <div class="student-push-sheet-head">
+      <span class="student-push-sheet-icon"><i class="fa-solid fa-bell"></i></span>
+      <div>
+        <small>24K MR ZERO</small>
+        <h3 id="studentPushSheetTitle">Subscribe for Notifications</h3>
+        <p>Get instant browser alerts for new signals, chart analysis and important updates.</p>
+      </div>
+      <button type="button" class="student-push-sheet-close" data-close-student-push aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <div class="student-push-status-card" id="studentPushStatusCard">
+      <span class="student-push-status-dot"></span>
+      <div><b id="studentPushStatusTitle">Notifications are off</b><small id="studentPushStatusText">Tap subscribe to enable browser notifications on this device.</small></div>
+    </div>
+
+    <div class="student-push-benefits">
+      <span><i class="fa-solid fa-bolt"></i> New Signals</span>
+      <span><i class="fa-solid fa-chart-line"></i> Chart Updates</span>
+      <span><i class="fa-solid fa-bullhorn"></i> Announcements</span>
+    </div>
+
+    <button type="button" class="student-push-primary" id="studentPushPrimary">
+      <i class="fa-solid fa-bell"></i><span>Subscribe for Notifications</span>
+    </button>
+    <button type="button" class="student-push-secondary" id="studentPushSecondary" hidden>Turn Off Notifications</button>
+    <small class="student-push-footnote" id="studentPushFootnote">You can change this anytime from the Student sidebar.</small>
+  </section>
+</div>
+
 <div class="app-modal" id="chartModal"><div class="app-modal-card large"><div class="app-modal-head"><h3 id="chartModalTitle">Chart Details</h3><button class="modal-close" data-close-modal="chartModal"><i class="fa-solid fa-xmark"></i></button></div><div class="app-modal-body" id="chartModalContent"></div></div></div>
 
 <div class="app-modal" id="articleModal"><div class="app-modal-card large"><div class="app-modal-head"><h3 id="articleModalTitle">Article</h3><button class="modal-close" data-close-modal="articleModal"><i class="fa-solid fa-xmark"></i></button></div><div class="app-modal-body"><div id="articleModalContent" class="article-content"></div></div></div></div>
