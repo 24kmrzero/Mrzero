@@ -1,0 +1,327 @@
+/* 24K MR ZERO — Daily Report Compact Executive v14.58
+   Desktop only. Higher-density premium layout; mobile untouched. */
+@media (min-width:901px){
+
+  /* Page density */
+  #teamApp:not(.hidden) [data-view-panel="daily"]{
+    max-width:1400px!important;
+    padding:11px 15px 24px!important;
+  }
+
+  /* ===== HERO: shorter, cleaner ===== */
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-command{
+    padding:11px 13px 10px!important;
+    border-radius:14px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-command:after{
+    top:-42px!important;
+    right:18px!important;
+    font-size:88px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-kicker{
+    min-height:20px!important;
+    padding:0 8px!important;
+    font-size:7.5px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-command h2{
+    margin:5px 0 2px!important;
+    font-size:23px!important;
+    line-height:1.04!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-command p{
+    font-size:9.5px!important;
+    line-height:1.35!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-status{
+    min-width:118px!important;
+    padding:6px 8px!important;
+    border-radius:10px!important;
+  }
+
+  /* Summary rail */
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-summary{
+    gap:7px!important;
+    margin-top:9px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-summary-card{
+    min-height:50px!important;
+    grid-template-columns:29px minmax(0,1fr)!important;
+    gap:7px!important;
+    padding:6px 8px!important;
+    border-radius:10px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-summary-card>span{
+    width:29px!important;
+    height:29px!important;
+    border-radius:8px!important;
+    font-size:9px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-summary-card small{
+    font-size:7.3px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-summary-card b{
+    font-size:15px!important;
+    line-height:1!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-summary-card:after{
+    height:2px!important;
+  }
+
+  /* ===== Section labels ===== */
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-section-head{
+    min-height:34px!important;
+    margin-top:6px!important;
+    padding:0 1px 5px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-section-head small{
+    font-size:7.2px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-section-head b{
+    font-size:12.5px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-section-head>span{
+    min-height:19px!important;
+    padding:0 7px!important;
+    font-size:7.2px!important;
+  }
+
+  /* ===== MANUAL WORK: compact premium sheet ===== */
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-form{
+    margin-top:6px!important;
+    padding:9px!important;
+    border-radius:13px!important;
+    box-shadow:0 8px 20px rgba(22,28,34,.035)!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-grid{
+    gap:7px!important;
+    padding:8px 9px!important;
+    border-radius:9px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-grid label{
+    gap:4px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-grid label>span,
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-note>span{
+    gap:5px!important;
+    font-size:8.4px!important;
+    line-height:1.15!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-grid label>span i{
+    width:13px!important;
+    height:13px!important;
+    font-size:8px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-grid input{
+    height:34px!important;
+    padding:0 9px!important;
+    border-radius:8px!important;
+    font-size:9.7px!important;
+  }
+
+  /* Communication heading */
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-form>.team-daily-grid:first-of-type:before{
+    min-height:14px!important;
+    margin:0!important;
+    font-size:7.6px!important;
+  }
+
+  /* Sub sections */
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-subhead{
+    min-height:24px!important;
+    margin:6px 0 4px!important;
+    padding:0 1px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-subhead>span{
+    gap:6px!important;
+    font-size:7.6px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-subhead>span:before{
+    width:2px!important;
+    height:12px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-subhead>small{
+    min-height:18px!important;
+    padding:0 6px!important;
+    font-size:6.8px!important;
+  }
+
+  /* Note: much shorter */
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-note{
+    margin-top:7px!important;
+    padding:7px 8px!important;
+    gap:4px!important;
+    border-radius:9px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-note textarea{
+    min-height:48px!important;
+    max-height:76px!important;
+    padding:8px 9px!important;
+    border-radius:8px!important;
+    font-size:9.3px!important;
+    line-height:1.35!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-note>span small{
+    min-height:17px!important;
+    font-size:6.6px!important;
+  }
+
+  /* Submit strip */
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-submit{
+    min-height:43px!important;
+    margin-top:7px!important;
+    padding:6px 7px 6px 9px!important;
+    border-radius:9px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-submit>span{
+    gap:6px!important;
+    font-size:7.7px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-submit>span i{
+    width:21px!important;
+    height:21px!important;
+    border-radius:6px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-submit button{
+    min-height:32px!important;
+    height:32px!important;
+    padding:0 12px!important;
+    border-radius:8px!important;
+    font-size:7.8px!important;
+  }
+
+  /* ===== PAID / FREE: premium but compact ===== */
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-course-conversion-snapshot{
+    gap:8px!important;
+    margin-top:6px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-course-conversion-card{
+    min-height:108px!important;
+    padding:9px 10px!important;
+    border-radius:12px!important;
+    box-shadow:0 6px 16px rgba(20,26,32,.03)!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .course-conversion-top{
+    grid-template-columns:31px minmax(0,1fr) auto!important;
+    gap:8px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .course-conversion-icon{
+    width:31px!important;
+    height:31px!important;
+    border-radius:9px!important;
+    font-size:10px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .course-conversion-top small{
+    font-size:6.8px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .course-conversion-top b{
+    font-size:10.7px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .course-conversion-live{
+    min-height:19px!important;
+    padding:0 6px!important;
+    font-size:6.2px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .course-conversion-live i{
+    width:5px!important;
+    height:5px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .course-conversion-metrics{
+    gap:6px!important;
+    margin-top:8px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .course-conversion-metrics>div{
+    min-height:45px!important;
+    column-gap:5px!important;
+    padding:6px 8px!important;
+    border-radius:8px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .course-conversion-metrics span{
+    font-size:6.8px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .course-conversion-metrics strong{
+    font-size:18px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .course-conversion-metrics small{
+    font-size:6.5px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .course-conversion-foot{
+    margin-top:6px!important;
+    gap:5px!important;
+    font-size:7px!important;
+  }
+
+  /* ===== AUTO ACTIVITY: slimmer ===== */
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-auto-activity{
+    margin-top:6px!important;
+    padding:8px!important;
+    border-radius:11px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .auto-activity-grid{
+    gap:6px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .auto-activity-grid>div{
+    grid-template-columns:29px minmax(0,1fr)!important;
+    gap:7px!important;
+    min-height:58px!important;
+    padding:7px 8px!important;
+    border-radius:9px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .auto-activity-icon{
+    width:29px!important;
+    height:29px!important;
+    border-radius:8px!important;
+    font-size:8.5px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .auto-activity-grid>div>div>span{
+    font-size:7.3px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .auto-activity-grid>div>div>b{
+    font-size:14px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .auto-activity-grid>div>div>small{
+    font-size:6.5px!important;
+  }
+
+  /* ===== HISTORY: denser admin table ===== */
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-history{
+    margin-top:6px!important;
+    padding:8px!important;
+    border-radius:11px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-history th{
+    height:30px!important;
+    padding:0 8px!important;
+    font-size:7.2px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-history td{
+    height:35px!important;
+    padding:0 8px!important;
+    font-size:8.2px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .daily-history-status{
+    min-height:20px!important;
+    padding:0 6px!important;
+    font-size:6.8px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .daily-history-empty{
+    min-height:54px!important;
+    font-size:8.2px!important;
+  }
+
+  /* Keep text readable on standard laptop widths without making the cards tall again */
+  @media (max-width:1180px){
+    #teamApp:not(.hidden) [data-view-panel="daily"]{
+      padding-left:12px!important;
+      padding-right:12px!important;
+    }
+    #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-command h2{
+      font-size:21px!important;
+    }
+    #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-grid label>span,
+    #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-note>span{
+      font-size:8px!important;
+    }
+  }
+}
+/* Mobile <=900px intentionally untouched. */
