@@ -334,12 +334,8 @@
   }
 
   .student-page #p-signals.history-mode .premium-signal-table tbody tr:hover td:last-child::after{
-    content:"  VIEW"!important;
-    margin-left:5px!important;
-    color:#9b7306!important;
-    font-size:6px!important;
-    font-weight:950!important;
-    letter-spacing:.06em!important;
+    content:none!important;
+    display:none!important;
   }
 
   .student-page #p-signals .signal-time-cell b{
@@ -945,5 +941,67 @@
 
   .student-page #p-signals .premium-signal-table{
     margin:0!important;
+  }
+}
+
+
+/* v14.63 — hard lock Signal history table width */
+@media (min-width:901px){
+  .student-page #p-signals .desktop-signal-table-wrap{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    scrollbar-gutter:stable!important;
+  }
+
+  .student-page #p-signals .premium-signal-table,
+  .student-page #p-signals .premium-signal-table.compact-history-table{
+    width:100%!important;
+    min-width:1180px!important;
+    max-width:none!important;
+    table-layout:fixed!important;
+    border-collapse:separate!important;
+    border-spacing:0!important;
+  }
+
+  .student-page #p-signals .premium-signal-table th,
+  .student-page #p-signals .premium-signal-table td{
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+
+  .student-page #p-signals .premium-signal-table th:nth-child(1),
+  .student-page #p-signals .premium-signal-table td:nth-child(1){width:8%!important}
+  .student-page #p-signals .premium-signal-table th:nth-child(2),
+  .student-page #p-signals .premium-signal-table td:nth-child(2){width:10%!important}
+  .student-page #p-signals .premium-signal-table th:nth-child(3),
+  .student-page #p-signals .premium-signal-table td:nth-child(3){width:18%!important}
+  .student-page #p-signals .premium-signal-table th:nth-child(4),
+  .student-page #p-signals .premium-signal-table td:nth-child(4){width:7%!important}
+  .student-page #p-signals .premium-signal-table th:nth-child(5),
+  .student-page #p-signals .premium-signal-table td:nth-child(5){width:10%!important}
+  .student-page #p-signals .premium-signal-table th:nth-child(6),
+  .student-page #p-signals .premium-signal-table td:nth-child(6){width:6%!important}
+  .student-page #p-signals .premium-signal-table th:nth-child(7),
+  .student-page #p-signals .premium-signal-table td:nth-child(7){width:6%!important}
+  .student-page #p-signals .premium-signal-table th:nth-child(8),
+  .student-page #p-signals .premium-signal-table td:nth-child(8){width:6%!important}
+  .student-page #p-signals .premium-signal-table th:nth-child(9),
+  .student-page #p-signals .premium-signal-table td:nth-child(9){width:6%!important}
+  .student-page #p-signals .premium-signal-table th:nth-child(10),
+  .student-page #p-signals .premium-signal-table td:nth-child(10){width:10%!important}
+  .student-page #p-signals .premium-signal-table th:nth-child(11),
+  .student-page #p-signals .premium-signal-table td:nth-child(11){width:13%!important}
+
+  .student-page #p-signals.history-mode .premium-signal-table tbody tr:hover td{
+    padding-left:10px!important;
+    padding-right:10px!important;
+  }
+
+  .student-page #p-signals.history-mode .premium-signal-table tbody tr:hover td:last-child::after{
+    content:none!important;
+    display:none!important;
   }
 }
