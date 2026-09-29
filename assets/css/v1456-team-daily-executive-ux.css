@@ -1,0 +1,398 @@
+/* 24K MR ZERO — Team Daily Report Executive UX v14.56
+   Desktop only. Keeps existing data + submit logic intact. */
+@media (min-width:901px){
+
+  #teamApp:not(.hidden) [data-view-panel="daily"]{
+    max-width:1460px!important;
+    margin:0 auto!important;
+    padding:15px 18px 30px!important;
+  }
+
+  /* ===== Compact executive hero ===== */
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-command{
+    padding:16px 17px 14px!important;
+    border:1px solid #e2e5e8!important;
+    border-left:3px solid #d8a20a!important;
+    border-radius:17px!important;
+    background:
+      radial-gradient(470px 180px at 94% -10%,rgba(216,162,10,.085),transparent 68%),
+      linear-gradient(135deg,#fffefa,#fffaf1)!important;
+    box-shadow:0 12px 30px rgba(48,40,18,.05)!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-command:after{
+    top:-32px!important;
+    right:24px!important;
+    font-size:104px!important;
+    color:rgba(171,124,0,.025)!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-kicker{
+    min-height:23px!important;
+    padding:0 9px!important;
+    font-size:8px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-command h2{
+    margin:8px 0 4px!important;
+    font-size:27px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-command p{
+    font-size:10.5px!important;
+    color:#707b86!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-status{
+    min-width:128px!important;
+    padding:7px 9px!important;
+    border-radius:11px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-status>b{
+    font-size:9px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-status>small{
+    font-size:7.5px!important;
+  }
+
+  /* ===== Summary rail ===== */
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-summary{
+    gap:8px!important;
+    margin-top:13px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-summary-card{
+    min-height:62px!important;
+    grid-template-columns:34px minmax(0,1fr)!important;
+    gap:9px!important;
+    padding:8px 10px!important;
+    border:1px solid #e4e7ea!important;
+    border-radius:11px!important;
+    background:#fff!important;
+    box-shadow:0 5px 15px rgba(22,28,34,.025)!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-summary-card>span{
+    width:34px!important;
+    height:34px!important;
+    border-radius:9px!important;
+    font-size:10px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-summary-card small{
+    font-size:8px!important;
+    font-weight:900!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-summary-card b{
+    font-size:17px!important;
+  }
+
+  /* ===== Section headings ===== */
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-section-head{
+    min-height:43px!important;
+    margin-top:9px!important;
+    padding:0 2px 7px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-section-head small{
+    font-size:7.8px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-section-head b{
+    font-size:14px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-section-head>span{
+    min-height:22px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    padding:0 8px!important;
+    border:1px solid #e4e7ea!important;
+    border-radius:999px!important;
+    background:#fff!important;
+    color:#747f8a!important;
+    font-size:8px!important;
+    font-weight:750!important;
+  }
+
+  /* ===== Main manual form ===== */
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-form{
+    margin-top:8px!important;
+    padding:13px!important;
+    border:1px solid #e1e5e8!important;
+    border-radius:15px!important;
+    background:#fff!important;
+    box-shadow:0 8px 24px rgba(18,24,32,.035)!important;
+  }
+
+  /* Each existing grid becomes a clear work group */
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-grid{
+    display:grid!important;
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    gap:9px!important;
+    padding:11px!important;
+    border:1px solid #e8ebee!important;
+    border-radius:11px!important;
+    background:#fafbfc!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-grid.broker-lots{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    background:#fffdf7!important;
+    border-color:#ebe2c8!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-grid label{
+    gap:6px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-grid label>span,
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-note>span{
+    gap:6px!important;
+    color:#5f6b77!important;
+    font-size:9px!important;
+    font-weight:850!important;
+    line-height:1.2!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-grid label>span i{
+    width:15px!important;
+    height:15px!important;
+    display:grid!important;
+    place-items:center!important;
+    color:#a87900!important;
+    font-size:9px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-grid input{
+    height:40px!important;
+    padding:0 11px!important;
+    border:1px solid #dde2e6!important;
+    border-radius:9px!important;
+    background:#fff!important;
+    color:#28313a!important;
+    font-size:10.5px!important;
+    font-weight:750!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-grid input:hover{
+    border-color:#d4d9dd!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-grid input:focus{
+    border-color:#d7bd6b!important;
+    box-shadow:0 0 0 3px rgba(216,162,10,.08)!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-grid input:disabled{
+    background:#f0f2f3!important;
+    color:#89939d!important;
+    border-style:dashed!important;
+  }
+
+  /* Group titles become visible workflow dividers */
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-subhead{
+    min-height:32px!important;
+    margin:10px 0 6px!important;
+    padding:0 2px!important;
+    border:0!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-subhead>span{
+    display:flex!important;
+    align-items:center!important;
+    gap:7px!important;
+    color:#565f69!important;
+    font-size:8.5px!important;
+    font-weight:950!important;
+    letter-spacing:.065em!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-subhead>span:before{
+    content:""!important;
+    width:3px!important;
+    height:15px!important;
+    border-radius:999px!important;
+    background:#d6a20d!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-subhead>small{
+    min-height:21px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    padding:0 7px!important;
+    border-radius:999px!important;
+    background:#f4f5f6!important;
+    color:#7c8792!important;
+    font-size:7.5px!important;
+  }
+
+  /* Notes = compact dedicated block */
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-note{
+    margin-top:10px!important;
+    padding:10px 11px!important;
+    gap:6px!important;
+    border:1px solid #e8ebee!important;
+    border-radius:11px!important;
+    background:#fafbfc!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-note>span small{
+    min-height:19px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    padding:0 6px!important;
+    border-radius:999px!important;
+    background:#eef1f3!important;
+    color:#7d8791!important;
+    font-size:7px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-note textarea{
+    min-height:70px!important;
+    max-height:120px!important;
+    padding:10px 11px!important;
+    border:1px solid #dde2e6!important;
+    border-radius:9px!important;
+    background:#fff!important;
+    color:#303943!important;
+    font-size:10px!important;
+    font-weight:650!important;
+    line-height:1.45!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-note textarea::placeholder{
+    color:#9aa3ac!important;
+  }
+
+  /* Review / submit command bar */
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-submit{
+    min-height:54px!important;
+    margin-top:10px!important;
+    padding:8px 9px 8px 11px!important;
+    border:1px solid #eadfbf!important;
+    border-radius:11px!important;
+    background:linear-gradient(135deg,#fffdf8,#fff8e8)!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-submit>span{
+    gap:7px!important;
+    color:#6f7882!important;
+    font-size:8.5px!important;
+    font-weight:700!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-submit>span i{
+    width:24px!important;
+    height:24px!important;
+    display:grid!important;
+    place-items:center!important;
+    border-radius:7px!important;
+    background:#fff2c8!important;
+    color:#9e7200!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-submit button{
+    min-height:38px!important;
+    padding:0 14px!important;
+    border-radius:9px!important;
+    font-size:8.5px!important;
+    box-shadow:0 5px 12px rgba(176,126,0,.12)!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-submit button:hover{
+    transform:translateY(-1px)!important;
+    box-shadow:0 7px 16px rgba(176,126,0,.16)!important;
+  }
+
+  /* ===== Automatic activity ===== */
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-auto-activity{
+    margin-top:8px!important;
+    padding:11px!important;
+    border-radius:14px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .auto-activity-grid{
+    gap:8px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .auto-activity-grid>div{
+    position:relative!important;
+    overflow:hidden!important;
+    min-height:72px!important;
+    padding:10px 11px!important;
+    border:1px solid #e6e9ec!important;
+    border-radius:10px!important;
+    background:#fff!important;
+    box-shadow:0 4px 12px rgba(18,24,32,.02)!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .auto-activity-grid>div:after{
+    content:""!important;
+    position:absolute!important;
+    left:0!important;
+    bottom:0!important;
+    width:100%!important;
+    height:3px!important;
+    background:#e6e9ec!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .auto-activity-grid>div:nth-child(1):after{background:#6e91c8!important}
+  #teamApp:not(.hidden) [data-view-panel="daily"] .auto-activity-grid>div:nth-child(2):after{background:#d5a10c!important}
+  #teamApp:not(.hidden) [data-view-panel="daily"] .auto-activity-grid>div:nth-child(3):after{background:#4c9c7b!important}
+  #teamApp:not(.hidden) [data-view-panel="daily"] .auto-activity-grid>div:nth-child(4):after{background:#8b72b8!important}
+  #teamApp:not(.hidden) [data-view-panel="daily"] .auto-activity-grid span{
+    color:#727d88!important;
+    font-size:8.5px!important;
+    font-weight:750!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .auto-activity-grid b{
+    margin-top:5px!important;
+    color:#20272e!important;
+    font-size:18px!important;
+  }
+
+  /* ===== Recent report history ===== */
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-history{
+    margin-top:8px!important;
+    padding:10px!important;
+    border-radius:14px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-history .table-wrap{
+    border:1px solid #e4e7ea!important;
+    border-radius:10px!important;
+    overflow:auto!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-history table{
+    min-width:980px!important;
+    background:#fff!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-history th{
+    height:36px!important;
+    padding:0 10px!important;
+    background:#f8f6f0!important;
+    color:#6f6754!important;
+    font-size:7.8px!important;
+    font-weight:950!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-history td{
+    height:42px!important;
+    padding:0 10px!important;
+    color:#4c5661!important;
+    font-size:8.8px!important;
+    font-weight:650!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-history tbody tr:nth-child(even) td{
+    background:#fbfaf7!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-history tbody tr:hover td{
+    background:#fff9ea!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-history th:first-child,
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-history td:first-child{
+    position:sticky!important;
+    left:0!important;
+    z-index:2!important;
+    font-weight:850!important;
+  }
+
+  /* ===== Dark parity ===== */
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-grid,
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-note{
+    background:#12161b!important;
+    border-color:#292f37!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-grid.broker-lots{
+    background:#17160f!important;
+    border-color:#40371c!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-grid input,
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-note textarea{
+    background:#0f1318!important;
+    border-color:#303740!important;
+    color:#eef1f4!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-submit{
+    background:#17160f!important;
+    border-color:#40371c!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="daily"] .auto-activity-grid>div{
+    background:#11151a!important;
+    border-color:#292f37!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-history tbody tr:nth-child(even) td{
+    background:#11151a!important;
+  }
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-history tbody tr:hover td{
+    background:#17160f!important;
+  }
+}
+/* No mobile overrides. */
