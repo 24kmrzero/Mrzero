@@ -903,3 +903,47 @@
     }
   }
 }
+
+
+/* v14.62 — lock Signal history geometry on hover/cursor.
+   The old hover "VIEW" pseudo text changed the auto table width and made the
+   history table appear to slide left/right as the pointer moved between rows. */
+@media (min-width:901px){
+  .student-page #p-signals{
+    width:100%!important;
+    max-width:1450px!important;
+    min-width:0!important;
+    overflow-x:clip!important;
+  }
+  .student-page #p-signals .signal-table-card,
+  .student-page #p-signals .signal-table-scroll,
+  .student-page #p-signals .desktop-signal-table-wrap{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+  }
+  .student-page #p-signals .signal-table-scroll{
+    overflow-x:hidden!important;
+  }
+  .student-page #p-signals .desktop-signal-table-wrap{
+    overflow-x:auto!important;
+    overscroll-behavior-x:contain!important;
+    scrollbar-gutter:stable!important;
+  }
+
+  /* Never add/remove text on row hover: keep column widths perfectly stable. */
+  .student-page #p-signals.history-mode .premium-signal-table tbody tr:hover td:last-child::after{
+    content:none!important;
+    display:none!important;
+    margin:0!important;
+  }
+
+  /* Premium hover feedback without any geometry change. */
+  .student-page #p-signals.history-mode .premium-signal-table tbody tr:hover .signal-table-status{
+    box-shadow:0 0 0 2px rgba(216,162,10,.08)!important;
+  }
+
+  .student-page #p-signals .premium-signal-table{
+    margin:0!important;
+  }
+}
