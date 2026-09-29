@@ -412,3 +412,26 @@ html[data-theme="dark"] .student-push-footnote{color:#7f8a95}
 @keyframes studentPushSheetIn{
   to{transform:translateY(0);opacity:1}
 }
+
+
+/* v14.94 Sidebar contrast hard-fix: sidebar stays dark even in light app theme */
+.student-page .app-side .premium-side-nav .student-push-nav{
+  color:#f2f5f7!important;
+}
+.student-page .app-side .premium-side-nav .student-push-nav .student-push-nav-copy b{
+  color:#f2f5f7!important;
+  opacity:1!important;
+}
+.student-page .app-side .premium-side-nav .student-push-nav .student-push-nav-copy small{
+  color:#9aa5b1!important;
+  opacity:1!important;
+}
+.student-page .app-side .premium-side-nav .student-push-nav.is-on .student-push-nav-copy b{
+  color:#fff8db!important;
+}
+.student-page .app-side .premium-side-nav .student-push-nav.is-on .student-push-nav-copy small{
+  color:#e7b82d!important;
+}
+.student-page .app-side .premium-side-nav .student-push-nav>i{
+  color:#efbd22!important;
+}
