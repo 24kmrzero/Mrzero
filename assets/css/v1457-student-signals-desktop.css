@@ -105,7 +105,7 @@
   .student-page #p-signals .signal-summary-card strong{
     margin:2px 0 0!important;
     color:#353b43!important;
-    font-size:8px!important;
+    font-size:9.5px!important;
     line-height:1.15!important;
     font-weight:900!important;
     white-space:nowrap!important;
@@ -113,7 +113,7 @@
   .student-page #p-signals .signal-summary-card small{
     margin:0!important;
     color:#7d8793!important;
-    font-size:7px!important;
+    font-size:8px!important;
     line-height:1.2!important;
     white-space:nowrap!important;
     overflow:hidden!important;
@@ -165,7 +165,7 @@
     background:transparent!important;
     color:#727d89!important;
     box-shadow:none!important;
-    font-size:8.5px!important;
+    font-size:9.5px!important;
     font-weight:900!important;
     letter-spacing:.01em!important;
     transition:.15s ease!important;
@@ -196,7 +196,7 @@
   }
   .student-page #p-signals .history-filter-group>small{
     color:#8a929d!important;
-    font-size:6.5px!important;
+    font-size:7.5px!important;
     font-weight:950!important;
     letter-spacing:.09em!important;
   }
@@ -211,7 +211,7 @@
     border-radius:8px!important;
     background:#fff!important;
     color:#727c88!important;
-    font-size:7.3px!important;
+    font-size:8.2px!important;
     font-weight:850!important;
     box-shadow:none!important;
   }
@@ -230,7 +230,7 @@
   }
   .student-page #p-signals .signal-history-custom label{
     color:#7d8793!important;
-    font-size:6.5px!important;
+    font-size:7.5px!important;
   }
   .student-page #p-signals .signal-history-custom input{
     min-width:120px!important;
@@ -238,13 +238,13 @@
     border-color:#e0e3e6!important;
     border-radius:8px!important;
     background:#fff!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
   .student-page #p-signals .signal-history-custom .app-btn{
     min-height:29px!important;
     height:29px!important;
     border-radius:8px!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
 
   /* Desktop table only */
@@ -270,7 +270,7 @@
     border-bottom:1px solid #e5e8eb!important;
     background:#f7f8fa!important;
     color:#747f8c!important;
-    font-size:7.2px!important;
+    font-size:8.2px!important;
     font-weight:900!important;
     letter-spacing:.055em!important;
     text-transform:none!important;
@@ -284,7 +284,7 @@
     border-top:1px solid #edf0f2!important;
     background:#fff!important;
     color:#343b44!important;
-    font-size:8.8px!important;
+    font-size:9.8px!important;
     vertical-align:middle!important;
     white-space:nowrap!important;
   }
@@ -317,16 +317,16 @@
   .student-page #p-signals .signal-time-cell b{
     display:block!important;
     color:#20262d!important;
-    font-size:9.5px!important;
+    font-size:10.2px!important;
     font-weight:900!important;
   }
   .student-page #p-signals .signal-date-cell{
     color:#78828e!important;
-    font-size:7.5px!important;
+    font-size:8.2px!important;
   }
   .student-page #p-signals .premium-signal-table td>b:not(.table-pips){
     color:#2e353d!important;
-    font-size:8.8px!important;
+    font-size:9.8px!important;
     font-weight:850!important;
   }
 
@@ -351,7 +351,7 @@
   .student-page #p-signals .instrument-cell b{
     display:block!important;
     color:#1d232a!important;
-    font-size:9.5px!important;
+    font-size:10.2px!important;
     line-height:1.1!important;
     font-weight:900!important;
   }
@@ -359,7 +359,7 @@
     display:block!important;
     margin-top:2px!important;
     color:#818b97!important;
-    font-size:6.7px!important;
+    font-size:7.4px!important;
     line-height:1.1!important;
   }
 
@@ -372,7 +372,7 @@
     padding:0 7px!important;
     border:1px solid transparent!important;
     border-radius:7px!important;
-    font-size:7px!important;
+    font-size:7.8px!important;
     line-height:1!important;
     font-weight:950!important;
     text-transform:uppercase!important;
@@ -395,7 +395,7 @@
     align-items:center!important;
     padding:0 7px!important;
     border-radius:999px!important;
-    font-size:7.4px!important;
+    font-size:8px!important;
     line-height:1!important;
     font-weight:950!important;
     white-space:nowrap!important;
@@ -429,7 +429,7 @@
     justify-content:center!important;
     padding:0 8px!important;
     border-radius:999px!important;
-    font-size:6.7px!important;
+    font-size:7.5px!important;
     line-height:1!important;
     font-weight:950!important;
     letter-spacing:.02em!important;
@@ -476,7 +476,7 @@
     border-top:1px solid #eceff1!important;
     background:#fafaf9!important;
     color:#7e8792!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
 
   /* Empty state */
