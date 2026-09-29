@@ -336,3 +336,45 @@
   body.student-page #p-profile .payment-table th{font-size:7px!important}
   body.student-page #p-profile .payment-table td{font-size:8.5px!important}
 }
+
+
+/* v14.72 — clearly readable profile typography
+   Stronger readability pass requested: keep compact cards, enlarge only text. */
+@media (min-width:901px){
+  body.student-page #p-profile .profile-panel-heading h2{font-size:18px!important}
+  body.student-page #p-profile .profile-panel-heading p{font-size:10.5px!important}
+
+  body.student-page #p-profile .profile-hero-copy>small{font-size:8.8px!important}
+  body.student-page #p-profile .profile-hero-copy h2{font-size:26px!important}
+  body.student-page #p-profile .profile-hero-copy>p{font-size:11px!important}
+  body.student-page #p-profile .profile-hero-meta b{font-size:9.5px!important}
+  body.student-page #p-profile .profile-hero-meta i{font-size:9px!important}
+
+  body.student-page #p-profile .profile-hero-access small{font-size:8.2px!important}
+  body.student-page #p-profile .profile-hero-access b{font-size:13px!important}
+  body.student-page #p-profile .profile-hero-access p{font-size:9.5px!important}
+  body.student-page #p-profile .profile-hero-access-meta small{font-size:7.5px!important}
+  body.student-page #p-profile .profile-hero-access-meta b{font-size:9.2px!important}
+
+  body.student-page #p-profile .account-row-copy h3{font-size:12.5px!important}
+  body.student-page #p-profile .account-row-copy p{font-size:9.5px!important}
+  body.student-page #p-profile .account-row-side .app-btn{font-size:9px!important}
+  body.student-page #p-profile .compact-access-state{font-size:8px!important}
+
+  body.student-page #p-profile .profile-info-head h3{font-size:13.5px!important}
+  body.student-page #p-profile .profile-info-head p{font-size:9.5px!important}
+  body.student-page #p-profile .profile-saved-badge{font-size:8px!important}
+
+  body.student-page #p-profile .profile-readonly-form .form-field label{font-size:9px!important}
+  body.student-page #p-profile .profile-readonly-form .form-field input{
+    font-size:11px!important;
+    font-weight:750!important;
+  }
+  body.student-page #p-profile .profile-readonly-form .form-field::after{font-size:9px!important}
+  body.student-page #p-profile .profile-experience-action .app-btn{font-size:9px!important}
+
+  body.student-page #p-profile .premium-history-details summary{font-size:10.5px!important}
+  body.student-page #p-profile .premium-history-details summary small{font-size:8px!important}
+  body.student-page #p-profile .payment-table th{font-size:8px!important}
+  body.student-page #p-profile .payment-table td{font-size:9.5px!important}
+}
