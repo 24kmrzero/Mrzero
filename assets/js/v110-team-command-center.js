@@ -406,7 +406,7 @@ function renderClients(){
     return
   }
 
-  box.innerHTML=rows.map(c=>{
+  box.innerHTML=rows.map((c,index)=>{
     const courses=(c.enrollments||[]).map(e=>e.course_title).filter(Boolean),
       status=clientStatus(c),
       follow=clientFollowState(c),
@@ -414,6 +414,7 @@ function renderClients(){
       source=c.link_name||c.link_source||'Direct',
       vip=String(c.vip_status||'')==='approved';
     return `<article class="client-work-card premium-client-card status-${status}" data-client-card="${c.id}">
+      <span class="client-row-number" aria-label="Client ${index+1}">${index+1}</span>
       <div class="premium-client-head">
         <div class="premium-client-identity">
           <span class="avatar">${esc(initials(c.full_name))}</span>
