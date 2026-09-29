@@ -1,0 +1,74 @@
+/* 24K MR ZERO — Admin Chart editor scroll recovery v14.66
+   Keeps header/footer fixed while the long chart form scrolls inside the modal. */
+@media (min-width:901px){
+  body.app-page #chartFormBox{
+    overflow:hidden!important;
+  }
+
+  body.app-page #chartFormBox .content-create-card{
+    width:min(760px,94vw)!important;
+    height:min(88vh,900px)!important;
+    max-height:88vh!important;
+    min-height:0!important;
+    display:grid!important;
+    grid-template-rows:auto minmax(0,1fr)!important;
+    overflow:hidden!important;
+  }
+
+  body.app-page #chartFormBox #chartForm{
+    min-height:0!important;
+    height:100%!important;
+    display:grid!important;
+    grid-template-rows:minmax(0,1fr) auto!important;
+    overflow:hidden!important;
+  }
+
+  body.app-page #chartFormBox .app-modal-body{
+    min-height:0!important;
+    height:auto!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    overscroll-behavior:contain!important;
+    scrollbar-gutter:stable!important;
+    scrollbar-width:thin!important;
+    scrollbar-color:#d4b858 transparent!important;
+    padding-bottom:22px!important;
+  }
+
+  body.app-page #chartFormBox .app-modal-foot{
+    position:relative!important;
+    z-index:4!important;
+    flex:0 0 auto!important;
+    background:#fffaf2!important;
+    box-shadow:0 -8px 22px rgba(18,24,32,.04)!important;
+  }
+
+  body.app-page #chartFormBox .chart-upload-preview{
+    max-height:360px!important;
+    overflow:hidden!important;
+  }
+
+  body.app-page #chartFormBox .chart-upload-preview img{
+    width:100%!important;
+    height:auto!important;
+    max-height:360px!important;
+    object-fit:contain!important;
+    display:block!important;
+  }
+
+  html[data-theme="dark"] body.app-page #chartFormBox .app-modal-foot{
+    background:#111419!important;
+    border-top-color:#292f37!important;
+  }
+}
+
+@media (max-width:900px){
+  body.app-page #chartFormBox .content-create-card,
+  body.app-page #chartFormBox #chartForm{
+    min-height:0!important;
+  }
+  body.app-page #chartFormBox .app-modal-body{
+    overflow-y:auto!important;
+    -webkit-overflow-scrolling:touch!important;
+  }
+}
