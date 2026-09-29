@@ -500,19 +500,85 @@ function renderDaily(){
       ['Report',r.id?'Submitted':'Pending',r.id?'fa-circle-check':'fa-clock',r.id?'green':'neutral']
     ].map(x=>`<div class="team-daily-summary-card ${x[3]}"><span><i class="fa-solid ${x[2]}"></i></span><div><small>${x[0]}</small><b>${x[1]}</b></div></div>`).join('')
   }
+
   if($('#reportDate')) $('#reportDate').value=td;
   const set=(id,v)=>{const el=$(id);if(el)el.value=v??0};
   set('#leadsContacted',r.leads_contacted);set('#messagesSent',r.messages_sent);set('#callsMade',r.calls_made);set('#followUps',r.follow_ups);
   set('#newBrokerAccounts',r.new_broker_accounts);set('#ibPartnerShifts',r.ib_partner_shifts);
   set('#xmWeeklyLots',r.xm_lots);set('#dprimeWeeklyLots',r.dprime_lots);set('#exnessWeeklyLots',r.exness_lots);
   if($('#reportNotes')) $('#reportNotes').value=r.notes||'';
-  if($('#dailyStatus')) $('#dailyStatus').textContent=r.id?'Submitted':'Not submitted';
+
+  const statusEl=$('#dailyStatus');
+  if(statusEl){
+    statusEl.textContent=r.id?'Submitted':'Not submitted';
+    statusEl.dataset.state=r.id?'submitted':'pending'
+  }
+
   const p=payload?.performance||{}, clients=payload?.clients||[];
   const newToday=clients.filter(x=>sameDay(clientDate(x),td)).length;
-  const auto=[['New assigned leads',newToday],['Course enrollments',Number(payload?.metrics?.enrollments||0)],['Approved course sales',money(p.course_sales||0)],['VIP conversions',Number(p.vip_count||0)]];
-  if($('#autoActivity')) $('#autoActivity').innerHTML='<div class="auto-activity-grid">'+auto.map(x=>`<div><span>${x[0]}</span><b>${x[1]}</b></div>`).join('')+'</div>';
+
+  /* Paid / Free course conversions are enrollment-backed and auto tracked.
+     Count unique clients per category so one client never double-counts in a category. */
+  const selectedMonth=$('#teamMonth')?.value||monthNow();
+  const enrollmentRows=[];
+  clients.forEach(client=>{
+    (client.enrollments||[]).forEach(e=>{
+      if(String(e.status||'active').toLowerCase()!=='active')return;
+      const rawPrice=e.course_price;
+      let type='unknown';
+      if(rawPrice!==undefined&&rawPrice!==null&&rawPrice!==''){
+        type=Number(rawPrice)>0?'paid':'free'
+      }else{
+        const title=String(e.course_title||'').toLowerCase();
+        if(/free|basic|level\s*1/.test(title))type='free';
+        else if(/paid|advanced|level\s*2|mentorship/.test(title))type='paid'
+      }
+      enrollmentRows.push({
+        studentId:String(client.id||client.client_id||''),
+        type,
+        createdAt:e.created_at||null,
+        title:e.course_title||'Course'
+      })
+    })
+  });
+  const uniqueStudents=rows=>new Set(rows.map(x=>x.studentId).filter(Boolean)).size;
+  const todayEnrollments=enrollmentRows.filter(x=>x.createdAt&&String(x.createdAt).slice(0,10)===td);
+  const monthEnrollments=enrollmentRows.filter(x=>x.createdAt&&String(x.createdAt).slice(0,7)===selectedMonth);
+  const paidToday=uniqueStudents(todayEnrollments.filter(x=>x.type==='paid'));
+  const freeToday=uniqueStudents(todayEnrollments.filter(x=>x.type==='free'));
+  const paidMonth=uniqueStudents(monthEnrollments.filter(x=>x.type==='paid'));
+  const freeMonth=uniqueStudents(monthEnrollments.filter(x=>x.type==='free'));
+
+  const conversionBox=$('#courseConversionSnapshot');
+  if(conversionBox){
+    conversionBox.innerHTML=[
+      {tone:'paid',icon:'fa-gem',eyebrow:'PAID COURSE',title:'Paid Course Conversions',today:paidToday,month:paidMonth,copy:'Approved paid enrollments'},
+      {tone:'free',icon:'fa-gift',eyebrow:'FREE COURSE',title:'Free Course Conversions',today:freeToday,month:freeMonth,copy:'Free course enrollments'}
+    ].map(x=>`<article class="team-course-conversion-card ${x.tone}">
+      <div class="course-conversion-top">
+        <span class="course-conversion-icon"><i class="fa-solid ${x.icon}"></i></span>
+        <div><small>${x.eyebrow}</small><b>${x.title}</b></div>
+        <span class="course-conversion-live"><i></i> LIVE</span>
+      </div>
+      <div class="course-conversion-metrics">
+        <div class="primary"><span>Today</span><strong>${x.today}</strong><small>clients</small></div>
+        <div><span>This Month</span><strong>${x.month}</strong><small>clients</small></div>
+      </div>
+      <div class="course-conversion-foot"><i class="fa-solid fa-circle-check"></i><span>${x.copy}</span></div>
+    </article>`).join('')
+  }
+
+  const auto=[
+    {label:'New assigned leads',value:newToday,sub:'Today',icon:'fa-user-plus',tone:'blue'},
+    {label:'Course enrollments',value:paidMonth+freeMonth,sub:'This month',icon:'fa-graduation-cap',tone:'gold'},
+    {label:'Approved course sales',value:money(p.course_sales||0),sub:'This month',icon:'fa-wallet',tone:'green'},
+    {label:'VIP conversions',value:Number(p.vip_count||0),sub:'This month',icon:'fa-crown',tone:'purple'}
+  ];
+  if($('#autoActivity')) $('#autoActivity').innerHTML='<div class="auto-activity-grid">'+auto.map(x=>`<div class="${x.tone}"><span class="auto-activity-icon"><i class="fa-solid ${x.icon}"></i></span><div><span>${x.label}</span><b>${x.value}</b><small>${x.sub}</small></div></div>`).join('')+'</div>';
+
   if($('#manualVip')) $('#manualVip').value=Number(p.vip_count||0);
-  if($('#dailyReportsList')) $('#dailyReportsList').innerHTML=`<table><thead><tr><th>Date</th><th>Leads</th><th>Messages</th><th>Calls</th><th>Follow-ups</th><th>New Accounts</th><th>IB Shifts</th><th>XM</th><th>DPrime</th><th>Exness</th><th>Status</th></tr></thead><tbody>${reports.length?reports.map(x=>`<tr><td>${esc(x.date||'')}</td><td>${num(x.leads_contacted)}</td><td>${num(x.messages_sent)}</td><td>${num(x.calls_made)}</td><td>${num(x.follow_ups)}</td><td>${num(x.new_broker_accounts)}</td><td>${num(x.ib_partner_shifts)}</td><td>${num(x.xm_lots,1)}</td><td>${num(x.dprime_lots,1)}</td><td>${num(x.exness_lots,1)}</td><td>${esc(x.status||'submitted')}</td></tr>`).join(''):'<tr><td colspan="11">No daily reports yet.</td></tr>'}</tbody></table>`;
+
+  if($('#dailyReportsList')) $('#dailyReportsList').innerHTML=`<table><thead><tr><th>Date</th><th>Leads</th><th>Messages</th><th>Calls</th><th>Follow-ups</th><th>New Accounts</th><th>IB Shifts</th><th>XM</th><th>DPrime</th><th>Exness</th><th>Status</th></tr></thead><tbody>${reports.length?reports.map(x=>`<tr><td>${esc(x.date||'')}</td><td>${num(x.leads_contacted)}</td><td>${num(x.messages_sent)}</td><td>${num(x.calls_made)}</td><td>${num(x.follow_ups)}</td><td>${num(x.new_broker_accounts)}</td><td>${num(x.ib_partner_shifts)}</td><td>${num(x.xm_lots,1)}</td><td>${num(x.dprime_lots,1)}</td><td>${num(x.exness_lots,1)}</td><td><span class="daily-history-status ${String(x.status||'submitted').toLowerCase()}"><i class="fa-solid fa-circle-check"></i>${esc(statusLabel(x.status||'submitted'))}</span></td></tr>`).join(''):'<tr><td colspan="11"><div class="daily-history-empty"><i class="fa-regular fa-clipboard"></i><span>No daily reports yet.</span></div></td></tr>'}</tbody></table>`;
 }
 function progressCard(title,value,tier,nextText,pct,icon='fa-chart-line',tone='gold'){
   const safePct=Math.max(0,Math.min(100,Number(pct||0)));
