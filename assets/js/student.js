@@ -1340,8 +1340,42 @@
   }
 
   function renderAnnouncements() {
-    document.getElementById('announcementsList').innerHTML = state.announcements.length ? state.announcements.map(n => `<article class="announcement ${n.priority === 'important' ? 'important' : ''}"><h4>${A.escapeHtml(n.title)}</h4><p>${A.escapeHtml(n.message)}</p><small>${A.formatDateTime(n.published_at)}</small></article>`).join('') : empty('No announcements yet.', 'fa-bullhorn');
+    document.getElementById('announcementsList').innerHTML = state.announcements.length ? state.announcements.map(n => `<article class="announcement ${n.priority === 'important' ? 'important' : ''}" data-announcement-id="${n.id}"><h4>${A.escapeHtml(n.title)}</h4><p>${A.escapeHtml(n.message)}</p><small>${A.formatDateTime(n.published_at)}</small></article>`).join('') : empty('No announcements yet.', 'fa-bullhorn');
   }
+
+  window.__24K_OPEN_PUSH_CONTENT__ = function(type,id){
+    const kind=String(type||'').toLowerCase(),contentId=String(id||'');
+    try{
+      if(kind==='signal'||kind==='signal_update'){
+        const signal=(state.signals||[]).find(x=>String(x.id)===contentId);
+        signalWorkspaceView=signal&&signalIsFinal(signal)?'history':'active';
+        openPanel('signals');renderSignals();
+        if(signal)setTimeout(()=>openSignalHistory(contentId),60);
+        return Boolean(signal)
+      }
+      if(kind==='chart'){
+        const chart=(state.charts||[]).find(x=>String(x.id)===contentId);
+        openPanel('charts');renderCharts();
+        if(chart)setTimeout(()=>openChart(contentId),60);
+        return Boolean(chart)
+      }
+      if(kind==='article'){
+        const article=(state.articles||[]).find(x=>String(x.id)===contentId);
+        openPanel('articles');renderArticles();
+        if(article)setTimeout(()=>openArticle(contentId),60);
+        return Boolean(article)
+      }
+      if(kind==='announcement'){
+        openPanel('announcements');renderAnnouncements();
+        setTimeout(()=>{
+          const el=document.querySelector(`[data-announcement-id="${CSS.escape(contentId)}"]`);
+          if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.classList.add('push-highlight');setTimeout(()=>el.classList.remove('push-highlight'),2600)}
+        },80);
+        return true
+      }
+    }catch(error){console.warn('[24K Push] Could not open notification content',error)}
+    return false
+  };
 
   function renderProfile() {
     const form = document.getElementById('profileForm');
