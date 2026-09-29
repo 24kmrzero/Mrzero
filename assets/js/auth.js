@@ -104,30 +104,17 @@
   const { data: sessionData } = await supabase.auth.getSession();
   if (sessionData.session?.user) {
     try {
-      let profile = await getProfileWithRetry(sessionData.session.user.id);
+      const profile = await getProfileWithRetry(sessionData.session.user.id);
       if (profile.role !== 'student') {
         await supabase.auth.signOut();
         toast('This page accepts student accounts only.', 'error');
       } else {
-        if (params.get('verify_email') === '1' && !profile.email_verified) {
-          const verifyResponse = await supabase.functions.invoke('auth-email', {
-            body: { action:'confirm_email_verification', email: sessionData.session.user.email || '' }
-          });
-          if (verifyResponse.error) throw verifyResponse.error;
-          if (verifyResponse.data?.error) throw new Error(verifyResponse.data.error);
-          profile = { ...profile, email_verified: true };
-          toast('Email verified successfully.', 'success');
-        }
         await finishStudentLogin(sessionData.session.user, profile);
         return;
       }
     } catch (error) {
       console.error(error);
-      if (params.get('verify_email') === '1') {
-        toast(friendlyError(error, 'Could not verify your email. Please request a new verification email from Profile.'), 'error');
-      } else {
-        await supabase.auth.signOut().catch(() => {});
-      }
+      await supabase.auth.signOut().catch(() => {});
     }
   }
 
