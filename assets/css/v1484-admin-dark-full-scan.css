@@ -1,0 +1,652 @@
+/* 24K MR ZERO — Admin dark-theme full scan v14.84
+   Final desktop-only override.
+   Goals:
+   - No stray light/white controls in dark mode.
+   - White icon/action boxes become 24K gold.
+   - Large white cards become premium charcoal, not yellow.
+   - Forms/search inputs stay dark for readability.
+   - Mobile/tablet remain untouched.
+*/
+
+@media (min-width:901px){
+
+  html[data-auth-scope="admin"][data-theme="dark"]{
+    --a84-bg:#0b0f14;
+    --a84-card:#10151b;
+    --a84-card2:#151a20;
+    --a84-card3:#191e24;
+    --a84-line:#2c343e;
+    --a84-line2:#37404b;
+    --a84-gold:#e2ad12;
+    --a84-gold2:#f4ca3b;
+    --a84-gold3:#d59d04;
+    --a84-gold-dark:#211a06;
+    --a84-text:#f2f5f7;
+    --a84-muted:#929da8;
+  }
+
+  /* ------------------------------------------------------------
+     GLOBAL ADMIN DARK GUARD
+     ------------------------------------------------------------ */
+  html[data-auth-scope="admin"][data-theme="dark"] body.app-page,
+  html[data-auth-scope="admin"][data-theme="dark"] #adminApp.app-shell,
+  html[data-auth-scope="admin"][data-theme="dark"] .app-main,
+  html[data-auth-scope="admin"][data-theme="dark"] .app-content{
+    background:#090d12!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] .panel{
+    color:var(--a84-text)!important;
+  }
+
+  /* Any standard dark-form control must remain dark, never white. */
+  html[data-auth-scope="admin"][data-theme="dark"] :is(
+    .filter-row input,.filter-row select,
+    .form-field input,.form-field select,.form-field textarea,
+    .app-modal input,.app-modal select,.app-modal textarea,
+    .v1218-toolbar input,.v1218-toolbar select
+  ){
+    border-color:var(--a84-line)!important;
+    background:var(--a84-card2)!important;
+    color:#e9edf1!important;
+    box-shadow:none!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] :is(
+    .filter-row input,.form-field input,.form-field textarea,.app-modal input,.app-modal textarea
+  )::placeholder{
+    color:#697581!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] :is(
+    .filter-row select,.form-field select,.app-modal select,.v1218-toolbar select
+  ) option{
+    background:#11161c!important;
+    color:#eef1f4!important;
+  }
+
+  /* White / cream outline buttons seen in screenshots => real 24K gold. */
+  html[data-auth-scope="admin"][data-theme="dark"] .app-btn.outline:not(.danger),
+  html[data-auth-scope="admin"][data-theme="dark"] button.app-btn.outline:not(.danger),
+  html[data-auth-scope="admin"][data-theme="dark"] a.app-btn.outline:not(.danger){
+    border-color:var(--a84-gold)!important;
+    background:linear-gradient(145deg,var(--a84-gold2),var(--a84-gold3))!important;
+    color:#201800!important;
+    box-shadow:0 6px 14px rgba(213,157,4,.13)!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] .app-btn.outline:not(.danger):hover,
+  html[data-auth-scope="admin"][data-theme="dark"] button.app-btn.outline:not(.danger):hover,
+  html[data-auth-scope="admin"][data-theme="dark"] a.app-btn.outline:not(.danger):hover{
+    border-color:#f0c533!important;
+    background:linear-gradient(145deg,#ffda58,#e6ab09)!important;
+    color:#171100!important;
+    transform:translateY(-1px)!important;
+  }
+
+  /* Generic admin modals: no white shells left behind in dark mode. */
+  html[data-auth-scope="admin"][data-theme="dark"] .app-modal .app-modal-card{
+    border-color:var(--a84-line)!important;
+    background:#0f141a!important;
+    box-shadow:0 30px 90px rgba(0,0,0,.45)!important;
+  }
+  html[data-auth-scope="admin"][data-theme="dark"] .app-modal .app-modal-head,
+  html[data-auth-scope="admin"][data-theme="dark"] .app-modal .app-modal-foot{
+    border-color:var(--a84-line)!important;
+    background:#11161c!important;
+  }
+  html[data-auth-scope="admin"][data-theme="dark"] .app-modal .app-modal-body{
+    background:#0c1116!important;
+  }
+  html[data-auth-scope="admin"][data-theme="dark"] .app-modal .app-modal-head :is(h2,h3,b){
+    color:var(--a84-text)!important;
+  }
+  html[data-auth-scope="admin"][data-theme="dark"] .app-modal .modal-close{
+    border-color:#5c4915!important;
+    background:#211c0d!important;
+    color:#efc43a!important;
+  }
+
+  /* ============================================================
+     ARTICLES
+     ============================================================ */
+  html[data-auth-scope="admin"][data-theme="dark"] #p-articles .admin-content-command,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-articles .admin-mentor-stat,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-articles .admin-research-filter,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-articles .admin-mentor-content-card{
+    border-color:var(--a84-line)!important;
+    background:linear-gradient(145deg,#11171d,#0f141a)!important;
+    box-shadow:none!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-articles .admin-content-command{
+    border-left-color:#d8a20a!important;
+    background:
+      radial-gradient(430px 190px at 94% 0%,rgba(216,162,10,.075),transparent 70%),
+      linear-gradient(145deg,#11161c,#0e1319 64%,#151209)!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-articles :is(.admin-content-kicker,.admin-content-command>div>small){
+    border-color:var(--a84-gold)!important;
+    background:linear-gradient(145deg,var(--a84-gold2),var(--a84-gold3))!important;
+    color:#201800!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-articles .admin-research-filter :is(input,select){
+    border-color:var(--a84-line2)!important;
+    background:var(--a84-card2)!important;
+    color:#e2e7eb!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-articles .admin-mentor-actions :is(button,a):not(.danger){
+    border-color:var(--a84-gold)!important;
+    background:linear-gradient(145deg,var(--a84-gold2),var(--a84-gold3))!important;
+    color:#201800!important;
+    box-shadow:none!important;
+  }
+  html[data-auth-scope="admin"][data-theme="dark"] #p-articles .admin-mentor-actions .danger{
+    border-color:#6a303a!important;
+    background:#26161a!important;
+    color:#ff8190!important;
+  }
+
+  /* ============================================================
+     COURSES
+     ============================================================ */
+  html[data-auth-scope="admin"][data-theme="dark"] #p-courses .admin-course-command,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-courses .admin-course-stat,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-courses .admin-course-card,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-courses .admin-course-card-metrics>div,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-courses .admin-course-table-wrap,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-courses>.table-scroll{
+    border-color:var(--a84-line)!important;
+    background:linear-gradient(145deg,#11171d,#0f141a)!important;
+    box-shadow:none!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-courses .admin-course-command{
+    border-left-color:#d8a20a!important;
+    background:
+      radial-gradient(430px 190px at 94% 0%,rgba(216,162,10,.075),transparent 70%),
+      linear-gradient(145deg,#11161c,#0e1319 64%,#151209)!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-courses .admin-course-kicker{
+    border-color:var(--a84-gold)!important;
+    background:linear-gradient(145deg,var(--a84-gold2),var(--a84-gold3))!important;
+    color:#201800!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-courses .admin-course-card :is(h3,b),
+  html[data-auth-scope="admin"][data-theme="dark"] #p-courses .admin-course-stat b{
+    color:var(--a84-text)!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-courses .admin-course-card :is(p,small),
+  html[data-auth-scope="admin"][data-theme="dark"] #p-courses .admin-course-stat :is(small,em){
+    color:var(--a84-muted)!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-courses .admin-course-card-meta span{
+    border-color:#5b4917!important;
+    background:#201b0d!important;
+    color:#e5ba32!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-courses .admin-course-card .app-btn.outline,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-courses .table-actions .app-btn.outline{
+    border-color:var(--a84-gold)!important;
+    background:linear-gradient(145deg,var(--a84-gold2),var(--a84-gold3))!important;
+    color:#201800!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-courses .admin-table tbody td{
+    border-color:#27303a!important;
+    background:#10151b!important;
+    color:#c4ccd4!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-courses .table-course-placeholder{
+    border-color:var(--a84-gold)!important;
+    background:linear-gradient(145deg,var(--a84-gold2),var(--a84-gold3))!important;
+    color:#201800!important;
+  }
+
+  /* Course form modal */
+  html[data-auth-scope="admin"][data-theme="dark"] #courseFormBox .course-form-card,
+  html[data-auth-scope="admin"][data-theme="dark"] #courseFormBox .app-modal-head,
+  html[data-auth-scope="admin"][data-theme="dark"] #courseFormBox .course-modal-body{
+    border-color:var(--a84-line)!important;
+    background:#10151b!important;
+    box-shadow:none!important;
+  }
+  html[data-auth-scope="admin"][data-theme="dark"] #courseFormBox :is(input,select,textarea){
+    border-color:var(--a84-line2)!important;
+    background:var(--a84-card2)!important;
+    color:#edf1f4!important;
+  }
+
+  /* ============================================================
+     PAYMENTS
+     ============================================================ */
+  html[data-auth-scope="admin"][data-theme="dark"] #p-payments .payment-command,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-payments .payment-review-filters,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-payments .payment-table-shell{
+    border-color:var(--a84-line)!important;
+    background:linear-gradient(145deg,#11171d,#0f141a)!important;
+    box-shadow:none!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-payments .payment-command{
+    border-left:3px solid #d8a20a!important;
+    background:
+      radial-gradient(430px 185px at 94% 0%,rgba(216,162,10,.07),transparent 72%),
+      linear-gradient(145deg,#11161c,#0f141a)!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-payments :is(.payment-command-kicker,.payment-command>div>small){
+    border-color:var(--a84-gold)!important;
+    background:linear-gradient(145deg,var(--a84-gold2),var(--a84-gold3))!important;
+    color:#201800!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-payments .payment-review-filters :is(select,input),
+  html[data-auth-scope="admin"][data-theme="dark"] #p-payments .payment-date-filter>input{
+    border-color:var(--a84-line2)!important;
+    background:var(--a84-card2)!important;
+    color:#e7ebef!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-payments .payment-filter-reset{
+    border-color:var(--a84-gold)!important;
+    background:linear-gradient(145deg,var(--a84-gold2),var(--a84-gold3))!important;
+    color:#201800!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-payments .payment-quick-card,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-payments .payment-date-card{
+    border-color:#343c46!important;
+    background:#151a20!important;
+    color:#c9d0d7!important;
+    box-shadow:none!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-payments .payment-quick-card :is(b,span),
+  html[data-auth-scope="admin"][data-theme="dark"] #p-payments .payment-date-card span{
+    color:inherit!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-payments .payment-quick-card.on,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-payments .payment-date-card.on{
+    border-color:var(--a84-gold)!important;
+    background:linear-gradient(145deg,var(--a84-gold2),var(--a84-gold3))!important;
+    color:#201800!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-payments .payment-review-table .app-btn:not(.danger){
+    border-color:var(--a84-gold)!important;
+    background:linear-gradient(145deg,var(--a84-gold2),var(--a84-gold3))!important;
+    color:#201800!important;
+  }
+
+  /* ============================================================
+     STUDENTS
+     ============================================================ */
+  html[data-auth-scope="admin"][data-theme="dark"] #p-students>.panel-heading,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-students .student-summary-card,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-students .student-filter-toolbar,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-students .bulk-bar,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-students>.table-scroll{
+    border-color:var(--a84-line)!important;
+    background:linear-gradient(145deg,#11171d,#0f141a)!important;
+    box-shadow:none!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-students>.panel-heading{
+    border-left-color:#d8a20a!important;
+    background:
+      radial-gradient(430px 185px at 94% 0%,rgba(216,162,10,.07),transparent 72%),
+      linear-gradient(145deg,#11161c,#0f141a)!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-students>.panel-heading>div:before,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-students #exportUsers,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-students #notifySelectedUsers{
+    border-color:var(--a84-gold)!important;
+    background:linear-gradient(145deg,var(--a84-gold2),var(--a84-gold3))!important;
+    color:#201800!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-students .student-summary-card>span,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-students .student-attribution-item>span{
+    border-color:#6a5317!important;
+    background:#211c0d!important;
+    color:#efc43a!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-students .student-date-btn{
+    border-color:#343c46!important;
+    background:#151a20!important;
+    color:#aeb7c0!important;
+  }
+  html[data-auth-scope="admin"][data-theme="dark"] #p-students .student-date-btn.active{
+    border-color:var(--a84-gold)!important;
+    background:linear-gradient(145deg,var(--a84-gold2),var(--a84-gold3))!important;
+    color:#201800!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-students .student-management-table tbody td{
+    border-color:#27303a!important;
+    background:#10151b!important;
+    color:#bdc6ce!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-students .student-attribution-strip,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-students .student-attribution-item{
+    border-color:#2d3540!important;
+    background:#13191f!important;
+    box-shadow:none!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-students .student-management-table .table-actions .app-btn.outline{
+    border-color:var(--a84-gold)!important;
+    background:linear-gradient(145deg,var(--a84-gold2),var(--a84-gold3))!important;
+    color:#201800!important;
+  }
+
+  /* ============================================================
+     TEAM ACCOUNTS
+     ============================================================ */
+  html[data-auth-scope="admin"][data-theme="dark"] #p-team-access-ref>.panel-heading,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-team-access-ref #v18TeamKpis .v1218-kpi,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-team-access-ref>.table-scroll>.admin-table tbody tr{
+    border-color:var(--a84-line)!important;
+    background:linear-gradient(145deg,#11171d,#0f141a)!important;
+    box-shadow:none!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-team-access-ref>.panel-heading{
+    border-left-color:#d8a20a!important;
+    background:
+      radial-gradient(390px 165px at 94% 0%,rgba(216,162,10,.07),transparent 72%),
+      linear-gradient(145deg,#11161c,#0f141a)!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-team-access-ref .v18-team-kicker,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-team-access-ref #v18TeamKpis .v1218-kpi:before,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(1):before{
+    border-color:var(--a84-gold)!important;
+    background:linear-gradient(145deg,var(--a84-gold2),var(--a84-gold3))!important;
+    color:#201800!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-team-access-ref>.table-scroll>.admin-table tbody td{
+    border-color:#303842!important;
+    background:#151a20!important;
+    color:#c8d0d7!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(1),
+  html[data-auth-scope="admin"][data-theme="dark"] #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(8){
+    background:transparent!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(1) b{
+    color:var(--a84-text)!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(8) .app-btn:not(.danger){
+    border-color:var(--a84-gold)!important;
+    background:linear-gradient(145deg,var(--a84-gold2),var(--a84-gold3))!important;
+    color:#201800!important;
+  }
+
+  /* ============================================================
+     MENTOR ACCOUNTS
+     ============================================================ */
+  html[data-auth-scope="admin"][data-theme="dark"] #p-v1216-center>.panel-heading,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-v1216-center .v1216-kpi,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-v1216-center .v1216-mentor-premium,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-v1216-center [data-v1216-sub="mentors"]>.panel-heading{
+    border-color:var(--a84-line)!important;
+    background:linear-gradient(145deg,#11171d,#0f141a)!important;
+    box-shadow:none!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-v1216-center>.panel-heading{
+    border-left-color:#d8a20a!important;
+    background:
+      radial-gradient(430px 185px at 94% 0%,rgba(216,162,10,.07),transparent 72%),
+      linear-gradient(145deg,#11161c,#0f141a)!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-v1216-center>.panel-heading:before,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-v1216-center .v1216-kpi:before,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-v1216-center .v1216-mentor-avatar{
+    border-color:var(--a84-gold)!important;
+    background:linear-gradient(145deg,var(--a84-gold2),var(--a84-gold3))!important;
+    color:#201800!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-v1216-center .v1216-mentor-head h3,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-v1216-center .v1216-kpi b{
+    color:var(--a84-text)!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-v1216-center .v1216-mentor-email,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-v1216-center .v1216-mentor-access{
+    border-color:#303842!important;
+    background:#151a20!important;
+    color:#c2cad2!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-v1216-center .v1216-mentor-access span{
+    border-color:#5c4915!important;
+    background:#211c0d!important;
+    color:#efc43a!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-v1216-center .v1216-mentor-foot{
+    border-top-color:#2d3540!important;
+  }
+  html[data-auth-scope="admin"][data-theme="dark"] #p-v1216-center .v1216-mentor-foot .app-btn{
+    border-color:var(--a84-gold)!important;
+    background:linear-gradient(145deg,var(--a84-gold2),var(--a84-gold3))!important;
+    color:#201800!important;
+  }
+
+  /* Mentor modal */
+  html[data-auth-scope="admin"][data-theme="dark"] #v1216MentorModal .v1216-modal-card,
+  html[data-auth-scope="admin"][data-theme="dark"] #v1216MentorModal .v1216-modal-head,
+  html[data-auth-scope="admin"][data-theme="dark"] #v1216MentorModal .v1216-modal-body,
+  html[data-auth-scope="admin"][data-theme="dark"] #v1216MentorModal .v1216-modal-foot{
+    border-color:var(--a84-line)!important;
+    background:#10151b!important;
+    box-shadow:none!important;
+  }
+  html[data-auth-scope="admin"][data-theme="dark"] #v1216MentorModal .v1216-form input,
+  html[data-auth-scope="admin"][data-theme="dark"] #v1216MentorModal .v1216-perms label{
+    border-color:var(--a84-line2)!important;
+    background:var(--a84-card2)!important;
+    color:#e7ebef!important;
+  }
+
+  /* ============================================================
+     PREMIUM ACCESS
+     ============================================================ */
+  html[data-auth-scope="admin"][data-theme="dark"] #p-premium-access>.premium-access-command,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-premium-access #v1250PremiumSetup,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-premium-access .premium-access-kpi,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-premium-access .premium-access-tabs,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-premium-access .premium-course-filter-shell,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-premium-access .premium-users-toolbar,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-premium-access .premium-users-table-shell,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-premium-access .premium-broker-box{
+    border-color:var(--a84-line)!important;
+    background:linear-gradient(145deg,#11171d,#0f141a)!important;
+    box-shadow:none!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-premium-access>.premium-access-command{
+    border-left-color:#d8a20a!important;
+    background:
+      radial-gradient(430px 185px at 95% 0%,rgba(216,162,10,.075),transparent 72%),
+      linear-gradient(145deg,#11161c,#0f141a)!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-premium-access :is(
+    .premium-access-kicker,
+    .premium-access-command>div:first-child>small,
+    .premium-setup-kicker
+  ){
+    border-color:var(--a84-gold)!important;
+    background:linear-gradient(145deg,var(--a84-gold2),var(--a84-gold3))!important;
+    color:#201800!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-premium-access .premium-payment-methods-link{
+    border-color:var(--a84-gold)!important;
+    background:linear-gradient(145deg,var(--a84-gold2),var(--a84-gold3))!important;
+    color:#201800!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-premium-access .premium-access-kpi>span,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-premium-access .premium-student-avatar{
+    border-color:var(--a84-gold)!important;
+    background:linear-gradient(145deg,var(--a84-gold2),var(--a84-gold3))!important;
+    color:#201800!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-premium-access .premium-course-filters button{
+    border-color:#343c46!important;
+    background:#151a20!important;
+    color:#cbd2d9!important;
+  }
+  html[data-auth-scope="admin"][data-theme="dark"] #p-premium-access .premium-course-filters button.on,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-premium-access .premium-course-filters button.on b{
+    border-color:var(--a84-gold)!important;
+    background:linear-gradient(145deg,var(--a84-gold2),var(--a84-gold3))!important;
+    color:#201800!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-premium-access .premium-users-table tbody td{
+    border-color:#27303a!important;
+    background:#10151b!important;
+    color:#bdc6ce!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-premium-access .premium-access-state.off,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-premium-access .premium-days{
+    border:1px solid #5b4916!important;
+    background:#211c0d!important;
+    color:#efc43a!important;
+  }
+
+  /* ============================================================
+     LINK MANAGER
+     ============================================================ */
+  html[data-auth-scope="admin"][data-theme="dark"] #p-link-manager-ref>.link-manager-hero,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-link-manager-ref .link-manager-kpi,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-link-manager-ref .link-manager-filter-shell,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-link-manager-ref .link-manager-table-shell{
+    border-color:var(--a84-line)!important;
+    background:linear-gradient(145deg,#11171d,#0f141a)!important;
+    box-shadow:none!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-link-manager-ref>.link-manager-hero{
+    border-left:3px solid #d8a20a!important;
+    background:
+      radial-gradient(430px 185px at 95% 0%,rgba(216,162,10,.075),transparent 72%),
+      linear-gradient(145deg,#11161c,#0f141a)!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-link-manager-ref :is(
+    .link-manager-kicker,
+    .link-manager-hero>div:first-child>small,
+    .link-manager-kpi>span,
+    .link-manager-row-icon
+  ){
+    border-color:var(--a84-gold)!important;
+    background:linear-gradient(145deg,var(--a84-gold2),var(--a84-gold3))!important;
+    color:#201800!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-link-manager-ref .link-manager-search,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-link-manager-ref .link-manager-filter-shell>select{
+    border-color:var(--a84-line2)!important;
+    background:var(--a84-card2)!important;
+    color:#e5eaee!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-link-manager-ref .link-manager-table tbody td{
+    border-color:#27303a!important;
+    background:#10151b!important;
+    color:#bdc6ce!important;
+  }
+
+  /* ============================================================
+     ACTIVITY LOGS
+     ============================================================ */
+  html[data-auth-scope="admin"][data-theme="dark"] #p-audit>.audit-v1430-hero,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-audit .audit-v1430-kpi,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-audit .audit-v1430-filters,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-audit .audit-v1430-table-shell{
+    border-color:var(--a84-line)!important;
+    background:linear-gradient(145deg,#11171d,#0f141a)!important;
+    box-shadow:none!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-audit>.audit-v1430-hero{
+    border-left:3px solid #d8a20a!important;
+    background:
+      radial-gradient(430px 185px at 95% 0%,rgba(216,162,10,.075),transparent 72%),
+      linear-gradient(145deg,#11161c,#0f141a)!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-audit :is(
+    .audit-v1430-kicker,
+    .audit-v1430-hero>div:first-child>small,
+    .audit-v1430-kpi>span,
+    .audit-v1430-actor>span,
+    .audit-detail-btn
+  ){
+    border-color:var(--a84-gold)!important;
+    background:linear-gradient(145deg,var(--a84-gold2),var(--a84-gold3))!important;
+    color:#201800!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-audit .audit-v1430-search,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-audit .audit-v1430-filters>select,
+  html[data-auth-scope="admin"][data-theme="dark"] #p-audit .audit-v1430-filters>input[type="date"]{
+    border-color:var(--a84-line2)!important;
+    background:var(--a84-card2)!important;
+    color:#e4e9ed!important;
+  }
+
+  html[data-auth-scope="admin"][data-theme="dark"] #p-audit .audit-v1430-table tbody td{
+    border-color:#27303a!important;
+    background:#10151b!important;
+    color:#bdc6ce!important;
+  }
+
+  /* Keep semantic role/status pills readable; remove only white neutral pills. */
+  html[data-auth-scope="admin"][data-theme="dark"] #p-audit .audit-role:not(.role-admin):not(.role-mentor):not(.role-team):not(.role-student){
+    border-color:#5b4916!important;
+    background:#211c0d!important;
+    color:#efc43a!important;
+  }
+
+  /* ============================================================
+     GENERAL DARK ICON / AVATAR BOXES FROM DYNAMIC ADMIN WORKSPACES
+     ============================================================ */
+  html[data-auth-scope="admin"][data-theme="dark"] :is(
+    #p-link-manager-ref .v1218-kpi>span,
+    #p-audit .audit-v1430-kpi>span,
+    #p-premium-access .premium-access-kpi>span
+  ){
+    border-color:var(--a84-gold)!important;
+    background:linear-gradient(145deg,var(--a84-gold2),var(--a84-gold3))!important;
+    color:#201800!important;
+  }
+}
