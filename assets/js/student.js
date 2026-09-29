@@ -495,6 +495,11 @@
   }
 
   function updateSignalWorkspaceUi() {
+    const signalPanel = document.getElementById('p-signals');
+    if (signalPanel) {
+      signalPanel.classList.toggle('active-mode', signalWorkspaceView === 'active');
+      signalPanel.classList.toggle('history-mode', signalWorkspaceView === 'history');
+    }
     document.querySelectorAll('[data-signal-view]').forEach(btn => {
       const active = btn.dataset.signalView === signalWorkspaceView;
       btn.classList.toggle('active', active);
