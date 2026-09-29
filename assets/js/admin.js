@@ -1,7 +1,7 @@
 (async function () {
   const A = window.App;
   const FINAL_SIGNAL_STATES = new Set(['tp4_hit','sl_hit','breakeven_hit','manually_closed','cancelled']);
-  const state = { profile:null, profiles:[], courses:[], sessions:[], sessionLinks:{}, payments:[], signals:[], signalUpdates:[], charts:[], articles:[], announcements:[], banners:[], resources:[], support:[], methods:[] };
+  const state = { profile:null, profiles:[], courses:[], sessions:[], sessionLinks:{}, payments:[], signals:[], signalUpdates:[], charts:[], articles:[], announcements:[], banners:[], resources:[], support:[], methods:[], socialSettings:{youtube:'',facebook:'',whatsapp_number:'',whatsapp_url:'',instagram:'',tiktok:''} };
   const demoPayments = [
     {id:'demo-payment-1',__demo:true,invoice_no:'DEMO-24001',student_name:'Ali Raza',student_email:'ali.demo@24kmrzero.test',course_title:'Level 2 Course',currency:'USD',amount:250,payment_method_name:'USDT TRC20',transaction_reference:'DEMO-USDT-001',receipt_path:'',status:'received',created_at:new Date(Date.now()-2*60*60*1000).toISOString(),admin_note:null},
     {id:'demo-payment-2',__demo:true,invoice_no:'DEMO-24002',student_name:'Sara Khan',student_email:'sara.demo@24kmrzero.test',course_title:'Level 2 Course',currency:'USD',amount:250,payment_method_name:'Bank Transfer',transaction_reference:'DEMO-BANK-002',receipt_path:'',status:'under_review',created_at:new Date(Date.now()-1*24*60*60*1000).toISOString(),admin_note:'Demo payment under review.'},
@@ -80,7 +80,8 @@
       ['banners',sb.from('mentor_banners').select('*').order('created_at',{ascending:false}),false],
       ['resources',sb.from('course_resources').select('*').order('created_at',{ascending:false}),false],
       ['support',sb.from('support_requests').select('*').order('created_at',{ascending:false}),false],
-      ['methods',sb.from('payment_methods').select('*').order('sort_order'),false]
+      ['methods',sb.from('payment_methods').select('*').order('sort_order'),false],
+      ['socialSettings',sb.from('platform_settings').select('setting_value').eq('setting_key','social_contacts').maybeSingle(),false]
     ];
     const results=await Promise.all(requests.map(async([key,query,critical])=>[key,critical,await query]));
     for(const [key,critical,response] of results){
@@ -91,11 +92,12 @@
         continue;
       }
       if(key==='sessionLinks') state.sessionLinks=Object.fromEntries((response.data||[]).map(r=>[r.course_session_id,r.meet_url]));
+      else if(key==='socialSettings') state.socialSettings={...state.socialSettings,...(response.data?.setting_value||{})};
       else if(key in state) state[key]=response.data||[];
     }
   }
 
-  function renderAll(){populateCourseSelects();renderDashboard();renderSignals();renderCharts();renderArticles();renderAnnouncements();renderBanners();renderCourses();renderSessions();renderResources();renderPayments();renderStudents();renderSupport();renderMethods();const p=state.payments.filter(x=>['received','under_review'].includes(x.status)).length;const pendingBadge=document.getElementById('pendingPaymentCount');if(pendingBadge)pendingBadge.textContent=p;window.dispatchEvent(new CustomEvent('24k:admin-base-updated',{detail:state}));}
+  function renderAll(){populateCourseSelects();renderDashboard();renderSignals();renderCharts();renderArticles();renderAnnouncements();renderBanners();renderCourses();renderSessions();renderResources();renderPayments();renderStudents();renderSupport();renderMethods();renderSocialSettings();const p=state.payments.filter(x=>['received','under_review'].includes(x.status)).length;const pendingBadge=document.getElementById('pendingPaymentCount');if(pendingBadge)pendingBadge.textContent=p;window.dispatchEvent(new CustomEvent('24k:admin-base-updated',{detail:state}));}
 
   function renderDashboard(){
     const students=state.profiles.filter(p=>p.role==='student');const pending=state.payments.filter(p=>['received','under_review'].includes(p.status));const approved=state.payments.filter(p=>p.status==='approved');const revenueTotals=approved.reduce((totals,p)=>{const currency=courseCurrency(p.course_id);totals[currency]=(totals[currency]||0)+Number(p.amount||0);return totals;},{});const revenueText=Object.keys(revenueTotals).length?Object.entries(revenueTotals).map(([currency,total])=>`${currency} ${Number(total).toLocaleString('en-US',{maximumFractionDigits:2})}`).join(' · '):'PKR 0';const activeCourses=state.courses.filter(c=>c.status==='active'&&c.is_published).length;const upcoming=state.sessions.filter(s=>new Date(s.starts_at)>=new Date()&&s.status!=='cancelled');
@@ -246,6 +248,48 @@
     document.getElementById('methodsBody').innerHTML=rows||`<tr><td colspan="7">${empty('No payment methods configured.','fa-credit-card')}</td></tr>`;
   }
 
+  function renderSocialSettings(){
+    const form=document.getElementById('socialSettingsForm');
+    if(!form||form.dataset.dirty==='1')return;
+    const values=state.socialSettings||{};
+    ['youtube','facebook','whatsapp_number','whatsapp_url','instagram','tiktok'].forEach(key=>{
+      if(form.elements[key])form.elements[key].value=String(values[key]||'');
+    });
+  }
+
+  async function saveSocialSettings(event){
+    event.preventDefault();
+    const form=event.currentTarget;
+    const button=form.querySelector('button[type="submit"]');
+    const valueOf=name=>String(form.elements[name]?.value||'').trim();
+    const settingValue={
+      youtube:valueOf('youtube'),
+      facebook:valueOf('facebook'),
+      whatsapp_number:valueOf('whatsapp_number'),
+      whatsapp_url:valueOf('whatsapp_url'),
+      instagram:valueOf('instagram'),
+      tiktok:valueOf('tiktok')
+    };
+    A.setLoading(button,true,'Saving...');
+    try{
+      const {error}=await A.supabase.from('platform_settings').upsert({
+        setting_key:'social_contacts',
+        setting_value:settingValue,
+        updated_by:state.profile?.id||null,
+        updated_at:new Date().toISOString()
+      },{onConflict:'setting_key'});
+      if(error)throw error;
+      state.socialSettings={...settingValue};
+      form.dataset.dirty='0';
+      A.toast('Social & contact settings saved.','success');
+    }catch(error){
+      console.error('[Admin social settings]',error);
+      A.toast(A.friendlyError(error,'Could not save social & contact settings.'),'error');
+    }finally{
+      A.setLoading(button,false);
+    }
+  }
+
   function populateCourseSelects(){const opts=state.courses.map(c=>`<option value="${c.id}">${A.escapeHtml(c.title)}</option>`).join('');document.getElementById('sessionCourseSelect').innerHTML=opts;const resourceSelect=document.getElementById('resourceCourseSelect');if(resourceSelect){resourceSelect.innerHTML=opts;updateResourceSessionOptions();}}
 
   function bindAnnouncementPreview(){
@@ -275,6 +319,9 @@
   function bindEvents(){
     prepareCourseSaveUi();
     bindAnnouncementPreview();
+    const socialSettingsForm=document.getElementById('socialSettingsForm');
+    socialSettingsForm?.addEventListener('input',()=>{socialSettingsForm.dataset.dirty='1';});
+    socialSettingsForm?.addEventListener('submit',saveSocialSettings);
     document.querySelectorAll('[data-toggle-form]').forEach(btn=>btn.addEventListener('click',()=>{const box=document.getElementById(btn.dataset.toggleForm);box?.classList.add('open');if(box?.classList.contains('app-modal'))box.setAttribute('aria-hidden','false');if(btn.dataset.toggleForm==='signalFormBox'&&!document.getElementById('signalForm').elements.id.value)resetSignalForm();if(btn.dataset.toggleForm==='chartFormBox'&&!document.getElementById('chartForm').elements.id.value)resetChartForm();if(btn.dataset.toggleForm==='articleFormBox'&&!document.getElementById('articleForm').elements.id.value){document.getElementById('articleForm').reset();const title=document.getElementById('articleFormTitle');if(title)title.textContent='Add Article';}if(btn.dataset.toggleForm==='announcementFormBox'&&!document.getElementById('announcementForm').elements.id.value){document.getElementById('announcementForm').reset();const title=document.getElementById('announcementFormTitle');if(title)title.textContent='New Announcement';}if(btn.dataset.toggleForm==='bannerFormBox'&&!document.getElementById('bannerForm').elements.id.value){document.getElementById('bannerForm').reset();document.getElementById('bannerForm').elements.existing_image_url.value='';const title=document.getElementById('bannerFormTitle');if(title)title.textContent='Add Banner';}if(btn.dataset.toggleForm==='courseFormBox'&&!document.getElementById('courseForm').elements.id.value){const title=document.getElementById('courseFormTitle');if(title)title.textContent='Add Course';}}));
     document.querySelectorAll('[data-cancel-form]').forEach(btn=>btn.addEventListener('click',()=>{const box=document.getElementById(btn.dataset.cancelForm);box?.classList.remove('open');if(box?.classList.contains('app-modal'))box.setAttribute('aria-hidden','true');box?.querySelector('form')?.reset();if(btn.dataset.cancelForm==='signalFormBox')resetSignalForm();if(btn.dataset.cancelForm==='chartFormBox')resetChartForm();if(btn.dataset.cancelForm==='courseFormBox'){const title=document.getElementById('courseFormTitle');if(title)title.textContent='Add Course';setCourseThumbnailPreview(null,'');}if(btn.dataset.cancelForm==='articleFormBox'){const title=document.getElementById('articleFormTitle');if(title)title.textContent='Add Article';}if(btn.dataset.cancelForm==='announcementFormBox'){const title=document.getElementById('announcementFormTitle');if(title)title.textContent='New Announcement';}if(btn.dataset.cancelForm==='bannerFormBox'){const f=document.getElementById('bannerForm');if(f?.elements.existing_image_url)f.elements.existing_image_url.value='';const title=document.getElementById('bannerFormTitle');if(title)title.textContent='Add Banner';}}));
     document.getElementById('resourceCourseSelect')?.addEventListener('change',updateResourceSessionOptions);document.getElementById('courseForm').elements.course_type.addEventListener('change',syncCourseTypeFields);syncCourseTypeFields();document.getElementById('addCourseSessionBtn').addEventListener('click',()=>{const editor=document.getElementById('courseSessionEditor'),count=editor.querySelectorAll('[data-course-session-row]').length;editor.insertAdjacentHTML('beforeend',courseSessionTemplate({},count));renumberCourseSessionRows();});document.getElementById('courseSessionEditor').addEventListener('click',e=>{const button=e.target.closest('[data-remove-course-session]');if(!button)return;const rows=document.querySelectorAll('[data-course-session-row]');if(rows.length===1)return A.toast('A course needs at least one class session.','warning');button.closest('[data-course-session-row]').remove();renumberCourseSessionRows();});document.getElementById('paymentStatusFilter').addEventListener('change',renderPayments);document.getElementById('paymentSearch').addEventListener('input',renderPayments);document.getElementById('paymentDateFrom')?.addEventListener('change',renderPayments);document.getElementById('paymentDateTo')?.addEventListener('change',renderPayments);document.getElementById('paymentFilterReset')?.addEventListener('click',()=>{const st=document.getElementById('paymentStatusFilter'),q=document.getElementById('paymentSearch'),df=document.getElementById('paymentDateFrom'),dt=document.getElementById('paymentDateTo');if(st)st.value='all';if(q)q.value='';if(df)df.value='';if(dt)dt.value='';renderPayments();});document.getElementById('adminAnnouncementSearch')?.addEventListener('input',renderAnnouncements);document.getElementById('adminAnnouncementPriority')?.addEventListener('change',renderAnnouncements);document.getElementById('adminAnnouncementStatus')?.addEventListener('change',renderAnnouncements);document.getElementById('adminAnnouncementSort')?.addEventListener('change',renderAnnouncements);document.getElementById('adminSignalSearch').addEventListener('input',renderSignals);document.querySelectorAll('[data-admin-signal-view]').forEach(btn=>btn.addEventListener('click',()=>{document.getElementById('adminSignalView').value=btn.dataset.adminSignalView;renderSignals();}));
