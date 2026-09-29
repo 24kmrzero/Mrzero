@@ -1,0 +1,182 @@
+/* 24K MR ZERO — My Clients Strong Readability v13.77
+   Desktop only. Visibly larger type while preserving admin-style row structure. */
+@media (min-width:901px){
+
+  /* Top command area: compact height, readable type */
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-clients-command h2{
+    font-size:27px!important;
+    line-height:1.05!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-clients-command p{
+    font-size:11px!important;
+    line-height:1.45!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-clients-kicker{
+    font-size:8.2px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-clients-live>b{
+    font-size:16px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-clients-live>small{
+    font-size:8px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-summary-card{
+    min-height:66px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-summary-card small{
+    font-size:8.5px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-summary-card b{
+    font-size:19px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-search{
+    height:42px!important;
+    min-height:42px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-search input{
+    height:39px!important;
+    font-size:10.5px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-filter-trigger{
+    height:42px!important;
+    font-size:9.2px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-status-tabs button{
+    min-height:31px!important;
+    font-size:8.8px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-filter-panel label>span{
+    font-size:8.5px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-filter-panel :is(select,button){
+    font-size:9.5px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-results-head small{
+    font-size:8.2px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-results-head b{
+    font-size:16px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-results-head>span{
+    font-size:8.2px!important;
+  }
+
+  /* One client = one comfortable admin-style row */
+  #teamApp:not(.hidden) [data-view-panel="clients"] .client-work-card.premium-client-card,
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-card{
+    grid-template-columns:minmax(260px,1fr) minmax(470px,1.55fr) minmax(410px,1.2fr)!important;
+    grid-template-rows:70px 56px!important;
+    min-height:126px!important;
+    padding:0 15px 0 17px!important;
+    column-gap:16px!important;
+  }
+
+  /* Identity */
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-head{
+    min-height:70px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-identity{
+    grid-template-columns:46px minmax(0,1fr)!important;
+    gap:11px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-identity .avatar{
+    width:46px!important;
+    height:46px!important;
+    font-size:12px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-identity b{
+    font-size:13.5px!important;
+    line-height:1.2!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-identity small{
+    font-size:9.8px!important;
+    line-height:1.35!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="clients"] .client-status-pill{
+    min-height:25px!important;
+    padding:0 9px!important;
+    font-size:8.7px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="clients"] .client-wa-icon{
+    width:33px!important;
+    height:33px!important;
+    font-size:11px!important;
+  }
+
+  /* Contact */
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-contact{
+    min-height:56px!important;
+    padding:6px 0 6px 57px!important;
+    gap:4px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-contact span{
+    min-height:18px!important;
+    font-size:10.5px!important;
+    line-height:1.4!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-contact i{
+    width:16px!important;
+    font-size:9px!important;
+  }
+
+  /* Course / assigned / follow-up */
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-info-grid{
+    min-height:126px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-info-grid>div{
+    min-height:126px!important;
+    padding:12px 14px!important;
+    gap:6px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-info-grid span{
+    font-size:8.8px!important;
+    line-height:1.2!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-info-grid b{
+    font-size:11.8px!important;
+    line-height:1.4!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-info-grid small{
+    font-size:10px!important;
+    line-height:1.4!important;
+  }
+
+  /* Status / follow-up */
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-controls{
+    min-height:70px!important;
+    grid-template-columns:minmax(132px,.72fr) minmax(205px,1.28fr)!important;
+    gap:10px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-controls label>span{
+    font-size:8.8px!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-controls :is(select,input){
+    height:39px!important;
+    font-size:10.8px!important;
+    padding:0 11px!important;
+  }
+
+  /* Note / actions */
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-footer{
+    min-height:56px!important;
+    padding:8px 0!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="clients"] .client-note-preview{
+    font-size:9.8px!important;
+    line-height:1.35!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="clients"] .client-actions button{
+    min-height:34px!important;
+    height:34px!important;
+    padding:0 10px!important;
+    font-size:9.2px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-card-list{
+    gap:10px!important;
+  }
+}
+/* Desktop only. */
