@@ -1528,7 +1528,7 @@
       renderCharts();
       if (chartDateFilter === 'custom') {
         const input = document.getElementById('chartCustomDate');
-        input?.showPicker?.();
+        try { input?.showPicker?.(); } catch (error) {}
         input?.focus?.();
       }
     }));
