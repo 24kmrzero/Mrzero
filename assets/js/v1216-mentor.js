@@ -1088,7 +1088,7 @@ function renderArticles(){
           <div class="admin-mentor-card-foot">
             <span class="admin-mentor-state ${live?'live':'draft'}"><i class="fa-solid ${live?'fa-circle-check':'fa-pen'}"></i> ${live?'Live':'Draft'}</span>
             <div class="admin-mentor-actions">
-              <button type="button" data-edit-article="${x.id}"><i class="fa-solid fa-pen"></i><span>Edit</span></button>
+              <button type="button" data-view-article="${x.id}"><i class="fa-regular fa-eye"></i><span>View</span></button>\n              <button type="button" data-edit-article="${x.id}"><i class="fa-solid fa-pen"></i><span>Edit</span></button>
               <button type="button" class="danger" data-delete-article="${x.id}" title="Delete"><i class="fa-regular fa-trash-can"></i></button>
             </div>
           </div>
