@@ -1526,3 +1526,24 @@
     background:#171b21!important;
   }
 }
+
+
+/* v14.76 — all Premium Access marked icon boxes gold in dark
+   Paid Access, Broker Access and their arrow boxes use one consistent 24K gold tile. */
+@media (min-width:901px){
+  html[data-theme="dark"] .student-page #p-premium .premium-path-card .ppc-icon,
+  html[data-theme="dark"] .student-page #p-premium .premium-path-card.broker .ppc-icon,
+  html[data-theme="dark"] .student-page #p-premium .premium-path-card .ppc-arrow{
+    border:1px solid #e2ad12!important;
+    background:linear-gradient(145deg,#f6cd3e,#d69f05)!important;
+    color:#201800!important;
+    box-shadow:0 6px 14px rgba(214,159,5,.15)!important;
+  }
+
+  html[data-theme="dark"] .student-page #p-premium .premium-path-card:hover .ppc-icon,
+  html[data-theme="dark"] .student-page #p-premium .premium-path-card:hover .ppc-arrow{
+    border-color:#f0c535!important;
+    background:linear-gradient(145deg,#ffda55,#e1a90b)!important;
+    color:#171100!important;
+  }
+}
