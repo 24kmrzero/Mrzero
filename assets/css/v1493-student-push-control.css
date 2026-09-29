@@ -435,3 +435,60 @@ html[data-theme="dark"] .student-push-footnote{color:#7f8a95}
 .student-page .app-side .premium-side-nav .student-push-nav>i{
   color:#efbd22!important;
 }
+
+
+/* v14.95 — Match notification row with the rest of the Student sidebar */
+.student-page .app-side .premium-side-nav .student-push-nav,
+.student-page .app-side .premium-side-nav .student-push-nav.is-on{
+  background:transparent!important;
+  border-color:transparent!important;
+  box-shadow:none!important;
+  color:#f3f5f7!important;
+}
+.student-page .app-side .premium-side-nav .student-push-nav:hover{
+  background:rgba(255,255,255,.035)!important;
+  border-color:rgba(255,255,255,.06)!important;
+}
+.student-page .app-side .premium-side-nav .student-push-nav>i{
+  background:#171d28!important;
+  color:#d8dde5!important;
+  border:1px solid rgba(255,255,255,.035)!important;
+}
+.student-page .app-side .premium-side-nav .student-push-nav.is-on>i{
+  color:#f1bd20!important;
+}
+.student-page .app-side .premium-side-nav .student-push-nav .student-push-nav-copy b,
+.student-page .app-side .premium-side-nav .student-push-nav.is-on .student-push-nav-copy b{
+  color:#f5f7fa!important;
+  opacity:1!important;
+  text-shadow:none!important;
+  font-weight:800!important;
+}
+.student-page .app-side .premium-side-nav .student-push-nav .student-push-nav-copy small{
+  color:#9ca6b2!important;
+  opacity:1!important;
+}
+.student-page .app-side .premium-side-nav .student-push-nav.is-on .student-push-nav-copy small{
+  color:#f1bd20!important;
+  opacity:1!important;
+  font-weight:800!important;
+}
+
+/* Keep all mobile app toasts above the fixed 24K navigator. */
+@media(max-width:760px){
+  .student-page .app-toast,
+  body.student-page .app-toast,
+  #appToast{
+    left:12px!important;
+    right:12px!important;
+    bottom:calc(92px + env(safe-area-inset-bottom))!important;
+    max-width:none!important;
+    width:auto!important;
+    z-index:2147483100!important;
+    border-radius:12px!important;
+    text-align:center!important;
+    font-size:10.5px!important;
+    line-height:1.35!important;
+    padding:10px 12px!important;
+  }
+}
