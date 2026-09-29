@@ -1,0 +1,72 @@
+/* 24K MR ZERO — in-app chart viewer */
+.mentor-chart-viewer-modal{
+  padding:18px;
+}
+.mentor-chart-viewer-card{
+  width:min(1180px,96vw)!important;
+  max-height:92dvh!important;
+  overflow:hidden!important;
+  background:#0b0f16!important;
+  border:1px solid rgba(201,154,5,.26)!important;
+  box-shadow:0 28px 90px rgba(0,0,0,.55)!important;
+}
+.mentor-chart-viewer-head{
+  background:#0c1119!important;
+  border-bottom:1px solid rgba(201,154,5,.18)!important;
+}
+.mentor-chart-viewer-head b{color:#f7f8fa!important}
+.mentor-chart-viewer-head small{color:#b7bec8!important}
+.mentor-chart-viewer-body{
+  min-height:0;
+  max-height:calc(92dvh - 72px);
+  overflow:auto;
+  display:grid;
+  place-items:center;
+  padding:14px;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(201,154,5,.08),transparent 30%),
+    #070a0f;
+}
+.mentor-chart-viewer-body img{
+  display:block;
+  max-width:100%;
+  width:auto;
+  height:auto;
+  max-height:none;
+  object-fit:contain;
+  border-radius:12px;
+  box-shadow:0 18px 55px rgba(0,0,0,.38);
+}
+html[data-theme="light"] .mentor-chart-viewer-card{
+  background:#fffdf8!important;
+  border-color:rgba(201,154,5,.24)!important;
+}
+html[data-theme="light"] .mentor-chart-viewer-head{
+  background:#fffaf0!important;
+}
+html[data-theme="light"] .mentor-chart-viewer-head b{color:#171717!important}
+html[data-theme="light"] .mentor-chart-viewer-head small{color:#6d665c!important}
+html[data-theme="light"] .mentor-chart-viewer-body{
+  background:#f8f3e8!important;
+}
+@media(max-width:760px){
+  .mentor-chart-viewer-modal{padding:0!important;align-items:stretch!important}
+  .mentor-chart-viewer-card{
+    width:100vw!important;
+    height:100dvh!important;
+    max-height:100dvh!important;
+    border-radius:0!important;
+    border:0!important;
+  }
+  .mentor-chart-viewer-body{
+    max-height:calc(100dvh - 64px)!important;
+    min-height:calc(100dvh - 64px)!important;
+    padding:8px!important;
+    align-items:start;
+  }
+  .mentor-chart-viewer-body img{
+    width:100%!important;
+    max-width:100%!important;
+    border-radius:8px!important;
+  }
+}
