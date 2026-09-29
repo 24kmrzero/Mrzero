@@ -1,0 +1,1408 @@
+/* 24K MR ZERO — Student Premium Access VIP desktop flow v14.68
+   Premium page + paid/broker states + verification/payment/success modals.
+   Desktop only; existing mobile flow is intentionally preserved. */
+
+@media (min-width:901px){
+  .student-page #p-premium{
+    --pa-gold:#d6a10b;
+    --pa-gold-2:#f0c432;
+    --pa-ink:#20262d;
+    --pa-muted:#7b8590;
+    --pa-line:#e2e5e8;
+    --pa-soft:#f8f8f7;
+    --pa-green:#0da36f;
+    --pa-red:#df5268;
+    padding-bottom:30px!important;
+  }
+
+  /* ===== premium page shell ===== */
+  .student-page #p-premium .premium-page-shell{
+    display:grid!important;
+    gap:14px!important;
+  }
+
+  .student-page #p-premium .premium-page-hero,
+  .student-page #p-premium .premium-page-flow{
+    position:relative!important;
+    overflow:hidden!important;
+    border:1px solid var(--pa-line)!important;
+    border-radius:18px!important;
+    background:#fff!important;
+    box-shadow:0 14px 34px rgba(18,24,32,.045)!important;
+  }
+
+  .student-page #p-premium .premium-page-hero::before,
+  .student-page #p-premium .premium-page-flow::before{
+    content:""!important;
+    position:absolute!important;
+    left:0!important;top:0!important;right:0!important;
+    height:2px!important;
+    background:linear-gradient(90deg,#9f7300,#efc63e 46%,#9f7300)!important;
+    z-index:2!important;
+  }
+
+  .student-page #p-premium .premium-page-hero{
+    padding:19px 20px 18px!important;
+    background:
+      radial-gradient(440px 180px at 100% 0%,rgba(214,161,11,.065),transparent 75%),
+      #fff!important;
+  }
+
+  .student-page #p-premium .premium-page-flow{
+    padding:18px 20px 20px!important;
+  }
+
+  .student-page #p-premium .premium-page-hero-copy{
+    display:flex!important;
+    align-items:center!important;
+    gap:12px!important;
+  }
+
+  .student-page #p-premium .premium-page-crown{
+    width:44px!important;height:44px!important;
+    border-radius:13px!important;
+    font-size:16px!important;
+    background:linear-gradient(145deg,#f3c831,#d6a10b)!important;
+    box-shadow:0 8px 18px rgba(162,116,0,.12)!important;
+  }
+
+  .student-page #p-premium .premium-page-hero-copy small,
+  .student-page #p-premium .premium-page-section-head small{
+    color:#9d7406!important;
+    font-size:7.5px!important;
+    line-height:1!important;
+    font-weight:950!important;
+    letter-spacing:.12em!important;
+  }
+
+  .student-page #p-premium .premium-page-hero-copy h2{
+    margin:3px 0 3px!important;
+    color:var(--pa-ink)!important;
+    font-size:24px!important;
+    line-height:1.08!important;
+    font-weight:900!important;
+    letter-spacing:-.035em!important;
+  }
+
+  .student-page #p-premium .premium-page-hero-copy p{
+    margin:0!important;
+    color:var(--pa-muted)!important;
+    font-size:9.5px!important;
+    line-height:1.4!important;
+  }
+
+  /* ===== status card ===== */
+  .student-page #p-premium .premium-page-status{
+    position:relative!important;
+    margin-top:14px!important;
+    min-height:72px!important;
+    padding:12px 13px!important;
+    grid-template-columns:38px minmax(0,1fr) auto!important;
+    gap:10px!important;
+    border:1px solid #e6d9aa!important;
+    border-radius:13px!important;
+    background:
+      linear-gradient(90deg,rgba(214,161,11,.055),rgba(214,161,11,.015))!important;
+  }
+
+  .student-page #p-premium .premium-page-status .pps-icon{
+    width:38px!important;height:38px!important;
+    border-radius:11px!important;
+    background:#fff6d9!important;
+    color:#9f7606!important;
+    font-size:13px!important;
+  }
+
+  .student-page #p-premium .premium-page-status>div small{
+    font-size:7px!important;
+    color:#96720e!important;
+  }
+
+  .student-page #p-premium .premium-page-status>div b{
+    margin-top:2px!important;
+    color:#2a3037!important;
+    font-size:13px!important;
+    line-height:1.2!important;
+  }
+
+  .student-page #p-premium .premium-page-status>div p{
+    margin-top:3px!important;
+    color:#7a8490!important;
+    font-size:8.5px!important;
+    line-height:1.35!important;
+  }
+
+  .student-page #p-premium .pps-days{
+    display:inline-flex!important;
+    min-height:22px!important;
+    align-items:center!important;
+    padding:0 7px!important;
+    margin-right:5px!important;
+    border-radius:999px!important;
+    background:#f3c631!important;
+    color:#342500!important;
+    font-size:7px!important;
+    font-weight:950!important;
+  }
+
+  .student-page #p-premium .pps-until{
+    color:#7a8490!important;
+  }
+
+  .student-page #p-premium .pps-state{
+    min-height:26px!important;
+    padding:0 9px!important;
+    font-size:7px!important;
+    letter-spacing:.05em!important;
+  }
+
+  /* ===== benefits rail ===== */
+  .student-page #p-premium .premium-page-benefits{
+    margin-top:9px!important;
+    gap:7px!important;
+  }
+
+  .student-page #p-premium .premium-page-benefits span{
+    min-height:54px!important;
+    padding:8px 10px!important;
+    grid-template-columns:26px minmax(0,1fr)!important;
+    column-gap:7px!important;
+    border-color:#e3e6e9!important;
+    border-radius:11px!important;
+    background:#f9fafb!important;
+  }
+
+  .student-page #p-premium .premium-page-benefits i{
+    width:26px!important;height:26px!important;
+    border-radius:8px!important;
+    background:#fff4cc!important;
+    color:#a67b04!important;
+    font-size:10px!important;
+  }
+
+  .student-page #p-premium .premium-page-benefits b{
+    color:#313840!important;
+    font-size:9.5px!important;
+  }
+
+  .student-page #p-premium .premium-page-benefits small{
+    margin-top:1px!important;
+    color:#8a939d!important;
+    font-size:7px!important;
+  }
+
+  /* ===== flow section heading ===== */
+  .student-page #p-premium .premium-page-section-head{
+    display:flex!important;
+    align-items:flex-start!important;
+    gap:10px!important;
+    margin-bottom:13px!important;
+  }
+
+  .student-page #p-premium .premium-page-section-head>div{
+    min-width:0!important;
+  }
+
+  .student-page #p-premium .premium-page-section-head h3{
+    margin:3px 0 4px!important;
+    color:#232a31!important;
+    font-size:18px!important;
+    line-height:1.15!important;
+    font-weight:900!important;
+    letter-spacing:-.025em!important;
+  }
+
+  .student-page #p-premium .premium-page-section-head p{
+    margin:0!important;
+    color:#7b8590!important;
+    font-size:9px!important;
+    line-height:1.45!important;
+  }
+
+  .student-page #p-premium .premium-page-back{
+    min-height:34px!important;
+    height:34px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    gap:6px!important;
+    padding:0 10px!important;
+    margin:0 2px 0 0!important;
+    border:1px solid #e0e3e6!important;
+    border-radius:9px!important;
+    background:#f8f9fa!important;
+    color:#69737e!important;
+    font-size:8px!important;
+    font-weight:900!important;
+    white-space:nowrap!important;
+  }
+
+  .student-page #p-premium .premium-page-back:hover{
+    border-color:#ddc36a!important;
+    color:#8d6800!important;
+    background:#fffaf0!important;
+  }
+
+  /* ===== home access paths ===== */
+  .student-page #p-premium .premium-path-grid{
+    gap:10px!important;
+  }
+
+  .student-page #p-premium .premium-path-card{
+    position:relative!important;
+    min-height:94px!important;
+    padding:12px 13px!important;
+    grid-template-columns:40px minmax(0,1fr) 28px!important;
+    gap:10px!important;
+    border:1px solid #e1e4e7!important;
+    border-radius:13px!important;
+    background:#fafafa!important;
+    box-shadow:0 5px 16px rgba(18,24,32,.025)!important;
+    transition:.16s ease!important;
+  }
+
+  .student-page #p-premium .premium-path-card:hover{
+    transform:translateY(-1px)!important;
+    border-color:#dcc469!important;
+    background:#fffdf6!important;
+    box-shadow:0 10px 24px rgba(18,24,32,.055)!important;
+  }
+
+  .student-page #p-premium .ppc-icon{
+    width:40px!important;height:40px!important;
+    border-radius:11px!important;
+    font-size:13px!important;
+    background:#fff4cc!important;
+  }
+
+  .student-page #p-premium .premium-path-card.broker .ppc-icon{
+    background:#eaf9f4!important;
+    color:#0b9467!important;
+  }
+
+  .student-page #p-premium .premium-path-card small{
+    font-size:7px!important;
+  }
+
+  .student-page #p-premium .premium-path-card h4{
+    margin:3px 0!important;
+    color:#2a3037!important;
+    font-size:13px!important;
+    font-weight:900!important;
+  }
+
+  .student-page #p-premium .premium-path-card p{
+    color:#818a94!important;
+    font-size:8.3px!important;
+    line-height:1.4!important;
+  }
+
+  .student-page #p-premium .ppc-arrow{
+    width:28px!important;height:28px!important;
+    border:1px solid #ebe3c9!important;
+    border-radius:9px!important;
+    background:#fff!important;
+    color:#a47a06!important;
+    font-size:9px!important;
+  }
+
+  /* ===== paid state ===== */
+  .student-page #p-premium .premium-paid-summary{
+    min-height:76px!important;
+    display:grid!important;
+    grid-template-columns:42px minmax(0,1fr) auto!important;
+    align-items:center!important;
+    gap:10px!important;
+    padding:12px!important;
+    margin-bottom:10px!important;
+    border:1px solid #e4d6a7!important;
+    border-radius:12px!important;
+    background:#fffaf0!important;
+  }
+
+  .student-page #p-premium .pps-plan-icon{
+    width:42px!important;height:42px!important;
+    display:grid!important;
+    place-items:center!important;
+    border-radius:11px!important;
+    background:linear-gradient(145deg,#f1c735,#d6a10b)!important;
+    color:#211900!important;
+    font-size:14px!important;
+  }
+
+  .student-page #p-premium .premium-paid-summary small{
+    color:#95700c!important;
+    font-size:7px!important;
+    font-weight:950!important;
+    letter-spacing:.08em!important;
+  }
+
+  .student-page #p-premium .premium-paid-summary h4{
+    margin:3px 0!important;
+    color:#282f36!important;
+    font-size:13px!important;
+  }
+
+  .student-page #p-premium .premium-paid-summary p{
+    margin:0!important;
+    color:#7a8490!important;
+    font-size:8px!important;
+  }
+
+  .student-page #p-premium .pps-duration{
+    min-height:26px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    padding:0 9px!important;
+    border-radius:999px!important;
+    background:#f2c630!important;
+    color:#342700!important;
+    font-size:7px!important;
+    font-weight:950!important;
+  }
+
+  .student-page #p-premium .premium-payment-grid{
+    gap:9px!important;
+  }
+
+  .student-page #p-premium .premium-action-card{
+    min-height:76px!important;
+    grid-template-columns:38px minmax(0,1fr) 18px!important;
+    gap:9px!important;
+    padding:11px 12px!important;
+    border:1px solid #e0e4e7!important;
+    border-radius:12px!important;
+    background:#fafafa!important;
+    transition:.16s ease!important;
+  }
+
+  .student-page #p-premium .premium-action-card:not(:disabled):hover{
+    border-color:#dbc365!important;
+    background:#fffdf6!important;
+    transform:translateY(-1px)!important;
+  }
+
+  .student-page #p-premium .premium-action-card>span{
+    width:38px!important;height:38px!important;
+    border-radius:10px!important;
+    background:#fff4cf!important;
+    color:#9f7605!important;
+    font-size:12px!important;
+  }
+
+  .student-page #p-premium .premium-action-card div>small{
+    display:block!important;
+    color:#917018!important;
+    font-size:6.5px!important;
+    font-weight:950!important;
+    letter-spacing:.08em!important;
+  }
+
+  .student-page #p-premium .premium-action-card b{
+    color:#30373f!important;
+    font-size:11px!important;
+  }
+
+  .student-page #p-premium .premium-action-card p{
+    margin:2px 0 0!important;
+    color:#7d8791!important;
+    font-size:8px!important;
+  }
+
+  .student-page #p-premium .premium-price-pending,
+  .student-page #p-premium .premium-page-hint{
+    min-height:54px!important;
+    display:flex!important;
+    align-items:center!important;
+    gap:9px!important;
+    padding:10px 11px!important;
+    margin:0 0 10px!important;
+    border:1px solid #eadcae!important;
+    border-radius:11px!important;
+    background:#fffaf0!important;
+    color:#74643b!important;
+  }
+
+  .student-page #p-premium .premium-price-pending i,
+  .student-page #p-premium .premium-page-hint i{
+    color:#aa7d03!important;
+  }
+
+  .student-page #p-premium .premium-price-pending b{
+    display:block!important;
+    color:#4f462e!important;
+    font-size:9.5px!important;
+  }
+
+  .student-page #p-premium .premium-price-pending p{
+    margin:2px 0 0!important;
+    font-size:8px!important;
+    line-height:1.4!important;
+  }
+
+  /* ===== pending payment state ===== */
+  .student-page #p-premium .premium-pending-payment-card{
+    overflow:hidden!important;
+    border:1px solid #e3d6aa!important;
+    border-radius:13px!important;
+    background:#fff!important;
+    box-shadow:0 8px 22px rgba(18,24,32,.035)!important;
+  }
+
+  .student-page #p-premium .pppc-top{
+    min-height:78px!important;
+    display:grid!important;
+    grid-template-columns:42px minmax(0,1fr) auto!important;
+    align-items:center!important;
+    gap:10px!important;
+    padding:12px!important;
+    border-bottom:1px solid #eee8d7!important;
+    background:#fffaf0!important;
+  }
+
+  .student-page #p-premium .pppc-icon{
+    width:42px!important;height:42px!important;
+    display:grid!important;
+    place-items:center!important;
+    border-radius:11px!important;
+    background:#fff0b9!important;
+    color:#9b7100!important;
+    font-size:14px!important;
+  }
+
+  .student-page #p-premium .pppc-top small{
+    color:#9d770c!important;
+    font-size:6.5px!important;
+    font-weight:950!important;
+    letter-spacing:.08em!important;
+  }
+
+  .student-page #p-premium .pppc-top h4{
+    margin:2px 0!important;
+    color:#2b3239!important;
+    font-size:13px!important;
+  }
+
+  .student-page #p-premium .pppc-top p{
+    margin:0!important;
+    color:#7a8490!important;
+    font-size:8px!important;
+  }
+
+  .student-page #p-premium .pppc-badge{
+    min-height:25px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    padding:0 8px!important;
+    border-radius:999px!important;
+    background:#f3c632!important;
+    color:#342600!important;
+    font-size:6.5px!important;
+    font-weight:950!important;
+  }
+
+  .student-page #p-premium .pppc-meta{
+    display:grid!important;
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    gap:0!important;
+    padding:0 12px!important;
+  }
+
+  .student-page #p-premium .pppc-meta>span{
+    min-height:58px!important;
+    display:grid!important;
+    align-content:center!important;
+    gap:3px!important;
+    padding:9px 11px!important;
+    border-right:1px solid #eceff1!important;
+  }
+
+  .student-page #p-premium .pppc-meta>span:last-child{
+    border-right:0!important;
+  }
+
+  .student-page #p-premium .pppc-meta small{
+    color:#939ba4!important;
+    font-size:6px!important;
+    font-weight:900!important;
+    letter-spacing:.08em!important;
+  }
+
+  .student-page #p-premium .pppc-meta b{
+    color:#343b43!important;
+    font-size:9px!important;
+    line-height:1.3!important;
+  }
+
+  .student-page #p-premium .pppc-note,
+  .student-page #p-premium .pppc-test{
+    min-height:38px!important;
+    display:flex!important;
+    align-items:center!important;
+    gap:7px!important;
+    padding:8px 12px!important;
+    border-top:1px solid #eceff1!important;
+    color:#68727d!important;
+    font-size:8px!important;
+  }
+
+  .student-page #p-premium .pppc-note i{
+    color:#0b9a69!important;
+  }
+
+  .student-page #p-premium .pppc-test{
+    color:#8a6807!important;
+    background:#fffaf0!important;
+  }
+
+  /* ===== broker state ===== */
+  .student-page #p-premium .premium-broker-status{
+    min-height:50px!important;
+    padding:9px 11px!important;
+    border:1px solid #e2e5e8!important;
+    border-radius:10px!important;
+    background:#f8f9fa!important;
+  }
+
+  .student-page #p-premium .premium-broker-status.ok{
+    border-color:rgba(13,163,111,.18)!important;
+    background:rgba(13,163,111,.045)!important;
+  }
+
+  .student-page #p-premium .premium-broker-status.bad{
+    border-color:rgba(223,82,104,.17)!important;
+    background:rgba(223,82,104,.04)!important;
+  }
+
+  .student-page #p-premium .premium-broker-status.pending{
+    border-color:#e4d7a8!important;
+    background:#fffaf0!important;
+  }
+
+  .student-page #p-premium .premium-broker-grid{
+    gap:8px!important;
+  }
+
+  .student-page #p-premium .premium-broker-grid button{
+    min-height:66px!important;
+    border:1px solid #e0e4e7!important;
+    border-radius:11px!important;
+    background:#fafafa!important;
+    color:#343b43!important;
+    font-size:9px!important;
+    transition:.15s ease!important;
+  }
+
+  .student-page #p-premium .premium-broker-grid button:hover,
+  .student-page #p-premium .premium-broker-grid button.is-active{
+    border-color:#d9bd5d!important;
+    background:#fff9e7!important;
+  }
+
+  .student-page #p-premium .premium-broker-grid button i{
+    color:#a57a04!important;
+    font-size:13px!important;
+  }
+
+  .student-page #p-premium .premium-account-mode-grid{
+    gap:8px!important;
+  }
+
+  .student-page #p-premium .premium-account-mode-grid button{
+    min-height:72px!important;
+    padding:10px!important;
+    grid-template-columns:34px minmax(0,1fr)!important;
+    border:1px solid #e0e4e7!important;
+    border-radius:11px!important;
+    background:#fafafa!important;
+    transition:.15s ease!important;
+  }
+
+  .student-page #p-premium .premium-account-mode-grid button:hover,
+  .student-page #p-premium .premium-account-mode-grid button.is-active{
+    border-color:#d9bd5d!important;
+    background:#fff9e7!important;
+  }
+
+  .student-page #p-premium .premium-account-mode-grid button>span{
+    width:34px!important;height:34px!important;
+    border-radius:9px!important;
+    background:#fff3c9!important;
+    color:#a37a05!important;
+  }
+
+  .student-page #p-premium .premium-account-mode-grid b{
+    color:#333a42!important;
+    font-size:10px!important;
+  }
+
+  .student-page #p-premium .premium-account-mode-grid small{
+    color:#808a95!important;
+    font-size:7.5px!important;
+    line-height:1.35!important;
+  }
+
+  .student-page #p-premium .premium-broker-guide{
+    margin-top:10px!important;
+    padding:12px!important;
+    border:1px solid #e2e5e8!important;
+    border-radius:11px!important;
+    background:#f9fafb!important;
+  }
+
+  .student-page #p-premium .premium-broker-guide>small{
+    color:#9a7408!important;
+    font-size:6.5px!important;
+    font-weight:950!important;
+    letter-spacing:.08em!important;
+  }
+
+  .student-page #p-premium .premium-broker-guide h4{
+    margin:4px 0 6px!important;
+    color:#30373e!important;
+    font-size:11px!important;
+  }
+
+  .student-page #p-premium .premium-broker-instructions{
+    margin:0!important;
+    padding-left:20px!important;
+    color:#707a85!important;
+    font-size:8.5px!important;
+    line-height:1.55!important;
+  }
+
+  .student-page #p-premium .premium-partner-link{
+    min-height:58px!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) auto auto!important;
+    align-items:center!important;
+    gap:8px!important;
+    margin-top:9px!important;
+    padding:9px 10px!important;
+    border:1px solid #e2e5e8!important;
+    border-radius:11px!important;
+    background:#fff!important;
+  }
+
+  .student-page #p-premium .premium-partner-link small{
+    color:#929ba5!important;
+    font-size:6px!important;
+    font-weight:900!important;
+    letter-spacing:.08em!important;
+  }
+
+  .student-page #p-premium .premium-partner-link b{
+    display:block!important;
+    margin-top:2px!important;
+    overflow:hidden!important;
+    color:#384049!important;
+    font-size:8px!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+  }
+
+  .student-page #p-premium .premium-partner-link .app-btn,
+  .student-page #p-premium .premium-verify-btn,
+  .student-page #p-premium .premium-use-broker{
+    min-height:34px!important;
+    height:34px!important;
+    padding:0 10px!important;
+    border-radius:8px!important;
+    font-size:8px!important;
+  }
+
+  .student-page #p-premium .premium-verify-btn{
+    margin-top:9px!important;
+  }
+
+  /* ===================================================================
+     Premium-related modals
+     =================================================================== */
+  .student-page :is(#premiumAccessModal,#ibVerificationModal,#premiumBankModal,#premiumUsdtModal,#premiumPaymentSuccessModal){
+    padding:28px!important;
+    background:rgba(10,14,19,.56)!important;
+    backdrop-filter:blur(7px)!important;
+    -webkit-backdrop-filter:blur(7px)!important;
+  }
+
+  .student-page :is(#premiumAccessModal,#ibVerificationModal,#premiumBankModal,#premiumUsdtModal,#premiumPaymentSuccessModal) .app-modal-card{
+    position:relative!important;
+    display:grid!important;
+    grid-template-rows:auto minmax(0,1fr) auto!important;
+    min-height:0!important;
+    max-height:88vh!important;
+    overflow:hidden!important;
+    border:1px solid #dfe2e5!important;
+    border-radius:19px!important;
+    background:#fff!important;
+    box-shadow:0 30px 88px rgba(18,24,32,.26)!important;
+  }
+
+  .student-page #premiumAccessModal .app-modal-card,
+  .student-page #ibVerificationModal .app-modal-card{
+    width:min(780px,94vw)!important;
+    max-width:780px!important;
+  }
+
+  .student-page :is(#premiumBankModal,#premiumUsdtModal) .app-modal-card{
+    width:min(640px,94vw)!important;
+    max-width:640px!important;
+  }
+
+  .student-page #premiumPaymentSuccessModal .app-modal-card{
+    width:min(520px,92vw)!important;
+    max-width:520px!important;
+  }
+
+  .student-page :is(#premiumAccessModal,#ibVerificationModal,#premiumBankModal,#premiumUsdtModal,#premiumPaymentSuccessModal) .app-modal-card::before{
+    content:""!important;
+    position:absolute!important;
+    left:0!important;top:0!important;right:0!important;
+    height:3px!important;
+    z-index:8!important;
+    background:linear-gradient(90deg,#a27600,#efc63b 50%,#9b7000)!important;
+  }
+
+  .student-page :is(#premiumAccessModal,#ibVerificationModal,#premiumBankModal,#premiumUsdtModal,#premiumPaymentSuccessModal) .app-modal-head{
+    min-height:74px!important;
+    padding:14px 17px!important;
+    border-bottom:1px solid #e7eaed!important;
+    background:
+      radial-gradient(260px 90px at 100% 0%,rgba(214,161,11,.07),transparent 72%),
+      #fff!important;
+  }
+
+  .student-page :is(#premiumAccessModal,#ibVerificationModal,#premiumBankModal,#premiumUsdtModal,#premiumPaymentSuccessModal) .app-modal-head h3{
+    margin:0!important;
+    color:#20262d!important;
+    font-size:17px!important;
+    line-height:1.18!important;
+    font-weight:900!important;
+    letter-spacing:-.025em!important;
+  }
+
+  .student-page #premiumAccessModal .premium-kicker{
+    display:block!important;
+    margin-bottom:3px!important;
+    color:#9c7407!important;
+    font-size:6.5px!important;
+    font-weight:950!important;
+    letter-spacing:.12em!important;
+  }
+
+  .student-page :is(#premiumAccessModal,#ibVerificationModal,#premiumBankModal,#premiumUsdtModal,#premiumPaymentSuccessModal) .app-modal-head .muted{
+    display:block!important;
+    margin-top:4px!important;
+    color:#7b8590!important;
+    font-size:8.5px!important;
+  }
+
+  .student-page :is(#premiumAccessModal,#ibVerificationModal,#premiumBankModal,#premiumUsdtModal,#premiumPaymentSuccessModal) .modal-close{
+    width:36px!important;height:36px!important;
+    display:grid!important;
+    place-items:center!important;
+    border:1px solid #e0d4ad!important;
+    border-radius:10px!important;
+    background:#fff8e7!important;
+    color:#735b1b!important;
+    font-size:11px!important;
+  }
+
+  .student-page :is(#premiumAccessModal,#ibVerificationModal,#premiumBankModal,#premiumUsdtModal,#premiumPaymentSuccessModal) .app-modal-body{
+    min-height:0!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    padding:15px 17px!important;
+    background:#fff!important;
+    scrollbar-width:thin!important;
+    scrollbar-color:#d4b858 transparent!important;
+  }
+
+  .student-page :is(#premiumAccessModal,#ibVerificationModal,#premiumBankModal,#premiumUsdtModal,#premiumPaymentSuccessModal) .app-modal-foot{
+    min-height:60px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-end!important;
+    gap:8px!important;
+    padding:11px 17px!important;
+    border-top:1px solid #e6e9ec!important;
+    background:#fffaf1!important;
+    box-shadow:0 -8px 20px rgba(18,24,32,.025)!important;
+  }
+
+  .student-page :is(#premiumAccessModal,#ibVerificationModal,#premiumBankModal,#premiumUsdtModal,#premiumPaymentSuccessModal) .app-modal-foot .app-btn{
+    min-height:36px!important;
+    height:36px!important;
+    padding:0 12px!important;
+    border-radius:8px!important;
+    font-size:8px!important;
+    font-weight:900!important;
+  }
+
+  /* premium access chooser modal */
+  .student-page #premiumAccessModal .all-access-modal-body{
+    display:grid!important;
+    gap:10px!important;
+  }
+
+  .student-page #premiumAccessModal #allAccessCurrentStatus{
+    min-height:52px!important;
+    display:flex!important;
+    align-items:center!important;
+    padding:9px 11px!important;
+    border:1px solid #e5d7a9!important;
+    border-radius:11px!important;
+    background:#fffaf0!important;
+    color:#4c4533!important;
+    font-size:8px!important;
+    line-height:1.4!important;
+  }
+
+  .student-page #premiumAccessModal #allAccessCurrentStatus b{
+    color:#312b1d!important;
+    font-size:10px!important;
+  }
+
+  .student-page #premiumAccessModal .premium-benefit-strip{
+    display:grid!important;
+    grid-template-columns:repeat(3,1fr)!important;
+    gap:6px!important;
+  }
+
+  .student-page #premiumAccessModal .premium-benefit-strip span{
+    min-height:38px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:6px!important;
+    border:1px solid #e2e5e8!important;
+    border-radius:9px!important;
+    background:#f8f9fa!important;
+    color:#69737e!important;
+    font-size:8px!important;
+    font-weight:850!important;
+  }
+
+  .student-page #premiumAccessModal .premium-benefit-strip i{
+    color:#a47a06!important;
+  }
+
+  .student-page #premiumAccessModal .access-step-title{
+    margin:2px 0 3px!important;
+    color:#262d34!important;
+    font-size:14px!important;
+  }
+
+  .student-page #premiumAccessModal .access-step-copy{
+    margin:0 0 9px!important;
+    color:#7b8590!important;
+    font-size:8.5px!important;
+  }
+
+  .student-page #premiumAccessModal .access-choice-grid{
+    grid-template-columns:1fr 1fr!important;
+    gap:8px!important;
+  }
+
+  .student-page #premiumAccessModal .access-choice-card{
+    min-height:74px!important;
+    display:grid!important;
+    grid-template-columns:36px minmax(0,1fr) 18px!important;
+    align-items:center!important;
+    gap:8px!important;
+    padding:10px!important;
+    border:1px solid #e0e4e7!important;
+    border-radius:11px!important;
+    background:#fafafa!important;
+    color:#30373e!important;
+  }
+
+  .student-page #premiumAccessModal .access-choice-card>i:first-child{
+    width:36px!important;height:36px!important;
+    display:grid!important;place-items:center!important;
+    border-radius:10px!important;
+    background:#fff4cd!important;
+    color:#a17904!important;
+    font-size:12px!important;
+  }
+
+  .student-page #premiumAccessModal .access-choice-card:nth-child(2)>i:first-child{
+    background:#eaf9f4!important;
+    color:#0b9468!important;
+  }
+
+  .student-page #premiumAccessModal .access-choice-card h4{
+    margin:0 0 2px!important;
+    color:#30373e!important;
+    font-size:10.5px!important;
+  }
+
+  .student-page #premiumAccessModal .access-choice-card p{
+    margin:0!important;
+    color:#7c8691!important;
+    font-size:7.5px!important;
+  }
+
+  .student-page #premiumAccessModal .access-choice-card:hover,
+  .student-page #premiumAccessModal .access-choice-card.is-active{
+    border-color:#d9be60!important;
+    background:#fff9e8!important;
+  }
+
+  .student-page #premiumAccessModal .access-back-btn{
+    min-height:31px!important;
+    height:31px!important;
+    margin-bottom:8px!important;
+    padding:0 9px!important;
+    font-size:7.5px!important;
+  }
+
+  .student-page #premiumAccessModal .access-progress{
+    display:none!important;
+  }
+
+  .student-page #premiumAccessModal .access-method-grid{
+    grid-template-columns:1fr 1fr!important;
+    gap:7px!important;
+  }
+
+  .student-page #premiumAccessModal .access-method-card{
+    min-height:64px!important;
+    display:grid!important;
+    grid-template-columns:34px minmax(0,1fr)!important;
+    align-items:center!important;
+    gap:8px!important;
+    padding:9px!important;
+    border:1px solid #e0e4e7!important;
+    border-radius:10px!important;
+    background:#f9fafb!important;
+  }
+
+  .student-page #premiumAccessModal .access-method-card>i{
+    width:34px!important;height:34px!important;
+    display:grid!important;place-items:center!important;
+    border-radius:9px!important;
+    background:#fff4cf!important;
+    color:#a17804!important;
+    font-size:11px!important;
+  }
+
+  .student-page #premiumAccessModal .access-method-card h4{
+    margin:0 0 2px!important;
+    color:#30373f!important;
+    font-size:9.5px!important;
+  }
+
+  .student-page #premiumAccessModal .access-method-card p{
+    margin:0!important;
+    color:#7f8994!important;
+    font-size:7.4px!important;
+    line-height:1.35!important;
+  }
+
+  .student-page #premiumAccessModal .access-broker-grid{
+    grid-template-columns:repeat(3,1fr)!important;
+    gap:7px!important;
+    margin:8px 0!important;
+  }
+
+  .student-page #premiumAccessModal .access-broker-card{
+    min-height:62px!important;
+    border:1px solid #e0e4e7!important;
+    border-radius:10px!important;
+    background:#f9fafb!important;
+    font-size:8px!important;
+  }
+
+  .student-page #premiumAccessModal .access-broker-card.is-active{
+    border-color:#d9be60!important;
+    background:#fff9e8!important;
+  }
+
+  .student-page #premiumAccessModal .access-link-box,
+  .student-page #ibVerificationModal .access-link-box{
+    padding:9px 10px!important;
+    border:1px solid #e0e4e7!important;
+    border-radius:10px!important;
+    background:#f9fafb!important;
+  }
+
+  .student-page #premiumAccessModal .ib-instruction-box,
+  .student-page #ibVerificationModal .ib-instruction-box{
+    margin-top:8px!important;
+    padding:10px 11px!important;
+    border:1px solid #e5d8ac!important;
+    border-radius:10px!important;
+    background:#fffaf0!important;
+    color:#625a45!important;
+    font-size:8.5px!important;
+    line-height:1.5!important;
+  }
+
+  /* ===== verification modal ===== */
+  .student-page #ibVerificationModal #ibVerificationForm,
+  .student-page :is(#premiumBankModal,#premiumUsdtModal) form{
+    min-height:0!important;
+    height:100%!important;
+    display:grid!important;
+    grid-template-rows:minmax(0,1fr) auto!important;
+    overflow:hidden!important;
+  }
+
+  .student-page #ibVerificationModal .form-grid,
+  .student-page :is(#premiumBankModal,#premiumUsdtModal) .form-grid{
+    gap:10px!important;
+  }
+
+  .student-page #ibVerificationModal .form-field label,
+  .student-page :is(#premiumBankModal,#premiumUsdtModal) .form-field label{
+    color:#4b5560!important;
+    font-size:8px!important;
+    font-weight:900!important;
+  }
+
+  .student-page #ibVerificationModal :is(input,select,textarea),
+  .student-page :is(#premiumBankModal,#premiumUsdtModal) :is(input,select,textarea){
+    min-height:39px!important;
+    border:1px solid #dce1e5!important;
+    border-radius:9px!important;
+    background:#fff!important;
+    color:#2d343c!important;
+    box-shadow:none!important;
+    font-size:9.5px!important;
+  }
+
+  .student-page #ibVerificationModal textarea,
+  .student-page :is(#premiumBankModal,#premiumUsdtModal) textarea{
+    min-height:80px!important;
+    padding-top:9px!important;
+  }
+
+  .student-page #ibVerificationModal :is(input,select,textarea):focus,
+  .student-page :is(#premiumBankModal,#premiumUsdtModal) :is(input,select,textarea):focus{
+    border-color:#d7b94b!important;
+    box-shadow:0 0 0 3px rgba(214,161,11,.08)!important;
+    outline:none!important;
+  }
+
+  .student-page #ibVerificationModal input[type="file"],
+  .student-page :is(#premiumBankModal,#premiumUsdtModal) input[type="file"]{
+    padding:5px!important;
+    font-size:8.5px!important;
+  }
+
+  .student-page #ibVerificationModal input[type="file"]::file-selector-button,
+  .student-page :is(#premiumBankModal,#premiumUsdtModal) input[type="file"]::file-selector-button{
+    min-height:28px!important;
+    margin-right:8px!important;
+    border:0!important;
+    border-radius:7px!important;
+    background:#efbd20!important;
+    color:#231a00!important;
+    font-size:8px!important;
+    font-weight:900!important;
+  }
+
+  .student-page #ibVerificationModal .form-field small,
+  .student-page :is(#premiumBankModal,#premiumUsdtModal) .form-field small{
+    margin-top:4px!important;
+    color:#8b949e!important;
+    font-size:7.5px!important;
+  }
+
+  /* ===== premium payment forms ===== */
+  .student-page :is(#premiumBankModal,#premiumUsdtModal) .course-payment-steps{
+    display:grid!important;
+    grid-template-columns:auto 1fr auto 1fr auto!important;
+    align-items:center!important;
+    gap:6px!important;
+    margin-bottom:10px!important;
+  }
+
+  .student-page :is(#premiumBankModal,#premiumUsdtModal) .course-payment-steps>span{
+    min-height:29px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    gap:5px!important;
+    padding:0 8px!important;
+    border:1px solid #e0e4e7!important;
+    border-radius:8px!important;
+    background:#f8f9fa!important;
+    color:#78828d!important;
+    font-size:7px!important;
+    font-weight:900!important;
+  }
+
+  .student-page :is(#premiumBankModal,#premiumUsdtModal) .course-payment-steps>span b{
+    width:17px!important;height:17px!important;
+    display:grid!important;
+    place-items:center!important;
+    border-radius:50%!important;
+    background:#e9edf0!important;
+    color:#68727d!important;
+    font-size:6.5px!important;
+  }
+
+  .student-page :is(#premiumBankModal,#premiumUsdtModal) .course-payment-steps>span.active,
+  .student-page :is(#premiumBankModal,#premiumUsdtModal) .course-payment-steps>span.done{
+    border-color:#dec46d!important;
+    background:#fff7df!important;
+    color:#8d6905!important;
+  }
+
+  .student-page :is(#premiumBankModal,#premiumUsdtModal) .course-payment-steps>span.active b,
+  .student-page :is(#premiumBankModal,#premiumUsdtModal) .course-payment-steps>span.done b{
+    background:#efbd20!important;
+    color:#211900!important;
+  }
+
+  .student-page :is(#premiumBankModal,#premiumUsdtModal) .course-payment-steps>i{
+    height:1px!important;
+    background:#dfe3e6!important;
+  }
+
+  .student-page :is(#premiumBankModal,#premiumUsdtModal) .notice.info{
+    margin:0 0 9px!important;
+    padding:9px 10px!important;
+    border:1px solid #e3d7ad!important;
+    border-radius:10px!important;
+    background:#fffaf0!important;
+    color:#655c47!important;
+    font-size:8.5px!important;
+    line-height:1.45!important;
+  }
+
+  .student-page #premiumBankModal .premium-bank-card,
+  .student-page #premiumUsdtModal .usdt-wallet-card{
+    margin-bottom:10px!important;
+    overflow:hidden!important;
+    border:1px solid #e2e5e8!important;
+    border-radius:11px!important;
+    background:#f9fafb!important;
+  }
+
+  .student-page #premiumBankModal .premium-bank-top,
+  .student-page #premiumUsdtModal .usdt-wallet-top{
+    min-height:54px!important;
+    padding:9px 10px!important;
+    border-bottom:1px solid #e5e8eb!important;
+    background:#fffaf0!important;
+  }
+
+  .student-page #premiumBankModal .premium-bank-details,
+  .student-page #premiumUsdtModal .usdt-wallet-address{
+    padding:10px!important;
+  }
+
+  .student-page #premiumBankModal .premium-bank-details small,
+  .student-page #premiumUsdtModal .usdt-wallet-address small{
+    font-size:6.5px!important;
+    color:#8b949e!important;
+    font-weight:900!important;
+  }
+
+  .student-page #premiumBankModal .premium-bank-details b,
+  .student-page #premiumBankModal .premium-bank-details code,
+  .student-page #premiumUsdtModal .usdt-wallet-address code{
+    color:#333b43!important;
+    font-size:9px!important;
+  }
+
+  .student-page #premiumBankModal .premium-bank-note,
+  .student-page #premiumUsdtModal .usdt-wallet-note{
+    min-height:38px!important;
+    padding:8px 10px!important;
+    border-top:1px solid #e5e8eb!important;
+    color:#727c87!important;
+    font-size:8px!important;
+  }
+
+  .student-page :is(#premiumBankModal,#premiumUsdtModal) .check-row{
+    min-height:42px!important;
+    display:flex!important;
+    align-items:center!important;
+    gap:8px!important;
+    padding:8px 10px!important;
+    border:1px solid #e1e4e7!important;
+    border-radius:9px!important;
+    background:#f8f9fa!important;
+    color:#68727d!important;
+    font-size:8px!important;
+  }
+
+  /* ===== premium success ===== */
+  .student-page #premiumPaymentSuccessModal .app-modal-body{
+    display:grid!important;
+    justify-items:center!important;
+    align-content:center!important;
+    text-align:center!important;
+    padding:26px 22px!important;
+  }
+
+  .student-page #premiumPaymentSuccessModal .payment-success-icon{
+    width:54px!important;height:54px!important;
+    display:grid!important;
+    place-items:center!important;
+    margin-bottom:10px!important;
+    border-radius:16px!important;
+    background:linear-gradient(145deg,#f2c934,#d5a10b)!important;
+    color:#201800!important;
+    font-size:18px!important;
+    box-shadow:0 10px 24px rgba(165,118,0,.13)!important;
+  }
+
+  .student-page #premiumPaymentSuccessModal .app-modal-body>small{
+    color:#9b7508!important;
+    font-size:7px!important;
+    font-weight:950!important;
+    letter-spacing:.11em!important;
+  }
+
+  .student-page #premiumPaymentSuccessModal .app-modal-body>h3{
+    margin:5px 0 4px!important;
+    color:#252c33!important;
+    font-size:17px!important;
+  }
+
+  .student-page #premiumPaymentSuccessModal .app-modal-body>p{
+    margin:0!important;
+    color:#7c8691!important;
+    font-size:9px!important;
+  }
+
+  .student-page #premiumPaymentSuccessModal .payment-success-state{
+    width:100%!important;
+    display:grid!important;
+    grid-template-columns:36px minmax(0,1fr)!important;
+    align-items:center!important;
+    gap:9px!important;
+    margin-top:14px!important;
+    padding:10px!important;
+    border:1px solid #e5d8aa!important;
+    border-radius:11px!important;
+    background:#fffaf0!important;
+    text-align:left!important;
+  }
+
+  .student-page #premiumPaymentSuccessModal .payment-success-state>i{
+    width:36px!important;height:36px!important;
+    display:grid!important;place-items:center!important;
+    border-radius:10px!important;
+    background:#fff0b8!important;
+    color:#997000!important;
+  }
+
+  .student-page #premiumPaymentSuccessModal .payment-success-state b{
+    display:block!important;
+    color:#343b43!important;
+    font-size:9.5px!important;
+  }
+
+  .student-page #premiumPaymentSuccessModal .payment-success-state span{
+    display:block!important;
+    margin-top:2px!important;
+    color:#79838e!important;
+    font-size:8px!important;
+    line-height:1.4!important;
+  }
+
+  /* ===== dark mode parity ===== */
+  html[data-theme="dark"] .student-page #p-premium .premium-page-hero,
+  html[data-theme="dark"] .student-page #p-premium .premium-page-flow,
+  html[data-theme="dark"] .student-page #p-premium .premium-path-card,
+  html[data-theme="dark"] .student-page #p-premium .premium-action-card,
+  html[data-theme="dark"] .student-page #p-premium .premium-broker-grid button,
+  html[data-theme="dark"] .student-page #p-premium .premium-account-mode-grid button,
+  html[data-theme="dark"] .student-page #p-premium .premium-broker-guide,
+  html[data-theme="dark"] .student-page #p-premium .premium-partner-link,
+  html[data-theme="dark"] .student-page #p-premium .premium-pending-payment-card,
+  html[data-theme="dark"] .student-page :is(#premiumAccessModal,#ibVerificationModal,#premiumBankModal,#premiumUsdtModal,#premiumPaymentSuccessModal) .app-modal-card,
+  html[data-theme="dark"] .student-page :is(#premiumAccessModal,#ibVerificationModal,#premiumBankModal,#premiumUsdtModal,#premiumPaymentSuccessModal) .app-modal-body{
+    border-color:#282e37!important;
+    background:#101319!important;
+    box-shadow:none!important;
+  }
+
+  html[data-theme="dark"] .student-page #p-premium .premium-page-hero,
+  html[data-theme="dark"] .student-page :is(#premiumAccessModal,#ibVerificationModal,#premiumBankModal,#premiumUsdtModal,#premiumPaymentSuccessModal) .app-modal-head{
+    background:
+      radial-gradient(360px 140px at 100% 0%,rgba(214,161,11,.075),transparent 74%),
+      #101319!important;
+  }
+
+  html[data-theme="dark"] .student-page #p-premium :is(.premium-page-hero-copy h2,.premium-page-section-head h3,.premium-path-card h4,.premium-action-card b,.premium-paid-summary h4,.pppc-top h4,.pppc-meta b,.premium-account-mode-grid b,.premium-broker-guide h4),
+  html[data-theme="dark"] .student-page :is(#premiumAccessModal,#ibVerificationModal,#premiumBankModal,#premiumUsdtModal,#premiumPaymentSuccessModal) .app-modal-head h3,
+  html[data-theme="dark"] .student-page #premiumPaymentSuccessModal .app-modal-body>h3{
+    color:#f1f4f6!important;
+  }
+
+  html[data-theme="dark"] .student-page #p-premium :is(.premium-page-hero-copy p,.premium-page-section-head p,.premium-path-card p,.premium-action-card p,.premium-account-mode-grid small,.pppc-top p){
+    color:#929ba6!important;
+  }
+
+  html[data-theme="dark"] .student-page #p-premium .premium-page-status,
+  html[data-theme="dark"] .student-page #p-premium .premium-paid-summary,
+  html[data-theme="dark"] .student-page #p-premium .pppc-top,
+  html[data-theme="dark"] .student-page #p-premium .premium-price-pending,
+  html[data-theme="dark"] .student-page #p-premium .premium-page-hint,
+  html[data-theme="dark"] .student-page #premiumAccessModal #allAccessCurrentStatus,
+  html[data-theme="dark"] .student-page #premiumAccessModal .ib-instruction-box,
+  html[data-theme="dark"] .student-page #ibVerificationModal .ib-instruction-box,
+  html[data-theme="dark"] .student-page #premiumPaymentSuccessModal .payment-success-state{
+    border-color:#42391d!important;
+    background:#1b180f!important;
+  }
+
+  html[data-theme="dark"] .student-page #p-premium .premium-page-benefits span,
+  html[data-theme="dark"] .student-page #premiumAccessModal .premium-benefit-strip span,
+  html[data-theme="dark"] .student-page #premiumAccessModal .access-choice-card,
+  html[data-theme="dark"] .student-page #premiumAccessModal .access-method-card,
+  html[data-theme="dark"] .student-page #premiumAccessModal .access-broker-card,
+  html[data-theme="dark"] .student-page #premiumAccessModal .access-link-box,
+  html[data-theme="dark"] .student-page #ibVerificationModal .access-link-box,
+  html[data-theme="dark"] .student-page :is(#premiumBankModal,#premiumUsdtModal) .check-row{
+    border-color:#2a313a!important;
+    background:#151a20!important;
+    color:#aab2bc!important;
+  }
+
+  html[data-theme="dark"] .student-page :is(#premiumAccessModal,#ibVerificationModal,#premiumBankModal,#premiumUsdtModal,#premiumPaymentSuccessModal) .app-modal-foot{
+    border-top-color:#282e37!important;
+    background:#14140f!important;
+    box-shadow:none!important;
+  }
+
+  html[data-theme="dark"] .student-page #ibVerificationModal :is(input,select,textarea),
+  html[data-theme="dark"] .student-page :is(#premiumBankModal,#premiumUsdtModal) :is(input,select,textarea){
+    border-color:#303741!important;
+    background:#0d1116!important;
+    color:#e6e9ec!important;
+  }
+
+  html[data-theme="dark"] .student-page #premiumBankModal .premium-bank-card,
+  html[data-theme="dark"] .student-page #premiumUsdtModal .usdt-wallet-card{
+    border-color:#2a3038!important;
+    background:#14191f!important;
+  }
+
+  html[data-theme="dark"] .student-page #premiumBankModal .premium-bank-top,
+  html[data-theme="dark"] .student-page #premiumUsdtModal .usdt-wallet-top{
+    border-bottom-color:#2b3139!important;
+    background:#1b180f!important;
+  }
+
+  /* compact laptop */
+  @media (max-width:1180px){
+    .student-page #p-premium .pppc-meta{
+      grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    }
+    .student-page #p-premium .pppc-meta>span:nth-child(2){
+      border-right:0!important;
+    }
+    .student-page #p-premium .pppc-meta>span{
+      border-bottom:1px solid #eceff1!important;
+    }
+    .student-page #p-premium .pppc-meta>span:nth-last-child(-n+2){
+      border-bottom:0!important;
+    }
+  }
+}
