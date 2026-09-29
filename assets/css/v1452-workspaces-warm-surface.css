@@ -1,0 +1,112 @@
+/* 24K MR ZERO — Shared Warm Workspace Surface v14.52
+   Desktop-only canvas unification for Admin, Mentor and Team.
+   Light theme: #F8F5EE -> #F5F1E8. Dark theme remains untouched. */
+@media (min-width:901px){
+
+  /* =========================
+     ADMIN — ALL TABS
+     ========================= */
+  html:not([data-theme="dark"]) body.app-page,
+  html:not([data-theme="dark"]) #adminApp,
+  html:not([data-theme="dark"]) #adminApp .app-main,
+  html:not([data-theme="dark"]) #adminApp .app-content{
+    background:
+      radial-gradient(760px 270px at 82% -85px,rgba(216,162,10,.04),transparent 72%),
+      linear-gradient(180deg,#F8F5EE 0%,#F5F1E8 100%)!important;
+    background-attachment:fixed!important;
+  }
+
+  html:not([data-theme="dark"]) #adminApp .app-content>.panel,
+  html:not([data-theme="dark"]) #adminApp .app-content>.panel.on,
+  html:not([data-theme="dark"]) #adminApp [id^="p-"]{
+    background:transparent!important;
+    background-image:none!important;
+  }
+
+  html:not([data-theme="dark"]) #adminApp .app-topbar{
+    background:rgba(255,254,250,.96)!important;
+    border-bottom-color:#e4ddd0!important;
+    backdrop-filter:blur(12px)!important;
+  }
+
+  html:not([data-theme="dark"]) #adminApp .app-side{
+    background:linear-gradient(180deg,#FFFEFA 0%,#FBF7ED 100%)!important;
+    border-right-color:#e4ddd0!important;
+  }
+
+  /* =========================
+     MENTOR — ALL TABS
+     ========================= */
+  html:not([data-theme="dark"]) body.mentor-page,
+  html:not([data-theme="dark"]) #mentorApp,
+  html:not([data-theme="dark"]) #mentorApp .mentor-main,
+  html:not([data-theme="dark"]) #mentorApp .mentor-content{
+    background:
+      radial-gradient(760px 270px at 82% -85px,rgba(216,162,10,.04),transparent 72%),
+      linear-gradient(180deg,#F8F5EE 0%,#F5F1E8 100%)!important;
+    background-attachment:fixed!important;
+  }
+
+  html:not([data-theme="dark"]) #mentorApp .mentor-view,
+  html:not([data-theme="dark"]) #mentorApp [data-mentor-panel]{
+    background:transparent!important;
+    background-image:none!important;
+  }
+
+  html:not([data-theme="dark"]) #mentorApp .mentor-top{
+    background:rgba(255,254,250,.96)!important;
+    border-bottom-color:#e4ddd0!important;
+    backdrop-filter:blur(12px)!important;
+  }
+
+  html:not([data-theme="dark"]) #mentorApp .mentor-side{
+    background:linear-gradient(180deg,#FFFEFA 0%,#FBF7ED 100%)!important;
+    border-right-color:#e4ddd0!important;
+  }
+
+  /* =========================
+     TEAM — ALL TABS
+     ========================= */
+  html:not([data-theme="dark"]) #teamApp:not(.hidden),
+  html:not([data-theme="dark"]) #teamApp:not(.hidden) .team-main{
+    background:
+      radial-gradient(760px 270px at 82% -85px,rgba(216,162,10,.04),transparent 72%),
+      linear-gradient(180deg,#F8F5EE 0%,#F5F1E8 100%)!important;
+    background-attachment:fixed!important;
+  }
+
+  html:not([data-theme="dark"]) #teamApp:not(.hidden) .view,
+  html:not([data-theme="dark"]) #teamApp:not(.hidden) [data-view-panel]{
+    background:transparent!important;
+    background-image:none!important;
+  }
+
+  html:not([data-theme="dark"]) #teamApp:not(.hidden) .team-topbar{
+    background:rgba(255,254,250,.96)!important;
+    border-bottom-color:#e4ddd0!important;
+    backdrop-filter:blur(12px)!important;
+  }
+
+  html:not([data-theme="dark"]) #teamApp:not(.hidden) .team-side{
+    background:linear-gradient(180deg,#FFFEFA 0%,#FBF7ED 100%)!important;
+    border-right-color:#e4ddd0!important;
+  }
+
+  /* Keep premium cards crisp against the warm canvas */
+  html:not([data-theme="dark"]) #adminApp :is(
+    .card,.panel-card,.kpi-card,.admin-dashboard-hero,
+    .admin-dashboard-card,.admin-content-card,.admin-table-card
+  ),
+  html:not([data-theme="dark"]) #mentorApp :is(
+    .mentor-card,.mrzero-command-panel,.mentor-chart-card,.mentor-article-card,
+    .mentor-course-card,.mentor-news-card,.mentor-more-profile
+  ),
+  html:not([data-theme="dark"]) #teamApp:not(.hidden) :is(
+    .team-home-card,.team-insight-card,.overview-kpi,.team-priority-card,
+    .premium-client-card,.team-performance-card,.premium-link-card,
+    .team-history-card,.premium-broker-card,.premium-progress-card
+  ){
+    --workspace-card-bg:#fff;
+  }
+}
+/* Intentionally no mobile rules. */
