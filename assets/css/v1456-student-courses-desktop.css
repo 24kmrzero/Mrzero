@@ -174,14 +174,14 @@
   .student-page #p-courses .course-list-grid{
     width:100%!important;
     display:grid!important;
-    grid-template-columns:repeat(auto-fill,minmax(360px,420px))!important;
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
     align-items:start!important;
-    justify-content:start!important;
-    gap:16px!important;
+    justify-content:stretch!important;
+    gap:12px!important;
   }
   .student-page #p-courses .premium-course-card{
     width:100%!important;
-    max-width:420px!important;
+    max-width:none!important;
     overflow:hidden!important;
     border:1px solid #e1e4e7!important;
     border-radius:18px!important;
@@ -700,7 +700,7 @@
   }
 
   /* Medium desktop: remain compact, still no mobile override */
-  @media (max-width: 1180px){
+  @media (max-width: 1280px){
     .student-page #p-courses .course-page-hero{
       grid-template-columns:46px minmax(0,1fr) auto!important;
       padding:17px 18px!important;
@@ -709,11 +709,15 @@
       grid-template-columns:repeat(2,78px)!important;
     }
     .student-page #p-courses .course-list-grid{
-      grid-template-columns:repeat(2,minmax(0,1fr))!important;
-      gap:13px!important;
+      grid-template-columns:repeat(3,minmax(0,1fr))!important;
+      gap:12px!important;
     }
-    .student-page #p-courses .premium-course-card{
-      max-width:none!important;
+  }
+
+  @media (max-width: 1050px){
+    .student-page #p-courses .course-list-grid{
+      grid-template-columns:repeat(2,minmax(0,1fr))!important;
+      gap:12px!important;
     }
   }
 }
