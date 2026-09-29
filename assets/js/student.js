@@ -1446,29 +1446,23 @@
     if(!email)return A.toast('Your account email is missing. Please contact Admin.','error');
     A.setLoading(button, true, 'Sending...');
     try {
-      const {data:sessionData}=await A.supabase.auth.getSession();
-      const accessToken=sessionData?.session?.access_token||'';
-      if(!accessToken)throw new Error('Your session has expired. Please sign in again.');
-      const response = await A.supabase.functions.invoke('auth-email', {
-        headers:{Authorization:`Bearer ${accessToken}`},
-        body:{action:'request_email_verification',email}
-      });
-      if (response.error) {
-        let detail='';
-        try{
-          const payload=await response.error.context?.clone?.().json?.();
-          detail=String(payload?.error||payload?.message||'');
-        }catch{}
-        throw new Error(detail||'Could not send verification email.');
+      const {data,error}=await A.supabase.rpc('request_app_email_verification');
+      if(error)throw error;
+      if(data?.verified){
+        state.profile.email_verified=true;
+        renderEmailVerification();
+        return A.toast('Your email is already verified.','success');
       }
-      if (response.data?.error) throw new Error(response.data.error);
-      A.toast(response.data?.already_verified ? 'Your email is already verified.' : 'Verification email sent. Check Inbox and Spam.', 'success');
+      A.toast(data?.message||'Verification email sent. Check Inbox and Spam.','success');
     } catch (error) {
       console.error('Verification email failed:', error);
-      const message=/session.*expired|invalid session/i.test(String(error?.message||''))
-        ? 'Your session has expired. Please sign in again.'
-        : 'Could not send verification email. Please try again.';
-      A.toast(message, 'error');
+      const raw=String(error?.message||'');
+      const message=/60 seconds/i.test(raw)
+        ? 'Please wait 60 seconds before requesting another verification email.'
+        : /authentication|required|jwt|session/i.test(raw)
+          ? 'Your session has expired. Please sign in again.'
+          : 'Could not send verification email. Please try again.';
+      A.toast(message,'error');
     } finally { A.setLoading(button, false); }
   }
 
