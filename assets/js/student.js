@@ -839,14 +839,9 @@
     return [...groups.values()].map(group => {
       const isToday = group.info.label === 'Today';
       const isYesterday = group.info.label === 'Yesterday';
-      const eyebrow = isToday ? 'LATEST' : isYesterday ? 'PREVIOUS DAY' : 'DAILY ARCHIVE';
-      const noun = type === 'chart' ? 'chart' : 'article';
       const cards = group.items.map(item => type === 'chart' ? chartContentCard(item) : articleContentCard(item)).join('');
       return `<section class="daily-content-section ${isToday?'is-today':isYesterday?'is-yesterday':'is-date'}">
-        <div class="daily-content-heading">
-          <div><small>${eyebrow}</small><h3>${A.escapeHtml(group.info.label)}</h3>${(isToday||isYesterday)?`<span>${A.escapeHtml(group.info.full)}</span>`:''}</div>
-          <span class="daily-content-count">${group.items.length} ${noun}${group.items.length===1?'':'s'}</span>
-        </div>
+        <div class="daily-content-heading"><h3>${A.escapeHtml(group.info.label)}</h3></div>
         <div class="daily-content-grid">${cards}</div>
       </section>`;
     }).join('');
