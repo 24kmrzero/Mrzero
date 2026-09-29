@@ -1,0 +1,208 @@
+/* 24K MR ZERO — Student Premium Access readability v14.90
+   Desktop-only typography/readability refinement for the Premium Access tab.
+   Mobile is intentionally untouched. */
+@media (min-width:901px){
+
+  /* Page header + feature rail */
+  .student-page #p-premium .premium-page-hero-copy>div>small{
+    font-size:9px!important;
+    line-height:1.15!important;
+  }
+  .student-page #p-premium .premium-page-hero-copy p{
+    font-size:11.5px!important;
+    line-height:1.5!important;
+  }
+  .student-page #p-premium .premium-page-benefits b{
+    font-size:11px!important;
+    line-height:1.25!important;
+  }
+  .student-page #p-premium .premium-page-benefits small{
+    margin-top:2px!important;
+    font-size:9px!important;
+    line-height:1.35!important;
+  }
+
+  /* Shared Premium flow heading */
+  .student-page #p-premium .premium-page-section-head{
+    margin-bottom:15px!important;
+  }
+  .student-page #p-premium .premium-page-section-head small{
+    font-size:9px!important;
+    line-height:1.15!important;
+    letter-spacing:.1em!important;
+  }
+  .student-page #p-premium .premium-page-section-head h3{
+    margin:4px 0 5px!important;
+    font-size:20px!important;
+    line-height:1.18!important;
+  }
+  .student-page #p-premium .premium-page-section-head p{
+    font-size:11.5px!important;
+    line-height:1.5!important;
+  }
+  .student-page #p-premium .premium-page-back{
+    min-height:36px!important;
+    height:36px!important;
+    padding:0 11px!important;
+    font-size:9.5px!important;
+  }
+
+  /* Home choice cards */
+  .student-page #p-premium .premium-path-card small{
+    font-size:8.5px!important;
+    line-height:1.2!important;
+  }
+  .student-page #p-premium .premium-path-card h4{
+    margin:4px 0!important;
+    font-size:14.5px!important;
+    line-height:1.25!important;
+  }
+  .student-page #p-premium .premium-path-card p{
+    font-size:10.5px!important;
+    line-height:1.5!important;
+  }
+
+  /* Broker selector */
+  .student-page #p-premium .premium-broker-grid{
+    gap:9px!important;
+  }
+  .student-page #p-premium .premium-broker-grid button{
+    min-height:70px!important;
+    padding:10px 13px!important;
+    font-size:11px!important;
+    line-height:1.25!important;
+  }
+  .student-page #p-premium .premium-broker-grid button b{
+    font-size:11.5px!important;
+    line-height:1.25!important;
+    font-weight:850!important;
+  }
+  .student-page #p-premium .premium-broker-grid button i{
+    font-size:14px!important;
+  }
+  .student-page #p-premium .premium-broker-grid button::after{
+    font-size:7px!important;
+  }
+
+  /* New / existing account cards */
+  .student-page #p-premium .premium-account-mode-grid{
+    gap:9px!important;
+  }
+  .student-page #p-premium .premium-account-mode-grid button{
+    min-height:78px!important;
+    padding:11px 12px!important;
+    grid-template-columns:38px minmax(0,1fr)!important;
+    gap:10px!important;
+  }
+  .student-page #p-premium .premium-account-mode-grid button>span{
+    width:38px!important;
+    height:38px!important;
+  }
+  .student-page #p-premium .premium-account-mode-grid b{
+    font-size:12px!important;
+    line-height:1.3!important;
+  }
+  .student-page #p-premium .premium-account-mode-grid small{
+    margin-top:2px!important;
+    font-size:10.5px!important;
+    line-height:1.45!important;
+  }
+
+  /* Instructions */
+  .student-page #p-premium .premium-broker-guide{
+    margin-top:11px!important;
+    padding:14px!important;
+  }
+  .student-page #p-premium .premium-broker-guide>small{
+    font-size:8.5px!important;
+    line-height:1.2!important;
+    letter-spacing:.075em!important;
+  }
+  .student-page #p-premium .premium-broker-guide h4{
+    margin:5px 0 8px!important;
+    font-size:13px!important;
+    line-height:1.3!important;
+  }
+  .student-page #p-premium .premium-broker-instructions{
+    padding-left:22px!important;
+    font-size:10.8px!important;
+    line-height:1.6!important;
+  }
+  .student-page #p-premium .premium-broker-instructions li{
+    min-height:34px!important;
+    align-items:center!important;
+  }
+  .student-page #p-premium .premium-broker-instructions li>span{
+    font-size:8.5px!important;
+    font-weight:900!important;
+  }
+  .student-page #p-premium .premium-broker-instructions li p{
+    margin:0!important;
+    font-size:10.8px!important;
+    line-height:1.5!important;
+  }
+
+  /* Official partner link + actions */
+  .student-page #p-premium .premium-partner-link{
+    min-height:64px!important;
+    gap:9px!important;
+    padding:10px 11px!important;
+  }
+  .student-page #p-premium .premium-partner-link small{
+    font-size:8px!important;
+    line-height:1.2!important;
+  }
+  .student-page #p-premium .premium-partner-link b{
+    margin-top:3px!important;
+    font-size:10.5px!important;
+    line-height:1.35!important;
+  }
+  .student-page #p-premium .premium-partner-link .app-btn,
+  .student-page #p-premium .premium-verify-btn,
+  .student-page #p-premium .premium-use-broker{
+    min-height:38px!important;
+    height:38px!important;
+    padding:0 12px!important;
+    font-size:10px!important;
+    font-weight:850!important;
+  }
+  .student-page #p-premium .premium-verify-btn{
+    margin-top:10px!important;
+  }
+
+  /* Latest verification status if present */
+  .student-page #p-premium .premium-broker-status{
+    min-height:56px!important;
+    padding:10px 12px!important;
+  }
+  .student-page #p-premium .premium-broker-status small{
+    font-size:8px!important;
+    line-height:1.2!important;
+  }
+  .student-page #p-premium .premium-broker-status b{
+    font-size:11.5px!important;
+    line-height:1.3!important;
+  }
+  .student-page #p-premium .premium-broker-status span{
+    font-size:9.5px!important;
+    line-height:1.35!important;
+  }
+
+  /* Paid path text gets the same readable hierarchy */
+  .student-page #p-premium .premium-paid-summary small,
+  .student-page #p-premium .premium-action-card div>small,
+  .student-page #p-premium .premium-price-pending small{
+    font-size:8.5px!important;
+  }
+  .student-page #p-premium .premium-paid-summary h4,
+  .student-page #p-premium .premium-action-card b{
+    font-size:12.5px!important;
+    line-height:1.3!important;
+  }
+  .student-page #p-premium .premium-paid-summary p,
+  .student-page #p-premium .premium-action-card p,
+  .student-page #p-premium .premium-price-pending p{
+    font-size:10.5px!important;
+    line-height:1.45!important;
+  }
+}
