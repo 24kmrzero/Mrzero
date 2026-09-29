@@ -1222,7 +1222,7 @@ function openMentorCourseEditor(id,focusSessions=false){
   if(focusSessions)setTimeout(()=>$('#mentorCourseSessionEditor')?.scrollIntoView({behavior:'smooth',block:'start'}),120)
 }
 function collectMentorCourseSessions(){
-  return $('[data-mentor-course-session-row]').map((row,index)=>{
+  return [...document.querySelectorAll('[data-mentor-course-session-row]')].map((row,index)=>{
     const get=name=>row.querySelector(`[data-course-session-field="${name}"]`)?.value??'';
     const title=String(get('title')).trim(),starts=mentorCourseIso(get('starts_at')),topic=String(get('topic')).trim(),duration=Math.max(15,Number(get('duration_minutes')||90));
     if(!title)throw new Error(`Class ${index+1}: title is required.`);
