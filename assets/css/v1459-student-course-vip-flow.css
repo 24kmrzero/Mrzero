@@ -1451,3 +1451,84 @@
     }
   }
 }
+
+
+/* v14.59 readability pass */
+@media (min-width:901px){
+  .student-page #courseDetailsModal .app-modal-head small,
+  .student-page #paymentMethodChoiceModal .app-modal-head small,
+  .student-page #bankPaymentModal .app-modal-head small,
+  .student-page #coursePaymentSuccessModal .app-modal-head small{font-size:10px!important}
+
+  .student-page .course-payment-steps>span{font-size:9px!important}
+  .student-page .course-payment-steps>span>b{font-size:9px!important}
+
+  .student-page #paymentChoiceCourseSummary,
+  .student-page #paymentCourseSummary,
+  .student-page #bankPaymentCourseSummary{font-size:10px!important}
+  .student-page #paymentChoiceCourseSummary b,
+  .student-page #paymentCourseSummary b,
+  .student-page #bankPaymentCourseSummary b{font-size:11px!important}
+  .student-page #paymentChoiceCourseSummary small,
+  .student-page #paymentCourseSummary small,
+  .student-page #bankPaymentCourseSummary small{font-size:9px!important}
+
+  .student-page #paymentMethodChoiceModal [data-payment-choice] h3{font-size:13px!important}
+  .student-page #paymentMethodChoiceModal [data-payment-choice] p{font-size:9.5px!important}
+  .student-page #paymentMethodChoiceModal .notice.warn{font-size:9px!important}
+
+  .student-page #courseDetailsModal .course-detail-hero small{font-size:8px!important}
+  .student-page #courseDetailsModal .course-detail-hero p{font-size:10px!important}
+  .student-page #courseDetailsModal .course-detail-state{font-size:8px!important}
+  .student-page #courseDetailsModal .course-detail-stats small{font-size:7.5px!important}
+  .student-page #courseDetailsModal .course-detail-stats b{font-size:10.5px!important}
+  .student-page #courseDetailsModal .course-detail-section-head small{font-size:7.5px!important}
+  .student-page #courseDetailsModal .course-detail-section-head>span{font-size:8px!important}
+  .student-page #courseDetailsModal .cds-copy small{font-size:7.5px!important}
+  .student-page #courseDetailsModal .cds-copy b{font-size:10.5px!important}
+  .student-page #courseDetailsModal .cds-copy p{font-size:8.5px!important}
+  .student-page #courseDetailsModal .cds-time b{font-size:9px!important}
+  .student-page #courseDetailsModal .cds-time small{font-size:7.5px!important}
+  .student-page #courseDetailsModal .course-detail-note b{font-size:10px!important}
+  .student-page #courseDetailsModal .course-detail-note span{font-size:8.5px!important}
+
+  .student-page #paymentModal .form-field label,
+  .student-page #bankPaymentModal .form-field label{font-size:8.5px!important}
+  .student-page #paymentModal :is(input,select,textarea),
+  .student-page #bankPaymentModal :is(input,select,textarea){font-size:10.5px!important}
+  .student-page #paymentModal .form-field small,
+  .student-page #bankPaymentModal .form-field small{font-size:8px!important}
+  .student-page #paymentModal .check-row,
+  .student-page #bankPaymentModal .check-row{font-size:8.5px!important}
+  .student-page #paymentModal input[type="file"]::file-selector-button,
+  .student-page #bankPaymentModal input[type="file"]::file-selector-button{font-size:9px!important}
+
+  .student-page #paymentModal .usdt-wallet-top small{font-size:7.5px!important}
+  .student-page #paymentModal .usdt-wallet-top b{font-size:11px!important}
+  .student-page #paymentModal .usdt-network-badge{font-size:7.5px!important}
+  .student-page #paymentModal .usdt-wallet-address small{font-size:7.5px!important}
+  .student-page #paymentModal .usdt-wallet-address code{font-size:9.5px!important}
+  .student-page #paymentModal .usdt-wallet-address button{font-size:8.5px!important}
+  .student-page #paymentModal .usdt-wallet-note span{font-size:8.5px!important}
+  .student-page #bankPaymentMethodInfo .notice{font-size:9.5px!important}
+  .student-page #bankPaymentMethodInfo .notice b{font-size:10.5px!important}
+
+  .student-page #coursePaymentSuccessBody>small{font-size:8px!important}
+  .student-page #coursePaymentSuccessBody>p{font-size:10px!important}
+  .student-page #coursePaymentSuccessBody .payment-success-state b{font-size:10.5px!important}
+  .student-page #coursePaymentSuccessBody .payment-success-state span{font-size:9px!important}
+
+  .student-page #p-courses #sessionsArea>.panel-heading p{font-size:10px!important}
+  .student-page #p-courses #closeSessions{font-size:9px!important}
+  .student-page #p-courses #sessionsGrid .session-number{font-size:8px!important}
+  .student-page #p-courses #sessionsGrid .session-body h3{font-size:13px!important}
+  .student-page #p-courses #sessionsGrid .session-body>p{font-size:9.5px!important}
+  .student-page #p-courses #sessionsGrid .status-pill{font-size:7.5px!important}
+  .student-page #p-courses #sessionsGrid .session-date span{font-size:8.5px!important}
+  .student-page #p-courses #sessionsGrid .session-community-note span{font-size:8.5px!important}
+  .student-page #p-courses #sessionsGrid .session-body>.muted{font-size:8px!important}
+  .student-page #p-courses #resourcesArea .app-card-head p{font-size:9px!important}
+  .student-page #p-courses #resourcesList .resource-row b{font-size:10px!important}
+  .student-page #p-courses #resourcesList .resource-row small{font-size:8px!important}
+  .student-page #p-courses #resourcesList .resource-row .app-btn{font-size:8px!important}
+}
