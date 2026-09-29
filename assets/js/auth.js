@@ -30,7 +30,8 @@
 
   const reason = params.get('reason');
   if (reason === 'student-required') toast('Please sign in with a student account.', 'info');
-  if (params.get('verified') === '1') toast('Email verified successfully. You can sign in now.', 'success');
+  if (params.get('verified') === '1') toast('Email verified successfully.', 'success');
+  if (params.get('created') === '1') toast('Account created successfully. Sign in to continue.', 'success');
 
   const checkEmailUrl = () => '/check-email/';
   const studentHome = () => '/student/';
@@ -103,17 +104,30 @@
   const { data: sessionData } = await supabase.auth.getSession();
   if (sessionData.session?.user) {
     try {
-      const profile = await getProfileWithRetry(sessionData.session.user.id);
+      let profile = await getProfileWithRetry(sessionData.session.user.id);
       if (profile.role !== 'student') {
         await supabase.auth.signOut();
         toast('This page accepts student accounts only.', 'error');
       } else {
+        if (params.get('verify_email') === '1' && !profile.email_verified) {
+          const verifyResponse = await supabase.functions.invoke('auth-email', {
+            body: { action:'confirm_email_verification', email: sessionData.session.user.email || '' }
+          });
+          if (verifyResponse.error) throw verifyResponse.error;
+          if (verifyResponse.data?.error) throw new Error(verifyResponse.data.error);
+          profile = { ...profile, email_verified: true };
+          toast('Email verified successfully.', 'success');
+        }
         await finishStudentLogin(sessionData.session.user, profile);
         return;
       }
     } catch (error) {
       console.error(error);
-      await supabase.auth.signOut().catch(() => {});
+      if (params.get('verify_email') === '1') {
+        toast(friendlyError(error, 'Could not verify your email. Please request a new verification email from Profile.'), 'error');
+      } else {
+        await supabase.auth.signOut().catch(() => {});
+      }
     }
   }
 
@@ -148,13 +162,14 @@
     const values = Object.fromEntries(new FormData(form).entries());
     const context = tracking?.context() || {};
     const email = String(values.email || '').trim().toLowerCase();
+    const password = String(values.password || '');
     setLoading(button, true, 'Creating account...');
     try {
       const response = await supabase.functions.invoke('auth-email', {
         body: {
           action: 'signup',
           email,
-          password: String(values.password || ''),
+          password,
           metadata: {
             full_name: String(values.full_name || '').trim(),
             whatsapp: String(values.whatsapp || '').trim(),
@@ -171,12 +186,25 @@
       });
       if (response.error) throw response.error;
       if (response.data?.error) throw new Error(response.data.error);
+
       await audit('student_signup','success',{email});
+      setLoading(button, true, 'Signing you in...');
+
+      const { data: loginData, error: loginError } = await supabase.auth.signInWithPassword({ email, password });
+      if (loginError || !loginData?.user) {
+        form.reset();
+        toast('Account created successfully. Please sign in with your email and password.', 'success');
+        window.location.replace('/sign-in/?created=1');
+        return;
+      }
+
+      const profile = await getProfileWithRetry(loginData.user.id);
+      if (profile.role !== 'student') {
+        await supabase.auth.signOut();
+        throw new Error('This account is not registered as a student account.');
+      }
       form.reset();
-      sessionStorage.setItem('24k_pending_signup_email', email);
-      localStorage.setItem('24k_pending_signup_email', email);
-      toast('Account created. A verification email has been sent. Check Inbox and Spam.', 'success');
-      window.location.replace(checkEmailUrl());
+      await finishStudentLogin(loginData.user, profile);
     } catch (error) {
       await audit('signup_attempt','failed',{email,scope:'student'});
       toast(friendlyError(error, 'Could not create student account.'), 'error');
