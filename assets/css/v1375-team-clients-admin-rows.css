@@ -1,0 +1,424 @@
+/* 24K MR ZERO — My Clients Admin-Style Rows v13.75
+   Desktop only. One client = one full-width compact work row. */
+@media (min-width:901px){
+
+  #teamApp:not(.hidden) [data-view-panel="clients"]{
+    padding:14px 18px 28px!important;
+  }
+
+  /* =========================
+     COMPACT COMMAND CENTER
+     ========================= */
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-clients-command{
+    padding:13px 16px 12px!important;
+    border-radius:16px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-clients-command:after{
+    top:-38px!important;
+    font-size:108px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-clients-command-top{
+    align-items:center!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-clients-kicker{
+    min-height:21px!important;
+    padding:0 8px!important;
+    font-size:6.2px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-clients-command h2{
+    margin:7px 0 3px!important;
+    font-size:24px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-clients-command p{
+    font-size:7.6px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-clients-live{
+    min-width:98px!important;
+    min-height:38px!important;
+    grid-template-columns:7px minmax(0,1fr)!important;
+    padding:5px 8px!important;
+    border-radius:10px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-clients-live>i{
+    width:7px!important;
+    height:7px!important;
+    box-shadow:0 0 0 3px rgba(24,168,116,.08)!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-clients-live>b{
+    font-size:12px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-clients-live>small{
+    font-size:5.2px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-summary{
+    gap:7px!important;
+    margin-top:10px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-summary-card{
+    min-height:51px!important;
+    grid-template-columns:29px minmax(0,1fr)!important;
+    gap:7px!important;
+    padding:6px 9px!important;
+    border-radius:10px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-summary-card>span{
+    width:29px!important;
+    height:29px!important;
+    border-radius:8px!important;
+    font-size:8px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-summary-card small{
+    font-size:5.5px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-summary-card b{
+    font-size:13px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-search-row{
+    gap:7px!important;
+    margin-top:9px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-search{
+    height:37px!important;
+    min-height:37px!important;
+    grid-template-columns:20px minmax(0,1fr) 25px!important;
+    padding-left:9px!important;
+    border-radius:9px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-search input{
+    height:34px!important;
+    font-size:7px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-search button{
+    width:23px!important;
+    height:23px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-filter-trigger{
+    min-width:90px!important;
+    height:37px!important;
+    border-radius:9px!important;
+    font-size:6.3px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-status-tabs{
+    gap:4px!important;
+    margin-top:7px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-status-tabs button{
+    min-height:25px!important;
+    padding:0 8px!important;
+    font-size:5.8px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-filter-panel{
+    margin-top:7px!important;
+    padding:9px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-filter-panel :is(select,button){
+    height:31px!important;
+    font-size:6.3px!important;
+  }
+
+  /* =========================
+     WORK LIST
+     ========================= */
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-results-head{
+    min-height:40px!important;
+    margin-top:6px!important;
+    padding-bottom:7px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-results-head b{
+    font-size:12.5px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-results-head>span{
+    min-height:19px!important;
+    font-size:5.6px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-card-list{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:8px!important;
+    margin-top:8px!important;
+  }
+
+  /* One client = one admin-style row */
+  #teamApp:not(.hidden) [data-view-panel="clients"] .client-work-card.premium-client-card,
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-card{
+    display:grid!important;
+    grid-template-columns:minmax(220px,.95fr) minmax(390px,1.55fr) minmax(355px,1.2fr)!important;
+    grid-template-rows:auto auto!important;
+    grid-template-areas:
+      "identity info controls"
+      "contact  info footer"!important;
+    column-gap:14px!important;
+    row-gap:7px!important;
+    align-items:center!important;
+    min-height:132px!important;
+    padding:11px 12px 10px 15px!important;
+    border:1px solid #e2e6e9!important;
+    border-radius:13px!important;
+    background:#fff!important;
+    box-shadow:0 6px 18px rgba(20,25,31,.03)!important;
+    overflow:hidden!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-card:hover{
+    border-color:#d9dde1!important;
+    box-shadow:0 9px 22px rgba(20,25,31,.05)!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-card:before{
+    width:3px!important;
+    border-radius:13px 0 0 13px!important;
+  }
+
+  /* Identity cell */
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-head{
+    grid-area:identity!important;
+    width:100%!important;
+    min-width:0!important;
+    min-height:43px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:8px!important;
+    padding:0!important;
+    border:0!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-identity{
+    grid-template-columns:38px minmax(0,1fr)!important;
+    gap:8px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-identity .avatar{
+    width:38px!important;
+    height:38px!important;
+    border-radius:10px!important;
+    font-size:9px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-identity b{
+    font-size:9px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-identity small{
+    font-size:5.7px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-head-actions{
+    gap:4px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .client-vip-badge{
+    display:none!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .client-status-pill{
+    min-height:19px!important;
+    padding:0 6px!important;
+    font-size:5.1px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .client-wa-icon{
+    width:27px!important;
+    height:27px!important;
+    border-radius:8px!important;
+    font-size:8px!important;
+  }
+
+  /* Contact cell: simple admin-row metadata, no oversized box */
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-contact{
+    grid-area:contact!important;
+    width:100%!important;
+    min-width:0!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:3px!important;
+    margin:0!important;
+    padding:0 0 0 46px!important;
+    border:0!important;
+    border-radius:0!important;
+    background:transparent!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-contact span{
+    min-height:15px!important;
+    font-size:5.8px!important;
+    color:#78838e!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-contact i{
+    width:13px!important;
+    font-size:5.8px!important;
+    color:#9e770d!important;
+  }
+
+  /* Middle = Course / Assigned / Follow-up, like table cells */
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-info-grid{
+    grid-area:info!important;
+    width:100%!important;
+    min-width:0!important;
+    display:grid!important;
+    grid-template-columns:1.25fr .9fr 1fr!important;
+    gap:7px!important;
+    margin:0!important;
+    align-self:stretch!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-info-grid>div{
+    min-width:0!important;
+    min-height:78px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:center!important;
+    gap:4px!important;
+    padding:8px 10px!important;
+    border:0!important;
+    border-left:1px solid #edf0f2!important;
+    border-radius:0!important;
+    background:transparent!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-info-grid>div:first-child{
+    border-left:0!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-info-grid span{
+    font-size:5.3px!important;
+    color:#929ba5!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-info-grid b{
+    font-size:7.2px!important;
+    line-height:1.3!important;
+    white-space:normal!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-info-grid small{
+    font-size:5.4px!important;
+    line-height:1.3!important;
+    white-space:normal!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-info-grid .follow-state.attention,
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-info-grid .follow-state.ok{
+    background:transparent!important;
+    border-top:0!important;
+    border-right:0!important;
+    border-bottom:0!important;
+  }
+
+  /* Right top = Status + next follow-up */
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-controls{
+    grid-area:controls!important;
+    width:100%!important;
+    min-width:0!important;
+    display:grid!important;
+    grid-template-columns:minmax(105px,.72fr) minmax(175px,1.28fr)!important;
+    gap:7px!important;
+    margin:0!important;
+    padding:0!important;
+    border:0!important;
+    border-radius:0!important;
+    background:transparent!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-controls label{
+    min-width:0!important;
+    gap:4px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-controls label>span{
+    font-size:5.4px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-controls :is(select,input){
+    height:32px!important;
+    border-color:#dfe4e7!important;
+    border-radius:8px!important;
+    font-size:6.3px!important;
+    padding:0 8px!important;
+  }
+
+  /* Right bottom = note + actions */
+  #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-footer{
+    grid-area:footer!important;
+    width:100%!important;
+    min-width:0!important;
+    min-height:32px!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) auto!important;
+    align-items:center!important;
+    gap:7px!important;
+    margin:0!important;
+    padding:6px 0 0!important;
+    border-top:1px solid #edf0f2!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .client-note-preview{
+    max-width:none!important;
+    font-size:5.5px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .client-actions{
+    gap:5px!important;
+  }
+
+  #teamApp:not(.hidden) [data-view-panel="clients"] .client-actions button{
+    min-height:27px!important;
+    padding:0 7px!important;
+    border-radius:7px!important;
+    font-size:5.7px!important;
+  }
+
+  /* Empty state stays full width */
+  #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-empty{
+    min-height:170px!important;
+  }
+
+  /* Dark mode */
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-card{
+    background:#101319!important;
+    border-color:#2a3038!important;
+    box-shadow:none!important;
+  }
+
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-contact,
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-controls,
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-info-grid>div{
+    background:transparent!important;
+  }
+
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-info-grid>div{
+    border-left-color:#2b323a!important;
+  }
+
+  html[data-theme="dark"] #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-footer{
+    border-top-color:#2b323a!important;
+  }
+}
+/* Desktop only. */
