@@ -1173,6 +1173,111 @@ function mentorNextCourseSession(courseId){
     .filter(s=>String(s?.course_id)===String(courseId)&&!['cancelled','completed'].includes(String(s?.status||'').toLowerCase())&&new Date(s?.starts_at||0).getTime()>=now)
     .sort((a,b)=>new Date(a.starts_at)-new Date(b.starts_at))[0]||null
 }
+function mentorCourseLocal(v){
+  const d=v?new Date(v):null;if(!d||Number.isNaN(d.getTime()))return'';
+  const parts=Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Karachi',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(d).filter(x=>x.type!=='literal').map(x=>[x.type,x.value]));
+  return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`
+}
+function mentorCourseIso(v){
+  const m=String(v||'').match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);if(!m)return null;
+  const d=new Date(Date.UTC(Number(m[1]),Number(m[2])-1,Number(m[3]),Number(m[4])-5,Number(m[5]),0));
+  return Number.isNaN(d.getTime())?null:d.toISOString()
+}
+function mentorCourseSessionTemplate(session={},index=0){
+  const no=index+1;
+  return `<article class="mentor-course-session-row" data-mentor-course-session-row data-status="${esc(session.status||'upcoming')}">
+    <input type="hidden" data-course-session-field="id" value="${esc(session.id||'')}">
+    <div class="mentor-course-session-head"><div><small>CLASS ${String(no).padStart(2,'0')}</small><b>${esc(session.title||`Class ${no}`)}</b></div><button type="button" data-remove-mentor-course-session aria-label="Remove class"><i class="fa-regular fa-trash-can"></i></button></div>
+    <div class="mentor-course-session-grid">
+      <label><span>Class Title</span><input data-course-session-field="title" value="${esc(session.title||`Class ${no}`)}" required></label>
+      <label><span>Date & Time (PKT)</span><input type="datetime-local" data-course-session-field="starts_at" value="${esc(mentorCourseLocal(session.starts_at))}" required></label>
+      <label class="full"><span>Topic / What Students Will Learn</span><textarea data-course-session-field="topic" rows="3" required>${esc(session.topic||'')}</textarea></label>
+      <label><span>Duration Minutes</span><input type="number" min="15" step="5" data-course-session-field="duration_minutes" value="${esc(session.duration_minutes||90)}" required></label>
+      <label><span>Status</span><select data-course-session-field="status"><option value="upcoming" ${String(session.status||'upcoming')==='upcoming'?'selected':''}>Upcoming</option><option value="live" ${String(session.status||'')==='live'?'selected':''}>Live</option><option value="completed" ${String(session.status||'')==='completed'?'selected':''}>Completed</option><option value="cancelled" ${String(session.status||'')==='cancelled'?'selected':''}>Cancelled</option></select></label>
+    </div>
+  </article>`
+}
+function renderMentorCourseSessionEditor(rows){
+  const box=$('#mentorCourseSessionEditor');if(!box)return;
+  const list=rows?.length?rows:[{}];
+  box.innerHTML=list.map(mentorCourseSessionTemplate).join('')
+}
+function openMentorCourseEditor(id,focusSessions=false){
+  const course=(state.courses||[]).find(x=>String(x.id)===String(id)),form=$('#mentorCourseForm');if(!course||!form)return toast('Course could not be found.');
+  form.reset();
+  form.elements.id.value=course.id;
+  form.elements.title.value=course.title||'';
+  form.elements.instructor_name.value=course.instructor_name||'Mr. Zameer';
+  form.elements.short_description.value=course.short_description||course.description||'';
+  form.elements.course_type.value=course.course_type||((Number(course.price||0)<=0)?'free':'paid');
+  form.elements.price.value=course.price??0;
+  form.elements.discount_price.value=course.discount_price??'';
+  form.elements.currency.value=course.currency||'USD';
+  form.elements.enrollment_open.checked=course.enrollment_open!==false;
+  form.elements.is_published.checked=course.is_published!==false;
+  const rows=(state.courseSessions||[]).filter(x=>String(x.course_id)===String(course.id)).sort((a,b)=>Number(a.session_number||0)-Number(b.session_number||0));
+  renderMentorCourseSessionEditor(rows);
+  const title=$('#mentorCourseModalTitle');if(title)title.textContent='Edit Course — '+(course.title||'Course');
+  openModal('course');
+  if(focusSessions)setTimeout(()=>$('#mentorCourseSessionEditor')?.scrollIntoView({behavior:'smooth',block:'start'}),120)
+}
+function collectMentorCourseSessions(){
+  return $('[data-mentor-course-session-row]').map((row,index)=>{
+    const get=name=>row.querySelector(`[data-course-session-field="${name}"]`)?.value??'';
+    const title=String(get('title')).trim(),starts=mentorCourseIso(get('starts_at')),topic=String(get('topic')).trim(),duration=Math.max(15,Number(get('duration_minutes')||90));
+    if(!title)throw new Error(`Class ${index+1}: title is required.`);
+    if(!starts)throw new Error(`Class ${index+1}: date and time are required.`);
+    if(!topic)throw new Error(`Class ${index+1}: topic is required.`);
+    return {id:String(get('id')).trim()||null,session_number:index+1,title,topic,starts_at:starts,duration_minutes:duration,status:String(get('status')||row.dataset.status||'upcoming')}
+  })
+}
+async function saveMentorCourse(event){
+  event.preventDefault();
+  const form=event.currentTarget,button=form.querySelector('button[type="submit"]'),old=button?.innerHTML||'Save Changes';
+  const id=String(form.elements.id.value||''),course=(state.courses||[]).find(x=>String(x.id)===id);
+  if(!course)return toast('Course could not be found.');
+  try{
+    if(button){button.disabled=true;button.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Saving…'}
+    const title=String(form.elements.title.value||'').trim(),desc=String(form.elements.short_description.value||'').trim(),type=String(form.elements.course_type.value||'paid'),price=Number(form.elements.price.value||0),discountRaw=String(form.elements.discount_price.value||'').trim(),discount=discountRaw===''?null:Number(discountRaw);
+    if(!title)throw new Error('Course heading is required.');
+    if(!desc)throw new Error('Short caption is required.');
+    if(type==='paid'&&(!Number.isFinite(price)||price<=0))throw new Error('Paid course price must be greater than zero.');
+    if(discount!==null&&(!Number.isFinite(discount)||discount<0))throw new Error('Discount price is invalid.');
+    const sessions=collectMentorCourseSessions();
+    if(!sessions.length)throw new Error('Add at least one class.');
+    const starts=sessions.map(s=>new Date(s.starts_at)).sort((a,b)=>a-b);
+    const row={
+      title,
+      short_description:desc,
+      description:desc,
+      instructor_name:String(form.elements.instructor_name.value||'Mr. Zameer').trim()||'Mr. Zameer',
+      course_type:type,
+      price:type==='free'?0:price,
+      discount_price:type==='free'?null:discount,
+      currency:String(form.elements.currency.value||'USD'),
+      enrollment_open:Boolean(form.elements.enrollment_open.checked),
+      is_published:Boolean(form.elements.is_published.checked),
+      start_date:starts[0]?.toISOString().slice(0,10)||course.start_date||null,
+      end_date:starts.at(-1)?.toISOString().slice(0,10)||course.end_date||null,
+      updated_at:new Date().toISOString()
+    };
+    const cr=await sb.from('courses').update(row).eq('id',id).select('id').single();if(cr.error)throw cr.error;
+    const existing=(state.courseSessions||[]).filter(x=>String(x.course_id)===id),keep=[];
+    for(const s of sessions){
+      const payload={course_id:id,session_number:s.session_number,title:s.title,topic:s.topic,starts_at:s.starts_at,duration_minutes:s.duration_minutes,status:s.status,updated_at:new Date().toISOString()};
+      if(s.id){const r=await sb.from('course_sessions').update(payload).eq('id',s.id);if(r.error)throw r.error;keep.push(String(s.id))}
+      else{const r=await sb.from('course_sessions').insert({...payload,created_by:state.user?.id||null}).select('id').single();if(r.error)throw r.error;keep.push(String(r.data.id))}
+    }
+    const removed=existing.filter(x=>!keep.includes(String(x.id)));
+    for(const s of removed){const r=await sb.from('course_sessions').delete().eq('id',s.id);if(r.error)throw r.error}
+    closeModals();
+    await load();
+    toast('Course and classes updated successfully.')
+  }catch(err){
+    console.error('[Mentor Course Save]',err);toast(err?.message||'Could not update course.')
+  }finally{if(button){button.disabled=false;button.innerHTML=old}}
+}
+
 function renderCourses(){
   const courses=state.courses||[],sessions=state.courseSessions||[];
   const mobile=$('#mentorCourses'),stats=$('#mentorCourseStatsDesktop'),cards=$('#mentorCourseCardsDesktop');
@@ -1215,7 +1320,7 @@ function renderCourses(){
         '<p>'+esc(course.short_description||course.description||'No course description added.')+'</p>'+
         '<div class="admin-course-card-metrics"><div><small>PRICE</small><b>'+esc(price)+'</b>'+(regular?'<em>'+esc(regular)+'</em>':'')+'</div><div><small>NEXT CLASS</small><b>'+(next?esc(next.title||'Upcoming Class'):'No upcoming class')+'</b><em>'+(next?esc(mentorCourseDate(next.starts_at)):'Schedule not added')+'</em></div></div>'+
         '<div class="admin-course-card-meta"><span><i class="fa-brands fa-whatsapp"></i> WhatsApp Community</span><span class="'+(publishedState?'ok':'muted')+'"><i class="fa-solid '+(publishedState?'fa-circle-check':'fa-circle-minus')+'"></i> '+(publishedState?'Published':'Hidden')+'</span></div>'+
-        '<div class="mentor-course-admin-footer"><i class="fa-solid fa-shield-halved"></i> Course settings managed by Admin</div>'+
+        '<div class="mentor-course-admin-actions"><button type="button" class="mentor-btn small" data-edit-course="'+esc(course.id)+'"><i class="fa-regular fa-pen-to-square"></i> Edit Course</button><button type="button" class="mentor-btn small gold" data-edit-course-sessions="'+esc(course.id)+'"><i class="fa-solid fa-video"></i> Sessions</button></div>'+
       '</div>'+
     '</article>'
   }).join(''):'<div class="admin-course-card-empty"><i class="fa-solid fa-graduation-cap"></i><b>No courses created</b><small>Add a course from the Admin panel to begin.</small></div>'
