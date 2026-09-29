@@ -283,6 +283,7 @@
 <link rel="stylesheet" href="assets/css/v1466-admin-chart-modal-scroll.css?v=14.66">
 <link rel="stylesheet" href="assets/css/v1482-admin-dashboard-dark-final.css?v=14.83">
 <link rel="stylesheet" href="assets/css/v1484-admin-dark-full-scan.css?v=14.87">
+<link rel="stylesheet" href="assets/css/v1497-admin-social-settings.css?v=14.97">
 </head>
 <body class="app-page">
 <div id="pageLoader" class="loading-screen"><div><img src="assets/logo.png?v=9.69" alt="24K Digital Gold"><i class="fa-solid fa-spinner fa-spin"></i><p>Loading admin controls...</p></div></div>
@@ -312,6 +313,7 @@
       <a href="/admin/operations/" data-nav-key="operations"><i class="fa-solid fa-diagram-project"></i> Master Operations</a>
       <a href="/admin/admin-notifications/" data-panel="admin-notifications"><i class="fa-solid fa-bell"></i> Admin Notifications <span class="nav-count" id="adminNotificationCount">0</span></a>
       <a href="/admin/activity-logs/" data-panel="audit"><i class="fa-solid fa-clock-rotate-left"></i> Activity Logs</a>
+      <a href="/admin/social-links/" data-panel="social-settings"><i class="fa-solid fa-share-nodes"></i> Social & Contact</a>
     </nav></div>
     <div class="app-side-foot"><a href="/"><i class="fa-solid fa-house"></i> Website Home</a><button id="logoutButton"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button></div>
   </aside>
@@ -729,6 +731,56 @@
         <div class="app-card admin-form-box" id="methodFormBox"><form id="methodForm"><input type="hidden" name="id"><div class="form-grid"><div class="form-field"><label>Method Name</label><input name="name" required value="USDT TRC20" placeholder="USDT TRC20"></div><div class="form-field"><label>Account Title <span class="muted">(optional)</span></label><input name="account_title" placeholder="24K Zero"></div><div class="form-field"><label>Account / Wallet / IBAN</label><input name="account_number" required placeholder="Bank account / IBAN or TRC20 wallet address"></div><div class="form-field"><label>Sort Order</label><input type="number" name="sort_order" value="0"></div><div class="form-field full"><label>Instructions</label><textarea name="instructions" placeholder="Send exact USDT amount using TRC20 network, then submit TXID and receipt."></textarea></div><label class="check-row"><input type="checkbox" name="is_active" checked> Active</label></div><div class="inline-actions"><button type="button" class="app-btn outline" data-cancel-form="methodFormBox">Cancel</button><button class="app-btn gold" type="submit">Save Payment Method</button></div></form></div>
         <div class="table-scroll"><table class="admin-table"><thead><tr><th>Method</th><th>Account Title</th><th>Account / Wallet</th><th>Instructions</th><th>ON / OFF</th><th>Status</th><th>Actions</th></tr></thead><tbody id="methodsBody"></tbody></table></div>
       </section>
+
+      <section class="panel" id="p-social-settings">
+        <div class="social-settings-hero">
+          <div>
+            <span class="social-settings-kicker"><i class="fa-solid fa-link"></i> PLATFORM CONTACT DIRECTORY</span>
+            <h2>Social & Contact Settings</h2>
+            <p>Save the official 24K MR ZERO social links and WhatsApp contact here. These values stay in one central place so the website can use the same approved details everywhere.</p>
+          </div>
+          <span class="social-settings-badge"><i class="fa-solid fa-shield-halved"></i> Admin Only</span>
+        </div>
+
+        <form id="socialSettingsForm" class="social-settings-card">
+          <div class="social-settings-grid">
+            <label class="social-field">
+              <span class="social-field-head"><span class="social-field-icon"><i class="fa-brands fa-youtube"></i></span><span><b>YouTube</b><small>Official channel URL</small></span></span>
+              <input type="url" name="youtube" inputmode="url" autocomplete="url" placeholder="https://youtube.com/@...">
+            </label>
+
+            <label class="social-field">
+              <span class="social-field-head"><span class="social-field-icon"><i class="fa-brands fa-facebook-f"></i></span><span><b>Facebook</b><small>Official page URL</small></span></span>
+              <input type="url" name="facebook" inputmode="url" autocomplete="url" placeholder="https://facebook.com/...">
+            </label>
+
+            <label class="social-field">
+              <span class="social-field-head"><span class="social-field-icon"><i class="fa-brands fa-instagram"></i></span><span><b>Instagram</b><small>Official profile URL</small></span></span>
+              <input type="url" name="instagram" inputmode="url" autocomplete="url" placeholder="https://instagram.com/...">
+            </label>
+
+            <label class="social-field">
+              <span class="social-field-head"><span class="social-field-icon"><i class="fa-brands fa-tiktok"></i></span><span><b>TikTok</b><small>Official profile URL</small></span></span>
+              <input type="url" name="tiktok" inputmode="url" autocomplete="url" placeholder="https://tiktok.com/@...">
+            </label>
+
+            <label class="social-field">
+              <span class="social-field-head"><span class="social-field-icon"><i class="fa-brands fa-whatsapp"></i></span><span><b>WhatsApp Number</b><small>Number with country code</small></span></span>
+              <input type="tel" name="whatsapp_number" autocomplete="tel" placeholder="+60 11 0000 0000">
+            </label>
+
+            <label class="social-field">
+              <span class="social-field-head"><span class="social-field-icon"><i class="fa-solid fa-link"></i></span><span><b>WhatsApp Link</b><small>Optional direct chat / channel link</small></span></span>
+              <input type="url" name="whatsapp_url" inputmode="url" autocomplete="url" placeholder="https://wa.me/...">
+            </label>
+          </div>
+
+          <div class="social-settings-foot">
+            <div class="social-settings-note"><i class="fa-solid fa-circle-info"></i><span>Leave any field blank until the final account/link is ready. Saving this page does not change your current website links automatically unless that section is connected to these settings.</span></div>
+            <button class="app-btn gold" id="socialSettingsSave" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save Settings</button>
+          </div>
+        </form>
+      </section>
     </div>
   </main>
 </div>
@@ -741,7 +793,7 @@
 
 <div class="app-modal" id="receiptPreviewModal"><div class="app-modal-card receipt-preview-card"><div class="app-modal-head"><div><h3>Payment Receipt</h3><small id="receiptPreviewSubtitle" class="muted">Secure temporary preview</small></div><button class="modal-close" data-close-modal="receiptPreviewModal"><i class="fa-solid fa-xmark"></i></button></div><div class="app-modal-body"><div id="receiptPreviewContent" class="receipt-preview-content"></div></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="receiptPreviewModal">Close</button><a id="receiptOpenExternal" class="app-btn gold" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Full Size</a></div></div></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js?v=11.11"></script><script src="assets/js/core.js?v=14.53"></script><script src="assets/js/admin.js?v=14.54"></script><script src="assets/js/platform-v8-admin.js?v=13.93"></script><script src="assets/js/platform-v962-admin.js?v=14.30"></script><script src="assets/js/dashboard-analytics-recovery.js?v=11.11"></script><script src="assets/js/v972-admin-course-actions.js?v=12.32"></script><script src="assets/js/v990-admin-ui.js?v=14.45"></script><script src="assets/js/v120-feature-flags.js?v=12.00"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js?v=11.11"></script><script src="assets/js/core.js?v=14.54"></script><script src="assets/js/admin.js?v=14.55"></script><script src="assets/js/platform-v8-admin.js?v=13.93"></script><script src="assets/js/platform-v962-admin.js?v=14.30"></script><script src="assets/js/dashboard-analytics-recovery.js?v=11.11"></script><script src="assets/js/v972-admin-course-actions.js?v=12.32"></script><script src="assets/js/v990-admin-ui.js?v=14.45"></script><script src="assets/js/v120-feature-flags.js?v=12.00"></script>
 
 <script src="assets/js/v1214-admin-unified.js?v=14.28"></script>
 <script src="assets/js/v1216-admin-final.js?v=14.00"></script>
