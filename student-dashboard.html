@@ -159,6 +159,11 @@
         <a href="/student/articles/" data-panel="articles"><i class="fa-solid fa-newspaper"></i><span>Articles</span></a>
         <a href="/student/premium/" data-panel="premium"><i class="fa-solid fa-crown"></i><span>Premium Access</span></a>
         <a href="/student/updates/" data-panel="announcements"><i class="fa-solid fa-bell"></i><span>Updates</span><span class="nav-count" id="announcementCount">0</span></a>
+        <button type="button" class="student-push-nav student-install-nav" id="studentSidebarInstallButton" data-student-install>
+          <i class="fa-solid fa-download"></i>
+          <span class="student-push-nav-copy"><b>Install 24K App</b><small data-install-status>Install app on this device</small></span>
+          <span class="student-install-nav-action" data-install-action><i class="fa-solid fa-chevron-right"></i></span>
+        </button>
         <button type="button" class="student-push-nav" id="studentPushNavButton" aria-haspopup="dialog" aria-controls="studentPushSheet">
           <i class="fa-solid fa-bell-concierge"></i>
           <span class="student-push-nav-copy"><b>Subscribe for Notifications</b><small id="studentPushNavStatus">Get signal & update alerts</small></span>
@@ -375,7 +380,7 @@
             <div class="account-access-row">
               <span class="account-row-icon"><i class="fa-solid fa-download"></i></span>
               <div class="account-row-copy"><h3>Install 24K Student App</h3><p>Add the Student Panel to this device for an app-like experience.</p></div>
-              <div class="account-row-side"><button type="button" class="app-btn gold" id="studentInstallButton"><i class="fa-solid fa-download"></i> Install App</button></div>
+              <div class="account-row-side"><button type="button" class="app-btn gold" id="studentInstallButton" data-student-install><i class="fa-solid fa-download"></i> Install App</button></div>
             </div>
           </div>
 
