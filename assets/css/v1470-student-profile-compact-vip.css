@@ -1,0 +1,298 @@
+/* 24K MR ZERO — Profile compact VIP desktop density v14.70
+   Final desktop-only compression layer. Keeps the premium hierarchy while
+   removing oversized cards / empty vertical space. */
+
+@media (min-width:901px){
+
+  body.student-page #p-profile{
+    padding-bottom:20px!important;
+  }
+
+  body.student-page #p-profile .profile-panel-heading{
+    min-height:54px!important;
+    height:auto!important;
+    padding:10px 14px!important;
+    margin-bottom:9px!important;
+    border-radius:12px!important;
+  }
+  body.student-page #p-profile .profile-panel-heading::before{
+    left:12px!important;
+    top:11px!important;
+    bottom:11px!important;
+  }
+  body.student-page #p-profile .profile-panel-heading h2{
+    font-size:16px!important;
+  }
+  body.student-page #p-profile .profile-panel-heading p{
+    margin-top:3px!important;
+    font-size:7.5px!important;
+  }
+
+  body.student-page #p-profile .profile-compact-shell{
+    gap:8px!important;
+  }
+
+  /* Compact hero */
+  body.student-page #p-profile .profile-premium-hero{
+    min-height:128px!important;
+    grid-template-columns:minmax(0,1.25fr) minmax(390px,.85fr)!important;
+    grid-template-rows:auto auto!important;
+    column-gap:14px!important;
+    row-gap:6px!important;
+    padding:13px 15px!important;
+    border-radius:14px!important;
+    box-shadow:0 10px 24px rgba(18,24,32,.045)!important;
+  }
+
+  body.student-page #p-profile .profile-hero-identity{
+    gap:13px!important;
+  }
+  body.student-page #p-profile .profile-hero-avatar{
+    width:62px!important;
+    height:62px!important;
+    flex-basis:62px!important;
+    border-width:2px!important;
+    box-shadow:0 0 0 4px rgba(240,197,50,.08),0 8px 18px rgba(18,24,32,.12)!important;
+    font-size:16px!important;
+  }
+  body.student-page #p-profile .profile-hero-avatar>i{
+    width:20px!important;
+    height:20px!important;
+    border-width:2px!important;
+    font-size:7px!important;
+  }
+  body.student-page #p-profile .profile-hero-copy>small{
+    font-size:6px!important;
+    margin-bottom:2px!important;
+  }
+  body.student-page #p-profile .profile-hero-copy h2{
+    font-size:21px!important;
+  }
+  body.student-page #p-profile .profile-hero-copy>p{
+    margin-top:3px!important;
+    font-size:8px!important;
+  }
+  body.student-page #p-profile .profile-hero-meta{
+    gap:5px!important;
+    margin-top:7px!important;
+  }
+  body.student-page #p-profile .profile-hero-meta>span{
+    min-height:24px!important;
+    padding:0 7px!important;
+    border-radius:7px!important;
+  }
+  body.student-page #p-profile .profile-hero-meta b{
+    font-size:6.8px!important;
+  }
+
+  body.student-page #p-profile .profile-hero-access{
+    min-height:62px!important;
+    grid-template-columns:32px minmax(0,1fr) 24px!important;
+    gap:8px!important;
+    padding:8px 9px!important;
+    border-radius:10px!important;
+  }
+  body.student-page #p-profile .profile-access-icon{
+    width:32px!important;
+    height:32px!important;
+    border-radius:9px!important;
+    font-size:10px!important;
+  }
+  body.student-page #p-profile .profile-hero-access small{
+    font-size:5.5px!important;
+  }
+  body.student-page #p-profile .profile-hero-access b{
+    font-size:9.5px!important;
+  }
+  body.student-page #p-profile .profile-hero-access p{
+    font-size:6.7px!important;
+  }
+  body.student-page #p-profile .profile-access-arrow{
+    width:24px!important;
+    height:24px!important;
+    border-radius:7px!important;
+    font-size:7px!important;
+  }
+
+  body.student-page #p-profile .profile-hero-access-meta{
+    gap:5px!important;
+  }
+  body.student-page #p-profile .profile-hero-access-meta>span{
+    min-height:34px!important;
+    padding:5px 7px!important;
+    border-radius:8px!important;
+  }
+  body.student-page #p-profile .profile-hero-access-meta small{
+    font-size:4.8px!important;
+  }
+  body.student-page #p-profile .profile-hero-access-meta b{
+    font-size:6.6px!important;
+  }
+
+  /* Compact action matrix */
+  body.student-page #p-profile .account-access-card{
+    gap:6px!important;
+  }
+  body.student-page #p-profile .account-access-row{
+    min-height:62px!important;
+    grid-template-columns:32px minmax(0,1fr) auto!important;
+    gap:8px!important;
+    padding:8px 10px!important;
+    border-radius:10px!important;
+    box-shadow:0 5px 14px rgba(18,24,32,.025)!important;
+  }
+  body.student-page #p-profile .account-access-row::before{
+    top:9px!important;
+    bottom:9px!important;
+  }
+  body.student-page #p-profile .account-row-icon{
+    width:31px!important;
+    height:31px!important;
+    border-radius:8px!important;
+    font-size:9px!important;
+  }
+  body.student-page #p-profile .account-row-copy h3{
+    font-size:9.5px!important;
+  }
+  body.student-page #p-profile .account-row-copy p{
+    margin-top:2px!important;
+    font-size:6.8px!important;
+  }
+  body.student-page #p-profile .account-row-side{
+    gap:5px!important;
+  }
+  body.student-page #p-profile .account-row-side .app-btn{
+    min-height:29px!important;
+    height:29px!important;
+    padding:0 8px!important;
+    border-radius:7px!important;
+    font-size:6.4px!important;
+  }
+  body.student-page #p-profile .compact-access-state{
+    min-height:21px!important;
+    padding:0 6px!important;
+    font-size:5.5px!important;
+  }
+
+  /* Personal information — 4 fields in one compact row on wide desktop */
+  body.student-page #p-profile .profile-readonly-card{
+    padding:10px 12px 11px!important;
+    border-radius:12px!important;
+    box-shadow:0 6px 16px rgba(18,24,32,.025)!important;
+  }
+  body.student-page #p-profile .profile-info-head{
+    min-height:37px!important;
+    grid-template-columns:30px minmax(0,1fr) auto!important;
+    gap:8px!important;
+    margin-bottom:8px!important;
+    padding-bottom:8px!important;
+  }
+  body.student-page #p-profile .profile-section-icon{
+    width:30px!important;
+    height:30px!important;
+    border-radius:8px!important;
+    font-size:9px!important;
+  }
+  body.student-page #p-profile .profile-info-head h3{
+    font-size:10.5px!important;
+  }
+  body.student-page #p-profile .profile-info-head p{
+    margin-top:2px!important;
+    font-size:6.8px!important;
+  }
+  body.student-page #p-profile .profile-saved-badge{
+    min-height:23px!important;
+    padding:0 7px!important;
+    border-radius:7px!important;
+    font-size:5.8px!important;
+  }
+
+  body.student-page #p-profile .profile-readonly-form .form-grid{
+    display:grid!important;
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    gap:7px!important;
+    align-items:end!important;
+  }
+  body.student-page #p-profile .profile-readonly-form .form-field,
+  body.student-page #p-profile .profile-readonly-form .form-field.full,
+  body.student-page #p-profile .profile-readonly-form .editable-experience{
+    grid-column:auto!important;
+    width:auto!important;
+    min-width:0!important;
+  }
+  body.student-page #p-profile .profile-readonly-form .form-field label{
+    margin-bottom:4px!important;
+    font-size:6.3px!important;
+  }
+  body.student-page #p-profile .profile-readonly-form .form-field input{
+    min-height:35px!important;
+    height:35px!important;
+    padding:0 9px!important;
+    border-radius:8px!important;
+    font-size:8px!important;
+  }
+  body.student-page #p-profile .profile-readonly-form .form-field::after{
+    right:9px!important;
+    font-size:7px!important;
+  }
+  body.student-page #p-profile .profile-readonly-form .editable-experience input{
+    padding-right:28px!important;
+  }
+  body.student-page #p-profile .profile-experience-action{
+    margin-top:7px!important;
+  }
+  body.student-page #p-profile .profile-experience-action .app-btn{
+    min-width:132px!important;
+    min-height:30px!important;
+    height:30px!important;
+    padding:0 9px!important;
+    border-radius:7px!important;
+    font-size:6.5px!important;
+  }
+
+  /* Payment history accordions */
+  body.student-page #p-profile .premium-history-details{
+    border-radius:10px!important;
+    box-shadow:0 4px 12px rgba(18,24,32,.02)!important;
+  }
+  body.student-page #p-profile .premium-history-details summary{
+    min-height:40px!important;
+    padding:6px 10px!important;
+    font-size:8px!important;
+  }
+  body.student-page #p-profile .premium-history-details summary>span>i{
+    width:25px!important;
+    height:25px!important;
+    border-radius:7px!important;
+    font-size:7px!important;
+  }
+  body.student-page #p-profile .premium-history-details summary small{
+    font-size:5.8px!important;
+  }
+  body.student-page #p-profile .payment-table th{
+    padding:7px 8px!important;
+    font-size:6px!important;
+  }
+  body.student-page #p-profile .payment-table td{
+    padding:8px!important;
+    font-size:7.5px!important;
+  }
+
+  /* Dark parity */
+  html[data-theme="dark"] body.student-page #p-profile .profile-readonly-card,
+  html[data-theme="dark"] body.student-page #p-profile .account-access-row,
+  html[data-theme="dark"] body.student-page #p-profile .profile-panel-heading,
+  html[data-theme="dark"] body.student-page #p-profile .premium-history-details{
+    box-shadow:none!important;
+  }
+}
+
+/* Mid-size desktop: keep compact without squeezing fields too far. */
+@media (min-width:901px) and (max-width:1240px){
+  body.student-page #p-profile .profile-premium-hero{
+    grid-template-columns:minmax(0,1fr) minmax(340px,.9fr)!important;
+  }
+  body.student-page #p-profile .profile-readonly-form .form-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
