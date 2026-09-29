@@ -422,3 +422,34 @@
   body.student-page #p-profile .payment-table th{font-size:9px!important}
   body.student-page #p-profile .payment-table td{font-size:10.5px!important}
 }
+
+
+/* v14.76 — all marked Profile icon boxes gold in dark
+   Email, Premium, WhatsApp, Install App, Personal Information,
+   payment-history icons and the hero access arrow all use the same 24K gold tile. */
+@media (min-width:901px){
+  html[data-theme="dark"] body.student-page #p-profile .profile-access-arrow,
+  html[data-theme="dark"] body.student-page #p-profile .account-row-icon,
+  html[data-theme="dark"] body.student-page #p-profile .account-row-icon.whatsapp,
+  html[data-theme="dark"] body.student-page #p-profile .profile-section-icon,
+  html[data-theme="dark"] body.student-page #p-profile .premium-history-details summary>span>i{
+    border:1px solid #e2ad12!important;
+    background:linear-gradient(145deg,#f6cd3e,#d69f05)!important;
+    color:#201800!important;
+    box-shadow:0 6px 14px rgba(214,159,5,.13)!important;
+  }
+
+  /* Keep row accent lines premium gold as well, including Support. */
+  html[data-theme="dark"] body.student-page #p-profile .account-access-row::before,
+  html[data-theme="dark"] body.student-page #p-profile .account-access-row:nth-child(3)::before,
+  html[data-theme="dark"] body.student-page #p-profile .account-access-row:nth-child(4)::before{
+    background:#d6a10b!important;
+  }
+
+  html[data-theme="dark"] body.student-page #p-profile .profile-hero-access:hover .profile-access-arrow,
+  html[data-theme="dark"] body.student-page #p-profile .premium-history-details summary:hover>span>i{
+    border-color:#f0c535!important;
+    background:linear-gradient(145deg,#ffda55,#e1a90b)!important;
+    color:#171100!important;
+  }
+}
