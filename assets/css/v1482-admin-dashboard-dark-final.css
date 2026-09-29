@@ -1,0 +1,321 @@
+/* 24K MR ZERO — Admin Dashboard dark-theme final polish v14.82
+   Desktop-only dashboard refinement. Mobile/tablet remain untouched. */
+
+@media (min-width:901px){
+
+  /* ------------------------------------------------------------
+     Remove artificial dashboard runway / bottom scroll space
+     ------------------------------------------------------------ */
+  html[data-auth-scope="admin"] body.app-page:has(#p-dashboard.on),
+  html[data-auth-scope="admin"] body.app-page:has(#p-dashboard.on) #adminApp.app-shell,
+  html[data-auth-scope="admin"] body.app-page:has(#p-dashboard.on) .app-main,
+  html[data-auth-scope="admin"] body.app-page:has(#p-dashboard.on) .app-content,
+  html[data-auth-scope="admin"] body.app-page:has(#p-dashboard.on) #p-dashboard{
+    min-height:0!important;
+    height:auto!important;
+  }
+
+  html[data-auth-scope="admin"] body.app-page:has(#p-dashboard.on) .app-content{
+    padding-bottom:0!important;
+  }
+
+  #p-dashboard.admin-dashboard-v2{
+    padding-bottom:0!important;
+    margin-bottom:0!important;
+  }
+
+  #p-dashboard .admin-dashboard-analytics,
+  #p-dashboard .dashboard-analytics-column,
+  #p-dashboard .analytics-card:last-child,
+  #p-dashboard .analytics-performance-row:last-child{
+    margin-bottom:0!important;
+    padding-bottom:0!important;
+  }
+
+  #p-dashboard .admin-dashboard-analytics{
+    align-self:start!important;
+    height:auto!important;
+    min-height:0!important;
+  }
+
+  /* ------------------------------------------------------------
+     Dark dashboard hierarchy
+     ------------------------------------------------------------ */
+  html[data-theme="dark"] #p-dashboard{
+    --dash-card:#10151b;
+    --dash-card-2:#131920;
+    --dash-card-3:#171b1f;
+    --dash-line:#29313a;
+    --dash-line-gold:#564414;
+    --dash-gold:#e2b425;
+    --dash-gold-soft:#f0c73b;
+    --dash-text:#f2f5f7;
+    --dash-muted:#8e99a5;
+  }
+
+  html[data-theme="dark"] #p-dashboard .admin-dashboard-hero{
+    border-color:#303741!important;
+    border-left-color:#d8a20a!important;
+    background:
+      radial-gradient(520px 220px at 98% 5%,rgba(216,162,10,.10),transparent 68%),
+      linear-gradient(135deg,#11161c 0%,#0d1218 62%,#151209 100%)!important;
+    box-shadow:0 18px 42px rgba(0,0,0,.19)!important;
+  }
+
+  html[data-theme="dark"] #p-dashboard .admin-dashboard-kicker{
+    border-color:#665117!important;
+    background:linear-gradient(145deg,#3a2f0e,#201a09)!important;
+    color:#efc43a!important;
+    box-shadow:none!important;
+  }
+
+  html[data-theme="dark"] #p-dashboard .admin-live-pill{
+    border-color:#28503f!important;
+    background:linear-gradient(145deg,#102019,#0d1814)!important;
+    box-shadow:none!important;
+  }
+
+  html[data-theme="dark"] #p-dashboard .admin-live-pill>b{color:#69d59b!important}
+  html[data-theme="dark"] #p-dashboard .admin-live-pill>small{color:#769087!important}
+  html[data-theme="dark"] #p-dashboard .admin-live-pill>i{
+    background:#2bc889!important;
+    box-shadow:0 0 0 5px rgba(43,200,137,.10)!important;
+  }
+
+  /* Hero snapshot cards */
+  html[data-theme="dark"] #p-dashboard .admin-platform-snapshot .v1218-mini{
+    border-color:#303741!important;
+    background:linear-gradient(145deg,#11171d,#0f141a)!important;
+    box-shadow:none!important;
+  }
+  html[data-theme="dark"] #p-dashboard .admin-platform-snapshot .v1218-mini:before{
+    background:linear-gradient(#e0ad1d,rgba(224,173,29,.18))!important;
+  }
+  html[data-theme="dark"] #p-dashboard .admin-platform-snapshot .v1218-mini small{color:#8d98a4!important}
+  html[data-theme="dark"] #p-dashboard .admin-platform-snapshot .v1218-mini b{color:#f3f5f7!important}
+  html[data-theme="dark"] #p-dashboard .admin-snapshot-icon{
+    border:1px solid #554515!important;
+    background:#1d190d!important;
+    color:#e6ba31!important;
+  }
+
+  /* Section headers */
+  html[data-theme="dark"] #p-dashboard .admin-dashboard-section-head{
+    margin-top:14px!important;
+  }
+  html[data-theme="dark"] #p-dashboard .admin-dashboard-section-head small{color:#c89c1b!important}
+  html[data-theme="dark"] #p-dashboard .admin-dashboard-section-head b{color:#eef2f5!important}
+  html[data-theme="dark"] #p-dashboard .admin-dashboard-section-head>span{color:#737e8a!important}
+
+  /* KPI cards */
+  html[data-theme="dark"] #p-dashboard #adminKpis .business-summary-card,
+  html[data-theme="dark"] #p-dashboard #adminKpis .app-kpi{
+    border-color:#303741!important;
+    background:
+      radial-gradient(100px 60px at 100% 100%,rgba(216,162,10,.055),transparent 72%),
+      linear-gradient(145deg,#11171d,#0f141a)!important;
+    box-shadow:none!important;
+  }
+  html[data-theme="dark"] #p-dashboard #adminKpis .business-summary-card:hover,
+  html[data-theme="dark"] #p-dashboard #adminKpis .app-kpi:hover{
+    border-color:#675219!important;
+    background:linear-gradient(145deg,#151a20,#12170f)!important;
+    box-shadow:0 12px 28px rgba(0,0,0,.16)!important;
+  }
+  html[data-theme="dark"] #p-dashboard #adminKpis .business-summary-icon,
+  html[data-theme="dark"] #p-dashboard #adminKpis .app-kpi>i:first-child{
+    border-color:#574716!important;
+    background:#1d190d!important;
+    color:#e9bd31!important;
+  }
+
+  /* Quick actions */
+  html[data-theme="dark"] #p-dashboard .admin-dashboard-quick button{
+    border-color:#303741!important;
+    background:linear-gradient(145deg,#11171d,#0f141a)!important;
+    box-shadow:none!important;
+  }
+  html[data-theme="dark"] #p-dashboard .admin-dashboard-quick button>span{
+    border-color:#574716!important;
+    background:linear-gradient(145deg,#201b0d,#17150d)!important;
+    color:#e5b82c!important;
+  }
+  html[data-theme="dark"] #p-dashboard .admin-dashboard-quick button small{color:#89939f!important}
+  html[data-theme="dark"] #p-dashboard .admin-dashboard-quick button>i{color:#a88629!important}
+  html[data-theme="dark"] #p-dashboard .admin-dashboard-quick button:hover{
+    border-color:#675219!important;
+    background:linear-gradient(145deg,#161b21,#17150d)!important;
+    box-shadow:0 12px 28px rgba(0,0,0,.15)!important;
+  }
+
+  /* ------------------------------------------------------------
+     Requiring Action + Upcoming Sessions
+     Remove the olive/green wash from the whole cards.
+     ------------------------------------------------------------ */
+  html[data-theme="dark"] #p-dashboard .admin-dashboard-card{
+    border-color:#303741!important;
+    background:
+      radial-gradient(170px 84px at 100% 0%,rgba(216,162,10,.045),transparent 72%),
+      linear-gradient(145deg,#11171d,#0f141a)!important;
+    box-shadow:none!important;
+  }
+
+  html[data-theme="dark"] #p-dashboard #dashboardPayments .empty-state{
+    min-height:122px!important;
+    border:1px dashed #4b4124!important;
+    background:#121711!important;
+    color:#a9b1ba!important;
+  }
+  html[data-theme="dark"] #p-dashboard #dashboardPayments .empty-state i{
+    color:#d2aa2d!important;
+    background:#211d10!important;
+    border:1px solid #4e421d!important;
+    border-radius:50%!important;
+    width:34px!important;
+    height:34px!important;
+    display:grid!important;
+    place-items:center!important;
+    margin:0 auto 8px!important;
+    font-size:14px!important;
+  }
+
+  html[data-theme="dark"] #p-dashboard #dashboardSessions .activity-item{
+    border-color:#323943!important;
+    background:linear-gradient(145deg,#131920,#11161b)!important;
+  }
+  html[data-theme="dark"] #p-dashboard #dashboardSessions .activity-item:hover{
+    border-color:#604d19!important;
+    background:linear-gradient(145deg,#171c22,#19170d)!important;
+  }
+  html[data-theme="dark"] #p-dashboard #dashboardSessions .activity-icon{
+    border:1px solid #5a4815!important;
+    background:#211c0d!important;
+    color:#efc43a!important;
+  }
+  html[data-theme="dark"] #p-dashboard #dashboardSessions .activity-item b{color:#f0f3f5!important}
+  html[data-theme="dark"] #p-dashboard #dashboardSessions .activity-item small{color:#8e98a3!important}
+  html[data-theme="dark"] #p-dashboard #dashboardSessions .status-pill{
+    border-color:#5d4a14!important;
+    background:#211c0d!important;
+    color:#e9bb2e!important;
+  }
+  html[data-theme="dark"] #p-dashboard .admin-dashboard-card .app-btn.outline{
+    border-color:#5c4915!important;
+    background:#17170f!important;
+    color:#e3b62a!important;
+  }
+  html[data-theme="dark"] #p-dashboard .admin-dashboard-card .app-btn.outline:hover{
+    border-color:#816817!important;
+    background:#211c0d!important;
+    color:#f0c83e!important;
+  }
+
+  /* ------------------------------------------------------------
+     Analytics — neutral dark surfaces, gold only where it matters
+     ------------------------------------------------------------ */
+  html[data-theme="dark"] #p-dashboard .analytics-card,
+  html[data-theme="dark"] #p-dashboard .trend-analytics-card,
+  html[data-theme="dark"] #p-dashboard .v929-analytics-card{
+    border-color:#303741!important;
+    background:
+      radial-gradient(180px 90px at 100% 0%,rgba(216,162,10,.045),transparent 72%),
+      linear-gradient(145deg,#11171d,#0f141a)!important;
+    box-shadow:none!important;
+  }
+
+  html[data-theme="dark"] #p-dashboard .analytics-head h3,
+  html[data-theme="dark"] #p-dashboard .trend-head h3{color:#f1f4f6!important}
+  html[data-theme="dark"] #p-dashboard .analytics-head p,
+  html[data-theme="dark"] #p-dashboard .trend-head p{color:#89949f!important}
+  html[data-theme="dark"] #p-dashboard .analytics-eyebrow{color:#c89c1b!important}
+  html[data-theme="dark"] #p-dashboard .trend-total b{color:#f1f4f6!important}
+  html[data-theme="dark"] #p-dashboard .trend-total small{color:#75808c!important}
+
+  html[data-theme="dark"] #p-dashboard .analytics-range-row button,
+  html[data-theme="dark"] #p-dashboard .analytics-range-btn{
+    border-color:#343b44!important;
+    background:#151a20!important;
+    color:#aab3bc!important;
+    box-shadow:none!important;
+  }
+  html[data-theme="dark"] #p-dashboard .analytics-range-row button:hover,
+  html[data-theme="dark"] #p-dashboard .analytics-range-btn:hover{
+    border-color:#5d4b18!important;
+    background:#1c1b12!important;
+    color:#e5bc38!important;
+  }
+  html[data-theme="dark"] #p-dashboard .analytics-range-row button.active,
+  html[data-theme="dark"] #p-dashboard .analytics-range-btn.active{
+    border-color:#d6a40e!important;
+    background:linear-gradient(145deg,#efc336,#d8a008)!important;
+    color:#211900!important;
+    box-shadow:0 6px 14px rgba(216,162,10,.10)!important;
+  }
+
+  html[data-theme="dark"] #p-dashboard .analytics-trend-chart.round,
+  html[data-theme="dark"] #p-dashboard .v933-chart-surface{
+    min-height:164px!important;
+    border-color:#2e353e!important;
+    background:linear-gradient(145deg,#11161b,#10151a)!important;
+  }
+
+  html[data-theme="dark"] #p-dashboard .analytics-donut-svg .donut-track{
+    stroke:#2a3139!important;
+  }
+
+  html[data-theme="dark"] #p-dashboard .analytics-donut-center{
+    color:#eef2f5!important;
+  }
+  html[data-theme="dark"] #p-dashboard .analytics-donut-center b{color:#f4f6f8!important}
+  html[data-theme="dark"] #p-dashboard .analytics-donut-center span{color:#a7b0b9!important}
+  html[data-theme="dark"] #p-dashboard .analytics-donut-center small{color:#d2aa2d!important}
+
+  html[data-theme="dark"] #p-dashboard .analytics-pie-legend>div{
+    border-color:#303741!important;
+    background:#151a20!important;
+    color:#9da7b1!important;
+  }
+  html[data-theme="dark"] #p-dashboard .analytics-pie-legend b{color:#f0f3f5!important}
+  html[data-theme="dark"] #p-dashboard .analytics-pie-legend small{color:#737e89!important}
+
+  html[data-theme="dark"] #p-dashboard .analytics-performance-row{
+    border-top-color:#2b323b!important;
+    color:#7f8a96!important;
+  }
+
+  html[data-theme="dark"] #p-dashboard .analytics-change.positive{
+    border:1px solid #24513d!important;
+    background:#102019!important;
+    color:#6bd49b!important;
+  }
+  html[data-theme="dark"] #p-dashboard .analytics-change.negative{
+    border:1px solid #5b2b34!important;
+    background:#211418!important;
+    color:#ef7f8d!important;
+  }
+  html[data-theme="dark"] #p-dashboard .analytics-change.neutral{
+    border:1px solid #594817!important;
+    background:#201c0e!important;
+    color:#d9b332!important;
+  }
+
+  html[data-theme="dark"] #p-dashboard .v929-custom{
+    border-color:#303741!important;
+    background:#12171d!important;
+  }
+  html[data-theme="dark"] #p-dashboard .v929-custom label{color:#aab3bc!important}
+  html[data-theme="dark"] #p-dashboard .v929-custom input{
+    border-color:#343b45!important;
+    background:#151a20!important;
+    color:#eef1f4!important;
+  }
+
+  /* slightly tighter final section so page ends immediately after analytics */
+  #p-dashboard .admin-dashboard-section-head:has(+ #dashboardAnalytics){
+    margin-bottom:7px!important;
+  }
+  #p-dashboard #dashboardAnalytics{
+    padding-bottom:0!important;
+    margin-bottom:0!important;
+  }
+}
