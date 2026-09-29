@@ -446,7 +446,7 @@
   }
 
   async function requireRole(role) {
-    const loginUrl = role === 'admin' ? 'admin-login.html' : 'login.html?tab=student-login';
+    const loginUrl = role === 'admin' ? '/admin-login.html' : '/login.html?tab=student-login';
     try {
       const user = await getCurrentUser();
       if (!user) throw new Error('No active session');
@@ -467,7 +467,7 @@
 
   async function logout() {
     if (supabase) await supabase.auth.signOut();
-    window.location.replace(authScope === 'admin' ? 'admin-login.html' : 'login.html');
+    window.location.replace(authScope === 'admin' ? '/admin-login.html' : '/login.html');
   }
 
   async function hashFile(file) {
