@@ -772,3 +772,171 @@
 }
 
 /* Mobile intentionally unchanged. */
+
+
+/* =========================================================
+   v14.88 SECOND QA PASS — late-selector / hover leakage fixes
+   ========================================================= */
+@media (min-width:901px){
+  /* Overview inner opportunity panel + text */
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="overview"] .team-opportunity-main{
+    background:#0f151c!important;
+    border-color:#29323c!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="overview"] .team-opportunity-main b{
+    color:var(--td-text)!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="overview"] .team-opportunity-main small,
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-quick-actions small,
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="overview"] .recent-client small,
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="overview"] .today-work-label{
+    color:var(--td-muted)!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-quick-actions b{
+    color:var(--td-text)!important;
+  }
+
+  /* Client workspace remaining labels / attention cell */
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-summary-card b{
+    color:var(--td-text)!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-summary-card small,
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-filter-panel label>span,
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-identity small{
+    color:var(--td-muted)!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-info-grid .follow-state.attention{
+    background:#19170f!important;
+    border-color:#4b3e18!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-info-grid .follow-state.ok{
+    background:#102019!important;
+    border-color:#26513f!important;
+  }
+
+  /* Search ownership state chips */
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="search"] .ownership-state{
+    background:#1b1a11!important;
+    border-color:#5a4817!important;
+    color:#efc13b!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="search"] .ownership-state.mine{
+    background:#10241d!important;
+    border-color:#285d49!important;
+    color:#58d1a4!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="search"] .premium-manager-wa{
+    background:#10231d!important;
+    border-color:#235744!important;
+    color:#55d3a4!important;
+  }
+
+  /* Daily Report grouped work surfaces were still inheriting light backgrounds. */
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-grid,
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-note{
+    background:#0f151c!important;
+    border-color:#29323c!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-grid.broker-lots,
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-submit{
+    background:#18170f!important;
+    border-color:#4a3d17!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-form>.team-daily-grid:first-of-type:before,
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-subhead>span{
+    color:#b9c2cb!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-subhead>small,
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-note>span small{
+    background:#1a222b!important;
+    border:1px solid #303a44!important;
+    color:#aeb8c2!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-submit>span i{
+    background:linear-gradient(145deg,var(--td-gold-hi),var(--td-gold-deep))!important;
+    color:var(--td-gold-ink)!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="daily"] .course-conversion-foot,
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="daily"] .course-conversion-metrics span,
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="daily"] .auto-activity-grid>div>div>span{
+    color:var(--td-muted)!important;
+  }
+
+  /* Chat inner headers / empty profile / active count */
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-inbox-head,
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-conversation-head{
+    background:#10161d!important;
+    border-color:#29323c!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-profile .profile-empty,
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-messages>.team-chat-empty-state{
+    background:#121820!important;
+    border-color:#343028!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-filter-row button.active em{
+    background:rgba(36,27,0,.18)!important;
+    color:#241b00!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="chat"] .chat-conversation-placeholder-title small{
+    color:var(--td-muted)!important;
+  }
+
+  /* Earnings inner white cards + percentage/info pills */
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="earnings"] .team-earnings-total,
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="earnings"] .team-earnings-hero-stat{
+    background:#0f151c!important;
+    border-color:#29323c!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="earnings"] .team-earnings-policy summary>span>i,
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="earnings"] .premium-earning-card-top em{
+    background:linear-gradient(145deg,var(--td-gold-hi),var(--td-gold-deep))!important;
+    border-color:#e2b51f!important;
+    color:var(--td-gold-ink)!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="earnings"] .premium-earning-card small,
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="earnings"] .premium-earning-card>span,
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="earnings"] .progress-meta span,
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="earnings"] .next-copy,
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="earnings"] .broker-stats span{
+    color:var(--td-muted)!important;
+  }
+
+  /* Performance hover/focus must stay dark; no cream flash. */
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="performance"] .team-performance-range .preset-row button:hover{
+    background:#1a211f!important;
+    border-color:#5a4a1b!important;
+    color:#efc13b!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="performance"] .team-performance-range .preset-row button.active:hover{
+    background:linear-gradient(145deg,var(--td-gold-hi),var(--td-gold-deep))!important;
+    border-color:#e2b51f!important;
+    color:var(--td-gold-ink)!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="performance"] .course-performance-grid>div:hover,
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="performance"] .metric-box-grid>div:hover{
+    background:#171d24!important;
+    border-color:#3a444e!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="performance"] .team-source-performance tbody tr:hover td{
+    background:#181a14!important;
+  }
+
+  /* History generated pseudo-icon boxes / empty strip */
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="history"] .team-history-card td[colspan]:before,
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="history"] .team-history-links .overview-link-chip:before{
+    background:linear-gradient(145deg,var(--td-gold-hi),var(--td-gold-deep))!important;
+    color:var(--td-gold-ink)!important;
+  }
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="history"] .team-history-links .muted{
+    background:#0f151c!important;
+    border-color:#343e48!important;
+    color:var(--td-muted)!important;
+  }
+
+  /* Tracking copy hover must not flash white. */
+  html[data-theme="dark"] body #teamApp:not(.hidden) [data-view-panel="links"] .premium-tracked-url button:hover{
+    background:linear-gradient(145deg,#f8d34b,#dda609)!important;
+    border-color:#efc637!important;
+    color:var(--td-gold-ink)!important;
+  }
+}
