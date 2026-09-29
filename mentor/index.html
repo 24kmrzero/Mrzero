@@ -493,7 +493,7 @@
               <h2>Courses Management</h2>
               <p>Create courses, add sessions and manage the course structure from one place.</p>
             </div>
-            <span class="mentor-course-admin-managed"><i class="fa-solid fa-shield-halved"></i> ADMIN MANAGED</span>
+            <span class="mentor-course-admin-managed"><i class="fa-regular fa-pen-to-square"></i> EDIT ENABLED</span>
           </div>
           <div id="mentorCourseStatsDesktop" class="admin-course-stats" aria-label="Course overview"></div>
           <div id="mentorCourseCardsDesktop" class="admin-course-cards-desktop" aria-label="Course cards"></div>
@@ -806,6 +806,50 @@
       <div class="mentor-modal-foot premium-editor-foot">
         <button type="button" class="mentor-btn premium-secondary" data-close-mentor-modal>Cancel</button>
         <button class="mentor-btn gold premium-primary" type="submit"><i class="fa-solid fa-paper-plane"></i><span>Save Article</span></button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="mentor-modal mentor-course-modal" id="mentorCourseModal">
+  <div class="mentor-modal-card mentor-course-editor-card">
+    <div class="mentor-modal-head mentor-course-editor-head">
+      <div>
+        <small class="mentor-course-editor-kicker">24K COURSE OPERATIONS</small>
+        <b id="mentorCourseModalTitle">Edit Course</b>
+        <span>Update course details and live class schedule.</span>
+      </div>
+      <button class="mentor-close" type="button" data-close-mentor-modal aria-label="Close Course Editor"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <form id="mentorCourseForm">
+      <input type="hidden" name="id">
+      <div class="mentor-modal-body mentor-course-editor-body">
+        <section class="mentor-course-editor-section">
+          <div class="mentor-course-editor-section-head"><span>01</span><div><small>COURSE INFO</small><b>Details & Pricing</b></div></div>
+          <div class="mentor-course-editor-grid">
+            <label><span>Course Heading</span><input name="title" required></label>
+            <label><span>Instructor</span><input name="instructor_name" required></label>
+            <label class="full"><span>Short Caption</span><textarea name="short_description" rows="3" maxlength="220" required></textarea></label>
+            <label><span>Course Type</span><select name="course_type"><option value="paid">Paid</option><option value="free">Free</option></select></label>
+            <label><span>Regular Price</span><input type="number" min="0" step="0.01" name="price" required></label>
+            <label><span>Discount Price</span><input type="number" min="0" step="0.01" name="discount_price"></label>
+            <label><span>Currency</span><select name="currency"><option value="USD">USD</option><option value="PKR">PKR</option><option value="USDT">USDT</option></select></label>
+          </div>
+          <div class="mentor-course-editor-toggles">
+            <label><input type="checkbox" name="enrollment_open"><span><b>Enrollment Open</b><small>Allow new enrollments</small></span></label>
+            <label><input type="checkbox" name="is_published"><span><b>Published</b><small>Show course to students</small></span></label>
+          </div>
+        </section>
+
+        <section class="mentor-course-editor-section sessions">
+          <div class="mentor-course-editor-section-head"><span>02</span><div><small>LIVE CLASSES</small><b>Sessions</b></div><button type="button" data-add-mentor-course-session><i class="fa-solid fa-plus"></i> Add Class</button></div>
+          <div id="mentorCourseSessionEditor" class="mentor-course-session-editor"></div>
+        </section>
+
+        <div class="mentor-course-editor-note"><i class="fa-solid fa-circle-info"></i><span>Course thumbnail remains unchanged here. Edit saves directly to the shared Admin / Mentor / Student course data.</span></div>
+      </div>
+      <div class="mentor-modal-foot mentor-course-editor-foot">
+        <button type="button" class="mentor-btn" data-close-mentor-modal>Cancel</button>
+        <button class="mentor-btn gold" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save Course & Classes</button>
       </div>
     </form>
   </div>
