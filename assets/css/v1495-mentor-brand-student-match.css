@@ -1,0 +1,52 @@
+/* v14.95 — Mentor brand matches Student sidebar logo block */
+.mentor-side .mentor-brand.mentor-brand-student-match{
+  position:relative!important;
+  min-height:96px!important;
+  height:auto!important;
+  margin:-16px -12px 0!important;
+  padding:13px 18px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:0!important;
+  border-bottom:1px solid rgba(255,255,255,.07)!important;
+  box-sizing:border-box!important;
+}
+html[data-theme="light"] .mentor-side .mentor-brand.mentor-brand-student-match{
+  border-bottom-color:rgba(17,17,17,.08)!important;
+}
+.mentor-side .mentor-brand.mentor-brand-student-match .mentor-logo-home{
+  width:100%!important;
+  height:100%!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  text-decoration:none!important;
+}
+.mentor-side .mentor-brand.mentor-brand-student-match .mentor-logo-home img{
+  display:block!important;
+  width:auto!important;
+  height:auto!important;
+  max-width:150px!important;
+  max-height:70px!important;
+  object-fit:contain!important;
+  filter:drop-shadow(0 8px 24px rgba(255,193,7,.12))!important;
+}
+.mentor-side .mentor-brand.mentor-brand-student-match .mentor-menu-close{
+  position:absolute!important;
+  right:12px!important;
+  top:50%!important;
+  transform:translateY(-50%)!important;
+  z-index:2!important;
+}
+@media(max-width:760px){
+  .mentor-side .mentor-brand.mentor-brand-student-match{
+    min-height:96px!important;
+    margin:-14px -12px 0!important;
+    padding:13px 18px!important;
+  }
+  .mentor-side .mentor-brand.mentor-brand-student-match .mentor-logo-home img{
+    max-width:150px!important;
+    max-height:70px!important;
+  }
+}
