@@ -61,6 +61,40 @@ async function auditMentor(action,status='success',details={},entityType=null,en
     await sb.functions.invoke('audit-event',{body:{action,status,entity_type:entityType,entity_id:entityId,details:{scope:'mentor',...details}}});
   }catch(_){}
 }
+async function sendStudentPush24K(payload){
+  try{
+    if(!sb)return null;
+    const {data,error}=await sb.functions.invoke('send-student-push',{body:payload});
+    if(error)throw error;
+    return data||{ok:true}
+  }catch(error){
+    console.warn('[24K Push] Mentor push failed',error);
+    return null
+  }
+}
+async function sendLatestMentorSignalUpdatePush24K(signalId){
+  try{
+    const {data:update,error}=await sb.from('signal_updates')
+      .select('id,event_type,notify_users,notification_title,notification_message,note,created_at')
+      .eq('signal_id',signalId)
+      .eq('notify_users',true)
+      .order('created_at',{ascending:false})
+      .limit(1)
+      .maybeSingle();
+    if(error||!update)return null;
+    return await sendStudentPush24K({
+      type:'signal_update',
+      content_id:String(signalId),
+      event_key:`signal:update:${update.id}`,
+      title:update.notification_title||'24K Signal Update',
+      message:update.notification_message||update.note||'A signal has been updated.',
+      url:`/student/signals/?push=${encodeURIComponent(signalId)}`
+    })
+  }catch(error){
+    console.warn('[24K Push] Mentor signal update lookup failed',error);
+    return null
+  }
+}
 function num(v){if(v===null||v===undefined||String(v).trim()==='')return null;const x=Number(v);return Number.isFinite(x)?x:null}function money(v){return Number(v||0).toLocaleString(undefined,{maximumFractionDigits:1})}function dt(v){if(!v)return'—';try{return new Date(v).toLocaleString()}catch{return'—'}}function slug(v){return String(v||'article').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,70)}
 function byDate(items,key='created_at'){return items.reduce((a,x)=>{const d=new Date(x[key]||x.published_at||Date.now()),k=d.toLocaleDateString(undefined,{day:'numeric',month:'long',year:'numeric'});(a[k]||(a[k]=[])).push(x);return a},{})}
 function contentAssetPath(url){if(!url)return null;try{const p=new URL(url,location.origin).pathname,marker='/storage/v1/object/public/content-assets/';const i=p.indexOf(marker);return i>=0?decodeURIComponent(p.slice(i+marker.length)):null}catch{return null}}
@@ -1374,9 +1408,13 @@ async function saveAnnouncement(e){
         send_browser:true,
         published_at:new Date().toISOString(),
         created_by:state.user.id
-      })
+      }).select('id').single()
     }
     if(r.error)throw r.error;
+    const announcementId=d.id||r.data?.id;
+    if(announcementId&&published&&(!d.id||!existing?.is_published)){
+      await sendStudentPush24K({type:'announcement',content_id:announcementId,event_key:`announcement:new:${announcementId}`,title:`24K Update: ${title}`,message,url:`/student/updates/?push=${encodeURIComponent(announcementId)}`})
+    }
     resetMentorEditor('announcement');
     closeModals();
     toast(d.id?'Announcement updated.':'Announcement published.');
@@ -1432,8 +1470,8 @@ function renderMentorPipPreview(){
 }
 function mentorSignalResult(signal,row){const status=String(signal.status||'');if(status==='cancelled')return{result_pips:null,close_price:null};const entry=(Number(row.entry_from||0)+Number(row.entry_to??row.entry_from??0))/2;let price=null,outcome='manual';if(status==='breakeven_hit'){price=entry;outcome='be'}else if(status==='tp1_hit'){price=row.take_profit_1;outcome='tp'}else if(status==='tp2_hit'){price=row.take_profit_2;outcome='tp'}else if(status==='tp3_hit'){price=row.take_profit_3;outcome='tp'}else if(status==='tp4_hit'){price=row.take_profit_4;outcome='tp'}else if(status==='sl_hit'){price=row.stop_loss;outcome='sl'}else if(status==='manually_closed')price=signal.close_price;if(price===null||price===undefined||!Number.isFinite(Number(price)))return{result_pips:signal.result_pips??null,close_price:signal.close_price??null};const result=mentorOutcomePips({...signal,...row},price,outcome);return{result_pips:result,close_price:signalIsClosed({...signal,...row,status})?Number(price):(signal.close_price??null)}}
 function editSignal(id){const x=state.signals.find(v=>v.id===id);if(!x)return;closeModals();const f=$('#mentorSignalForm');f.elements.id.value=x.id;f.elements.symbol.value=x.symbol||'XAUUSD';f.elements.signal_type.value=signalTypeLabel(x);f.elements.entry_from.value=x.entry_from??'';f.elements.entry_to.value=x.entry_to??'';f.elements.stop_loss.value=x.stop_loss??'';f.elements.take_profit_1.value=x.take_profit_1??'';f.elements.take_profit_2.value=x.take_profit_2??'';f.elements.take_profit_3.value=x.take_profit_3??'';f.elements.take_profit_4.value=x.take_profit_4??'';f.elements.notes.value=x.notes||'';const t=$('#mentorSignalModalTitle');if(t)t.textContent=signalIsClosed(x)?'Edit Signal History':'Edit Signal';openModal('signal');renderMentorPipPreview()}
-async function saveSignal(e){e.preventDefault();const f=e.currentTarget,b=f.querySelector('button[type=submit]'),d=Object.fromEntries(new FormData(f)),kind=String(d.signal_type||'BUY').trim().toUpperCase(),direction=kind.startsWith('SELL')?'SELL':'BUY',orderType=kind.includes('STOP')?'stop':kind.includes('LIMIT')?'limit':'market',original=b.innerHTML;b.disabled=true;b.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Publishing...';try{const row={symbol:String(d.symbol||'').trim().toUpperCase(),direction,order_type:orderType,entry_from:num(d.entry_from),entry_to:num(d.entry_to),stop_loss:num(d.stop_loss),take_profit_1:num(d.take_profit_1),take_profit_2:num(d.take_profit_2),take_profit_3:num(d.take_profit_3),take_profit_4:num(d.take_profit_4),notes:String(d.notes||'').trim()||null};if(!row.symbol||row.entry_from===null||row.stop_loss===null||row.take_profit_1===null){const name=row.entry_from===null?'entry_from':row.stop_loss===null?'stop_loss':row.take_profit_1===null?'take_profit_1':'symbol';f.elements[name]?.focus();throw new Error('Entry From, Stop Loss and TP1 are required.');}let r;if(d.id){const existing=state.signals.find(x=>x.id===d.id);if(!existing)throw new Error('Signal not found.');const calc=mentorSignalResult(existing,row);r=await sb.from('signals').update({...row,...calc,updated_at:new Date().toISOString()}).eq('id',d.id);if(r.error)throw r.error;toast('Signal updated.')}else{r=await sb.from('signals').insert({...row,status:row.order_type==='market'?'active':'pending',audience_access:'all_students',is_published:true,published_at:new Date().toISOString(),created_by:state.user.id});if(r.error)throw r.error;toast('Signal published.')}f.reset();f.elements.id.value='';const t=$('#mentorSignalModalTitle');if(t)t.textContent='New Signal';closeModals();await load()}catch(err){toast(err.message||'Could not save signal.')}finally{b.disabled=false;b.innerHTML=original}}
-async function signalAction(id,action){let close=null;if(action==='manually_closed'){const v=await mentorAskAction({title:'Close Signal',eyebrow:'TRADE MANAGEMENT',message:'Enter the final close price.',hint:'The result pips will be calculated from this price.',confirmText:'Close Signal',icon:'fa-chart-line',input:true,inputLabel:'Close Price',inputPlaceholder:'e.g. 4012.50'});if(v===null)return;close=Number(v);if(!Number.isFinite(close))return toast('Enter a valid close price.')}const r=await sb.rpc('mentor_update_signal_status_v12_16',{p_signal_id:id,p_action:action,p_close_price:close,p_note:null,p_notify_users:true});if(r.error)throw r.error;const p=r.data?.result_pips;toast(p==null?'Signal updated.':`Signal updated · ${pipText(Number(p))}`);closeModals();await load()}
+async function saveSignal(e){e.preventDefault();const f=e.currentTarget,b=f.querySelector('button[type=submit]'),d=Object.fromEntries(new FormData(f)),kind=String(d.signal_type||'BUY').trim().toUpperCase(),direction=kind.startsWith('SELL')?'SELL':'BUY',orderType=kind.includes('STOP')?'stop':kind.includes('LIMIT')?'limit':'market',original=b.innerHTML;b.disabled=true;b.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Publishing...';try{const row={symbol:String(d.symbol||'').trim().toUpperCase(),direction,order_type:orderType,entry_from:num(d.entry_from),entry_to:num(d.entry_to),stop_loss:num(d.stop_loss),take_profit_1:num(d.take_profit_1),take_profit_2:num(d.take_profit_2),take_profit_3:num(d.take_profit_3),take_profit_4:num(d.take_profit_4),notes:String(d.notes||'').trim()||null};if(!row.symbol||row.entry_from===null||row.stop_loss===null||row.take_profit_1===null){const name=row.entry_from===null?'entry_from':row.stop_loss===null?'stop_loss':row.take_profit_1===null?'take_profit_1':'symbol';f.elements[name]?.focus();throw new Error('Entry From, Stop Loss and TP1 are required.');}let r;if(d.id){const existing=state.signals.find(x=>x.id===d.id);if(!existing)throw new Error('Signal not found.');const calc=mentorSignalResult(existing,row);r=await sb.from('signals').update({...row,...calc,updated_at:new Date().toISOString()}).eq('id',d.id);if(r.error)throw r.error;toast('Signal updated.')}else{r=await sb.from('signals').insert({...row,status:row.order_type==='market'?'active':'pending',audience_access:'all_students',is_published:true,published_at:new Date().toISOString(),created_by:state.user.id}).select('id').single();if(r.error)throw r.error;const signalId=r.data?.id;if(signalId)await sendStudentPush24K({type:'signal',content_id:signalId,event_key:`signal:new:${signalId}`,title:`New ${mentorDisplaySymbol(row.symbol)} ${row.direction} Signal`,message:`${String(kind||'MARKET').replace('_',' ')} · Entry ${row.entry_from}${row.entry_to!=null?' - '+row.entry_to:''} · SL ${row.stop_loss} · TP1 ${row.take_profit_1}`,url:`/student/signals/?push=${encodeURIComponent(signalId)}`});toast('Signal published.')}f.reset();f.elements.id.value='';const t=$('#mentorSignalModalTitle');if(t)t.textContent='New Signal';closeModals();await load()}catch(err){toast(err.message||'Could not save signal.')}finally{b.disabled=false;b.innerHTML=original}}
+async function signalAction(id,action){let close=null;if(action==='manually_closed'){const v=await mentorAskAction({title:'Close Signal',eyebrow:'TRADE MANAGEMENT',message:'Enter the final close price.',hint:'The result pips will be calculated from this price.',confirmText:'Close Signal',icon:'fa-chart-line',input:true,inputLabel:'Close Price',inputPlaceholder:'e.g. 4012.50'});if(v===null)return;close=Number(v);if(!Number.isFinite(close))return toast('Enter a valid close price.')}const r=await sb.rpc('mentor_update_signal_status_v12_16',{p_signal_id:id,p_action:action,p_close_price:close,p_note:null,p_notify_users:true});if(r.error)throw r.error;await sendLatestMentorSignalUpdatePush24K(id);const p=r.data?.result_pips;toast(p==null?'Signal updated.':`Signal updated · ${pipText(Number(p))}`);closeModals();await load()}
 function syncEditorFileLabel(kind,file){
   const el=document.querySelector(`[data-file-label="${kind}"]`);
   if(!el)return;
@@ -1572,9 +1610,14 @@ async function saveChart(e){
     if(!row.title||!row.symbol||!row.summary)throw new Error('Title, symbol and summary are required.');
     let r;
     if(d.id)r=await sb.from('charts').update(row).eq('id',d.id);
-    else r=await sb.from('charts').insert({...row,published_at:new Date().toISOString(),created_by:state.user.id});
+    else r=await sb.from('charts').insert({...row,published_at:new Date().toISOString(),created_by:state.user.id}).select('id').single();
     if(r.error)throw r.error;
     saved=true;
+    const chartId=d.id||r.data?.id;
+    const existingChart=d.id?(state.charts||[]).find(x=>String(x.id)===String(d.id)):null;
+    if(chartId&&row.is_published&&(!d.id||!existingChart?.is_published)){
+      await sendStudentPush24K({type:'chart',content_id:chartId,event_key:`chart:new:${chartId}`,title:`New ${mentorDisplaySymbol(row.symbol)} Chart Analysis`,message:`${row.title}${row.timeframe?' · '+row.timeframe:''}`,url:`/student/charts/?push=${encodeURIComponent(chartId)}`,image_url:row.image_url||null})
+    }
     if(image&&oldImage&&image!==oldImage)await removeContentAsset(oldImage);
     resetMentorEditor('chart');
     closeModals();
@@ -1642,9 +1685,13 @@ async function saveArticle(e){
 
     let r;
     if(d.id)r=await sb.from('articles').update(row).eq('id',d.id);
-    else r=await sb.from('articles').insert({...row,created_by:state.user.id});
+    else r=await sb.from('articles').insert({...row,created_by:state.user.id}).select('id').single();
     if(r.error)throw r.error;
     saved=true;
+    const articleId=d.id||r.data?.id;
+    if(articleId&&published&&(!d.id||!existing?.is_published)){
+      await sendStudentPush24K({type:'article',content_id:articleId,event_key:`article:new:${articleId}`,title:`New Article: ${title}`,message:autoExcerpt||'A new learning article is available.',url:`/student/articles/?push=${encodeURIComponent(articleId)}`,image_url:row.cover_url||null})
+    }
     if(cover&&oldCover&&cover!==oldCover)await removeContentAsset(oldCover);
     resetMentorEditor('article');
     closeModals();
