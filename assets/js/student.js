@@ -16,8 +16,6 @@
   let historyDateFilter = 'month';
   let historyCustomStart = '';
   let historyCustomEnd = '';
-  let chartDateFilter = 'all';
-  let chartCustomDate = '';
   // Market sync primitives must exist before the first async data load.
   // Keep these above every await/call path to avoid temporal-dead-zone startup crashes.
   let marketContentSyncSeq = 0;
@@ -810,38 +808,62 @@
     return `<i class="fa-solid ${fallbackIcon} content-cover-fallback" aria-hidden="true"></i>${cleanUrl ? `<img src="${attr(cleanUrl)}" alt="${attr(altText || '')}" loading="lazy" decoding="async" onerror="this.remove();this.parentElement.classList.remove('has-image')">` : ''}`;
   }
 
+  function contentDateInfo(value) {
+    const date = new Date(value || 0);
+    if (Number.isNaN(date.getTime())) return { key:'undated', label:'Undated', full:'Date not available', time:0 };
+    const key = dateKey(date);
+    const today = dateKey(new Date());
+    const yesterday = dateKey(new Date(Date.now() - 86400000));
+    const full = new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Karachi',day:'2-digit',month:'short',year:'numeric'}).format(date);
+    return { key, label:key===today?'Today':key===yesterday?'Yesterday':full, full, time:date.getTime() };
+  }
+
+  function chartContentCard(chart) {
+    return `<article class="content-card compact-media-card"><div class="content-cover media-thumb-16x9 ${chart.image_url ? 'has-image' : ''}">${safeMediaImage(chart.image_url, chart.title, 'fa-chart-candlestick')}</div><div class="content-body"><div class="course-meta content-meta-strong"><span>${A.escapeHtml(chart.symbol)}</span><span>${A.escapeHtml(chart.timeframe || '—')}</span><span>${A.escapeHtml(chart.category || 'Market Analysis')}</span><span>${A.formatDate(chart.published_at || chart.created_at)}</span></div><h3>${A.escapeHtml(chart.title)}</h3><p>${A.escapeHtml(chart.summary || '')}</p><div class="card-actions"><button class="app-btn small gold" data-read-chart="${chart.id}">View Details</button>${chart.image_url ? `<a class="app-btn small outline" href="${attr(chart.image_url)}" target="_blank" rel="noopener"><i class="fa-solid fa-up-right-from-square"></i> Full Chart</a>` : ''}</div></div></article>`;
+  }
+
+  function articleContentCard(article) {
+    return `<article class="content-card compact-media-card"><div class="content-cover media-thumb-16x9 ${article.cover_url ? 'has-image' : ''}">${safeMediaImage(article.cover_url, article.title, 'fa-book-open')}</div><div class="content-body"><div class="course-meta content-meta-strong"><span>${A.escapeHtml(article.category || 'Education')}</span>${article.content_roman?'<span><i class="fa-solid fa-language"></i> English / Roman</span>':''}<span><i class="fa-solid fa-calendar"></i> ${A.formatDate(article.published_at || article.created_at)}</span></div><h3>${A.escapeHtml(article.title)}</h3><p>${A.escapeHtml(article.excerpt || '')}</p><button class="app-btn small gold" data-read-article="${article.id}">Read Article</button></div></article>`;
+  }
+
+  function renderDailyContentGroups(rows, type) {
+    const groups = new Map();
+    rows
+      .slice()
+      .sort((a,b) => new Date(b.published_at || b.created_at || 0) - new Date(a.published_at || a.created_at || 0))
+      .forEach(item => {
+        const info = contentDateInfo(item.published_at || item.created_at);
+        if (!groups.has(info.key)) groups.set(info.key,{ info, items:[] });
+        groups.get(info.key).items.push(item);
+      });
+    return [...groups.values()].map(group => {
+      const isToday = group.info.label === 'Today';
+      const isYesterday = group.info.label === 'Yesterday';
+      const eyebrow = isToday ? 'LATEST' : isYesterday ? 'PREVIOUS DAY' : 'DAILY ARCHIVE';
+      const noun = type === 'chart' ? 'chart' : 'article';
+      const cards = group.items.map(item => type === 'chart' ? chartContentCard(item) : articleContentCard(item)).join('');
+      return `<section class="daily-content-section ${isToday?'is-today':isYesterday?'is-yesterday':'is-date'}">
+        <div class="daily-content-heading">
+          <div><small>${eyebrow}</small><h3>${A.escapeHtml(group.info.label)}</h3>${(isToday||isYesterday)?`<span>${A.escapeHtml(group.info.full)}</span>`:''}</div>
+          <span class="daily-content-count">${group.items.length} ${noun}${group.items.length===1?'':'s'}</span>
+        </div>
+        <div class="daily-content-grid">${cards}</div>
+      </section>`;
+    }).join('');
+  }
+
   function renderCharts() {
     const query = document.getElementById('chartSearch')?.value.trim().toLowerCase() || '';
-    const tf = document.getElementById('chartTimeframeFilter')?.value || 'all';
-    const todayKey = dateKey(new Date());
-    const yesterdayKey = dateKey(new Date(Date.now() - 86400000));
-    document.querySelectorAll('[data-chart-date]').forEach(button => {
-      button.classList.toggle('active', button.dataset.chartDate === chartDateFilter);
-      button.setAttribute('aria-pressed', button.dataset.chartDate === chartDateFilter ? 'true' : 'false');
-    });
-    const customDateInput = document.getElementById('chartCustomDate');
-    if (customDateInput) customDateInput.hidden = chartDateFilter !== 'custom';
-
-    const rows = state.charts.filter(chart => {
-      const matchesText = !query || `${chart.title} ${chart.symbol} ${chart.summary}`.toLowerCase().includes(query);
-      const matchesTimeframe = tf === 'all' || chart.timeframe === tf;
-      const sourceDate = new Date(chart.published_at || chart.created_at || Date.now());
-      const key = dateKey(sourceDate);
-      const matchesDate =
-        chartDateFilter === 'all' ||
-        (chartDateFilter === 'today' && key === todayKey) ||
-        (chartDateFilter === 'yesterday' && key === yesterdayKey) ||
-        (chartDateFilter === 'custom' && (!chartCustomDate || key === chartCustomDate));
-      return matchesText && matchesTimeframe && matchesDate;
-    });
-
-    document.getElementById('chartsGrid').innerHTML = rows.length ? rows.map(chart => `<article class="content-card compact-media-card"><div class="content-cover media-thumb-16x9 ${chart.image_url ? 'has-image' : ''}">${safeMediaImage(chart.image_url, chart.title, 'fa-chart-candlestick')}</div><div class="content-body"><div class="course-meta content-meta-strong"><span>${A.escapeHtml(chart.symbol)}</span><span>${A.escapeHtml(chart.timeframe || '—')}</span><span>${A.escapeHtml(chart.category || 'Market Analysis')}</span><span>${A.formatDate(chart.published_at)}</span></div><h3>${A.escapeHtml(chart.title)}</h3><p>${A.escapeHtml(chart.summary || '')}</p><div class="card-actions"><button class="app-btn small gold" data-read-chart="${chart.id}">View Details</button>${chart.image_url ? `<a class="app-btn small outline" href="${attr(chart.image_url)}" target="_blank" rel="noopener"><i class="fa-solid fa-up-right-from-square"></i> Full Chart</a>` : ''}</div></div></article>`).join('') : empty('No chart analysis matches these filters.', 'fa-chart-line');
+    const rows = state.charts.filter(chart => !query || `${chart.title} ${chart.symbol} ${chart.summary} ${chart.timeframe||''} ${chart.category||''}`.toLowerCase().includes(query));
+    const root = document.getElementById('chartsGrid');
+    if (root) root.innerHTML = rows.length ? renderDailyContentGroups(rows,'chart') : empty('No chart analysis matches your search.', 'fa-chart-line');
   }
 
   function renderArticles() {
     const query = document.getElementById('articleSearch')?.value.trim().toLowerCase() || '';
-    const rows = state.articles.filter(a => !query || `${a.title} ${a.excerpt} ${a.content} ${a.content_roman||''}`.toLowerCase().includes(query));
-    document.getElementById('articlesGrid').innerHTML = rows.length ? rows.map(article => `<article class="content-card compact-media-card"><div class="content-cover media-thumb-16x9 ${article.cover_url ? 'has-image' : ''}">${safeMediaImage(article.cover_url, article.title, 'fa-book-open')}</div><div class="content-body"><div class="course-meta content-meta-strong"><span>${A.escapeHtml(article.category || 'Education')}</span>${article.content_roman?'<span><i class="fa-solid fa-language"></i> English / Roman</span>':''}<span><i class="fa-solid fa-calendar"></i> ${A.formatDate(article.published_at)}</span></div><h3>${A.escapeHtml(article.title)}</h3><p>${A.escapeHtml(article.excerpt || '')}</p><button class="app-btn small gold" data-read-article="${article.id}">Read Article</button></div></article>`).join('') : empty('No article matches your search.', 'fa-newspaper');
+    const rows = state.articles.filter(a => !query || `${a.title} ${a.excerpt} ${a.content} ${a.content_roman||''} ${a.category||''}`.toLowerCase().includes(query));
+    const root = document.getElementById('articlesGrid');
+    if (root) root.innerHTML = rows.length ? renderDailyContentGroups(rows,'article') : empty('No article matches your search.', 'fa-newspaper');
   }
 
   function upcomingCourseSession(courseId) {
@@ -1536,22 +1558,7 @@
     document.getElementById('ibBrokerSelect')?.addEventListener('change',event=>{if(!window.__24K_ACCESS_V1224_READY__)renderIbBrokerInstructions(event);});
     document.getElementById('ibAccountAction')?.addEventListener('change',event=>{if(!window.__24K_ACCESS_V1224_READY__)renderIbBrokerInstructions(event);});
     document.getElementById('ibCopyPartnerLink')?.addEventListener('click',event=>{if(!window.__24K_ACCESS_V1224_READY__)copyIbPartnerLink(event);});
-    ['chartSearch','chartTimeframeFilter'].forEach(id => document.getElementById(id)?.addEventListener('input', renderCharts));
-    document.querySelectorAll('[data-chart-date]').forEach(button => button.addEventListener('click', event => {
-      event.preventDefault();
-      chartDateFilter = button.dataset.chartDate || 'all';
-      renderCharts();
-      if (chartDateFilter === 'custom') {
-        const input = document.getElementById('chartCustomDate');
-        try { input?.showPicker?.(); } catch (error) {}
-        input?.focus?.();
-      }
-    }));
-    document.getElementById('chartCustomDate')?.addEventListener('change', event => {
-      chartCustomDate = event.target.value || '';
-      chartDateFilter = 'custom';
-      renderCharts();
-    });
+    document.getElementById('chartSearch')?.addEventListener('input', renderCharts);
     document.getElementById('articleSearch')?.addEventListener('input', renderArticles);
     document.getElementById('closeSessions')?.addEventListener('click', resetCourseView);
 
