@@ -18,6 +18,40 @@
     ).trim();
   }
 
+  function getPushIntent(){
+    try{
+      const params=new URLSearchParams(location.search);
+      const id=String(params.get('push')||'').trim();
+      if(!id)return null;
+      const hash=String(location.hash||'').replace(/^#/,'').toLowerCase();
+      const type=String(params.get('type')||(
+        hash==='signals'?'signal':
+        hash==='charts'?'chart':
+        hash==='articles'?'article':
+        hash==='announcements'?'announcement':''
+      )).toLowerCase();
+      return type?{type,id}:null;
+    }catch(_){return null}
+  }
+
+  let pushIntentHandled=false;
+  function openPushIntent(){
+    if(pushIntentHandled)return;
+    const intent=getPushIntent();
+    if(!intent)return;
+    if(typeof window.__24K_OPEN_PUSH_CONTENT__!=='function')return;
+    const opened=window.__24K_OPEN_PUSH_CONTENT__(intent.type,intent.id);
+    if(opened){
+      pushIntentHandled=true;
+      try{
+        const url=new URL(location.href);
+        url.searchParams.delete('push');
+        url.searchParams.delete('type');
+        history.replaceState(history.state,'',url.pathname+(url.search||'')+(url.hash||''));
+      }catch(_){}
+    }
+  }
+
   async function identify(detail){
     if(!ready||!sdk) return;
     const id=getStudentId(detail);
@@ -75,5 +109,7 @@
     }
   });
 
-  window.addEventListener('24k:student-base-updated',event=>{void identify(event.detail);});
+  window.addEventListener('24k:student-base-updated',event=>{void identify(event.detail);setTimeout(openPushIntent,120);});
+  window.addEventListener('24k:student-market-updated',()=>setTimeout(openPushIntent,80));
+  window.addEventListener('load',()=>setTimeout(openPushIntent,500));
 })();
