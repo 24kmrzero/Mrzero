@@ -44,16 +44,28 @@
   A.activateDashboardNavigation();
   async function auditSession(action){try{await A.supabase.functions.invoke('audit-event',{body:{action,entity_type:'session',status:'success',details:{scope:'admin'}}});}catch{}}
   document.getElementById('logoutButton').addEventListener('click', async()=>{await auditSession('admin_logout');await A.logout();});
-  await loadAll();
+
+  // First authenticated paint: do not hold the whole Admin Panel behind every
+  // dashboard query. Empty states render instantly and live data fills in below.
   renderAll();
   bindEvents();
   subscribeRealtime();
   document.getElementById('pageLoader').classList.add('hidden');
   document.getElementById('adminApp').classList.remove('hidden');
 
+  void loadAll().then(()=>{
+    renderAll();
+  }).catch(error=>{
+    console.error('[Admin startup data]',error);
+    A.toast(A.friendlyError(error,'Admin data is still syncing. Use Refresh if needed.'),'warning');
+  });
+
   async function loadAll() {
     const sb=A.supabase;
-    try { await sb.rpc('refresh_course_statuses_from_schedule'); } catch (error) { console.warn('Course schedule status refresh skipped:', error?.message || error); }
+    // Course-status maintenance must never delay the initial Admin shell.
+    void sb.rpc('refresh_course_statuses_from_schedule').then(({error})=>{
+      if(error)console.warn('Course schedule status refresh skipped:',error?.message||error);
+    }).catch(error=>console.warn('Course schedule status refresh skipped:',error?.message||error));
     const requests=[
       ['profiles',sb.from('profiles').select('*').order('created_at',{ascending:false}),true],
       ['courses',sb.from('courses').select('*').order('created_at',{ascending:false}),true],
