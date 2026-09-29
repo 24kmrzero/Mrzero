@@ -1,4 +1,4 @@
-/* 24K MR ZERO — Student OneSignal Web Push v14.93 */
+/* 24K MR ZERO — Student OneSignal Web Push v14.94 */
 (function(){
   'use strict';
   if(window.__24K_ONESIGNAL_PUSH_V1493__) return;
@@ -171,18 +171,76 @@
     return isSubscribed();
   }
 
-  async function sendSelfTest(){
+  function currentExternalId(){
+    try{return String(sdk?.User?.externalId||'').trim();}catch(_){return '';}
+  }
+
+  async function waitForIdentity(expectedId,timeout=7000){
+    const expected=String(expectedId||'').trim();
+    if(!expected||!sdk) return false;
+
+    // Re-assert the OneSignal login after the browser subscription exists.
+    // This prevents a first-subscribe race where the PushSubscription is ready
+    // before the external_id alias has propagated to OneSignal.
     try{
-      if(!window.App?.supabase?.functions) return null;
-      const {data,error}=await window.App.supabase.functions.invoke('send-student-push',{
-        body:{type:'subscription_test'}
-      });
-      if(error) throw error;
-      return data||null;
+      await sdk.login(expected);
+      lastExternalId=expected;
+      if(sdk.User?.addTags){
+        await sdk.User.addTags({role:'student',portal:'24k_student'});
+      }
     }catch(error){
-      console.warn('[24K Push] Self-test push failed',error);
-      return null;
+      console.warn('[24K Push] Identity resync failed',error?.message||error);
+      return false;
     }
+
+    const started=Date.now();
+    let externalIdSeen=false;
+    while(Date.now()-started<timeout){
+      if(!isSubscribed()){
+        await new Promise(resolve=>setTimeout(resolve,250));
+        continue;
+      }
+      const externalId=currentExternalId();
+      if(externalId){
+        externalIdSeen=true;
+        if(externalId===expected){
+          // Allow a short server-side settle window after the SDK reports the alias.
+          await new Promise(resolve=>setTimeout(resolve,900));
+          return true;
+        }
+      }
+      await new Promise(resolve=>setTimeout(resolve,250));
+    }
+
+    // Older/limited SDK builds may not expose User.externalId even though login()
+    // completed. In that case, use a conservative settle delay instead of
+    // firing the self-test immediately.
+    if(!externalIdSeen&&isSubscribed()){
+      await new Promise(resolve=>setTimeout(resolve,1600));
+      return true;
+    }
+    return currentExternalId()===expected&&isSubscribed();
+  }
+
+  async function sendSelfTest(options={}){
+    const retries=Math.max(1,Number(options.retries||1));
+    const retryDelay=Math.max(700,Number(options.retryDelay||1400));
+    for(let attempt=1;attempt<=retries;attempt++){
+      try{
+        if(!window.App?.supabase?.functions) return null;
+        const {data,error}=await window.App.supabase.functions.invoke('send-student-push',{
+          body:{type:'subscription_test'}
+        });
+        if(error) throw error;
+        if(data?.ok) return data;
+        if(attempt===retries) return data||null;
+      }catch(error){
+        console.warn(`[24K Push] Self-test push attempt ${attempt} failed`,error?.message||error);
+        if(attempt===retries) return null;
+      }
+      await new Promise(resolve=>setTimeout(resolve,retryDelay*attempt));
+    }
+    return null;
   }
 
   async function subscribe(){
@@ -219,10 +277,16 @@
 
       toast('Notifications enabled on this device.','success');
 
-      // Confirm the complete path with a real browser push to this logged-in student.
-      // The notification may arrive a moment after this sheet closes.
-      setTimeout(()=>{ void sendSelfTest(); },700);
-      setTimeout(closeSheet,900);
+      // Only send the individual delivery test after OneSignal has the logged-in
+      // student's external_id attached to the live browser subscription.
+      const studentId=getStudentId(window.StudentBase?.state||null);
+      const identityReady=await waitForIdentity(studentId);
+      if(identityReady){
+        void sendSelfTest({retries:3,retryDelay:1400});
+      }else{
+        console.warn('[24K Push] Self-test skipped until OneSignal identity is synced');
+      }
+      setTimeout(closeSheet,650);
     }catch(error){
       console.error('[24K Push] Subscribe failed',error);
       toast('Could not enable notifications. Please try again.','error');
@@ -324,15 +388,19 @@
       await identify(window.StudentBase?.state||null);
       renderPushUI();
 
-      // Existing subscribers upgraded from the default OneSignal bell get one
-      // real delivery check after this custom 24K UI is loaded.
-      if(isSubscribed()&&!localStorage.getItem('24k_push_delivery_test_v1493')){
-        localStorage.setItem('24k_push_delivery_test_v1493','pending');
+      // Existing subscribers get one delivery check only after the external_id
+      // identity is confirmed. This avoids invalid_aliases during page startup.
+      if(isSubscribed()&&!localStorage.getItem('24k_push_delivery_test_v1494')){
+        localStorage.setItem('24k_push_delivery_test_v1494','pending');
         setTimeout(async()=>{
-          const result=await sendSelfTest();
-          if(result?.ok)localStorage.setItem('24k_push_delivery_test_v1493','sent');
-          else localStorage.removeItem('24k_push_delivery_test_v1493');
-        },1400);
+          const studentId=getStudentId(window.StudentBase?.state||null);
+          const identityReady=await waitForIdentity(studentId);
+          const result=identityReady
+            ? await sendSelfTest({retries:3,retryDelay:1400})
+            : null;
+          if(result?.ok)localStorage.setItem('24k_push_delivery_test_v1494','sent');
+          else localStorage.removeItem('24k_push_delivery_test_v1494');
+        },1200);
       }
 
       try{
