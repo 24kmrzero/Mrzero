@@ -1,7 +1,7 @@
 (function(){
 'use strict';
 const cfg=window.APP_CONFIG||{},msg=document.getElementById('mentorLoginError');
-const sb=(window.supabase&&cfg.SUPABASE_URL&&cfg.SUPABASE_ANON_KEY)?window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true}}):null;
+const mentorProjectRef=(()=>{try{return new URL(cfg.SUPABASE_URL).hostname.split('.')[0]}catch{return'24k'}})(),mentorAuthKey=`sb-${mentorProjectRef}-mentor-auth-token`;const sb=(window.supabase&&cfg.SUPABASE_URL&&cfg.SUPABASE_ANON_KEY)?window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY,{auth:{storageKey:mentorAuthKey,persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:'pkce'}}):null;
 const say=(v,bad=true)=>{if(msg){msg.textContent=v||'';msg.style.color=bad?'#ff8383':'#69dd8b'}};
 async function destination(){const {data:{user}}=await sb.auth.getUser();if(!user)return false;const {data:p,error}=await sb.from('profiles').select('role,status').eq('id',user.id).maybeSingle();if(error||!p||p.role!=='mentor'||String(p.status||'active')!=='active'){await sb.auth.signOut();return false}location.href='/mentor/';return true}
 async function auditMentorLogin(action,status='success',details={},session=null){
