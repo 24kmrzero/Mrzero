@@ -1,0 +1,554 @@
+/* 24K MR ZERO — Mentor dark-theme final QA + course editor v14.77
+   Desktop refinements only. Mobile keeps the existing mentor UI. */
+
+@media (min-width:901px){
+
+  /* ============================================================
+     SIGNALS — dark controls + fully dark New Signal editor
+     ============================================================ */
+  html[data-theme="dark"] [data-mentor-panel="signals"] [data-signal-tab]{
+    color:#9ca6b1!important;
+  }
+  html[data-theme="dark"] [data-mentor-panel="signals"] [data-signal-tab].active{
+    border-color:#5a4815!important;
+    background:#211c0d!important;
+    color:#efc43a!important;
+    box-shadow:inset 0 0 0 1px rgba(239,196,58,.04)!important;
+  }
+  html[data-theme="dark"] [data-mentor-panel="signals"] [data-signal-tab].active i,
+  html[data-theme="dark"] [data-mentor-panel="signals"] [data-signal-tab].active b{
+    color:#efc43a!important;
+  }
+
+  html[data-theme="dark"] #mentorSignalModal{
+    background:rgba(2,5,8,.72)!important;
+    backdrop-filter:blur(8px)!important;
+  }
+  html[data-theme="dark"] #mentorSignalModal .mentor-modal-card{
+    border:1px solid #323944!important;
+    background:#0e1217!important;
+    box-shadow:0 30px 90px rgba(0,0,0,.52)!important;
+  }
+  html[data-theme="dark"] #mentorSignalModal .mentor-modal-head{
+    border-bottom-color:#2a3038!important;
+    background:
+      radial-gradient(260px 100px at 100% 0%,rgba(216,162,10,.08),transparent 72%),
+      #11151a!important;
+  }
+  html[data-theme="dark"] #mentorSignalModal .mentor-modal-head .eyebrow{
+    color:#c8a331!important;
+  }
+  html[data-theme="dark"] #mentorSignalModal .mentor-modal-body{
+    background:#0c1014!important;
+  }
+  html[data-theme="dark"] #mentorSignalModal .mentor-signal-form-intro{
+    border-color:#514318!important;
+    background:
+      linear-gradient(90deg,rgba(216,162,10,.10),rgba(216,162,10,.025)),
+      #15150f!important;
+  }
+  html[data-theme="dark"] #mentorSignalModal .mentor-signal-form-intro>span{
+    border:1px solid #695317!important;
+    background:linear-gradient(145deg,#f0c438,#d69e04)!important;
+    color:#1c1500!important;
+  }
+  html[data-theme="dark"] #mentorSignalModal .mentor-signal-form-intro b{
+    color:#f2f4f6!important;
+  }
+  html[data-theme="dark"] #mentorSignalModal .mentor-signal-form-intro small{
+    color:#a7b0b9!important;
+  }
+  html[data-theme="dark"] #mentorSignalModal .mentor-form>label,
+  html[data-theme="dark"] #mentorSignalModal .mentor-note-presets>span{
+    color:#cbd2d9!important;
+  }
+  html[data-theme="dark"] #mentorSignalModal .mentor-form>label>small{
+    color:#7f8994!important;
+  }
+  html[data-theme="dark"] #mentorSignalModal .mentor-form :is(input,select,textarea){
+    border-color:#303741!important;
+    background:#13181e!important;
+    color:#eef1f4!important;
+    box-shadow:none!important;
+  }
+  html[data-theme="dark"] #mentorSignalModal .mentor-form :is(input,select,textarea)::placeholder{
+    color:#66717d!important;
+  }
+  html[data-theme="dark"] #mentorSignalModal .mentor-form :is(input,select,textarea):focus{
+    border-color:#9a7715!important;
+    background:#151a20!important;
+    box-shadow:0 0 0 3px rgba(216,162,10,.08)!important;
+    outline:none!important;
+  }
+  html[data-theme="dark"] #mentorSignalModal .mentor-form select option{
+    background:#11161b!important;
+    color:#eef1f4!important;
+  }
+  html[data-theme="dark"] #mentorSignalModal .mentor-pip-preview{
+    border-color:#303741!important;
+    background:#11161b!important;
+  }
+  html[data-theme="dark"] #mentorSignalModal .mentor-pip-preview span{
+    color:#e9edf1!important;
+  }
+  html[data-theme="dark"] #mentorSignalModal .mentor-pip-preview small{
+    color:#8f99a4!important;
+  }
+  html[data-theme="dark"] #mentorSignalModal .mentor-note-presets button{
+    border-color:#303741!important;
+    background:#151a20!important;
+    color:#cbd2d9!important;
+  }
+  html[data-theme="dark"] #mentorSignalModal .mentor-note-presets button:hover,
+  html[data-theme="dark"] #mentorSignalModal .mentor-note-presets button.active{
+    border-color:#735b15!important;
+    background:#211c0d!important;
+    color:#efc43a!important;
+  }
+  html[data-theme="dark"] #mentorSignalModal .mentor-modal-foot{
+    border-top-color:#2a3038!important;
+    background:#111419!important;
+  }
+  html[data-theme="dark"] #mentorSignalModal .mentor-modal-foot .mentor-btn:not(.gold){
+    border-color:#343b45!important;
+    background:#171c22!important;
+    color:#d4dae0!important;
+  }
+
+  /* ============================================================
+     CHARTS + ARTICLES — remove light pills/buttons in dark mode
+     ============================================================ */
+  html[data-theme="dark"] [data-mentor-panel="charts"] .mentor-chart-kicker,
+  html[data-theme="dark"] [data-mentor-panel="charts"] .mentor-chart-workspace-badge,
+  html[data-theme="dark"] [data-mentor-panel="articles"] .mentor-article-kicker,
+  html[data-theme="dark"] [data-mentor-panel="articles"] .mentor-article-workspace-badge{
+    border-color:#d8a20a!important;
+    background:linear-gradient(145deg,#f2c735,#d7a006)!important;
+    color:#211900!important;
+    box-shadow:0 6px 14px rgba(216,162,10,.12)!important;
+  }
+  html[data-theme="dark"] [data-mentor-panel="charts"] .mentor-chart-kicker i,
+  html[data-theme="dark"] [data-mentor-panel="articles"] .mentor-article-kicker i{
+    color:#211900!important;
+  }
+
+  html[data-theme="dark"] :is([data-mentor-panel="charts"],[data-mentor-panel="articles"]) .admin-content-date-group span{
+    color:#f1f3f5!important;
+  }
+  html[data-theme="dark"] :is([data-mentor-panel="charts"],[data-mentor-panel="articles"]) .admin-content-date-group small{
+    color:#9aa4ae!important;
+  }
+  html[data-theme="dark"] :is([data-mentor-panel="charts"],[data-mentor-panel="articles"]) .admin-content-date-group i{
+    background:linear-gradient(90deg,#554412,transparent)!important;
+  }
+
+  html[data-theme="dark"] [data-mentor-panel="charts"] .admin-mentor-actions :is(button,a),
+  html[data-theme="dark"] [data-mentor-panel="articles"] .admin-mentor-actions :is(button,a){
+    border-color:#343b45!important;
+    background:#161b21!important;
+    color:#cbd2d9!important;
+    box-shadow:none!important;
+  }
+  html[data-theme="dark"] [data-mentor-panel="charts"] .admin-mentor-actions :is(button,a):hover,
+  html[data-theme="dark"] [data-mentor-panel="articles"] .admin-mentor-actions :is(button,a):hover{
+    border-color:#725a15!important;
+    background:#211c0d!important;
+    color:#efc43a!important;
+  }
+  html[data-theme="dark"] [data-mentor-panel="charts"] .admin-mentor-actions button[data-edit-chart],
+  html[data-theme="dark"] [data-mentor-panel="articles"] .admin-mentor-actions button[data-edit-article]{
+    border-color:#695315!important;
+    background:#211c0d!important;
+    color:#efc43a!important;
+  }
+  html[data-theme="dark"] [data-mentor-panel="charts"] .admin-mentor-actions .danger,
+  html[data-theme="dark"] [data-mentor-panel="articles"] .admin-mentor-actions .danger{
+    border-color:#512a32!important;
+    background:#211418!important;
+    color:#ef7183!important;
+  }
+  html[data-theme="dark"] [data-mentor-panel="charts"] .admin-mentor-actions .danger:hover,
+  html[data-theme="dark"] [data-mentor-panel="articles"] .admin-mentor-actions .danger:hover{
+    border-color:#81404c!important;
+    background:#2a171c!important;
+    color:#ff8c9b!important;
+  }
+
+  /* Filters/search remain dark and readable */
+  html[data-theme="dark"] :is([data-mentor-panel="charts"],[data-mentor-panel="articles"]) :is(.mentor-chart-search,.mentor-article-search,.mentor-chart-select select,.mentor-article-select select){
+    border-color:#303741!important;
+    background:#13181e!important;
+    color:#dce2e8!important;
+  }
+
+  /* ============================================================
+     COURSES — edit actions + full dark course editor
+     ============================================================ */
+  [data-mentor-panel="courses"] .mentor-course-admin-actions{
+    min-height:39px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-end!important;
+    gap:7px!important;
+    padding-top:9px!important;
+    border-top:1px solid #edf0f2!important;
+  }
+  [data-mentor-panel="courses"] .mentor-course-admin-actions .mentor-btn{
+    min-height:31px!important;
+    height:31px!important;
+    padding:0 9px!important;
+    border-radius:8px!important;
+    font-size:7.8px!important;
+    font-weight:900!important;
+  }
+  html[data-theme="dark"] [data-mentor-panel="courses"] .mentor-course-admin-actions{
+    border-top-color:#293039!important;
+  }
+  html[data-theme="dark"] [data-mentor-panel="courses"] .mentor-course-admin-actions .mentor-btn:not(.gold){
+    border-color:#39414b!important;
+    background:#161b21!important;
+    color:#d5dbe1!important;
+  }
+  html[data-theme="dark"] [data-mentor-panel="courses"] .mentor-course-admin-actions .mentor-btn:not(.gold):hover{
+    border-color:#6d5615!important;
+    background:#211c0d!important;
+    color:#efc43a!important;
+  }
+
+  #mentorCourseModal{
+    background:rgba(2,5,8,.72)!important;
+    backdrop-filter:blur(8px)!important;
+  }
+  #mentorCourseModal .mentor-course-editor-card{
+    width:min(900px,94vw)!important;
+    max-width:900px!important;
+    max-height:90vh!important;
+    display:grid!important;
+    grid-template-rows:auto minmax(0,1fr)!important;
+    overflow:hidden!important;
+    border:1px solid #dfe3e7!important;
+    border-radius:18px!important;
+    background:#fff!important;
+    box-shadow:0 30px 90px rgba(18,24,32,.28)!important;
+  }
+  #mentorCourseModal form{
+    min-height:0!important;
+    display:grid!important;
+    grid-template-rows:minmax(0,1fr) auto!important;
+    overflow:hidden!important;
+  }
+  #mentorCourseModal .mentor-course-editor-head{
+    min-height:76px!important;
+    padding:14px 17px!important;
+    border-bottom:1px solid #e5e8eb!important;
+    background:
+      radial-gradient(280px 100px at 100% 0%,rgba(216,162,10,.07),transparent 72%),
+      #fff!important;
+  }
+  #mentorCourseModal .mentor-course-editor-kicker{
+    display:block!important;
+    margin-bottom:3px!important;
+    color:#9a7205!important;
+    font-size:6.5px!important;
+    font-weight:950!important;
+    letter-spacing:.12em!important;
+  }
+  #mentorCourseModal .mentor-course-editor-head b{
+    display:block!important;
+    color:#20262d!important;
+    font-size:17px!important;
+    line-height:1.15!important;
+  }
+  #mentorCourseModal .mentor-course-editor-head span{
+    display:block!important;
+    margin-top:3px!important;
+    color:#7d8792!important;
+    font-size:8px!important;
+  }
+  #mentorCourseModal .mentor-course-editor-body{
+    min-height:0!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    display:grid!important;
+    gap:10px!important;
+    padding:14px 16px!important;
+    background:#f8f9fa!important;
+    scrollbar-width:thin!important;
+    scrollbar-color:#caa128 transparent!important;
+  }
+  #mentorCourseModal .mentor-course-editor-section{
+    overflow:hidden!important;
+    border:1px solid #e0e4e7!important;
+    border-radius:12px!important;
+    background:#fff!important;
+  }
+  #mentorCourseModal .mentor-course-editor-section-head{
+    min-height:52px!important;
+    display:flex!important;
+    align-items:center!important;
+    gap:9px!important;
+    padding:9px 11px!important;
+    border-bottom:1px solid #e7eaed!important;
+    background:#fffaf1!important;
+  }
+  #mentorCourseModal .mentor-course-editor-section-head>span{
+    width:28px!important;
+    height:28px!important;
+    display:grid!important;
+    place-items:center!important;
+    border-radius:8px!important;
+    background:linear-gradient(145deg,#f2c735,#d7a006)!important;
+    color:#211900!important;
+    font-size:7px!important;
+    font-weight:950!important;
+  }
+  #mentorCourseModal .mentor-course-editor-section-head>div{
+    min-width:0!important;
+    display:grid!important;
+  }
+  #mentorCourseModal .mentor-course-editor-section-head small{
+    color:#9a7308!important;
+    font-size:6px!important;
+    font-weight:950!important;
+    letter-spacing:.09em!important;
+  }
+  #mentorCourseModal .mentor-course-editor-section-head b{
+    color:#30373e!important;
+    font-size:10.5px!important;
+  }
+  #mentorCourseModal .mentor-course-editor-section-head>button{
+    margin-left:auto!important;
+    min-height:30px!important;
+    height:30px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    gap:5px!important;
+    padding:0 9px!important;
+    border:1px solid #d5ae2a!important;
+    border-radius:8px!important;
+    background:#f2c735!important;
+    color:#211900!important;
+    font-size:7.2px!important;
+    font-weight:900!important;
+  }
+  #mentorCourseModal .mentor-course-editor-grid{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:9px!important;
+    padding:11px!important;
+  }
+  #mentorCourseModal .mentor-course-editor-grid label,
+  #mentorCourseModal .mentor-course-session-grid label{
+    min-width:0!important;
+    display:grid!important;
+    gap:5px!important;
+  }
+  #mentorCourseModal .mentor-course-editor-grid label.full,
+  #mentorCourseModal .mentor-course-session-grid label.full{
+    grid-column:1/-1!important;
+  }
+  #mentorCourseModal :is(.mentor-course-editor-grid,.mentor-course-session-grid) label>span{
+    color:#59636e!important;
+    font-size:7.2px!important;
+    font-weight:900!important;
+  }
+  #mentorCourseModal :is(input,select,textarea){
+    width:100%!important;
+    min-height:38px!important;
+    padding:8px 9px!important;
+    border:1px solid #dfe3e6!important;
+    border-radius:8px!important;
+    background:#fff!important;
+    color:#2e353d!important;
+    font:inherit!important;
+    font-size:9px!important;
+    outline:none!important;
+  }
+  #mentorCourseModal textarea{
+    min-height:70px!important;
+    resize:vertical!important;
+  }
+  #mentorCourseModal :is(input,select,textarea):focus{
+    border-color:#d0a51b!important;
+    box-shadow:0 0 0 3px rgba(216,162,10,.08)!important;
+  }
+  #mentorCourseModal .mentor-course-editor-toggles{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:8px!important;
+    padding:0 11px 11px!important;
+  }
+  #mentorCourseModal .mentor-course-editor-toggles>label{
+    min-height:52px!important;
+    display:flex!important;
+    align-items:center!important;
+    gap:9px!important;
+    padding:8px 10px!important;
+    border:1px solid #e1e4e7!important;
+    border-radius:9px!important;
+    background:#f8f9fa!important;
+  }
+  #mentorCourseModal .mentor-course-editor-toggles input{
+    width:17px!important;
+    height:17px!important;
+    min-height:17px!important;
+    padding:0!important;
+    accent-color:#d8a20a!important;
+  }
+  #mentorCourseModal .mentor-course-editor-toggles span{
+    display:grid!important;
+  }
+  #mentorCourseModal .mentor-course-editor-toggles b{
+    color:#30373e!important;
+    font-size:8.5px!important;
+  }
+  #mentorCourseModal .mentor-course-editor-toggles small{
+    color:#8a939d!important;
+    font-size:6.8px!important;
+  }
+  #mentorCourseModal .mentor-course-session-editor{
+    display:grid!important;
+    gap:8px!important;
+    padding:10px!important;
+  }
+  #mentorCourseModal .mentor-course-session-row{
+    overflow:hidden!important;
+    border:1px solid #e2e5e8!important;
+    border-radius:10px!important;
+    background:#fafbfc!important;
+  }
+  #mentorCourseModal .mentor-course-session-head{
+    min-height:42px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:9px!important;
+    padding:7px 9px!important;
+    border-bottom:1px solid #e5e8eb!important;
+    background:#fff!important;
+  }
+  #mentorCourseModal .mentor-course-session-head>div{
+    display:grid!important;
+  }
+  #mentorCourseModal .mentor-course-session-head small{
+    color:#9b7306!important;
+    font-size:5.8px!important;
+    font-weight:950!important;
+  }
+  #mentorCourseModal .mentor-course-session-head b{
+    color:#30373e!important;
+    font-size:9px!important;
+  }
+  #mentorCourseModal .mentor-course-session-head>button{
+    width:29px!important;
+    height:29px!important;
+    display:grid!important;
+    place-items:center!important;
+    border:1px solid #ecc8cf!important;
+    border-radius:8px!important;
+    background:#fff5f6!important;
+    color:#d94b61!important;
+  }
+  #mentorCourseModal .mentor-course-session-grid{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:8px!important;
+    padding:9px!important;
+  }
+  #mentorCourseModal .mentor-course-editor-note{
+    min-height:42px!important;
+    display:flex!important;
+    align-items:center!important;
+    gap:8px!important;
+    padding:8px 10px!important;
+    border:1px solid #e6d8a8!important;
+    border-radius:10px!important;
+    background:#fffaf0!important;
+    color:#6b6043!important;
+    font-size:7.5px!important;
+  }
+  #mentorCourseModal .mentor-course-editor-note i{
+    color:#a77b04!important;
+  }
+  #mentorCourseModal .mentor-course-editor-foot{
+    min-height:60px!important;
+    padding:10px 16px!important;
+    border-top:1px solid #e3e7ea!important;
+    background:#fff!important;
+  }
+
+  html[data-theme="dark"] #mentorCourseModal .mentor-course-editor-card,
+  html[data-theme="dark"] #mentorCourseModal .mentor-course-editor-head,
+  html[data-theme="dark"] #mentorCourseModal .mentor-course-editor-section,
+  html[data-theme="dark"] #mentorCourseModal .mentor-course-session-head,
+  html[data-theme="dark"] #mentorCourseModal .mentor-course-editor-foot{
+    border-color:#2b323b!important;
+    background:#11151a!important;
+    box-shadow:none!important;
+  }
+  html[data-theme="dark"] #mentorCourseModal .mentor-course-editor-body{
+    background:#0c1014!important;
+  }
+  html[data-theme="dark"] #mentorCourseModal .mentor-course-editor-head{
+    background:
+      radial-gradient(280px 100px at 100% 0%,rgba(216,162,10,.08),transparent 72%),
+      #11151a!important;
+  }
+  html[data-theme="dark"] #mentorCourseModal .mentor-course-editor-head b,
+  html[data-theme="dark"] #mentorCourseModal .mentor-course-editor-section-head b,
+  html[data-theme="dark"] #mentorCourseModal .mentor-course-session-head b,
+  html[data-theme="dark"] #mentorCourseModal .mentor-course-editor-toggles b{
+    color:#f0f3f5!important;
+  }
+  html[data-theme="dark"] #mentorCourseModal .mentor-course-editor-head span{
+    color:#969faa!important;
+  }
+  html[data-theme="dark"] #mentorCourseModal .mentor-course-editor-section-head{
+    border-bottom-color:#2a3038!important;
+    background:#17150d!important;
+  }
+  html[data-theme="dark"] #mentorCourseModal :is(.mentor-course-editor-grid,.mentor-course-session-grid) label>span{
+    color:#bac2ca!important;
+  }
+  html[data-theme="dark"] #mentorCourseModal :is(input,select,textarea){
+    border-color:#303741!important;
+    background:#14191f!important;
+    color:#edf1f4!important;
+  }
+  html[data-theme="dark"] #mentorCourseModal select option{
+    background:#11161b!important;
+    color:#edf1f4!important;
+  }
+  html[data-theme="dark"] #mentorCourseModal .mentor-course-editor-toggles>label,
+  html[data-theme="dark"] #mentorCourseModal .mentor-course-session-row{
+    border-color:#2c333c!important;
+    background:#14191f!important;
+  }
+  html[data-theme="dark"] #mentorCourseModal .mentor-course-editor-toggles small{
+    color:#89939e!important;
+  }
+  html[data-theme="dark"] #mentorCourseModal .mentor-course-editor-note{
+    border-color:#4c401e!important;
+    background:#1a180f!important;
+    color:#c2b78f!important;
+  }
+
+  /* ============================================================
+     SETTINGS — finish dark-gold hierarchy
+     ============================================================ */
+  html[data-theme="dark"] [data-mentor-panel="settings"] .mentor-profile-install-icon,
+  html[data-theme="dark"] [data-mentor-panel="settings"] .mentor-profile-access-title>span i{
+    border-color:#645117!important;
+    background:linear-gradient(145deg,#3b300f,#211b0b)!important;
+    color:#efc43a!important;
+  }
+  html[data-theme="dark"] [data-mentor-panel="settings"] .mentor-profile-install>i{
+    border:1px solid #3d444d!important;
+    background:#181d23!important;
+    color:#d1b24a!important;
+  }
+  html[data-theme="dark"] [data-mentor-panel="settings"] .mentor-profile-install:hover{
+    border-color:#655117!important;
+    background:#1d1a10!important;
+  }
+}
