@@ -324,6 +324,17 @@
       await identify(window.StudentBase?.state||null);
       renderPushUI();
 
+      // Existing subscribers upgraded from the default OneSignal bell get one
+      // real delivery check after this custom 24K UI is loaded.
+      if(isSubscribed()&&!localStorage.getItem('24k_push_delivery_test_v1493')){
+        localStorage.setItem('24k_push_delivery_test_v1493','pending');
+        setTimeout(async()=>{
+          const result=await sendSelfTest();
+          if(result?.ok)localStorage.setItem('24k_push_delivery_test_v1493','sent');
+          else localStorage.removeItem('24k_push_delivery_test_v1493');
+        },1400);
+      }
+
       try{
         OneSignal.Notifications.addEventListener('permissionChange',function(){
           renderPushUI();
