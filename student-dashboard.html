@@ -265,23 +265,17 @@
 
       <section class="panel" id="p-charts">
         <div class="panel-heading"><div><h2>Market Charts</h2><p>Admin-published chart analysis and market outlooks.</p></div></div>
-        <div class="filter-row chart-filter-row">
-          <input id="chartSearch" type="search" placeholder="Search title or symbol...">
-          <select id="chartTimeframeFilter"><option value="all">All Timeframes</option><option>M15</option><option>H1</option><option>H4</option><option>D1</option></select>
-          <div class="chart-date-filter" role="group" aria-label="Chart date filter">
-            <button type="button" class="active" data-chart-date="all">All</button>
-            <button type="button" data-chart-date="today">Today</button>
-            <button type="button" data-chart-date="yesterday">Yesterday</button>
-            <button type="button" data-chart-date="custom"><i class="fa-regular fa-calendar"></i> Date</button>
-            <input type="date" id="chartCustomDate" aria-label="Select chart date" hidden>
-          </div>
+        <div class="filter-row daily-content-search">
+          <div class="daily-search-field"><i class="fa-solid fa-magnifying-glass"></i><input id="chartSearch" type="search" placeholder="Search charts by title or symbol..."></div>
         </div>
         <div class="content-grid" id="chartsGrid"></div>
       </section>
 
       <section class="panel" id="p-articles">
         <div class="panel-heading"><div><h2>Trading Articles</h2><p>Learning material and practical market education.</p></div></div>
-        <div class="filter-row"><input id="articleSearch" type="search" placeholder="Search articles..."></div>
+        <div class="filter-row daily-content-search">
+          <div class="daily-search-field"><i class="fa-solid fa-magnifying-glass"></i><input id="articleSearch" type="search" placeholder="Search articles..."></div>
+        </div>
         <div class="content-grid" id="articlesGrid"></div>
       </section>
 
