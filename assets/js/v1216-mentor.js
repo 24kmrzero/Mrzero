@@ -43,7 +43,7 @@ window.addEventListener('appinstalled',()=>{
   try{toast('24K Mentor App installed successfully.','success')}catch(_){}
 });
 window.addEventListener('load',updateMentorInstall);
-const cfg=window.APP_CONFIG||{},sb=(window.supabase&&cfg.SUPABASE_URL&&cfg.SUPABASE_ANON_KEY)?window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true}}):null;
+const cfg=window.APP_CONFIG||{},mentorProjectRef=(()=>{try{return new URL(cfg.SUPABASE_URL).hostname.split('.')[0]}catch{return'24k'}})(),mentorAuthKey=`sb-${mentorProjectRef}-mentor-auth-token`,sb=(window.supabase&&cfg.SUPABASE_URL&&cfg.SUPABASE_ANON_KEY)?window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY,{auth:{storageKey:mentorAuthKey,persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:'pkce'}}):null;
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 const state={user:null,profile:null,perms:{signals:false,charts:false,articles:false,announcements:false},signals:[],charts:[],articles:[],banners:[],courses:[],courseSessions:[],news:[],signalTab:'active',signalPeriod:'all',signalFilters:{q:'',pair:'all',type:'all',status:'all',from:'',to:''},chartPeriod:'all',articlePeriod:'all',performanceMonth:null,performanceMonthKeys:[]};
 const CLOSED=new Set(['sl_hit','breakeven_hit','manually_closed','closed','cancelled','tp4_hit']);
