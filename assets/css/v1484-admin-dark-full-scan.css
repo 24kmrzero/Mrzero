@@ -710,3 +710,75 @@
     color:#201800!important;
   }
 }
+
+
+/* v14.87 — Mentor Accounts dedicated dark-card specificity fix */
+@media (min-width:901px){
+  /* Dedicated Mentor page has a more-specific legacy light rule; override it explicitly. */
+  html[data-theme="dark"][data-auth-scope="admin"] body
+  #p-v1216-center.mentor-accounts-only
+  .v1216-mentor-card.v1216-mentor-premium{
+    width:100%!important;
+    max-width:370px!important;
+    min-height:238px!important;
+    padding:14px!important;
+    border:1px solid #303842!important;
+    border-top:3px solid #e2ad12!important;
+    border-radius:16px!important;
+    background:
+      radial-gradient(190px 95px at 100% 0%,rgba(226,173,18,.07),transparent 72%),
+      linear-gradient(145deg,#12181f,#0f141a)!important;
+    box-shadow:0 12px 30px rgba(0,0,0,.22)!important;
+  }
+
+  html[data-theme="dark"][data-auth-scope="admin"] body
+  #p-v1216-center.mentor-accounts-only
+  .v1216-mentor-card.v1216-mentor-premium:hover{
+    border-color:#5b4814!important;
+    border-top-color:#f0bd26!important;
+    background:
+      radial-gradient(200px 100px at 100% 0%,rgba(226,173,18,.09),transparent 72%),
+      linear-gradient(145deg,#141a21,#10151b)!important;
+    box-shadow:0 14px 34px rgba(0,0,0,.28)!important;
+  }
+
+  /* KPI icon boxes in the screenshot: cream/white -> 24K gold. */
+  html[data-theme="dark"][data-auth-scope="admin"] body
+  #p-v1216-center.mentor-accounts-only
+  .v1216-mentor-overview-icon{
+    border-color:#e2ad12!important;
+    background:linear-gradient(145deg,#f4ca3b,#d59d04)!important;
+    color:#201800!important;
+    box-shadow:0 6px 14px rgba(213,157,4,.12)!important;
+  }
+
+  /* Inner surfaces stay charcoal so the card is premium, not over-yellow. */
+  html[data-theme="dark"][data-auth-scope="admin"] body
+  #p-v1216-center.mentor-accounts-only
+  .v1216-mentor-card.v1216-mentor-premium .v1216-mentor-email,
+  html[data-theme="dark"][data-auth-scope="admin"] body
+  #p-v1216-center.mentor-accounts-only
+  .v1216-mentor-card.v1216-mentor-premium .v1216-mentor-access{
+    border-color:#323b46!important;
+    background:#151b22!important;
+    color:#cbd2d9!important;
+  }
+
+  html[data-theme="dark"][data-auth-scope="admin"] body
+  #p-v1216-center.mentor-accounts-only
+  .v1216-mentor-card.v1216-mentor-premium .v1216-mentor-head h3{
+    color:#f4f6f8!important;
+  }
+
+  html[data-theme="dark"][data-auth-scope="admin"] body
+  #p-v1216-center.mentor-accounts-only
+  .v1216-mentor-card.v1216-mentor-premium .v1216-mentor-head p{
+    color:#9ba6b1!important;
+  }
+
+  html[data-theme="dark"][data-auth-scope="admin"] body
+  #p-v1216-center.mentor-accounts-only
+  .v1216-mentor-card.v1216-mentor-premium .v1216-mentor-foot{
+    border-top-color:#303842!important;
+  }
+}
