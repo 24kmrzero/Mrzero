@@ -524,6 +524,16 @@
       return;
     }
     grid.innerHTML = `<div class="mobile-signal-list">${rows.map(signalMobileCard).join('')}</div><div class="desktop-signal-table-wrap"><table class="premium-signal-table compact-history-table"><thead><tr><th>Time</th><th>Date</th><th>Instrument</th><th>Type</th><th>Entry</th><th>SL</th><th>TP1</th><th>TP2</th><th>TP3</th><th>Current Pips</th><th>Status</th></tr></thead><tbody>${rows.map(signalTableRow).join('')}</tbody></table></div><div class="signal-table-footer">Showing ${rows.length} signal${rows.length === 1 ? '' : 's'}</div>`;
+    const desktopWrap = grid.querySelector('.desktop-signal-table-wrap');
+    if (desktopWrap && signalWorkspaceView === 'history' && window.innerWidth >= 1180) {
+      desktopWrap.scrollLeft = 0;
+      desktopWrap.addEventListener('scroll', () => {
+        if (desktopWrap.scrollLeft !== 0) desktopWrap.scrollLeft = 0;
+      }, { passive:true });
+      desktopWrap.querySelectorAll('tbody tr').forEach(row => row.addEventListener('mouseenter', () => {
+        if (desktopWrap.scrollLeft !== 0) desktopWrap.scrollLeft = 0;
+      }));
+    }
   }
 
   function syncSignalInstrumentFilter() { return; }
