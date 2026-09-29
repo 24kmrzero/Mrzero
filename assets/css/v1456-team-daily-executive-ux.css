@@ -124,6 +124,33 @@
     border-radius:11px!important;
     background:#fafbfc!important;
   }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-form>.team-daily-grid:first-of-type:before{
+    content:"COMMUNICATION"!important;
+    grid-column:1/-1!important;
+    display:flex!important;
+    align-items:center!important;
+    gap:7px!important;
+    min-height:18px!important;
+    margin:0 0 1px!important;
+    color:#59636d!important;
+    font-size:8.5px!important;
+    font-weight:950!important;
+    letter-spacing:.065em!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-form>.team-daily-grid:first-of-type:after{
+    content:""!important;
+    position:absolute!important;
+    left:0!important;
+    top:0!important;
+    width:3px!important;
+    height:100%!important;
+    border-radius:11px 0 0 11px!important;
+    background:#d6a20d!important;
+  }
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-form>.team-daily-grid:first-of-type{
+    position:relative!important;
+    overflow:hidden!important;
+  }
   #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-grid.broker-lots{
     grid-template-columns:repeat(3,minmax(0,1fr))!important;
     background:#fffdf7!important;
