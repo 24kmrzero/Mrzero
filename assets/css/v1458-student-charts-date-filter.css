@@ -1,0 +1,127 @@
+/* 24K MR ZERO — Student Charts date filters v14.58
+   Premium desktop controls with safe responsive wrapping. */
+
+@media (min-width:901px){
+  .student-page #p-charts .chart-filter-row{
+    min-height:58px!important;
+    display:flex!important;
+    align-items:center!important;
+    gap:8px!important;
+    padding:8px!important;
+    border:1px solid #e1e4e8!important;
+    border-radius:14px!important;
+    background:#fff!important;
+    box-shadow:0 7px 20px rgba(18,24,32,.028)!important;
+  }
+  .student-page #p-charts #chartSearch{
+    width:260px!important;
+    min-height:38px!important;
+    height:38px!important;
+    border:1px solid #e1e4e8!important;
+    border-radius:10px!important;
+    background:#fafbfc!important;
+    font-size:10px!important;
+  }
+  .student-page #p-charts #chartTimeframeFilter{
+    width:180px!important;
+    min-height:38px!important;
+    height:38px!important;
+    border:1px solid #e1e4e8!important;
+    border-radius:10px!important;
+    background:#fafbfc!important;
+    font-size:10px!important;
+  }
+  .student-page #p-charts .chart-date-filter{
+    display:flex!important;
+    align-items:center!important;
+    gap:4px!important;
+    margin-left:2px!important;
+    padding:4px!important;
+    border:1px solid #e3e5e8!important;
+    border-radius:10px!important;
+    background:#f7f8fa!important;
+  }
+  .student-page #p-charts .chart-date-filter button{
+    min-height:30px!important;
+    height:30px!important;
+    padding:0 10px!important;
+    border:1px solid transparent!important;
+    border-radius:7px!important;
+    background:transparent!important;
+    color:#727c88!important;
+    font:850 8px/1 inherit!important;
+    cursor:pointer!important;
+    box-shadow:none!important;
+  }
+  .student-page #p-charts .chart-date-filter button:hover{
+    color:#8c6700!important;
+    background:#fff!important;
+  }
+  .student-page #p-charts .chart-date-filter button.active{
+    border-color:#d9b845!important;
+    background:#fff3c8!important;
+    color:#8d6700!important;
+  }
+  .student-page #p-charts #chartCustomDate{
+    width:138px!important;
+    min-height:30px!important;
+    height:30px!important;
+    padding:0 8px!important;
+    border:1px solid #dfc66f!important;
+    border-radius:7px!important;
+    background:#fff!important;
+    color:#343b44!important;
+    font-size:8px!important;
+  }
+
+  html[data-theme="dark"] .student-page #p-charts .chart-filter-row{
+    background:#101319!important;
+    border-color:#252b35!important;
+    box-shadow:none!important;
+  }
+  html[data-theme="dark"] .student-page #p-charts #chartSearch,
+  html[data-theme="dark"] .student-page #p-charts #chartTimeframeFilter{
+    background:#0d1116!important;
+    border-color:#29303a!important;
+    color:#c5cbd1!important;
+  }
+  html[data-theme="dark"] .student-page #p-charts .chart-date-filter{
+    background:#0d1116!important;
+    border-color:#29303a!important;
+  }
+  html[data-theme="dark"] .student-page #p-charts .chart-date-filter button{
+    color:#98a1ab!important;
+  }
+  html[data-theme="dark"] .student-page #p-charts .chart-date-filter button.active{
+    border-color:#514419!important;
+    background:#211c0d!important;
+    color:#e3b638!important;
+  }
+  html[data-theme="dark"] .student-page #p-charts #chartCustomDate{
+    border-color:#514419!important;
+    background:#151a20!important;
+    color:#d7dce1!important;
+  }
+}
+
+@media (max-width:900px){
+  .student-page #p-charts .chart-filter-row{
+    display:flex!important;
+    flex-wrap:wrap!important;
+    gap:8px!important;
+  }
+  .student-page #p-charts .chart-date-filter{
+    width:100%!important;
+    display:flex!important;
+    align-items:center!important;
+    gap:6px!important;
+    flex-wrap:wrap!important;
+  }
+  .student-page #p-charts .chart-date-filter button{
+    min-height:34px!important;
+    padding:0 10px!important;
+  }
+  .student-page #p-charts #chartCustomDate{
+    min-height:34px!important;
+  }
+}
