@@ -10,7 +10,7 @@
   }
   #teamApp:not(.hidden) .team-earnings-command:after{content:"$"!important;position:absolute!important;right:34px!important;top:-37px!important;color:rgba(172,123,0,.04)!important;font-size:148px!important;font-weight:950!important;pointer-events:none!important}
   #teamApp:not(.hidden) .team-earnings-command-top{position:relative!important;z-index:2!important;display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:18px!important}
-  #teamApp:not(.hidden) .team-earnings-kicker{min-height:25px!important;display:inline-flex!important;align-items:center!important;gap:7px!important;padding:0 10px!important;border:1px solid #e7d69d!important;border-radius:999px!important;background:#fff9e9!important;color:#8f6900!important;font-size:7.2px!important;font-weight:950!important;letter-spacing:.12em!important}
+  #teamApp:not(.hidden) .team-earnings-kicker{min-height:25px!important;display:inline-flex!important;align-items:center!important;gap:7px!important;padding:0 10px!important;border:1px solid #e7d69d!important;border-radius:999px!important;background:#fff9e9!important;color:#8f6900!important;font-size:8px!important;font-weight:950!important;letter-spacing:.12em!important}
   #teamApp:not(.hidden) .team-earnings-command h2{margin:11px 0 5px!important;color:#1d2229!important;font-size:28px!important;line-height:1!important;font-weight:950!important;letter-spacing:-.04em!important}
   #teamApp:not(.hidden) .team-earnings-command p{margin:0!important;color:#6e7883!important;font-size:10px!important;line-height:1.5!important}
   #teamApp:not(.hidden) .team-earnings-auto{position:relative!important;z-index:2!important;min-width:132px!important;display:grid!important;grid-template-columns:34px minmax(0,1fr)!important;grid-template-rows:auto auto!important;align-items:center!important;gap:2px 8px!important;padding:8px 10px!important;border:1px solid #e4d5a8!important;border-radius:12px!important;background:rgba(255,255,255,.82)!important}
@@ -48,7 +48,7 @@
   #teamApp:not(.hidden) .team-earnings-policy{margin:11px 0 0!important;border:1px solid #e4e7ea!important;border-radius:12px!important;background:#fff!important;box-shadow:0 6px 18px rgba(18,24,32,.025)!important}
   #teamApp:not(.hidden) .team-earnings-policy summary{min-height:42px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;padding:0 12px!important;color:#48535e!important;cursor:pointer!important}
   #teamApp:not(.hidden) .team-earnings-policy summary>span{display:flex!important;align-items:center!important;gap:7px!important}
-  #teamApp:not(.hidden) .team-earnings-policy summary b{font-size:7.5px!important}
+  #teamApp:not(.hidden) .team-earnings-policy summary b{font-size:8px!important}
   #teamApp:not(.hidden) .team-earnings-policy summary i{color:#a67a00!important}
   #teamApp:not(.hidden) .team-earnings-policy p{margin:0!important;padding:0 12px 12px!important;color:#7f8994!important;font-size:6.8px!important;line-height:1.55!important}
 
@@ -56,7 +56,7 @@
   #teamApp:not(.hidden) .team-earnings-section-head>div{display:grid!important;gap:1px!important}
   #teamApp:not(.hidden) .team-earnings-section-head small{color:#a0780b!important;font-size:6.2px!important;font-weight:950!important;letter-spacing:.11em!important}
   #teamApp:not(.hidden) .team-earnings-section-head b{color:#252b32!important;font-size:13px!important;font-weight:950!important}
-  #teamApp:not(.hidden) .team-earnings-section-head>span{color:#858f9a!important;font-size:7px!important}
+  #teamApp:not(.hidden) .team-earnings-section-head>span{color:#858f9a!important;font-size:8px!important}
 
   #teamApp:not(.hidden) .team-earnings-progress{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:10px!important;margin-top:10px!important}
   #teamApp:not(.hidden) .premium-progress-card{min-height:190px!important;display:flex!important;flex-direction:column!important;padding:14px!important;border:1px solid #e2e5e8!important;border-radius:15px!important;background:#fff!important;box-shadow:0 9px 24px rgba(18,24,32,.035)!important}

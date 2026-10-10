@@ -67,7 +67,7 @@
     border-radius:999px!important;
     background:#fff9e9!important;
     color:#8d6800!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
     font-weight:950!important;
     letter-spacing:.13em!important;
   }
@@ -109,7 +109,7 @@
     background:transparent!important;
     color:#7b8490!important;
     box-shadow:none!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
     font-weight:900!important;
     gap:5px!important;
   }
@@ -201,7 +201,7 @@
   [data-mentor-panel="signals"] .mentor-signal-stats article em{
     margin-top:2px!important;
     color:#7c8693!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-style:normal!important;
   }
 
@@ -235,7 +235,7 @@
     border-radius:9px!important;
     background:transparent!important;
     color:#7b8490!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
     font-weight:900!important;
   }
   [data-mentor-panel="signals"] .mentor-signal-segments button.active{
@@ -255,7 +255,7 @@
   [data-mentor-panel="signals"] #mentorSignalViewMeta{
     padding-right:8px!important;
     color:#8a939f!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
 
   /* Quick filters = Admin */
@@ -282,7 +282,7 @@
     border-radius:9px!important;
     background:#fafbfc!important;
     color:#727c89!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
     font-weight:850!important;
     box-shadow:none!important;
   }
@@ -314,7 +314,7 @@
     align-items:center!important;
     gap:6px!important;
     color:#7b8490!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
   [data-mentor-panel="signals"] .mentor-signal-custom-date input,
   [data-mentor-panel="signals"] .mentor-signal-custom-date button{
@@ -394,7 +394,7 @@
     border-bottom:1px solid #e7e9ec!important;
     background:#f7f8fa!important;
     color:#737d8a!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
     font-weight:900!important;
     letter-spacing:.08em!important;
     text-transform:none!important;
@@ -426,7 +426,7 @@
     display:block!important;
     margin-top:3px!important;
     color:#7b8591!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
   [data-mentor-panel="signals"] .mentor-signal-pair{
     color:#181a20!important;
@@ -440,7 +440,7 @@
     padding:0 7px!important;
     border:1px solid transparent!important;
     border-radius:7px!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:950!important;
   }
   [data-mentor-panel="signals"] .mentor-type-badge.buy{
@@ -471,7 +471,7 @@
     align-items:center!important;
     padding:0 7px!important;
     border-radius:999px!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:950!important;
   }
   [data-mentor-panel="signals"] .mentor-pips-chip.good{
@@ -503,7 +503,7 @@
     background:#fff!important;
     color:#747f8d!important;
     box-shadow:none!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:850!important;
   }
   [data-mentor-panel="signals"] .mentor-manage-buttons{
@@ -564,7 +564,7 @@
   }
   #mentorSignalModal .mentor-modal-head .eyebrow{
     color:#8a939f!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
   #mentorSignalModal .mentor-modal-body{
     padding:14px!important;

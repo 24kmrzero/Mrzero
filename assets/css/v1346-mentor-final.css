@@ -49,7 +49,7 @@
 }
 .mentor-action-input span{
   color:var(--m-muted);
-  font-size:7px;
+  font-size:8px;
   font-weight:800;
 }
 .mentor-action-input input{
@@ -107,7 +107,7 @@ html[data-theme="light"] .mentor-action-input input{
     font-size:15px;
   }
   .mentor-action-copy b{font-size:11px}
-  .mentor-action-copy small{font-size:7px}
+  .mentor-action-copy small{font-size:8px}
   .mentor-action-input input{
     height:40px;
     font-size:10px;

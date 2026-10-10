@@ -51,7 +51,7 @@
     border:1px solid rgba(219,169,34,.22)!important
   }
   .app-title strong{font-size:13px!important}
-  .app-title small{display:block!important;font-size:7.2px!important;line-height:1.1!important;margin-top:2px!important}
+  .app-title small{display:block!important;font-size:8px!important;line-height:1.1!important;margin-top:2px!important}
   .app-notify,.app-avatar{display:none!important}
 
   /* Dashboard shell */
@@ -99,7 +99,7 @@
   }
   .admin-snapshot-icon{
     width:26px!important;height:26px!important;display:grid!important;place-items:center!important;border-radius:8px!important;
-    background:#fff5d8!important;color:#b17d00!important;font-size:7px!important
+    background:#fff5d8!important;color:#b17d00!important;font-size:8px!important
   }
   #p-dashboard .admin-platform-snapshot .v1218-mini small{color:#8e97a1!important;font-size:5.4px!important}
   #p-dashboard .admin-platform-snapshot .v1218-mini b{color:#272d35!important;font-size:10px!important;line-height:1!important;margin-top:2px!important}
@@ -149,7 +149,7 @@
     background:#fff5d8!important;color:#b17d00!important;font-size:8px!important
   }
   .admin-dashboard-quick button>div{min-width:0!important;display:grid!important;gap:2px!important}
-  .admin-dashboard-quick button b{font-size:7.8px!important}
+  .admin-dashboard-quick button b{font-size:8px!important}
   .admin-dashboard-quick button small{font-size:5.8px!important;color:#8d96a0!important}
   .admin-dashboard-quick button>i{color:#a6adb5!important;font-size:5.5px!important}
 
@@ -165,7 +165,7 @@
   #p-dashboard .admin-dashboard-card .app-btn{min-height:30px!important;padding:0 9px!important;font-size:6.4px!important;border-radius:9px!important}
   #p-dashboard .activity-item{min-height:51px!important;padding:7px!important;border-radius:10px!important}
   #p-dashboard .activity-icon{width:30px!important;height:30px!important;min-width:30px!important;border-radius:9px!important}
-  #p-dashboard .activity-item b{font-size:7.6px!important}
+  #p-dashboard .activity-item b{font-size:8px!important}
   #p-dashboard .activity-item small{font-size:5.8px!important}
 
   /* Analytics */

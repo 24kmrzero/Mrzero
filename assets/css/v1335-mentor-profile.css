@@ -48,7 +48,7 @@
   align-items:center;
   gap:6px;
   color:#dca800;
-  font-size:7px;
+  font-size:8px;
   font-weight:900;
   letter-spacing:.13em;
 }
@@ -198,7 +198,7 @@
   border-radius:999px;
   background:rgba(240,185,11,.07);
   color:#d4a100;
-  font-size:7px;
+  font-size:8px;
   font-weight:850;
 }
 
@@ -301,7 +301,7 @@
 }
 .mentor-profile-admin-note small{
   color:#707b88;
-  font-size:7px;
+  font-size:8px;
   line-height:1.35;
 }
 
@@ -384,7 +384,7 @@
 }
 .mentor-profile-links>button>i{
   color:#65707d;
-  font-size:7px;
+  font-size:8px;
 }
 
 .mentor-profile-install{
@@ -417,7 +417,7 @@
 .mentor-profile-install>span:nth-child(2){display:grid;gap:2px}
 .mentor-profile-install b{font-size:9px}
 .mentor-profile-install small{color:#7a8592;font-size:6.5px}
-.mentor-profile-install>i{justify-self:end;color:#9d7900;font-size:7px}
+.mentor-profile-install>i{justify-self:end;color:#9d7900;font-size:8px}
 .mentor-profile-install.installed{
   border-color:rgba(22,199,132,.20);
   background:linear-gradient(90deg,rgba(22,199,132,.075),rgba(22,199,132,.018)),#10151b;
@@ -570,7 +570,7 @@ html[data-theme="light"] .mentor-profile-close{
   .mentor-profile-head:after{font-size:76px;right:52px;top:-18px}
   .mentor-profile-eyebrow{font-size:5.8px}
   .mentor-profile-head h2{font-size:18px}
-  .mentor-profile-head p{font-size:7px}
+  .mentor-profile-head p{font-size:8px}
   #mentorProfileModal .mentor-close{
     width:32px!important;
     height:32px!important;
@@ -599,7 +599,7 @@ html[data-theme="light"] .mentor-profile-close{
     height:17px;
     right:-3px;
     bottom:-3px;
-    font-size:7px;
+    font-size:8px;
   }
   .mentor-profile-status{font-size:5px}
   .mentor-profile-identity h3{margin:3px 0 2px;font-size:15px}
@@ -637,7 +637,7 @@ html[data-theme="light"] .mentor-profile-close{
     border-radius:8px;
     font-size:8px;
   }
-  .mentor-profile-admin-note b{font-size:7.5px}
+  .mentor-profile-admin-note b{font-size:8px}
   .mentor-profile-admin-note small{font-size:5.8px}
 
   .mentor-profile-section-head{
@@ -663,7 +663,7 @@ html[data-theme="light"] .mentor-profile-close{
     border-radius:8px;
     font-size:9px;
   }
-  .mentor-profile-links b{font-size:7.5px}
+  .mentor-profile-links b{font-size:8px}
   .mentor-profile-links small{font-size:5.5px}
   .mentor-profile-links>button>i{font-size:6px}
 
@@ -680,7 +680,7 @@ html[data-theme="light"] .mentor-profile-close{
     border-radius:8px;
     font-size:9px;
   }
-  .mentor-profile-install b{font-size:7.5px}
+  .mentor-profile-install b{font-size:8px}
   .mentor-profile-install small{font-size:5.5px}
 
   .mentor-profile-foot{
@@ -691,7 +691,7 @@ html[data-theme="light"] .mentor-profile-close{
   .mentor-profile-foot button{
     min-height:39px;
     border-radius:10px;
-    font-size:7.5px;
+    font-size:8px;
   }
 }
 @media(max-width:390px){
@@ -734,7 +734,7 @@ html[data-theme="light"] .mentor-profile-close{
   border-radius:999px;
   background:rgba(22,199,132,.07);
   color:#169d6d;
-  font-size:7px;
+  font-size:8px;
   font-weight:900;
 }
 .mentor-profile-access-simple{
@@ -860,7 +860,7 @@ html[data-theme="light"] .mentor-profile-permissions-simple span.on{
     font-size:17px!important;
   }
   .mentor-profile-identity p{
-    font-size:7px!important;
+    font-size:8px!important;
   }
   .mentor-profile-verified{
     min-height:24px!important;
@@ -989,7 +989,7 @@ html[data-theme="light"] .mentor-profile-permissions-simple span.on{
   border-radius:999px;
   background:rgba(240,185,11,.055);
   color:#dfaa00;
-  font-size:7.4px;
+  font-size:8px;
   font-weight:900;
   letter-spacing:.13em;
 }
@@ -1092,7 +1092,7 @@ html[data-theme="light"] .mentor-profile-permissions-simple span.on{
 }
 .mentor-more-section-head small{
   color:var(--m-muted);
-  font-size:7px;
+  font-size:8px;
 }
 
 .mentor-more-links{
@@ -1139,7 +1139,7 @@ html[data-theme="light"] .mentor-profile-permissions-simple span.on{
 }
 .mentor-more-links>button>i{
   color:#65707d;
-  font-size:7px;
+  font-size:8px;
 }
 
 .mentor-more-actions{
@@ -1195,7 +1195,7 @@ html[data-theme="light"] .mentor-profile-permissions-simple span.on{
 .mentor-more-logout>i{
   justify-self:end;
   color:#9b6870;
-  font-size:7px;
+  font-size:8px;
 }
 
 /* light theme */

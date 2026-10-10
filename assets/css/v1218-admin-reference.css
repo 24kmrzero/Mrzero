@@ -224,7 +224,7 @@ html[data-theme="light"] .admin-quick-menu button:hover{
 .admin-research-eyebrow{display:block;color:var(--v18-gold);font-size:8px;font-weight:900;letter-spacing:.13em}
 .admin-research-hero h2{margin:6px 0 4px;font-size:24px;color:#f5f2ea}
 .admin-research-hero p{margin:0;color:#9ca5b3;font-size:10px;line-height:1.5}
-.admin-research-hero small{display:inline-flex;margin-top:9px;padding:4px 8px;border:1px solid rgba(242,182,50,.35);border-radius:999px;color:var(--v18-gold);font-size:7px;font-weight:900;letter-spacing:.08em}
+.admin-research-hero small{display:inline-flex;margin-top:9px;padding:4px 8px;border:1px solid rgba(242,182,50,.35);border-radius:999px;color:var(--v18-gold);font-size:8px;font-weight:900;letter-spacing:.08em}
 .admin-research-filter{display:grid;gap:8px;border:1px solid var(--v18-line);background:var(--v18-card);border-radius:12px;padding:9px;margin-bottom:12px}
 .admin-chart-filter{grid-template-columns:minmax(220px,1fr) 150px 145px}
 .admin-article-filter{grid-template-columns:minmax(220px,1fr) 145px 130px 145px}
@@ -239,7 +239,7 @@ html[data-theme="light"] .admin-quick-menu button:hover{
 .admin-research-body{padding:10px}.admin-research-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .admin-research-meta span{border:1px solid var(--v18-line);border-radius:999px;padding:4px 7px;color:var(--v18-muted);font-size:8px;font-weight:800}
 .admin-research-meta span.gold{background:rgba(242,182,50,.10);color:var(--v18-gold);border-color:rgba(242,182,50,.30)}
-.admin-research-meta small{margin-left:auto;color:var(--v18-muted);font-size:7.5px}
+.admin-research-meta small{margin-left:auto;color:var(--v18-muted);font-size:8px}
 .admin-research-body h3{margin:8px 0 5px;font-size:13px;line-height:1.35}.admin-research-body p{margin:0;color:var(--v18-muted);font-size:9.5px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:28px}
 .admin-research-actions{display:grid;grid-template-columns:1fr 1fr auto;gap:6px;margin-top:9px}
 .admin-research-actions .app-btn{min-height:31px!important;display:grid!important;place-items:center!important;text-decoration:none!important;font-size:9px!important}

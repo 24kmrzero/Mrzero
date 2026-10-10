@@ -76,7 +76,7 @@
 }
 .mentor-news-card small{
   color:#8b949f;
-  font-size:7px;
+  font-size:8px;
 }
 .mentor-news-actions{
   display:flex;
@@ -94,7 +94,7 @@
   background:#fafbfc;
   color:#59636f;
   font:inherit;
-  font-size:7.5px;
+  font-size:8px;
   font-weight:850;
   cursor:pointer;
 }

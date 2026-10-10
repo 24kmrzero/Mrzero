@@ -187,7 +187,7 @@
     border-radius:7px!important;
     background:#fff4d6!important;
     color:#bd8500!important;
-    font-size:7px!important;
+    font-size:8px!important;
     line-height:1!important;
   }
   #teamApp:not(.hidden) #todayWork .today-work-label>span{
@@ -195,7 +195,7 @@
     margin:0!important;
     padding:0!important;
     color:#4d5661!important;
-    font-size:7.8px!important;
+    font-size:8px!important;
     font-weight:650!important;
     line-height:1.2!important;
     white-space:nowrap!important;

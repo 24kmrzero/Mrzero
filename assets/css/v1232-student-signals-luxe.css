@@ -180,7 +180,7 @@
     border-radius:7px!important;
     background:#F5F6F7!important;
     color:#737C89!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
   html[data-theme="dark"] .student-page .mobile-signal-four .msa-chevron{
     background:#232830!important;color:#8993A1!important;
@@ -241,7 +241,7 @@
   .student-page #p-signals .signal-table-footer{
     padding-top:7px!important;
     color:#8A929E!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
 }
 
@@ -258,7 +258,7 @@
   .student-page .msa-main-date em,
   .student-page .msa-main-pair em{font-size:6.3px!important}
   .student-page .mobile-signal-four .msa-direction .table-direction{
-    min-width:46px!important;min-height:27px!important;font-size:7.8px!important
+    min-width:46px!important;min-height:27px!important;font-size:8px!important
   }
   .student-page .mobile-signal-four .msa-five-levels b{font-size:8.5px!important}
 }

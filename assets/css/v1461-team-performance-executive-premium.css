@@ -55,7 +55,7 @@
     font-size:8.5px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="performance"] .team-tool-status>small{
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
 
   /* ===== Range selector ===== */
@@ -156,7 +156,7 @@
     margin-bottom:8px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="performance"] .team-performance-card .card-head small{
-    font-size:7.5px!important;
+    font-size:8px!important;
     letter-spacing:.08em!important;
   }
   #teamApp:not(.hidden) [data-view-panel="performance"] .team-performance-card .card-head h3{
@@ -278,7 +278,7 @@
   #teamApp:not(.hidden) [data-view-panel="performance"] .team-source-performance th{
     height:33px!important;
     padding:0 9px!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
     letter-spacing:.055em!important;
   }
   #teamApp:not(.hidden) [data-view-panel="performance"] .team-source-performance td{
@@ -290,7 +290,7 @@
     font-size:8.8px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="performance"] .team-source-performance td small{
-    font-size:7.2px!important;
+    font-size:8px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="performance"] .team-source-performance tbody tr:nth-child(even) td{
     background:#fbfaf7!important;

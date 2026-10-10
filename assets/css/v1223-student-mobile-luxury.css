@@ -112,12 +112,12 @@
     background:rgba(255,255,255,.72)!important;
     border:1px solid rgba(86,67,36,.09)!important;
     color:var(--lx-muted)!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
   html[data-theme="dark"] .student-page .compact-welcome-meta>span{
     background:rgba(255,255,255,.025)!important;border-color:rgba(255,255,255,.05)!important
   }
-  .student-page .compact-welcome-meta b{font-size:7.5px!important}
+  .student-page .compact-welcome-meta b{font-size:8px!important}
   .student-page .compact-account-badge{
     min-height:40px!important;
     padding:6px 8px!important;
@@ -185,7 +185,7 @@
   }
   .student-page .compact-card-head{margin-bottom:8px!important}
   .student-page .compact-card-head span{
-    font-size:7px!important;letter-spacing:.11em!important;color:var(--lx-gold)!important
+    font-size:8px!important;letter-spacing:.11em!important;color:var(--lx-gold)!important
   }
   .student-page .compact-card-head h3{
     margin-top:2px!important;font-size:17px!important;color:var(--lx-ink)!important
@@ -242,7 +242,7 @@
   .student-page .dash-signal-levels small{font-size:6px!important;color:#8B8378!important}
   .student-page .dash-signal-levels b{font-size:11px!important;color:var(--lx-ink)!important}
   .student-page .dash-signal-foot{min-height:30px!important;padding:6px 8px!important}
-  .student-page .dash-signal-foot small,.student-page .dash-signal-foot>span{font-size:7px!important}
+  .student-page .dash-signal-foot small,.student-page .dash-signal-foot>span{font-size:8px!important}
 
   /* compact empty states */
   .student-page .live-learning-card .dashboard-empty-compact,
@@ -274,7 +274,7 @@
   .student-page .desk-crown{width:34px!important;height:34px!important;border-radius:10px!important}
   .student-page .member-desk-access b{font-size:11px!important;color:var(--lx-ink)!important}
   .student-page .member-desk-access small{font-size:6.5px!important}
-  .student-page .member-desk-access em{font-size:7.5px!important;color:var(--lx-muted)!important}
+  .student-page .member-desk-access em{font-size:8px!important;color:var(--lx-muted)!important}
   .student-page .member-desk-metrics{gap:6px!important}
   .student-page .member-desk-metrics button{
     min-height:68px!important;padding:8px!important;border-radius:12px!important;
@@ -285,8 +285,8 @@
   .student-page .desk-metric-icon{width:28px!important;height:28px!important;border-radius:9px!important}
   .student-page .member-desk-metrics small{font-size:6.5px!important}
   .student-page .member-desk-metrics b{font-size:9.5px!important;color:var(--lx-ink)!important}
-  .student-page .member-desk-metrics em{font-size:7px!important;color:var(--lx-muted)!important}
-  .student-page .member-desk-footer{min-height:29px!important;font-size:7.5px!important}
+  .student-page .member-desk-metrics em{font-size:8px!important;color:var(--lx-muted)!important}
+  .student-page .member-desk-footer{min-height:29px!important;font-size:8px!important}
 
   /* bottom dock: floating but restrained */
   .student-mobile-nav{

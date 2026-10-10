@@ -12,7 +12,7 @@
   }
   #teamApp:not(.hidden) .team-clients-command:after{content:"24K"!important;position:absolute!important;right:22px!important;top:-33px!important;font-size:132px!important;line-height:1!important;font-weight:950!important;letter-spacing:-.08em!important;color:rgba(172,123,0,.035)!important;pointer-events:none!important}
   #teamApp:not(.hidden) .team-clients-command-top{position:relative!important;z-index:2!important;display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:18px!important}
-  #teamApp:not(.hidden) .team-clients-kicker{min-height:25px!important;display:inline-flex!important;align-items:center!important;gap:7px!important;padding:0 10px!important;border:1px solid #e7d69d!important;border-radius:999px!important;background:#fff9e9!important;color:#8f6900!important;font-size:7.2px!important;font-weight:950!important;letter-spacing:.12em!important}
+  #teamApp:not(.hidden) .team-clients-kicker{min-height:25px!important;display:inline-flex!important;align-items:center!important;gap:7px!important;padding:0 10px!important;border:1px solid #e7d69d!important;border-radius:999px!important;background:#fff9e9!important;color:#8f6900!important;font-size:8px!important;font-weight:950!important;letter-spacing:.12em!important}
   #teamApp:not(.hidden) .team-clients-command h2{margin:11px 0 5px!important;color:#1d2229!important;font-size:28px!important;line-height:1!important;font-weight:950!important;letter-spacing:-.04em!important}
   #teamApp:not(.hidden) .team-clients-command p{margin:0!important;color:#6e7883!important;font-size:10px!important;line-height:1.5!important}
   #teamApp:not(.hidden) .team-clients-live{position:relative!important;z-index:2!important;min-width:86px!important;display:grid!important;grid-template-columns:8px auto!important;grid-template-rows:auto auto!important;align-items:center!important;column-gap:7px!important;padding:9px 11px!important;border:1px solid #dfe3e6!important;border-radius:12px!important;background:rgba(255,255,255,.82)!important}
@@ -39,19 +39,19 @@
   #teamApp:not(.hidden) .team-client-filter-trigger{min-width:100px!important;height:44px!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;padding:0 12px!important;border:1px solid #e2d29e!important;border-radius:12px!important;background:#fff9e9!important;color:#926b00!important;font:inherit!important;font-size:8px!important;font-weight:900!important}
 
   #teamApp:not(.hidden) .team-client-status-tabs{position:relative!important;z-index:2!important;display:flex!important;gap:6px!important;margin-top:10px!important;padding:0!important;overflow:visible!important}
-  #teamApp:not(.hidden) .team-client-status-tabs button{min-height:32px!important;padding:0 11px!important;border:1px solid #e1e4e7!important;border-radius:999px!important;background:#fff!important;color:#727d88!important;font:inherit!important;font-size:7px!important;font-weight:850!important}
+  #teamApp:not(.hidden) .team-client-status-tabs button{min-height:32px!important;padding:0 11px!important;border:1px solid #e1e4e7!important;border-radius:999px!important;background:#fff!important;color:#727d88!important;font:inherit!important;font-size:8px!important;font-weight:850!important}
   #teamApp:not(.hidden) .team-client-status-tabs button.active{border-color:#e1c76e!important;background:#fff4d5!important;color:#936a00!important}
   #teamApp:not(.hidden) .team-client-filter-panel{position:relative!important;z-index:2!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important;margin-top:10px!important;padding:11px!important;border:1px solid #e4e6e8!important;border-radius:12px!important;background:#fafbfc!important}
   #teamApp:not(.hidden) .team-client-filter-panel[hidden]{display:none!important}
   #teamApp:not(.hidden) .team-client-filter-panel label{display:grid!important;gap:4px!important}
   #teamApp:not(.hidden) .team-client-filter-panel label>span{color:#7c8792!important;font-size:6.5px!important;font-weight:850!important}
-  #teamApp:not(.hidden) .team-client-filter-panel :is(select,button){width:100%!important;height:36px!important;border:1px solid #dfe3e7!important;border-radius:9px!important;background:#fff!important;color:#333a42!important;font:inherit!important;font-size:7.5px!important;padding:0 9px!important}
+  #teamApp:not(.hidden) .team-client-filter-panel :is(select,button){width:100%!important;height:36px!important;border:1px solid #dfe3e7!important;border-radius:9px!important;background:#fff!important;color:#333a42!important;font:inherit!important;font-size:8px!important;padding:0 9px!important}
 
   #teamApp:not(.hidden) .team-client-results-head{min-height:48px!important;display:flex!important;align-items:flex-end!important;justify-content:space-between!important;gap:10px!important;padding:0 2px 9px!important;margin-top:10px!important;border-bottom:1px solid #e4e1d9!important}
   #teamApp:not(.hidden) .team-client-results-head>div{display:grid!important;gap:1px!important}
   #teamApp:not(.hidden) .team-client-results-head small{color:#a0780b!important;font-size:6.3px!important;font-weight:950!important;letter-spacing:.11em!important}
   #teamApp:not(.hidden) .team-client-results-head b{color:#252b32!important;font-size:13px!important;font-weight:950!important}
-  #teamApp:not(.hidden) .team-client-results-head>span{color:#858f9a!important;font-size:7px!important}
+  #teamApp:not(.hidden) .team-client-results-head>span{color:#858f9a!important;font-size:8px!important}
 
   #teamApp:not(.hidden) .team-client-card-list{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:11px!important;margin-top:11px!important}
   #teamApp:not(.hidden) .premium-client-card{position:relative!important;overflow:hidden!important;min-width:0!important;padding:14px!important;border:1px solid #e2e5e8!important;border-radius:15px!important;background:#fff!important;box-shadow:0 9px 24px rgba(18,24,32,.04)!important}
@@ -85,12 +85,12 @@
   #teamApp:not(.hidden) .premium-client-info-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important;margin-bottom:9px!important}
   #teamApp:not(.hidden) .premium-client-info-grid>div{min-height:62px!important;display:grid!important;align-content:center!important;gap:2px!important;padding:8px!important;border:1px solid #eceef0!important;border-radius:9px!important;background:#fbfbfa!important}
   #teamApp:not(.hidden) .premium-client-info-grid span{color:#9099a3!important;font-size:5.8px!important;font-weight:900!important;letter-spacing:.07em!important}
-  #teamApp:not(.hidden) .premium-client-info-grid b{overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;color:#30363d!important;font-size:7.5px!important}
+  #teamApp:not(.hidden) .premium-client-info-grid b{overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;color:#30363d!important;font-size:8px!important}
   #teamApp:not(.hidden) .premium-client-info-grid small{overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;color:#8b949f!important;font-size:6px!important}
   #teamApp:not(.hidden) .premium-client-controls{display:grid!important;grid-template-columns:.75fr 1.25fr!important;gap:8px!important;margin-bottom:9px!important}
   #teamApp:not(.hidden) .premium-client-controls label{display:grid!important;gap:4px!important}
   #teamApp:not(.hidden) .premium-client-controls label>span{color:#7c8792!important;font-size:6.2px!important;font-weight:850!important}
-  #teamApp:not(.hidden) .premium-client-controls :is(select,input){width:100%!important;height:34px!important;border:1px solid #dfe3e7!important;border-radius:9px!important;background:#fff!important;color:#313840!important;font:inherit!important;font-size:7.2px!important;padding:0 8px!important}
+  #teamApp:not(.hidden) .premium-client-controls :is(select,input){width:100%!important;height:34px!important;border:1px solid #dfe3e7!important;border-radius:9px!important;background:#fff!important;color:#313840!important;font:inherit!important;font-size:8px!important;padding:0 8px!important}
   #teamApp:not(.hidden) .premium-client-footer{min-height:42px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;padding-top:9px!important;border-top:1px solid #eceef0!important}
   #teamApp:not(.hidden) .client-note-preview{min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;color:#858f9a!important;font-size:6.6px!important}
   #teamApp:not(.hidden) .client-actions{display:flex!important;gap:6px!important;flex:0 0 auto!important}

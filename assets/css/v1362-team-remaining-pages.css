@@ -153,7 +153,7 @@
     border-radius:12px!important;
     background:#fff!important;
   }
-  #teamApp:not(.hidden) .team-ownership-search>i{color:#9ba3ac!important;font-size:7px!important}
+  #teamApp:not(.hidden) .team-ownership-search>i{color:#9ba3ac!important;font-size:8px!important}
   #teamApp:not(.hidden) .team-ownership-search input{
     width:100%!important;min-width:0!important;height:39px!important;padding:0!important;border:0!important;outline:0!important;
     background:transparent!important;color:#252b33!important;font-size:8.6px!important;font-weight:650!important;box-shadow:none!important

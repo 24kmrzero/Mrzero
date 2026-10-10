@@ -89,7 +89,7 @@
   }
   .student-page .msa-pair em{
     color:var(--s-muted,#707A8A);
-    font-size:7.5px;
+    font-size:8px;
     line-height:1.1;
     font-style:normal;
     white-space:nowrap;

@@ -58,13 +58,13 @@
     border-radius:999px!important;
     background:#fffaf0!important;
     color:#8d6800!important;
-    font-size:7.4px!important;
+    font-size:8px!important;
     font-weight:950!important;
     letter-spacing:.13em!important;
   }
   [data-mentor-panel="charts"] .mentor-chart-kicker{font-size:0!important}
   [data-mentor-panel="charts"] .mentor-chart-kicker i{font-size:8px!important}
-  [data-mentor-panel="charts"] .mentor-chart-kicker:after{content:"CHART COMMAND CENTER";display:inline!important;font-size:7.4px!important}
+  [data-mentor-panel="charts"] .mentor-chart-kicker:after{content:"CHART COMMAND CENTER";display:inline!important;font-size:8px!important}
   [data-mentor-panel="charts"] .mentor-chart-command-copy h2{
     margin:10px 0 5px!important;
     color:#181a20!important;
@@ -150,7 +150,7 @@
   }
   [data-mentor-panel="charts"] .mentor-chart-desktop-stats small{
     color:#747f8d!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:950!important;
     letter-spacing:.1em!important;
   }
@@ -163,7 +163,7 @@
   [data-mentor-panel="charts"] .mentor-chart-desktop-stats em{
     margin-top:4px!important;
     color:#7c8693!important;
-    font-size:7.2px!important;
+    font-size:8px!important;
     font-style:normal!important;
   }
 
@@ -331,7 +331,7 @@
   }
   [data-mentor-panel="charts"] .admin-mentor-placeholder i{font-size:22px!important}
   [data-mentor-panel="charts"] .admin-mentor-placeholder span{
-    font-size:7px!important;font-weight:900!important;letter-spacing:.15em!important;
+    font-size:8px!important;font-weight:900!important;letter-spacing:.15em!important;
   }
   [data-mentor-panel="charts"] .admin-mentor-media-top{
     position:absolute!important;
@@ -353,7 +353,7 @@
     background:rgba(11,15,20,.78)!important;
     backdrop-filter:blur(7px)!important;
     color:#fff!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:900!important;
   }
   [data-mentor-panel="charts"] .admin-mentor-media-top .gold{
@@ -585,7 +585,7 @@
   }
   #mentorChartModal .mentor-admin-form-field>textarea[name="details"]{min-height:150px!important}
   #mentorChartModal .mentor-admin-form-field small.muted{
-    color:#8a939f!important;font-size:7.5px!important;line-height:1.4!important;
+    color:#8a939f!important;font-size:8px!important;line-height:1.4!important;
   }
   #mentorChartModal .mentor-admin-instrument-picker{
     position:relative!important;
@@ -650,7 +650,7 @@
   }
   #mentorChartModal .mentor-admin-instrument-menu button:hover{background:#fff8e7!important}
   #mentorChartModal .mentor-admin-instrument-menu button b{font-size:9px!important}
-  #mentorChartModal .mentor-admin-instrument-menu button small{color:#8a939f!important;font-size:7px!important}
+  #mentorChartModal .mentor-admin-instrument-menu button small{color:#8a939f!important;font-size:8px!important}
   #mentorChartModal .mentor-admin-instrument-menu .instrument-empty{
     padding:12px!important;color:#8a939f!important;font-size:8px!important;text-align:center!important;
   }

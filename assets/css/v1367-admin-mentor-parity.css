@@ -249,7 +249,7 @@ html[data-theme="light"] #p-signals #adminSignalStats .performance-item{
   color:inherit!important;font-size:18px!important;line-height:1!important;letter-spacing:-.025em!important
 }
 .admin-mentor-stat em{
-  margin-top:2px;color:#7a8492;font-size:7px;font-style:normal
+  margin-top:2px;color:#7a8492;font-size:8px;font-style:normal
 }
 
 /* Signals */
@@ -261,7 +261,7 @@ html[data-theme="light"] #p-signals #adminSignalStats .performance-item{
   min-height:46px!important;padding:6px!important;border-radius:13px!important;margin:8px 0!important
 }
 #p-signals .table-scroll{border-radius:14px!important}
-#p-signals .signal-admin-table th{height:34px!important;font-size:7.5px!important;letter-spacing:.08em!important}
+#p-signals .signal-admin-table th{height:34px!important;font-size:8px!important;letter-spacing:.08em!important}
 #p-signals .signal-admin-table td{height:48px!important;font-size:9px!important}
 html[data-theme="dark"] #p-signals .table-scroll{background:#101319!important;border-color:#252b35!important}
 html[data-theme="dark"] #p-signals .signal-admin-table th{background:#151a21!important;border-color:#252b35!important;color:#778291!important}
@@ -294,7 +294,7 @@ html[data-theme="dark"] .admin-mentor-content-card.cream{background:#15150f;bord
     radial-gradient(circle at 70% 15%,rgba(240,185,11,.10),transparent 34%),#11161c;
   background-size:22px 22px,22px 22px,auto,auto;color:#d7a100
 }
-.admin-mentor-placeholder i{font-size:22px}.admin-mentor-placeholder span{font-size:7px;font-weight:900;letter-spacing:.15em}
+.admin-mentor-placeholder i{font-size:22px}.admin-mentor-placeholder span{font-size:8px;font-weight:900;letter-spacing:.15em}
 html[data-theme="light"] .admin-mentor-placeholder{
   background:
     linear-gradient(rgba(181,133,0,.04) 1px,transparent 1px),
@@ -307,7 +307,7 @@ html[data-theme="light"] .admin-mentor-placeholder{
 .admin-mentor-media-top span{
   min-height:22px;display:inline-flex;align-items:center;padding:0 7px;
   border:1px solid rgba(255,255,255,.14);border-radius:999px;
-  background:rgba(11,15,20,.78);backdrop-filter:blur(7px);color:#fff;font-size:7px;font-weight:900
+  background:rgba(11,15,20,.78);backdrop-filter:blur(7px);color:#fff;font-size:8px;font-weight:900
 }
 .admin-mentor-media-top .gold{border-color:rgba(240,185,11,.28);color:#f3c538}
 .admin-mentor-media-top .live{margin-left:auto;border-color:rgba(22,199,132,.25);color:#5de0ac}

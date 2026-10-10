@@ -196,7 +196,7 @@
   }
   .student-page #p-signals .history-filter-group>small{
     color:#8a929d!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
     font-weight:950!important;
     letter-spacing:.09em!important;
   }
@@ -230,7 +230,7 @@
   }
   .student-page #p-signals .signal-history-custom label{
     color:#7d8793!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
   .student-page #p-signals .signal-history-custom input{
     min-width:120px!important;
@@ -359,7 +359,7 @@
     display:block!important;
     margin-top:2px!important;
     color:#818b97!important;
-    font-size:7.4px!important;
+    font-size:8px!important;
     line-height:1.1!important;
   }
 
@@ -372,7 +372,7 @@
     padding:0 7px!important;
     border:1px solid transparent!important;
     border-radius:7px!important;
-    font-size:7.8px!important;
+    font-size:8px!important;
     line-height:1!important;
     font-weight:950!important;
     text-transform:uppercase!important;
@@ -429,7 +429,7 @@
     justify-content:center!important;
     padding:0 8px!important;
     border-radius:999px!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
     line-height:1!important;
     font-weight:950!important;
     letter-spacing:.02em!important;

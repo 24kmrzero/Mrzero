@@ -35,7 +35,7 @@
   }
 
   #teamApp:not(.hidden) [data-view-panel="clients"] .team-clients-command p{
-    font-size:7.6px!important;
+    font-size:8px!important;
   }
 
   #teamApp:not(.hidden) [data-view-panel="clients"] .team-clients-live{
@@ -103,7 +103,7 @@
 
   #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-search input{
     height:34px!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
 
   #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-search button{
@@ -313,7 +313,7 @@
   }
 
   #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-info-grid b{
-    font-size:7.2px!important;
+    font-size:8px!important;
     line-height:1.3!important;
     white-space:normal!important;
   }

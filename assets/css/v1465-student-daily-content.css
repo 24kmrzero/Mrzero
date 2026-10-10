@@ -129,7 +129,7 @@
   border-radius:999px!important;
   background:#fffaf0!important;
   color:#886600!important;
-  font-size:7px!important;
+  font-size:8px!important;
   font-weight:900!important;
   white-space:nowrap!important;
 }
@@ -173,7 +173,7 @@
 }
 
 .student-page .daily-content-grid .content-meta-strong span{
-  font-size:7.2px!important;
+  font-size:8px!important;
 }
 
 .student-page .daily-content-grid .compact-media-card h3{
@@ -208,7 +208,7 @@
   height:34px!important;
   padding:0 10px!important;
   border-radius:8px!important;
-  font-size:7.8px!important;
+  font-size:8px!important;
   font-weight:900!important;
 }
 
@@ -292,7 +292,7 @@ html[data-theme="dark"] .student-page .daily-content-heading>div>span{
   }
 
   .student-page .daily-content-heading>div>span{
-    font-size:7px!important;
+    font-size:8px!important;
   }
 
   .student-page .daily-content-count{

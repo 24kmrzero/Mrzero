@@ -55,7 +55,7 @@
     font-size:8.5px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="history"] .team-tool-status>small{
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
 
   /* ===== History KPI rail ===== */
@@ -105,7 +105,7 @@
     padding:0 2px 6px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="history"] .team-tool-section-head small{
-    font-size:7.5px!important;
+    font-size:8px!important;
     letter-spacing:.09em!important;
   }
   #teamApp:not(.hidden) [data-view-panel="history"] .team-tool-section-head b{
@@ -119,7 +119,7 @@
     border:1px solid #e4e7ea!important;
     border-radius:999px!important;
     background:#fff!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="history"] .team-tool-section-head button{
     min-height:28px!important;
@@ -143,7 +143,7 @@
   #teamApp:not(.hidden) [data-view-panel="history"] .team-history-card th{
     height:33px!important;
     padding:0 9px!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
     letter-spacing:.055em!important;
     background:#f8f6f0!important;
   }
@@ -160,7 +160,7 @@
     padding:0 7px!important;
     background:#f2f4f5!important;
     color:#6e7882!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="history"] .team-history-card tbody tr:nth-child(even) td{
     background:#fbfaf7!important;
@@ -250,7 +250,7 @@
     line-height:1.15!important;
   }
   #teamApp:not(.hidden) [data-view-panel="history"] .team-history-links .overview-link-chip small{
-    font-size:7.5px!important;
+    font-size:8px!important;
     line-height:1.25!important;
   }
   #teamApp:not(.hidden) [data-view-panel="history"] .team-history-links .muted{

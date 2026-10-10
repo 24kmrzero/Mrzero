@@ -115,7 +115,7 @@
     background:#d69b00!important;
     color:#17130a!important;
   }
-  #teamApp:not(.hidden) .team-install-card>b{font-size:7.4px!important;font-weight:950!important}
+  #teamApp:not(.hidden) .team-install-card>b{font-size:8px!important;font-weight:950!important}
   #teamApp:not(.hidden) .team-install-card>small{color:#8d8166!important;font-size:5.8px!important}
   #teamApp:not(.hidden) .team-flow-note{
     margin:14px 9px 0!important;
@@ -179,7 +179,7 @@
     background:#faf7ef!important;
     color:#3b4148!important;
     font:inherit!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:750!important;
     outline:0!important;
   }
@@ -213,11 +213,11 @@
     border-radius:50%!important;
     background:linear-gradient(145deg,#e1a20a,#c98b00)!important;
     color:#201700!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:950!important;
   }
   #teamApp:not(.hidden) .team-user-chip>div{display:grid!important;gap:1px!important}
-  #teamApp:not(.hidden) .team-user-chip b{color:#2d333a!important;font-size:7px!important;font-weight:900!important}
+  #teamApp:not(.hidden) .team-user-chip b{color:#2d333a!important;font-size:8px!important;font-weight:900!important}
   #teamApp:not(.hidden) .team-user-chip small{color:#929aa3!important;font-size:5.6px!important}
 
   /* Kill remaining browser-default visual noise */
@@ -229,7 +229,7 @@
     outline-offset:2px!important;
   }
   #teamApp:not(.hidden) .panel-card{box-sizing:border-box!important}
-  #teamApp:not(.hidden) .muted{color:#8a939d!important;font-size:7px!important}
+  #teamApp:not(.hidden) .muted{color:#8a939d!important;font-size:8px!important}
 
   html[data-theme="dark"] #teamApp:not(.hidden){
     background:#0d1014!important;

@@ -96,7 +96,7 @@ html[data-theme="light"] body.team-authenticated{
 
   body.team-authenticated .team-home-profile-copy b{
     color:#252a30!important;
-    font-size:7.6px!important;
+    font-size:8px!important;
     line-height:1!important;
     white-space:nowrap!important;
   }
@@ -330,7 +330,7 @@ html[data-theme="light"] body.team-authenticated{
 
   body.team-authenticated .today-work-label>span{
     overflow:hidden!important;
-    font-size:7.8px!important;
+    font-size:8px!important;
     text-overflow:ellipsis!important;
     white-space:nowrap!important;
   }

@@ -181,7 +181,7 @@
 
   .student-page #p-signals .history-filter-group>small{
     color:#8a939d!important;
-    font-size:7.2px!important;
+    font-size:8px!important;
     font-weight:950!important;
     letter-spacing:.10em!important;
     text-transform:uppercase!important;
@@ -240,7 +240,7 @@
     align-items:center!important;
     gap:5px!important;
     color:#7b8590!important;
-    font-size:7.3px!important;
+    font-size:8px!important;
     font-weight:850!important;
   }
 
@@ -261,7 +261,7 @@
     height:31px!important;
     padding:0 10px!important;
     border-radius:8px!important;
-    font-size:7.8px!important;
+    font-size:8px!important;
   }
 
   /* ------------------------------------------------------------
@@ -364,14 +364,14 @@
   }
 
   .student-page #p-signals .instrument-cell small{
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
 
   .student-page #p-signals .table-direction{
     min-height:23px!important;
     padding:0 8px!important;
     border-radius:7px!important;
-    font-size:7.8px!important;
+    font-size:8px!important;
   }
 
   .student-page #p-signals .table-pips{
@@ -384,7 +384,7 @@
     min-height:24px!important;
     height:24px!important;
     padding:0 8px!important;
-    font-size:7.3px!important;
+    font-size:8px!important;
   }
 
   .student-page #p-signals .signal-table-footer{
@@ -683,7 +683,7 @@
 
   .student-page #studentSignalHistoryModal .timeline-title time{
     color:#87909a!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
     white-space:nowrap!important;
   }
 
@@ -713,7 +713,7 @@
     border-radius:999px!important;
     background:rgba(22,168,114,.065)!important;
     color:#16835f!important;
-    font-size:7.8px!important;
+    font-size:8px!important;
     font-weight:950!important;
   }
 

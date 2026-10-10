@@ -100,7 +100,7 @@
     border-radius:999px!important;
     background:rgba(255,250,238,.9)!important;
     color:#8b6600!important;
-    font-size:7.3px!important;
+    font-size:8px!important;
     font-weight:950!important;
     letter-spacing:.13em!important;
   }
@@ -247,7 +247,7 @@
 
   #teamApp:not(.hidden) .team-health-meter em{
     color:#7d8691!important;
-    font-size:7.3px!important;
+    font-size:8px!important;
     font-style:normal!important;
   }
 
@@ -292,7 +292,7 @@
 
   #teamApp:not(.hidden) .team-home-attention-copy em{
     color:#7d8691!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
     font-style:normal!important;
   }
 
@@ -456,7 +456,7 @@
 
   #teamApp:not(.hidden) .team-priority-card em{
     overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;
-    color:#89919a!important;font-size:7px!important;font-style:normal!important;
+    color:#89919a!important;font-size:8px!important;font-style:normal!important;
   }
 
   #teamApp:not(.hidden) .team-priority-card>i{
@@ -638,7 +638,7 @@
   #teamApp:not(.hidden) .team-insight-head>i{
     width:30px!important;height:30px!important;display:grid!important;place-items:center!important;border-radius:9px!important;background:#fff7df!important;color:#a87b00!important;
   }
-  #teamApp:not(.hidden) .team-insight-head>span{color:#7f8994!important;font-size:7px!important;font-weight:800!important}
+  #teamApp:not(.hidden) .team-insight-head>span{color:#7f8994!important;font-size:8px!important;font-weight:800!important}
 
   #teamApp:not(.hidden) .team-goal-list,
   #teamApp:not(.hidden) .team-pipeline,
@@ -677,7 +677,7 @@
     padding:4px 0!important;border-bottom:1px solid #f0f1f2!important;
   }
   #teamApp:not(.hidden) .team-pipeline-row:last-child{border-bottom:0!important}
-  #teamApp:not(.hidden) .team-pipeline-row span{color:#747f89!important;font-size:7.2px!important}
+  #teamApp:not(.hidden) .team-pipeline-row span{color:#747f89!important;font-size:8px!important}
   #teamApp:not(.hidden) .team-pipeline-row b{color:#242a31!important;font-size:9px!important}
 
   /* Trend chart */
@@ -691,13 +691,13 @@
   }
   #teamApp:not(.hidden) .team-opportunity-main{display:grid!important;gap:4px!important}
   #teamApp:not(.hidden) .team-opportunity-main>b{color:#252b32!important;font-size:12px!important}
-  #teamApp:not(.hidden) .team-opportunity-main small{color:#7e8792!important;font-size:7px!important}
+  #teamApp:not(.hidden) .team-opportunity-main small{color:#7e8792!important;font-size:8px!important}
   #teamApp:not(.hidden) .team-opportunity-actions{
     display:flex!important;gap:6px!important;margin-top:auto!important;padding-top:10px!important;
   }
   #teamApp:not(.hidden) .team-opportunity-actions :is(a,button){
     min-height:31px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:5px!important;
-    padding:0 9px!important;border:1px solid #dfe3e7!important;border-radius:8px!important;background:#fafbfc!important;color:#525e69!important;font:inherit!important;font-size:7px!important;font-weight:850!important;text-decoration:none!important;
+    padding:0 9px!important;border:1px solid #dfe3e7!important;border-radius:8px!important;background:#fafbfc!important;color:#525e69!important;font:inherit!important;font-size:8px!important;font-weight:850!important;text-decoration:none!important;
   }
   #teamApp:not(.hidden) .team-opportunity-actions a{border-color:#cfe8dc!important;background:#f2fbf7!important;color:#14895f!important}
 
@@ -791,7 +791,7 @@
   }
 
   #teamApp:not(.hidden) .team-home-card-head .tiny-btn{
-    min-height:30px!important;padding:0 9px!important;border:1px solid #e4d5a9!important;border-radius:8px!important;background:#fff9e9!important;color:#9a7100!important;font-size:7px!important;font-weight:900!important;
+    min-height:30px!important;padding:0 9px!important;border:1px solid #e4d5a9!important;border-radius:8px!important;background:#fff9e9!important;color:#9a7100!important;font-size:8px!important;font-weight:900!important;
   }
 
   #teamApp:not(.hidden) .recent-client-list{
@@ -855,11 +855,11 @@
   }
 
   #teamApp:not(.hidden) .today-work-label{
-    display:flex!important;align-items:center!important;gap:7px!important;color:#59636e!important;font-size:7.5px!important;
+    display:flex!important;align-items:center!important;gap:7px!important;color:#59636e!important;font-size:8px!important;
   }
 
   #teamApp:not(.hidden) .today-work-label>i{
-    width:23px!important;height:23px!important;display:grid!important;place-items:center!important;border-radius:7px!important;background:#f4f5f6!important;color:#7e8994!important;font-size:7px!important;
+    width:23px!important;height:23px!important;display:grid!important;place-items:center!important;border-radius:7px!important;background:#f4f5f6!important;color:#7e8994!important;font-size:8px!important;
   }
 
   #teamApp:not(.hidden) .today-work-value{

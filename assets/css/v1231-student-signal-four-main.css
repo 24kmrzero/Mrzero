@@ -69,7 +69,7 @@
   .student-page .mobile-signal-four .msa-chevron{
     width:14px!important;
     height:14px!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
 
   /* Expanded view stays one small row: SL + TP1 + TP2 + TP3 + TP4 */
@@ -124,7 +124,7 @@
   }
   .student-page .mobile-signal-four .msa-direction .table-direction{
     min-width:44px!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
   .student-page .mobile-signal-four .msa-five-levels>span{
     min-height:42px!important;

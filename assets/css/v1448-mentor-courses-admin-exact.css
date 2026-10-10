@@ -61,7 +61,7 @@
     border-radius:999px!important;
     background:#fffaf0!important;
     color:#8d6800!important;
-    font-size:7.4px!important;
+    font-size:8px!important;
     font-weight:950!important;
     letter-spacing:.13em!important;
   }
@@ -159,7 +159,7 @@
 
   [data-mentor-panel="courses"] .admin-course-stat small{
     color:#747f8d!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:950!important;
     letter-spacing:.1em!important;
   }
@@ -175,7 +175,7 @@
   [data-mentor-panel="courses"] .admin-course-stat em{
     margin-top:4px!important;
     color:#7d8794!important;
-    font-size:7.4px!important;
+    font-size:8px!important;
     font-style:normal!important;
   }
 
@@ -327,7 +327,7 @@
 
   [data-mentor-panel="courses"] .admin-course-card-metrics em{
     color:#8b939d!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-style:normal!important;
   }
 
@@ -351,7 +351,7 @@
     border-radius:999px!important;
     background:#faf7f1!important;
     color:#6d655a!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:850!important;
   }
 
@@ -370,7 +370,7 @@
     padding-top:9px!important;
     border-top:1px solid #edf0f2!important;
     color:#887444!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
     font-weight:850!important;
   }
 

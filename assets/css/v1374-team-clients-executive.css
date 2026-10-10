@@ -44,7 +44,7 @@
     padding:0 9px!important;
     border-color:#e5d8af!important;
     background:#fffaf0!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
 
   #teamApp:not(.hidden) [data-view-panel="clients"] .team-clients-command h2{
@@ -128,7 +128,7 @@
     border-color:#e2d4a6!important;
     border-radius:11px!important;
     background:#fff9ea!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
 
   #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-status-tabs{
@@ -167,7 +167,7 @@
     height:35px!important;
     border-color:#dfe4e7!important;
     background:#f9fafb!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
 
   /* Work list heading */
@@ -391,7 +391,7 @@
     border-radius:9px!important;
     background:#fff!important;
     color:#2f363e!important;
-    font-size:7px!important;
+    font-size:8px!important;
     padding:0 9px!important;
   }
 

@@ -97,7 +97,7 @@
     border-left:3px solid var(--ex-yellow)!important;
   }
   .student-page .compact-kicker{
-    font-size:7.5px!important;
+    font-size:8px!important;
     letter-spacing:.11em!important;
     color:var(--ex-yellow)!important;
   }
@@ -130,11 +130,11 @@
     background:var(--ex-surface-2)!important;
     border:0!important;
     color:var(--ex-muted)!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
   .student-page .compact-welcome-meta b{
     color:var(--ex-ink)!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
     font-weight:700!important;
   }
   .student-page .compact-welcome-meta .live-chip{
@@ -155,7 +155,7 @@
     color:var(--ex-yellow)!important;
   }
   .student-page .compact-account-badge b{font-size:9.5px!important;color:var(--ex-ink)!important}
-  .student-page .compact-account-badge small{font-size:7.5px!important;color:var(--ex-muted)!important}
+  .student-page .compact-account-badge small{font-size:8px!important;color:var(--ex-muted)!important}
   .student-page .compact-account-badge button{
     border:0!important;
     background:rgba(240,185,11,.10)!important;
@@ -213,7 +213,7 @@
     color:var(--ex-ink)!important;
   }
   .student-page .compact-kpi-grid .app-kpi em{
-    font-size:7.8px!important;
+    font-size:8px!important;
     line-height:1.2!important;
     color:var(--ex-muted)!important;
   }
@@ -239,7 +239,7 @@
     align-items:center!important;
   }
   .student-page .compact-card-head span{
-    font-size:7px!important;
+    font-size:8px!important;
     letter-spacing:.10em!important;
     color:var(--ex-yellow)!important;
   }
@@ -318,7 +318,7 @@
     border-top:1px solid var(--ex-line)!important;
   }
   .student-page .dash-signal-foot small,
-  .student-page .dash-signal-foot>span{font-size:7px!important}
+  .student-page .dash-signal-foot>span{font-size:8px!important}
 
   /* Empty states: compact and calm */
   .student-page .live-learning-card .dashboard-empty-compact,
@@ -359,7 +359,7 @@
   }
   .student-page .analysis-mini-copy b{font-size:10.5px!important;color:var(--ex-ink)!important}
   .student-page .analysis-mini-copy small{font-size:8px!important;color:var(--ex-muted)!important}
-  .student-page .analysis-mini-copy em{font-size:7px!important;color:var(--ex-muted)!important}
+  .student-page .analysis-mini-copy em{font-size:8px!important;color:var(--ex-muted)!important}
 
   /* Member desk — simplified account center */
   .student-page .member-desk-shell{gap:6px!important}
@@ -378,7 +378,7 @@
   }
   .student-page .member-desk-access small{font-size:6.5px!important;color:var(--ex-muted)!important}
   .student-page .member-desk-access b{font-size:10.5px!important;color:var(--ex-ink)!important}
-  .student-page .member-desk-access em{font-size:7.5px!important;color:var(--ex-muted)!important}
+  .student-page .member-desk-access em{font-size:8px!important;color:var(--ex-muted)!important}
   .student-page .member-desk-metrics{
     grid-template-columns:repeat(2,minmax(0,1fr))!important;
     gap:5px!important;
@@ -397,8 +397,8 @@
   }
   .student-page .member-desk-metrics small{font-size:6.5px!important;color:var(--ex-muted)!important}
   .student-page .member-desk-metrics b{font-size:9px!important;color:var(--ex-ink)!important}
-  .student-page .member-desk-metrics em{font-size:7px!important;color:var(--ex-muted)!important}
-  .student-page .member-desk-footer{font-size:7.5px!important}
+  .student-page .member-desk-metrics em{font-size:8px!important;color:var(--ex-muted)!important}
+  .student-page .member-desk-footer{font-size:8px!important}
 
   /* Common panels */
   .student-page .app-card,

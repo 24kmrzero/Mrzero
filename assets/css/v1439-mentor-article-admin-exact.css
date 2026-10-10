@@ -64,7 +64,7 @@
   [data-mentor-panel="articles"] .mentor-article-kicker:after{
     content:"EDITORIAL DESK";
     display:inline!important;
-    font-size:7.4px!important;
+    font-size:8px!important;
   }
   [data-mentor-panel="articles"] .mentor-article-command-copy h2{
     margin:10px 0 5px!important;
@@ -157,7 +157,7 @@
   }
   [data-mentor-panel="articles"] .mentor-article-desktop-stats small{
     color:#747f8d!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:950!important;
     letter-spacing:.1em!important;
   }
@@ -170,7 +170,7 @@
   [data-mentor-panel="articles"] .mentor-article-desktop-stats em{
     margin-top:4px!important;
     color:#7c8693!important;
-    font-size:7.2px!important;
+    font-size:8px!important;
     font-style:normal!important;
   }
 
@@ -335,7 +335,7 @@
     color:#d7a100!important;
   }
   [data-mentor-panel="articles"] .admin-mentor-placeholder i{font-size:22px!important}
-  [data-mentor-panel="articles"] .admin-mentor-placeholder span{font-size:7px!important;font-weight:900!important;letter-spacing:.15em!important}
+  [data-mentor-panel="articles"] .admin-mentor-placeholder span{font-size:8px!important;font-weight:900!important;letter-spacing:.15em!important}
   [data-mentor-panel="articles"] .admin-mentor-media-top{
     position:absolute!important;
     z-index:2!important;
@@ -356,7 +356,7 @@
     background:rgba(11,15,20,.78)!important;
     backdrop-filter:blur(7px)!important;
     color:#fff!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:900!important;
   }
   [data-mentor-panel="articles"] .admin-mentor-media-top .gold{
@@ -576,7 +576,7 @@
     resize:vertical!important;
   }
   #mentorArticleModal .mentor-admin-article-field textarea[name="content"]{min-height:190px!important}
-  #mentorArticleModal .mentor-admin-article-field .muted{color:#8a939f!important;font-size:7.5px!important}
+  #mentorArticleModal .mentor-admin-article-field .muted{color:#8a939f!important;font-size:8px!important}
   #mentorArticleModal .mentor-admin-article-check-row{
     grid-column:1/-1!important;
     min-height:48px!important;

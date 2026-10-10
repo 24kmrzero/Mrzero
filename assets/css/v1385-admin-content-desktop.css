@@ -43,7 +43,7 @@
     padding:0 9px!important;
     border:1px solid #e8d99f!important;border-radius:999px!important;
     background:#fffaf0!important;color:#8d6800!important;
-    font-size:7.4px!important;font-weight:950!important;letter-spacing:.13em!important;
+    font-size:8px!important;font-weight:950!important;letter-spacing:.13em!important;
   }
   #p-charts .admin-content-command h2,
   #p-articles .admin-content-command h2{
@@ -103,7 +103,7 @@
   }
   #p-charts .admin-mentor-stat small,
   #p-articles .admin-mentor-stat small{
-    color:#747f8d!important;font-size:7px!important;font-weight:950!important;letter-spacing:.1em!important;
+    color:#747f8d!important;font-size:8px!important;font-weight:950!important;letter-spacing:.1em!important;
   }
   #p-charts .admin-mentor-stat b,
   #p-articles .admin-mentor-stat b{
@@ -111,7 +111,7 @@
   }
   #p-charts .admin-mentor-stat em,
   #p-articles .admin-mentor-stat em{
-    margin-top:4px!important;color:#7c8693!important;font-size:7.2px!important;
+    margin-top:4px!important;color:#7c8693!important;font-size:8px!important;
   }
 
   /* ===== premium filter rail ===== */
@@ -194,7 +194,7 @@
   }
   #p-charts .admin-mentor-card-meta,
   #p-articles .admin-mentor-card-meta{
-    gap:11px!important;color:#7a8492!important;font-size:7.4px!important;
+    gap:11px!important;color:#7a8492!important;font-size:8px!important;
   }
   #p-charts .admin-mentor-card-body h3,
   #p-articles .admin-mentor-card-body h3{
@@ -214,7 +214,7 @@
   }
   #p-charts .admin-mentor-state,
   #p-articles .admin-mentor-state{
-    font-size:7px!important;
+    font-size:8px!important;
   }
   #p-charts .admin-mentor-actions :is(button,a),
   #p-articles .admin-mentor-actions :is(button,a){
@@ -222,7 +222,7 @@
     padding:0 8px!important;
     border:1px solid #e0e4e8!important;border-radius:8px!important;
     background:#fafbfc!important;color:#66717e!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
   #p-charts .admin-mentor-actions :is(button,a):hover,
   #p-articles .admin-mentor-actions :is(button,a):hover{

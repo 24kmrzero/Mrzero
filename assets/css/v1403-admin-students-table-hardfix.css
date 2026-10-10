@@ -127,7 +127,7 @@
     border-radius:0!important;
     background:#fff!important;
     color:#303842!important;
-    font-size:7.8px!important;
+    font-size:8px!important;
     line-height:1.28!important;
     white-space:normal!important;
   }
@@ -227,7 +227,7 @@
     overflow:hidden!important;
     text-overflow:ellipsis!important;
     white-space:nowrap!important;
-    font-size:7.3px!important;
+    font-size:8px!important;
   }
 
   /* Course / statuses stay inside their own columns. */
@@ -237,7 +237,7 @@
     overflow:hidden!important;
     text-overflow:ellipsis!important;
     white-space:nowrap!important;
-    font-size:7.8px!important;
+    font-size:8px!important;
   }
 
   html[data-auth-scope="admin"] body #p-students .student-management-table .status-pill{
@@ -378,7 +378,7 @@
   }
 
   html[data-auth-scope="admin"] body #p-students .student-management-table thead th{
-    font-size:7.4px!important;
+    font-size:8px!important;
     letter-spacing:.06em!important;
   }
 
@@ -392,7 +392,7 @@
   }
 
   html[data-auth-scope="admin"] body #p-students .student-management-table td small{
-    font-size:7.15px!important;
+    font-size:8px!important;
   }
 
   html[data-auth-scope="admin"] body #p-students .student-origin,

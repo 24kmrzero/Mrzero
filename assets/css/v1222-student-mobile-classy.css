@@ -43,7 +43,7 @@
   .student-page .app-title strong{font-size:17px!important;font-weight:850!important}
   .student-page .app-title:before{
     content:"24K MR ZERO";display:block;margin-bottom:1px;
-    color:var(--cx-gold);font-size:7px;font-weight:900;letter-spacing:.14em;
+    color:var(--cx-gold);font-size:8px;font-weight:900;letter-spacing:.14em;
   }
 
   /* Hero compact like a premium mobile home card */
@@ -78,10 +78,10 @@
   }
   .student-page .compact-welcome-meta>span{
     flex:1 1 0!important;min-width:0!important;min-height:27px!important;padding:0 5px!important;
-    border-radius:9px!important;font-size:7.5px!important;white-space:nowrap!important;
+    border-radius:9px!important;font-size:8px!important;white-space:nowrap!important;
     background:var(--cx-card)!important;border:1px solid var(--cx-line)!important;color:var(--cx-muted)!important;
   }
-  .student-page .compact-welcome-meta b{font-size:7.5px!important}
+  .student-page .compact-welcome-meta b{font-size:8px!important}
   .student-page .compact-welcome-meta .live-chip{max-width:64px!important}
   .student-page .compact-account-badge{
     min-height:40px!important;padding:6px 8px!important;
@@ -119,7 +119,7 @@
     width:36px!important;height:36px!important;border-radius:12px!important;font-size:14px!important;
     grid-row:1/3!important;
   }
-  .student-page .compact-kpi-grid .app-kpi small{font-size:7px!important}
+  .student-page .compact-kpi-grid .app-kpi small{font-size:8px!important}
   .student-page .compact-kpi-grid .app-kpi b{font-size:22px!important}
   .student-page .compact-kpi-grid .app-kpi em{font-size:8.5px!important;line-height:1.25!important}
   .student-page .compact-kpi-grid .kpi-spark,.student-page .compact-kpi-grid .dashboard-nav-arrow{display:none!important}
@@ -134,7 +134,7 @@
   }
   html[data-theme="dark"] .student-page .compact-dashboard-card{background:linear-gradient(145deg,#121417,#0D0F11)!important}
   .student-page .compact-card-head{margin-bottom:8px!important}
-  .student-page .compact-card-head span{font-size:7.5px!important}
+  .student-page .compact-card-head span{font-size:8px!important}
   .student-page .compact-card-head h3{font-size:17px!important}
   .student-page .text-link-btn{font-size:9px!important}
 
@@ -149,7 +149,7 @@
   .student-page .dash-signal-levels small{font-size:6.5px!important}
   .student-page .dash-signal-levels b{font-size:12px!important}
   .student-page .dash-signal-foot{min-height:32px!important;padding:6px 8px!important}
-  .student-page .dash-signal-foot small,.student-page .dash-signal-foot>span{font-size:7.5px!important}
+  .student-page .dash-signal-foot small,.student-page .dash-signal-foot>span{font-size:8px!important}
 
   .student-page .live-learning-card .dashboard-empty-compact,
   .student-page .dashboard-empty-compact,
@@ -164,19 +164,19 @@
   .student-page .analysis-thumb{width:62px!important;height:42px!important}
   .student-page .analysis-mini-copy b{font-size:11px!important}
   .student-page .analysis-mini-copy small{font-size:8.5px!important}
-  .student-page .analysis-mini-copy em{font-size:7.5px!important}
+  .student-page .analysis-mini-copy em{font-size:8px!important}
 
   .student-page .member-desk-access{min-height:58px!important;padding:8px!important}
   .student-page .desk-crown{width:36px!important;height:36px!important}
   .student-page .member-desk-access b{font-size:12px!important}
-  .student-page .member-desk-access small{font-size:7px!important}
+  .student-page .member-desk-access small{font-size:8px!important}
   .student-page .member-desk-access em{font-size:8px!important}
   .student-page .member-desk-metrics{gap:6px!important}
   .student-page .member-desk-metrics button{min-height:74px!important;padding:8px!important;border-radius:13px!important}
   .student-page .desk-metric-icon{width:30px!important;height:30px!important}
-  .student-page .member-desk-metrics small{font-size:7px!important}
+  .student-page .member-desk-metrics small{font-size:8px!important}
   .student-page .member-desk-metrics b{font-size:10px!important}
-  .student-page .member-desk-metrics em{font-size:7.5px!important}
+  .student-page .member-desk-metrics em{font-size:8px!important}
 
   /* Bottom navigation: slimmer like a native tab bar */
   .student-mobile-nav{

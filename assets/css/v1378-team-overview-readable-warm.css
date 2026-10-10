@@ -31,7 +31,7 @@
   }
 
   #teamApp:not(.hidden) .nav-badge{
-    font-size:7.4px!important;
+    font-size:8px!important;
   }
 
   #teamApp:not(.hidden) .team-install-card>b{
@@ -39,11 +39,11 @@
   }
 
   #teamApp:not(.hidden) .team-install-card>small{
-    font-size:7.4px!important;
+    font-size:8px!important;
   }
 
   #teamApp:not(.hidden) .team-flow-note b{
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
 
   #teamApp:not(.hidden) .team-flow-note p{
@@ -68,7 +68,7 @@
   }
 
   #teamApp:not(.hidden) .team-user-chip small{
-    font-size:7.2px!important;
+    font-size:8px!important;
   }
 
   /* =========================
@@ -83,7 +83,7 @@
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-profile-copy small{
-    font-size:7.6px!important;
+    font-size:8px!important;
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-profile-copy b{
@@ -109,14 +109,14 @@
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .team-sync-chip{
-    font-size:7.6px!important;
+    font-size:8px!important;
   }
 
   /* =========================
      SECTION HEADS
      ========================= */
   #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-section-head small{
-    font-size:7.8px!important;
+    font-size:8px!important;
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-section-head b{
@@ -124,7 +124,7 @@
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-section-head>span{
-    font-size:7.6px!important;
+    font-size:8px!important;
   }
 
   /* =========================
@@ -154,7 +154,7 @@
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .overview-kpi-chip{
-    font-size:7.4px!important;
+    font-size:8px!important;
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .overview-kpi-foot>small{
@@ -165,7 +165,7 @@
      PERFORMANCE INSIGHTS
      ========================= */
   #teamApp:not(.hidden) [data-view-panel="overview"] .team-insight-head small{
-    font-size:7.8px!important;
+    font-size:8px!important;
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .team-insight-head b{
@@ -173,7 +173,7 @@
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .team-insight-head>span{
-    font-size:7.4px!important;
+    font-size:8px!important;
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .team-goal-row span{
@@ -185,7 +185,7 @@
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .team-goal-row em{
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .team-projection-row span{
@@ -205,11 +205,11 @@
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .team-pipeline-step>i{
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .team-trend-labels{
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .team-opportunity-main b{
@@ -221,7 +221,7 @@
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .team-opportunity-main em{
-    font-size:7.4px!important;
+    font-size:8px!important;
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .team-opportunity-actions :is(a,button){
@@ -243,7 +243,7 @@
      RECENT ASSIGNED / ACTION CENTER
      ========================= */
   #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-card-head small{
-    font-size:7.8px!important;
+    font-size:8px!important;
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-card-head h3{
@@ -263,11 +263,11 @@
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .recent-client>div:last-child>span{
-    font-size:7.4px!important;
+    font-size:8px!important;
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .wa-mini{
-    font-size:7.8px!important;
+    font-size:8px!important;
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .today-work-label{
@@ -283,7 +283,7 @@
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .today-work-value button{
-    font-size:7.8px!important;
+    font-size:8px!important;
   }
 
   /* =========================
@@ -298,7 +298,7 @@
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .team-activity-item em{
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .overview-link-chip b{

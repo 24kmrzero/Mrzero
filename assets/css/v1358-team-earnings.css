@@ -158,7 +158,7 @@
     border-radius:8px!important;
     background:#fff5d8!important;
     color:#b27e00!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
 
   #teamApp:not(.hidden) .team-earnings-hero-stat>div{
@@ -226,7 +226,7 @@
     border-radius:8px!important;
     background:#f3f4f6!important;
     color:#77828e!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
 
   #teamApp:not(.hidden) .premium-earning-card.blue .premium-earning-icon{background:#eef5ff!important;color:#4d7dba!important}
@@ -319,11 +319,11 @@
     border-radius:8px!important;
     background:#fff6dc!important;
     color:#b27e00!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
   #teamApp:not(.hidden) .team-earnings-policy summary b{
     color:#39414a!important;
-    font-size:7.4px!important;
+    font-size:8px!important;
   }
   #teamApp:not(.hidden) .team-earnings-policy summary>i{
     color:#9ba2aa!important;
@@ -401,7 +401,7 @@
     border-radius:9px!important;
     background:#fff6dc!important;
     color:#ad7b00!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
   #teamApp:not(.hidden) .premium-progress-card.blue .premium-progress-icon{background:#eef5ff!important;color:#4c79b8!important}
   #teamApp:not(.hidden) .premium-progress-card.purple .premium-progress-icon{background:#f5efff!important;color:#835bc0!important}
@@ -519,7 +519,7 @@
     border-radius:9px!important;
     background:#141920!important;
     color:#e8c744!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:950!important;
     letter-spacing:-.02em!important;
   }

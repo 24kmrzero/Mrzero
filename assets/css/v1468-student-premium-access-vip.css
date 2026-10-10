@@ -69,7 +69,7 @@
   .student-page #p-premium .premium-page-hero-copy small,
   .student-page #p-premium .premium-page-section-head small{
     color:#9d7406!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
     line-height:1!important;
     font-weight:950!important;
     letter-spacing:.12em!important;
@@ -114,7 +114,7 @@
   }
 
   .student-page #p-premium .premium-page-status>div small{
-    font-size:7px!important;
+    font-size:8px!important;
     color:#96720e!important;
   }
 
@@ -141,7 +141,7 @@
     border-radius:999px!important;
     background:#f3c631!important;
     color:#342500!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:950!important;
   }
 
@@ -152,7 +152,7 @@
   .student-page #p-premium .pps-state{
     min-height:26px!important;
     padding:0 9px!important;
-    font-size:7px!important;
+    font-size:8px!important;
     letter-spacing:.05em!important;
   }
 
@@ -188,7 +188,7 @@
   .student-page #p-premium .premium-page-benefits small{
     margin-top:1px!important;
     color:#8a939d!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
 
   /* ===== flow section heading ===== */
@@ -280,7 +280,7 @@
   }
 
   .student-page #p-premium .premium-path-card small{
-    font-size:7px!important;
+    font-size:8px!important;
   }
 
   .student-page #p-premium .premium-path-card h4{
@@ -331,7 +331,7 @@
 
   .student-page #p-premium .premium-paid-summary small{
     color:#95700c!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:950!important;
     letter-spacing:.08em!important;
   }
@@ -356,7 +356,7 @@
     border-radius:999px!important;
     background:#f2c630!important;
     color:#342700!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:950!important;
   }
 
@@ -637,7 +637,7 @@
 
   .student-page #p-premium .premium-account-mode-grid small{
     color:#808a95!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
     line-height:1.35!important;
   }
 
@@ -939,7 +939,7 @@
   .student-page #premiumAccessModal .access-choice-card p{
     margin:0!important;
     color:#7c8691!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
 
   .student-page #premiumAccessModal .access-choice-card:hover,
@@ -953,7 +953,7 @@
     height:31px!important;
     margin-bottom:8px!important;
     padding:0 9px!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
 
   .student-page #premiumAccessModal .access-progress{
@@ -995,7 +995,7 @@
   .student-page #premiumAccessModal .access-method-card p{
     margin:0!important;
     color:#7f8994!important;
-    font-size:7.4px!important;
+    font-size:8px!important;
     line-height:1.35!important;
   }
 
@@ -1106,7 +1106,7 @@
   .student-page :is(#premiumBankModal,#premiumUsdtModal) .form-field small{
     margin-top:4px!important;
     color:#8b949e!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
 
   /* ===== premium payment forms ===== */
@@ -1128,7 +1128,7 @@
     border-radius:8px!important;
     background:#f8f9fa!important;
     color:#78828d!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:900!important;
   }
 
@@ -1252,7 +1252,7 @@
 
   .student-page #premiumPaymentSuccessModal .app-modal-body>small{
     color:#9b7508!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:950!important;
     letter-spacing:.11em!important;
   }

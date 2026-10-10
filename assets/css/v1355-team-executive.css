@@ -37,7 +37,7 @@
     color:#959da6!important;font-size:5.3px!important;font-weight:900!important;letter-spacing:.10em!important
   }
   #teamApp:not(.hidden) .team-smart-summary b{
-    overflow:hidden!important;color:#30363f!important;font-size:7.3px!important;line-height:1.25!important;
+    overflow:hidden!important;color:#30363f!important;font-size:8px!important;line-height:1.25!important;
     white-space:nowrap!important;text-overflow:ellipsis!important
   }
   #teamApp:not(.hidden) .team-sync-chip{
@@ -85,7 +85,7 @@
     background:#fff5d9!important;color:#b47e00!important;font-size:8px!important;font-weight:900!important
   }
   #teamApp:not(.hidden) .team-home-search-results button>div{min-width:0!important;display:grid!important;gap:1px!important}
-  #teamApp:not(.hidden) .team-home-search-results button b{font-size:7.8px!important}
+  #teamApp:not(.hidden) .team-home-search-results button b{font-size:8px!important}
   #teamApp:not(.hidden) .team-home-search-results button small{
     overflow:hidden!important;color:#8b94a0!important;font-size:6.1px!important;white-space:nowrap!important;text-overflow:ellipsis!important
   }
@@ -112,7 +112,7 @@
   #teamApp:not(.hidden) .team-insight-head b{color:#262c34!important;font-size:8.5px!important;line-height:1.15!important}
   #teamApp:not(.hidden) .team-insight-head>i{
     width:24px!important;height:24px!important;display:grid!important;place-items:center!important;border-radius:8px!important;
-    background:#fff6dd!important;color:#b67f00!important;font-size:7px!important
+    background:#fff6dd!important;color:#b67f00!important;font-size:8px!important
   }
   #teamApp:not(.hidden) .team-insight-head>span{color:#8c95a0!important;font-size:5.7px!important}
 
@@ -123,7 +123,7 @@
   }
   #teamApp:not(.hidden) .team-goal-row>div{min-width:0!important;display:grid!important;gap:1px!important}
   #teamApp:not(.hidden) .team-goal-row span{color:#8b94a0!important;font-size:5.6px!important}
-  #teamApp:not(.hidden) .team-goal-row b{color:#313740!important;font-size:7px!important;line-height:1.1!important}
+  #teamApp:not(.hidden) .team-goal-row b{color:#313740!important;font-size:8px!important;line-height:1.1!important}
   #teamApp:not(.hidden) .team-goal-row em{color:#a47300!important;font-size:6px!important;font-style:normal!important;font-weight:900!important}
   #teamApp:not(.hidden) .team-goal-bar{
     grid-column:1/-1!important;height:3px!important;overflow:hidden!important;border-radius:99px!important;background:#eff1f3!important
@@ -143,7 +143,7 @@
   }
   #teamApp:not(.hidden) .team-pipeline-step>div{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:5px!important}
   #teamApp:not(.hidden) .team-pipeline-step span{color:#727d89!important;font-size:5.9px!important}
-  #teamApp:not(.hidden) .team-pipeline-step b{color:#2c323a!important;font-size:7.5px!important}
+  #teamApp:not(.hidden) .team-pipeline-step b{color:#2c323a!important;font-size:8px!important}
   #teamApp:not(.hidden) .team-pipeline-step>i{grid-column:2!important;grid-row:1/3!important;color:#c4c9cf!important;font-size:5px!important}
   #teamApp:not(.hidden) .team-pipeline-bar{
     grid-column:1!important;height:4px!important;overflow:hidden!important;border-radius:99px!important;background:#f0f2f4!important
@@ -235,7 +235,7 @@
     width:28px!important;height:28px!important;display:grid!important;place-items:center!important;border-radius:9px!important;background:#fff5db!important;color:#b98000!important;font-size:8px!important
   }
   #teamApp:not(.hidden) .team-more-grid button>span{min-width:0!important;display:grid!important;gap:1px!important}
-  #teamApp:not(.hidden) .team-more-grid button b{font-size:7.8px!important}
+  #teamApp:not(.hidden) .team-more-grid button b{font-size:8px!important}
   #teamApp:not(.hidden) .team-more-grid button small{color:#8c95a0!important;font-size:5.9px!important}
   #teamApp:not(.hidden) .team-more-grid button>i:last-child{color:#a5abb2!important;font-size:5.5px!important}
   #teamApp:not(.hidden) .team-more-controls{display:grid!important;gap:6px!important}

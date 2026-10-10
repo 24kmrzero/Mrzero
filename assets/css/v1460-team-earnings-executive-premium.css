@@ -58,7 +58,7 @@
     font-size:8.5px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="earnings"] .team-earnings-auto>small{
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
 
   /* ===== Main finance stats ===== */
@@ -86,14 +86,14 @@
   }
   #teamApp:not(.hidden) [data-view-panel="earnings"] .team-earnings-total small,
   #teamApp:not(.hidden) [data-view-panel="earnings"] .team-earnings-hero-stat small{
-    font-size:7.7px!important;
+    font-size:8px!important;
     letter-spacing:.05em!important;
   }
   #teamApp:not(.hidden) [data-view-panel="earnings"] .team-earnings-total>b{
     font-size:24px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="earnings"] .team-earnings-total>span{
-    font-size:7.8px!important;
+    font-size:8px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="earnings"] .team-earnings-hero-stat{
     grid-template-columns:31px minmax(0,1fr)!important;
@@ -109,7 +109,7 @@
     font-size:14px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="earnings"] .team-earnings-hero-stat em{
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
 
   /* ===== Source cards ===== */
@@ -155,17 +155,17 @@
     border-radius:999px!important;
     background:#f4f5f6!important;
     color:#747f89!important;
-    font-size:7.2px!important;
+    font-size:8px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="earnings"] .premium-earning-card>small{
-    font-size:7.8px!important;
+    font-size:8px!important;
     letter-spacing:.05em!important;
   }
   #teamApp:not(.hidden) [data-view-panel="earnings"] .premium-earning-card>b{
     font-size:18px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="earnings"] .premium-earning-card>span{
-    font-size:7.8px!important;
+    font-size:8px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="earnings"] .earning-share{
     height:4px!important;
@@ -209,7 +209,7 @@
     padding:0 2px 6px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="earnings"] .team-earnings-section-head small{
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="earnings"] .team-earnings-section-head b{
     font-size:13px!important;
@@ -222,7 +222,7 @@
     border:1px solid #e4e7ea!important;
     border-radius:999px!important;
     background:#fff!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
 
   /* ===== Progress / tier cards ===== */
@@ -252,7 +252,7 @@
     font-size:10px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="earnings"] .premium-progress-head small{
-    font-size:7.2px!important;
+    font-size:8px!important;
     letter-spacing:.06em!important;
   }
   #teamApp:not(.hidden) [data-view-panel="earnings"] .premium-progress-head h3{
@@ -263,10 +263,10 @@
   }
   #teamApp:not(.hidden) [data-view-panel="earnings"] .progress-meta{
     margin-top:12px!important;
-    font-size:7.6px!important;
+    font-size:8px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="earnings"] .progress-meta b{
-    font-size:7.8px!important;
+    font-size:8px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="earnings"] .premium-progress-bar{
     height:5px!important;
@@ -277,7 +277,7 @@
     margin-top:auto!important;
     padding:6px 7px!important;
     border-radius:8px!important;
-    font-size:7.6px!important;
+    font-size:8px!important;
     line-height:1.3!important;
   }
   #teamApp:not(.hidden) [data-view-panel="earnings"] .next-copy i{
@@ -319,7 +319,7 @@
     box-shadow:inset 0 0 0 1px rgba(255,255,255,.05)!important;
   }
   #teamApp:not(.hidden) [data-view-panel="earnings"] .premium-broker-head small{
-    font-size:7px!important;
+    font-size:8px!important;
     letter-spacing:.06em!important;
   }
   #teamApp:not(.hidden) [data-view-panel="earnings"] .premium-broker-head b{
@@ -333,7 +333,7 @@
     border-radius:999px!important;
     background:#edf9f4!important;
     color:#16885f!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="earnings"] .broker-stats{
     gap:6px!important;
@@ -345,7 +345,7 @@
     border-radius:8px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="earnings"] .broker-stats span{
-    font-size:7.4px!important;
+    font-size:8px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="earnings"] .broker-stats b{
     font-size:11.5px!important;

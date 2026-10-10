@@ -11,7 +11,7 @@
   }
   #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-command:after{content:"DAILY"!important;position:absolute!important;right:22px!important;top:-28px!important;color:rgba(172,123,0,.035)!important;font-size:110px!important;font-weight:950!important;letter-spacing:-.07em!important;pointer-events:none!important}
   #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-command-top{position:relative!important;z-index:2!important;display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:18px!important}
-  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-kicker{min-height:25px!important;display:inline-flex!important;align-items:center!important;gap:7px!important;padding:0 10px!important;border:1px solid #e7d69d!important;border-radius:999px!important;background:#fff9e9!important;color:#8f6900!important;font-size:7.2px!important;font-weight:950!important;letter-spacing:.12em!important}
+  #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-kicker{min-height:25px!important;display:inline-flex!important;align-items:center!important;gap:7px!important;padding:0 10px!important;border:1px solid #e7d69d!important;border-radius:999px!important;background:#fff9e9!important;color:#8f6900!important;font-size:8px!important;font-weight:950!important;letter-spacing:.12em!important}
   #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-command h2{margin:11px 0 5px!important;color:#1d2229!important;font-size:28px!important;line-height:1!important;font-weight:950!important;letter-spacing:-.04em!important}
   #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-command p{margin:0!important;color:#6e7883!important;font-size:10px!important;line-height:1.5!important}
   #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-status{position:relative!important;z-index:2!important;min-width:136px!important;display:grid!important;grid-template-columns:34px minmax(0,1fr)!important;grid-template-rows:auto auto!important;align-items:center!important;gap:2px 8px!important;padding:8px 10px!important;border:1px solid #e5d8af!important;border-radius:12px!important;background:rgba(255,255,255,.82)!important}
@@ -33,13 +33,13 @@
   #teamApp:not(.hidden) .team-tool-section-head>div{display:grid!important;gap:1px!important}
   #teamApp:not(.hidden) .team-tool-section-head small{color:#a0780b!important;font-size:6.2px!important;font-weight:950!important;letter-spacing:.11em!important}
   #teamApp:not(.hidden) .team-tool-section-head b{color:#252b32!important;font-size:13px!important;font-weight:950!important}
-  #teamApp:not(.hidden) .team-tool-section-head>span{color:#858f9a!important;font-size:7px!important}
+  #teamApp:not(.hidden) .team-tool-section-head>span{color:#858f9a!important;font-size:8px!important}
 
   #teamApp:not(.hidden) .team-daily-form{margin-top:10px!important;padding:15px!important;border:1px solid #e1e4e7!important;border-radius:16px!important;background:#fff!important;box-shadow:0 9px 24px rgba(18,24,32,.04)!important}
   #teamApp:not(.hidden) .team-daily-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:9px!important}
   #teamApp:not(.hidden) .team-daily-grid.broker-lots{grid-template-columns:repeat(3,minmax(0,1fr))!important}
   #teamApp:not(.hidden) .team-daily-grid label,#teamApp:not(.hidden) .team-daily-note{min-width:0!important;display:grid!important;gap:5px!important}
-  #teamApp:not(.hidden) .team-daily-grid label>span,#teamApp:not(.hidden) .team-daily-note>span{display:flex!important;align-items:center!important;gap:5px!important;color:#707b86!important;font-size:7px!important;font-weight:850!important}
+  #teamApp:not(.hidden) .team-daily-grid label>span,#teamApp:not(.hidden) .team-daily-note>span{display:flex!important;align-items:center!important;gap:5px!important;color:#707b86!important;font-size:8px!important;font-weight:850!important}
   #teamApp:not(.hidden) .team-daily-grid label>span i{width:14px!important;color:#a87a00!important}
   #teamApp:not(.hidden) .team-daily-grid input,#teamApp:not(.hidden) .team-daily-note textarea{width:100%!important;min-width:0!important;border:1px solid #dfe3e7!important;border-radius:10px!important;background:#fafbfc!important;color:#303740!important;font:inherit!important;font-size:8px!important;font-weight:700!important;outline:0!important;box-shadow:none!important}
   #teamApp:not(.hidden) .team-daily-grid input{height:40px!important;padding:0 10px!important}
@@ -54,7 +54,7 @@
   #teamApp:not(.hidden) .team-daily-submit{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;margin-top:12px!important;padding-top:11px!important;border-top:1px solid #eceef0!important}
   #teamApp:not(.hidden) .team-daily-submit>span{display:flex!important;align-items:center!important;gap:6px!important;color:#7f8994!important;font-size:6.8px!important}
   #teamApp:not(.hidden) .team-daily-submit>span i{color:#a67a00!important}
-  #teamApp:not(.hidden) .team-daily-submit button{min-height:36px!important;display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 12px!important;border:1px solid #d7a30b!important;border-radius:9px!important;background:linear-gradient(180deg,#ffd65b,#efbd22)!important;color:#2b2100!important;font:inherit!important;font-size:7.2px!important;font-weight:950!important}
+  #teamApp:not(.hidden) .team-daily-submit button{min-height:36px!important;display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 12px!important;border:1px solid #d7a30b!important;border-radius:9px!important;background:linear-gradient(180deg,#ffd65b,#efbd22)!important;color:#2b2100!important;font:inherit!important;font-size:8px!important;font-weight:950!important}
 
   #teamApp:not(.hidden) .team-auto-activity,#teamApp:not(.hidden) .team-daily-history{margin-top:10px!important;padding:14px!important;border:1px solid #e1e4e7!important;border-radius:15px!important;background:#fff!important;box-shadow:0 8px 22px rgba(18,24,32,.035)!important}
   #teamApp:not(.hidden) .auto-activity-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:9px!important;margin:0!important}

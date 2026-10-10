@@ -44,7 +44,7 @@ body.app-page .app-nav a{
   font-size:11px!important;line-height:1.15!important;font-weight:650!important;gap:8px!important
 }
 body.app-page .app-nav a i{width:17px!important;font-size:12px!important}
-body.app-page .app-nav-label{font-size:7.5px!important;letter-spacing:.13em!important;margin:10px 8px 4px!important}
+body.app-page .app-nav-label{font-size:8px!important;letter-spacing:.13em!important;margin:10px 8px 4px!important}
 body.app-page .app-side-foot{padding:8px 7px 10px!important}
 body.app-page .app-side-foot a,body.app-page .app-side-foot button{min-height:36px!important;font-size:11px!important;border-radius:8px!important}
 body.app-page .app-topbar{height:58px!important;padding:0 15px!important;gap:9px!important}
@@ -190,18 +190,18 @@ html[data-theme="dark"] body.app-page .tiny-btn{background:#171f29!important;bor
 .v1218-command{padding:13px 15px!important;border-radius:11px!important}
 html[data-theme="light"] .v1218-command{background:linear-gradient(120deg,#fff7e8,#fffdf9)!important;border:1px solid #efc98c!important;box-shadow:0 4px 15px rgba(55,35,7,.035)!important}
 html[data-theme="dark"] .v1218-command{background:var(--p-dark-2)!important;border:1px solid var(--p-dark-line)!important;box-shadow:none!important}
-.v1218-command .eyebrow{font-size:7.5px!important;letter-spacing:.11em!important;color:#c87500!important}
+.v1218-command .eyebrow{font-size:8px!important;letter-spacing:.11em!important;color:#c87500!important}
 .v1218-command h2{font-size:20px!important;margin:3px 0!important}
 .v1218-command p{font-size:9.5px!important;margin:0!important}
 .v1218-kpis{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:7px!important;margin:0!important}
 .v1218-kpi{min-height:68px!important;padding:10px 11px!important;border-radius:9px!important}
-.v1218-kpi small{font-size:7px!important;font-weight:800!important;letter-spacing:.025em!important}
+.v1218-kpi small{font-size:8px!important;font-weight:800!important;letter-spacing:.025em!important}
 .v1218-kpi b{font-size:19px!important;line-height:1.05!important;margin-top:5px!important}
 .v1218-dashboard-grid{grid-template-columns:minmax(0,1.3fr) minmax(290px,.7fr)!important;gap:8px!important;margin-top:0!important}
 .v1218-dashboard-grid>.app-card{min-height:145px!important}
 .v1218-mini-grid{gap:6px!important}
 .v1218-mini{min-height:38px!important;padding:8px 9px!important;border-radius:8px!important;font-size:9px!important}
-.v1218-mini small{font-size:7px!important}.v1218-mini b{font-size:14px!important}
+.v1218-mini small{font-size:8px!important}.v1218-mini b{font-size:14px!important}
 .v1220-legacy-dashboard{display:none!important}
 
 /* ---------- Standalone Admin Team Performance ---------- */
@@ -231,7 +231,7 @@ html[data-theme="dark"] body.app-page .ta-lots-summary{background:#171f29!import
 .student-page .compact-welcome-copy h1{font-size:24px!important}
 .student-page .compact-welcome-copy p{font-size:10px!important}
 .student-page .compact-card-head h3{font-size:13px!important}
-.student-page .compact-card-head span{font-size:7px!important}
+.student-page .compact-card-head span{font-size:8px!important}
 .student-page .kpi-grid{gap:8px!important}
 html[data-theme="light"] .student-page .compact-welcome-banner,
 html[data-theme="light"] .student-page .compact-dashboard-card,
@@ -249,8 +249,8 @@ html[data-theme="dark"] .student-page .personal-info-card{background:var(--p-dar
 .team-side{padding:13px 10px!important}
 .team-side .brand{padding:2px 6px 14px!important;gap:8px!important}
 .team-side .brand img{width:48px!important;height:48px!important;object-fit:contain!important}
-.team-side .brand b{font-size:12px!important}.team-side .brand span{font-size:7px!important}
-.team-nav-label{font-size:7px!important;padding:4px 8px 6px!important}
+.team-side .brand b{font-size:12px!important}.team-side .brand span{font-size:8px!important}
+.team-nav-label{font-size:8px!important;padding:4px 8px 6px!important}
 .team-side nav{gap:3px!important}
 .team-side .nav-btn{min-height:37px!important;padding:8px 9px!important;border-radius:8px!important;font-size:10.5px!important;gap:8px!important}
 .team-main{padding:0!important;min-width:0!important}
@@ -265,7 +265,7 @@ html[data-theme="dark"] .student-page .personal-info-card{background:var(--p-dar
 .team-flow-cards b{font-size:10px!important}.team-flow-cards p{font-size:8px!important}
 .team-overview-kpis{gap:7px!important;margin:8px 0!important}
 .overview-kpi{padding:10px!important;border-radius:9px!important}
-.overview-kpi span{font-size:7px!important}.overview-kpi b{font-size:18px!important}
+.overview-kpi span{font-size:8px!important}.overview-kpi b{font-size:18px!important}
 .panel-card,.client-filter-card,.client-work-card,.search-client-card,.ownership-card,.earning-card,.progress-card,.broker-card,.chat-kpi,.live-desk-shell{border-radius:10px!important;box-shadow:none!important}
 html[data-theme="light"] .team-app,html[data-theme="light"] .team-main{background:var(--p-cream)!important;color:var(--p-text)!important}
 html[data-theme="light"] .team-side{background:#fffaf1!important;border-right:1px solid var(--p-line)!important;color:var(--p-text)!important}
@@ -302,8 +302,8 @@ html[data-theme="dark"] .team-main input,html[data-theme="dark"] .team-main sele
 .mentor-side{padding:13px 10px!important}
 .mentor-brand{padding:2px 6px 14px!important;gap:8px!important}
 .mentor-brand img{width:42px!important;height:42px!important}
-.mentor-brand b{font-size:12px!important}.mentor-brand small{font-size:7px!important}
-.mentor-nav-label{font-size:7px!important;margin:7px 7px 4px!important}
+.mentor-brand b{font-size:12px!important}.mentor-brand small{font-size:8px!important}
+.mentor-nav-label{font-size:8px!important;margin:7px 7px 4px!important}
 .mentor-nav{gap:3px!important;margin-top:0!important}
 .mentor-nav button{min-height:37px!important;height:auto!important;padding:8px 9px!important;border-radius:8px!important;font-size:10.5px!important;gap:8px!important}
 .mentor-top{height:58px!important;padding:0 15px!important}
@@ -355,7 +355,7 @@ html[data-theme="dark"] .mentor-form input,html[data-theme="dark"] .mentor-form 
 .input-wrap{height:40px!important;border-radius:8px!important;background:#fff!important;border:1px solid #ded2be!important;box-shadow:none!important}
 .input-wrap input{font-size:11px!important;padding:0 11px!important;color:var(--p-text)!important}
 #enrollSubmit{height:41px!important;border-radius:8px!important;background:var(--p-orange)!important;color:#111!important;font-size:11px!important;font-weight:800!important;box-shadow:none!important}
-.secure-note{font-size:7.5px!important;margin:8px 0 0!important;color:#8a94a1!important}
+.secure-note{font-size:8px!important;margin:8px 0 0!important;color:#8a94a1!important}
 .terms-note{display:none!important}
 .side-copy,.market-bg{display:none!important}
 
@@ -391,7 +391,7 @@ html[data-theme="dark"] .mentor-mobile-nav{background:#101720!important;border-t
 
 /* V12.24 — final navigation, dashboard and auth alignment */
 .v1218-nav-group{
-  display:block!important;margin:10px 8px 4px!important;font-size:7px!important;line-height:1!important;
+  display:block!important;margin:10px 8px 4px!important;font-size:8px!important;line-height:1!important;
   letter-spacing:.14em!important;font-weight:800!important;text-transform:uppercase!important;color:#7f94a6!important
 }
 .v1218-command{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:18px!important}
@@ -404,8 +404,8 @@ html[data-theme="dark"] .v1218-date-chip{background:#171f29!important;border:1px
 .v1218-op-row{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;padding:9px 2px!important;border-bottom:1px solid!important}
 .v1218-op-row:last-child{border-bottom:0!important}
 .v1218-op-row b{display:block!important;font-size:9px!important}
-.v1218-op-row small{display:block!important;font-size:7.5px!important;margin-top:2px!important;text-transform:capitalize!important}
-.v1218-op-row>span{font-size:7px!important;white-space:nowrap!important}
+.v1218-op-row small{display:block!important;font-size:8px!important;margin-top:2px!important;text-transform:capitalize!important}
+.v1218-op-row>span{font-size:8px!important;white-space:nowrap!important}
 .v1218-empty{padding:20px 8px!important;text-align:center!important;font-size:9px!important}
 html[data-theme="light"] .v1218-op-row{border-color:#eee1cc!important}
 html[data-theme="light"] .v1218-op-row small,html[data-theme="light"] .v1218-op-row>span{color:var(--p-muted)!important}

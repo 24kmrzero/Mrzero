@@ -8,13 +8,13 @@
     line-height:1.25!important;
   }
   html[data-auth-scope="admin"] .v1218-nav-group{
-    font-size:7.8px!important;
+    font-size:8px!important;
   }
 
   /* ================= LINK MANAGER ================= */
   #p-link-manager-ref>.link-manager-hero p{font-size:11.5px!important}
   #p-link-manager-ref .link-manager-kicker{font-size:8.2px!important}
-  #p-link-manager-ref>.link-manager-hero>div:first-child>small{font-size:7.6px!important}
+  #p-link-manager-ref>.link-manager-hero>div:first-child>small{font-size:8px!important}
   #p-link-manager-ref .link-manager-create{font-size:9.3px!important}
 
   #p-link-manager-ref .link-manager-kpi small{
@@ -66,7 +66,7 @@
   }
 
   /* ================= CREATE / EDIT LINK MODAL ================= */
-  #v14LinkModal .premium-link-kicker{font-size:7.8px!important}
+  #v14LinkModal .premium-link-kicker{font-size:8px!important}
   #v14LinkModal .premium-link-head h3{font-size:24px!important}
   #v14LinkModal .premium-link-head .muted{
     font-size:10.2px!important;
@@ -83,19 +83,19 @@
   #v14LinkModal .premium-link-advanced summary{font-size:9.3px!important}
   #v14LinkModal .premium-toggle-row b{font-size:9.5px!important}
   #v14LinkModal .premium-toggle-row small{font-size:8px!important}
-  #v14LinkModal .premium-link-preview-label{font-size:7.7px!important}
-  #v14LinkModal .premium-link-preview-top span{font-size:7.2px!important}
+  #v14LinkModal .premium-link-preview-label{font-size:8px!important}
+  #v14LinkModal .premium-link-preview-top span{font-size:8px!important}
   #v14LinkModal .premium-link-preview-card>p{font-size:9.3px!important}
   #v14LinkModal .premium-link-preview-meta span{font-size:8px!important}
   #v14LinkModal .premium-link-preview-meta b{font-size:8.7px!important}
-  #v14LinkModal .premium-link-preview-url small{font-size:7.2px!important}
-  #v14LinkModal .premium-link-preview-url code{font-size:7.7px!important}
+  #v14LinkModal .premium-link-preview-url small{font-size:8px!important}
+  #v14LinkModal .premium-link-preview-url code{font-size:8px!important}
   #v14LinkModal .premium-link-preview-note{font-size:8px!important}
   #v14LinkModal .premium-link-foot-note{font-size:8.5px!important}
   #v14LinkModal .premium-link-foot .app-btn{font-size:8.8px!important}
 
   /* ================= TEAM ACCOUNTS ================= */
-  #p-team-access-ref .v18-team-kicker{font-size:7.8px!important}
+  #p-team-access-ref .v18-team-kicker{font-size:8px!important}
   #p-team-access-ref>.panel-heading p{font-size:11.5px!important}
   #p-team-access-ref>.panel-heading .app-btn{font-size:9px!important}
 
@@ -110,13 +110,13 @@
     line-height:1.45!important;
   }
   #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(1):after{
-    font-size:7.8px!important;
+    font-size:8px!important;
   }
   #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(1) b{
     font-size:15px!important;
   }
   #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(n+2):nth-child(-n+7):before{
-    font-size:7.8px!important;
+    font-size:8px!important;
     letter-spacing:.055em!important;
   }
   #p-team-access-ref .v18-team-toggle b{font-size:8.6px!important}
@@ -126,7 +126,7 @@
 
   /* ================= MENTOR ACCOUNTS ================= */
   #p-v1216-center.mentor-accounts-only .v1216-mentor-kicker{
-    font-size:7.8px!important;
+    font-size:8px!important;
   }
   #p-v1216-center.mentor-accounts-only .v1216-mentor-command p{
     font-size:11px!important;
@@ -143,7 +143,7 @@
     font-size:20px!important;
   }
   #p-v1216-center .v1216-mentor-head>div>small{
-    font-size:7.2px!important;
+    font-size:8px!important;
   }
   #p-v1216-center .v1216-mentor-head h3{
     font-size:15px!important;
@@ -152,7 +152,7 @@
     font-size:8.7px!important;
   }
   #p-v1216-center .v1216-mentor-state{
-    font-size:7.8px!important;
+    font-size:8px!important;
   }
   #p-v1216-center .v1216-mentor-email{
     min-height:39px!important;
@@ -213,10 +213,10 @@
     font-size:9.3px!important;
   }
   #p-students .student-management-table .status-pill{
-    font-size:7.7px!important;
+    font-size:8px!important;
   }
   #p-students .student-management-table .table-actions .app-btn{
-    font-size:7.8px!important;
+    font-size:8px!important;
   }
 
   /* Shared form readability */

@@ -57,7 +57,7 @@
     padding:0 9px!important;
     border-color:#e5d8af!important;
     background:#fffaf0!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-hero h2{
@@ -138,7 +138,7 @@
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .team-health-meter em{
-    font-size:7.2px!important;
+    font-size:8px!important;
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-attention{
@@ -152,7 +152,7 @@
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-attention-copy em{
-    font-size:7.2px!important;
+    font-size:8px!important;
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-follow-btn{
@@ -181,7 +181,7 @@
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .team-smart-summary b{
-    font-size:7.8px!important;
+    font-size:8px!important;
     color:#4b555f!important;
   }
 
@@ -505,7 +505,7 @@
     border-radius:7px!important;
     background:#f1f3f5!important;
     color:#303740!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:950!important;
   }
 
@@ -741,7 +741,7 @@
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .recent-client b{
-    font-size:7.8px!important;
+    font-size:8px!important;
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .today-work-item{
@@ -767,7 +767,7 @@
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .team-activity-item b{
-    font-size:7.6px!important;
+    font-size:8px!important;
   }
 
   #teamApp:not(.hidden) [data-view-panel="overview"] .team-home-links .overview-link-row:not(.home-collapsed){

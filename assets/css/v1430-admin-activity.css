@@ -44,7 +44,7 @@
   border-radius:999px!important;
   background:#fff9e9!important;
   color:#7f5d00!important;
-  font-size:7.6px!important;
+  font-size:8px!important;
   font-weight:950!important;
   letter-spacing:.12em!important;
 }
@@ -212,7 +212,7 @@
   padding:0 10px!important;
   background:linear-gradient(180deg,#f8f9fa,#f2f4f5)!important;
   color:#596571!important;
-  font-size:7.8px!important;
+  font-size:8px!important;
   font-weight:950!important;
   letter-spacing:.065em!important;
   text-transform:uppercase!important;
@@ -265,7 +265,7 @@
   display:block!important;
   margin-top:3px!important;
   color:#6d7985!important;
-  font-size:7.5px!important;
+  font-size:8px!important;
   font-weight:650!important;
 }
 #p-audit .audit-role{
@@ -418,7 +418,7 @@
   display:block!important;
   margin-top:2px!important;
   color:#74808c!important;
-  font-size:7.4px!important;
+  font-size:8px!important;
 }
 #auditV962DetailModal .audit-v1430-json pre{
   max-height:300px!important;
@@ -427,7 +427,7 @@
   padding:11px!important;
   background:#11161d!important;
   color:#d7dee6!important;
-  font-size:7.6px!important;
+  font-size:8px!important;
   line-height:1.55!important;
   white-space:pre-wrap!important;
   word-break:break-word!important;

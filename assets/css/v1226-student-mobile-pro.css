@@ -94,7 +94,7 @@
     font-size:62px!important;color:rgba(240,185,11,.03)!important;
   }
   .student-page .compact-welcome-copy{border-left:3px solid var(--pro-gold)!important;padding-left:9px!important}
-  .student-page .compact-kicker{font-size:7.5px!important;color:var(--pro-gold)!important}
+  .student-page .compact-kicker{font-size:8px!important;color:var(--pro-gold)!important}
   .student-page .compact-welcome-copy h1{
     margin:2px 0!important;font-size:24px!important;letter-spacing:-.045em!important;color:var(--pro-ink)!important
   }
@@ -107,9 +107,9 @@
   .student-page .compact-welcome-meta>span{
     min-height:28px!important;padding:0 6px!important;
     border:0!important;border-radius:8px!important;
-    background:var(--pro-surface-2)!important;color:var(--pro-muted)!important;font-size:7.5px!important
+    background:var(--pro-surface-2)!important;color:var(--pro-muted)!important;font-size:8px!important
   }
-  .student-page .compact-welcome-meta b{font-size:7.5px!important;color:var(--pro-text)!important}
+  .student-page .compact-welcome-meta b{font-size:8px!important;color:var(--pro-text)!important}
   .student-page .compact-welcome-meta .live-chip{color:var(--pro-green)!important;background:rgba(14,203,129,.08)!important}
 
   .student-page .compact-account-badge{
@@ -120,7 +120,7 @@
     width:28px!important;height:28px!important;border-radius:8px!important;background:var(--pro-gold-soft)!important;color:var(--pro-gold)!important
   }
   .student-page .compact-account-badge b{font-size:9.5px!important;color:var(--pro-text)!important}
-  .student-page .compact-account-badge small{font-size:7.5px!important;color:var(--pro-muted)!important}
+  .student-page .compact-account-badge small{font-size:8px!important;color:var(--pro-muted)!important}
 
   .student-page .compact-kpi-grid{gap:6px!important;margin:0 0 8px!important}
   .student-page .compact-kpi-grid .app-kpi,
@@ -139,13 +139,13 @@
   .student-page .compact-kpi-grid .app-kpi:first-child .kpi-icon{background:var(--pro-gold)!important;color:#181A20!important}
   .student-page .compact-kpi-grid .app-kpi small{font-size:6.8px!important;color:var(--pro-muted)!important}
   .student-page .compact-kpi-grid .app-kpi b{font-size:20px!important;color:var(--pro-ink)!important}
-  .student-page .compact-kpi-grid .app-kpi em{font-size:7.8px!important;color:var(--pro-muted)!important}
+  .student-page .compact-kpi-grid .app-kpi em{font-size:8px!important;color:var(--pro-muted)!important}
 
   .student-page .compact-dashboard-card{
     padding:11px!important;border:1px solid var(--pro-line)!important;border-radius:13px!important;
     background:var(--pro-surface)!important;box-shadow:none!important;
   }
-  .student-page .compact-card-head span{font-size:7px!important;color:var(--pro-gold)!important}
+  .student-page .compact-card-head span{font-size:8px!important;color:var(--pro-gold)!important}
   .student-page .compact-card-head h3{font-size:16px!important;color:var(--pro-ink)!important}
   .student-page .text-link-btn{font-size:8.5px!important;color:var(--pro-gold)!important}
 
@@ -157,7 +157,7 @@
   }
   .student-page #p-signals .signal-summary-card b{font-size:19px!important;color:var(--pro-ink)!important}
   .student-page #p-signals .signal-summary-card strong{font-size:8.5px!important;color:var(--pro-text)!important}
-  .student-page #p-signals .signal-summary-card small{font-size:7.5px!important;color:var(--pro-muted)!important}
+  .student-page #p-signals .signal-summary-card small{font-size:8px!important;color:var(--pro-muted)!important}
 
   .student-page .signal-workspace-switch{
     padding:4px!important;margin-bottom:7px!important;border:1px solid var(--pro-line)!important;border-radius:10px!important;background:var(--pro-surface)!important

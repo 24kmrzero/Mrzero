@@ -65,7 +65,7 @@
     border-radius:999px!important;
     background:#fffaf0!important;
     color:#8d6800!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:950!important;
     letter-spacing:.12em!important;
   }
@@ -479,7 +479,7 @@
   .student-page #p-courses .premium-next-class em{
     overflow:hidden!important;
     color:#7e8792!important;
-    font-size:7.2px!important;
+    font-size:8px!important;
     line-height:1.25!important;
     font-style:normal!important;
     text-overflow:ellipsis!important;
@@ -534,7 +534,7 @@
   }
   .student-page #p-courses .course-access-notice span:not(.notice-icon):not(.notice-state){
     color:#7d8691!important;
-    font-size:7px!important;
+    font-size:8px!important;
     line-height:1.35!important;
   }
   .student-page #p-courses .notice-state{
@@ -567,7 +567,7 @@
     gap:6px!important;
     padding:0 10px!important;
     border-radius:9px!important;
-    font-size:7.8px!important;
+    font-size:8px!important;
     font-weight:900!important;
     line-height:1!important;
     box-shadow:none!important;
@@ -613,7 +613,7 @@
     height:34px!important;
     padding:0 11px!important;
     border-radius:9px!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
 
   /* Light desktop canvas */

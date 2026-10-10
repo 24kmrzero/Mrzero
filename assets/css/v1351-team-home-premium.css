@@ -213,7 +213,7 @@
   body.team-authenticated .team-home-attention-copy em{
     overflow:hidden!important;
     color:#6f7884!important;
-    font-size:7.2px!important;
+    font-size:8px!important;
     font-style:normal!important;
     line-height:1.25!important;
     text-overflow:ellipsis!important;
@@ -410,7 +410,7 @@
 
   body.team-authenticated .team-home-quick-actions button>i{
     color:#a2a8af!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
 
   /* ---------- LOWER CARDS ---------- */
@@ -471,7 +471,7 @@
     border-radius:9px!important;
     background:#fff9e9!important;
     color:#b57f00!important;
-    font-size:7.2px!important;
+    font-size:8px!important;
     font-weight:900!important;
   }
 
@@ -577,7 +577,7 @@
     border-radius:12px!important;
     background:transparent!important;
     color:#65707e!important;
-    font-size:7.7px!important;
+    font-size:8px!important;
     font-weight:850!important;
   }
 

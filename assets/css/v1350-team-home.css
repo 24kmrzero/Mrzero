@@ -95,7 +95,7 @@
 
 .team-home-attention-copy small{
   color:#8b95a1;
-  font-size:7px;
+  font-size:8px;
   font-weight:900;
   letter-spacing:.11em;
 }
@@ -143,7 +143,7 @@
 
 .team-home-section-head small{
   color:#8e98a4;
-  font-size:7px;
+  font-size:8px;
   font-weight:900;
   letter-spacing:.13em;
 }
@@ -246,7 +246,7 @@
 
 .team-home-quick-actions button small{
   color:var(--r18-muted);
-  font-size:7.5px;
+  font-size:8px;
 }
 
 .team-home-quick-actions button>i{
@@ -279,7 +279,7 @@
 
 .team-home-card-head small{
   color:#8e98a4!important;
-  font-size:7px!important;
+  font-size:8px!important;
   font-weight:900;
   letter-spacing:.13em;
 }
@@ -319,7 +319,7 @@
   min-height:28px!important;
   padding:0 8px!important;
   border-radius:8px!important;
-  font-size:7.5px!important;
+  font-size:8px!important;
 }
 
 .team-home-links{
@@ -399,7 +399,7 @@ html[data-theme="dark"] .team-home-quick-actions button>span{
   }
 
   .team-home-attention-copy em{
-    font-size:7.5px;
+    font-size:8px;
   }
 
   .team-home-follow-btn{

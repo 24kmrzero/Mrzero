@@ -63,7 +63,7 @@
   }
   .student-page .course-detail-section-head small{display:block!important;color:#B17F00!important;font-size:5.8px!important;font-weight:950!important;letter-spacing:.09em!important}
   .student-page .course-detail-section-head h4{margin:2px 0 0!important;font-size:14px!important;color:var(--s-text,#0B0E11)!important}
-  .student-page .course-detail-section-head>span{font-size:7px!important;color:var(--s-muted,#707A8A)!important}
+  .student-page .course-detail-section-head>span{font-size:8px!important;color:var(--s-muted,#707A8A)!important}
 
   .student-page .course-detail-sessions{display:grid!important;gap:6px!important}
   .student-page .course-detail-session{
@@ -84,9 +84,9 @@
   .student-page .cds-copy{min-width:0!important}
   .student-page .cds-copy small{display:block!important;margin-bottom:2px!important;font-size:6.3px!important;font-weight:850!important;color:#A87900!important}
   .student-page .cds-copy b{display:block!important;font-size:9.2px!important;line-height:1.2!important;color:var(--s-text,#0B0E11)!important}
-  .student-page .cds-copy p{margin:2px 0 0!important;font-size:7px!important;line-height:1.25!important;color:var(--s-muted,#707A8A)!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  .student-page .cds-copy p{margin:2px 0 0!important;font-size:8px!important;line-height:1.25!important;color:var(--s-muted,#707A8A)!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
   .student-page .cds-time{display:grid!important;justify-items:end!important;gap:2px!important}
-  .student-page .cds-time b{font-size:7.5px!important;color:var(--s-text,#0B0E11)!important;white-space:nowrap!important}
+  .student-page .cds-time b{font-size:8px!important;color:var(--s-text,#0B0E11)!important;white-space:nowrap!important}
   .student-page .cds-time small{font-size:6px!important;color:var(--s-muted,#707A8A)!important}
   .student-page .cds-lock{color:#C08B00!important;font-size:9px!important}
   .student-page .course-detail-note{
@@ -95,7 +95,7 @@
   }
   .student-page .course-detail-note>i{width:28px!important;height:28px!important;display:grid!important;place-items:center!important;border-radius:8px!important;background:rgba(14,203,129,.11)!important;color:#078A58!important}
   .student-page .course-detail-note b{display:block!important;font-size:8.5px!important;color:var(--s-text,#0B0E11)!important}
-  .student-page .course-detail-note span{display:block!important;margin-top:2px!important;font-size:7.2px!important;line-height:1.3!important;color:var(--s-muted,#707A8A)!important}
+  .student-page .course-detail-note span{display:block!important;margin-top:2px!important;font-size:8px!important;line-height:1.3!important;color:var(--s-muted,#707A8A)!important}
   .student-page .course-details-foot{display:grid!important;grid-template-columns:.75fr 1.25fr!important;gap:6px!important}
   .student-page .course-details-foot .app-btn{width:100%!important}
 
@@ -112,7 +112,7 @@
   .student-page .course-payment-steps>span>b{
     width:22px!important;height:22px!important;display:grid!important;place-items:center!important;
     border-radius:50%!important;background:#fff!important;border:1px solid var(--s-line,#E7E9ED)!important;
-    color:var(--s-muted,#707A8A)!important;font-size:7px!important;
+    color:var(--s-muted,#707A8A)!important;font-size:8px!important;
   }
   html[data-theme="dark"] .student-page .course-payment-steps>span>b{background:#181A20!important}
   .student-page .course-payment-steps>span.active{color:#A87900!important}
@@ -138,7 +138,7 @@
     border-radius:10px!important;background:rgba(240,185,11,.10)!important;color:#B17F00!important;font-size:14px!important;
   }
   .student-page #paymentMethodChoiceModal [data-payment-choice] h3{font-size:11px!important;margin:0 0 2px!important;color:var(--s-text,#0B0E11)!important}
-  .student-page #paymentMethodChoiceModal [data-payment-choice] p{font-size:7.5px!important;line-height:1.3!important}
+  .student-page #paymentMethodChoiceModal [data-payment-choice] p{font-size:8px!important;line-height:1.3!important}
 
   /* success */
   .student-page #coursePaymentSuccessBody{
@@ -157,5 +157,5 @@
   }
   .student-page .payment-success-state>i{width:32px!important;height:32px!important;display:grid!important;place-items:center!important;border-radius:9px!important;background:rgba(240,185,11,.11)!important;color:#A87900!important}
   .student-page .payment-success-state b{display:block!important;font-size:9px!important;color:var(--s-text,#0B0E11)!important}
-  .student-page .payment-success-state span{display:block!important;margin-top:2px!important;font-size:7px!important;color:var(--s-muted,#707A8A)!important}
+  .student-page .payment-success-state span{display:block!important;margin-top:2px!important;font-size:8px!important;color:var(--s-muted,#707A8A)!important}
 }

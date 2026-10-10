@@ -88,7 +88,7 @@
   }
   #teamApp:not(.hidden) [data-view-panel="daily"] .team-conversion-section-head>span i{
     color:#b18100!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
 
   #teamApp:not(.hidden) [data-view-panel="daily"] .team-course-conversion-card{
@@ -155,7 +155,7 @@
   }
   #teamApp:not(.hidden) [data-view-panel="daily"] .course-conversion-top small{
     color:#8a949e!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
     font-weight:950!important;
     letter-spacing:.08em!important;
   }
@@ -218,7 +218,7 @@
   #teamApp:not(.hidden) [data-view-panel="daily"] .course-conversion-metrics span{
     grid-column:1/-1!important;
     color:#76818c!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
     font-weight:850!important;
   }
   #teamApp:not(.hidden) [data-view-panel="daily"] .course-conversion-metrics strong{
@@ -231,7 +231,7 @@
     align-self:end!important;
     padding-bottom:2px!important;
     color:#8a949e!important;
-    font-size:7.2px!important;
+    font-size:8px!important;
     font-weight:700!important;
   }
   #teamApp:not(.hidden) [data-view-panel="daily"] .course-conversion-foot{
@@ -240,7 +240,7 @@
     gap:6px!important;
     margin-top:9px!important;
     color:#76818c!important;
-    font-size:7.8px!important;
+    font-size:8px!important;
     font-weight:700!important;
   }
   #teamApp:not(.hidden) [data-view-panel="daily"] .course-conversion-foot i{
@@ -298,7 +298,7 @@
   }
   #teamApp:not(.hidden) [data-view-panel="daily"] .auto-activity-grid>div>div>small{
     color:#949ca4!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:650!important;
   }
 
@@ -313,7 +313,7 @@
     border-radius:999px!important;
     background:#eef9f4!important;
     color:#1d7d5e!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
     font-weight:900!important;
   }
   #teamApp:not(.hidden) [data-view-panel="daily"] .daily-history-status i{

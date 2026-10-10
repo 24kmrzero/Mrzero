@@ -48,7 +48,7 @@
     border-radius:999px!important;
     background:#fff9e9!important;
     color:#7f5d00!important;
-    font-size:7.8px!important;
+    font-size:8px!important;
     font-weight:950!important;
     letter-spacing:.13em!important;
   }
@@ -199,7 +199,7 @@
     height:31px!important;
     padding:0 9px!important;
     border-radius:8px!important;
-    font-size:7.6px!important;
+    font-size:8px!important;
     font-weight:900!important;
   }
 
@@ -332,7 +332,7 @@
     border-bottom:1px solid #e5e9ec!important;
     background:linear-gradient(180deg,#f8f9fa,#f2f4f5)!important;
     color:#697581!important;
-    font-size:7.2px!important;
+    font-size:8px!important;
     font-weight:950!important;
     letter-spacing:.075em!important;
     text-transform:uppercase!important;
@@ -383,13 +383,13 @@
     display:block!important;
     margin-top:2px!important;
     color:#78838f!important;
-    font-size:7.8px!important;
+    font-size:8px!important;
     font-weight:650!important;
   }
   #p-premium-access .premium-access-state{
     min-height:24px!important;
     padding:0 8px!important;
-    font-size:7.4px!important;
+    font-size:8px!important;
     font-weight:950!important;
   }
   #p-premium-access .premium-access-state.off{
@@ -430,7 +430,7 @@
     height:31px!important;
     padding:0 10px!important;
     border-radius:8px!important;
-    font-size:7.6px!important;
+    font-size:8px!important;
     font-weight:950!important;
   }
 
@@ -456,7 +456,7 @@
     display:block!important;
     margin-top:3px!important;
     color:#7a8490!important;
-    font-size:7.8px!important;
+    font-size:8px!important;
     font-weight:650!important;
   }
   #p-premium-access .premium-request-statuses{
@@ -476,7 +476,7 @@
     border-radius:9px!important;
     background:#fafbfc!important;
     color:#58636f!important;
-    font-size:7.8px!important;
+    font-size:8px!important;
     font-weight:950!important;
     cursor:pointer!important;
   }
@@ -489,7 +489,7 @@
     border-radius:999px!important;
     background:#eef0f2!important;
     color:#4e5863!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
   #p-premium-access .premium-request-statuses button.on{
     border-color:#d4a713!important;
@@ -542,7 +542,7 @@
   #p-premium-access .premium-request-card p{
     margin:0!important;
     color:#78838f!important;
-    font-size:7.8px!important;
+    font-size:8px!important;
     font-weight:650!important;
   }
   #p-premium-access .v14-prem-list{
@@ -578,7 +578,7 @@
   }
   #p-premium-access .premium-request-row .v14-request-main small{
     color:#798490!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
     font-weight:650!important;
   }
   #p-premium-access .premium-request-status{
@@ -613,7 +613,7 @@
     height:29px!important;
     padding:0 8px!important;
     border-radius:8px!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:950!important;
   }
   #p-premium-access .premium-reviewed{
@@ -847,7 +847,7 @@
     height:32px!important;
     padding:0 10px!important;
     border-radius:8px!important;
-    font-size:7.7px!important;
+    font-size:8px!important;
     font-weight:950!important;
   }
   #v1250BrokerListModal .app-modal-foot{
@@ -952,7 +952,7 @@
     display:block!important;
     margin-top:3px!important;
     color:#7b8591!important;
-    font-size:7.6px!important;
+    font-size:8px!important;
     font-weight:650!important;
   }
   #p-premium-access .premium-course-filters{

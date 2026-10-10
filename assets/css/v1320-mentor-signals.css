@@ -57,7 +57,7 @@
   border-radius:999px;
   background:rgba(240,185,11,.055);
   color:#e8b80f;
-  font-size:7.5px;
+  font-size:8px;
   font-weight:900;
   letter-spacing:.14em;
 }
@@ -132,7 +132,7 @@
 .mentor-signal-stats em{
   margin-top:4px;
   color:#737d8b;
-  font-size:7px;
+  font-size:8px;
   font-style:normal;
 }
 
@@ -194,7 +194,7 @@ html[data-theme="light"] .mentor-signal-stats em{color:#7a8492}
   border-radius:999px;
   background:var(--m-panel2);
   color:var(--m-muted);
-  font-size:7px;
+  font-size:8px;
 }
 .mentor-signal-segments button.active{
   background:rgba(240,185,11,.10);
@@ -207,7 +207,7 @@ html[data-theme="light"] .mentor-signal-stats em{color:#7a8492}
 .mentor-signal-tabs>small{
   padding-right:6px;
   color:var(--m-muted);
-  font-size:7.5px;
+  font-size:8px;
 }
 
 /* Filter rail */
@@ -253,7 +253,7 @@ html[data-theme="light"] [data-mentor-panel="signals"] .mentor-signal-toolbar>se
   border-bottom:1px solid #252b35;
   background:#151a21!important;
   color:#778291!important;
-  font-size:7.5px!important;
+  font-size:8px!important;
   letter-spacing:.08em!important;
 }
 [data-mentor-panel="signals"] .mentor-signal-table td{
@@ -274,7 +274,7 @@ html[data-theme="light"] [data-mentor-panel="signals"] .mentor-signal-toolbar>se
   min-height:22px!important;
   padding:0 7px!important;
   border-radius:7px!important;
-  font-size:7px!important;
+  font-size:8px!important;
   letter-spacing:.025em;
 }
 .mentor-type-badge.buy{
@@ -313,7 +313,7 @@ html[data-theme="light"] [data-mentor-panel="signals"] .mentor-signal-toolbar>se
   align-items:center;
   padding:0 7px;
   border-radius:999px;
-  font-size:7px;
+  font-size:8px;
   font-weight:900;
 }
 .mentor-pips-chip.good{color:#16a872;background:rgba(22,199,132,.07);border:1px solid rgba(22,199,132,.15)}
@@ -328,7 +328,7 @@ html[data-theme="light"] [data-mentor-panel="signals"] .mentor-signal-toolbar>se
   border-radius:8px!important;
   background:transparent!important;
   color:#8994a3!important;
-  font-size:7px!important;
+  font-size:8px!important;
 }
 [data-mentor-panel="signals"] .mentor-manage-buttons button{
   min-height:29px;height:29px;
@@ -337,7 +337,7 @@ html[data-theme="light"] [data-mentor-panel="signals"] .mentor-signal-toolbar>se
   border-color:#343b46!important;
   background:transparent!important;
   color:#9ca6b4!important;
-  font-size:7px!important;
+  font-size:8px!important;
 }
 [data-mentor-panel="signals"] .mentor-manage-buttons button:first-child{width:29px;padding:0!important}
 [data-mentor-panel="signals"] .mentor-manage-buttons button.gold{
@@ -378,7 +378,7 @@ html[data-theme="light"] [data-mentor-panel="signals"] .mentor-signal-row:hover{
 .mentor-signal-report-card>div{display:grid}
 .mentor-signal-report-card small{color:var(--m-muted);font-size:6.8px;font-weight:900;letter-spacing:.10em}
 .mentor-signal-report-card b{margin-top:3px;color:var(--m-text);font-size:20px;line-height:1}
-.mentor-signal-report-card em{margin-top:5px;color:var(--m-muted);font-size:7px;font-style:normal}
+.mentor-signal-report-card em{margin-top:5px;color:var(--m-muted);font-size:8px;font-style:normal}
 .mentor-signal-report-card.good b{color:#16a872}
 .mentor-signal-report-card.bad b{color:#e94d65}
 html[data-theme="light"] .mentor-signal-report-card{border-color:#e4e7eb;background:#fff;box-shadow:0 7px 20px rgba(18,24,32,.04)}
@@ -420,7 +420,7 @@ html[data-theme="light"] .mentor-signal-report-card{border-color:#e4e7eb;backgro
 .mentor-signal-form-intro>span{width:31px;height:31px;flex:0 0 auto;display:grid;place-items:center;border-radius:9px;background:rgba(240,185,11,.12);color:#e6af00}
 .mentor-signal-form-intro>div{display:grid}
 .mentor-signal-form-intro b{font-size:11px}
-.mentor-signal-form-intro small{margin-top:2px;color:var(--m-muted);font-size:7.5px;font-weight:500}
+.mentor-signal-form-intro small{margin-top:2px;color:var(--m-muted);font-size:8px;font-weight:500}
 #mentorSignalModal .mentor-form label{color:var(--m-muted)!important;font-size:8.5px!important;letter-spacing:.015em}
 #mentorSignalModal .mentor-form input,
 #mentorSignalModal .mentor-form select,
@@ -654,7 +654,7 @@ html[data-theme="light"] #mentorSignalDetailModal .mentor-running-pips{border-co
   .mentor-signal-row-chevron{
     justify-self:end;
     color:#7c8794;
-    font-size:7px;
+    font-size:8px;
     transition:transform .18s ease;
   }
   .mentor-signal-mobile-card.is-open .mentor-signal-row-chevron{
@@ -872,7 +872,7 @@ html[data-theme="light"] #mentorSignalDetailModal .mentor-running-pips{border-co
   [data-mentor-panel="signals"] .mentor-signal-row-entry b,
   [data-mentor-panel="signals"] .mentor-signal-row-sl b,
   [data-mentor-panel="signals"] .mentor-signal-row-pips b{
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
   [data-mentor-panel="signals"] .mentor-signal-row-type .mentor-type-badge,
   [data-mentor-panel="signals"] .mentor-signal-row-status .mentor-status-badge{
@@ -1019,7 +1019,7 @@ html[data-theme="light"] .mentor-signal-quick-more{
   }
   [data-mentor-panel="signals"] .mentor-signal-row-entry b,
   [data-mentor-panel="signals"] .mentor-signal-row-pips b{
-    font-size:7px!important;
+    font-size:8px!important;
   }
 
   /* Status + SL live inside dropdown, keeping collapsed row thin */
@@ -1353,7 +1353,7 @@ html[data-theme="light"] .mentor-signal-quick-more{
   border-radius:9px;
   background:rgba(240,185,11,.07);
   color:#d7a200;
-  font-size:7px;
+  font-size:8px;
   font-weight:950;
 }
 .mentor-manage-section-head>div>div{
@@ -1408,7 +1408,7 @@ html[data-theme="light"] .mentor-signal-quick-more{
 }
 .mentor-manage-level i{
   color:#8a95a3;
-  font-size:7px;
+  font-size:8px;
 }
 .mentor-manage-level small{
   color:#737e8b!important;
@@ -1729,7 +1729,7 @@ html[data-theme="light"] .mentor-running-pips.premium-result.bad .mentor-result-
     min-height:37px!important;
     padding:0 6px!important;
     border-radius:9px!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
 
   .mentor-manage-note-result{
@@ -1996,7 +1996,7 @@ html[data-theme="light"] .mentor-running-pips.premium-result.bad .mentor-result-
     width:22px!important;
     height:22px!important;
     border-radius:7px!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
   .mentor-note-head small,
   .mentor-result-head small{
@@ -2004,7 +2004,7 @@ html[data-theme="light"] .mentor-running-pips.premium-result.bad .mentor-result-
     color:#5f6975!important;
   }
   .mentor-note-head b{
-    font-size:7.4px!important;
+    font-size:8px!important;
     color:#22272e!important;
   }
   .mentor-signal-note.premium-note p,
@@ -2303,7 +2303,7 @@ html[data-theme="light"] .mentor-signal-quick-select.is-active select{
   background:rgba(240,185,11,.10);
   color:#a97b00;
   font:inherit;
-  font-size:7px;
+  font-size:8px;
   font-weight:900;
 }
 html[data-theme="light"] .mentor-signal-custom-date{
@@ -2401,12 +2401,12 @@ html[data-theme="light"] .mentor-signal-custom-date input{
   transition:.15s ease!important;
 }
 .mentor-signal-quick-filters>button{
-  font-size:7.5px!important;
+  font-size:8px!important;
   font-weight:850!important;
 }
 .mentor-signal-quick-select select{
   min-height:34px!important;
-  font-size:7.5px!important;
+  font-size:8px!important;
   font-weight:850!important;
 }
 .mentor-signal-quick-filters>button.active,
@@ -2458,7 +2458,7 @@ html[data-theme="dark"] .mentor-signal-quick-select.is-active{
   }
   .mentor-signal-quick-filters>button,
   .mentor-signal-quick-select select{
-    font-size:7px!important;
+    font-size:8px!important;
   }
   [data-mentor-panel="signals"] .mentor-signal-toolbar{
     margin-top:6px!important;

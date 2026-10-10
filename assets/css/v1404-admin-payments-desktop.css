@@ -29,7 +29,7 @@
   #p-payments .payment-date-filter>span{
     padding-left:2px!important;
     color:#7b8591!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:900!important;
     letter-spacing:.08em!important;
     text-transform:uppercase!important;
@@ -180,7 +180,7 @@
 
   #p-payments .payment-quick-card span,
   #p-payments .payment-date-card span{
-    font-size:7.5px!important;
+    font-size:8px!important;
     font-weight:900!important;
     letter-spacing:.035em!important;
     text-transform:uppercase!important;
@@ -387,7 +387,7 @@
     border-radius:999px!important;
     background:#fff9e9!important;
     color:#805e00!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:950!important;
     letter-spacing:.13em!important;
   }
@@ -443,7 +443,7 @@
     border-radius:999px!important;
     background:#eff9f3!important;
     color:#20774b!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:950!important;
     letter-spacing:.09em!important;
   }
@@ -458,7 +458,7 @@
 
   #p-payments .payment-command-status small{
     color:#7b8590!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:700!important;
   }
 
@@ -509,7 +509,7 @@
     border-color:#d8b858!important;
     background:#fff9ea!important;
     color:#755700!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
     font-weight:950!important;
     box-shadow:none!important;
   }
@@ -552,7 +552,7 @@
 
   #p-payments .payment-quick-card span,
   #p-payments .payment-date-card span{
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:950!important;
     letter-spacing:.07em!important;
   }
@@ -560,7 +560,7 @@
   #p-payments .payment-quick-card b{
     min-width:23px!important;
     height:23px!important;
-    font-size:7.7px!important;
+    font-size:8px!important;
     background:#f0f2f4!important;
     color:#47515c!important;
   }
@@ -650,7 +650,7 @@
     display:block!important;
     margin-top:2px!important;
     color:#7a8490!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:650!important;
   }
 
@@ -661,7 +661,7 @@
     justify-content:center!important;
     padding:0 9px!important;
     border-radius:999px!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:950!important;
     letter-spacing:.04em!important;
   }
@@ -678,7 +678,7 @@
     height:31px!important;
     padding:0 10px!important;
     border-radius:9px!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:950!important;
     box-shadow:none!important;
   }
@@ -768,7 +768,7 @@
 /* v14.13 — payment typography readability pass */
 @media (min-width:901px){
   #p-payments .payment-command-kicker{
-    font-size:7.8px!important;
+    font-size:8px!important;
   }
 
   #p-payments .payment-command h2{
@@ -781,15 +781,15 @@
   }
 
   #p-payments .payment-command>div:first-child>small{
-    font-size:7px!important;
+    font-size:8px!important;
   }
 
   #p-payments .payment-command-status>span{
-    font-size:7.8px!important;
+    font-size:8px!important;
   }
 
   #p-payments .payment-command-status small{
-    font-size:7.8px!important;
+    font-size:8px!important;
   }
 
   #p-payments .payment-review-filters>select,
@@ -799,7 +799,7 @@
   }
 
   #p-payments .payment-date-filter>span{
-    font-size:7.6px!important;
+    font-size:8px!important;
   }
 
   #p-payments .payment-filter-reset{
@@ -808,7 +808,7 @@
 
   #p-payments .payment-quick-card span,
   #p-payments .payment-date-card span{
-    font-size:7.8px!important;
+    font-size:8px!important;
   }
 
   #p-payments .payment-quick-card b{
@@ -816,7 +816,7 @@
   }
 
   #p-payments .payment-review-table thead th{
-    font-size:7.4px!important;
+    font-size:8px!important;
   }
 
   #p-payments .payment-review-table tbody td{
@@ -832,19 +832,19 @@
   }
 
   #p-payments .payment-review-table tbody td:nth-child(2) small{
-    font-size:7.6px!important;
+    font-size:8px!important;
   }
 
   #p-payments .payment-demo-badge{
-    font-size:7px!important;
+    font-size:8px!important;
   }
 
   #p-payments .payment-review-table .status-pill{
-    font-size:7.8px!important;
+    font-size:8px!important;
   }
 
   #p-payments .payment-review-table .table-actions .app-btn{
-    font-size:7.8px!important;
+    font-size:8px!important;
   }
 }
 

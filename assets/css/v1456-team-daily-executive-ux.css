@@ -47,7 +47,7 @@
     font-size:9px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-status>small{
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
 
   /* ===== Summary rail ===== */
@@ -86,7 +86,7 @@
     padding:0 2px 7px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-section-head small{
-    font-size:7.8px!important;
+    font-size:8px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="daily"] .team-tool-section-head b{
     font-size:14px!important;
@@ -230,7 +230,7 @@
     border-radius:999px!important;
     background:#f4f5f6!important;
     color:#7c8792!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
 
   /* Notes = compact dedicated block */
@@ -250,7 +250,7 @@
     border-radius:999px!important;
     background:#eef1f3!important;
     color:#7d8791!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-note textarea{
     min-height:70px!important;
@@ -367,7 +367,7 @@
     padding:0 10px!important;
     background:#f8f6f0!important;
     color:#6f6754!important;
-    font-size:7.8px!important;
+    font-size:8px!important;
     font-weight:950!important;
   }
   #teamApp:not(.hidden) [data-view-panel="daily"] .team-daily-history td{

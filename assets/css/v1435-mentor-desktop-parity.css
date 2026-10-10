@@ -99,11 +99,11 @@
   .mentor-article-kicker i{font-size:8px!important}
   .mentor-chart-kicker:after{
     content:"CHART COMMAND CENTER";
-    font-size:7.4px!important;
+    font-size:8px!important;
   }
   .mentor-article-kicker:after{
     content:"EDITORIAL DESK";
-    font-size:7.4px!important;
+    font-size:8px!important;
   }
 
   .mentor-chart-command-copy h2,
@@ -215,14 +215,14 @@
     font-weight:950!important;
     letter-spacing:.1em!important;
   }
-  .mentor-chart-stats article:nth-child(1) small:after{content:"TOTAL ANALYSIS";font-size:7px}
-  .mentor-chart-stats article:nth-child(2) small:after{content:"THIS WEEK";font-size:7px}
-  .mentor-chart-stats article:nth-child(3) small:after{content:"TODAY";font-size:7px}
-  .mentor-chart-stats article:nth-child(4) small:after{content:"TOP PAIR";font-size:7px}
-  .mentor-article-stats article:nth-child(1) small:after{content:"TOTAL ARTICLES";font-size:7px}
-  .mentor-article-stats article:nth-child(2) small:after{content:"PUBLISHED";font-size:7px}
-  .mentor-article-stats article:nth-child(3) small:after{content:"DRAFTS";font-size:7px}
-  .mentor-article-stats article:nth-child(4) small:after{content:"THIS WEEK";font-size:7px}
+  .mentor-chart-stats article:nth-child(1) small:after{content:"TOTAL ANALYSIS";font-size:8px}
+  .mentor-chart-stats article:nth-child(2) small:after{content:"THIS WEEK";font-size:8px}
+  .mentor-chart-stats article:nth-child(3) small:after{content:"TODAY";font-size:8px}
+  .mentor-chart-stats article:nth-child(4) small:after{content:"TOP PAIR";font-size:8px}
+  .mentor-article-stats article:nth-child(1) small:after{content:"TOTAL ARTICLES";font-size:8px}
+  .mentor-article-stats article:nth-child(2) small:after{content:"PUBLISHED";font-size:8px}
+  .mentor-article-stats article:nth-child(3) small:after{content:"DRAFTS";font-size:8px}
+  .mentor-article-stats article:nth-child(4) small:after{content:"THIS WEEK";font-size:8px}
   .mentor-chart-stats article b,
   .mentor-article-stats article b{
     margin-top:2px!important;
@@ -237,14 +237,14 @@
     font-size:0!important;
     font-style:normal!important;
   }
-  .mentor-chart-stats article:nth-child(1) em:after{content:"Research library";font-size:7.2px}
-  .mentor-chart-stats article:nth-child(2) em:after{content:"Last 7 days";font-size:7.2px}
-  .mentor-chart-stats article:nth-child(3) em:after{content:"Published today";font-size:7.2px}
-  .mentor-chart-stats article:nth-child(4) em:after{content:"Most covered";font-size:7.2px}
-  .mentor-article-stats article:nth-child(1) em:after{content:"Editorial library";font-size:7.2px}
-  .mentor-article-stats article:nth-child(2) em:after{content:"Visible to users";font-size:7.2px}
-  .mentor-article-stats article:nth-child(3) em:after{content:"Work in progress";font-size:7.2px}
-  .mentor-article-stats article:nth-child(4) em:after{content:"Last 7 days";font-size:7.2px}
+  .mentor-chart-stats article:nth-child(1) em:after{content:"Research library";font-size:8px}
+  .mentor-chart-stats article:nth-child(2) em:after{content:"Last 7 days";font-size:8px}
+  .mentor-chart-stats article:nth-child(3) em:after{content:"Published today";font-size:8px}
+  .mentor-chart-stats article:nth-child(4) em:after{content:"Most covered";font-size:8px}
+  .mentor-article-stats article:nth-child(1) em:after{content:"Editorial library";font-size:8px}
+  .mentor-article-stats article:nth-child(2) em:after{content:"Visible to users";font-size:8px}
+  .mentor-article-stats article:nth-child(3) em:after{content:"Work in progress";font-size:8px}
+  .mentor-article-stats article:nth-child(4) em:after{content:"Last 7 days";font-size:8px}
 
   /* Admin-equivalent filter rail: Search + selects only */
   .mentor-chart-controls,
@@ -526,7 +526,7 @@
     border-radius:999px!important;
     background:#fffaf0!important;
     color:#8d6800!important;
-    font-size:7.4px!important;
+    font-size:8px!important;
     font-weight:950!important;
     letter-spacing:.13em!important;
   }

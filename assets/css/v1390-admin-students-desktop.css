@@ -62,7 +62,7 @@
     border-radius:999px!important;
     background:#fffaf0!important;
     color:#8d6800!important;
-    font-size:7.3px!important;
+    font-size:8px!important;
     font-weight:950!important;
     letter-spacing:.13em!important;
   }
@@ -180,7 +180,7 @@
 
   #p-students .student-summary-card small{
     color:#77818d!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
     font-weight:800!important;
   }
 
@@ -381,7 +381,7 @@
     border:0!important;
     background:transparent!important;
     color:#7a8491!important;
-    font-size:7.3px!important;
+    font-size:8px!important;
     font-weight:900!important;
     letter-spacing:.075em!important;
     text-transform:uppercase!important;
@@ -449,7 +449,7 @@
     display:block!important;
     margin-top:3px!important;
     color:#858e99!important;
-    font-size:7.3px!important;
+    font-size:8px!important;
   }
 
   #p-students .student-management-table td:nth-child(2){
@@ -560,7 +560,7 @@
     border-radius:7px!important;
     background:#fffaf0!important;
     color:#9a7100!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:950!important;
   }
 
@@ -595,7 +595,7 @@
     justify-content:center!important;
     padding:0 8px!important;
     border-radius:999px!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:950!important;
     letter-spacing:.025em!important;
     box-shadow:none!important;
@@ -614,7 +614,7 @@
     height:31px!important;
     padding:0 9px!important;
     border-radius:8px!important;
-    font-size:7.8px!important;
+    font-size:8px!important;
     font-weight:850!important;
     box-shadow:none!important;
   }
@@ -731,7 +731,7 @@
     border-radius:7px!important;
     background:#fff6d9!important;
     color:#8f6800!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:950!important;
   }
 
@@ -768,7 +768,7 @@
 
   #userDetailsModal .student-history-empty i{color:#a67b00!important}
   #userDetailsModal .student-history-empty b{color:#252b33!important;font-size:10px!important}
-  #userDetailsModal .student-history-empty small{font-size:7px!important}
+  #userDetailsModal .student-history-empty small{font-size:8px!important}
 
 
   /* ===== Dark desktop parity ===== */

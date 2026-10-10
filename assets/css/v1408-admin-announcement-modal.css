@@ -40,7 +40,7 @@
     border-radius:999px!important;
     background:#fff7df!important;
     color:#8d6800!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:950!important;
     letter-spacing:.13em!important;
   }
@@ -118,7 +118,7 @@
   #announcementFormBox .premium-section-heading p{
     margin:0!important;
     color:#818b97!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
   #announcementFormBox .form-grid{
     gap:10px!important;
@@ -161,7 +161,7 @@
     gap:10px!important;
     margin-top:5px!important;
     color:#8b95a1!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
   #announcementFormBox .premium-field-foot span{
     font-weight:850!important;
@@ -293,7 +293,7 @@
     justify-content:space-between!important;
     padding:0 3px!important;
     color:#7e8793!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:950!important;
     letter-spacing:.11em!important;
   }
@@ -347,7 +347,7 @@
   }
   #announcementFormBox .premium-preview-brand small{
     color:#818b96!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
   #announcementFormBox .premium-preview-badges{
     display:flex!important;
@@ -419,11 +419,11 @@
     align-items:center!important;
     gap:7px!important;
     color:#7b8590!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
   #announcementFormBox .premium-preview-meta b{
     color:#4d5864!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
   #announcementFormBox .premium-preview-delivery{
     position:relative!important;
@@ -483,7 +483,7 @@
     align-items:center!important;
     gap:7px!important;
     color:#7b8591!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
   #announcementFormBox .premium-announcement-foot-note i{color:#b68800!important}
   #announcementFormBox .premium-announcement-foot-actions{
@@ -706,7 +706,7 @@
 
   #announcementFormBox .premium-toggle-row small{
     color:#687481!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:650!important;
     opacity:1!important;
   }
@@ -777,7 +777,7 @@
     border-color:#ddd8ca!important;
     background:#fffdf8!important;
     color:#68737f!important;
-    font-size:7.2px!important;
+    font-size:8px!important;
     font-weight:650!important;
     opacity:1!important;
   }

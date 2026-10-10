@@ -18,7 +18,7 @@
   #teamApp:not(.hidden) [data-view-panel="links"] .team-tool-kicker{
     min-height:25px!important;display:inline-flex!important;align-items:center!important;gap:7px!important;padding:0 10px!important;
     border:1px solid #e7d69d!important;border-radius:999px!important;background:#fff9e9!important;color:#8f6900!important;
-    font-size:7.2px!important;font-weight:950!important;letter-spacing:.12em!important
+    font-size:8px!important;font-weight:950!important;letter-spacing:.12em!important
   }
   #teamApp:not(.hidden) [data-view-panel="links"] .team-tool-command h2{
     margin:11px 0 5px!important;color:#1d2229!important;font-size:28px!important;line-height:1!important;font-weight:950!important;letter-spacing:-.04em!important
@@ -64,7 +64,7 @@
   #teamApp:not(.hidden) [data-view-panel="links"] .team-tool-section-head>div{display:grid!important;gap:1px!important}
   #teamApp:not(.hidden) [data-view-panel="links"] .team-tool-section-head small{color:#a0780b!important;font-size:6.2px!important;font-weight:950!important;letter-spacing:.11em!important}
   #teamApp:not(.hidden) [data-view-panel="links"] .team-tool-section-head b{color:#252b32!important;font-size:13px!important;font-weight:950!important}
-  #teamApp:not(.hidden) [data-view-panel="links"] .team-tool-section-head>span{color:#858f9a!important;font-size:7px!important}
+  #teamApp:not(.hidden) [data-view-panel="links"] .team-tool-section-head>span{color:#858f9a!important;font-size:8px!important}
 
   #teamApp:not(.hidden) .team-links-grid{
     display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:11px!important;margin-top:10px!important

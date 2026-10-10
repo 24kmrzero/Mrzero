@@ -67,7 +67,7 @@
     border-radius:999px!important;
     background:rgba(255,250,239,.9)!important;
     color:#8c6700!important;
-    font-size:7.3px!important;
+    font-size:8px!important;
     font-weight:950!important;
     letter-spacing:.13em!important;
     box-shadow:0 4px 12px rgba(177,128,0,.045)!important;
@@ -217,7 +217,7 @@
     border:1px solid rgba(22,168,114,.20)!important;
     background:#f5fbf8!important;
     color:#16845f!important;
-    font-size:7px!important;
+    font-size:8px!important;
     box-shadow:0 5px 14px rgba(22,168,114,.05)!important;
   }
 
@@ -280,7 +280,7 @@
     border-radius:10px!important;
     background:#fafbfc!important;
     color:#697480!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:900!important;
     box-shadow:0 4px 12px rgba(18,24,32,.018)!important;
   }
@@ -330,7 +330,7 @@
 
   [data-mentor-panel="settings"] .mentor-more-section-head small{
     color:#8a929b!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
 
   [data-mentor-panel="settings"] .mentor-more-actions{
@@ -413,7 +413,7 @@
   [data-mentor-panel="settings"] .mentor-more-logout small{
     margin-top:2px!important;
     color:#75808c!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
 
   [data-mentor-panel="settings"] .mentor-profile-install>i,

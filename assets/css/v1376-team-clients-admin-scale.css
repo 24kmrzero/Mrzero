@@ -11,13 +11,13 @@
     line-height:1.45!important;
   }
   #teamApp:not(.hidden) [data-view-panel="clients"] .team-clients-kicker{
-    font-size:7.8px!important;
+    font-size:8px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="clients"] .team-clients-live>b{
     font-size:15px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="clients"] .team-clients-live>small{
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
 
   #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-summary-card{
@@ -65,14 +65,14 @@
   }
 
   #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-results-head small{
-    font-size:7.8px!important;
+    font-size:8px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-results-head b{
     font-size:15px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="clients"] .team-client-results-head>span{
     min-height:22px!important;
-    font-size:7.8px!important;
+    font-size:8px!important;
   }
 
   /* =========================

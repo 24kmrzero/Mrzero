@@ -49,7 +49,7 @@
   border-radius:999px;
   background:rgba(240,185,11,.055);
   color:#e2ad00;
-  font-size:7.5px;
+  font-size:8px;
   font-weight:900;
   letter-spacing:.14em;
 }
@@ -129,7 +129,7 @@
 .mentor-chart-stats em{
   margin-top:4px;
   color:#737d8b;
-  font-size:7px;
+  font-size:8px;
   font-style:normal;
 }
 
@@ -348,7 +348,7 @@ html[data-theme="light"] .mentor-chart-select.is-active:after{color:#8e6700}
   color:#d7a100;
 }
 .mentor-chart-placeholder i{font-size:22px}
-.mentor-chart-placeholder span{font-size:7px;font-weight:900;letter-spacing:.15em}
+.mentor-chart-placeholder span{font-size:8px;font-weight:900;letter-spacing:.15em}
 .mentor-chart-media-top{
   position:absolute;
   z-index:2;
@@ -367,7 +367,7 @@ html[data-theme="light"] .mentor-chart-select.is-active:after{color:#8e6700}
   background:rgba(11,15,20,.78);
   backdrop-filter:blur(7px);
   color:#fff;
-  font-size:7px;
+  font-size:8px;
   font-weight:900;
 }
 .mentor-chart-media-top .pair{
@@ -565,7 +565,7 @@ html[data-theme="dark"] .mentor-chart-card.cream{
 }
 .mentor-chart-form-intro>div{display:grid}
 .mentor-chart-form-intro b{font-size:11px}
-.mentor-chart-form-intro small{margin-top:2px;color:var(--m-muted);font-size:7.5px}
+.mentor-chart-form-intro small{margin-top:2px;color:var(--m-muted);font-size:8px}
 #mentorChartModal .mentor-form label{
   color:var(--m-muted)!important;
   font-size:8.5px!important;
@@ -583,7 +583,7 @@ html[data-theme="dark"] .mentor-chart-card.cream{
 #mentorChartModal .mentor-chart-upload>small{
   margin-top:2px;
   color:var(--m-muted);
-  font-size:7px;
+  font-size:8px;
 }
 html[data-theme="light"] #mentorChartModal .mentor-modal-card{border-color:#e1e4e8!important}
 html[data-theme="light"] #mentorChartModal .mentor-form input,
@@ -647,7 +647,7 @@ html[data-theme="light"] #mentorChartModal .mentor-form textarea{
     width:23px;
     height:23px;
     border-radius:7px;
-    font-size:7.5px;
+    font-size:8px;
   }
   .mentor-chart-stats small{font-size:5.3px}
   .mentor-chart-stats b{font-size:13px}

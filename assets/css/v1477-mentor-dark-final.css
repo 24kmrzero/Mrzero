@@ -198,7 +198,7 @@
     height:31px!important;
     padding:0 9px!important;
     border-radius:8px!important;
-    font-size:7.8px!important;
+    font-size:8px!important;
     font-weight:900!important;
   }
   html[data-theme="dark"] [data-mentor-panel="courses"] .mentor-course-admin-actions{
@@ -299,7 +299,7 @@
     border-radius:8px!important;
     background:linear-gradient(145deg,#f2c735,#d7a006)!important;
     color:#211900!important;
-    font-size:7px!important;
+    font-size:8px!important;
     font-weight:950!important;
   }
   #mentorCourseModal .mentor-course-editor-section-head>div{
@@ -328,7 +328,7 @@
     border-radius:8px!important;
     background:#f2c735!important;
     color:#211900!important;
-    font-size:7.2px!important;
+    font-size:8px!important;
     font-weight:900!important;
   }
   #mentorCourseModal .mentor-course-editor-grid{
@@ -349,7 +349,7 @@
   }
   #mentorCourseModal :is(.mentor-course-editor-grid,.mentor-course-session-grid) label>span{
     color:#59636e!important;
-    font-size:7.2px!important;
+    font-size:8px!important;
     font-weight:900!important;
   }
   #mentorCourseModal :is(input,select,textarea){
@@ -465,7 +465,7 @@
     border-radius:10px!important;
     background:#fffaf0!important;
     color:#6b6043!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
   #mentorCourseModal .mentor-course-editor-note i{
     color:#a77b04!important;

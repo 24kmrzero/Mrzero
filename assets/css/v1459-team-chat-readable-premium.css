@@ -42,7 +42,7 @@
     font-size:9px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-online>small{
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
 
   #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-kpi-rail{
@@ -71,7 +71,7 @@
     font-size:16px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="chat"] .premium-chat-kpi em{
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
 
   /* ===== Inbox section heading ===== */
@@ -81,7 +81,7 @@
     padding:0 2px 6px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-section-head small{
-    font-size:7.8px!important;
+    font-size:8px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-section-head b{
     font-size:14px!important;
@@ -170,7 +170,7 @@
     padding:0 3px!important;
     border-radius:999px!important;
     background:#f0f2f4!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-filter-row button.active em{
     background:#fff!important;
@@ -202,14 +202,14 @@
   #teamApp:not(.hidden) [data-view-panel="chat"] .closed-dot{
     min-height:18px!important;
     padding:0 5px!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="chat"] .chat-thread-copy p{
     font-size:8px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="chat"] .chat-thread-meta,
   #teamApp:not(.hidden) [data-view-panel="chat"] .chat-thread-side small{
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
 
   /* ===== Conversation workspace ===== */
@@ -259,7 +259,7 @@
     line-height:1.45!important;
   }
   #teamApp:not(.hidden) [data-view-panel="chat"] .premium-desk-msg small{
-    font-size:7.2px!important;
+    font-size:8px!important;
   }
 
   /* Better empty state instead of giant blank canvas */
@@ -387,7 +387,7 @@
   #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-profile-status{
     min-height:21px!important;
     padding:0 6px!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="chat"] .profile-section{
     padding:10px 0!important;
@@ -461,12 +461,12 @@
       grid-template-columns:270px minmax(0,1fr) 245px!important;
     }
     #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-filter-row button{
-      font-size:7.5px!important;
+      font-size:8px!important;
       padding:0 4px!important;
     }
     #teamApp:not(.hidden) [data-view-panel="chat"] .team-chat-quick-tools button{
       padding:0 6px!important;
-      font-size:7.5px!important;
+      font-size:8px!important;
     }
   }
 }

@@ -40,7 +40,7 @@
     border-radius:999px;
     background:rgba(14,203,129,.09);
     color:#0AA66B;
-    font-size:7px;
+    font-size:8px;
     font-weight:900;
     letter-spacing:.08em;
   }
@@ -148,7 +148,7 @@
     font-size:12px!important;
   }
   .student-page .msa-pair em{
-    font-size:7px!important;
+    font-size:8px!important;
   }
   .student-page .msa-direction .table-direction{
     min-width:50px!important;
@@ -158,7 +158,7 @@
     font-size:8.5px!important;
   }
   .student-page .msa-chevron{
-    width:15px!important;height:15px!important;font-size:7px!important;
+    width:15px!important;height:15px!important;font-size:8px!important;
   }
 
   /* Open state: organized trading ticket */
@@ -172,7 +172,7 @@
   .student-page .msa-detail-head{
     min-height:38px!important;
   }
-  .student-page .msa-date{font-size:7.5px!important}
+  .student-page .msa-date{font-size:8px!important}
   .student-page .msa-level-grid{
     grid-template-columns:repeat(3,minmax(0,1fr))!important;
     gap:5px!important;
@@ -200,7 +200,7 @@
   .student-page #p-signals .signal-table-footer{
     padding:7px 2px 0!important;
     margin:0!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
 
   /* Slimmer nav specifically on signal workspace */

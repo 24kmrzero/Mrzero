@@ -128,7 +128,7 @@
 #p-profile .profile-hero-access small{
   display:block;
   color:#A97800;
-  font-size:7px;
+  font-size:8px;
   font-weight:950;
   letter-spacing:.08em;
 }
@@ -269,7 +269,7 @@
   border-radius:999px;
   background:rgba(14,203,129,.08);
   color:#078A58!important;
-  font-size:7.5px!important;
+  font-size:8px!important;
   font-weight:900;
 }
 #p-profile .compact-access-state.locked{background:rgba(246,70,93,.07);color:#C94C5D!important}
@@ -387,11 +387,11 @@ html[data-theme="dark"] #p-profile .personal-info-card{
     right:-4px!important;bottom:0!important;
     width:22px!important;height:22px!important;
     border-width:2px!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
   #p-profile .profile-hero-copy>small{font-size:5.5px!important;margin-bottom:2px!important}
   #p-profile .profile-hero-copy h2{font-size:19px!important}
-  #p-profile .profile-hero-copy>p{margin-top:3px!important;font-size:7.5px!important}
+  #p-profile .profile-hero-copy>p{margin-top:3px!important;font-size:8px!important}
   #p-profile .profile-hero-meta{gap:4px!important;margin-top:7px!important}
   #p-profile .profile-hero-meta>span{
     min-height:26px!important;
@@ -412,7 +412,7 @@ html[data-theme="dark"] #p-profile .personal-info-card{
   #p-profile .profile-hero-access small{font-size:4.8px!important}
   #p-profile .profile-hero-access b{font-size:9px!important}
   #p-profile .profile-hero-access p{font-size:5.9px!important;margin-top:2px!important}
-  #p-profile .profile-access-arrow{width:22px!important;height:22px!important;border-radius:7px!important;font-size:7px!important}
+  #p-profile .profile-access-arrow{width:22px!important;height:22px!important;border-radius:7px!important;font-size:8px!important}
   #p-profile .profile-hero-access-meta{
     grid-column:auto!important;
     grid-template-columns:repeat(3,minmax(0,1fr))!important;
@@ -862,7 +862,7 @@ html[data-theme="dark"] #p-profile .profile-saved-badge{
     display:inline-flex!important;
     align-items:center!important;
     margin:0 0 0 auto!important;
-    font-size:7px!important;
+    font-size:8px!important;
     line-height:1!important;
     white-space:nowrap!important;
   }

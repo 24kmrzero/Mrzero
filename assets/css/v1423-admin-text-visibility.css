@@ -82,7 +82,7 @@
   html[data-auth-scope="admin"][data-theme="light"] #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(1):after,
   html[data-auth-scope="admin"][data-theme="light"] #p-team-access-ref>.table-scroll>.admin-table tbody td:nth-child(n+2):nth-child(-n+7):before{
     color:#66717d!important;
-    font-size:7.8px!important;
+    font-size:8px!important;
     font-weight:950!important;
     opacity:1!important;
   }
@@ -164,7 +164,7 @@
   }
   html[data-auth-scope="admin"][data-theme="light"] #p-v1216-center .v1216-mentor-access>small{
     color:#68737f!important;
-    font-size:7.8px!important;
+    font-size:8px!important;
     opacity:1!important;
   }
 

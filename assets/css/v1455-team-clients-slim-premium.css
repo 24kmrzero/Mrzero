@@ -72,7 +72,7 @@
     border-radius:9px!important;
     background:rgba(255,255,255,.62)!important;
     color:#7b8590!important;
-    font-size:7.3px!important;
+    font-size:8px!important;
     font-weight:900!important;
     letter-spacing:.055em!important;
     text-transform:uppercase!important;
@@ -208,7 +208,7 @@
   #teamApp:not(.hidden) [data-view-panel="clients"] .client-vip-badge{
     min-height:21px!important;
     padding:0 6px!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="clients"] .client-wa-icon{
     width:28px!important;
@@ -278,7 +278,7 @@
     border-right:0!important;
   }
   #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-info-grid span{
-    font-size:7.2px!important;
+    font-size:8px!important;
     font-weight:900!important;
     letter-spacing:.05em!important;
     color:#87919c!important;
@@ -316,7 +316,7 @@
     gap:4px!important;
   }
   #teamApp:not(.hidden) [data-view-panel="clients"] .premium-client-controls label>span{
-    font-size:7.2px!important;
+    font-size:8px!important;
     font-weight:850!important;
     color:#737e89!important;
   }

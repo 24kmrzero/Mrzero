@@ -86,7 +86,7 @@
 }
 .premium-editor-intro small{
   color:#778290;
-  font-size:7.2px;
+  font-size:8px;
   line-height:1.4;
 }
 .premium-required-note{
@@ -157,7 +157,7 @@
   display:grid;
   gap:5px;
   color:#85909d!important;
-  font-size:7.6px!important;
+  font-size:8px!important;
   font-weight:800!important;
 }
 .premium-editor-modal .mentor-form label strong{
@@ -627,7 +627,7 @@ html[data-theme="light"] .premium-secondary{
     font-size:5.5px;
   }
   .premium-editor-section-head small{font-size:4.8px}
-  .premium-editor-section-head b{font-size:7.8px}
+  .premium-editor-section-head b{font-size:8px}
 
   .premium-editor-grid{
     gap:6px;
@@ -667,7 +667,7 @@ html[data-theme="light"] .premium-secondary{
     border-radius:8px;
     font-size:9px;
   }
-  .premium-upload-copy b{font-size:7.4px}
+  .premium-upload-copy b{font-size:8px}
   .premium-upload-copy small{font-size:5.5px!important}
   .premium-upload-action{
     min-height:24px;
@@ -684,7 +684,7 @@ html[data-theme="light"] .premium-secondary{
     padding:7px 8px!important;
     border-radius:8px;
   }
-  .premium-language-switch b{font-size:7.7px}
+  .premium-language-switch b{font-size:8px}
   .premium-language-switch small{font-size:5.5px!important}
   .premium-language-switch label>span:before{
     right:8px;
@@ -715,7 +715,7 @@ html[data-theme="light"] .premium-secondary{
   .premium-publish-toggle input:checked+.toggle-ui:after{
     left:17px;
   }
-  .premium-publish-toggle b{font-size:7.5px}
+  .premium-publish-toggle b{font-size:8px}
   .premium-publish-toggle small{font-size:5.4px!important}
   .premium-publish-state{
     min-height:23px;
@@ -732,7 +732,7 @@ html[data-theme="light"] .premium-secondary{
   .premium-editor-foot .mentor-btn{
     min-height:40px!important;
     border-radius:10px!important;
-    font-size:7.5px!important;
+    font-size:8px!important;
   }
 }
 
@@ -869,7 +869,7 @@ html[data-theme="light"] .premium-language-label b{color:#22272e}
     border-radius:7px;
     font-size:8px;
   }
-  .premium-language-label b{font-size:7.5px}
+  .premium-language-label b{font-size:8px}
   .premium-language-label small{font-size:5.2px!important}
   .premium-language-editor textarea{
     min-height:135px!important;
@@ -982,7 +982,7 @@ html[data-theme="light"] .premium-language-editor textarea{
     border-radius:7px;
     font-size:8px;
   }
-  .premium-language-label b{font-size:7.5px}
+  .premium-language-label b{font-size:8px}
   .premium-language-label small{font-size:5.2px!important}
   .premium-language-editor textarea{
     min-height:135px!important;

@@ -182,7 +182,7 @@
   letter-spacing:-.02em!important;
 }
 [data-mentor-panel="performance"] .mrzero-panel-head>small{
-  font-size:7.5px!important;
+  font-size:8px!important;
   letter-spacing:.12em!important;
 }
 
@@ -219,7 +219,7 @@
   font-size:30px!important;
 }
 [data-mentor-panel="performance"] .mrzero-score-ring small{
-  font-size:7.5px!important;
+  font-size:8px!important;
   letter-spacing:.07em!important;
 }
 [data-mentor-panel="performance"] .mrzero-win-stats{
@@ -245,7 +245,7 @@
   gap:10px!important;
 }
 [data-mentor-panel="performance"] .mrzero-quality-title small{
-  font-size:7.5px!important;
+  font-size:8px!important;
   letter-spacing:.12em!important;
 }
 [data-mentor-panel="performance"] .mrzero-quality-title h3{
@@ -257,7 +257,7 @@
   padding:6px 12px!important;
 }
 [data-mentor-panel="performance"] .mrzero-quality-stats small{
-  font-size:7.5px!important;
+  font-size:8px!important;
   letter-spacing:.08em!important;
 }
 [data-mentor-panel="performance"] .mrzero-quality-stats b{
@@ -277,7 +277,7 @@
   font-size:10px!important;
 }
 [data-mentor-panel="performance"] .mrzero-market-row small{
-  font-size:7.5px!important;
+  font-size:8px!important;
 }
 [data-mentor-panel="performance"] .mrzero-market-track{
   height:7px!important;
@@ -303,12 +303,12 @@
   font-size:10.5px!important;
 }
 [data-mentor-panel="performance"] .mrzero-activity-copy small{
-  font-size:7.5px!important;
+  font-size:8px!important;
 }
 [data-mentor-panel="performance"] .mrzero-pips-badge,
 [data-mentor-panel="performance"] .mrzero-activity-status{
   min-height:20px!important;
-  font-size:7px!important;
+  font-size:8px!important;
   border-radius:999px!important;
 }
 
@@ -389,7 +389,7 @@ html[data-theme="dark"] [data-mentor-panel="performance"] .mrzero-performance-li
   }
   [data-mentor-panel="performance"] .mrzero-performance-kicker{
     padding:5px 8px!important;
-    font-size:7.3px!important;
+    font-size:8px!important;
   }
   [data-mentor-panel="performance"] .mrzero-performance-copy h2{
     margin:11px 0 6px!important;
@@ -561,7 +561,7 @@ html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-performance{
   max-width:100%!important;
   padding:5px 8px!important;
   border-radius:8px!important;
-  font-size:7.8px!important;
+  font-size:8px!important;
   letter-spacing:.13em!important;
 }
 [data-mentor-panel="performance"] .mrzero-performance-copy h2{
@@ -656,7 +656,7 @@ html[data-theme="dark"] [data-mentor-panel="performance"] .mrzero-performance-li
   bottom:-32px!important;
 }
 [data-mentor-panel="performance"] .mrzero-metric-head span{
-  font-size:7.2px!important;
+  font-size:8px!important;
 }
 [data-mentor-panel="performance"] .mrzero-metric-head i{
   width:24px!important;
@@ -672,7 +672,7 @@ html[data-theme="dark"] [data-mentor-panel="performance"] .mrzero-performance-li
 }
 [data-mentor-panel="performance"] .mrzero-metric small{
   margin-top:5px!important;
-  font-size:7.5px!important;
+  font-size:8px!important;
 }
 html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-metric{
   border-color:#e4e7eb!important;
@@ -712,13 +712,13 @@ html[data-theme="dark"] [data-mentor-panel="performance"] .mrzero-quality-panel{
 [data-mentor-panel="performance"] .mrzero-panel-index{
   width:25px!important;
   height:25px!important;
-  font-size:7px!important;
+  font-size:8px!important;
 }
 [data-mentor-panel="performance"] .mrzero-panel-head h3{
   font-size:12.5px!important;
 }
 [data-mentor-panel="performance"] .mrzero-panel-head>small{
-  font-size:7px!important;
+  font-size:8px!important;
 }
 
 /* chart feels like a real terminal panel */
@@ -760,7 +760,7 @@ html[data-theme="dark"] [data-mentor-panel="performance"] .mrzero-quality-panel{
   border-radius:8px!important;
 }
 [data-mentor-panel="performance"] .mrzero-win-stat span{
-  font-size:7.5px!important;
+  font-size:8px!important;
 }
 [data-mentor-panel="performance"] .mrzero-win-stat b{
   font-size:13px!important;
@@ -784,7 +784,7 @@ html[data-theme="dark"] [data-mentor-panel="performance"] .mrzero-quality-panel{
   padding:5px 11px!important;
 }
 [data-mentor-panel="performance"] .mrzero-quality-stats small{
-  font-size:7px!important;
+  font-size:8px!important;
 }
 [data-mentor-panel="performance"] .mrzero-quality-stats b{
   font-size:14px!important;
@@ -806,7 +806,7 @@ html[data-theme="dark"] [data-mentor-panel="performance"] .mrzero-quality-panel{
   font-size:9.5px!important;
 }
 [data-mentor-panel="performance"] .mrzero-market-row small{
-  font-size:7px!important;
+  font-size:8px!important;
 }
 [data-mentor-panel="performance"] .mrzero-activity-item{
   padding:8px 0!important;
@@ -906,7 +906,7 @@ html[data-theme="light"] .mentor-top .mentor-btn.small{
   [data-mentor-panel="performance"] .mrzero-performance-live>small:not(.mrzero-last-updated){
     grid-area:sub!important;
     margin:0!important;
-    font-size:7.3px!important;
+    font-size:8px!important;
   }
   [data-mentor-panel="performance"] .mrzero-last-updated{
     grid-area:update!important;
@@ -914,7 +914,7 @@ html[data-theme="light"] .mentor-top .mentor-btn.small{
     padding:0!important;
     border:0!important;
     text-align:right!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
 
   /* Horizontal metric ticker: major visual departure from old 2x2 blocks */
@@ -948,7 +948,7 @@ html[data-theme="light"] .mentor-top .mentor-btn.small{
     font-size:23px!important;
   }
   [data-mentor-panel="performance"] .mrzero-metric small{
-    font-size:7px!important;
+    font-size:8px!important;
   }
 
   [data-mentor-panel="performance"] .mrzero-command-grid,
@@ -1544,7 +1544,7 @@ body.mentor-refreshing [data-mentor-panel="performance"] .mrzero-metric b{
 }
 [data-mentor-panel="performance"] .mrzero-period-copy span{
   color:var(--m-muted);
-  font-size:7px;
+  font-size:8px;
   font-weight:900;
   letter-spacing:.14em;
 }
@@ -1640,7 +1640,7 @@ html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-period-select
   margin:0!important;
   padding:0!important;
   border:0!important;
-  font-size:7.4px!important;
+  font-size:8px!important;
   color:var(--m-muted)!important;
 }
 [data-mentor-panel="performance"] .mrzero-performance-live-foot small.good{color:#0fa66b!important}
@@ -1769,7 +1769,7 @@ html[data-theme="light"] [data-mentor-panel="performance"] .mrzero-market-rank{
   }
   [data-mentor-panel="performance"] .mrzero-performance-live>small{
     margin-top:4px!important;
-    font-size:7px!important;
+    font-size:8px!important;
   }
   [data-mentor-panel="performance"] .mrzero-performance-live-foot{
     margin-top:7px;

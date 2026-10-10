@@ -150,7 +150,7 @@
     background:#fff!important;
   }
 
-  #teamApp:not(.hidden) .team-client-search>i{color:#9ba3ac!important;font-size:7px!important}
+  #teamApp:not(.hidden) .team-client-search>i{color:#9ba3ac!important;font-size:8px!important}
   #teamApp:not(.hidden) .team-client-search input{
     width:100%!important;min-width:0!important;height:36px!important;padding:0!important;border:0!important;outline:0!important;
     background:transparent!important;color:#252b33!important;font-size:8.6px!important;font-weight:650!important;box-shadow:none!important
@@ -165,7 +165,7 @@
   #teamApp:not(.hidden) .team-client-filter-trigger{
     -webkit-appearance:none!important;appearance:none!important;position:relative!important;min-width:76px!important;height:40px!important;display:flex!important;
     align-items:center!important;justify-content:center!important;gap:5px!important;padding:0 10px!important;border:1px solid #e2d8bb!important;
-    border-radius:11px!important;background:#fff9e8!important;color:#9e7200!important;font:inherit!important;font-size:7px!important;font-weight:900!important
+    border-radius:11px!important;background:#fff9e8!important;color:#9e7200!important;font:inherit!important;font-size:8px!important;font-weight:900!important
   }
   #teamApp:not(.hidden) .team-client-filter-trigger em{
     min-width:14px!important;height:14px!important;display:grid!important;place-items:center!important;padding:0 3px!important;border-radius:999px!important;
@@ -211,7 +211,7 @@
   }
   #teamApp:not(.hidden) .team-client-filter-panel select{
     width:100%!important;min-width:0!important;height:35px!important;padding:0 28px 0 8px!important;border:1px solid #e1e4e8!important;
-    border-radius:9px!important;background:#fff!important;color:#343b44!important;font-size:7.2px!important;font-weight:700!important;outline:0!important
+    border-radius:9px!important;background:#fff!important;color:#343b44!important;font-size:8px!important;font-weight:700!important;outline:0!important
   }
   #teamApp:not(.hidden) #clientResetFilters{
     -webkit-appearance:none!important;appearance:none!important;align-self:end!important;height:35px!important;padding:0 9px!important;border:1px solid #eadfbf!important;
@@ -332,7 +332,7 @@
   #teamApp:not(.hidden) .premium-client-controls select,
   #teamApp:not(.hidden) .premium-client-controls input{
     width:100%!important;min-width:0!important;height:35px!important;padding:0 8px!important;border:1px solid #e1e4e8!important;border-radius:9px!important;
-    background:#fff!important;color:#343b44!important;font-size:7px!important;font-weight:700!important;outline:0!important;box-shadow:none!important
+    background:#fff!important;color:#343b44!important;font-size:8px!important;font-weight:700!important;outline:0!important;box-shadow:none!important
   }
 
   #teamApp:not(.hidden) .premium-client-footer{
