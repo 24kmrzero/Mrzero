@@ -9,6 +9,7 @@
 
   const params = new URLSearchParams(window.location.search);
   if (params.get('reason') === 'admin-required') A.toast('Please sign in with an authorized Admin account.', 'info');
+  if (params.get('reason') === 'api-auth-unavailable') A.toast('Database API authentication is temporarily unavailable (PGRST303). Login credentials are valid; please try again shortly.', 'error', 10000);
 
   // Attach the submit handler BEFORE restoring an old session. A broken or
   // expired refresh token must never block a fresh password login.
@@ -32,8 +33,10 @@
       try {
         profile = await A.getProfile(data.user.id);
       } catch (firstError) {
-        // Only retry a fresh login verification when the token/server was
-        // temporarily out of sync. Never bypass the real Admin role check.
+        // A PGRST303 means PostgREST rejected the JWT claims even though Auth
+        // accepted it. The core profile method already retried this token.
+        // Refreshing JWT immediately would restart the issued-at race.
+        if (String(firstError?.code || '').toUpperCase() === 'PGRST303') throw firstError;
         console.warn('[24K Admin] First profile check failed, verifying session.', firstError?.message || firstError);
         const verified = await A.supabase.auth.getUser();
         if (verified.error || verified.data?.user?.id !== data.user.id) {
