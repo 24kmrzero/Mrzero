@@ -10,24 +10,13 @@
   const params = new URLSearchParams(window.location.search);
   if (params.get('reason') === 'admin-required') A.toast('Please sign in with an authorized Admin account.', 'info');
 
-  const { data: sessionData } = await A.supabase.auth.getSession();
-  if (sessionData.session?.user) {
-    try {
-      const profile = await A.getProfile(sessionData.session.user.id);
-      if (['admin','super_admin'].includes(profile.role)) {
-        window.location.replace('/admin/');
-        return;
-      }
-      await A.supabase.auth.signOut();
-      A.toast('This account does not have Admin access.', 'error');
-    } catch (error) {
-      console.error(error);
-      await A.supabase.auth.signOut().catch(() => {});
-    }
-  }
-
+  // Attach the submit handler BEFORE restoring an old session. A broken or
+  // expired refresh token must never block a fresh password login.
+  let loginInProgress = false;
   document.getElementById('adminLoginForm')?.addEventListener('submit', async event => {
     event.preventDefault();
+    if (loginInProgress) return;
+    loginInProgress = true;
     const form = event.currentTarget;
     const button = form.querySelector('button[type="submit"]');
     const values = new FormData(form);
@@ -37,20 +26,64 @@
     try {
       const { data, error } = await A.supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
-      const profile = await A.getProfile(data.user.id);
-      if (!['admin','super_admin'].includes(profile.role)) {
-        await A.supabase.auth.signOut();
+      if (!data?.user || !data?.session?.access_token) throw new Error('Sign in did not return an active session. Please retry.');
+
+      let profile;
+      try {
+        profile = await A.getProfile(data.user.id);
+      } catch (firstError) {
+        // Only retry a fresh login verification when the token/server was
+        // temporarily out of sync. Never bypass the real Admin role check.
+        console.warn('[24K Admin] First profile check failed, verifying session.', firstError?.message || firstError);
+        const verified = await A.supabase.auth.getUser();
+        if (verified.error || verified.data?.user?.id !== data.user.id) {
+          const refreshed = await A.supabase.auth.refreshSession();
+          if (refreshed.error || !refreshed.data?.session?.user ||
+              refreshed.data.session.user.id !== data.user.id) {
+            throw verified.error || refreshed.error || firstError;
+          }
+        }
+        profile = await A.getProfile(data.user.id);
+      }
+      if (!['admin','super_admin'].includes(profile?.role) || (profile?.status && profile.status !== 'active')) {
+        await A.supabase.auth.signOut({scope:'local'});
         throw new Error('This account is not authorized for Admin access.');
       }
-      await audit('admin_login','success',{email},data.session?.access_token||'');
+
+      // Logging is best-effort, and must not hold up the Admin redirect.
+      void audit('admin_login','success',{email},data.session.access_token);
       A.toast('Admin login successful.', 'success');
       window.location.replace('/admin/');
     } catch (error) {
-      await audit('login_failed','failed',{email,scope:'admin'});
+      void audit('login_failed','failed',{email,scope:'admin'});
       A.toast(A.friendlyError(error, 'Admin login failed.'), 'error');
       A.setLoading(button, false);
+      loginInProgress = false;
     }
   });
+
+  // Reuse an existing valid Admin session when possible. A stale session must
+  // not sign out a new login that starts while this async check is running.
+  void (async () => {
+    try {
+      const { data: sessionData, error } = await A.supabase.auth.getSession();
+      if (error || loginInProgress || !sessionData?.session?.user) return;
+      const profile = await A.getProfile(sessionData.session.user.id);
+      if (loginInProgress) return;
+      if (['admin','super_admin'].includes(profile?.role) && (!profile.status || profile.status === 'active')) {
+        window.location.replace('/admin/');
+        return;
+      }
+      if (!loginInProgress) {
+        await A.supabase.auth.signOut({scope:'local'});
+        A.toast('This account does not have Admin access.', 'error');
+      }
+    } catch (error) {
+      // A failed check of a previous session is not a failed password login.
+      // The submit button is already active so the user can sign in again.
+      console.warn('[24K Admin] Saved session check skipped:', error?.message || error);
+    }
+  })();
 
   document.getElementById('adminForgotPasswordLink')?.addEventListener('click', event => {
     event.preventDefault(); A.openModal('adminForgotModal');
