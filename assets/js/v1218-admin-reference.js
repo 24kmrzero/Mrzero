@@ -18,6 +18,7 @@ function installNav(){const nav=$('.app-nav');if(!nav)return;nav.innerHTML=`
 <a href="/admin/payments/" data-panel="payments" data-v1218-nav="payments"><i class="fa-solid fa-receipt"></i> Payments <span class="nav-count" id="pendingPaymentCount">0</span></a>
 <a href="/admin/students/" data-panel="students" data-v1218-nav="students"><i class="fa-solid fa-users"></i> Students</a>
 <a href="/admin/team-manager/" data-panel="team-access-ref" data-v1218-nav="team-access-ref"><i class="fa-solid fa-people-group"></i> Team Accounts</a>
+<a href="/admin/team-daily-reports/" data-panel="team-daily-reports" data-v1218-nav="team-daily-reports"><i class="fa-solid fa-clipboard-check"></i> Team Daily Reports <span class="nav-count" id="tdrPendingBadge">0</span></a>
 <a href="/admin/mentors/" data-panel="v1216-center" data-v18-mentor-link><i class="fa-solid fa-user-graduate"></i> Mentor Accounts</a>
 <a href="/admin/support/" data-panel="support"><i class="fa-solid fa-headset"></i> Support</a>
 <span class="v1218-nav-group">Operations</span>
