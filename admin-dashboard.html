@@ -284,6 +284,7 @@
 <link rel="stylesheet" href="assets/css/v1482-admin-dashboard-dark-final.css?v=15.01">
 <link rel="stylesheet" href="assets/css/v1484-admin-dark-full-scan.css?v=15.01">
 <link rel="stylesheet" href="assets/css/v1497-admin-social-settings.css?v=15.01">
+<link rel="stylesheet" href="assets/css/v1505-admin-team-daily.css?v=15.05">
 </head>
 <body class="app-page">
 <div id="pageLoader" class="loading-screen"><div><img src="assets/logo.png?v=9.69" alt="24K Digital Gold"><i class="fa-solid fa-spinner fa-spin"></i><p>Loading admin controls...</p></div></div>
@@ -309,6 +310,7 @@
       <p class="app-nav-label">OPERATIONS</p>
       <a href="/admin/premium-access/" data-panel="premium-access"><i class="fa-solid fa-crown"></i> Premium Access</a>
       <a href="/admin/team-manager/" data-admin-team-manager="true" data-nav-key="team-manager"><i class="fa-solid fa-people-group"></i> Team & Links</a>
+      <a href="/admin/team-daily-reports/" data-panel="team-daily-reports"><i class="fa-solid fa-clipboard-check"></i> Team Daily Reports</a>
       <a href="/admin/team-performance/" data-nav-key="team-performance"><i class="fa-solid fa-chart-column"></i> Performance Editor</a>
       <a href="/admin/operations/" data-nav-key="operations"><i class="fa-solid fa-diagram-project"></i> Master Operations</a>
       <a href="/admin/admin-notifications/" data-panel="admin-notifications"><i class="fa-solid fa-bell"></i> Admin Notifications <span class="nav-count" id="adminNotificationCount">0</span></a>
@@ -793,11 +795,11 @@
 
 <div class="app-modal" id="receiptPreviewModal"><div class="app-modal-card receipt-preview-card"><div class="app-modal-head"><div><h3>Payment Receipt</h3><small id="receiptPreviewSubtitle" class="muted">Secure temporary preview</small></div><button class="modal-close" data-close-modal="receiptPreviewModal"><i class="fa-solid fa-xmark"></i></button></div><div class="app-modal-body"><div id="receiptPreviewContent" class="receipt-preview-content"></div></div><div class="app-modal-foot"><button type="button" class="app-btn outline" data-close-modal="receiptPreviewModal">Close</button><a id="receiptOpenExternal" class="app-btn gold" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Full Size</a></div></div></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js?v=11.11"></script><script src="assets/js/core.js?v=14.102"></script><script src="assets/js/admin.js?v=14.55"></script><script src="assets/js/platform-v8-admin.js?v=13.93"></script><script src="assets/js/platform-v962-admin.js?v=14.30"></script><script src="assets/js/dashboard-analytics-recovery.js?v=11.11"></script><script src="assets/js/v972-admin-course-actions.js?v=12.32"></script><script src="assets/js/v990-admin-ui.js?v=14.45"></script><script src="assets/js/v120-feature-flags.js?v=12.00"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js?v=11.11"></script><script src="assets/js/core.js?v=15.05"></script><script src="assets/js/admin.js?v=14.55"></script><script src="assets/js/platform-v8-admin.js?v=13.93"></script><script src="assets/js/platform-v962-admin.js?v=14.30"></script><script src="assets/js/dashboard-analytics-recovery.js?v=11.11"></script><script src="assets/js/v972-admin-course-actions.js?v=12.32"></script><script src="assets/js/v990-admin-ui.js?v=14.45"></script><script src="assets/js/v120-feature-flags.js?v=12.00"></script>
 
 <script src="assets/js/v1214-admin-unified.js?v=14.28"></script>
 <script src="assets/js/v1216-admin-final.js?v=14.00"></script>
-<script src="assets/js/v1218-admin-reference.js?v=14.98"></script>
+<script src="assets/js/v1218-admin-reference.js?v=15.05"></script>
 <script src="assets/js/v1250-premium-setup-admin.js?v=14.16"></script>
 <script src="assets/js/v1363-admin-dashboard-premium.js?v=13.63.1"></script>
 <script src="assets/js/v1367-admin-mentor-parity.js?v=14.44"></script>
@@ -806,5 +808,6 @@
 <script src="assets/js/v1388-admin-courses-desktop.js?v=13.89"></script>
 <script src="assets/js/v1431-admin-activity-final.js?v=14.32"></script>
 <script src="assets/js/v1498-admin-social-nav.js?v=14.99"></script>
+<script src="assets/js/v1505-admin-team-daily.js?v=15.05"></script>
 </body>
 </html>
