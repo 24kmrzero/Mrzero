@@ -448,18 +448,35 @@
   async function requireRole(role) {
     const loginUrl = role === 'admin' ? '/admin-login.html' : '/login.html?tab=student-login';
     try {
-      const user = await getCurrentUser();
+      let user = await getCurrentUser();
+      // Admin deep links can open while a freshly saved session is still
+      // being restored. Confirm with Supabase before treating it as logged out.
+      if (!user && role === 'admin') {
+        const verified = await supabase.auth.getUser();
+        if (!verified.error) user = verified.data?.user || null;
+      }
       if (!user) throw new Error('No active session');
-      const profile = await getProfile(user.id);
-      if (role === 'admin' ? !['admin','super_admin'].includes(profile.role) : profile.role !== role) {
-        await supabase.auth.signOut().catch(() => {});
+      let profile;
+      try {
+        profile = await getProfile(user.id);
+      } catch (firstError) {
+        // A newly signed-in Admin session may briefly be out of sync after
+        // a stale-token refresh. Retry exactly once with a refreshed JWT.
+        const transientAuthError = /jwt|session|not authenticated|token|expired/i.test(String(firstError?.message || ''));
+        if (role !== 'admin' || !transientAuthError) throw firstError;
+        const { data, error } = await supabase.auth.refreshSession();
+        if (error || data?.session?.user?.id !== user.id) throw firstError;
+        profile = await getProfile(user.id);
+      }
+      if (role === 'admin' ? !['admin','super_admin'].includes(profile?.role) : profile?.role !== role) {
+        await supabase.auth.signOut({scope:'local'}).catch(() => {});
         const reason = role === 'admin' ? 'admin-required' : 'student-required';
         window.location.replace(`${loginUrl}${loginUrl.includes('?') ? '&' : '?'}reason=${reason}`);
         return null;
       }
       return { user, profile };
     } catch (error) {
-      console.error(error);
+      console.error('[24K] Panel authorization check:', error);
       window.location.replace(loginUrl);
       return null;
     }
