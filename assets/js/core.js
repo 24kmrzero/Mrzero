@@ -136,6 +136,11 @@
   };
 
   function friendlyError(error, fallback = 'Something went wrong. Please try again.') {
+    // PGRST303 is a database-side rejection of JWT claims, not proof the
+    // student's or administrator's password/session is expired.
+    if (String(error?.code || '').toUpperCase() === 'PGRST303') {
+      return 'The database API is temporarily rejecting valid login tokens (PGRST303). Your password was accepted. Please retry shortly or contact platform support.';
+    }
     const raw = String(error?.message || error || '').trim();
     const lower = raw.toLowerCase();
     if (!raw) return fallback;
@@ -433,15 +438,27 @@
 
   async function getProfile(userId) {
     if (!configured || !supabase) throw new Error('Website connection is unavailable. Please contact support.');
-    const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single();
-    if (error) throw error;
+    // Auth may return HTTP 200 while hosted PostgREST briefly rejects a
+    // freshly minted ES256 JWT with PGRST303. Retry the SAME token, rather
+    // than refreshing it (which makes its issued-at time new again).
+    // Student behavior stays unchanged; only the Admin scope retries.
+    const waits = authScope === 'admin' ? [1200, 2500, 4500, 6500, 9000] : [];
+    let data, error;
+    for (let attempt = 0; ; attempt++) {
+      const response = await supabase.from('profiles').select('*').eq('id', userId).single();
+      data = response.data;
+      error = response.error;
+      if (!error) break;
+      const isJwtClaimsError = String(error.code || '').toUpperCase() === 'PGRST303';
+      if (!isJwtClaimsError || attempt >= waits.length) throw error;
+      console.warn('[24K Admin] Database JWT validation delayed; retry', attempt + 1);
+      await new Promise(resolve => setTimeout(resolve, waits[attempt]));
+    }
 
-    // Access-status maintenance is useful but must not block the first authenticated
-    // paint. Run it quietly after the role/profile check has completed.
+    // Non-critical status maintenance must not affect Admin login.
     void supabase.rpc('sync_current_access_status').then(({error})=>{
-      if(error) console.warn('Access status sync skipped:', error?.message || error);
+      if(error)console.warn('Access status sync skipped:', error?.message || error);
     }).catch(error=>console.warn('Access status sync skipped:', error?.message || error));
-
     return data;
   }
 
@@ -462,6 +479,7 @@
       } catch (firstError) {
         // A newly signed-in Admin session may briefly be out of sync after
         // a stale-token refresh. Retry exactly once with a refreshed JWT.
+        if (String(firstError?.code || '').toUpperCase() === 'PGRST303') throw firstError; // Keep the original JWT: refreshing cannot fix the API clock.
         const transientAuthError = /jwt|session|not authenticated|token|expired/i.test(String(firstError?.message || ''));
         if (role !== 'admin' || !transientAuthError) throw firstError;
         const { data, error } = await supabase.auth.refreshSession();
@@ -477,7 +495,9 @@
       return { user, profile };
     } catch (error) {
       console.error('[24K] Panel authorization check:', error);
-      window.location.replace(loginUrl);
+      const reason = role === 'admin' && String(error?.code || '').toUpperCase() === 'PGRST303'
+        ? '?reason=api-auth-unavailable' : '';
+      window.location.replace(loginUrl + reason);
       return null;
     }
   }
