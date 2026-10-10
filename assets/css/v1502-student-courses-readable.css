@@ -1,0 +1,186 @@
+/* 24K MR ZERO — Student Courses readability, desktop only.
+   Keeps the existing card/theme styling while replacing the tiny typography
+   and allowing all labels to fit without clipping. Mobile remains unchanged. */
+@media (min-width: 901px) {
+  /* Use the available canvas to make the existing 2 cards wide enough. */
+  body.student-page #p-courses .course-list-grid {
+    width: 100% !important;
+    max-width: 1180px !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+  }
+  body.student-page #p-courses .premium-course-card {
+    min-width: 0 !important;
+  }
+
+  /* Academy heading, stats and filters */
+  body.student-page #p-courses .course-hero-copy > small { font-size: 10px !important; letter-spacing: .055em !important; }
+  body.student-page #p-courses .course-hero-copy p { font-size: 13px !important; line-height: 1.5 !important; }
+  body.student-page #p-courses .course-hero-stats small { font-size: 10px !important; letter-spacing: .03em !important; }
+  body.student-page #p-courses .premium-course-filters button {
+    min-width: 94px !important;
+    min-height: 38px !important;
+    height: auto !important;
+    font-size: 13px !important;
+  }
+  body.student-page #p-courses .premium-course-filters button > span {
+    min-width: 21px !important;
+    height: 21px !important;
+    font-size: 10px !important;
+  }
+
+  /* Course covers & titles */
+  body.student-page #p-courses .course-cover-brand small { font-size: 10px !important; }
+  body.student-page #p-courses .course-cover-brand b { font-size: 13px !important; }
+  body.student-page #p-courses .course-type-badge,
+  body.student-page #p-courses .course-status {
+    font-size: 10px !important;
+    min-height: 26px !important;
+  }
+  body.student-page #p-courses .premium-course-card .course-body {
+    gap: 14px !important;
+    padding: 18px !important;
+  }
+  body.student-page #p-courses .course-title-row small {
+    font-size: 10px !important;
+    letter-spacing: .045em !important;
+  }
+  body.student-page #p-courses .course-title-row h3 {
+    font-size: 20px !important;
+    line-height: 1.25 !important;
+  }
+  body.student-page #p-courses .course-access-state {
+    font-size: 10px !important;
+    min-height: 28px !important;
+    padding-inline: 9px !important;
+  }
+  body.student-page #p-courses .course-description {
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+    min-height: 0 !important;
+    -webkit-line-clamp: unset !important;
+    display: block !important;
+    overflow: visible !important;
+  }
+
+  /* Mentor / price / classes: retain 3 existing boxes, but no squeezed text */
+  body.student-page #p-courses .premium-course-meta {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 9px !important;
+  }
+  body.student-page #p-courses .premium-course-meta > span {
+    min-height: 72px !important;
+    grid-template-columns: 17px minmax(0, 1fr) !important;
+    column-gap: 7px !important;
+    row-gap: 4px !important;
+    padding: 10px !important;
+  }
+  body.student-page #p-courses .premium-course-meta i { font-size: 13px !important; }
+  body.student-page #p-courses .premium-course-meta small {
+    font-size: 10px !important;
+    letter-spacing: .025em !important;
+  }
+  body.student-page #p-courses .premium-course-meta b {
+    font-size: 12.5px !important;
+    line-height: 1.35 !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  /* Next live class: key line 14px bold; explanation 12px */
+  body.student-page #p-courses .premium-next-class {
+    min-height: 84px !important;
+    grid-template-columns: 36px minmax(0, 1fr) 16px !important;
+    gap: 11px !important;
+    padding: 13px 14px !important;
+  }
+  body.student-page #p-courses .next-class-icon {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 14px !important;
+  }
+  body.student-page #p-courses .premium-next-class > div { gap: 4px !important; }
+  body.student-page #p-courses .premium-next-class small {
+    font-size: 10px !important;
+    line-height: 1.2 !important;
+    letter-spacing: .045em !important;
+  }
+  body.student-page #p-courses .premium-next-class b {
+    font-size: 14px !important;
+    line-height: 1.35 !important;
+    overflow: visible !important;
+    white-space: normal !important;
+    text-overflow: clip !important;
+    overflow-wrap: break-word !important;
+  }
+  body.student-page #p-courses .premium-next-class em {
+    font-size: 12px !important;
+    line-height: 1.45 !important;
+    overflow: visible !important;
+    white-space: normal !important;
+    text-overflow: clip !important;
+    overflow-wrap: break-word !important;
+  }
+  body.student-page #p-courses .next-class-arrow { font-size: 12px !important; }
+
+  /* Access/payment: key line 14px bold; explanation 12px */
+  body.student-page #p-courses .course-access-notice {
+    min-height: 84px !important;
+    grid-template-columns: 36px minmax(0, 1fr) auto !important;
+    gap: 11px !important;
+    padding: 12px 13px !important;
+  }
+  body.student-page #p-courses .course-access-notice .notice-icon {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 14px !important;
+  }
+  body.student-page #p-courses .course-access-notice > div { gap: 4px !important; }
+  body.student-page #p-courses .course-access-notice b {
+    font-size: 14px !important;
+    line-height: 1.35 !important;
+  }
+  body.student-page #p-courses .course-access-notice span:not(.notice-icon):not(.notice-state) {
+    font-size: 12px !important;
+    line-height: 1.45 !important;
+    overflow-wrap: break-word !important;
+  }
+  body.student-page #p-courses .notice-state {
+    min-height: 28px !important;
+    padding: 0 9px !important;
+    font-size: 10px !important;
+    white-space: nowrap !important;
+  }
+
+  /* Actions & expanded course session listing */
+  body.student-page #p-courses .course-actions {
+    gap: 10px !important;
+  }
+  body.student-page #p-courses .course-actions .app-btn {
+    min-height: 44px !important;
+    height: auto !important;
+    padding: 9px 12px !important;
+    font-size: 13px !important;
+    line-height: 1.25 !important;
+    white-space: normal !important;
+  }
+  body.student-page #p-courses #sessionsArea > .panel-heading p { font-size: 12px !important; }
+  body.student-page #p-courses #closeSessions { min-height: 38px !important; height: auto !important; font-size: 12px !important; }
+}
+
+/* Narrow desktop: avoid shrinking the larger text into tiny cards. */
+@media (min-width: 901px) and (max-width: 1180px) {
+  body.student-page #p-courses .course-list-grid {
+    max-width: 660px !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  body.student-page #p-courses .course-page-hero {
+    grid-template-columns: 48px minmax(0, 1fr) !important;
+  }
+  body.student-page #p-courses .course-hero-stats {
+    grid-column: 2 !important;
+    width: max-content !important;
+  }
+}
