@@ -336,7 +336,7 @@
       dashboard: '/admin/', content: '/admin/content/', signals: '/admin/signals/', charts: '/admin/charts/', articles: '/admin/articles/',
       announcements: '/admin/announcements/', banners: '/admin/banners/', courses: '/admin/courses/', sessions: '/admin/zoom-sessions/',
       calendar: '/admin/calendar/', leads: '/admin/enquiries/',
-      'team-access-ref': '/admin/team-manager/', 'premium-access': '/admin/premium-access/', 'link-manager-ref': '/admin/link-manager/', operations: '/admin/operations/', 'admin-notifications': '/admin/admin-notifications/',
+      'team-access-ref': '/admin/team-manager/', 'team-daily-reports': '/admin/team-daily-reports/', 'premium-access': '/admin/premium-access/', 'link-manager-ref': '/admin/link-manager/', operations: '/admin/operations/', 'admin-notifications': '/admin/admin-notifications/',
       audit: '/admin/activity-logs/', delivery: '/admin/delivery/', settings: '/admin/settings/', 'social-settings': '/admin/social-links/',
       payments: '/admin/payments/', students: '/admin/students/', 'v1216-center': '/admin/mentors/', support: '/admin/support/', methods: '/admin/payment-methods/'
     };
