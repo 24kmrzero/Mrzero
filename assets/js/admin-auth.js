@@ -1,6 +1,6 @@
 (async function () {
   const A = window.App;
-  async function audit(action,status='success',details={},token=''){try{await fetch(`${A.cfg.SUPABASE_URL}/functions/v1/audit-event`,{method:'POST',headers:{'Content-Type':'application/json','apikey':A.cfg.SUPABASE_ANON_KEY,...(token?{'Authorization':`Bearer ${token}`}:{})},body:JSON.stringify({action,status,actor_email:details.email||null,details})});}catch{}}
+  async function audit(action,status='success',details={},token=''){try{await fetch(`${A.cfg.SUPABASE_URL}/functions/v1/audit-event`,{method:'POST',keepalive:true,headers:{'Content-Type':'application/json','apikey':A.cfg.SUPABASE_ANON_KEY,...(token?{'Authorization':`Bearer ${token}`}:{})},body:JSON.stringify({action,status,actor_email:details.email||null,details})});}catch{}}
   if (!A.configured || !A.supabase) {
     A.toast('Admin authentication setup is incomplete. Please contact support.', 'error');
     document.querySelectorAll('form button[type="submit"]').forEach(button => button.disabled = true);
